@@ -1,6 +1,5 @@
 #include <NERO/scene/ObjectManager.h>
 #include <fstream>
-#include <NERO/engine/DevEngine.h>
 #include <string>
 
 #include <easyloggingpp/easylogging++.h>

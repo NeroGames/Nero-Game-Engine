@@ -39,6 +39,7 @@
 #include <boost/filesystem.hpp>
 //EASY_LOG
 #include <easyloggingpp/easylogging++.h>
+INITIALIZE_EASYLOGGINGPP
 ////////////////////////////////////////////////////////////
 
 namespace nero
