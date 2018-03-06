@@ -23,6 +23,23 @@
 #include <SFGUI/Canvas.hpp>
 ////////////////////////////////////////////////////////////
 
+namespace
+{
+    class ConfigLog
+    {
+        public :
+            static bool config()
+            {
+                el::Configurations log_conf("config/log_config.nero");
+                el::Loggers::reconfigureAllLoggers(log_conf);
+
+                return true;
+            }
+    };
+
+    bool result = ConfigLog::config();
+}
+
 
 namespace nero
 {

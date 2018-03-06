@@ -76,6 +76,12 @@ namespace
                 sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt);
     }
 
+
+    std::string toString(const sf::String& value)
+    {
+        return std::string(value);
+    }
+
     sf::Color b2_to_sf(const b2Color& color, int transparency)
     {
         return sf::Color(color.r * 255, color.g * 255, color.b * 255, transparency);

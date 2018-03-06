@@ -19,6 +19,7 @@
 #include <NERO/scene/UndoManager.h>
 #include <NERO/resource/Resource.h>
 #include <NERO/scene/ObjectManager.h>
+#include <NERO/Utility.h>
 //SFML
 #include <SFML/Graphics/Sprite.hpp>
 //SFGUI
@@ -37,10 +38,24 @@
 #include <SFGUI/Notebook.hpp>
 //BOOST
 #include <boost/filesystem.hpp>
-//EASY_LOG
-#include <easyloggingpp/easylogging++.h>
-INITIALIZE_EASYLOGGINGPP
 ////////////////////////////////////////////////////////////
+
+namespace
+{
+    class ConfigLog
+    {
+        public :
+            static bool config()
+            {
+                el::Configurations log_conf("config/log_config.nero");
+                el::Loggers::reconfigureAllLoggers(log_conf);
+
+                return true;
+            }
+    };
+
+    bool result = ConfigLog::config();
+}
 
 namespace nero
 {
@@ -304,11 +319,6 @@ namespace nero
         using namespace boost::filesystem;
         std::string directory = NERO_FOLDER + "/" + scene_name;
         create_directories(path(directory));
-
-        LOG(INFO) << "New Scene Registered";
-        LOG(INFO) << "--> Name            : " << std::string(scene_name);
-        LOG(INFO) << "--> Directory Path  : " << directory << "\n";
-
 
         //Provide the update_engine function to the Scene
         ObjectManager*  objectManager   = m_SceneManager.getObjectManager(scene_name);

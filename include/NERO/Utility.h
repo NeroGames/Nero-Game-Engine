@@ -1,6 +1,19 @@
 #ifndef UTILITY_H_INCLUDED
 #define UTILITY_H_INCLUDED
 
+#define EXPAND(x) x
+#define nero_log_info(message) LOG(INFO) << message
+#define nero_log_level(message, level)(level == nero::Debug ? LOG(DEBUG) << message : (level == nero::Warning ? LOG(WARNING) << message : LOG(INFO) << message))
+#define nero_log_info_if(message, condition) LOG_IF(condition, INFO) << message
+#define nero_log_level_if(message, level, condition)(condition == false ? : (level == nero::Debug ? LOG(DEBUG) << message : (level == nero::Warning ? LOG(WARNING) << message : LOG(INFO) << message )))
+#define GET_NERO_LOG_MACRO(_1,_2,NAME,...) NAME
+#define _nero_log(...) GET_NERO_LOG_MACRO(__VA_ARGS__, nero_log_level, nero_log_info)(__VA_ARGS__)
+#define GET_NERO_LOG_IF_MACRO(_1,_2,_3,NAME,...) NAME
+#define _nero_log_if(...) GET_NERO_LOG_IF_MACRO(__VA_ARGS__, nero_log_level_if, nero_log_info_if)(__VA_ARGS__)
+#define nero_log(...) EXPAND(_nero_log(__VA_ARGS__))
+#define nero_log_if(...) EXPAND(_nero_log_if(__VA_ARGS__))
+#define _s(value) nero::toString(value) + nero::toString(" ")
+
 #include <sstream>
 #include <stdlib.h>
 //SFML
@@ -21,6 +34,8 @@ namespace sf
 //Box2D
 #include <Box2D/Common/b2Math.h>
 #include <Box2D/Common/b2Draw.h>
+//EASYLOG
+#include <easyloggingpp/easylogging++.h>
 
 namespace nero
 {
@@ -127,6 +142,8 @@ namespace nero
     sf::Vector2f        world_to_canvas(const sf::Vector2f& point, const sfg::Canvas::Ptr& renderWindow);
 
     //-----------------------------------------------------------------
+    enum Log {Debug, Warning};
+
     template <typename T>
     std::string toString(T const& value)
     {
@@ -134,6 +151,8 @@ namespace nero
         stream << value;
         return stream.str();
     }
+
+    std::string toString(const sf::String& value);
 }
 
 

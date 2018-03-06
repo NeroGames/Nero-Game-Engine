@@ -28,6 +28,7 @@ namespace nero
         m_Window.setVerticalSyncEnabled(true);
         m_Window.resetGLStates(); //if not, SFGUI will have some undetermined behaviour
 
+        //Load resources
         m_ResourceManager.Texture.load("Resource/Texture");
         m_ResourceManager.Font.load("Resource/Font");
 

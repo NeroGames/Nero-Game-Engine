@@ -418,8 +418,6 @@ namespace nero
 
         m_LayerTab.push_back(Layer_object);
 
-        std::cout << std::string(Layer_object->toString()) << "\n\n";
-
         m_SelectedLayer = Layer_object;
         m_SelectedObject = nullptr;
 
@@ -597,7 +595,6 @@ namespace nero
 
         }
 
-        std::cout << std::string(object->toString()) << "\n\n";
         m_SelectedObject = object;
         m_SelectedLayer->addChild(m_SelectedObject);
     }
@@ -776,8 +773,6 @@ namespace nero
 
             }break;
         }
-
-        std::cout << std::string(object->toString()) << "\n\n";
 
         if(m_SelectedLayer->getSecondType() == type)
         {

@@ -26,6 +26,7 @@ set(NERO_BUILD_SHARED_LIB ON CACHE BOOL "Build shared or static library")
 #set(NERO_BUILD_DOC 	FALSE CACHE BOOL "Build doxygen doc")
 #set(NERO_BUILD_EXEMPLES FALSE CACHE BOOL "Build all exemples")
 
+add_definitions(-DAUTO_INITIALIZE_EASYLOGGINGPP)
 
 
 # Get the engine source files
