@@ -237,11 +237,6 @@ namespace nero
         m_DevScene->getCameraSettings();
     }
 
-    /*PhysicObjectManager* SceneManager::getPhysicObjectManager()
-    {
-        return m_DevScene->getPhysicObjectManager();
-    }*/
-
     SceneSettings& SceneManager::getSceneSettings()
     {
         return m_SceneSettings;
@@ -259,8 +254,14 @@ namespace nero
 
     void SceneManager::buildScene()
     {
-        Scene::Ptr scene = m_Factories[m_DevScene->m_Name].second();
-        m_DevScene->m_Scene = scene;
+        if(m_DevScene->m_Scene)
+        {
+            m_DevScene->m_ObjectManager.destroyAllPhysicObject(m_DevScene->m_Scene->m_RootObject);
+            m_DevScene->m_Scene->m_RootObject->removeAllChild();
+            m_DevScene->m_Scene = nullptr;
+        }
+
+        m_DevScene->m_Scene = m_Factories[m_DevScene->m_Name].second();
         m_DevScene->init();
         m_DevScene->m_ObjectManager.setWorld(m_DevScene->m_Scene->m_World);
         m_DevScene->m_ObjectManager.buildScene(m_DevScene->m_Scene->m_RootObject);

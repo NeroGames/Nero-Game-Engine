@@ -261,7 +261,7 @@ namespace nero
             return getObjectA();
         else if (getObjectB()->getCategory() == indicator)
             return getObjectB();
-        if(getObjectA()->getName() == indicator)
+        else if(getObjectA()->getName() == indicator)
             return getObjectA();
         else if (getObjectB()->getName() == indicator)
             return getObjectB();

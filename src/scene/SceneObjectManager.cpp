@@ -9,7 +9,7 @@ namespace nero
         m_World(world),
         m_DeadPhysicObject()
     {
-        //ctor
+        //ctr
     }
 
     SceneObjectManager::~SceneObjectManager()
@@ -190,12 +190,38 @@ namespace nero
         return findChildObject(findLayerObject(layer), id);
     }
 
-    ///////////////////////////////////////////////////////////////
-
-    void SceneObjectManager::checkAllObject(ObjectTab object_tab)
+    ///////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////
+    //Checking
+    void SceneObjectManager::checkAllObject(std::vector<sf::String> objectNameTab)
     {
-        for(auto object : object_tab)
-            assert(object);
+        for(sf::String object_name : objectNameTab)
+        {
+            Object::Ptr object  = findObject(object_name);
+
+            if(!object)
+                throw std::runtime_error("Object [" + _s(object_name) + "] not found, please check that you have entered the correct object name");
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////
+    //Move object by name
+    Object::Ptr SceneObjectManager::moveObject(sf::String name)
+    {
+        Object::Ptr result = nullptr;
+
+        auto layerTab = m_RootObject->getAllChild();
+
+        for (auto it = layerTab->begin(); it != layerTab->end(); it++)
+        {
+             result = moveChildObject(*it, name);
+
+             if(result)
+                break;
+        }
+
+        return result;
     }
 
     Object::Ptr SceneObjectManager::moveObjectByLayerType(sf::String name, Object::Type layer_type)
@@ -218,6 +244,7 @@ namespace nero
         return result;
     }
 
+
     Object::Ptr SceneObjectManager::moveChildObject(Object::Ptr object, sf::String name)
     {
         auto childTab = object->getAllChild();
@@ -225,14 +252,19 @@ namespace nero
         for (auto it = childTab->begin(); it != childTab->end(); it++)
             if((*it)->getName() == name)
             {
-                auto clone = (*it)->clone();
+                auto result = (*it);
 
                 object->removeChild((*it));
 
-                return clone;
+                return result;
             }
 
         return nullptr;
+    }
+
+    Object::Ptr SceneObjectManager::movePhysicObject(sf::String name)
+    {
+        return moveObjectByLayerType(name, Object::Physic_Object);
     }
 
     Object::Ptr SceneObjectManager::moveSpriteObject(sf::String name)
@@ -240,26 +272,14 @@ namespace nero
         return moveObjectByLayerType(name, Object::Sprite_Object);
     }
 
-    bool SceneObjectManager::removeObjectByLayerType(Object::Ptr object, Object::Type layer_type)
+    Object::Ptr SceneObjectManager::moveSolidObject(sf::String name)
     {
-        bool result = true;
-
-        auto layerTab = m_RootObject->getAllChild();
-
-        for (auto it = layerTab->begin(); it != layerTab->end(); it++)
-        {
-            if((*it)->getSecondType() != layer_type)
-                continue;
-
-             result = removeChildObject(*it, object);
-
-             if(result)
-                break;
-        }
-
-        return result;
+        return moveObjectByLayerType(name, Object::Solid_Object);
     }
 
+    ///////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////
     bool SceneObjectManager::removeChildObject(Object::Ptr object,  Object::Ptr child)
     {
         auto childTab = object->getAllChild();
@@ -268,7 +288,8 @@ namespace nero
         {
             if((*it)->getId() == child->getId())
             {
-                if(object->getSecondType() == Object::Physic_Object || object->getSecondType() == Object::Solid_Object)
+                if((object->getSecondType() == Object::Physic_Object || object->getSecondType() == Object::Solid_Object) &&
+                   (*it)->getSecondType() == Object::Physic_Object)
                 {
                     PhysicObject::Ptr physic_Object = PhysicObject::Cast(*it);
                     physic_Object->setSensor(true);
@@ -294,7 +315,19 @@ namespace nero
         if(!object)
             return false;
 
-        return removeObjectByLayerType(object, object->getSecondType());
+        bool result = true;
+
+        auto layerTab = m_RootObject->getAllChild();
+
+        for (auto it = layerTab->begin(); it != layerTab->end(); it++)
+        {
+             result = removeChildObject(*it, object);
+
+             if(result)
+                break;
+        }
+
+        return result;
     }
 
     bool SceneObjectManager::removeObject(sf::String name)
@@ -323,6 +356,11 @@ namespace nero
     void SceneObjectManager::setWorld(b2World* world)
     {
         m_World = world;
+    }
+
+    void SceneObjectManager::addObject(Object::Ptr object)
+    {
+        m_RootObject->addChild(object);
     }
 
 }

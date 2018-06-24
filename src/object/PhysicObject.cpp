@@ -311,10 +311,20 @@ namespace nero
         return unitVector(b2_to_sf(p2-p1));
     }
 
-     void PhysicObject::clearVelocity()
-     {
+    void PhysicObject::clearVelocity()
+    {
         setLinearVelocity(sf::Vector2f(0.f, 0.f));
-     }
+    }
+
+    void PhysicObject::clearVelocity_x()
+    {
+        setLinearVelocity(sf::Vector2f(0.f, getLinearVelocity().y));
+    }
+
+    void PhysicObject::clearVelocity_y()
+    {
+        setLinearVelocity(sf::Vector2f(getLinearVelocity().x, 0.f));
+    }
 
     void PhysicObject::clearAngularVelocity()
     {

@@ -3,6 +3,7 @@
 
 #include <NERO/object/Object.h>
 #include <NERO/object/PhysicObject.h>
+#include <NERO/object/LayerObject.h>
 #include <Box2D/Dynamics/b2World.h>
 
 #include <assert.h>
@@ -37,28 +38,37 @@ namespace nero
             Object::Ptr     findSolidObject(int id);
 
             //Move
+            Object::Ptr     moveObject(sf::String name);
+            Object::Ptr     movePhysicObject(sf::String name);
             Object::Ptr     moveSpriteObject(sf::String name);
+            Object::Ptr     moveSolidObject(sf::String name);
 
             //Remove
             bool            removeObject(Object::Ptr object);
             bool            removeObject(sf::String name);
 
             //
-            void            checkAllObject(ObjectTab object_tab);
-
+            void            checkAllObject(std::vector<sf::String> objectNameTab);
+            //
             void            removeDeadPhysicObject();
 
             void            setWorld(b2World* world);
+
+            //
+            void            addSpriteObject(Object::Ptr object);
+            void            addPhysicObject(Object::Ptr object);
+            void            addSolidObject(Object::Ptr object);
+            void            addObject(Object::Ptr object);
 
 
         private:
 
             Object::Ptr     findObject(Object::Ptr object, sf::String name);
             void            findObject(Object::Ptr object, sf::String name, Object::Ptr& result);
-
             Object::Ptr     findChildObject(Object::Ptr object, sf::String name);
             Object::Ptr     findObjectByLayerType(sf::String name, Object::Type layer_type);
 
+            //
             Object::Ptr     findObject(Object::Ptr object, int id);
             void            findObject(Object::Ptr object, int id, Object::Ptr& result);
             Object::Ptr     findChildObject(Object::Ptr object, int id);
@@ -76,8 +86,6 @@ namespace nero
             Object::Ptr         m_RootObject;
             b2World*            m_World;
             PhysicObjectTab     m_DeadPhysicObject;
-
-
     };
 }
 #endif // SCENEOBJECTMANAGER_H

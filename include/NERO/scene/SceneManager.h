@@ -1,3 +1,12 @@
+////////////////////////////////////////////////////////////
+//
+// Nero Game Engine
+// Author : SANOU A. K. Landry
+//
+// All rights reserved
+//
+////////////////////////////////////////////////////////////
+
 #ifndef SCENEMANAGER_H
 #define SCENEMANAGER_H
 
@@ -82,7 +91,6 @@ namespace nero
     void SceneManager::registerScene(sf::String name)
     {
         //Create a DevScene;
-        //Scene::Ptr scene = Scene::Ptr(new T(m_Context));
         m_Factories[name].first = DevScene::Ptr(new DevScene(m_Context));
         m_Factories[name].first->setName(name);
         m_SceneList.push_back(name);

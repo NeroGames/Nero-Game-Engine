@@ -24,17 +24,17 @@ namespace nero
     class ObjectManager
     {
         public:
-                            ObjectManager(sfg::Canvas::Ptr& renderCanvas, TextureHolder& textureHolder);
+                                        ObjectManager(sfg::Canvas::Ptr& renderCanvas, TextureHolder& textureHolder);
 
             //Main
-            void            handleEvent(const sf::Event& event);
-            void            update(const sf::Time& elapsedTime);
-            void            render();
+            void                        handleEvent(const sf::Event& event);
+            void                        update(const sf::Time& elapsedTime);
+            void                        render();
 
             //Input
-            void            handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
-            void            handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
-            void            handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
+            void                        handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
+            void                        handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
+            void                        handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
 
             //Layer
             const LayerObject::Ptr      addLayer();
@@ -49,49 +49,49 @@ namespace nero
             const LayerObject::Tab&     getLayerTab() const;
 
             //object
-            enum                Position {Up, Down, Left, Right, Up_Left, Up_Right, Down_Left, Down_Right};
+            enum                        Position {Up, Down, Left, Right, Up_Left, Up_Right, Down_Left, Down_Right};
 
-            bool                addObject(Object::Type type, const sf::String& label, sf::Vector2f position = sf::Vector2f(0.f, 0.f));
-            void                copyObject(const Position& position);
-            void                deleteObject(Object::Ptr object);
-            void                setObjectName(const sf::String& name);
-            void                setObjectCategory(const sf::String& category);
-            Object::Ptr         getSelectedObject();
+            bool                        addObject(Object::Type type, const sf::String& label, sf::Vector2f position = sf::Vector2f(0.f, 0.f));
+            void                        copyObject(const Position& position);
+            void                        deleteObject(Object::Ptr object);
+            void                        setObjectName(const sf::String& name);
+            void                        setObjectCategory(const sf::String& category);
+            Object::Ptr                 getSelectedObject();
 
 
 
             //Sprite
-            void                updateLayerColor(const sf::Color& color);
-            void                updateAllLayerAlpha(int alpha);
-            void                updateSpriteColor(const sf::Color& color);
-            sf::Color           getLayerColor();
+            void                        updateLayerColor(const sf::Color& color);
+            void                        updateAllLayerAlpha(int alpha);
+            void                        updateSpriteColor(const sf::Color& color);
+            sf::Color                   getLayerColor();
 
 
             //Mesh
-            void                setMeshType(const sf::String& label);
-            void                setMeshFixedRotation(bool tag);
-            void                setMeshSensor(bool tag);
-            void                setMeshAllowSleep(bool tag);
-            void                setMeshDensity(float density);
-            void                setMeshFriction(float friction);
-            void                setMeshRestitution(float restitution);
-            void                setMeshGravityScale(float gravityScale);
+            void                        setMeshType(const sf::String& label);
+            void                        setMeshFixedRotation(bool tag);
+            void                        setMeshSensor(bool tag);
+            void                        setMeshAllowSleep(bool tag);
+            void                        setMeshDensity(float density);
+            void                        setMeshFriction(float friction);
+            void                        setMeshRestitution(float restitution);
+            void                        setMeshGravityScale(float gravityScale);
 
-            MeshEditor*         getMeshEditor();
+            MeshEditor*                 getMeshEditor();
 
             //Scene
-            void                buildScene(Object::Ptr mainObject);
-            void                destroyAllPhysicObject(Object::Ptr mainObject);
-            void                updateLayerOrder();
-            nlohmann::json      saveScene();
-            void                loadScene(nlohmann::json scene);
+            void                        buildScene(Object::Ptr mainObject);
+            void                        destroyAllPhysicObject(Object::Ptr mainObject);
+            void                        updateLayerOrder();
+            nlohmann::json              saveScene();
+            void                        loadScene(nlohmann::json scene);
 
 
 
-            void                setUpdateEngineFunction(std::function<void()>  f);
-            void                setEngineUndoFunction(std::function<void()>  f);
+            void                        setUpdateEngineFunction(std::function<void()>  f);
+            void                        setEngineUndoFunction(std::function<void()>  f);
 
-            void                setWorld(b2World* world);
+            void                        setWorld(b2World* world);
 
 
 

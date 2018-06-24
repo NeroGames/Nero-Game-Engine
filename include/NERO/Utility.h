@@ -13,6 +13,9 @@
 #define nero_log(...) EXPAND(_nero_log(__VA_ARGS__))
 #define nero_log_if(...) EXPAND(_nero_log_if(__VA_ARGS__))
 #define _s(value) nero::toString(value) + nero::toString(" ")
+#define _ss(value) #value + nero::toString(" ")
+#define _sn(object)  nero::toString(object->toString())
+
 
 #include <sstream>
 #include <stdlib.h>

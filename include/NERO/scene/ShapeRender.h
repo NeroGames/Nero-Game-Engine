@@ -1,3 +1,12 @@
+////////////////////////////////////////////////////////////
+//
+// Nero Game Engine
+// Author : SANOU A. K. Landry
+//
+// All rights reserved
+//
+////////////////////////////////////////////////////////////
+
 #ifndef SHAPERENDER_H
 #define SHAPERENDER_H
 
@@ -17,7 +26,7 @@ namespace nero
             //Constructor
                     ShapeRender(sfg::Canvas::Ptr& renderCanvas, const float& thickness = -2.f, const int& tranparency = 50);
 
-            //Drawing foncitons
+            //Drawing functions
             void    DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
 
             void    DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);

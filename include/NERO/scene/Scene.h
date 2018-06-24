@@ -37,13 +37,12 @@ namespace nero
                                         Scene(Context context);
             virtual                    ~Scene();
         //----------------------------------------------------------------------------------->
-            //Update, render, event fonctions
+            //Update, render, event functions
             virtual void                handleEvent(const sf::Event& event);
             virtual void                update(SceneSettings* settings);
             virtual void                render();
             virtual void                renderShape();
             virtual void                renderOnFrontScreen();
-//            void                        cameraFollowObject(Object::Ptr object);
 
         private:
             // Callbacks for derived classes.

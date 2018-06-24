@@ -51,8 +51,8 @@ namespace nero
     Scene::~Scene()
     {
         // By deleting the world, we delete the bomb, mouse joint, etc.
-        //delete m_World;
-        //m_World = nullptr;
+        delete m_World;
+        m_World = nullptr;
     }
 
     void Scene::renderOnFrontScreen()
@@ -209,8 +209,8 @@ namespace nero
         int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
         int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-        collision.setObjectA(std::static_pointer_cast<nero::PhysicObject>(m_ObjectManager.findObject(id_A)));
-        collision.setObjectB(std::static_pointer_cast<nero::PhysicObject>(m_ObjectManager.findObject(id_B)));
+        collision.setObjectA(nero::PhysicObject::Cast(m_ObjectManager.findObject(id_A)));
+        collision.setObjectB(nero::PhysicObject::Cast(m_ObjectManager.findObject(id_B)));
 
         handleCollisionPostSolveContact(collision);
     }
@@ -224,8 +224,8 @@ namespace nero
         int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
         int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-        collision.setObjectA(std::static_pointer_cast<nero::PhysicObject>(m_ObjectManager.findObject(id_A)));
-        collision.setObjectB(std::static_pointer_cast<nero::PhysicObject>(m_ObjectManager.findObject(id_B)));
+        collision.setObjectA(nero::PhysicObject::Cast(m_ObjectManager.findObject(id_A)));
+        collision.setObjectB(nero::PhysicObject::Cast(m_ObjectManager.findObject(id_B)));
 
         handleCollisionContactBegin(collision);
     }
@@ -240,8 +240,8 @@ namespace nero
         int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
         int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-        collision.setObjectA(std::static_pointer_cast<nero::PhysicObject>(m_ObjectManager.findObject(id_A)));
-        collision.setObjectB(std::static_pointer_cast<nero::PhysicObject>(m_ObjectManager.findObject(id_B)));
+        collision.setObjectA(nero::PhysicObject::Cast(m_ObjectManager.findObject(id_A)));
+        collision.setObjectB(nero::PhysicObject::Cast(m_ObjectManager.findObject(id_B)));
 
         handleCollisionContactEnd(collision);
     }
@@ -268,22 +268,22 @@ namespace nero
 
     void Scene::handleCollisionContactBegin(Collision collision)
     {
-
+        //
     }
 
     void Scene::handleCollisionContactEnd(Collision collision)
     {
-
+        //
     }
 
     void Scene::handleCollisionPreSolveContact(Collision collision)
     {
-
+        //
     }
 
     void Scene::handleCollisionPostSolveContact(Collision collision)
     {
-
+        //
     }
 
     void Scene::setGravity(const sf::Vector2f& gravity)

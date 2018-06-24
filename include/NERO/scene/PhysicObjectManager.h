@@ -20,7 +20,6 @@ namespace nero
                         PhysicObjectManager();
             virtual    ~PhysicObjectManager();
 
-            void        buildObjects(MeshTab& meshTab);
             PhysicObject::Ptr createObject(Mesh* mesh);
             void        destroyAllObject();
             void        setWorld(b2World* world);

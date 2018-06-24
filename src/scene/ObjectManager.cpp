@@ -992,9 +992,6 @@ namespace nero
 
     void ObjectManager::buildScene(Object::Ptr rootObject)
     {
-        destroyAllPhysicObject(rootObject);
-        rootObject->removeAllChild();
-
         for(auto layer = m_LayerTab.begin(); layer != m_LayerTab.end(); layer++)
         {
             if(!(*layer)->isVisible())
@@ -1085,7 +1082,6 @@ namespace nero
 
 
                         physic_object->addChild(sprite_object);
-                        //physic_object->setPosition(sprite_object->getPosition());
 
                         layer_object->addChild(physic_object);
                     }
@@ -1097,9 +1093,9 @@ namespace nero
         }
     }
 
-    void ObjectManager::destroyAllPhysicObject(Object::Ptr mainObject)
+    void ObjectManager::destroyAllPhysicObject(Object::Ptr rootObject)
     {
-        auto children = mainObject->getAllChild();
+        auto children = rootObject->getAllChild();
 
         for(auto layer = children->begin(); layer != children->end(); layer++)
         {
@@ -1109,7 +1105,7 @@ namespace nero
 
                 for(auto it = layer_children->begin(); it != layer_children->end(); it++)
                 {
-                    PhysicObject::Ptr physic_object = std::static_pointer_cast<PhysicObject>((*it));
+                    PhysicObject::Ptr physic_object = PhysicObject::Cast((*it));
                     m_World->DestroyBody(physic_object->getBody());
                 }
             }

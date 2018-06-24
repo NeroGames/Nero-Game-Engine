@@ -86,6 +86,8 @@ namespace nero
 
             void                 clearForce();
             void                 clearVelocity();
+            void                 clearVelocity_x();
+            void                 clearVelocity_y();
             void                 clearAngularVelocity();
             void                 setAngle(float angle);
 

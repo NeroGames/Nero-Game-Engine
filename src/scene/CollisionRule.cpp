@@ -128,7 +128,7 @@ namespace nero
 
                 for(auto it = objectTab->begin(); it != objectTab->end(); it++)
                 {
-                    PhysicObject::Ptr physic_object = std::static_pointer_cast<PhysicObject>((*it));
+                    PhysicObject::Ptr physic_object = PhysicObject::Cast((*it));
 
                     std::string category = physic_object->getCategory();
 
@@ -137,7 +137,6 @@ namespace nero
                     rule.maskBits = m_CollisionRuleMap[category].second;
 
                     physic_object->setCollisionRule(rule);
-
                 }
             }
         }
@@ -192,7 +191,4 @@ namespace nero
             }
         }
     }
-
-
-
 }
