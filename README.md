@@ -2,4 +2,4 @@
 
 Coming soon !
 
-<div style="text-align:center"><img src ="https://i.pinimg.com/564x/22/18/b1/2218b11253543acde4419e907a3cec15.jpg" /></div>
+![alt text](https://i.pinimg.com/564x/22/18/b1/2218b11253543acde4419e907a3cec15.jpg)
