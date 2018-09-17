@@ -1,20 +1,14 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
-////////////////////////////////////////////////////////////
-
+// Copyright (c) 2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/camera/DevCamera.h>
+#include <Nero/camera/AdvancedCamera.h>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
-    Camera::Camera(const sf::Vector2f& size, const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio):
+    Camera::Camera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio):
         m_DefaultPosition(defaultPos),
         m_PanningSpeed(panSpeed),
         m_DefaultPanningSpeed(panSpeed),
@@ -28,12 +22,12 @@ namespace nero
         m_View()
     {
         m_View.setCenter(defaultPos);
-        m_View.setSize(sf::Vector2f(size.x, size.y));
+        m_View.setSize(sf::Vector2f(viewSize.x, viewSize.y));
     }
 
     Camera::~Camera()
     {
-        //dtor
+        //Empty
     }
 
     void Camera::handleEvent(const sf::Event& event)
@@ -69,34 +63,39 @@ namespace nero
         }
     }
 
-    void Camera::update(const sf::Time& deltaTime)
+    void Camera::update(const sf::Time& timeStep)
     {
         sf::Transform t;
         t.rotate(m_Rotation);
         m_Pan = t * m_Pan;
-        m_View.move(m_Pan * deltaTime.asSeconds());
+        m_View.move(m_Pan * timeStep.asSeconds());
 
         m_Pan = sf::Vector2f(0.f, 0.f);
     }
 
+    void Camera::render()
+    {
+        //Empty
+    }
+
     void Camera::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
     {
-
+        //Empty
     }
 
     void Camera::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
     {
-
+        //Empty
     }
 
     void Camera::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
     {
-
+        //Empty
     }
 
     void Camera::handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse)
     {
-
+        //Empty
     }
 
     void Camera::panUp()

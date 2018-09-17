@@ -9,7 +9,7 @@
 
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/object/Object.h>
+#include <Nero/object/Object.h>
 //STD
 #include <algorithm>
 #include <cassert>

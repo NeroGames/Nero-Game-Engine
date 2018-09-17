@@ -7,7 +7,7 @@
 //
 ////////////////////////////////////////////////////////////
 
-#include <NERO/object/LayerActionObject.h>
+#include <Nero/object/LayerActionObject.h>
 
 namespace nero
 {

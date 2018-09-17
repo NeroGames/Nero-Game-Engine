@@ -12,7 +12,7 @@
 
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/object/Object.h>
+#include <Nero/object/Object.h>
 //SFML
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/String.hpp>

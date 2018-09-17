@@ -9,9 +9,9 @@
 
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/object/SpriteObject.h>
-#include <NERO/object/MeshObject.h>
-#include <NERO/object/PhysicObject.h>
+#include <Nero/object/SpriteObject.h>
+#include <Nero/object/MeshObject.h>
+#include <Nero/object/PhysicObject.h>
 //BOX2D
 #include <Box2D/Dynamics/b2Body.h>
 ////////////////////////////////////////////////////////////

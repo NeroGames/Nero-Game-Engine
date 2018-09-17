@@ -9,7 +9,7 @@
 
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/object/LayerObject.h>
+#include <Nero/object/LayerObject.h>
 ////////////////////////////////////////////////////////////
 
 namespace nero
@@ -106,6 +106,44 @@ namespace nero
                 }
 
                 layerJson["meshed_table"] = meshedJsonTab;
+
+                return layerJson;
+            }
+
+            case Object::Animation_Object:
+            {
+                layerJson["type"] = "animation_layer";
+
+                std::vector<nlohmann::json> aniamtionJsonTab;
+
+                auto childTab = getAllChild();
+
+                for(auto it = childTab->begin(); it != childTab->end(); it++)
+                    aniamtionJsonTab.push_back((*it)->toJson());
+
+                layerJson["animation_table"] = aniamtionJsonTab;
+
+                return layerJson;
+            }
+
+            case Object::Animation_Meshed_Object:
+            {
+                layerJson["type"] = "animation_meshed_layer";
+
+                std::vector<nlohmann::json> meshedJsonTab;
+
+                auto childTab = getAllChild();
+
+                for(auto it = childTab->begin(); it != childTab->end(); it++)
+                {
+                    nlohmann::json meshedJson;
+                    meshedJson["animation"]     = (*it)->toJson();
+                    meshedJson["mesh"]          = (*it)->getFirstChild()->toJson();
+
+                    meshedJsonTab.push_back(meshedJson);
+                }
+
+                layerJson["animation_meshed_table"] = meshedJsonTab;
 
                 return layerJson;
             }

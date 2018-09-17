@@ -9,8 +9,8 @@
 
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/object/PhysicObject.h>
-#include <NERO/Utility.h>
+#include <Nero/object/PhysicObject.h>
+#include <Nero/utility/Utility.h>
 //BOX2D
 #include <Box2D/Dynamics/b2Fixture.h>
 ////////////////////////////////////////////////////////////

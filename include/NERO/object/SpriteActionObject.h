@@ -10,8 +10,8 @@
 #ifndef SPRITEACTIONOBJECT_H
 #define SPRITEACTIONOBJECT_H
 
-#include <NERO/object/SpriteObject.h>
-#include <NERO/object/Action.h>
+#include <Nero/object/SpriteObject.h>
+#include <Nero/model/Action.h>
 
 namespace nero
 {

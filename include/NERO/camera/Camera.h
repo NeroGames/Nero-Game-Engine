@@ -1,33 +1,30 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
-////////////////////////////////////////////////////////////
-
+// Copyright (c) 2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef CAMERA_H
 #define CAMERA_H
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/Utility.h>
+#include <Nero/utility/Utility.h>
 //SFML
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/View.hpp>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     class Camera
     {
         public:
-                                Camera(const sf::Vector2f& size, const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f), const float& panSpeed = 300.f, const float& rotSpeed = 0.5f, const float& zRatio = 0.99f);
+            typedef std::shared_ptr<Camera>    Ptr;
+
+        public:
+                                Camera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f), const float& panSpeed = 300.f, const float& rotSpeed = 0.5f, const float& zRatio = 0.99f);
             virtual            ~Camera();
 
             virtual void        handleEvent(const sf::Event& event);
-            virtual void        update(const sf::Time& deltaTime);
+            virtual void        update(const sf::Time& timeStep);
+            virtual void        render();
 
             //Handle inputs
             virtual void        handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
@@ -37,8 +34,9 @@ namespace nero
 
             //Set Settings
             void                setDefaultPosition(const sf::Vector2f& pos, bool update = true);
-            void                setDefaultZoom(const int& nTime, bool update = true);
             void                setDefaultRotation(const float& degree, bool update = true);
+            void                setDefaultZoom(const int& nTime, bool update = true);
+
 
             void                setPanningSpeed(const float& panSpeed);
             void                setRotationSpeed(const float& rotSpeed);
@@ -88,7 +86,4 @@ namespace nero
             float               m_ZoomingRatio;
     };
 }
-
-
-
 #endif // CAMERA_H

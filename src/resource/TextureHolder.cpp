@@ -1,157 +1,204 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
+// Copyright (c) 2018 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/resource/TextureHolder.h>
+#include <Nero/resource/TextureHolder.h>
+#include <Nero/utility/Utility.h>
 //BOOST
 #include <boost/filesystem.hpp>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
-    void TextureHolder::load(const std::string& folder)
+    TextureHolder::TextureHolder()
     {
+        m_Configuration = loadConfiguration(RESOURCE_CONFIGURATION)["texture"];
+    }
+
+    void TextureHolder::load()
+    {
+        nero_log("///////////////////////// LOADING TEXTURE //////////////////////");
+
+        const std::string folder_name = m_Configuration["folder"].get<std::string>();
+
+        nero_log("Folder : " + folder_name);
+        nero_log("");
+
         using namespace boost::filesystem;
-        path p(folder);
-        m_logMessage = "\nTexture_Holder-->Loading textures from \"" + p.string() +"\"";
+        path folder_path(folder_name);
+
+        if(!exists(folder_name))
+        {
+            nero_log("failed to load texture resource");
+            nero_log("folder not found : " + folder_name);
+            return;
+        }
 
         //Iterate over files in the folder
-        directory_iterator it{p};
+        directory_iterator it{folder_path};
         while (it != directory_iterator{})
         {
             //When we found a Texture
-            if(it->path().extension().string() != ".txt")
+            if(checkExtention(it->path().extension().string(), m_Configuration["extension"]))
             {
                 //Load the Texture
-                std::unique_ptr<sf::Texture> texture(new sf::Texture());
+
+                std::unique_ptr<sf::Texture> texture = make_unique<sf::Texture>();
+
+                const std::string textureName = it->path().filename().stem().string();
 
                 if (!texture->loadFromFile(it->path().string()))
-                    throw std::runtime_error("TextureHolder::load - Failed to load " + it->path().filename().string());
-
-                //get the texture in m_TextureMap
-                std::string textureId = it->path().filename().stem().string();
-                m_logMessage += "\nTexture_Holder-->Texture loaded : \"" + textureId + "\"";
-
-                //Read the .txt file to retrieve sprite rectangles
-                std::string file = replaceFileExtension(it->path().string(), "txt");
-
-                //if the file existe, the texture get several sprites
-                if (exists(file))
                 {
-                    std::ifstream inStream(replaceFileExtension(it->path().string(), "txt"));
+                    nero_log("failed to load texture : " + textureName);
+                    it++;
+                    continue;
+                }
 
+                //Read the .txt file to retrieve sprite bound
+                std::string txtHelper   = replaceFileExtension(it->path().string(), "txt");
+                std::string jsonHelper  = replaceFileExtension(it->path().string(), "json");
+
+                if (exists(txtHelper))// .txt helper file exist, the texture get several sprites
+                {
+                    std::ifstream inStream(txtHelper);
                     //Split each line to retrieve the necessary information
+                    const std::string separatorString = m_Configuration["separator"].get<std::string>();
+                    char separator = separatorString[0];
                     std::string line;
+
                     while (std::getline(inStream, line))
                     {
-                        std::vector<std::string> sprite = splitString(line, '-');
+                        std::vector<std::string> sprite = splitString(line, separator);
 
-                        std::string spriteId    = sprite[0];
-                        int rectLeft            = std::stoi(sprite[1]);
-                        int rectTop             = std::stoi(sprite[2]);
-                        int rectWidth           = std::stoi(sprite[3]);
-                        int rectHeith           = std::stoi(sprite[4]);
+                        std::string spriteName      = sprite[0];
+                        int rectLeft                = std::stoi(sprite[1]);
+                        int rectTop                 = std::stoi(sprite[2]);
+                        int rectWidth               = std::stoi(sprite[3]);
+                        int rectHeight              = std::stoi(sprite[4]);
 
-                        sf::IntRect spriteRect = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeith);
+                        sf::IntRect spriteBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
 
-                        insertSpriteRect(textureId, spriteId, spriteRect);
-                        m_SpriteTab.push_back(spriteId);
+                        addSpriteBound(textureName, spriteName, spriteBound);
+                        m_SpriteTable.push_back(spriteName);
 
-                        m_logMessage += "\nTexture_Holder-->Sprite Detected : \"" + spriteId + "\" in texture \"" + textureId + "\"";
-
+                        nero_log("loaded : " + spriteName);
                     }
                 }
-                else //the texture is the sprite
+                else if(exists(jsonHelper))
                 {
-                    sf::IntRect spriteRect = sf::IntRect(0, 0, texture->getSize().x, texture->getSize().y);
+                    nlohmann::json helper = loadJson(jsonHelper);
 
-                    insertSpriteRect(textureId, textureId, spriteRect);
-                    m_SpriteTab.push_back(textureId);
+                    nlohmann::json frame_table = helper["frames"];
 
-                    m_logMessage += "\nTexture_Holder-->Sprite Detected : \"" + textureId + "\" in texture \"" + textureId + "\"";
+                    for (auto& frame : frame_table)
+                    {
+                        std::string spriteName      = removeFileExtension(frame["filename"].get<std::string>());
+                        int rectLeft                = frame["x"];
+                        int rectTop                 = frame["y"];
+                        int rectWidth               = frame["w"];
+                        int rectHeight              = frame["h"];
+
+                        sf::IntRect spriteBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
+
+                        addSpriteBound(textureName, spriteName, spriteBound);
+                        m_SpriteTable.push_back(spriteName);
+
+                        nero_log("loaded : " + spriteName);
+                    }
+                }
+                else //helper file not exist, texture is the sprite
+                {
+                    sf::IntRect spriteBound = sf::IntRect(0, 0, texture->getSize().x, texture->getSize().y);
+
+                    addSpriteBound(textureName, textureName, spriteBound);
+                    m_SpriteTable.push_back(textureName);
+
+                    nero_log("loaded : " + textureName);
                 }
 
                 //Insert the texture in m_TextureMap
-                insertTexture(textureId, std::move(texture));
+                addTexture(textureName, std::move(texture));
             }
 
             it++;
         }
     }
 
-    void TextureHolder::insertTexture(std::string textureId, std::unique_ptr<sf::Texture> texture)
+    void TextureHolder::addTexture(std::string textureName, std::unique_ptr<sf::Texture> texture)
     {
-        auto inserted = m_TextureMap.insert(std::make_pair(textureId, std::move(texture)));
-        assert(inserted.second);
+        auto inserted = m_TextureMap.insert(std::make_pair(textureName, std::move(texture)));
+
+        if(!inserted.second)
+        {
+            nero_log("failed to store texture " + textureName);
+        }
     }
 
-    void TextureHolder::insertSpriteRect(std::string textureId, std::string spriteId, sf::IntRect spriteRect)
+    void TextureHolder::addSpriteBound(std::string textureName, std::string spriteName, sf::IntRect spriteBound)
     {
-        m_SpriteRectMap[textureId][spriteId] = spriteRect;
+        m_SpriteMap[textureName][spriteName] = spriteBound;
     }
 
-    sf::Texture& TextureHolder::getTexture(std::string textureId)
+    sf::Texture& TextureHolder::getTexture(std::string textureName)
     {
-        auto found = m_TextureMap.find(textureId);
+        auto found = m_TextureMap.find(textureName);
         assert(found != m_TextureMap.end());
 
-            return *found->second;
+        return *found->second;
     }
 
-    const sf::Texture& TextureHolder::getTexture(std::string textureId) const
+    const sf::Texture& TextureHolder::getTexture(std::string textureName) const
     {
-        auto found = m_TextureMap.find(textureId);
+        auto found = m_TextureMap.find(textureName);
         assert(found != m_TextureMap.end());
 
-            return *found->second;
+        return *found->second;
     }
 
-    const sf::Texture& TextureHolder::getSpriteTexture(std::string spriteId) const
+    const sf::Texture& TextureHolder::getSpriteTexture(std::string spriteName) const
     {
-        std::string textureId;
+        std::string textureName;
 
-        for(auto t_it = m_SpriteRectMap.begin(); t_it != m_SpriteRectMap.end(); t_it++)
+        for(auto t_it = m_SpriteMap.begin(); t_it != m_SpriteMap.end(); t_it++)
         {
             for(auto r_it = t_it->second.begin(); r_it != t_it->second.end(); r_it++)
             {
-               if(r_it->first == spriteId)
+               if(r_it->first == spriteName)
                     return getTexture(t_it->first);
             }
 
         }
     }
 
-    sf::IntRect TextureHolder::getSpriteRect(std::string spriteId) const
+    sf::IntRect TextureHolder::getSpriteBound(std::string spriteName) const
     {
-        for(auto t_it = m_SpriteRectMap.begin(); t_it != m_SpriteRectMap.end(); t_it++)
+        for(auto t_it = m_SpriteMap.begin(); t_it != m_SpriteMap.end(); t_it++)
         {
             for(auto r_it = t_it->second.begin(); r_it != t_it->second.end(); r_it++)
             {
-               if(r_it->first == spriteId)
+               if(r_it->first == spriteName)
                     return r_it->second;
             }
 
         }
     }
 
-    const std::vector<std::string>& TextureHolder::getSpriteTab() const
+    const std::vector<std::string>& TextureHolder::getSpriteTable() const
     {
-        return m_SpriteTab;
+        return m_SpriteTable;
     }
 
     int TextureHolder::getSpriteCount() const
     {
-        return m_SpriteTab.size();
+        return m_SpriteTable.size();
     }
 
-    std::string TextureHolder::getLog() const
+    void TextureHolder::printSpriteTable() const
     {
-        return m_logMessage;
-    }
+        nero_log("TextureHolder : List of Sprite (" + _s(m_SpriteTable.size()) + ")");
 
+        for(std::string sprite : m_SpriteTable)
+            nero_log(sprite);
+    }
 }

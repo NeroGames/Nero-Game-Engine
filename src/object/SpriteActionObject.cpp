@@ -7,7 +7,7 @@
 //
 ////////////////////////////////////////////////////////////
 
-#include <NERO/object/SpriteActionObject.h>
+#include <Nero/object/SpriteActionObject.h>
 
 namespace nero
 {

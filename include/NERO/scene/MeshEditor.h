@@ -12,7 +12,7 @@
 
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/object/Mesh.h>
+#include <Nero/model/Mesh.h>
 //STD
 #include <vector>
 ////////////////////////////////////////////////////////////
@@ -22,11 +22,12 @@ namespace nero
     class MeshEditor
     {
         public:
+            typedef std::shared_ptr<MeshEditor> Ptr;
             typedef sf::RectangleShape  Vertex;
             typedef std::vector<Mesh*>  MeshTab;
 
 
-                                    MeshEditor(sfg::Canvas::Ptr& renderCanvas);
+                                    MeshEditor(sfg::Canvas::Ptr renderCanvas);
             virtual                ~MeshEditor();
 
             void                    handleEvent(const sf::Event& event);
@@ -58,7 +59,7 @@ namespace nero
 
             int                                     m_MeshCount;
 
-            sfg::Canvas::Ptr&                       m_RenderCanvas;
+            sfg::Canvas::Ptr                        m_RenderCanvas;
             sf::Vector2f                            m_LastMousePosition;
             std::function<void()>                   m_EngineUndo;
     };

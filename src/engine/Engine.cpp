@@ -1,22 +1,16 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2018 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/engine/Engine.h>
-#include <NERO/Utility.h>
+#include <Nero/engine/Engine.h>
+#include <Nero/utility/Utility.h>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     ////////////////////////////////////////////////////////////
-    Engine::Engine(const sf::String& winTitle, const float& winWidth, const float& winHeight):
+    Engine::Engine(const float& winWidth, const float& winHeight, const sf::String& winTitle):
         m_WinTitle(winTitle),
         m_WinWidth(winWidth),
         m_WinHeight(winHeight),
@@ -50,8 +44,8 @@ namespace nero
                 //retrieve 1/60 second in the accumulated time
                 timeSinceLastUpdate -= TIME_PER_FRAME;
 
-                //1... handle user input
-                handleEvents();
+                //1... handle user inputs
+                handleEvent();
                 //2... update the game
                 update(TIME_PER_FRAME);
                 //3... render the game

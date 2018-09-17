@@ -10,8 +10,8 @@
 #ifndef PHYSICACTIONOBJECT_H
 #define PHYSICACTIONOBJECT_H
 
-#include <NERO/object/PhysicObject.h>
-#include <NERO/object/Action.h>
+#include <Nero/object/PhysicObject.h>
+#include <Nero/model/Action.h>
 
 namespace nero
 {

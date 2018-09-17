@@ -9,12 +9,12 @@
 
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/scene/MeshEditor.h>
+#include <Nero/scene/MeshEditor.h>
 ////////////////////////////////////////////////////////////
 
 namespace nero
 {
-    MeshEditor::MeshEditor(sfg::Canvas::Ptr& renderCanvas):
+    MeshEditor::MeshEditor(sfg::Canvas::Ptr renderCanvas):
         m_RenderCanvas(renderCanvas),
         m_LastMousePosition(0.f, 0.f),
         //
@@ -572,6 +572,11 @@ namespace nero
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
             sf::Vector2f diff = world_pos - m_LastMousePosition;
+
+            if(std::abs(diff.x) > std::abs(diff.y))
+                diff.y = 0.f;
+            else
+                diff.x = 0.f;
 
             if(!m_SelectedVertexTab.empty() && m_SelectedMesh)
             {

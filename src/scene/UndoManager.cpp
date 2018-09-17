@@ -1,4 +1,4 @@
-#include <NERO/scene/UndoManager.h>
+#include <Nero/scene/UndoManager.h>
 #include <iostream>
 #include <algorithm>
 
@@ -6,6 +6,7 @@ namespace nero
 {
     UndoManager::UndoManager():
         m_UndoState(-1)
+        ,m_UndoTab()
     {
         //ctor
     }

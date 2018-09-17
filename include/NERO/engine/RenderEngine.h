@@ -1,28 +1,29 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 #ifndef RENDERENGINE_H
 #define RENDERENGINE_H
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/engine/Engine.h>
-#include <NERO/scene/Scene.h>
-#include <NERO/camera/Camera.h>
-#include <NERO/resource/Resource.h>
-#include <NERO/scene/ObjectManager.h>
+#include <Nero/engine/Engine.h>
+#include <Nero/scene/Scene.h>
+#include <Nero/camera/Camera.h>
+#include <Nero/resource/ResourceManager.h>
+#include <Nero/scene/SceneBuilder.h>
+#include <Nero/engine/StartupScreen.h>
+#include <Nero/utility/ConstantPool.h>
 //SFGUI
 #include <SFGUI/SFGUI.hpp>
 #include <SFGUI/Desktop.hpp>
 #include <SFGUI/Canvas.hpp>
+//BOOST
+#include <boost/filesystem.hpp>
+//STD
+#include <future>
 ////////////////////////////////////////////////////////////
 
+//*
 namespace
 {
     class ConfigLog
@@ -38,27 +39,29 @@ namespace
     };
 
     bool result = ConfigLog::config();
-}
-
+}//*/
 
 namespace nero
 {
     class RenderEngine : public Engine
     {
         public: //Methods
-                                            RenderEngine(const sf::String& title = "Nero Render Engine", const float& windowWidth = 800.f, const float& windowHeight = 600.f);
+                                            RenderEngine(const float& windowWidth = 800.f, const float& windowHeight = 600.f, const sf::String& title = "Nero Render Engine");
+                                            RenderEngine(StartupScreen::Ptr startupScreen, const float& windowWidth = 800.f, const float& windowHeight = 600.f, const sf::String& title = "Nero Render Engine");
             virtual                        ~RenderEngine();
 
             template <typename T>
-            void                            setScene(const sf::String& scene_name);
+            void                            setScene(const sf::String& sceneName);
 
         protected: //Methods
-            void                            handleEvents();
-            void                            update(const sf::Time& time_step);
+            void                            handleEvent();
+            void                            update(const sf::Time& timeStep);
             void                            render();
 
             void                            handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
 
+        private: //Start thread function
+            int                             startEngine(bool& engineStarted, const float minTime);
 
         //Private Attibuts
         private:
@@ -66,36 +69,38 @@ namespace nero
             sfg::Desktop                    m_Desktop;
 
             sfg::Canvas::Ptr                m_RenderCanvas;
-            sf::View                        m_CanvasDefaultView;
+            sf::View                        m_FrontView;
 
             Scene::Ptr                      m_Scene;
             std::function<Scene::Ptr()>     m_CreateScene;
-            SceneSettings                   m_SceneSettings;
+            nlohmann::json                  m_SceneJson;
 
-            Camera                          m_Camera;
-            ResourceManager                 m_ResourceManager;
-            ObjectManager                   m_ObjectManager;
+            Camera::Ptr                     m_Camera;
+            ResourceManager::Ptr            m_ResourceManager;
+            SceneBuilder::Ptr               m_SceneBuilder;
+            StartupScreen::Ptr              m_StartupScreen;
 
-            nlohmann::json                 m_SceneJson;
+            std::future<int>                m_StartEngineFuture;
+            bool                            m_EngineStarted;
     };
 
     ////////////////////////////////////////////////////////////
     template <typename T>
-    void RenderEngine::setScene(const sf::String& scene_name)
+    void RenderEngine::setScene(const sf::String& sceneName)
     {
         //Register a function that can return the Scene that has been set to the engine
         m_CreateScene =     [this] ()
                             {
-                                return Scene::Ptr(new T(Scene::Context(m_RenderCanvas, m_CanvasDefaultView, m_Camera, m_ResourceManager)));
+                                return Scene::Ptr(new T(Context(m_RenderCanvas, m_FrontView, m_Camera, m_ResourceManager)));
                             };
 
         //create the scene
         m_Scene = m_CreateScene();
 
         //update the engine window title
-        this->setWinTitle(scene_name);
+        setWinTitle(sceneName);
 
-        std::string file = NERO_FOLDER + "/" + scene_name + "/" + scene_name +  ".json";
+        std::string file = WORKSPACE_FOLDER + "/" + sceneName + "/" + sceneName +  ".json";
 
         using namespace boost::filesystem;
 
@@ -111,9 +116,9 @@ namespace nero
 
             m_SceneJson = scene;
 
-            m_ObjectManager.loadScene(scene);
-            m_ObjectManager.setWorld(m_Scene->m_World);
-            m_ObjectManager.buildScene(m_Scene->m_RootObject);
+            m_SceneBuilder->loadScene(scene);
+            m_SceneBuilder->setPhysicWorld(m_Scene->m_PhysicWorld);
+            m_SceneBuilder->buildScene(m_Scene->m_RootObject);
             m_Scene->init();
         }
     }

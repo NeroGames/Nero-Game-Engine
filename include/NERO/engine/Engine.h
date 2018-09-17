@@ -1,34 +1,27 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 #ifndef ENGINE_H
 #define ENGINE_H
-
 ///////////////////////////HEADERS//////////////////////////
 //SFML
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     class Engine
     {
         public: //Method
-                                Engine(const sf::String& winTitle, const float& winWidth, const float& winHeight);
+                                Engine(const float& winWidth, const float& winHeight, const sf::String& winTitle);
             virtual            ~Engine();
             virtual void        run();
 
         protected: //Method
-            virtual void        handleEvents()                         = 0;
-            virtual void        update(const sf::Time& elapsedTime)    = 0;
-            virtual void        render()                               = 0;
+            virtual void        handleEvent()                          = 0;
+            virtual void        update(const sf::Time& timeStep)        = 0;
+            virtual void        render()                                = 0;
 
             //Getter
             sf::String          getWinTitle()   const;

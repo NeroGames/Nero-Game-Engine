@@ -4,7 +4,7 @@
 #include <map>
 #include <unordered_set>
 #include <vector>
-#include <NERO/object/Object.h>
+#include <Nero/object/Object.h>
 
 namespace nero
 {
@@ -32,8 +32,6 @@ namespace nero
             std::map<std::string, std::unordered_set<std::string>> m_CollisionMap;
             std::map<std::string, std::pair<int, int>> m_CollisionRuleMap;
             std::vector<int> m_CatecotryBitTab;
-
-
     };
 }
 

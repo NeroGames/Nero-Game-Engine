@@ -1,21 +1,27 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2019 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
 #ifndef SCENE_H
 #define SCENE_H
-
+///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/scene/Utility.h>
-#include <NERO/scene/ShapeRender.h>
-#include <NERO/object/Object.h>
-#include <NERO/object/Collision.h>
-#include <NERO/camera/Camera.h>
-#include <NERO/resource/Resource.h>
-#include <NERO/scene/SceneObjectManager.h>
+#include <Nero/scene/SceneUtil.h>
+#include <Nero/scene/SoundManager.h>
+#include <Nero/scene/ScriptManager.h>
+#include <Nero/scene/ShapeRenderer.h>
+#include <Nero/scene/ObjectManager.h>
+#include <Nero/model/Collision.h>
+#include <Nero/object/Object.h>
+//SFGUI
+#include <SFGUI/Canvas.hpp>
 //SFML
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-//SFGUI
-#include <SFGUI/Canvas.hpp>
-
+//LUA
+#include <lua/lua.hpp>
+////////////////////////////////////////////////////////////
 namespace nero
 {
     class Scene : public b2ContactListener
@@ -23,86 +29,76 @@ namespace nero
         public:
             typedef std::shared_ptr<Scene> Ptr;
 
-            struct Context
-            {
-                Context(sfg::Canvas::Ptr& renderCanvas, sf::View& canvasDefaultView, Camera& camera, ResourceManager& resourceManager);
-
-                sfg::Canvas::Ptr&   renderCanvas;
-                sf::View&           canvasDefaultView;
-                Camera&             camera;
-                ResourceManager&    resourceManager;
-            };
-        //----------------------------------------------------------------------------------->
-            //Constructor & destructor
+        public:
                                         Scene(Context context);
             virtual                    ~Scene();
-        //----------------------------------------------------------------------------------->
-            //Update, render, event functions
+
+        public:
             virtual void                handleEvent(const sf::Event& event);
-            virtual void                update(SceneSettings* settings);
+            virtual void                update(const sf::Time& timeStep);
             virtual void                render();
             virtual void                renderShape();
-            virtual void                renderOnFrontScreen();
+            virtual void                renderFrontScreen();
 
         private:
-            // Callbacks for derived classes.
-            virtual void                BeginContact(b2Contact* contact);
-            virtual void                EndContact(b2Contact* contact);
-            virtual void                PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
-            virtual void                PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
-        //----------------------------------------------------------------------------------->
+            virtual void                beginContact(b2Contact* contact);
+            virtual void                endContact(b2Contact* contact);
+            virtual void                preSolve(b2Contact* contact, const b2Manifold* oldManifold);
+            virtual void                postSolve(b2Contact* contact, const b2ContactImpulse* impulse);
+
         protected:
+            virtual void                init();
+            //Collision
             virtual void                handleCollisionContactBegin(Collision collision);
             virtual void                handleCollisionContactEnd(Collision collision);
             virtual void                handleCollisionPreSolveContact(Collision collision);
             virtual void                handleCollisionPostSolveContact(Collision collision);
-
-
+            //Input
             virtual void                handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
-            virtual void                handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
+            virtual void                handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
             virtual void                handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
-
-            virtual void                init();
-
+            void                        handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse);
+            //Gravity
             void                        setGravity(const sf::Vector2f& gravity);
             void                        setGravity(float gravity);
-
-            void                        setCameraTarget(PhysicObject::Ptr target, float offset_left = 100.f, float offset_right = 0.f, float offset_up = 100.f, float offset_down = 100.f);
-            void                        cameraFollowTarget();
+            //Camera Target
+            void                        setCameraTarget(PhysicObject::Ptr target);
+            void                        setCameraTargetOffset(const float left, const float right, const float up, const float down);
             void                        setCameraFollowTarget(bool flag);
+            void                        cameraFollowTarget();
 
         protected:
+            //Friend
             friend class                DestructionListener;
             friend class                BoundaryListener;
             friend class                ContactListener;
-
-            friend class                DevScene;
+            friend class                AdvancedScene;
             friend class                SceneManager;
             friend class                RenderEngine;
-
-
-            sfg::Canvas::Ptr&           m_RenderCanvas;
+            //Main attribute
             Context                     m_Context;
-            ShapeRender                 m_ShapeRender;
-
+            sfg::Canvas::Ptr            m_RenderCanvas;
+            b2World*                    m_PhysicWorld;
+            Object::Ptr                 m_RootObject;
+            PhysicObject::Ptr           m_CameraTarget;
+            std::string                 m_SceneName;
+            lua_State*                  L;
+            //Setting
+            SceneSetting                m_SceneSetting;
+            CameraSetting               m_CameraSetting;
+            SoundSetting                m_SoundSetting;
+            CameraTargetOffset          m_CameraTargetOffset;
+            //Manager
+            ShapeRenderer               m_ShapeRenderer;
+            ObjectManager::Ptr          m_ObjectManager;
+            SoundManager::Ptr           m_SoundManager;
+            ScriptManager::Ptr          m_ScriptManager;
+            //Utility
+            int32                       m_PointCount;
             sf::Text                    m_Text;
             sf::String                  m_PauseMessage;
-
-            b2World*                    m_World;
-            int32                       m_PointCount;
             ContactPoint                m_Points[k_maxContactPoints];
-
-            Object::Ptr                 m_RootObject;
-            SceneObjectManager          m_ObjectManager;
-
-            PhysicObject::Ptr           m_CameraTarget;
-            float                       m_CameraTargetOffsetLeft;
-            float                       m_CameraTargetOffsetRight;
-            float                       m_CameraTargetOffsetUp;
-            float                       m_CameraTargetOffsetDown;
             bool                        m_CameraFollowTarget;
     };
 }
-
-
 #endif // SCENE_H

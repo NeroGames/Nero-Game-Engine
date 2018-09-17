@@ -1,26 +1,24 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 #ifndef SCENEMANAGER_H
 #define SCENEMANAGER_H
-
-#include <NERO/scene/DevScene.h>
-
+///////////////////////////HEADERS//////////////////////////
+//NERO
+#include <Nero/scene/AdvancedScene.h>
+////////////////////////////////////////////////////////////
 namespace nero
 {
-
     class SceneManager
     {
         public:
-                                            SceneManager(Scene::Context context);
+                typedef std::shared_ptr<SceneManager> Ptr;
 
-            void                            update();
+        public:
+                                            SceneManager(Context context);
+
+            void                            update(const sf::Time& timeStep);
             void                            handleEvent(sf::Event& event);
 
             void                            render();
@@ -28,74 +26,62 @@ namespace nero
             void                            renderDebug();
             void                            renderOnFrontScreen();
 
-            std::vector<sf::String>         getSceneList();
+            std::vector<sf::String>         getSceneTable();
             int                             getSceneCount();
 
             template <typename T>
-            void                            registerScene(sf::String name);
-
-            void                            setScene(sf::String name);
-
+            void                            addScene(std::string name);
+            void                            setScene(std::string name);
             void                            restartScene();
-
-            b2World*                        getSceneWorld() const;
-            ObjectManager*                  getObjectManager();
-            ObjectManager*                  getObjectManager(std::string name);
-            UndoManager*                    getUndoManager();
-            UndoManager*                    getUndoManager(std::string name);
-            std::string                     getSceneName();
-
-            void                            setCameraSettings(CameraSettings cameraSettings);
-            CameraSettings&                 getCameraSetting();
-
-            MeshEditor*                     getMeshEditor();
-
-            SceneSettings&                  getSceneSettings();
-            Object::Ptr                     getRootObject();
             void                            buildScene();
 
+            b2World*                        getPhysicWorld() const;
+            MeshEditor::Ptr                 getMeshEditor();
+            SceneBuilder::Ptr               getSceneBuilder();
+            UndoManager::Ptr                getUndoManager();
+            SoundManager::Ptr               getSoundManager();
+            SceneBuilder::Ptr               getSceneBuilder(std::string name);
+            UndoManager::Ptr                getUndoManager(std::string name);
 
-    private:
+            Object::Ptr                     getRootObject();
+            std::string                     getSceneName();
+            CameraSetting&                  getCameraSetting();
+            SceneSetting&                   getSceneSetting();
+
+        private:
             void                            handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
             void                            handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
             void                            handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
 
-
         private:
-            SceneSettings                   m_SceneSettings;
+
+            std::map<sf::String, std::pair<AdvancedScene::Ptr, std::function<Scene::Ptr()>>>     m_SceneFactoryMap;
+
+            AdvancedScene::Ptr              m_AdvancedScene;
+            std::vector<sf::String>         m_SceneTable;
+            Context                         m_Context;
 
             bool                            m_IsShiftOriginUp;
             bool                            m_IsShiftOriginDown;
             bool                            m_IsShiftOriginLeft;
             bool                            m_IsShiftOriginRight;
-
             bool                            m_IsLeftShift;
             bool                            m_IsMouseRightButton;
-
             b2Vec2                          m_LastMousePosition;
             b2Vec2                          m_ViewCenter;
-
             float                           m_ShitftOriginSpeed;
-
-            std::vector<sf::String>         m_SceneList;
-
-            Scene::Context                  m_Context;
-            DevScene::Ptr                   m_DevScene;
-            sf::String                      m_SceneName;
-
-            std::map<sf::String, std::pair<DevScene::Ptr, std::function<Scene::Ptr()>>>     m_Factories;
 
     };
 
     template <typename T>
-    void SceneManager::registerScene(sf::String name)
+    void SceneManager::addScene(std::string name)
     {
-        //Create a DevScene;
-        m_Factories[name].first = DevScene::Ptr(new DevScene(m_Context));
-        m_Factories[name].first->setName(name);
-        m_SceneList.push_back(name);
+        //Create a AdvancedScene;
+        m_SceneFactoryMap[name].first = AdvancedScene::Ptr(new AdvancedScene(m_Context));
+        m_SceneFactoryMap[name].first->setName(name);
+        m_SceneTable.push_back(name);
 
-        m_Factories[name].second = [this] ()
+        m_SceneFactoryMap[name].second = [this] ()
         {
             return Scene::Ptr(new T(m_Context));
         };

@@ -1,5 +1,5 @@
-#include <NERO/scene/CollisionRule.h>
-#include <NERO/object/PhysicObject.h>
+#include <Nero/scene/CollisionRule.h>
+#include <Nero/object/PhysicObject.h>
 
 #include <iostream>
 namespace nero

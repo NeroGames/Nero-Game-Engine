@@ -2,8 +2,8 @@
 #define PHYSICOBJECTMANAGER_H
 
 #include <vector>
-#include <NERO/object/PhysicObject.h>
-#include <NERO/object/Mesh.h>
+#include <Nero/object/PhysicObject.h>
+#include <Nero/model/Mesh.h>
 #include <Box2D/Dynamics/b2World.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <Box2D/Dynamics/b2Body.h>

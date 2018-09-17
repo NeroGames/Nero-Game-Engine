@@ -10,8 +10,8 @@
 #ifndef LAYERACTIONOBJECT_H
 #define LAYERACTIONOBJECT_H
 
-#include <NERO/object/LayerObject.h>
-#include <NERO/object/Action.h>
+#include <Nero/object/LayerObject.h>
+#include <Nero/model/Action.h>
 
 namespace nero
 {

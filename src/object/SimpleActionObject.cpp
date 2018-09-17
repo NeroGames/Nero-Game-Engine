@@ -7,10 +7,10 @@
 //
 ////////////////////////////////////////////////////////////
 
-#include <NERO/object/SimpleActionObject.h>
+#include <Nero/object/SimpleActionObject.h>
 
 #include <iostream>
-#include <NERO/Utility.h>
+#include <Nero/utility/Utility.h>
 
 namespace nero
 {

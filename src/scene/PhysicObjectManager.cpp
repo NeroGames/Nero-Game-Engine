@@ -1,10 +1,10 @@
-#include <NERO/scene/PhysicObjectManager.h>
+#include <Nero/scene/PhysicObjectManager.h>
 
 #include <Box2D/Collision/Shapes/b2EdgeShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
 #include <Box2D/Collision/Shapes/b2ChainShape.h>
-#include <NERO/Utility.h>
+#include <Nero/utility/Utility.h>
 namespace nero
 {
     PhysicObjectManager::PhysicObjectManager():

@@ -12,8 +12,8 @@
 
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <NERO/object/Object.h>
-#include <NERO/object/Mesh.h>
+#include <Nero/object/Object.h>
+#include <Nero/model/Mesh.h>
 //SFML
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>

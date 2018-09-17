@@ -11,8 +11,8 @@
 #define SIMPLEACTIONOBJECT_H
 
 #include <map>
-#include <NERO/object/Object.h>
-#include <NERO/object/Action.h>
+#include <Nero/object/Object.h>
+#include <Nero/model/Action.h>
 
 namespace nero
 {

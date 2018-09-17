@@ -7,7 +7,7 @@
 //
 ////////////////////////////////////////////////////////////
 
-#include <NERO/object/PhysicActionObject.h>
+#include <Nero/object/PhysicActionObject.h>
 
 namespace nero
 {

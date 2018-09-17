@@ -1,13 +1,18 @@
-#include <NERO/scene/SceneManager.h>
-#include <NERO/Utility.h>
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2019 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
+///////////////////////////HEADERS//////////////////////////
+//NERO
+#include <Nero/scene/SceneManager.h>
+#include <Nero/utility/Utility.h>
+//STD
 #include <typeinfo>
-
-//TEst----------
-#include <NERO/resource/Resource.h>
+////////////////////////////////////////////////////////////
 
 namespace nero
 {
-    SceneManager::SceneManager(Scene::Context context):
+    SceneManager::SceneManager(Context context):
     m_Context(context),
     m_IsLeftShift(false),
     m_IsMouseRightButton(false),
@@ -21,53 +26,55 @@ namespace nero
         //
     }
 
-    void SceneManager::update()
+    void SceneManager::update(const sf::Time& timeStep)
     {
-        m_SceneSettings.viewCenter = m_ViewCenter;
-        m_DevScene->update(&m_SceneSettings);
+        if(!m_AdvancedScene->m_Scene)
+            return;
+
+        m_AdvancedScene->update(timeStep);
 
         if(m_IsShiftOriginLeft && m_IsLeftShift)
         {
-            m_DevScene->ShiftOrigin(b2Vec2(m_ShitftOriginSpeed, 0.0f));
+            m_AdvancedScene->shiftOrigin(b2Vec2(m_ShitftOriginSpeed, 0.0f));
         }
         if(m_IsShiftOriginRight && m_IsLeftShift)
         {
-            m_DevScene->ShiftOrigin(b2Vec2(-m_ShitftOriginSpeed, 0.0f));
+            m_AdvancedScene->shiftOrigin(b2Vec2(-m_ShitftOriginSpeed, 0.0f));
         }
         if(m_IsShiftOriginUp && m_IsLeftShift)
         {
-            m_DevScene->ShiftOrigin(b2Vec2(0.0f, m_ShitftOriginSpeed));
+            m_AdvancedScene->shiftOrigin(b2Vec2(0.0f, m_ShitftOriginSpeed));
         }
         if(m_IsShiftOriginDown && m_IsLeftShift)
         {
-            m_DevScene->ShiftOrigin(b2Vec2(0.0f, -m_ShitftOriginSpeed));
+            m_AdvancedScene->shiftOrigin(b2Vec2(0.0f, -m_ShitftOriginSpeed));
         }
     }
 
     void SceneManager::render()
     {
-        m_DevScene->m_Scene->render();
-    }
+        if(m_AdvancedScene->m_Scene)
+        {
+            m_AdvancedScene->m_Scene->render();
+            m_AdvancedScene->m_Scene->renderShape();
+            m_AdvancedScene->renderDebug();
 
-    void SceneManager::renderShape()
-    {
-        m_DevScene->m_Scene->renderShape();
-    }
+        }
 
-
-    void SceneManager::renderDebug()
-    {
-        m_DevScene->renderDebug();
     }
 
     void SceneManager::renderOnFrontScreen()
     {
-        m_DevScene->m_Scene->renderOnFrontScreen();
+        if(m_AdvancedScene->m_Scene)
+            m_AdvancedScene->m_Scene->renderFrontScreen();
     }
 
     void SceneManager::handleEvent(sf::Event& event)
     {
-        m_DevScene->m_Scene->handleEvent(event);
+        if(!m_AdvancedScene->m_Scene)
+            return;
+
+        m_AdvancedScene->m_Scene->handleEvent(event);
 
         switch(event.type)
         {
@@ -100,7 +107,7 @@ namespace nero
         if(isPressed)
         {
             if(key == sf::Keyboard::B)
-                m_DevScene->LaunchBomb();
+                m_AdvancedScene->launchBomb();
         }
 
         if(key == sf::Keyboard::Z)
@@ -127,13 +134,13 @@ namespace nero
         if(mouse.button == sf::Mouse::Left && isPressed == true)
         {
             if(m_IsLeftShift)
-                m_DevScene->ShiftMouseDown(p);
+                m_AdvancedScene->shiftMouseDown(p);
             else
-                m_DevScene->MouseDown(p);
+                m_AdvancedScene->mouseDown(p);
         }
         else if (mouse.button == sf::Mouse::Left && isPressed == false)
         {
-            m_DevScene->MouseUp(p);
+            m_AdvancedScene->mouseUp(p);
         }
         else if (mouse.button == sf::Mouse::Right)
         {
@@ -153,119 +160,115 @@ namespace nero
         sf::Vector2f world_pos = canvas_to_world(sf::Vector2f(mouse.x, mouse.y), m_Context.renderCanvas);
         b2Vec2 p = sf_to_b2(world_pos, SCALE);
 
-        m_DevScene->MouseMove(p);
+        m_AdvancedScene->mouseMove(p);
 
         if(m_IsMouseRightButton)
         {
             b2Vec2 diff = p - m_LastMousePosition;
-            m_DevScene->ShiftOrigin(-diff);
+            m_AdvancedScene->shiftOrigin(-diff);
             m_LastMousePosition = p;
         }
     }
 
-    std::vector<sf::String> SceneManager::getSceneList()
+    std::vector<sf::String> SceneManager::getSceneTable()
     {
-        return  m_SceneList;
+        return  m_SceneTable;
     }
 
     int SceneManager::getSceneCount()
     {
-        return m_SceneList.size();
+        return m_SceneTable.size();
     }
 
-    void SceneManager::setScene(sf::String name)
+    void SceneManager::setScene(std::string name)
     {
-        if(name != "")
-        {
-            m_SceneName = name;
+        auto found = m_SceneFactoryMap.find(name);
 
-            auto found = m_Factories.find(name);
-
-            m_DevScene =  found->second.first;
-        }
-
+        m_AdvancedScene =  found->second.first;
     }
 
     void SceneManager::restartScene()
     {
-//        auto found = m_Factories.find(m_SceneName);
+//        auto found = m_SceneFactoryMap.find(m_SceneName);
 //
-//        m_DevScene =  found->second.second();
+//        m_AdvancedScene =  found->second.second();
     }
 
-    b2World*  SceneManager::getSceneWorld() const
+    b2World*  SceneManager::getPhysicWorld() const
     {
-        return m_DevScene->m_Scene->m_World;
+        return m_AdvancedScene->m_Scene->m_PhysicWorld;
     }
 
-    ObjectManager* SceneManager::getObjectManager()
+    SceneBuilder::Ptr SceneManager::getSceneBuilder()
     {
-        return m_DevScene->getObjectManager();
+        return m_AdvancedScene->getSceneBuilder();
     }
 
-    ObjectManager* SceneManager::getObjectManager(std::string name)
+    SceneBuilder::Ptr SceneManager::getSceneBuilder(std::string name)
     {
-        auto found = m_Factories.find(name);
+        auto found = m_SceneFactoryMap.find(name);
 
-        return found->second.first->getObjectManager();
+        return found->second.first->getSceneBuilder();
     }
 
-    UndoManager* SceneManager::getUndoManager()
+    UndoManager::Ptr SceneManager::getUndoManager()
     {
-        return m_DevScene->getUndoManager();
+        return m_AdvancedScene->getUndoManager();
     }
 
-    UndoManager* SceneManager::getUndoManager(std::string name)
+    SoundManager::Ptr SceneManager::getSoundManager()
     {
-        auto found = m_Factories.find(name);
+        return nullptr;
+    }
+
+    UndoManager::Ptr SceneManager::getUndoManager(std::string name)
+    {
+        auto found = m_SceneFactoryMap.find(name);
 
         return found->second.first->getUndoManager();
     }
 
     std::string SceneManager::getSceneName()
     {
-        return m_DevScene->getName();
+        return m_AdvancedScene->m_SceneName;
     }
 
-    void SceneManager::setCameraSettings(CameraSettings cameraSettings)
+    MeshEditor::Ptr SceneManager::getMeshEditor()
     {
-        m_DevScene->setCameraSettings(cameraSettings);
-    }
-
-    CameraSettings& SceneManager::getCameraSetting()
-    {
-        m_DevScene->getCameraSettings();
-    }
-
-    SceneSettings& SceneManager::getSceneSettings()
-    {
-        return m_SceneSettings;
-    }
-
-    MeshEditor* SceneManager::getMeshEditor()
-    {
-        return m_DevScene->getObjectManager()->getMeshEditor();
+        return m_AdvancedScene->m_SceneBuilder->getMeshEditor();
     }
 
     Object::Ptr SceneManager::getRootObject()
     {
-        return m_DevScene->m_Scene->m_RootObject;
+        return m_AdvancedScene->m_Scene->m_RootObject;
     }
 
     void SceneManager::buildScene()
     {
-        if(m_DevScene->m_Scene)
+        if(m_AdvancedScene->m_Scene)
         {
-            m_DevScene->m_ObjectManager.destroyAllPhysicObject(m_DevScene->m_Scene->m_RootObject);
-            m_DevScene->m_Scene->m_RootObject->removeAllChild();
-            m_DevScene->m_Scene = nullptr;
+            m_AdvancedScene->m_SceneBuilder->destroyAllPhysicObject(m_AdvancedScene->m_Scene->m_RootObject);
+            m_AdvancedScene->m_Scene->m_RootObject->removeAllChild();
+            m_AdvancedScene->m_Scene = nullptr;
         }
 
-        m_DevScene->m_Scene = m_Factories[m_DevScene->m_Name].second();
-        m_DevScene->init();
-        m_DevScene->m_ObjectManager.setWorld(m_DevScene->m_Scene->m_World);
-        m_DevScene->m_ObjectManager.buildScene(m_DevScene->m_Scene->m_RootObject);
-        m_DevScene->m_Scene->init();
+        m_AdvancedScene->m_Scene = m_SceneFactoryMap[m_AdvancedScene->m_SceneName].second();
+        m_AdvancedScene->init();
+        m_AdvancedScene->m_SceneBuilder->setPhysicWorld(m_AdvancedScene->m_Scene->m_PhysicWorld);
+        m_AdvancedScene->m_SceneBuilder->buildScene(m_AdvancedScene->m_Scene->m_RootObject);
+        m_AdvancedScene->m_Scene->init();
     }
+
+    CameraSetting& SceneManager::getCameraSetting()
+    {
+       return m_AdvancedScene->m_CameraSetting;
+    }
+
+    SceneSetting& SceneManager::getSceneSetting()
+    {
+         return m_AdvancedScene->m_SceneSetting;
+    }
+
+
 
 }
