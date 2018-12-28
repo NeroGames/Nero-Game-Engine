@@ -1,3 +1,1 @@
-# Nero Game Engine 0.8.0 Unstable | Coming soon !
-
-![alt text](https://i.pinimg.com/564x/22/18/b1/2218b11253543acde4419e907a3cec15.jpg)
+![alt text](https://i.pinimg.com/originals/66/d2/fa/66d2fa26d2859503beb4a74ab553c2a0.png)
