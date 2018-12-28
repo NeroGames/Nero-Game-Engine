@@ -9,11 +9,12 @@ namespace nero
 {
     ////////////////////////////////////////////////////////////
     //Context
-    Context::Context(sfg::Canvas::Ptr renderCanvas, sf::View& frontView, Camera::Ptr camera, ResourceManager::Ptr resourceManager):
+    Context::Context(sfg::Canvas::Ptr renderCanvas, sf::View& frontView, Camera::Ptr camera, ResourceManager::Ptr resourceManager, bool renderEngine):
         renderCanvas(renderCanvas)
         ,frontView(frontView)
         ,camera(camera)
         ,resourceManager(resourceManager)
+        ,renderEngine(renderEngine)
     {
         //Empty
     }
@@ -62,17 +63,15 @@ namespace nero
     //SceneSetting
     SceneSetting::SceneSetting()
     {
-        hz = 30.0f;
+        hz = 40.0f;
         viewCenter.Set(0.0f, 0.0f);
         gravity.Set(0.f, 10.f);
 
         velocityIterations  = 8;
         positionIterations  = 3;
 
-        canvasColor         = sf::Color::Black;
-
         drawAxis            = true;
-        drawGrid            = false;
+        drawGrid            = true;
         drawShapes          = true;
         drawJoints          = true;
         drawAABBs           = false;
@@ -97,6 +96,62 @@ namespace nero
     {
         nlohmann::json scene_setting;
 
+        scene_setting["frequency"]              = hz;
+        scene_setting["view_center"]            = nero::toJson<b2Vec2>(viewCenter);
+        scene_setting["gravity"]                = nero::toJson<b2Vec2>(gravity);
+
+        scene_setting["velocity_iterations"]    = velocityIterations;
+        scene_setting["position_iterations"]    = positionIterations;
+
+        scene_setting["enable_warm_starting"]   = enableWarmStarting;
+        scene_setting["enable_continuous"]      = enableContinuous;
+        scene_setting["enable_sub_stepping"]    = enableSubStepping;
+        scene_setting["enable_sleep"]           = enableSleep;
+
+        scene_setting["draw_axis"]              = drawAxis;
+        scene_setting["draw_grid"]              = drawGrid;
+        scene_setting["draw_shapes"]            = drawShapes;
+        scene_setting["draw_joints"]            = drawJoints;
+        scene_setting["draw_aabbs"]             = drawAABBs;
+        scene_setting["draw_contact_points"]    = drawContactPoints;
+        scene_setting["draw_contact_normals"]   = drawContactNormals;
+        scene_setting["draw_contact_impulse"]   = drawContactImpulse;
+        scene_setting["draw_coms"]              = drawCOMs;
+        scene_setting["draw_stats"]             = drawStats;
+        scene_setting["draw_profile"]           = drawProfile;
+
+        return scene_setting;
+    }
+
+    SceneSetting SceneSetting::fromJson(nlohmann::json setting)
+    {
+        SceneSetting scene_setting;
+
+        scene_setting.hz                    = setting["frequency"];
+        scene_setting.gravity               = vectorFromJson<b2Vec2>(setting["gravity"]);
+        scene_setting.viewCenter            = vectorFromJson<b2Vec2>(setting["view_center"]);
+
+
+        scene_setting.velocityIterations    = setting["velocity_iterations"];
+        scene_setting.positionIterations    = setting["position_iterations"];
+
+        scene_setting.enableWarmStarting    = setting["enable_warm_starting"];
+        scene_setting.enableContinuous      = setting["enable_continuous"];
+        scene_setting.enableSubStepping     = setting["enable_sub_stepping"];
+        scene_setting.enableSleep           = setting["enable_sleep"];
+
+        scene_setting.drawAxis              = setting["draw_axis"];
+        scene_setting.drawGrid              = setting["draw_grid"];
+        scene_setting.drawShapes            = setting["draw_shapes"];
+        scene_setting.drawJoints            = setting["draw_joints"];
+        scene_setting.drawAABBs             = setting["draw_aabbs"];
+        scene_setting.drawContactPoints     = setting["draw_contact_points"];
+        scene_setting.drawContactNormals    = setting["draw_contact_normals"];
+        scene_setting.drawContactImpulse    = setting["draw_contact_impulse"];
+        scene_setting.drawCOMs              = setting["draw_coms"];
+        scene_setting.drawStats             = setting["draw_stats"];
+        scene_setting.drawProfile           = setting["draw_profile"];
+
         return scene_setting;
     }
 
@@ -117,41 +172,45 @@ namespace nero
 
     nlohmann::json CameraSetting::toJson()
     {
-        nlohmann::json setting;
+        nlohmann::json camera_setting;
 
-        return setting;
+        camera_setting["default_position"] = {{"x", defaultPosition.x}, {"y", defaultPosition.y}};
+        camera_setting["default_rotation"] = defaultRotation;
+        camera_setting["default_zoom"] = defaultZoom;
+
+        camera_setting["position"] = {{"x", position.x}, {"y", position.y}};
+        camera_setting["rotation"] = rotation;
+        camera_setting["zoom"] = zoom;
+
+        return camera_setting;
+    }
+
+    CameraSetting CameraSetting::fromJson(nlohmann::json setting)
+    {
+        CameraSetting camera_setting;
+
+        camera_setting.defaultPosition.x    = setting["default_position"]["x"];
+        camera_setting.defaultPosition.y    = setting["default_position"]["y"];
+        camera_setting.defaultRotation      = setting["default_rotation"];
+        camera_setting.defaultZoom          = setting["default_zoom"];
+
+        camera_setting.position.x = setting["position"]["x"];
+        camera_setting.position.y = setting["position"]["y"];
+        camera_setting.rotation = setting["rotation"];
+        camera_setting.zoom = setting["zoom"];
+
+        return camera_setting;
     }
 
     ////////////////////////////////////////////////////////////
-    //SoundSetting
-    SoundSetting::SoundSetting()
+    //Target
+    CameraTarget::CameraTarget()
     {
-        soundVolume = 10.f;
-        musicVolume = 10.f;
+        target          = nullptr;
+        offsetLeft      = 150.f;
+        offsetRight     = 0.f;
+        offsetUp        = 250.f;
+        offsetDown      = 0.f;
+        followTarget    = false;
     }
-
-    nlohmann::json SoundSetting::toJson()
-    {
-        nlohmann::json sound_setting;
-
-        return sound_setting;
-    }
-
-    ////////////////////////////////////////////////////////////
-    //CameraTargetOffset
-    CameraTargetOffset::CameraTargetOffset()
-    {
-        left = 100.f;
-        right = 0.f;
-        up = 100.f;
-        down = 100.f;
-    }
-
-    nlohmann::json CameraTargetOffset::toJson()
-    {
-        nlohmann::json offset;
-
-        return offset;
-    }
-
 }

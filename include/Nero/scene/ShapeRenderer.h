@@ -7,6 +7,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //SFGUI
 #include <SFGUI/Canvas.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 //Box2D
 #include <Box2D/Common/b2Draw.h>
 //////////////////// FORWARD DECLARATION ////////////////////
@@ -19,6 +20,7 @@ namespace nero
     {
         public :
                                     ShapeRenderer(sfg::Canvas::Ptr renderCanvas, const float& thickness = -2.f, const int& tranparency = 50);
+                                    ShapeRenderer(sf::RenderWindow* renderWindow, const float& thickness = -2.f, const int& tranparency = 50);
 
             void                    DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
             void                    DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
@@ -31,6 +33,7 @@ namespace nero
 
         private:
             sfg::Canvas::Ptr        m_RenderCanvas;
+            sf::RenderWindow*       m_RenderWindow;
             float                   m_Thickness;
             int                     m_Tranparency;
 

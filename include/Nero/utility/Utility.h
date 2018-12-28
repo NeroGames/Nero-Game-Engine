@@ -6,9 +6,14 @@
 #define UTILITY_H_INCLUDED
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <Nero/utility/LogUtility.h>
 #include <Nero/utility/ConstantPool.h>
+#include <Nero/utility/LogUtility.h>
 #include <Nero/utility/EnumUtil.h>
+#include <Nero/utility/data/sansation.h>
+#include <Nero/utility/data/shader.h>
+#include <Nero/utility/data/logo.h>
+#include <Nero/utility/data/log.h>
+#include <Nero/resource/ResourceSetting.h>
 //SFGUI
 #include <SFGUI/Canvas.hpp>
 //SFML
@@ -22,6 +27,8 @@
 //Box2D
 #include <Box2D/Common/b2Math.h>
 #include <Box2D/Common/b2Draw.h>
+//BOOST
+#include <boost/filesystem.hpp>
 //EASYLOG
 #include <easyloggingpp/easylogging++.h>
 //JSON
@@ -105,8 +112,10 @@ namespace nero
     float               randomFloat(float lo, float hi);      // Random floating point number in range [lo, hi]
 
     float               vectLength(sf::Vector2f vect);
+    float               vectLength(b2Vec2 vect);
     sf::Vector2f        unitVector(sf::Vector2f vect);
     float               distance(sf::Vector2f vect1, sf::Vector2f vect2);
+    float               distance(b2Vec2 vect1, b2Vec2 vect2);
     float               distance(sf::Vector2f line_vect1, sf::Vector2f line_vect2, sf::Vector2f vect3);
     float               dot_product(const sf::Vector2f& vect1, const sf::Vector2f& vect2);
 
@@ -147,7 +156,7 @@ namespace nero
     sf::Vector2f        world_to_canvas(const sf::Vector2f& point, const sfg::Canvas::Ptr& renderWindow);
 
     //-----------------------------------------------------------------
-    enum Log {Debug, Warning};
+    enum Log {Info, Debug, Warning};
 
     template <typename T>
     std::string toString(T const& value)
@@ -171,6 +180,46 @@ namespace nero
     std::unique_ptr<T> make_unique(Args&&... args)
     {
         return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+    }
+
+    /// Create all engine necessary folders and files
+    void buildEngineDirectory();
+
+    ///Create a directory if not exist
+    void createDirectory(const std::string& name);
+
+    ///Check if a file exist
+    bool fileExist(const std::string& name);
+
+    ///Save a text to a file
+    void  saveFile(const std::string& name, const std::string& content);
+
+    ///Save binary date to a file
+    void  saveFile(const std::string& name, const unsigned char* content, const unsigned int length);
+
+    ///Color to JSON
+    nlohmann::json toJson(sf::Color color);
+
+    ///Vector to JSON
+    template<typename T>
+    nlohmann::json toJson(T point)
+    {
+        return  {{"x", point.x}, {"y", point.y}};
+    }
+
+    ///Color from JSON
+    sf::Color colorFromJson(nlohmann::json json);
+
+    ///Vector from JSON
+    template<typename T>
+    T vectorFromJson(nlohmann::json json)
+    {
+       T point;
+
+        point.x = json["x"];
+        point.y = json["y"];
+
+        return point;
     }
 }
 

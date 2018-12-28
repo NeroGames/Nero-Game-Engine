@@ -22,13 +22,13 @@ namespace nero
 
         //HolderList Nero Engine v1.0
         //Count : 7
-        FontHolder          Font;
-        SoundHolder         Sound;
-        MusicHolder         Music;
-        ShaderHolder        Shader;
-        ScriptHolder        Script;
-        TextureHolder       Texture;
-        AnimationHolder     Animation;
+        FontHolder          font;
+        SoundHolder         sound;
+        MusicHolder         music;
+        ShaderHolder        shader;
+        ScriptHolder        script;
+        TextureHolder       texture;
+        AnimationHolder     animation;
     };
 }
 #endif // RESOURCEMANAGER_H_INCLUDED

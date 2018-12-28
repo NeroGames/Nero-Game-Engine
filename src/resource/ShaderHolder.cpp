@@ -22,7 +22,7 @@ namespace nero
 
         if(!m_ShaderAvailable)
         {
-            nero_log("The computer you are using does not support Shader");
+            nero_log("The current computer or device does not support Shader");
             nero_log("////////////////////////////////////////////////////////////");
             return;
         }
@@ -41,9 +41,9 @@ namespace nero
         }
 
         //load the shader json
-        nlohmann::json shader_table = loadJson(m_Configuration["shader-list"].get<std::string>());
+        nlohmann::json shader_table = loadJson(m_Configuration["descriptor"].get<std::string>());
 
-        shader_table = shader_table["shader-list"];
+        shader_table = shader_table["shader_list"];
 
         for (auto& shader_json : shader_table)
         {
@@ -128,8 +128,6 @@ namespace nero
             addShader(shaderName, std::move(std::unique_ptr<sf::Shader>(shader)));
             m_ShaderTable.push_back(shaderName);
         }
-
-        nero_log("////////////////////////////////////////////////////////////");
     }
 
     void ShaderHolder::addShader(std::string shaderName, std::unique_ptr<sf::Shader> shader)

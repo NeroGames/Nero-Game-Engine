@@ -5,7 +5,7 @@
 namespace nero
 {
     UndoManager::UndoManager():
-        m_UndoState(-1)
+         m_UndoState(-1)
         ,m_UndoTab()
     {
         //ctor
@@ -53,5 +53,4 @@ namespace nero
 
         return m_UndoTab[++m_UndoState];
     }
-
 }

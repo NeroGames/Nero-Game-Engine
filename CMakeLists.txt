@@ -18,7 +18,7 @@ endif()
 project (Nero)
 
 #set(NERO_MAJOR_VERSION 0)
-#set(NERO_MINOR_VERSION 7)
+#set(NERO_MINOR_VERSION 9)
 #set(NERO_REVISION_VERSION 0)
 
 #set(NERO_BUILD_TYPE	Release CACHE STRING "Choose the build type (Debug / Release)")
@@ -38,6 +38,7 @@ file(GLOB_RECURSE NERO_SOURCES *.h *.cpp *.hpp *.cc)
 find_package(SFML 2.4 REQUIRED COMPONENTS graphics window  network audio system)
 find_package(SFGUI REQUIRED)
 find_package(BOX2D REQUIRED)
+find_package(LUA REQUIRED)
 
 set(Boost_USE_STATIC_LIBS OFF) 
 set(Boost_USE_MULTITHREADED ON)  
@@ -47,6 +48,7 @@ find_package(Boost 1.61.0 REQUIRED COMPONENTS filesystem system)
 include_directories(${SFML_INCLUDE_DIR})
 include_directories(${SFGUI_INCLUDE_DIR})
 include_directories(${BOX2D_INCLUDE_DIR})
+include_directories(${LUA_INCLUDE_DIR})
 include_directories(${Boost_INCLUDE_DIRS}) 
 
 # Build the library
@@ -57,7 +59,7 @@ else()
 endif()
 
 # Link Depedencies
-target_link_libraries(nero ${SFML_LIBRARIES} ${SFGUI_LIBRARY} ${BOX2D_LIBRARY} ${Boost_LIBRARIES})
+target_link_libraries(nero ${SFML_LIBRARIES} ${SFGUI_LIBRARY} ${BOX2D_LIBRARY} ${LUA_LIBRARIES} ${Boost_LIBRARIES})
 
 # Setup the output library
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)

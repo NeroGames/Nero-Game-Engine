@@ -179,6 +179,11 @@ namespace nero
         return &m_ChildTab;
     }
 
+    std::vector<Object::Ptr>* Object::getAllChild()
+    {
+        return &m_ChildTab;
+    }
+
     Object::Ptr Object::getChild(const int& index) const
     {
         if(index >= m_ChildTab.size())
@@ -199,6 +204,8 @@ namespace nero
         Object::Ptr result = std::move(*it);
         result->m_Parent = nullptr;
         it = m_ChildTab.erase(it);
+
+        return result;
     }
 
     Object::Ptr Object::removeFirstChild()
@@ -300,6 +307,12 @@ namespace nero
     {
         return object;
     }
+
+    sf::Vector2f Object::getCenter()  const
+    {
+        return sf::Vector2f();
+    }
+
 
 }
 

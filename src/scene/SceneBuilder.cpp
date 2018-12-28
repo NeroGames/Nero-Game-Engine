@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    SceneBuilder::SceneBuilder(sfg::Canvas::Ptr renderCanvas, ResourceManager::Ptr resourceManager):
+    SceneBuilder::SceneBuilder(sfg::Canvas::Ptr renderCanvas, ResourceManager::Ptr resourceManager, SceneSetting& sceneSetting):
         //Main
          m_RenderCanvas(renderCanvas)
         ,m_ResourceManager(resourceManager)
@@ -30,6 +30,7 @@ namespace nero
         ,m_SelectedObject(nullptr)
         ,m_LayerCount(0)
         ,m_ObjectCount(0)
+        ,m_SceneSetting(sceneSetting)
     {
         m_MeshEditor = MeshEditor::Ptr(new MeshEditor(renderCanvas));
 
@@ -37,8 +38,8 @@ namespace nero
         m_SelectionRect.setOutlineColor(sf::Color::Green);
         m_SelectionRect.setOutlineThickness(-3.f);
 
-        m_UpdateEngine  = [](){};
-        m_EngineUndo    = [](){};
+        m_UpdateUI  = [](){};
+        m_UpdateUndo    = [](){};
     }
 
     void SceneBuilder::handleEvent(const sf::Event& event)
@@ -68,8 +69,15 @@ namespace nero
         }
     }
 
-    void SceneBuilder::update(const sf::Time& elapsedTime)
+    void SceneBuilder::update(const sf::Time& timeStep)
     {
+        float32 b2TimeStep = m_SceneSetting.hz > 0.0f ? 1.0f / m_SceneSetting.hz : float32(0.0f);
+
+        if(b2TimeStep > 0.f)
+        {
+            b2TimeStep = (b2TimeStep * timeStep.asSeconds())/TIME_PER_FRAME.asSeconds();
+        }
+
         if(m_SelectedObject)
         {
             m_SelectionRect.setPosition(m_SelectedObject->getGlobalBounds().left,  m_SelectedObject->getGlobalBounds().top);
@@ -80,7 +88,7 @@ namespace nero
 
 
         if(m_SelectedLayer)
-            m_SelectedLayer->update(elapsedTime);
+            m_SelectedLayer->update(sf::seconds(b2TimeStep));
     }
 
     void SceneBuilder::render()
@@ -204,80 +212,80 @@ namespace nero
         if(!isPressed)
         {
             if(key == sf::Keyboard::Numpad8 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             if(key == sf::Keyboard::Numpad2 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             if(key == sf::Keyboard::Numpad4 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             if(key == sf::Keyboard::Numpad6 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             //Rotate
             if(key == sf::Keyboard::Numpad7 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad9 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Divide && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Multiply && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             //Zoom
             if(key == sf::Keyboard::Add && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Subtract && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             //Flip
             if(key == sf::Keyboard::Numpad1 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad3 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             //copy sprite
             if(key == sf::Keyboard::Numpad8 && ALT())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad2 && ALT())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad4 && ALT())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad6 && ALT())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad7 && ALT())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad9 && ALT())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad1 && ALT())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad3 && ALT())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else  if(key == sf::Keyboard::Numpad8 && CTRL_ALT())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad2 && CTRL_ALT())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad4 && CTRL_ALT())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad6 && CTRL_ALT())
-                m_EngineUndo();
+                m_UpdateUndo();
         }
     }
 
@@ -302,13 +310,13 @@ namespace nero
             m_SelectedObject = findObject(m_SelectedLayer, world_pos);
 
             if(m_SelectedObject)
-                m_UpdateEngine();
+                m_UpdateUI();
         }
 
         if (mouse.button == sf::Mouse::Left && !isPressed && m_SelectedLayer && m_SelectedObject)
         {
             m_SelectedObject = nullptr;
-            m_EngineUndo();
+            m_UpdateUndo();
         }
     }
 
@@ -428,7 +436,7 @@ namespace nero
         m_SelectedLayer = Layer_object;
         m_SelectedObject = nullptr;
 
-        m_EngineUndo();
+        m_UpdateUndo();
 
         return m_LayerTable.back();
     }
@@ -446,7 +454,7 @@ namespace nero
 
                 m_LayerTable.erase(it);
 
-                m_EngineUndo();
+                m_UpdateUndo();
 
                 break;
             }
@@ -462,7 +470,7 @@ namespace nero
                 std::iter_swap(it, it-1);
                 selectLayer((*(it-1))->getId());
 
-                m_EngineUndo();
+                m_UpdateUndo();
 
                 break;
             }
@@ -478,7 +486,7 @@ namespace nero
                 std::iter_swap(it, it+1);
                 selectLayer((*(it+1))->getId());
 
-                m_EngineUndo();
+                m_UpdateUndo();
 
                 break;
             }
@@ -504,7 +512,7 @@ namespace nero
 
                     m_LayerTable.erase(it);
 
-                    m_EngineUndo();
+                    m_UpdateUndo();
 
                     return true;
                 }
@@ -533,7 +541,7 @@ namespace nero
 
                     m_LayerTable.erase(it);
 
-                    m_EngineUndo();
+                    m_UpdateUndo();
 
                     return true;
                 }
@@ -553,7 +561,7 @@ namespace nero
             {
                 (*it)->setIsVisible(!(*it)->isVisible());
 
-                m_EngineUndo();
+                m_UpdateUndo();
 
                 break;
             }
@@ -568,7 +576,7 @@ namespace nero
             {
                 (*it)->setName(name);
 
-                m_EngineUndo();
+                m_UpdateUndo();
 
                 break;
             }
@@ -589,7 +597,7 @@ namespace nero
                 m_SelectedLayer->setIsSelected(true);
                 m_SelectedObject = nullptr;
 
-                m_EngineUndo();
+                m_UpdateUndo();
 
                 break;
             }
@@ -637,18 +645,18 @@ namespace nero
 
         if(object->getSecondType() == Object::Mesh_Object)
         {
-            MeshObject::Ptr mesh_object = std::static_pointer_cast<MeshObject>(object);
+            MeshObject::Ptr mesh_object = MeshObject::Cast(object);
             mesh_object->getMesh()->setId(mesh_object->getId());
             m_MeshEditor->addMesh(mesh_object->getMesh());
         }
 
-        if(object->getSecondType() == Object::Meshed_Object || object->getSecondType() == Object::Animation_Meshed_Object)
+        else if(object->getSecondType() == Object::Meshed_Object || object->getSecondType() == Object::Animation_Meshed_Object)
         {
             sf::Vector2f posf = -pos;
             Object::Ptr child_object = m_SelectedObject->getFirstChild()->clone(posf);
             child_object->setId(getNewId());
 
-            MeshObject::Ptr mesh_object = std::static_pointer_cast<MeshObject>(child_object);
+            MeshObject::Ptr mesh_object = MeshObject::Cast(child_object);
             mesh_object->getMesh()->setId(mesh_object->getId());
             mesh_object->setParentLastPosition(object->getPosition()-pos);
             mesh_object->setParentLastRotation(object->getRotation());
@@ -683,7 +691,7 @@ namespace nero
 
         for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
         {
-            if((*layer)->getSecondType() == Object::Sprite_Object || (*layer)->getSecondType() == Object::Meshed_Object)
+            if((*layer)->getSecondType() == Object::Sprite_Object || (*layer)->getSecondType() == Object::Animation_Object || (*layer)->getSecondType() == Object::Meshed_Object || (*layer)->getSecondType() == Object::Animation_Meshed_Object)
             {
                 auto children = (*layer)->getAllChild();
 
@@ -705,6 +713,18 @@ namespace nero
             m_SelectedObject->setColor(color);
     }
 
+    void SceneBuilder::updateTextColor(const sf::Color& color)
+    {
+        if(m_SelectedObject != nullptr && m_SelectedObject->getFirstType() == Object::Text_Object)
+            TextObject::Cast(m_SelectedObject)->setColor(color);
+    }
+
+    void SceneBuilder::updateOutlineTextColor(const sf::Color& color)
+    {
+        if(m_SelectedObject != nullptr && m_SelectedObject->getFirstType() == Object::Text_Object)
+            TextObject::Cast(m_SelectedObject)->setOutlineColor(color);
+    }
+
     const LayerObject::Tab& SceneBuilder::getLayerTable() const
     {
        return m_LayerTable;
@@ -724,9 +744,9 @@ namespace nero
             case Object::Sprite_Object:
             {
                 sf::Sprite sprite;
-                sf::IntRect rect = m_ResourceManager->Texture.getSpriteBound(label);
+                sf::IntRect rect = m_ResourceManager->texture.getSpriteBound(label);
                 sprite.setTextureRect(rect);
-                sprite.setTexture(m_ResourceManager->Texture.getSpriteTexture(label));
+                sprite.setTexture(m_ResourceManager->texture.getSpriteTexture(label));
                 sprite.setOrigin(rect.width/2.f, rect.height/2.f);
 
                 SpriteObject::Ptr sprite_object(new SpriteObject());
@@ -765,9 +785,10 @@ namespace nero
 
                     object = mesh_object;
                 }
-                else if(m_SelectedObject && m_SelectedObject->getSecondType() == Object::Meshed_Object)
+                else if(m_SelectedObject && (m_SelectedObject->getSecondType() == Object::Meshed_Object || m_SelectedObject->getSecondType() == Object::Animation_Meshed_Object))
                 {
                     m_MeshEditor->deleteMesh(m_SelectedObject->getFirstChild()->getId());
+                    m_SelectedObject->removeFirstChild();
 
                     Mesh mesh;
 
@@ -789,10 +810,12 @@ namespace nero
 
                     m_MeshEditor->addMesh(mesh_object->getMesh());
 
-                    m_SelectedObject->removeFirstChild();
                     m_SelectedObject->addChild(mesh_object);
 
-                    m_EngineUndo();
+                    m_SelectedObject->update(TIME_PER_FRAME);
+
+                    nero_log("change animation mesh");
+                    m_UpdateUndo();
 
                     return false;
                 }
@@ -807,9 +830,9 @@ namespace nero
             {
                 //Sprite Object
                 sf::Sprite sprite;
-                sf::IntRect rect = m_ResourceManager->Texture.getSpriteBound(label);
+                sf::IntRect rect = m_ResourceManager->texture.getSpriteBound(label);
                 sprite.setTextureRect(rect);
-                sprite.setTexture(m_ResourceManager->Texture.getSpriteTexture(label));
+                sprite.setTexture(m_ResourceManager->texture.getSpriteTexture(label));
                 sprite.setOrigin(rect.width/2.f, rect.height/2.f);
 
                 SpriteObject::Ptr sprite_object(new SpriteObject());
@@ -842,7 +865,7 @@ namespace nero
             case Object::Animation_Object:
             {
                 Animation animation;
-                auto sequenceMap = m_ResourceManager->Animation.getSequenceMap(label);
+                auto sequenceMap = m_ResourceManager->animation.getSequenceMap(label);
 
                 for(auto it=sequenceMap.begin(); it!=sequenceMap.end(); it++)
                 {
@@ -853,15 +876,15 @@ namespace nero
                 }
 
                 sf::Sprite sprite;
-                sf::IntRect rect = m_ResourceManager->Animation.getAnimationBound(label);
+                sf::IntRect rect = m_ResourceManager->animation.getAnimationBound(label);
                 sprite.setTextureRect(rect);
-                sprite.setTexture(m_ResourceManager->Animation.getTexture(label));
+                sprite.setTexture(m_ResourceManager->animation.getTexture(label));
                 sprite.setOrigin(rect.width/2.f, rect.height/2.f);
 
 
                 animation.setSprite(sprite);
                 animation.setTexture(label);
-                animation.setSequence(label);
+                animation.setSequence("idle");
 
                 AnimationObject::Ptr animation_object(new AnimationObject());
                 animation_object->setAnimation(animation);
@@ -876,7 +899,7 @@ namespace nero
             case Object::Animation_Meshed_Object:
             {
                 Animation animation;
-                auto sequenceMap = m_ResourceManager->Animation.getSequenceMap(label);
+                auto sequenceMap = m_ResourceManager->animation.getSequenceMap(label);
 
                 for(auto it=sequenceMap.begin(); it!=sequenceMap.end(); it++)
                 {
@@ -887,14 +910,14 @@ namespace nero
                 }
 
                 sf::Sprite sprite;
-                sf::IntRect rect = m_ResourceManager->Animation.getAnimationBound(label);
+                sf::IntRect rect = m_ResourceManager->animation.getAnimationBound(label);
                 sprite.setTextureRect(rect);
-                sprite.setTexture(m_ResourceManager->Animation.getTexture(label));
+                sprite.setTexture(m_ResourceManager->animation.getTexture(label));
                 sprite.setOrigin(rect.width/2.f, rect.height/2.f);
 
                 animation.setSprite(sprite);
                 animation.setTexture(label);
-                animation.setSequence(label);
+                animation.setSequence("idle");
 
 
                 AnimationObject::Ptr animation_object(new AnimationObject());
@@ -921,13 +944,50 @@ namespace nero
                 object = animation_object;
 
             }break;
+
+            case Object::Text_Object:
+            {
+                sf::Text text;
+                text.setFont(m_ResourceManager->font.getDefaultFont());
+                text.setString(label);
+                text.setCharacterSize(20.f);
+                text.setOrigin(text.getLocalBounds().width/2.f, text.getLocalBounds().height/2.f);
+
+                TextObject::Ptr text_object(new TextObject());
+                text_object->setText(text);
+                text_object->setPosition(position);
+                text_object->setId(getNewId());
+
+                object = text_object;
+
+            }break;
+
+            case Object::Button_Object:
+            {
+                sf::Sprite sprite;
+                sf::IntRect rect = m_ResourceManager->texture.getSpriteBound(label);
+                sprite.setTextureRect(rect);
+                sprite.setTexture(m_ResourceManager->texture.getSpriteTexture(label));
+                sprite.setOrigin(rect.width/2.f, rect.height/2.f);
+
+                SpriteObject::Ptr sprite_object(new SpriteObject());
+                sprite_object->setSprite(sprite);
+                sprite_object->setTextureName(label);
+                sprite_object->setSecondType(Object::Button_Object);
+                sprite_object->setPosition(position);
+                sprite_object->setId(getNewId());
+                sprite_object->setColor(sf::Color(255, 255, 255, 150));
+
+                object = sprite_object;
+
+            }break;
         }
 
         if(m_SelectedLayer->getSecondType() == type)
         {
             m_SelectedLayer->addChild(object);
             if(type == Object::Mesh_Object) object->update(TIME_PER_FRAME);
-            m_EngineUndo();
+            m_UpdateUndo();
             return false;
         }
         else if (m_SelectedLayer->getSecondType() == Object::None || m_SelectedLayer->isEmpty())
@@ -935,7 +995,7 @@ namespace nero
             m_SelectedLayer->setSecondType(type);
             m_SelectedLayer->addChild(object);
             if(type == Object::Mesh_Object) object->update(TIME_PER_FRAME);
-            m_EngineUndo();
+            m_UpdateUndo();
             return true;
         }
         else if(m_SelectedLayer->getSecondType() != type && m_SelectedLayer->getSecondType() != Object::None)
@@ -944,7 +1004,7 @@ namespace nero
             m_SelectedLayer->setSecondType(type);
             m_SelectedLayer->addChild(object);
             if(type == Object::Mesh_Object) object->update(TIME_PER_FRAME);
-            m_EngineUndo();
+            m_UpdateUndo();
             return true;
         }
     }
@@ -970,7 +1030,7 @@ namespace nero
 
         m_SelectedObject = nullptr;
 
-        m_EngineUndo();
+        m_UpdateUndo();
     }
 
     void SceneBuilder::setMeshType(const sf::String& label)
@@ -1000,7 +1060,7 @@ namespace nero
 
         mesh_object->setMeshType(type);
 
-        m_EngineUndo();
+        m_UpdateUndo();
     }
 
     void SceneBuilder::setMeshFixedRotation(bool flag)
@@ -1020,7 +1080,7 @@ namespace nero
 
         mesh_object->setMeshFixedRotation(flag);
 
-        m_EngineUndo();
+        m_UpdateUndo();
 
     }
 
@@ -1041,7 +1101,7 @@ namespace nero
 
         mesh_object->setMeshSensor(flag);
 
-        m_EngineUndo();
+        m_UpdateUndo();
 
     }
 
@@ -1062,7 +1122,7 @@ namespace nero
 
         mesh_object->setMeshAllowSleep(flag);
 
-        m_EngineUndo();
+        m_UpdateUndo();
     }
 
     void SceneBuilder::setMeshDensity(float density)
@@ -1082,7 +1142,7 @@ namespace nero
 
         mesh_object->setMeshDensity(density);
 
-        m_EngineUndo();
+        m_UpdateUndo();
     }
 
     void SceneBuilder::setMeshFriction(float friction)
@@ -1102,7 +1162,7 @@ namespace nero
 
         mesh_object->setMeshFriction(friction);
 
-        m_EngineUndo();
+        m_UpdateUndo();
     }
 
     void SceneBuilder::setMeshRestitution(float restitution)
@@ -1122,7 +1182,7 @@ namespace nero
 
         mesh_object->setMeshRestitution(restitution);
 
-        m_EngineUndo();
+        m_UpdateUndo();
     }
 
     void SceneBuilder::setMeshGravityScale(float gravityScale)
@@ -1142,7 +1202,7 @@ namespace nero
 
         mesh_object->setMeshGravityScale(gravityScale);
 
-        m_EngineUndo();
+        m_UpdateUndo();
     }
 
     void SceneBuilder::buildScene(Object::Ptr rootObject)
@@ -1265,7 +1325,7 @@ namespace nero
                 {
                     Object::Ptr layer_object = (*layer)->clone();
 
-                    layer_object->setSecondType(Object::Solid_Object);
+                    layer_object->setSecondType(Object::Animation_Solid_Object);
 
                     auto children = (*layer)->getAllChild();
 
@@ -1306,6 +1366,21 @@ namespace nero
 
                 }break;
 
+                case Object::Text_Object:
+                {
+                    Object::Ptr layer_object = (*layer)->clone();
+
+                    auto children = (*layer)->getAllChild();
+
+                    for(auto it = children->begin(); it != children->end(); it++)
+                    {
+                        Object::Ptr text_object = (*it)->clone();
+                        layer_object->addChild(text_object);
+                    }
+
+                    rootObject->addChild(layer_object);
+
+                }break;
             }
         }
     }
@@ -1329,15 +1404,28 @@ namespace nero
         }
     }
 
-    void SceneBuilder::setUpdateEngineFunction(std::function<void()>  fn)
+
+    void SceneBuilder::setUpdateUI(std::function<void()>  fn)
     {
-        m_UpdateEngine = fn;
+        m_UpdateUI = fn;
     }
 
-    void SceneBuilder::setEngineUndoFunction(std::function<void()>  fn)
+    void SceneBuilder::setUpdateUndo(std::function<void()>  fn)
     {
-        m_EngineUndo = fn;
-        m_MeshEditor->setEngineUndoFunction(fn);
+        m_UpdateUndo = fn;
+         m_MeshEditor->setUpdateUndo(fn);
+    }
+
+    void SceneBuilder::setUpdateLog(std::function<void(const std::string&, int)>  fn)
+    {
+        m_UpdateLog = fn;
+        m_MeshEditor->setUpdateLog(fn);
+    }
+
+    void SceneBuilder::setUpdateLogIf(std::function<void(const std::string&, bool, int)>  fn)
+    {
+        m_UpdateLogIf = fn;
+        m_MeshEditor->setUpdateLogIf(fn);
     }
 
     Object::Ptr SceneBuilder::getSelectedObject()
@@ -1355,7 +1443,7 @@ namespace nero
         if(m_SelectedObject->getSecondType() == Object::Meshed_Object)
             m_SelectedObject->getFirstChild()->setName(name);
 
-        m_EngineUndo();
+        m_UpdateUndo();
     }
 
     void SceneBuilder::setObjectCategory(const sf::String& category)
@@ -1368,15 +1456,15 @@ namespace nero
         if(m_SelectedObject->getSecondType() == Object::Meshed_Object)
             m_SelectedObject->getFirstChild()->setCategory(category);
 
-        m_EngineUndo();
+        m_UpdateUndo();
     }
 
     SpriteObject::Ptr SceneBuilder::loadSprite(nlohmann::json& json)
     {
         sf::Sprite sprite;
-        sf::IntRect rect = m_ResourceManager->Texture.getSpriteBound(json["sprite"].get<std::string>());
+        sf::IntRect rect = m_ResourceManager->texture.getSpriteBound(json["sprite"].get<std::string>());
         sprite.setTextureRect(rect);
-        sprite.setTexture(m_ResourceManager->Texture.getSpriteTexture(json["sprite"].get<std::string>()));
+        sprite.setTexture(m_ResourceManager->texture.getSpriteTexture(json["sprite"].get<std::string>()));
         sprite.setOrigin(rect.width/2.f, rect.height/2.f);
 
         SpriteObject::Ptr sprite_object(new SpriteObject());
@@ -1459,6 +1547,54 @@ namespace nero
         return mesh_object;
     }
 
+    TextObject::Ptr SceneBuilder::loadText(nlohmann::json& json)
+    {
+        nero_log("loading text");
+
+        sf::Text text;
+        text.setFont(m_ResourceManager->font.getFont(json["font"].get<std::string>()));
+        text.setString(json["content"].get<std::string>());
+        text.setCharacterSize(json["font_size"]);
+        //text.setLetterSpacing(json["letter_spacing"]);
+        //text.setLineSpacing(json["line_spacing"]);
+        text.setOutlineThickness(json["outline_thickness"]);
+        text.setOrigin(text.getLocalBounds().width/2.f, text.getLocalBounds().height/2.f);
+
+        nero_log("loading text 1");
+
+        TextObject::Ptr text_object(new TextObject());
+        text_object->setText(text);
+        text_object->setPosition(json["position"]["x"], json["position"]["y"]);
+        text_object->setRotation(json["rotation"]);
+        text_object->setScale(json["scale"]["x"], json["scale"]["y"]);
+        text_object->setColor(sf::Color(json["fill_color"]["r"], json["fill_color"]["g"], json["fill_color"]["b"], json["fill_color"]["a"]));
+        text_object->setOutlineColor(sf::Color(json["outline_color"]["r"], json["outline_color"]["g"], json["outline_color"]["b"], json["outline_color"]["a"]));
+
+        nero_log("loading text 2");
+
+        text_object->setFont(json["font"].get<std::string>());
+        text_object->setContent(json["content"].get<std::string>());
+        text_object->setFontSize(json["font_size"]);
+        text_object->setLetterSpacing(json["letter_spacing"]);
+        text_object->setLineSpacing(json["line_spacing"]);
+        text_object->setOutlineThickness(json["outline_thickness"]);
+        text_object->setStyle(json["style"]["bold"], json["style"]["italic"], json["style"]["underlined"], json["style"]["strike_through"]);
+
+        nero_log("loading text 3");
+
+        text_object->setId(json["object_id"]);
+        text_object->setName(json["name"].get<std::string>());
+        text_object->setCategory(json["category"].get<std::string>());
+        text_object->setSecondType(Object::Text_Object);
+        text_object->setIsVisible(json["is_visible"]);
+        text_object->setIsUpdateable(json["is_updateable"]);
+        text_object->setIsSelectable(json["is_selectable"]);
+        text_object->setIsSelected(json["is_selected"]);
+
+        return text_object;
+    }
+
+
     void SceneBuilder::updateLayerOrder()
     {
         int i = 0;
@@ -1468,10 +1604,12 @@ namespace nero
 
     sf::Color SceneBuilder::getLayerColor()
     {
-        /*if(m_SelectedLayer && !m_SelectedLayer->isEmpty())
-            return m_SelectedLayer->getChild(0)->getColor();
-        else
-            return sf::Color();*/
+        if(m_SelectedLayer && !m_SelectedLayer->isEmpty())
+        {
+            return m_SelectedLayer->getColor();
+        }
+
+        return sf::Color::White;
     }
 
     nlohmann::json SceneBuilder::saveScene()
@@ -1486,18 +1624,22 @@ namespace nero
         scene["layer_table"]    = layer_table;
         scene["layer_count"]    = m_LayerCount;
         scene["object_count"]   = m_ObjectCount;
+        scene["canvas_color"]   = nero::toJson(m_CanvasColor);
 
         return scene;
     }
 
     void SceneBuilder::loadScene(nlohmann::json scene)
     {
+        nero_log("loading scene");
+
         m_LayerTable.clear();
         m_MeshEditor->destroyAllMesh();
         m_SelectedObject = nullptr;
 
         m_LayerCount    = scene["layer_count"];
         m_ObjectCount   = scene["object_count"];
+        m_CanvasColor   = colorFromJson(scene["canvas_color"]);
 
         nlohmann::json layer_table = scene["layer_table"];
 
@@ -1515,6 +1657,10 @@ namespace nero
                 layer_type = Object::Animation_Object;
             else if(layer["type"] == "animation_meshed_layer")
                 layer_type = Object::Animation_Meshed_Object;
+            else if(layer["type"] == "button_layer")
+                layer_type = Object::Button_Object;
+            else if(layer["type"] == "text_layer")
+                layer_type = Object::Text_Object;
             else if(layer["type"] == "empty_layer")
                 layer_type = Object::None;
 
@@ -1616,6 +1762,28 @@ namespace nero
 
                 } break;
 
+                case Object::Button_Object:
+                {
+                    nlohmann::json button_table = layer["button_table"];
+
+                    for (auto& sprite : button_table)
+                        layer_object->addChild(loadSprite(sprite));
+
+                    m_LayerTable.push_back(layer_object);
+
+                } break;
+
+                case Object::Text_Object:
+                {
+                    nlohmann::json text_table = layer["text_table"];
+
+                    for (auto& text : text_table)
+                        layer_object->addChild(loadText(text));
+
+                    m_LayerTable.push_back(layer_object);
+
+                } break;
+
                 case Object::None:
                 {
                     m_LayerTable.push_back(layer_object);
@@ -1645,7 +1813,7 @@ namespace nero
         std::string label = json["animation"].get<std::string>();
 
         Animation animation;
-        auto sequenceMap = m_ResourceManager->Animation.getSequenceMap(label);
+        auto sequenceMap = m_ResourceManager->animation.getSequenceMap(label);
         auto sequenceJon = json["sequence_table"];
 
         nero_log("loading animation");
@@ -1663,15 +1831,15 @@ namespace nero
         }
 
         sf::Sprite sprite;
-        sf::IntRect rect = m_ResourceManager->Animation.getAnimationBound(label);
+        sf::IntRect rect = m_ResourceManager->animation.getAnimationBound(label);
         sprite.setTextureRect(rect);
-        sprite.setTexture(m_ResourceManager->Animation.getTexture(label));
+        sprite.setTexture(m_ResourceManager->animation.getTexture(label));
         sprite.setOrigin(rect.width/2.f, rect.height/2.f);
 
 
         animation.setSprite(sprite);
         animation.setTexture(label);
-        animation.setSequence(label);
+        animation.setSequence("idle");
 
         animation_object->setAnimation(animation);
 
@@ -1690,5 +1858,150 @@ namespace nero
         animation_object->setIsSelected(json["is_selected"]);
 
         return animation_object;
+    }
+
+    void SceneBuilder::moveObjectUp()
+    {
+        if(!m_SelectedLayer && !m_SelectedObject)
+            return;
+
+        auto childTable = m_SelectedLayer->getAllChild();
+
+        for(auto it = childTable->begin(); it != childTable->end(); it++)
+        {
+            if((*it)->getId() == m_SelectedObject->getId() && it != (childTable->end()-1))
+            {
+                std::iter_swap(it, it+1);
+                m_UpdateUndo();
+
+                break;
+            }
+        }
+    }
+
+    void SceneBuilder::moveObjectDown()
+    {
+        if(!m_SelectedLayer && !m_SelectedObject)
+            return;
+
+        auto childTable = m_SelectedLayer->getAllChild();
+
+        for(auto it = childTable->begin(); it != childTable->end(); it++)
+        {
+            if((*it)->getId() == m_SelectedObject->getId() && it != childTable->begin())
+            {
+                std::iter_swap(it, it-1);
+                m_UpdateUndo();
+
+                break;
+            }
+        }
+    }
+
+    void SceneBuilder::buildUI(UIObject::Ptr rootObject)
+    {
+        for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
+        {
+            if(!(*layer)->isVisible())
+                continue;
+
+            switch((*layer)->getSecondType())
+            {
+                case Object::Button_Object:
+                {
+                    UIObject::Ptr layer_object = UIObject::Ptr(new UIObject());
+                    layer_object->setName((*layer)->getName());
+                    layer_object->setId(getNewId());
+
+                    auto children = (*layer)->getAllChild();
+
+                    for(auto it = children->begin(); it != children->end(); it++)
+                    {
+                        Object::Ptr sprite_object = (*it)->clone();
+
+                        ButtonObject::Ptr button_object = ButtonObject::Ptr(new ButtonObject());
+                        button_object->setName(sprite_object->getName());
+                        button_object->setCategory(sprite_object->getCategory());
+                        sprite_object->setName("no_name");
+                        sprite_object->setCategory("no_category");
+
+                        button_object->addChild(sprite_object);
+
+                        layer_object->addChild(button_object);
+                    }
+
+                    rootObject->addChild(layer_object);
+
+                }break;
+            }
+        }
+    }
+
+    void SceneBuilder::setTextContent(const sf::String& content)
+    {
+        if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
+        {
+            TextObject::Cast(m_SelectedObject)->setContent(content);
+        }
+    }
+
+    void SceneBuilder::setTextFont(const sf::String& font)
+    {
+        if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
+        {
+            sf::Text& text = TextObject::Cast(m_SelectedObject)->getText();
+            text.setFont(m_ResourceManager->font.getFont(font));
+            TextObject::Cast(m_SelectedObject)->setFont(font);
+        }
+    }
+
+    void SceneBuilder::setTextFontSize(float value)
+    {
+        if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
+        {
+            TextObject::Cast(m_SelectedObject)->setFontSize(value);
+        }
+    }
+
+    void SceneBuilder::setTextLetterSpacing(float value)
+    {
+        if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
+        {
+            TextObject::Cast(m_SelectedObject)->setLetterSpacing(value);
+        }
+    }
+
+    void SceneBuilder::setTextLineSpacing(float value)
+    {
+        if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
+        {
+            TextObject::Cast(m_SelectedObject)->setLineSpacing(value);
+        }
+    }
+
+    void SceneBuilder::setTextOutlineThickness(float value)
+    {
+        if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
+        {
+            TextObject::Cast(m_SelectedObject)->setOutlineThickness(value);
+        }
+    }
+
+    void SceneBuilder::setTextStyle(bool bold, bool italic, bool underLined, bool strikeThrough)
+    {
+        if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
+        {
+            TextObject::Cast(m_SelectedObject)->setStyle(bold, italic, underLined, strikeThrough);
+        }
+    }
+
+    const sf::Color& SceneBuilder::getCanvasColor() const
+    {
+        return m_CanvasColor;
+    }
+
+    void SceneBuilder::setCanvasColor(const sf::Color& color)
+    {
+        m_CanvasColor = color;
     }
 }

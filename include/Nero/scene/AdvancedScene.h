@@ -9,11 +9,15 @@
 #include <Nero/scene/Scene.h>
 #include <Nero/scene/SceneBuilder.h>
 #include <Nero/scene/UndoManager.h>
+#include <Nero/scene/SoundManager.h>
 #include <Nero/camera/AdvancedCamera.h>
 #include <Nero/scene/MeshEditor.h>
+#include <Nero/model/Grid.h>
 //Box2D
 #include <Box2D/Dynamics/Joints/b2MouseJoint.h>
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
+//STD
+#include <algorithm>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -35,11 +39,9 @@ namespace nero
         public:
             typedef std::shared_ptr<AdvancedScene> Ptr;
 
-        public:
                                         AdvancedScene(Context context);
             virtual                    ~AdvancedScene();
 
-        public:
             virtual void                update(const sf::Time& timeStep);
             void                        renderDebug();
 
@@ -49,8 +51,15 @@ namespace nero
             void                        setScene(Scene::Ptr scene);
             SceneBuilder::Ptr           getSceneBuilder();
             UndoManager::Ptr            getUndoManager();
+            SceneBuilder::Ptr           getScreenBuilder();
+            UndoManager::Ptr            getScreenUndoManager();
+            SoundManager::Ptr           getSoundManager();
+            Grid::Ptr                   getFrontScreenGrid();
+            CameraSetting&              getScreenCameraSetting();
+            sf::Color                   getScreenCanvasColor();
+
+
             //
-            void                        shiftOrigin(const b2Vec2& newOrigin);
             //Mouse
             void                        shiftMouseDown(const b2Vec2& p);
             virtual void                mouseDown(const b2Vec2& p);
@@ -65,24 +74,51 @@ namespace nero
             virtual void                jointDestroyed(b2Joint* joint);
             void                        setName(std::string name);
 
+            bool                            addScreen(const std::string& name);
+            void                            selectScreen(const std::string& name);
+            std::vector<std::string>        getScreenTable();
+
+            bool                            deleteScreen(const std::string& name);
+            bool                            renameScreen(const std::string& name, const std::string& newName);
+            void                            setScreenCanvasColor(const sf::Color& color);
+            void                            setUpdateLog(std::function<void(std::string)>  fn);
+
+
+        private:
+            struct FrontScreen
+            {
+                SceneBuilder::Ptr           screenBuilder       = nullptr;
+                UndoManager::Ptr            undoManager         = nullptr;
+                Grid::Ptr                   grid                = nullptr;
+                std::string                 name                = "Screen";
+                sf::Color                   canvasColor         = sf::Color::Black;
+                CameraSetting               cameraSetting;
+            };
+
         protected:
             //Friend
             friend class                DestructionListener;
             friend class                BoundaryListener;
             friend class                ContactListener;
             friend class                SceneManager;
+            //Destruction Listener
+            DestructionListener         m_DestructionListener;
             //Scene
             Scene::Ptr                  m_Scene;
-            //Manager
-            SceneBuilder::Ptr           m_SceneBuilder;
-            UndoManager::Ptr            m_UndoManger;
-            DestructionListener         m_DestructionListener;
-            //
+            Context                     m_Context;
             SceneSetting                m_SceneSetting;
-            CameraSetting               m_CameraSetting;
-            SoundSetting                m_SoundSetting;
-            //
+            SoundManager::Ptr           m_SoundManager;
             std::string                 m_SceneName;
+            //World
+            SceneBuilder::Ptr           m_SceneBuilder;
+            UndoManager::Ptr            m_UndoManager;
+            Grid::Ptr                   m_Grid;
+            CameraSetting               m_CameraSetting;
+            sf::Color                   m_CanvasColor;
+            //Screen
+            std::vector<FrontScreen>    m_FrontScreenTable;
+            std::string                 m_CurrentScreen;
+            //Other
             sf::String                  m_Message;
             sf::String                  m_StatMessage;
             sf::String                  m_ProfileMessage;
@@ -96,6 +132,9 @@ namespace nero
             int32                       m_StepCount;
             b2Profile                   m_MaxProfile;
             b2Profile                   m_TotalProfile;
+
+            std::function<void(std::string)>    m_UpdateLog;
+
     };
 }
 #endif // ADVANCEDSCENE_H

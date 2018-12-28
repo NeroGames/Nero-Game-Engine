@@ -18,12 +18,9 @@ namespace nero
 
     void TextureHolder::load()
     {
-        nero_log("///////////////////////// LOADING TEXTURE //////////////////////");
-
         const std::string folder_name = m_Configuration["folder"].get<std::string>();
 
-        nero_log("Folder : " + folder_name);
-        nero_log("");
+        nero_log("Resource path : " + folder_name);
 
         using namespace boost::filesystem;
         path folder_path(folder_name);

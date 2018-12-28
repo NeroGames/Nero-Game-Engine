@@ -5,7 +5,6 @@
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/utility/Utility.h>
-#include <Nero/utility/ConstantPool.h>
 //SFML
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -167,10 +166,21 @@ namespace
         return std::sqrt(vect.x * vect.x + vect.y * vect.y);
     }
 
+    float vectLength(b2Vec2 vect)
+    {
+        return std::sqrt(vect.x * vect.x + vect.y * vect.y);
+    }
+
     float distance(sf::Vector2f vect1, sf::Vector2f vect2)
     {
         return vectLength(vect2 - vect1);
     }
+
+    float distance(b2Vec2 vect1, b2Vec2 vect2)
+    {
+        return vectLength(vect2 - vect1);
+    }
+
 
     float dot_product(const sf::Vector2f& vect1, const sf::Vector2f& vect2)
     {
@@ -911,7 +921,7 @@ namespace
 
     nlohmann::json loadConfiguration(const std::string& name)
     {
-        const std::string path = CONFIGURATION_PATH + "/" + name + ".json";
+        const std::string path = CONFIGURATION_FOLDER + "/" + name + ".json";
 
         nlohmann::json configuration = loadJson(path);
 
@@ -957,6 +967,117 @@ namespace
 
         return result;
     }
+
+    void createDirectory(const std::string& name)
+    {
+        using namespace boost::filesystem;
+        create_directories(path(name));
+    }
+
+    bool fileExist(const std::string& name)
+    {
+        return boost::filesystem::exists(name);
+    }
+
+    void  saveFile(const std::string& name, const std::string& content)
+    {
+        std::ofstream stream(name);
+
+        if(!stream.is_open())
+        {
+            nero_log("failed to save file : " + name);
+            return;
+        }
+
+        stream << content;
+        stream.close();
+    }
+
+    void  saveFile(const std::string& name, const unsigned char* content, const unsigned int length)
+    {
+        std::ofstream stream(name, std::ios::binary);
+
+        if(!stream.is_open())
+        {
+            nero_log("failed to save file : " + name);
+            return;
+        }
+
+        stream.write(reinterpret_cast<const char*>(content), length);
+        stream.close();
+    }
+
+    void buildEngineDirectory()
+    {
+        //Create all necessary directory
+        createDirectory(RESOURCE_FOLDER + "/" + FONT_FOLDER);
+        createDirectory(RESOURCE_FOLDER + "/" + SOUND_FOLDER);
+        createDirectory(RESOURCE_FOLDER + "/" + MUSIC_FOLDER);
+        createDirectory(RESOURCE_FOLDER + "/" + SHADER_FOLDER);
+        createDirectory(RESOURCE_FOLDER + "/" + SCRIPT_FOLDER);
+        createDirectory(RESOURCE_FOLDER + "/" + TEXTURE_FOLDER);
+        createDirectory(RESOURCE_FOLDER + "/" + ANIMATION_FOLDER);
+        createDirectory(LOG_FOLDER);
+        createDirectory(STARTUP_FOLDER);
+        //createDirectory(CONCEPTION_FOLDER);
+        createDirectory(CONFIGURATION_FOLDER);
+
+        //Create the Default Font if not exit
+        if(!fileExist(RESOURCE_FOLDER + "/" + FONT_FOLDER + "/" + DEFAULT_FONT))
+        {
+            saveFile(RESOURCE_FOLDER + "/" + FONT_FOLDER + "/" + DEFAULT_FONT, sansation_ttf, sansation_ttf_len);
+        }
+
+        //Create Resource configuration if not exit
+        if(!fileExist(CONFIGURATION_FOLDER + "/" + RESOURCE_CONFIGURATION + ".json"))
+        {
+            saveFile(CONFIGURATION_FOLDER + "/" + RESOURCE_CONFIGURATION + ".json", ResourceSetting::toJson().dump(3));
+        }
+
+        //Create Engine Logo if not exit
+        if(!fileExist(STARTUP_FOLDER + "/" + LOADING_LOGO))
+        {
+            saveFile(STARTUP_FOLDER + "/" + LOADING_LOGO, nero_logo_png, nero_logo_png_len);
+        }
+
+        //Create Engine Copyrights if not exit
+        if(!fileExist(STARTUP_FOLDER + "/" + ENGINE_COPYRIGHTS))
+        {
+            saveFile(STARTUP_FOLDER + "/" + ENGINE_COPYRIGHTS, copyrights_png, copyrights_png_len);
+        }
+
+        //Create Shader files if not exit
+        if(!fileExist(RESOURCE_FOLDER + "/" + SHADER_FOLDER + "/" + SHADER_LIST))
+        {
+            saveFile(RESOURCE_FOLDER + "/" + SHADER_FOLDER + "/" + SHADER_LIST, shader_json, shader_json_len);
+        }
+
+        if(!fileExist(RESOURCE_FOLDER + "/" + SHADER_FOLDER + "/" + SIMPLE_FRAGMENT))
+        {
+            saveFile(RESOURCE_FOLDER + "/" + SHADER_FOLDER + "/" + SIMPLE_FRAGMENT, simple_fragment_frag, simple_fragment_frag_len);
+        }
+
+        if(!fileExist(RESOURCE_FOLDER + "/" + SHADER_FOLDER + "/" + SIMPLE_VERTEX))
+        {
+            saveFile(RESOURCE_FOLDER + "/" + SHADER_FOLDER + "/" + SIMPLE_VERTEX, simple_vertex_ver, simple_vertex_ver_len);
+        }
+
+        //Create conception folder
+        //conception (use marked)
+        //conception/markdown guide line, explain how to use markdown
+        //conception/project management, give some update (git, gitkraken, time start small)
+        //conception/project(date, team, leader, etc)
+    }
+
+    nlohmann::json toJson(sf::Color color)
+    {
+        return  {{"r", color.r}, {"g", color.g}, {"b", color.b}, {"a", color.a}};
+    }
+
+     sf::Color colorFromJson(nlohmann::json json)
+     {
+        return sf::Color(json["r"], json["g"], json["b"], json["a"]);
+     }
  }
 
 

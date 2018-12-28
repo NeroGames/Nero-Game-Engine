@@ -9,10 +9,14 @@
 #include <Nero/resource/ResourceManager.h>
 #include <Nero/object/MeshObject.h>
 #include <Nero/object/SpriteObject.h>
+#include <Nero/object/ButtonObject.h>
 #include <Nero/object/AnimationObject.h>
 #include <Nero/object/LayerObject.h>
+#include <Nero/object/TextObject.h>
+#include <Nero/object/UIObject.h>
 #include <Nero/scene/MeshEditor.h>
 #include <Nero/scene/PhysicObjectManager.h>
+#include <Nero/scene/SceneUtil.h>
 //SFGUI
 #include <SFGUI/Canvas.hpp>
 //SFML
@@ -31,7 +35,7 @@ namespace nero
             typedef std::shared_ptr<SceneBuilder> Ptr;
 
         public:
-                                        SceneBuilder(sfg::Canvas::Ptr renderCanvas, ResourceManager::Ptr resourceManager);
+                                        SceneBuilder(sfg::Canvas::Ptr renderCanvas, ResourceManager::Ptr resourceManager, SceneSetting& sceneSetting);
 
             //Main
             void                        handleEvent(const sf::Event& event);
@@ -65,6 +69,8 @@ namespace nero
             void                        deleteObject(Object::Ptr object);
             void                        setObjectName(const sf::String& name);
             void                        setObjectCategory(const sf::String& category);
+            void                        moveObjectUp();
+            void                        moveObjectDown();
             Object::Ptr                 getSelectedObject();
 
 
@@ -73,6 +79,8 @@ namespace nero
             void                        updateLayerColor(const sf::Color& color);
             void                        updateAllLayerAlpha(int alpha);
             void                        updateSpriteColor(const sf::Color& color);
+            void                        updateTextColor(const sf::Color& color);
+            void                        updateOutlineTextColor(const sf::Color& color);
             sf::Color                   getLayerColor();
 
 
@@ -89,17 +97,31 @@ namespace nero
             MeshEditor::Ptr                 getMeshEditor();
 
             //Scene
-            void                        buildScene(Object::Ptr mainObject);
+            void                        buildScene(Object::Ptr rootObject);
             void                        destroyAllPhysicObject(Object::Ptr mainObject);
             void                        updateLayerOrder();
             nlohmann::json              saveScene();
             void                        loadScene(nlohmann::json scene);
 
-            void                        setUpdateEngineFunction(std::function<void()>  fn);
-            void                        setEngineUndoFunction(std::function<void()>  fn);
+             void                            setUpdateUI(std::function<void()>  fn);
+            void                            setUpdateUndo(std::function<void()>  fn);
+            void                            setUpdateLog(std::function<void(const std::string&, int)>  fn);
+            void                            setUpdateLogIf(std::function<void(const std::string&, bool, int)>  fn);
 
             void                        setPhysicWorld(b2World* world);
 
+            void                        buildUI(UIObject::Ptr rootObject);
+
+            void                        setTextContent(const sf::String& content);
+            void                        setTextFont(const sf::String& font);
+            void                        setTextFontSize(float value);
+            void                        setTextLetterSpacing(float value);
+            void                        setTextLineSpacing(float value);
+            void                        setTextOutlineThickness(float value);
+            void                        setTextStyle(bool bold, bool italic, bool underLine, bool lineThrough);
+
+            const sf::Color&                getCanvasColor() const;
+            void                            setCanvasColor(const sf::Color& color);
         private:
             Object::Ptr                     findObject(Object::Ptr object, sf::Vector2f pos);
 
@@ -113,6 +135,7 @@ namespace nero
 
         private:
             SpriteObject::Ptr               loadSprite(nlohmann::json& json);
+            TextObject::Ptr               loadText(nlohmann::json& json);
             MeshObject::Ptr                 loadMesh(nlohmann::json& json);
             AnimationObject::Ptr            loadAnimation(nlohmann::json& json);
             int                             getNewId();
@@ -139,8 +162,14 @@ namespace nero
 
             b2World*                        m_PhysicWorld;
 
-            std::function<void()>           m_UpdateEngine;
-            std::function<void()>           m_EngineUndo;
+            SceneSetting&                   m_SceneSetting;
+            sf::Color                       m_CanvasColor;
+
+
+            std::function<void()>               m_UpdateUI;
+            std::function<void()>               m_UpdateUndo;
+            std::function<void(const std::string&, int)>                  m_UpdateLog;
+            std::function<void(const std::string&, bool, int)>    m_UpdateLogIf;
     };
 }
 #endif // SCENEBUILDER_H

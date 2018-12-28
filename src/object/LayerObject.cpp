@@ -148,6 +148,38 @@ namespace nero
                 return layerJson;
             }
 
+            case Object::Button_Object:
+            {
+                layerJson["type"] = "button_layer";
+
+                std::vector<nlohmann::json> buttonJsonTab;
+
+                auto childTab = getAllChild();
+
+                for(auto it = childTab->begin(); it != childTab->end(); it++)
+                    buttonJsonTab.push_back((*it)->toJson());
+
+                layerJson["button_table"] = buttonJsonTab;
+
+                return layerJson;
+            }
+
+            case Object::Text_Object:
+            {
+                layerJson["type"] = "text_layer";
+
+                std::vector<nlohmann::json> textJsonTab;
+
+                auto childTab = getAllChild();
+
+                for(auto it = childTab->begin(); it != childTab->end(); it++)
+                    textJsonTab.push_back((*it)->toJson());
+
+                layerJson["text_table"] = textJsonTab;
+
+                return layerJson;
+            }
+
             case Object::None:
             {
                 layerJson["type"] = "empty_layer";

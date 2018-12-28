@@ -39,6 +39,8 @@ namespace nero
         private:
             sf::Texture             m_LogoTexture;
             sf::Sprite              m_LogoSprite;
+            sf::Texture             m_CopyrightsTexture;
+            sf::Sprite              m_CopyrightsSprite;
 
             sf::RectangleShape      m_LoadingRectRight;
             sf::RectangleShape      m_LoadingRectLeft;

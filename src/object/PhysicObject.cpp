@@ -54,7 +54,7 @@ namespace nero
 
     PhysicObject::Ptr PhysicObject::Cast(Object::Ptr object)
     {
-        if(object->getFirstType() != Object::Physic_Object)
+        if(!object || object->getFirstType() != Object::Physic_Object)
             return nullptr;
 
         return  std::static_pointer_cast<PhysicObject>(object);
@@ -108,6 +108,11 @@ namespace nero
     sf::Vector2f PhysicObject::getWorldCenter() const
     {
         return b2_to_sf(m_Body->GetWorldCenter(), SCALE);
+    }
+
+    sf::Vector2f PhysicObject::getCenter() const
+    {
+        return getWorldCenter();
     }
 
     void PhysicObject::applyAngularImpulse(float impulse, bool wake)

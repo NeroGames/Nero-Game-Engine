@@ -27,7 +27,7 @@ namespace nero
         ,m_EngineStarted(false)
         ,m_Camera(nullptr)
         ,m_ResourceManager(nullptr)
-        ,m_SceneBuilder(nullptr)
+        ,m_RestartScene(false)
     {
          //Setup the SFML window
         m_Window.setVerticalSyncEnabled(true);
@@ -36,6 +36,8 @@ namespace nero
         //Build the Loading Screen
         m_StartupScreen->setRenderWindow(&m_Window);
         m_StartupScreen->init();
+
+        m_Task = [](){};
 
         //Load resource in a separated  thread
         m_StartEngineFuture = std::async(std::launch::async, &RenderEngine::startEngine, this, std::ref(m_EngineStarted), m_StartupScreen->getMinTime());
@@ -49,11 +51,11 @@ namespace nero
         ,m_EngineStarted(true)
         ,m_Camera(nullptr)
         ,m_ResourceManager(nullptr)
-        ,m_SceneBuilder(nullptr)
     {
         m_Window.setVerticalSyncEnabled(true);
         m_Window.resetGLStates(); //if not, SFGUI will have some undetermined behaviour
 
+        m_Task = [](){};
 
         startEngine(m_EngineStarted, 0.f);
     }
@@ -94,6 +96,12 @@ namespace nero
                         handleKeyboardInput(event.key.code, false);
                         break;
                 }
+
+                if(m_RestartScene)
+                {
+                    m_Task();
+                    m_RestartScene = false;
+                }
             }
         }
     }
@@ -113,6 +121,8 @@ namespace nero
             m_RenderCanvas->SetView(m_Camera->getView());
 
             m_Scene->update(timeStep);
+            m_Scene->m_FrameRate = getFrameRate();
+            m_Scene->m_FrameTime = getFrameTime();
         }
     }
 
@@ -131,7 +141,7 @@ namespace nero
         {
             m_Window.clear();
 
-                m_RenderCanvas->Clear(m_Scene->m_SceneSetting.canvasColor);
+                m_RenderCanvas->Clear(m_Scene->m_CanvasColor);
 
                     m_Scene->render();
                     m_Scene->renderShape();
@@ -157,12 +167,12 @@ namespace nero
             // R to reset the scene
             if(key == sf::Keyboard::R && CTRL())
             {
-                m_Camera->reinitialize();
-                m_Scene = m_CreateScene();
-                m_SceneBuilder->loadScene(m_SceneJson);
-                m_SceneBuilder->setPhysicWorld(m_Scene->m_PhysicWorld);
-                m_SceneBuilder->buildScene(m_Scene->m_RootObject);
-                m_Scene->init();
+//                m_Camera->reinitialize();
+//                m_Scene = m_CreateScene();
+//                m_SceneBuilder->loadScene(m_SceneJson);
+//                m_SceneBuilder->setPhysicWorld(m_Scene->m_PhysicWorld);
+//                m_SceneBuilder->buildScene(m_Scene->m_RootObject);
+//                m_Scene->init();
             }
 
             // P to pause the scene
@@ -182,36 +192,51 @@ namespace nero
 
         //Load all resources
         m_ResourceManager = ResourceManager::Ptr(new ResourceManager());
-        m_ResourceManager->Font.load();
-        m_ResourceManager->Sound.load();
-        m_ResourceManager->Music.load();
-        m_ResourceManager->Shader.load();
-        m_ResourceManager->Script.load();
-        m_ResourceManager->Texture.load();
-        m_ResourceManager->Animation.load();
+        m_ResourceManager->font.load();
+        m_ResourceManager->sound.load();
+        m_ResourceManager->music.load();
+        m_ResourceManager->shader.load();
+        m_ResourceManager->script.load();
+        m_ResourceManager->texture.load();
+        m_ResourceManager->animation.load();
 
         // Create our SFML canvas window
         m_RenderCanvas = sfg::Canvas::Create();
-        m_RenderCanvas->SetRequisition(sf::Vector2f(m_WinWidth, m_WinHeight));
+        m_RenderCanvas->SetRequisition(sf::Vector2f(getWindowWidth(), getWindowHeight()));
         m_Desktop.Add(m_RenderCanvas);
 
         m_FrontView = m_RenderCanvas->GetView();
-        m_FrontView.setCenter(m_WinWidth/2.f, m_WinHeight/2.f);
-        m_FrontView.setSize(sf::Vector2f(m_WinWidth, m_WinHeight-22.f));
+        m_FrontView.setCenter(getWindowWidth()/2.f, getWindowHeight()/2.f);
+        m_FrontView.setSize(sf::Vector2f(getWindowWidth(), getWindowHeight()));
 
-
-        m_Camera = Camera::Ptr(new Camera(sf::Vector2f(m_WinWidth, m_WinHeight)));
-        m_SceneBuilder = SceneBuilder::Ptr(new SceneBuilder(m_RenderCanvas, m_ResourceManager));
+        m_Camera = Camera::Ptr(new Camera(sf::Vector2f(getWindowWidth(), getWindowHeight())));
 
         //If the startup was too fast, wait a time before exit
         int time = minTime - clock.getElapsedTime().asSeconds();
         std::this_thread::sleep_for(std::chrono::seconds(time < 0 ? 0 : time));
 
-        //Register the  default Scene
-        setScene<Scene>(DEFAULT_SCENE);
+        //Call set scene task
+        m_Task();
+
+        //Register the  default Scene if none exist
+        if(!m_Scene)
+        {
+            setScene<Scene>(DEFAULT_SCENE);
+            m_Task();
+        }
+
+        m_Camera->setPosition(m_Scene->m_CameraSetting.defaultPosition);
+        m_Camera->setRotation(m_Scene->m_CameraSetting.defaultRotation);
+        m_Camera->setZoom(m_Scene->m_CameraSetting.defaultZoom);
 
         //exit
         engineStarted = true;
         return 0;
     }
+
+    void RenderEngine::resetScene()
+    {
+       m_RestartScene = true;
+    }
+
 }

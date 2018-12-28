@@ -31,11 +31,25 @@ namespace nero
             void                stopMusic(std::string name);
             void                setSoundVolume(float volume);
             void                setMusicVolume(float volume);
+            void                pauseMusic();
+            void                resumeMusic();
+            void                stopMusic();
+            float               getSoundVolume();
+            float               getMusicVolume();
+
+            float               increaseMusicVolume(float offset = 1.f);
+            float               decreaseMusicVolume(float offset = 1.f);
+            float               increaseSoundVolume(float offset = 1.f);
+            float               decreaseSoundVolume(float offset = 1.f);
+
             //Listener
 //            void                setGlobalVolume(float volume);
 //            void                setListenerPosition(const sf::Vector3f& position);
 //            void                setListenerDirection(const sf::Vector3f& direction);
 //            void                setListenerUpVector(const sf::Vector3f& upVector);
+
+            nlohmann::json      toJson();
+            void                fromJson(nlohmann::json json);
 
         private:
             sf::Sound&          getSound();
@@ -45,7 +59,8 @@ namespace nero
             SoundHolder&                    m_SoundHolder;
             std::string                     m_CurrentMusic;
             std::vector<sf::Sound>          m_SoundPool;
-            SoundSetting                    m_SoundSetting;
+            float                           m_MusicVolume;
+            float                           m_SoundVolume;
     };
 }
 

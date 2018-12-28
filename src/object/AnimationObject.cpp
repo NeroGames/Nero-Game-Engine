@@ -116,6 +116,15 @@ namespace nero
         m_Animation.setLoop(flag);
     }
 
+    void AnimationObject::verticalFlip()
+    {
+        m_Animation.verticalFlip();
+    }
+
+    void AnimationObject::horizontalFlip()
+    {
+        m_Animation.horizontalFlip();
+    }
 
 
 }

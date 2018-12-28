@@ -70,6 +70,7 @@ namespace nero
             int                         getPointCount()         const;
             PointTab                    getAllVertexPoint()     const;
             sf::FloatRect               getGlobalBounds()       const;
+            sf::Vector2f                getCenter()             const;
 
             nlohmann::json              toJson()                const;
             sf::String                  toSting()               const;

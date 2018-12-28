@@ -9,7 +9,6 @@
 //STD
 #include <typeinfo>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     SceneManager::SceneManager(Context context):
@@ -32,23 +31,6 @@ namespace nero
             return;
 
         m_AdvancedScene->update(timeStep);
-
-        if(m_IsShiftOriginLeft && m_IsLeftShift)
-        {
-            m_AdvancedScene->shiftOrigin(b2Vec2(m_ShitftOriginSpeed, 0.0f));
-        }
-        if(m_IsShiftOriginRight && m_IsLeftShift)
-        {
-            m_AdvancedScene->shiftOrigin(b2Vec2(-m_ShitftOriginSpeed, 0.0f));
-        }
-        if(m_IsShiftOriginUp && m_IsLeftShift)
-        {
-            m_AdvancedScene->shiftOrigin(b2Vec2(0.0f, m_ShitftOriginSpeed));
-        }
-        if(m_IsShiftOriginDown && m_IsLeftShift)
-        {
-            m_AdvancedScene->shiftOrigin(b2Vec2(0.0f, -m_ShitftOriginSpeed));
-        }
     }
 
     void SceneManager::render()
@@ -63,7 +45,7 @@ namespace nero
 
     }
 
-    void SceneManager::renderOnFrontScreen()
+    void SceneManager::renderFrontScreen()
     {
         if(m_AdvancedScene->m_Scene)
             m_AdvancedScene->m_Scene->renderFrontScreen();
@@ -110,19 +92,7 @@ namespace nero
                 m_AdvancedScene->launchBomb();
         }
 
-        if(key == sf::Keyboard::Z)
-            m_IsShiftOriginUp = isPressed;
-
-        else if(key == sf::Keyboard::S)
-            m_IsShiftOriginDown = isPressed;
-
-        else if(key == sf::Keyboard::Q)
-            m_IsShiftOriginLeft = isPressed;
-
-        else if(key == sf::Keyboard::D)
-            m_IsShiftOriginRight = isPressed;
-
-        else if(key == sf::Keyboard::LShift)
+        if(key == sf::Keyboard::LShift)
             m_IsLeftShift = isPressed;
     }
 
@@ -161,21 +131,11 @@ namespace nero
         b2Vec2 p = sf_to_b2(world_pos, SCALE);
 
         m_AdvancedScene->mouseMove(p);
-
-        if(m_IsMouseRightButton)
-        {
-            b2Vec2 diff = p - m_LastMousePosition;
-            m_AdvancedScene->shiftOrigin(-diff);
-            m_LastMousePosition = p;
-        }
     }
 
-    std::vector<sf::String> SceneManager::getSceneTable()
-    {
-        return  m_SceneTable;
-    }
 
-    int SceneManager::getSceneCount()
+
+    const int& SceneManager::getSceneCount() const
     {
         return m_SceneTable.size();
     }
@@ -187,28 +147,14 @@ namespace nero
         m_AdvancedScene =  found->second.first;
     }
 
-    void SceneManager::restartScene()
-    {
-//        auto found = m_SceneFactoryMap.find(m_SceneName);
-//
-//        m_AdvancedScene =  found->second.second();
-    }
-
-    b2World*  SceneManager::getPhysicWorld() const
-    {
-        return m_AdvancedScene->m_Scene->m_PhysicWorld;
-    }
-
     SceneBuilder::Ptr SceneManager::getSceneBuilder()
     {
         return m_AdvancedScene->getSceneBuilder();
     }
 
-    SceneBuilder::Ptr SceneManager::getSceneBuilder(std::string name)
+    SceneBuilder::Ptr SceneManager::getScreenBuilder()
     {
-        auto found = m_SceneFactoryMap.find(name);
-
-        return found->second.first->getSceneBuilder();
+        return m_AdvancedScene->getScreenBuilder();
     }
 
     UndoManager::Ptr SceneManager::getUndoManager()
@@ -216,21 +162,14 @@ namespace nero
         return m_AdvancedScene->getUndoManager();
     }
 
+    UndoManager::Ptr SceneManager::getScreenUndoManager()
+    {
+        return m_AdvancedScene->getScreenUndoManager();
+    }
+
     SoundManager::Ptr SceneManager::getSoundManager()
     {
-        return nullptr;
-    }
-
-    UndoManager::Ptr SceneManager::getUndoManager(std::string name)
-    {
-        auto found = m_SceneFactoryMap.find(name);
-
-        return found->second.first->getUndoManager();
-    }
-
-    std::string SceneManager::getSceneName()
-    {
-        return m_AdvancedScene->m_SceneName;
+        return  m_AdvancedScene->getSoundManager();;
     }
 
     MeshEditor::Ptr SceneManager::getMeshEditor()
@@ -238,24 +177,43 @@ namespace nero
         return m_AdvancedScene->m_SceneBuilder->getMeshEditor();
     }
 
-    Object::Ptr SceneManager::getRootObject()
-    {
-        return m_AdvancedScene->m_Scene->m_RootObject;
-    }
-
     void SceneManager::buildScene()
     {
         if(m_AdvancedScene->m_Scene)
         {
-            m_AdvancedScene->m_SceneBuilder->destroyAllPhysicObject(m_AdvancedScene->m_Scene->m_RootObject);
-            m_AdvancedScene->m_Scene->m_RootObject->removeAllChild();
+            m_AdvancedScene->m_SceneBuilder->destroyAllPhysicObject(m_AdvancedScene->m_Scene->m_World);
+            m_AdvancedScene->m_Scene->m_World->removeAllChild();
             m_AdvancedScene->m_Scene = nullptr;
         }
 
+
         m_AdvancedScene->m_Scene = m_SceneFactoryMap[m_AdvancedScene->m_SceneName].second();
+        m_AdvancedScene->m_Scene->m_UpdateLog = m_UpdateLog;
+        m_AdvancedScene->m_Scene->m_UpdateLogIf = m_UpdateLogIf;
         m_AdvancedScene->init();
+
+        //World
         m_AdvancedScene->m_SceneBuilder->setPhysicWorld(m_AdvancedScene->m_Scene->m_PhysicWorld);
-        m_AdvancedScene->m_SceneBuilder->buildScene(m_AdvancedScene->m_Scene->m_RootObject);
+        m_AdvancedScene->m_SceneBuilder->buildScene(m_AdvancedScene->m_Scene->m_World);
+        //Screen
+        for(auto& devScreen : m_AdvancedScene->m_FrontScreenTable)
+        {
+            Screen::Ptr screen = Screen::Ptr(new Screen());
+
+            //FrontScreen
+            screen->screen  = Object::Ptr(new Object());
+            screen->screenUI = UIObject::Ptr(new UIObject());
+
+            devScreen.screenBuilder->buildScene(screen->screen);
+            devScreen.screenBuilder->buildUI(screen->screenUI);
+
+            screen->name = devScreen.name;
+            screen->hide = true;
+            screen->canvasColor = devScreen.screenBuilder->getCanvasColor();
+
+            m_AdvancedScene->m_Scene->m_ScreenTable.push_back(screen);
+        }
+
         m_AdvancedScene->m_Scene->init();
     }
 
@@ -264,11 +222,231 @@ namespace nero
        return m_AdvancedScene->m_CameraSetting;
     }
 
+    CameraSetting& SceneManager::getScreenCameraSetting()
+    {
+       return m_AdvancedScene->getScreenCameraSetting();
+    }
+
     SceneSetting& SceneManager::getSceneSetting()
     {
          return m_AdvancedScene->m_SceneSetting;
     }
 
+    nlohmann::json SceneManager::firstSave(const std::string& sceneName)
+    {
+        auto found = m_SceneFactoryMap.find(sceneName);
+        auto advanceScene = found->second.first = found->second.first;
+
+        advanceScene->m_CameraSetting.position                               = sf::Vector2f(400.f, 303.f);
+        advanceScene->m_CameraSetting.defaultPosition                        = sf::Vector2f(400.f, 303.f);
+        advanceScene->m_CameraSetting.zoom                                   = -36;
+        advanceScene->m_FrontScreenTable.front().cameraSetting.position        = sf::Vector2f(400.f, 303.f);
+        advanceScene->m_FrontScreenTable.front().cameraSetting.defaultPosition = sf::Vector2f(400.f, 303.f);
+        advanceScene->m_FrontScreenTable.front().cameraSetting.zoom            = -36;
+
+        nlohmann::json scene = saveScene(advanceScene);
+
+        //World
+        advanceScene->m_SceneBuilder->setUpdateUI(m_UpdateUI);
+        advanceScene->m_SceneBuilder->setUpdateUndo(m_UpdateUndo);
+        advanceScene->m_SceneBuilder->setUpdateLog(m_UpdateLog);
+        advanceScene->m_SceneBuilder->setUpdateLogIf(m_UpdateLogIf);
+        advanceScene->m_UndoManager->add(scene["world_view"]);
+        //Screen
+        advanceScene->m_FrontScreenTable.front().screenBuilder->setUpdateUI(m_UpdateUI);
+        advanceScene->m_FrontScreenTable.front().screenBuilder->setUpdateUndo(m_UpdateUndo);
+        advanceScene->m_FrontScreenTable.front().screenBuilder->setUpdateLog(m_UpdateLog);
+        advanceScene->m_FrontScreenTable.front().screenBuilder->setUpdateLogIf(m_UpdateLogIf);
+        advanceScene->m_FrontScreenTable.front().undoManager->add(advanceScene->m_FrontScreenTable.front().screenBuilder->saveScene());
+
+        return scene;
+    }
+
+
+    nlohmann::json SceneManager::saveScene()
+    {
+        return saveScene(m_AdvancedScene);
+    }
+
+    nlohmann::json SceneManager::saveScene(AdvancedScene::Ptr advanceScene)
+    {
+        nlohmann::json scene;
+        //Scene
+        scene["scene_name"]             = advanceScene->m_SceneName;
+        scene["scene_setting"]          = advanceScene->m_SceneSetting.toJson();
+        scene["sound_setting"]          = advanceScene->m_SoundManager->toJson();
+        //World
+        nlohmann::json world_view       = advanceScene->m_SceneBuilder->saveScene();
+        world_view["camera_setting"]    = advanceScene->m_CameraSetting.toJson();
+        world_view["grid_setting"]      = advanceScene->m_Grid->toJson();
+        //Screen
+        std::vector<nlohmann::json> screen_table;
+        for(auto screen : advanceScene->m_FrontScreenTable)
+        {
+            nlohmann::json screen_view      = screen.screenBuilder->saveScene();
+            screen_view["camera_setting"]   = screen.cameraSetting.toJson();
+            screen_view["grid_setting"]     = screen.grid->toJson();
+            screen_view["name"]             = screen.name;
+
+            screen_table.push_back(screen_view);
+        }
+        //
+        scene["world_view"]             = world_view;
+        scene["screen_table"]           = screen_table;
+
+        return scene;
+    }
+
+    void SceneManager::firstLoad(nlohmann::json scene, const std::string& sceneName)
+    {
+        auto found = m_SceneFactoryMap.find(sceneName);
+        auto advanceScene = found->second.first;
+
+         //Load Scene
+        loadScene(advanceScene, scene);
+
+        //World
+        advanceScene->m_SceneBuilder->setUpdateUI(m_UpdateUI);
+        advanceScene->m_SceneBuilder->setUpdateUndo(m_UpdateUndo);
+        advanceScene->m_SceneBuilder->setUpdateLog(m_UpdateLog);
+        advanceScene->m_UndoManager->add(scene["world_view"]);
+        //Screen
+        for(auto screen : advanceScene->m_FrontScreenTable)
+        {
+            screen.screenBuilder->setUpdateUI(m_UpdateUI);
+            screen.screenBuilder->setUpdateUndo(m_UpdateUndo);
+            screen.screenBuilder->setUpdateLog(m_UpdateLog);
+            screen.undoManager->add(screen.screenBuilder->saveScene());
+        }
+    }
+
+    void SceneManager::loadScene(nlohmann::json scene)
+    {
+        loadScene(m_AdvancedScene, scene);
+    }
+
+    void SceneManager::loadScene(AdvancedScene::Ptr advanceScene, nlohmann::json scene)
+    {
+        //Scene
+        advanceScene->m_SceneSetting = SceneSetting::fromJson(scene["scene_setting"]);
+        advanceScene->m_SoundManager->fromJson(scene["sound_setting"]);
+        //World
+        advanceScene->m_SceneBuilder->loadScene(scene["world_view"]);
+        advanceScene->m_CameraSetting = CameraSetting::fromJson(scene["world_view"]["camera_setting"]);
+        advanceScene->m_Grid->fromJson(scene["world_view"]["grid_setting"]);
+
+        //Screen
+        nlohmann::json screen_table = scene["screen_table"];
+        advanceScene->m_FrontScreenTable.clear();
+        for(auto screen : screen_table)
+        {
+            advanceScene->addScreen(screen["name"]);
+            advanceScene->m_FrontScreenTable.back().screenBuilder->loadScene(screen);
+            advanceScene->m_FrontScreenTable.back().cameraSetting = CameraSetting::fromJson(screen["camera_setting"]);
+            advanceScene->m_FrontScreenTable.back().grid->fromJson(screen["grid_setting"]);
+        }
+        //
+        advanceScene->selectScreen(advanceScene->m_FrontScreenTable.front().name);
+    }
+
+    Grid::Ptr SceneManager::getScreenGrid()
+    {
+        return m_AdvancedScene->getFrontScreenGrid();
+    }
+
+    Grid::Ptr SceneManager::getWorldGrid()
+    {
+        return m_AdvancedScene->m_Grid;
+    }
+
+    void SceneManager::setUpdateUI(std::function<void()>  fn)
+    {
+        m_UpdateUI = fn;
+    }
+
+    void SceneManager::setUpdateUndo(std::function<void()>  fn)
+    {
+        m_UpdateUndo = fn;
+    }
+
+    void SceneManager::setUpdateLog(std::function<void(const std::string&, int)>  fn)
+    {
+        m_UpdateLog = fn;
+    }
+
+    void SceneManager::setUpdateLogIf(std::function<void(const std::string&, bool, int)>  fn)
+    {
+        m_UpdateLogIf = fn;
+    }
+
+    const std::vector<sf::String>& SceneManager::getSceneTable() const
+    {
+        return m_SceneTable;
+    }
+
+    std::vector<std::string> SceneManager::getScreenTable()
+    {
+        return m_AdvancedScene->getScreenTable();
+    }
+
+    bool SceneManager::addScreen(const std::string& name)
+    {
+       return m_AdvancedScene->addScreen(name);
+    }
+
+    bool SceneManager::deleteScreen(const std::string& name)
+    {
+        return m_AdvancedScene->deleteScreen(name);
+    }
+
+    bool SceneManager::renameScreen(const std::string& name, const std::string& newName)
+    {
+        return m_AdvancedScene->renameScreen(name, newName);
+    }
+
+    void SceneManager::selectScreen(const std::string& name)
+    {
+        m_AdvancedScene->selectScreen(name);
+    }
+
+    void SceneManager::updateSceneSaveFile()
+    {
+        m_AdvancedScene->m_SceneBuilder->updateLayerOrder();
+
+        std::string file = WORKSPACE_FOLDER + "/" +  m_AdvancedScene->m_SceneName + "/" + m_AdvancedScene->m_SceneName +  ".json";
+
+        saveFile(file, saveScene().dump(3));
+    }
+
+    void SceneManager::loadSceneSaveFile()
+    {
+        std::string file = WORKSPACE_FOLDER + "/" +  m_AdvancedScene->m_SceneName + "/" + m_AdvancedScene->m_SceneName +  ".json";
+
+        loadScene(loadJson(file));
+    }
+
+    void SceneManager::saveAllScene()
+    {
+        for(auto factory : m_SceneFactoryMap)
+        {
+            factory.second.first->m_SceneBuilder->updateLayerOrder();
+
+            std::string file = WORKSPACE_FOLDER + "/" +  factory.first + "/" + factory.first +  ".json";
+
+            saveFile(file, saveScene(factory.second.first).dump(3));
+        }
+    }
+
+    const sf::Vector2f SceneManager::getSceneResolution() const
+    {
+        return m_AdvancedScene->m_Scene->m_Resolution;
+    }
+
+    Scene::Ptr SceneManager::getScene()
+    {
+        m_AdvancedScene->m_Scene->m_CameraSetting  = m_AdvancedScene->m_CameraSetting;
+        return m_AdvancedScene->m_Scene;
+    }
 
 
 }

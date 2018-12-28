@@ -27,43 +27,30 @@ namespace nero
             typedef std::shared_ptr<Grid>           Ptr;
 
         public:
-                                                    Grid(sf::Vector2f gridSize);
-            void                                    update(sf::View view);
+                                                    Grid();
+            sf::Vector2f                            getCenter();
+            void                                    update(const sf::Vector2i& tileSize, const sf::Vector2i& tileCount);
+            void                                    updatePosition(const sf::Vector2i& position);
+            const sf::Vector2i&                     getTileSize() const;
+            const sf::Vector2i&                     getTileCount() const;
+            const sf::Vector2i&                     getPosition() const;
+            void                                    setColor(const sf::Color& color);
+            sf::Color                               getColor();
+            nlohmann::json                          toJson();
+            void                                    fromJson(nlohmann::json json);
 
         private:
-
             void                                    initialize();
-            void                                    initialize_test();
             virtual void			                draw(sf::RenderTarget& target, sf::RenderStates states) const;
-            void                                    updateRotation(sf::View view);
-            void                                    updatePosition(sf::View view);
-            GridFace                                getRightFace(float angle);
-            GridFace                                getLeftFace(float angle);
-            GridFace                                getUpFace(float angle);
-            GridFace                                getDownFace(float angle);
-            void                                    handleRightOffset(sf::View view);
-            void                                    handleLeftOffset(sf::View view);
-            void                                    handleUpOffset(sf::View view);
-            void                                    handleDownOffset(sf::View view);
-            bool                                    axeAlign();
-            sf::Vector2f                            translateLine(sf::Vector2f offset, float angle);
-
-
 
         private:
-            sf::Vector2f                            m_Size;
-            sf::Vector2f                            m_Origin;
-            sf::Vector2f                            m_Position;
-            float                                   m_Rotation;
-            sf::Vector2f                            m_LastPosition;
-            float                                   m_LastRotation;
+            sf::Vector2i                            m_TileSize;
+            sf::Vector2i                            m_TileCount;
+            sf::Vector2i                            m_Position;
             sf::Color                               m_Color;
-            float                                   m_xOffset;
-            float                                   m_yOffset;
-            int                                     m_CountOffset;
             float                                   m_Thickness;
-            std::deque<sf::RectangleShape>          m_HorizontalLineTable;
-            std::deque<sf::RectangleShape>          m_VerticalLineTable;
+            std::vector<sf::RectangleShape>         m_HorizontalLineTable;
+            std::vector<sf::RectangleShape>         m_VerticalLineTable;
     };
 }
 

@@ -694,4 +694,16 @@ namespace nero
         return &m_VertexTab;
     }
 
+    sf::Vector2f Mesh::getCenter() const
+    {
+        sf::Vector2f center;
+        sf::FloatRect bound = getGlobalBounds();
+
+        center.x = bound.left + bound.width/2.f;
+        center.y = bound.top + bound.height/2.f;
+
+        return center;
+    }
+
+
 }

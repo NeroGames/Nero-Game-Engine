@@ -11,6 +11,7 @@
 #include <Nero/utility/EnumUtil.h>
 #include <Nero/model/Grid.h>
 #include <Nero/engine/EngineSetting.h>
+#include <Nero/engine/SceneRenderer.h>
 //SMFL
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Clock.hpp>
@@ -41,6 +42,10 @@
 #include <SFGUI/Canvas.hpp>
 #include <SFGUI/Adjustment.hpp>
 #include <SFGUI/Scale.hpp>
+#include <SFGUI/ToggleButton.hpp>
+//IMGUI
+#include <imgui/imgui.h>
+#include <imgui/imgui-SFML.h>
 ////////////////////////////////////////////////////////////
 
 namespace nero
@@ -52,25 +57,32 @@ namespace nero
             friend class                            DevEngine;
 
         public:
-                                        DevEngineUI(sf::RenderWindow& window, ResourceManager::Ptr resourceManager);
+                                        DevEngineUI(sf::RenderWindow& window);
 
             //EngineUI
-            void                        build();
+            void                        buildInterface();
+            void                        buildCamera();
+            void                        buildSceneManger();
+            void                        setup();
             void                        handleEvent(sf::Event& event);
             void                        update(const sf::Time& timeStep);
             void                        render();
             //Get Engine Resources
             void                        setSceneManager(SceneManager::Ptr sceneManager);
-            void                        setSoundManager(SoundManager::Ptr soundManager);
             void                        setEngineSetting(EngineSetting engineSetting);
             void                        setCamera(AdvancedCamera::Ptr camera);
-            void                        setGrid(Grid::Ptr grid);
             //
             void                        addScene(std::string name);
             void                        selectScene(std::string name);
             sf::View&                   getCanvasFrontView();
             sfg::Canvas::Ptr            getRenderCanvas() const;
 
+            template <typename T>
+            void                            addScene(std::string name);
+
+            void                        setResourceManager(ResourceManager::Ptr resourceManager);
+            void                        updateFrameRate(const float& frameRate, const float& frameTime);
+            void                        updateInfo();
 
         private:
             void                        handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
@@ -79,9 +91,13 @@ namespace nero
 
             void                        updatePositionLabel();
             void                        updateSceneSetting();
+            void                        updateSceneScreen();
             void                        updateCameraSetting();
+            void                        updateCamera(const CameraSetting& cameraSetting);
+            void                        updateGridSetting();
+            void                        updateSoundSetting();
             void                        autoSave();
-
+            void                        disableFrontScreen();
 
         private:
             ////////////////////////////////////////////////////////////
@@ -92,42 +108,59 @@ namespace nero
             EngineSetting                       m_EngineSetting;
             ResourceManager::Ptr                m_ResourceManager;
             SceneManager::Ptr                   m_SceneManager;
-            SoundManager::Ptr                   m_SoundManager;
             SceneBuilder::Ptr                   m_ActiveSceneBuilder;
             MeshEditor::Ptr                     m_ActiveMeshEditor;
             UndoManager::Ptr                    m_ActiveUndoManager;
             SoundManager::Ptr                   m_ActiveSoundManager;
+            Grid::Ptr                           m_ActiveGrid;
             //Camera
             AdvancedCamera::Ptr                 m_Camera;
             //Engine mode
             EngineMode                          m_EngineMode;
             EngineSubMode                       m_EngineSubMode;
-            //Grid
-            Grid::Ptr                           m_Grid;
             //Callback
             void                                updateUI();
             void                                updateUndo();
-            void                                updateLayerUndo();
-            void                                updateLog(const std::string& message);
+            void                                updateLog(const std::string& message, int level = nero::Info);
+            void                                updateLogIf(const std::string& message, bool condition, int level = nero::Info);
+            //
+            std::string                         m_CurrentView;
+            sf::Text                            m_InfoText;
             ////////////////////////////////////////////////////////////
             //Left_Interface : Utility | Music | Grid | Sprite | Animation | Color | Mesh
-            void                                build_left(sfg::Box::Ptr left_box);
+            void                                buildLeft(sfg::Box::Ptr left_box);
             void                                build_utility_box(sfg::Box::Ptr utility_box);
+            void                                build_front_screen_box(sfg::Box::Ptr front_screen_box);
             void                                build_music_box(sfg::Box::Ptr music_box);
             void                                build_grid_box(sfg::Box::Ptr grid_box);
             void                                build_sprite_box(sfg::Box::Ptr sprite_box);
             void                                build_animation_box(sfg::Box::Ptr animation_box);
-            void                                build_color_window(sfg::Window::Ptr color_window);
+            void                                build_color_box(sfg::Box::Ptr color_box);
             void                                build_mesh_window(sfg::Window::Ptr mesh_window);
+            void                                build_text_window(sfg::Window::Ptr text_window);
             //Utility
             sfg::RadioButton::Ptr               m_ObjectModeRadioButton;
             sfg::RadioButton::Ptr               m_MeshModeRadioButton;
             sfg::RadioButton::Ptr               m_PlayModeRadioButton;
+            sfg::ToggleButton::Ptr              m_FrontScreenToggleButton;
+            sfg::ComboBox::Ptr                  m_ScreenComboBoxFirst;
             sfg::Button::Ptr                    m_SaveButton;
             sfg::Button::Ptr                    m_LoadButton;
+            sfg::Button::Ptr                    m_AccessLearningButton;
+            sfg::Button::Ptr                    m_AccessSnippetButton;
+            sfg::Button::Ptr                    m_AccessAPIButton;
+            sfg::Button::Ptr                    m_AccessForumButton;
             sfg::CheckButton::Ptr               m_AutoSaveChekButton;
             sf::Clock                           m_AutoSaveClock;
             sf::Time                            m_ElapseTime;
+            bool                                m_FrontScreen;
+            //Front Screen
+            sfg::ComboBox::Ptr                  m_ScreenComboBoxSecond;
+            sfg::Entry::Ptr                     m_FrontScreenNameEntry;
+            sfg::Button::Ptr                    m_AddFrontScreenButton;
+            sfg::Button::Ptr                    m_CopyFrontScreenButton;
+            sfg::Button::Ptr                    m_DeleteFrontScreenButton;
+            sfg::Button::Ptr                    m_RenameFrontScreenButton;
             //Music
             sfg::ComboBox::Ptr                  m_MusicComboBox;
             sfg::ComboBox::Ptr                  m_SoundComboBox;
@@ -136,20 +169,27 @@ namespace nero
             sfg::Scale::Ptr                     m_MusicScaleBar;
             sfg::Scale::Ptr                     m_SoundScaleBar;
             //Grid
-            sfg::SpinButton::Ptr                m_xGridSpinButton;
-            sfg::SpinButton::Ptr                m_yGridSpinButton;
+            sfg::SpinButton::Ptr                m_GridWidthSpinButton;
+            sfg::SpinButton::Ptr                m_GridHeightSpinButton;
+            sfg::SpinButton::Ptr                m_GridXSizeSpinButton;
+            sfg::SpinButton::Ptr                m_GridYSizeSpinButton;
+            sfg::SpinButton::Ptr                m_GridXOffsetSpinButton;
+            sfg::SpinButton::Ptr                m_GridYOffsetSpinButton;
             //Sprite | Animation
             sf::Sprite                          m_Preview;
             sf::Texture                         m_PreviewTexture;
             //Color
             sfg::RadioButton::Ptr               m_SpriteColorRadioButton;
-            sfg::RadioButton::Ptr               m_AnimationColorRadioButton;
             sfg::RadioButton::Ptr               m_LayerColorRadioButton;
             sfg::RadioButton::Ptr               m_CanvasColorRadioButton;
+            sfg::RadioButton::Ptr               m_GridColorRadioButton;
+            sfg::RadioButton::Ptr               m_TextColorRadioButton;
+            sfg::RadioButton::Ptr               m_TextOutlineColorRadioButton;
             sfg::Adjustment::Ptr                m_AlphaAdjustment;
             sfg::Adjustment::Ptr                m_RedAdjustment;
             sfg::Adjustment::Ptr                m_GreenAdjustment;
             sfg::Adjustment::Ptr                m_BlueAdjustment;
+            sfg::Notebook::Ptr                  m_ColorNotebook;
             //Mesh
             sfg::CheckButton::Ptr               m_MeshFixedRotationCheckButton;
             sfg::CheckButton::Ptr               m_MeshIsSensorCheckButton;
@@ -158,6 +198,18 @@ namespace nero
             sfg::SpinButton::Ptr                m_MeshFrictionSpinButton;
             sfg::SpinButton::Ptr                m_MeshRestitutionSpinButton;
             sfg::SpinButton::Ptr                m_MeshGravityScaleSpinButton;
+            //Text
+            sfg::ComboBox::Ptr                  m_FontComboBox;
+            sfg::Entry::Ptr                     m_TextEntry;
+            sfg::Button::Ptr                    m_AddTextButton;
+            sfg::SpinButton::Ptr                m_TextFontSize;
+            sfg::SpinButton::Ptr                m_TextLineSpacing;
+            sfg::SpinButton::Ptr                m_TextLetterSpacing;
+            sfg::SpinButton::Ptr                m_TextOutlineThickness;
+            sfg::CheckButton::Ptr               m_TextBoldCheckButton;
+            sfg::CheckButton::Ptr               m_TextItalicCheckButton;
+            sfg::CheckButton::Ptr               m_TextUnderlinedCheckButton;
+            sfg::CheckButton::Ptr               m_TextStrikeThroughCheckButton;
             //Sequence
             sfg::Box::Ptr                       m_SequenceBox;
             sfg::Notebook::Ptr                  m_SequenceNoteBook;
@@ -186,9 +238,33 @@ namespace nero
             void                                onStopMusic();
             void                                onMusicAdjustment();
             void                                onSoundAdjustment();
+            void                                onFrontScreenToggleButton();
+            void                                onGridXSizeChange();
+            void                                onGridYSizeChange();
+            void                                onGridXCountChange();
+            void                                onGridYCountChange();
+            void                                onGridXMove();
+            void                                onGridYMove();
+            void                                onAddTextButton();
+            void                                onFontComboBox();
+            void                                onTextEnty();
+            void                                onTextFontSize();
+            void                                onTextLetterSpacing();
+            void                                onTextLineSpacing();
+            void                                onTextOutlineThickness();
+            void                                onTextStyle();
+            void                                onSelectFrontScreen();
+            void                                onAddFrontScreen();
+            void                                onDeleteFrontScreen();
+            void                                onRenameFrontScreen();
+            void                                onAccessLearningButton();
+            void                                onAccessForumButton();
+            void                                onAccessSnippetButton();
+            void                                onAccessAPIButton();
+            void                                saveCanvasColor(const sf::Color& color);
             ////////////////////////////////////////////////////////////
             //Center_Interface : Mouse-Camera | Button | Canvas | Log
-            void                                build_center(sfg::Box::Ptr main_box);
+            void                                buildCenter(sfg::Box::Ptr main_box);
             //Mouse
             std::string                         m_MousePositionText;
             sfg::Label::Ptr                     m_PositionLabel;
@@ -198,6 +274,7 @@ namespace nero
             sfg::Button::Ptr                    m_PauseButton;
             sfg::Button::Ptr                    m_StepButton;
             sfg::Button::Ptr                    m_ResetButton;
+            sfg::Button::Ptr                    m_RenderButton;
             sfg::Button::Ptr                    m_QuitButton;
             sfg::Button::Ptr                    m_UndoButton;
             sfg::Button::Ptr                    m_RedoButton;
@@ -213,12 +290,13 @@ namespace nero
             void                                onPauseButton();
             void                                onStepButton();
             void                                onResetButton();
+            void                                onRenderButton();
             void                                onQuitButton();
             void                                onUndoButton();
             void                                onRedoButton();
             ////////////////////////////////////////////////////////////
             //Right_Interface : Mesh | Object | Layer | Scene | Draw
-            void                                build_right(sfg::Box::Ptr main_box);
+            void                                buildRight(sfg::Box::Ptr main_box);
             void                                build_mesh_box(sfg::Box::Ptr main_box);
             void                                build_object_box(sfg::Box::Ptr main_box);
             void                                build_layer_box(sfg::Box::Ptr main_box);
@@ -242,6 +320,8 @@ namespace nero
             //Object
             sfg::Entry::Ptr                     m_ObjectNameEntry;
             sfg::Entry::Ptr                     m_ObjectCategoryEntry;
+            sfg::Button::Ptr                    m_ObjectMoveUpButton;
+            sfg::Button::Ptr                    m_ObjectMoveDownButton;
             //Scene
             sfg::ComboBox::Ptr                  m_SceneComboBox;
             sfg::SpinButton::Ptr                m_xGravitySpinButton;
@@ -286,6 +366,8 @@ namespace nero
             void                                onMeshComboBox();
             void                                onMeshTypeComboBox();
             void                                onObjectNameEntry();
+            void                                onMoveObjectUp();
+            void                                onMoveObjectDown();
             void                                onObjectCategoryEntry();
             void                                onAddLayerButton();
             void                                onDeleteLayerButton();
@@ -301,7 +383,26 @@ namespace nero
             void                                updateLayerBox();
             void                                updateLayerTable();
             void                                createLayer(LayerObject::Ptr layerObject);
+            //
+            float                               m_FrameRate;
+            float                               m_FrameTime;
+
+            //Renderer
+            SceneRenderer::Ptr                  m_SceneRenderer;
+            bool                                m_RenderScene;
+            //ColorPicker
+            ImVec4                              m_ColorPickerColor;
+            ImVec4                              m_ColorPickerLastColor;
+            bool                                m_RenderColorPicker;
+            void                                renderColorPicker();
+            void                                onColorNotebook();
     };
+
+    template <typename T>
+    void DevEngineUI::addScene(std::string sceneName)
+    {
+        m_SceneManager->addScene<T>(sceneName);
+    }
 }
 
 #endif // DEVENGINEUI_H_INCLUDED

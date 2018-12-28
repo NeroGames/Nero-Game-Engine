@@ -5,9 +5,10 @@
 namespace nero
 {
     Animation::Animation():
-        m_ElapsedTime(sf::seconds(0.f))
+         m_ElapsedTime(sf::seconds(0.f))
+        ,m_pause(false)
     {
-        //ctor
+        //Empty
     }
 
     void Animation::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -36,20 +37,14 @@ namespace nero
         return m_Sprite.getGlobalBounds();
     }
 
-    void Animation::update(sf::Time timeStep)
-    {
-        m_ElapsedTime += timeStep;
-
-        if(m_ElapsedTime >= sf::seconds(m_SequenceMap[m_CurrentSequence].getFrameRate()))
-        {
-            m_Sprite.setTextureRect(m_SequenceMap[m_CurrentSequence].getNextFrame());
-            m_ElapsedTime -= sf::seconds(m_SequenceMap[m_CurrentSequence].getFrameRate());
-        }
-    }
-
     void Animation::setSequence(std::string name)
     {
-        m_CurrentSequence = name;
+        if(m_CurrentSequence != name)
+        {
+            m_SequenceMap[name].reset();
+            m_CurrentSequence = name;
+        }
+
     }
 
     std::string Animation::getTexture() const
@@ -82,12 +77,41 @@ namespace nero
         m_SequenceMap[m_CurrentSequence].setLoop(flag);
     }
 
+    void Animation::verticalFlip()
+    {
+        m_Sprite.setScale(-m_Sprite.getScale().x, 1.f);
+    }
 
+    void Animation::horizontalFlip()
+    {
+        m_Sprite.setScale(1.f, -m_Sprite.getScale().y);
+    }
 
+    void Animation::play()
+    {
+        m_pause = false;
+    }
 
+    void Animation::pause()
+    {
+        m_pause = true;
+    }
 
+    void Animation::update(sf::Time timeStep)
+    {
+        if(m_pause)
+            return;
 
+        m_ElapsedTime += timeStep;
+        sf::Time framerate = sf::seconds(m_SequenceMap[m_CurrentSequence].getFrameRate());
 
+        if(m_ElapsedTime >= framerate)
+        {
+            m_Sprite.setTextureRect(m_SequenceMap[m_CurrentSequence].getNextFrame());
+
+            m_ElapsedTime -= framerate;
+        }
+    }
 }
 
 

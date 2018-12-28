@@ -10,34 +10,29 @@
 //SFML
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
-//STD
-#include <stdio.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
     ////////////////////////////////////////////////////////////
     Scene::Scene(Context context):
          m_Context(context)
-        ,m_RenderCanvas(context.renderCanvas)
-        ,m_RootObject(Object::Ptr(new Object))
-        ,m_CameraTarget(nullptr)
-        ,m_SceneName("")
-        ,L(nullptr)
+        ,m_World(Object::Ptr(new Object))
+        ,m_CameraTarget()
         //
         ,m_SceneSetting()
         ,m_CameraSetting()
-        ,m_SoundSetting()
         //
         ,m_ShapeRenderer(context.renderCanvas)
-        ,m_ObjectManager(ObjectManager::Ptr(new ObjectManager(m_RootObject, m_PhysicWorld)))
-        ,m_SoundManager(SoundManager::Ptr(new SoundManager(context.resourceManager->Music, context.resourceManager->Sound)))
+        ,m_ObjectManager(ObjectManager::Ptr(new ObjectManager(m_World, m_PhysicWorld, m_ScreenTable)))
+        ,m_SoundManager(SoundManager::Ptr(new SoundManager(context.resourceManager->music, context.resourceManager->sound)))
         ,m_ScriptManager(ScriptManager::Ptr(new ScriptManager()))
         //
         ,m_PointCount(0)
         ,m_Text()
         ,m_PauseMessage("")
-        ,m_CameraTargetOffset()
-        ,m_CameraFollowTarget(false)
+        ,m_HideWorld(false)
+        ,m_SceenCanvasColor(sf::Color::Transparent)
+        ,m_Resolution(800.f, 600.f)
     {
         //Setup the world
         m_PhysicWorld = new b2World(m_SceneSetting.gravity);
@@ -45,22 +40,21 @@ namespace nero
         m_PhysicWorld->SetDebugDraw(&m_ShapeRenderer);
 
         //Text
-        m_Text.setFont(context.resourceManager->Font.getDefaultFont());
+        m_Text.setFont(context.resourceManager->font.getDefaultFont());
         m_Text.setCharacterSize(15.f);
         m_Text.setFillColor(sf::Color::White);
         m_Text.setPosition(sf::Vector2f(10.f, 10.f));
 
-        //Script
-        L = luaL_newstate();
-        luaL_openlibs(L);
+        //
+        m_QuitEngine = [](){};
+        m_ResetScene = [](){};
+        m_UpdateLog = [](const std::string& content, int level){};
+        m_UpdateLogIf = [](const std::string& content, bool condition, int level){};
     }
 
     ////////////////////////////////////////////////////////////
     Scene::~Scene()
     {
-        //Close lua state
-        lua_close(L);
-
         //Delete the world
         delete m_PhysicWorld;
         m_PhysicWorld = nullptr;
@@ -69,47 +63,57 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void Scene::handleEvent(const sf::Event& event)
     {
-        if(m_SceneSetting.pause && !m_SceneSetting.singleStep)
-            return;
-
-        switch(event.type)
+        if(!m_HideWorld)
         {
-            //Keyboard events
-            case sf::Event::KeyPressed:
-                handleKeyboardInput(event.key.code, true);
-                break;
-            case sf::Event::KeyReleased:
-                handleKeyboardInput(event.key.code, false);
-                break;
+            if(!m_SceneSetting.pause || m_SceneSetting.singleStep)
+            {
+                switch(event.type)
+                {
+                    //Keyboard events
+                    case sf::Event::KeyPressed:
+                        handleKeyboardInput(event.key.code, true);
+                        break;
+                    case sf::Event::KeyReleased:
+                        handleKeyboardInput(event.key.code, false);
+                        break;
 
-            //Mouse buttons events
-            case sf::Event::MouseButtonPressed:
-                handleMouseButtonInput(event.mouseButton, true);
-                break;
-            case sf::Event::MouseButtonReleased:
-                handleMouseButtonInput(event.mouseButton, false);
-                break;
+                    //Mouse buttons events
+                    case sf::Event::MouseButtonPressed:
+                        handleMouseButtonInput(event.mouseButton, true);
+                        break;
+                    case sf::Event::MouseButtonReleased:
+                        handleMouseButtonInput(event.mouseButton, false);
+                        break;
 
-            //Mouse move event
-            case sf::Event::MouseMoved:
-                handleMouseMoveInput(event.mouseMove);
-                break;
+                    //Mouse move event
+                    case sf::Event::MouseMoved:
+                        handleMouseMoveInput(event.mouseMove);
+                        break;
 
-             //Mouse wheel
-            case sf::Event::MouseWheelScrolled:
-                handleMouseWheelInput(event.mouseWheelScroll);
-                break;
+                     //Mouse wheel
+                    case sf::Event::MouseWheelScrolled:
+                        handleMouseWheelInput(event.mouseWheelScroll);
+                        break;
+                }
+            }
         }
+
+        if(isRenderEngine())
+        {
+            for(auto screen : m_ScreenStack)
+            {
+                if(!screen->hide)
+                {
+                    screen->screenUI->handleEvent(event);
+                }
+            }
+        }
+
     }
 
     ////////////////////////////////////////////////////////////
     void Scene::update(const sf::Time& timeStep)
     {
-        m_ObjectManager->setWorld(m_PhysicWorld);
-
-        if(!m_PhysicWorld->IsLocked())
-            m_ObjectManager->removeDeadPhysicObject();
-
         float32 b2TimeStep = m_SceneSetting.hz > 0.0f ? 1.0f / m_SceneSetting.hz : float32(0.0f);
 
         if(b2TimeStep > 0.f)
@@ -117,69 +121,124 @@ namespace nero
             b2TimeStep = (b2TimeStep * timeStep.asSeconds())/TIME_PER_FRAME.asSeconds();
         }
 
-        if(m_SceneSetting.pause && !m_SceneSetting.singleStep)
+        if(!m_HideWorld)
         {
-            b2TimeStep = 0.0f;
-            m_PauseMessage = "#-- PAUSED --#";
+            m_ObjectManager->setWorld(m_PhysicWorld);
+
+            if(!m_PhysicWorld->IsLocked())
+                m_ObjectManager->removeDeadPhysicObject();
+
+
+            if(m_SceneSetting.pause && !m_SceneSetting.singleStep)
+            {
+                b2TimeStep = 0.0f;
+                m_PauseMessage = "#-- PAUSED --#";
+            }
+            else
+            {
+                m_PauseMessage = "";
+            }
+
+            uint32 flags = 0;
+            flags += m_SceneSetting.drawShapes * b2Draw::e_shapeBit;
+            flags += m_SceneSetting.drawJoints * b2Draw::e_jointBit;
+            flags += m_SceneSetting.drawAABBs * b2Draw::e_aabbBit;
+            flags += m_SceneSetting.drawCOMs * b2Draw::e_centerOfMassBit;
+
+            m_ShapeRenderer.SetFlags(flags);
+
+            m_PhysicWorld->SetAllowSleeping(m_SceneSetting.enableSleep > 0);
+            m_PhysicWorld->SetWarmStarting(m_SceneSetting.enableWarmStarting > 0);
+            m_PhysicWorld->SetContinuousPhysics(m_SceneSetting.enableContinuous > 0);
+            m_PhysicWorld->SetSubStepping(m_SceneSetting.enableSubStepping > 0);
+
+            m_PointCount = 0;
+
+            m_PhysicWorld->Step(b2TimeStep, m_SceneSetting.velocityIterations, m_SceneSetting.positionIterations);
+
+
+            if((!m_SceneSetting.pause || m_SceneSetting.singleStep))
+                m_World->update(sf::seconds(b2TimeStep));
+
+
+
+            m_Text.setString(m_PauseMessage);
+
+            followTarget();
         }
-        else
+
+        if(isRenderEngine())
         {
-            m_PauseMessage = "";
+            for(auto screen : m_ScreenStack)
+            {
+                if(!screen->hide)
+                {
+                    screen->screen->update(sf::seconds(b2TimeStep));
+                    screen->screenUI->update(sf::seconds(b2TimeStep));
+                }
+            }
         }
-
-        uint32 flags = 0;
-        flags += m_SceneSetting.drawShapes * b2Draw::e_shapeBit;
-        flags += m_SceneSetting.drawJoints * b2Draw::e_jointBit;
-        flags += m_SceneSetting.drawAABBs * b2Draw::e_aabbBit;
-        flags += m_SceneSetting.drawCOMs * b2Draw::e_centerOfMassBit;
-
-        m_ShapeRenderer.SetFlags(flags);
-
-        m_PhysicWorld->SetAllowSleeping(m_SceneSetting.enableSleep > 0);
-        m_PhysicWorld->SetWarmStarting(m_SceneSetting.enableWarmStarting > 0);
-        m_PhysicWorld->SetContinuousPhysics(m_SceneSetting.enableContinuous > 0);
-        m_PhysicWorld->SetSubStepping(m_SceneSetting.enableSubStepping > 0);
-
-        m_PointCount = 0;
-
-        m_PhysicWorld->Step(b2TimeStep, m_SceneSetting.velocityIterations, m_SceneSetting.positionIterations);
-
-        if(!m_SceneSetting.pause || m_SceneSetting.singleStep)
-            m_RootObject->update(sf::seconds(b2TimeStep));
-
-        m_Text.setString(m_PauseMessage);
-
-        cameraFollowTarget();
     }
 
     ////////////////////////////////////////////////////////////
     void Scene::render()
     {
-        auto childTable = m_RootObject->getAllChild();
-
-        for(auto it = childTable->begin(); it != childTable->end(); it++)
+        if(!m_HideWorld)
         {
-            LayerObject::Ptr layer_object = LayerObject::Cast(*it);
+            auto childTable = m_World->getAllChild();
 
-            if(layer_object->isVisible())
-                m_RenderCanvas->Draw(*layer_object);
+            for(auto it = childTable->begin(); it != childTable->end(); it++)
+            {
+                LayerObject::Ptr layer_object = LayerObject::Cast(*it);
+
+                if(layer_object->isVisible())
+                    m_Context.renderCanvas->Draw(*layer_object);
+            }
         }
     }
 
     ////////////////////////////////////////////////////////////
     void Scene::renderShape()
     {
-        m_PhysicWorld->DrawDebugData();
+        if(!m_HideWorld)
+        {
+            m_PhysicWorld->DrawDebugData();
+        }
     }
 
     ////////////////////////////////////////////////////////////
     void Scene::renderFrontScreen()
     {
-        m_RenderCanvas->Draw(m_Text);
+        if(isRenderEngine())
+        {
+            for(auto screen : m_ScreenStack)
+            {
+                if(!screen->hide)
+                {
+                    auto childTable1 = screen->screen->getAllChild();
+                    auto childTable2 = screen->screenUI->getAllChild();
+
+                    for(auto it = childTable1->begin(); it != childTable1->end(); it++)
+                    {
+                        m_Context.renderCanvas->Draw(**it);
+                    }
+
+                    for(auto it = childTable2->begin(); it != childTable2->end(); it++)
+                    {
+                        m_Context.renderCanvas->Draw(**it);
+                    }
+                }
+            }
+        }
+
+        if(!m_HideWorld)
+        {
+            m_Context.renderCanvas->Draw(m_Text);
+        }
     }
 
     ////////////////////////////////////////////////////////////
-    void Scene::preSolve(b2Contact* contact, const b2Manifold* oldManifold)
+    void Scene::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
     {
         const b2Manifold* manifold = contact->GetManifold();
 
@@ -223,7 +282,7 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    void Scene::postSolve(b2Contact* contact, const b2ContactImpulse* impulse)
+    void Scene::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
     {
         Collision collision(contact, nullptr, impulse);
 
@@ -237,7 +296,7 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    void Scene::beginContact(b2Contact* contact)
+    void Scene::BeginContact(b2Contact* contact)
     {
         Collision collision(contact, nullptr, nullptr);
 
@@ -251,7 +310,7 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    void Scene::endContact(b2Contact* contact)
+    void Scene::EndContact(b2Contact* contact)
     {
         Collision collision(contact, nullptr, nullptr);
 
@@ -265,69 +324,63 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    void Scene::setGravity(const sf::Vector2f& gravity)
+    void Scene::setCameraTarget(Object::Ptr target)
     {
-        m_PhysicWorld->SetGravity(sf_to_b2(gravity));
+        m_CameraTarget.target       = target;
+        m_CameraTarget.followTarget = true;
+    }
+
+      ////////////////////////////////////////////////////////////
+    void Scene::enableFollowTaget(bool flag)
+    {
+        m_CameraTarget.followTarget = flag;
     }
 
     ////////////////////////////////////////////////////////////
-    void Scene::setGravity(float gravity)
+    void Scene::updateTargetOffset(const float left, const float right, const float up, const float down)
     {
-        m_PhysicWorld->SetGravity(sf_to_b2(sf::Vector2f(0.f, gravity)));
+        m_CameraTarget.offsetLeft   = left;
+        m_CameraTarget.offsetRight  = right;
+        m_CameraTarget.offsetUp     = up;
+        m_CameraTarget.offsetDown   = down;
     }
 
     ////////////////////////////////////////////////////////////
-    void Scene::setCameraTarget(PhysicObject::Ptr target)
+    void Scene::followTarget()
     {
-        m_CameraTarget              = target;
-        m_CameraFollowTarget        = true;
-    }
-
-    ////////////////////////////////////////////////////////////
-    void Scene::setCameraTargetOffset(const float left, const float right, const float up, const float down)
-    {
-        m_CameraTargetOffset.left = left;
-        m_CameraTargetOffset.right = right;
-        m_CameraTargetOffset.up = up;
-        m_CameraTargetOffset.down = down;
-    }
-
-    ////////////////////////////////////////////////////////////
-    void Scene::cameraFollowTarget()
-    {
-        if(!m_CameraTarget || !m_CameraFollowTarget)
-            return;
-
-        float offset;
+        //Check
+        if(!m_CameraTarget.target || !m_CameraTarget.followTarget) return;
 
         //Horizontal offset
-        sf::Vector2f camera_position = m_Context.camera->getPosition();
-        sf::Vector2f target_position = m_CameraTarget->getWorldCenter();
-        offset = target_position.x - camera_position.x;
+        sf::Vector2f cameraPosition = m_Context.camera->getPosition();
+        sf::Vector2f targetPosition = m_CameraTarget.target->getCenter();
+        float offset                = targetPosition.x - cameraPosition.x;
 
-        if(offset > m_CameraTargetOffset.right)
-            m_Context.camera->setPosition(camera_position + sf::Vector2f(offset - m_CameraTargetOffset.right, 0.f));
-        else if(offset < - m_CameraTargetOffset.left)
-            m_Context.camera->setPosition(camera_position + sf::Vector2f(offset + m_CameraTargetOffset.left, 0.f));
+        if(offset > m_CameraTarget.offsetRight)
+        {
+            m_Context.camera->setPosition(cameraPosition + sf::Vector2f(offset - m_CameraTarget.offsetRight, 0.f));
+        }
+        else if(offset < - m_CameraTarget.offsetLeft)
+        {
+            m_Context.camera->setPosition(cameraPosition + sf::Vector2f(offset + m_CameraTarget.offsetLeft, 0.f));
+        }
 
         //Vertical offset
-        camera_position = m_Context.camera->getPosition();
-        offset = target_position.y - camera_position.y;
+        cameraPosition  = m_Context.camera->getPosition();
+        offset          = targetPosition.y - cameraPosition.y;
 
-        if(offset > m_CameraTargetOffset.up)
-            m_Context.camera->setPosition(camera_position + sf::Vector2f(0.f, offset - m_CameraTargetOffset.up));
-        else if(offset < - m_CameraTargetOffset.down)
-            m_Context.camera->setPosition(camera_position + sf::Vector2f(0.f, offset + m_CameraTargetOffset.down));
-
+        if(offset > m_CameraTarget.offsetUp)
+        {
+            m_Context.camera->setPosition(cameraPosition + sf::Vector2f(0.f, offset - m_CameraTarget.offsetUp));
+        }
+        else if(offset < - m_CameraTarget.offsetDown)
+        {
+            m_Context.camera->setPosition(cameraPosition + sf::Vector2f(0.f, offset + m_CameraTarget.offsetDown));
+        }
     }
 
-    ////////////////////////////////////////////////////////////
-    void Scene::setCameraFollowTarget(bool flag)
-    {
-        m_CameraFollowTarget = flag;
-    }
 
-        void Scene::init()
+    void Scene::init()
     {
         //Empty
     }
@@ -379,4 +432,225 @@ namespace nero
         //Empty
     }
 
+    void Scene::quitScene()
+    {
+        m_QuitEngine();
+    }
+
+    void Scene::enableScreen(const std::string& name, bool flag)
+    {
+        for(auto& screen : m_ScreenStack)
+        {
+            if(screen->name == name)
+            {
+                screen->hide = !flag;
+
+                nero_log_if("show " + _s(name), !screen->hide);
+
+                break;
+            }
+        }
+    }
+
+    const sf::Color& Scene::getScreenCanvasColor(const std::string& name) const
+    {
+        for(auto& screen : m_ScreenTable)
+        {
+            if(screen->name == name)
+            {
+                return screen->canvasColor;
+            }
+        }
+
+        return sf::Color::White;
+    }
+
+    bool Scene::isRenderEngine()
+    {
+        return m_Context.renderEngine;
+    }
+
+     const std::string& Scene::getSceneName() const
+     {
+         return m_SceneName;
+     }
+
+    const Context& Scene::getContext() const
+    {
+        return m_Context;
+    }
+
+    Object::Ptr Scene::getWorld()
+    {
+        return m_World;
+    }
+
+    void Scene::setCanvasColor(const sf::Color& color)
+    {
+        m_CanvasColor = color;
+    }
+
+    const sf::Color& Scene::getCanvasColor() const
+    {
+        return m_CanvasColor;
+    }
+
+    ObjectManager::Ptr Scene::getObjectManager()
+    {
+        return m_ObjectManager;
+    }
+
+    SoundManager::Ptr Scene::getSoundManager()
+    {
+        return m_SoundManager;
+    }
+
+    ScriptManager::Ptr Scene::getScriptManager()
+    {
+        return m_ScriptManager;
+    }
+
+    SceneSetting& Scene::getSceneSetting()
+    {
+        return m_SceneSetting;
+    }
+
+    CameraSetting& Scene::getCameraSetting()
+    {
+        return m_CameraSetting;
+    }
+
+    void Scene::pauseScene()
+    {
+        m_SceneSetting.pause = true;
+    }
+
+    void Scene::resumeScene()
+    {
+        m_SceneSetting.pause = false;
+    }
+
+    bool Scene::isScenePause()
+    {
+        return m_SceneSetting.pause;
+    }
+
+    void Scene::resetScene()
+    {
+        m_ResetScene();
+    }
+
+    float Scene::getFrameRate()
+    {
+        return m_FrameRate;
+    }
+
+    float Scene::getFrameTime()
+    {
+        return m_FrameTime;
+    }
+
+    void Scene::log(const std::string& content, int level)
+    {
+        nero_log(content, level);
+
+        if(!isRenderEngine())
+        {
+            m_UpdateLog(content, level);
+        }
+    }
+
+    void Scene::logIf(const std::string& content, bool condition, int level)
+    {
+        nero_log_if(content, condition, level);
+
+        if(!isRenderEngine())
+        {
+            m_UpdateLogIf(content, condition, level);
+        }
+    }
+
+    std::function<void(const std::string&, int)> Scene::getLog()
+    {
+        return [this](const std::string& content, int level)
+        {
+            nero_log(content, level);
+
+            if(!isRenderEngine())
+            {
+                m_UpdateLog(content, level);
+            }
+        };
+    }
+
+    std::function<void(const std::string&, bool, int)> Scene::getLogIf()
+    {
+        return [this](const std::string& content, bool condition, int level)
+        {
+            nero_log_if(content, condition, level);
+
+            if(!isRenderEngine())
+            {
+                m_UpdateLogIf(content, condition, level);
+            }
+        };
+    }
+
+
+    void Scene::hideWorld()
+    {
+        m_HideWorld = true;
+    }
+
+    void Scene::showWorld()
+    {
+        m_HideWorld = false;
+    }
+
+    void Scene::hideScreen(const std::string& name)
+    {
+        enableScreen(name, false);
+    }
+
+    void Scene::showScreen(const std::string& name)
+    {
+        enableScreen(name, true);
+    }
+
+    void Scene::pushScreen(const std::string& name)
+    {
+        for(Screen::Ptr screen : m_ScreenStack)
+        {
+            if(screen->name == name)
+            {
+                return;
+            }
+        }
+
+        for(Screen::Ptr screen : m_ScreenTable)
+        {
+            if(screen->name == name)
+            {
+                m_ScreenStack.push_back(screen);
+            }
+        }
+    }
+
+    void Scene::popScreen()
+    {
+        if(!m_ScreenStack.empty())
+        {
+            m_ScreenStack.pop_back();
+        }
+    }
+
+    const sf::Vector2f Scene::getResolution() const
+    {
+       return m_Resolution;
+    }
+
+    void Scene::setResolution(const float& width, const float& height)
+    {
+        m_Resolution = sf::Vector2f(width, height);
+    }
 }

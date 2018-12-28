@@ -18,38 +18,43 @@ namespace nero
     {
         public:
             typedef std::map<std::string, AnimationSequence> SequenceMap;
-        public:
-            Animation();
 
-            void            setSprite(sf::Sprite sprite);
-            void            setTexture(std::string texture);
-            void            addSequence(std::string name, AnimationSequence sequence);
-            void            setSequence(std::string name);
-            sf::FloatRect   getGlobalBounds() const;
-            std::string     getTexture() const;
+                                        Animation();
 
-            void            update(sf::Time timeStep);
+            void                        setSprite(sf::Sprite sprite);
+            void                        setTexture(std::string texture);
+            void                        addSequence(std::string name, AnimationSequence sequence);
+            void                        setSequence(std::string name);
+            //void                        playSequence(std::string name);
+            //void                        playSequence(std::string name, bool hide);
+            sf::FloatRect               getGlobalBounds() const;
+            std::string                 getTexture() const;
 
-             void                    setColor(const sf::Color& color);
-            const sf::Color&        getColor()                      const;
+            void                        update(sf::Time timeStep);
 
-            const SequenceMap&            getSequenceMap() const;
+            void                       setColor(const sf::Color& color);
+            const sf::Color&            getColor()                      const;
+
+            const SequenceMap&          getSequenceMap() const;
             void                        setFrameRate(float frameRate);
             void                        setLoop(bool flag);
 
-
+            void                        verticalFlip();
+            void                        horizontalFlip();
+            void                        play();
+            void                        pause();
 
 
         private:
             virtual void			    draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
         private:
-            std::string             m_Texture;
-            sf::Sprite              m_Sprite;
-            sf::Time                m_ElapsedTime;
-            std::string             m_CurrentSequence;
-
-            SequenceMap             m_SequenceMap;
+            std::string                 m_Texture;
+            std::string                 m_CurrentSequence;
+            sf::Sprite                  m_Sprite;
+            sf::Time                    m_ElapsedTime;
+            SequenceMap                 m_SequenceMap;
+            bool                        m_pause;
     };
 }
 

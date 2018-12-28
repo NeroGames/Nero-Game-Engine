@@ -40,11 +40,9 @@ namespace nero
 
     void SoundHolder::load()
     {
-        nero_log("///////////////////////// LOADING SOUND ////////////////////");
-
         const std::string folder_name = m_Configuration["folder"].get<std::string>();
 
-        nero_log("Sound resource path : " + folder_name);
+        nero_log("resource path : " + folder_name);
 
         using namespace boost::filesystem;
         path folder_path(folder_name);
@@ -79,9 +77,6 @@ namespace nero
 
             it++;
         }
-
-        nero_log("////////////////////////////////////////////////////////////");
-
     }
 }
 

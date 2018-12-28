@@ -11,8 +11,9 @@ namespace nero
     SoundManager::SoundManager(MusicHolder& musicHolder, SoundHolder& soundHolder):
         m_MusicHolder(musicHolder)
         ,m_SoundHolder(soundHolder)
-        ,m_SoundSetting()
         ,m_CurrentMusic("")
+        ,m_MusicVolume(50.f)
+        ,m_SoundVolume(50.f)
     {
         for(int i=0; i < MAX_SOUND_POOL; i++)
         {
@@ -24,7 +25,7 @@ namespace nero
     {
         auto& sound =  getSound();
         sound.setBuffer(m_SoundHolder.getSoundBuffer(name));
-        sound.setVolume(m_SoundSetting.soundVolume);
+        sound.setVolume(m_SoundVolume);
         sound.setRelativeToListener(true);
         sound.play();
     }
@@ -37,7 +38,7 @@ namespace nero
         }
 
         auto& music = m_MusicHolder.getMusic(name);
-        music.setVolume(m_SoundSetting.musicVolume);
+        music.setVolume(m_MusicVolume);
         music.play();
 
         m_CurrentMusic = name;
@@ -45,6 +46,9 @@ namespace nero
 
     void SoundManager::stopMusic(std::string name)
     {
+        if(m_CurrentMusic == "")
+            return;
+
         auto& music = m_MusicHolder.getMusic(name);
         music.stop();
 
@@ -53,12 +57,12 @@ namespace nero
 
     void SoundManager::setSoundVolume(float volume)
     {
-        m_SoundSetting.soundVolume = volume;
+        m_SoundVolume = volume;
     }
 
     void SoundManager::setMusicVolume(float volume)
     {
-        m_SoundSetting.musicVolume = volume;
+        m_MusicVolume = volume;
 
         if(m_CurrentMusic != "")
         {
@@ -78,6 +82,99 @@ namespace nero
         auto& sound = m_SoundPool.front();
         sound.stop();
         return sound;
+    }
+
+    float SoundManager::getSoundVolume()
+    {
+        return m_SoundVolume;
+    }
+
+    float SoundManager::getMusicVolume()
+    {
+        return m_MusicVolume;
+    }
+
+     nlohmann::json SoundManager::toJson()
+     {
+         nlohmann::json json;
+
+        json["sound_volume"] = m_SoundVolume;
+        json["music_volume"] = m_MusicVolume;
+
+        return json;
+     }
+
+    void SoundManager::fromJson(nlohmann::json json)
+    {
+        m_SoundVolume = json["sound_volume"];
+        m_MusicVolume = json["music_volume"];
+    }
+
+    void SoundManager::pauseMusic()
+    {
+        if(m_CurrentMusic == "")
+            return;
+
+        auto& music = m_MusicHolder.getMusic(m_CurrentMusic);
+        music.pause();
+    }
+
+    void SoundManager::resumeMusic()
+    {
+        if(m_CurrentMusic == "")
+            return;
+
+        auto& music = m_MusicHolder.getMusic(m_CurrentMusic);
+        music.play();
+    }
+
+    void SoundManager::stopMusic()
+    {
+        if(m_CurrentMusic == "")
+            return;
+
+        auto& music = m_MusicHolder.getMusic(m_CurrentMusic);
+        music.stop();
+    }
+
+    float SoundManager::increaseMusicVolume(float offset)
+    {
+        m_MusicVolume += offset;
+
+        if(m_CurrentMusic != "")
+        {
+            auto& music = m_MusicHolder.getMusic(m_CurrentMusic);
+            music.setVolume(m_MusicVolume);
+        }
+
+        return m_MusicVolume;
+    }
+
+    float SoundManager::decreaseMusicVolume(float offset)
+    {
+        m_MusicVolume -= offset;
+
+        if(m_CurrentMusic != "")
+        {
+            auto& music = m_MusicHolder.getMusic(m_CurrentMusic);
+            music.setVolume(m_MusicVolume);
+        }
+
+        return m_MusicVolume;
+    }
+
+    float SoundManager::increaseSoundVolume(float offset)
+    {
+        m_SoundVolume += offset;
+
+        return m_SoundVolume;
+    }
+
+    float SoundManager::decreaseSoundVolume(float offset)
+    {
+        m_SoundVolume -= offset;
+
+        return m_SoundVolume;
     }
 }
 

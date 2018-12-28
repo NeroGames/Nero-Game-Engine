@@ -7,11 +7,11 @@ namespace nero
 {
     AnimationSequence::AnimationSequence():
         m_FrameTable()
-        ,m_FrameRate(1/5.f)
-        ,m_CurrentFrame(1)
+        ,m_FrameRate(1.f/5.f)
+        ,m_CurrentFrame(0)
         ,m_Loop(true)
     {
-        //ctor
+        //Empty
     }
 
     void AnimationSequence::setFrameRate(const float& frameRate)
@@ -24,23 +24,7 @@ namespace nero
         return m_FrameTable.size();
     }
 
-
-    const sf::IntRect AnimationSequence::getNextFrame()
-    {
-        auto frame = m_FrameTable[m_CurrentFrame];
-
-        if(m_CurrentFrame == m_FrameTable.size()-1 && !m_Loop)
-            return frame;
-
-        m_CurrentFrame++;
-
-        if(m_CurrentFrame == m_FrameTable.size() && m_Loop)
-            m_CurrentFrame = 0;
-
-        return frame;
-    }
-
-    void AnimationSequence::setFrameTable(std::vector<sf::IntRect> frameTable)
+    void AnimationSequence::setFrameTable(const std::vector<sf::IntRect>& frameTable)
     {
         m_FrameTable = frameTable;
     }
@@ -60,6 +44,25 @@ namespace nero
         return m_Loop;
     }
 
+    void AnimationSequence::reset()
+    {
+        m_CurrentFrame = 0;
+    }
 
+    void AnimationSequence::lock()
+    {
+        m_CurrentFrame = m_FrameTable.size() - 1;
+    }
 
+    const sf::IntRect AnimationSequence::getNextFrame()
+    {
+        auto frame = m_FrameTable[m_CurrentFrame++];
+
+        if(m_CurrentFrame == m_FrameTable.size())
+        {
+            m_Loop ? reset() : lock();
+        }
+
+        return frame;
+    }
 }

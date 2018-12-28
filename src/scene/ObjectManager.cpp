@@ -4,10 +4,11 @@
 
 namespace nero
 {
-    ObjectManager::ObjectManager(Object::Ptr root_object, b2World* world):
-        m_RootObject(root_object),
-        m_World(world),
-        m_DeadPhysicObject()
+    ObjectManager::ObjectManager(Object::Ptr root_object, b2World* world,  std::vector<Screen::Ptr>& screenTable):
+        m_RootObject(root_object)
+        ,m_World(world)
+        ,m_DeadPhysicObject()
+        ,m_ScreenTable(screenTable)
     {
         //ctr
     }
@@ -197,10 +198,11 @@ namespace nero
     {
         for(sf::String object_name : objectNameTab)
         {
-            Object::Ptr object  = findObject(object_name);
-
-            if(!object)
+            //&& !findUIObject(object_name) && findFrontObject(object_name)
+            if(!findObject(object_name))
+            {
                 throw std::runtime_error("Object [" + _s(object_name) + "] not found, please check that you have entered the correct object name");
+            }
         }
     }
 
@@ -288,7 +290,7 @@ namespace nero
         {
             if((*it)->getId() == child->getId())
             {
-                if((object->getSecondType() == Object::Physic_Object || object->getSecondType() == Object::Solid_Object) &&
+                if((object->getSecondType() == Object::Physic_Object || object->getSecondType() == Object::Solid_Object || object->getSecondType() == Object::Animation_Solid_Object) &&
                    (*it)->getSecondType() == Object::Physic_Object)
                 {
                     PhysicObject::Ptr physic_Object = PhysicObject::Cast(*it);
@@ -350,7 +352,6 @@ namespace nero
         }
 
         m_DeadPhysicObject.clear();
-
     }
 
     void ObjectManager::setWorld(b2World* world)
@@ -361,6 +362,20 @@ namespace nero
     void ObjectManager::addObject(Object::Ptr object)
     {
         m_RootObject->addChild(object);
+    }
+
+    Object::Ptr ObjectManager::findScreenUIObject(std::string screenName, std::string ObjectName)
+    {
+        auto screen = std::find_if(m_ScreenTable.begin(), m_ScreenTable.end(), [&](Screen::Ptr screen){return screen->name == screenName;});
+
+        return findObject((*screen)->screenUI, ObjectName);
+    }
+
+    Object::Ptr ObjectManager::findScreenObject(std::string screenName, std::string ObjectName)
+    {
+        auto screen = std::find_if(m_ScreenTable.begin(), m_ScreenTable.end(), [&](Screen::Ptr screen){return screen->name == screenName;});
+
+        return findObject((*screen)->screen, ObjectName);
     }
 
 }

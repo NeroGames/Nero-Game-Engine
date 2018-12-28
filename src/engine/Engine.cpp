@@ -10,11 +10,15 @@
 namespace nero
 {
     ////////////////////////////////////////////////////////////
-    Engine::Engine(const float& winWidth, const float& winHeight, const sf::String& winTitle):
-        m_WinTitle(winTitle),
-        m_WinWidth(winWidth),
-        m_WinHeight(winHeight),
-        m_Window(sf::VideoMode(winWidth, winHeight), winTitle, sf::Style::Close)
+    Engine::Engine(const unsigned int& windowWidth, const unsigned int& windowHeight, const std::string& windowTitle):
+         m_WindowTitle(windowTitle)
+        ,m_WindowWidth(windowWidth)
+        ,m_WindowHeight(windowHeight)
+        ,m_Window(sf::VideoMode(windowWidth, windowHeight), windowTitle, sf::Style::Close)
+        ,m_ElapsedTime()
+        ,m_FrameCount(0)
+        ,m_FramePerSecond(0.f)
+        ,m_TimePerFrame(0.f)
     {
         //Empty
     }
@@ -32,12 +36,13 @@ namespace nero
         sf::Clock clock;
         sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
-        while (m_Window.isOpen())
+        while(m_Window.isOpen())
         {
-            //Accumulate the time passed at each loop
-            timeSinceLastUpdate += clock.restart();
+            //Accumulate the time elapsed at each loop
+            sf::Time elapsedTime = clock.restart();
+            timeSinceLastUpdate += elapsedTime;
 
-            //When the the time come over the value of "TIME_PER_FRAME" then ... 1 2 3
+            //When the time comes over the value of "TIME_PER_FRAME" do --> 1 --> 2 then do --> 2 --> 3
             //TIME_PER_FRAME is constant with a value of 1/60 second (the game is update 60 time per second)
             while(timeSinceLastUpdate > TIME_PER_FRAME)
             {
@@ -48,33 +53,66 @@ namespace nero
                 handleEvent();
                 //2... update the game
                 update(TIME_PER_FRAME);
-                //3... render the game
-                render();
             }
+
+            //3... Compute Frame rate
+            computeFrameRate(elapsedTime);
+            //4... render the game
+            render();
         }
     }
 
     ////////////////////////////////////////////////////////////
-    sf::String Engine::getWinTitle() const
+    void Engine::computeFrameRate(sf::Time timeStep)
     {
-        return m_WinTitle;
+        //Accumulate data for on 1 second
+        m_ElapsedTime       += timeStep;
+        m_FrameCount        += 1;
+
+        //Then compute the frame rate
+        if(m_ElapsedTime >= sf::seconds(1.0f))
+        {
+            m_FramePerSecond    = m_FrameCount;
+            m_TimePerFrame      = m_ElapsedTime.asSeconds() / m_FrameCount;
+
+            m_ElapsedTime      -= sf::seconds(1.0f);
+            m_FrameCount        = 0;
+        }
     }
 
     ////////////////////////////////////////////////////////////
-    void Engine::setWinTitle(const sf::String& winTitle)
+    std::string Engine::getWindowTitle() const
     {
-        m_Window.setTitle(winTitle);
+        return m_WindowTitle;
     }
 
     ////////////////////////////////////////////////////////////
-    float Engine::getWinWidth() const
+    void Engine::setWindowTitle(const std::string& windowTitle)
     {
-        return m_WinWidth;
+        m_Window.setTitle(windowTitle);
     }
 
     ////////////////////////////////////////////////////////////
-    float Engine::getWinHeight() const
+    unsigned int Engine::getWindowWidth() const
     {
-        return m_WinHeight;
+        return m_WindowWidth;
+    }
+
+    ////////////////////////////////////////////////////////////
+    unsigned int Engine::getWindowHeight() const
+    {
+        return m_WindowHeight;
+    }
+
+    ////////////////////////////////////////////////////////////
+    float Engine::getFrameRate() const
+    {
+        return m_FramePerSecond;
+    }
+
+    ////////////////////////////////////////////////////////////
+    float Engine::getFrameTime() const
+    {
+        return m_TimePerFrame;
     }
 }

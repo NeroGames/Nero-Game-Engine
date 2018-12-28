@@ -18,12 +18,9 @@ namespace nero
 
     void MusicHolder::load()
     {
-        nero_log("///////////////////////// LOADING MUSIC ////////////////////");
-
-        nero_log("Resource Manager : music loading");
         const std::string folder_name = m_Configuration["folder"].get<std::string>();
 
-        nero_log("Music resource path : " + folder_name);
+        nero_log("Resource path : " + folder_name);
 
         using namespace boost::filesystem;
         path folder_path(folder_name);

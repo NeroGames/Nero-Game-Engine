@@ -122,7 +122,7 @@ namespace nero
 
         for(auto layer = layerTab->begin(); layer != layerTab->end(); layer++)
         {
-            if((*layer)->getSecondType() == Object::Physic_Object || (*layer)->getSecondType() == Object::Solid_Object)
+            if((*layer)->getSecondType() == Object::Physic_Object || (*layer)->getSecondType() == Object::Solid_Object || (*layer)->getSecondType() == Object::Animation_Solid_Object)
             {
                 auto objectTab = (*layer)->getAllChild();
 
@@ -148,7 +148,7 @@ namespace nero
 
         for(auto layer = layerTab->begin(); layer != layerTab->end(); layer++)
         {
-            if((*layer)->getSecondType() == Object::Physic_Object || (*layer)->getSecondType() == Object::Solid_Object)
+            if((*layer)->getSecondType() == Object::Physic_Object || (*layer)->getSecondType() == Object::Solid_Object || (*layer)->getSecondType() == Object::Animation_Solid_Object)
             {
                 auto objectTab = (*layer)->getAllChild();
 
@@ -174,7 +174,7 @@ namespace nero
 
         for(auto layer = layerTab->begin(); layer != layerTab->end(); layer++)
         {
-            if((*layer)->getSecondType() == Object::Physic_Object || (*layer)->getSecondType() == Object::Solid_Object)
+            if((*layer)->getSecondType() == Object::Physic_Object || (*layer)->getSecondType() == Object::Solid_Object || (*layer)->getSecondType() == Object::Animation_Solid_Object)
             {
                 auto objectTab = (*layer)->getAllChild();
 

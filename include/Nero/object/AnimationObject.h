@@ -29,7 +29,8 @@ namespace nero
         void            setSequence(std::string name);
         void            setFrameRate(float frameRate);
         void            setLoop(bool flag);
-
+        void            verticalFlip();
+        void            horizontalFlip();
 
 
 

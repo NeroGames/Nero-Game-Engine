@@ -4,6 +4,7 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 #include <Nero/scene/AdvancedScene.h>
+#include <boost/algorithm/string.hpp>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -29,7 +30,8 @@ namespace nero
     ////////////////////////////////////////////////////////////
     //AdvancedScene
     AdvancedScene::AdvancedScene(Context context):
-        m_Scene(nullptr)
+         m_Scene(nullptr)
+        ,m_Context(context)
         ,m_DestructionListener()
         //
         ,m_Message("")
@@ -47,20 +49,29 @@ namespace nero
         ,m_TotalProfile()
         ,m_SceneSetting()
         ,m_CameraSetting()
-        ,m_SoundSetting()
+        ,m_CanvasColor(sf::Color::Black)
     {
         //Manager
         m_DestructionListener.scene = AdvancedScene::Ptr(this);
-        m_UndoManger                = UndoManager::Ptr(new UndoManager());
-        m_SceneBuilder              = SceneBuilder::Ptr(new SceneBuilder(context.renderCanvas, context.resourceManager));
+        //Scene
+        m_SoundManager              = SoundManager::Ptr(new SoundManager(context.resourceManager->music, context.resourceManager->sound));
+        //World
+        m_SceneBuilder              = SceneBuilder::Ptr(new SceneBuilder(context.renderCanvas, context.resourceManager, m_SceneSetting));
+        m_UndoManager                = UndoManager::Ptr(new UndoManager());
+        m_Grid                      = Grid::Ptr(new Grid());
+
+        //Front Screen
+        addScreen(DEFAULT_FRONTSREEN);
+        selectScreen(DEFAULT_FRONTSREEN);
+        m_CurrentScreen = DEFAULT_FRONTSREEN;
+
+        //Add the default layer
+        m_SceneBuilder->addLayer();
 
         //void * memset (void * ptr, int value, size_t num);
         //Sets the first num bytes of the block of memory pointed by ptr to the specified value (interpreted as an unsigned char).
         memset(&m_MaxProfile, 0, sizeof(b2Profile));
         memset(&m_TotalProfile, 0, sizeof(b2Profile));
-
-        //Add the default layer
-        m_SceneBuilder->addLayer();
     }
 
     ////////////////////////////////////////////////////////////
@@ -92,10 +103,44 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
+    SceneBuilder::Ptr AdvancedScene::getScreenBuilder()
+    {
+        auto frontSceen = std::find_if(m_FrontScreenTable.begin(), m_FrontScreenTable.end(), [&](FrontScreen screen){return screen.name == m_CurrentScreen;});
+        return frontSceen->screenBuilder;
+    }
+
+    ////////////////////////////////////////////////////////////
     UndoManager::Ptr AdvancedScene::getUndoManager()
     {
-        return m_UndoManger;
+        return m_UndoManager;
     }
+
+    ////////////////////////////////////////////////////////////
+    UndoManager::Ptr AdvancedScene::getScreenUndoManager()
+    {
+        auto frontSceen = std::find_if(m_FrontScreenTable.begin(), m_FrontScreenTable.end(), [&](FrontScreen screen){return screen.name == m_CurrentScreen;});
+        return frontSceen->undoManager;
+    }
+
+    ////////////////////////////////////////////////////////////
+    Grid::Ptr AdvancedScene::getFrontScreenGrid()
+    {
+        auto frontSceen = std::find_if(m_FrontScreenTable.begin(), m_FrontScreenTable.end(), [&](FrontScreen screen){return screen.name == m_CurrentScreen;});
+        return frontSceen->grid;
+    }
+
+     CameraSetting& AdvancedScene::getScreenCameraSetting()
+     {
+        auto frontSceen = std::find_if(m_FrontScreenTable.begin(), m_FrontScreenTable.end(), [&](FrontScreen screen){return screen.name == m_CurrentScreen;});
+        return frontSceen->cameraSetting;
+     }
+
+    sf::Color AdvancedScene::getScreenCanvasColor()
+    {
+        auto frontSceen = std::find_if(m_FrontScreenTable.begin(), m_FrontScreenTable.end(), [&](FrontScreen screen){return screen.name == m_CurrentScreen;});
+        return frontSceen->canvasColor;
+    }
+
 
     ////////////////////////////////////////////////////////////
     void AdvancedScene::setName(std::string name)
@@ -278,11 +323,6 @@ namespace nero
         }
     }
 
-    ////////////////////////////////////////////////////////////
-    void AdvancedScene::shiftOrigin(const b2Vec2& newOrigin)
-    {
-        m_Scene->m_PhysicWorld->ShiftOrigin(newOrigin);
-    }
      ////////////////////////////////////////////////////////////
     void AdvancedScene::shiftMouseDown(const b2Vec2& p)
     {
@@ -403,7 +443,7 @@ namespace nero
         m_Bomb->SetLinearVelocity(velocity);
 
         b2CircleShape circle;
-        circle.m_radius = 0.3f;
+        circle.m_radius = 0.2f;
 
         b2FixtureDef fd;
         fd.shape = &circle;
@@ -424,5 +464,115 @@ namespace nero
     void AdvancedScene::jointDestroyed(b2Joint* joint)
     {
         B2_NOT_USED(joint);
+    }
+
+    void AdvancedScene::selectScreen(const std::string& name)
+    {
+        m_CurrentScreen = name;
+    }
+
+    bool AdvancedScene::addScreen(const std::string& _name)
+    {
+        std::string name = _name;
+        boost::algorithm::trim(name);
+
+        //Cannot have two screen with the same name
+        for(auto screen : m_FrontScreenTable)
+        {
+            if(screen.name == name || name == "")
+                return false;
+        }
+
+        FrontScreen frontScreen;
+        frontScreen.screenBuilder                   = SceneBuilder::Ptr(new SceneBuilder(m_Context.renderCanvas, m_Context.resourceManager, m_SceneSetting));
+        frontScreen.undoManager                     = UndoManager::Ptr(new UndoManager());
+        frontScreen.grid                            = Grid::Ptr(new Grid());
+        frontScreen.name                            = name;
+        frontScreen.cameraSetting.position          = sf::Vector2f(400.f, 303.f);
+        frontScreen.cameraSetting.defaultPosition   = sf::Vector2f(400.f, 303.f);
+        frontScreen.cameraSetting.zoom              = -36;
+
+        m_FrontScreenTable.push_back(frontScreen);
+
+        m_FrontScreenTable.back().screenBuilder->addLayer();
+
+        return true;
+    }
+
+    std::vector<std::string> AdvancedScene::getScreenTable()
+    {
+        std::vector<std::string> screenTable;
+
+        for(auto screen : m_FrontScreenTable)
+        {
+           screenTable.push_back(screen.name);
+        }
+
+        nero_log("screen table : " + _s(screenTable.size()));
+
+        return screenTable;
+    }
+
+    SoundManager::Ptr AdvancedScene::getSoundManager()
+    {
+        return m_SoundManager;
+    }
+
+    bool AdvancedScene::deleteScreen(const std::string& name)
+    {
+        //At least one Screen my stay, the current screen cannot be delete
+        if(m_FrontScreenTable.size() == 1 || name == m_CurrentScreen)
+            return false;;
+
+        for(auto it = m_FrontScreenTable.begin(); it != m_FrontScreenTable.end(); it++)
+        {
+            if(it->name == name)
+            {
+                m_FrontScreenTable.erase(it);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool AdvancedScene::renameScreen(const std::string& name, const std::string& _newName)
+    {
+        std::string newName = _newName;
+        boost::algorithm::trim(newName);
+
+        //Cannot have two screen with the same name
+        for(auto screen : m_FrontScreenTable)
+        {
+            if(screen.name == newName || newName == "")
+                return false;
+        }
+
+        bool result = false;
+        for(auto it = m_FrontScreenTable.begin(); it != m_FrontScreenTable.end(); it++)
+        {
+            if(it->name == name)
+            {
+                it->name = newName;
+                result = true;
+                break;
+            }
+        }
+
+        if(m_CurrentScreen == name)
+            m_CurrentScreen = newName;
+
+        return result;
+    }
+
+    void AdvancedScene::setScreenCanvasColor(const sf::Color& color)
+    {
+        auto frontSceen = std::find_if(m_FrontScreenTable.begin(), m_FrontScreenTable.end(), [&](FrontScreen screen){return screen.name == m_CurrentScreen;});
+        frontSceen->canvasColor = color;
+    }
+
+    void AdvancedScene::setUpdateLog(std::function<void(std::string)>  fn)
+    {
+        m_UpdateLog = fn;
     }
 }

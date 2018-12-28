@@ -21,7 +21,7 @@ namespace nero
         m_SelectedMesh(nullptr),
         m_MeshCount(0)
     {
-        m_EngineUndo    = [](){};
+        m_UpdateUndo    = [](){};
     }
 
     MeshEditor::~MeshEditor()
@@ -160,30 +160,30 @@ namespace nero
         if(!isPressed)
         {
             if(key == sf::Keyboard::Numpad8 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad2 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad4 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad6 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             //Rotation
             else if(key == sf::Keyboard::Numpad9 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad7 && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             //Zoom
             else if(key == sf::Keyboard::Add && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
 
             else if(key == sf::Keyboard::Subtract && CTRL())
-                m_EngineUndo();
+                m_UpdateUndo();
         }
     }
 
@@ -425,7 +425,7 @@ namespace nero
                 m_SelectedMesh = nullptr;
             }
 
-            m_EngineUndo();
+            m_UpdateUndo();
         }
 
         //Right_Click
@@ -561,7 +561,7 @@ namespace nero
         if(mouse.button == sf::Mouse::Right && !isPressed && m_SelectedMesh)
         {
             m_SelectedMesh = nullptr;
-            m_EngineUndo();
+            m_UpdateUndo();
         }
     }
 
@@ -591,8 +591,19 @@ namespace nero
         }
     }
 
-    void MeshEditor::setEngineUndoFunction(std::function<void()>  f)
+    void MeshEditor::setUpdateUndo(std::function<void()>  fn)
     {
-        m_EngineUndo = f;
+        m_UpdateUndo = fn;
     }
+
+    void MeshEditor::setUpdateLog(std::function<void(const std::string&, int)>  fn)
+    {
+        m_UpdateLog = fn;
+    }
+
+    void MeshEditor::setUpdateLogIf(std::function<void(const std::string&, bool, int)>  fn)
+    {
+        m_UpdateLogIf = fn;
+    }
+
 }

@@ -17,12 +17,23 @@
 namespace nero
 {
     ShapeRenderer::ShapeRenderer(sfg::Canvas::Ptr renderCanvas, const float& thickness, const int& tranparency):
-        m_RenderCanvas(renderCanvas)
+         m_RenderCanvas(renderCanvas)
+        ,m_RenderWindow(nullptr)
         ,m_Thickness(thickness)
         ,m_Tranparency(tranparency)
     {
         //Empty
     }
+
+    ShapeRenderer::ShapeRenderer(sf::RenderWindow* renderWindow, const float& thickness, const int& tranparency):
+         m_RenderCanvas(nullptr)
+        ,m_RenderWindow(renderWindow)
+        ,m_Thickness(thickness)
+        ,m_Tranparency(tranparency)
+    {
+        //Empty
+    }
+
 
     void ShapeRenderer::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
     {
@@ -38,7 +49,10 @@ namespace nero
             polygon.setPoint(i, b2_to_sf(vertices[i], SCALE));
         }
 
-        m_RenderCanvas->Draw(polygon);
+        if(m_RenderWindow)
+            m_RenderWindow->draw(polygon);
+        else
+            m_RenderCanvas->Draw(polygon);
     }
 
     void ShapeRenderer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
@@ -56,7 +70,10 @@ namespace nero
         }
 
 
-        m_RenderCanvas->Draw(solidPolygon);
+        if(m_RenderWindow)
+            m_RenderWindow->draw(solidPolygon);
+        else
+            m_RenderCanvas->Draw(solidPolygon);
     }
 
     void ShapeRenderer::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
@@ -72,7 +89,10 @@ namespace nero
             circle.setRadius(rad);
             circle.setOrigin(sf::Vector2f(rad, rad));
 
-        m_RenderCanvas->Draw(circle);
+        if(m_RenderWindow)
+            m_RenderWindow->draw(circle);
+        else
+            m_RenderCanvas->Draw(circle);
     }
 
     void ShapeRenderer::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
@@ -88,7 +108,10 @@ namespace nero
             solidCircle.setRadius(rad);
             solidCircle.setOrigin(sf::Vector2f(rad, rad));
 
-        m_RenderCanvas->Draw(solidCircle);
+        if(m_RenderWindow)
+            m_RenderWindow->draw(solidCircle);
+        else
+            m_RenderCanvas->Draw(solidCircle);
 
         b2Vec2 p = center + radius * axis;
         DrawSegment(center, p, color);
@@ -109,7 +132,10 @@ namespace nero
         float angle = atan2(delta_y, delta_x);
         line.setRotation(toDegree(angle));
 
-        m_RenderCanvas->Draw(line);
+        if(m_RenderWindow)
+            m_RenderWindow->draw(line);
+        else
+            m_RenderCanvas->Draw(line);
     }
 
 
@@ -135,7 +161,10 @@ namespace nero
         point.setSize(sf::Vector2f(s, s));
         point.setOrigin(sf::Vector2f(s/2, s/2));
 
-        m_RenderCanvas->Draw(point);
+        if(m_RenderWindow)
+            m_RenderWindow->draw(point);
+        else
+            m_RenderCanvas->Draw(point);
     }
 
     void ShapeRenderer::DrawAABB(b2AABB* aabb, const b2Color& c)
@@ -149,6 +178,9 @@ namespace nero
         aabb_shape.setPoint(2, b2_to_sf(aabb->upperBound, SCALE));
         aabb_shape.setPoint(3, sf::Vector2f(aabb->lowerBound.x * SCALE, aabb->upperBound.y * SCALE));
 
-        m_RenderCanvas->Draw(aabb_shape);
+        if(m_RenderWindow)
+            m_RenderWindow->draw(aabb_shape);
+        else
+            m_RenderCanvas->Draw(aabb_shape);
     }
 }

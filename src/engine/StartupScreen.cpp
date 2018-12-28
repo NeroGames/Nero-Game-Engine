@@ -15,8 +15,8 @@ namespace nero
 
     StartupScreen::~StartupScreen()
     {
-        m_RenderWindow = nullptr;
         delete m_RenderWindow;
+         m_RenderWindow = nullptr;
     }
 
     void StartupScreen::setRenderWindow(sf::RenderWindow* renderWindow)

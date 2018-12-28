@@ -52,6 +52,7 @@ namespace nero
         m_RenderWindow->draw(m_LoadingRectRight);
         m_RenderWindow->draw(m_LoadingRectLeft);
         m_RenderWindow->draw(m_LoadingBall);
+        m_RenderWindow->draw(m_CopyrightsSprite);
     }
 
     const sf::Color LoadingScreen::getBackgroundColor() const
@@ -66,12 +67,18 @@ namespace nero
 
     void LoadingScreen::init()
     {
-         //Build the logo sprite
-        m_LogoTexture.loadFromFile(CONFIGURATION_PATH + "/logo.png");
+        //Build the logo sprite
+        m_LogoTexture.loadFromFile(STARTUP_FOLDER + "/" + LOADING_LOGO);
         m_LogoSprite.setTexture(m_LogoTexture);
         centerOrigin(m_LogoSprite);
         m_LogoSprite.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f, m_RenderWindow->getSize().y / 3.f));
         m_LogoSprite.setScale(sf::Vector2f(1.001f, 1.001f));
+        //Build the copyrights sprite
+        m_CopyrightsTexture.loadFromFile(STARTUP_FOLDER + "/" + ENGINE_COPYRIGHTS);
+        m_CopyrightsSprite.setTexture(m_CopyrightsTexture);
+        centerOrigin(m_CopyrightsSprite);
+        m_CopyrightsSprite.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f, m_RenderWindow->getSize().y - 50.f));
+        m_CopyrightsSprite.setScale(sf::Vector2f(1.001f, 1.001f));
         //Build the left loading rectangle
         m_LoadingRectLeft.setSize(sf::Vector2f(15.f, 15.f));
         m_LoadingRectLeft.setOutlineThickness(2.f);
@@ -96,6 +103,4 @@ namespace nero
         m_MaxRight = m_LoadingRectRight.getPosition().x - 30.f;
         m_Direction = 1;
     }
-
-
 }

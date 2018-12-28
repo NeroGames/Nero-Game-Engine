@@ -18,12 +18,9 @@ namespace nero
 
     void AnimationHolder::load()
     {
-        nero_log("///////////////////////// LOADING ANIMATION //////////////////////");
-
         const std::string folder_name = m_Configuration["folder"].get<std::string>();
 
-        nero_log("Folder : " + folder_name);
-        nero_log("");
+        nero_log("Resource path : " + folder_name);
 
         using namespace boost::filesystem;
         path folder_path(folder_name);
@@ -138,7 +135,7 @@ namespace nero
     {
         auto found = m_SequenceMap.find(animationName);
 
-        return found->second.find(animationName)->second[0];
+        return found->second.find("idle")->second[0];
     }
 
     std::map<std::string, std::vector<sf::IntRect>> AnimationHolder::getSequenceMap(std::string animationName) const

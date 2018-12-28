@@ -45,11 +45,9 @@ namespace nero
 
     void FontHolder::load()
     {
-        nero_log("///////////////////////// LOADING FONT //////////////////////");
-
         const std::string folder_name = m_Configuration["folder"].get<std::string>();
 
-        nero_log("Font resource path : " + folder_name);
+        nero_log("Resource path : " + folder_name);
 
         using namespace boost::filesystem;
         path folder_path(folder_name);
@@ -83,8 +81,5 @@ namespace nero
 
             it++;
         }
-
-
-        nero_log("////////////////////////////////////////////////////////////");
     }
 }

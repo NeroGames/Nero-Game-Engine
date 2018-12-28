@@ -8,6 +8,7 @@
 //NERO
 #include <Nero/resource/ResourceManager.h>
 #include <Nero/camera/Camera.h>
+#include <Nero/Object/Object.h>
 //SFGUI
 #include <SFGUI/Canvas.hpp>
 //SFML
@@ -24,12 +25,13 @@ namespace nero
     ///\brief Store resources provided by the engine
     struct Context
     {
-        Context(sfg::Canvas::Ptr renderCanvas, sf::View& frontView, Camera::Ptr camera, ResourceManager::Ptr resourceManager);
+        Context(sfg::Canvas::Ptr renderCanvas, sf::View& frontView, Camera::Ptr camera, ResourceManager::Ptr resourceManager, bool renderEngine);
 
         sfg::Canvas::Ptr        renderCanvas;
         sf::View&               frontView;
         Camera::Ptr             camera;
         ResourceManager::Ptr    resourceManager;
+        bool                    renderEngine;
     };
 
 
@@ -73,8 +75,6 @@ namespace nero
         int32   velocityIterations;
         int32   positionIterations;
 
-        sf::Color   canvasColor;
-
         bool pause;
         bool singleStep;
 
@@ -97,7 +97,8 @@ namespace nero
         bool drawProfile;
 
         //Function
-        nlohmann::json      toJson();
+        nlohmann::json toJson();
+        static  SceneSetting fromJson(nlohmann::json setting);
     };
 
     ///\brief Store the Scene current camera state
@@ -116,37 +117,22 @@ namespace nero
         float               zoom;
 
         //Function
-        nlohmann::json      toJson();
+        nlohmann::json toJson();
+        static  CameraSetting fromJson(nlohmann::json setting);
     };
 
-
-    ///\brief Scene sound setting
-    struct SoundSetting
+    struct CameraTarget
     {
         //Constructor
-        SoundSetting();
+        CameraTarget();
 
         //Parameter
-        float soundVolume;
-        float musicVolume;
-
-        //Function
-        nlohmann::json      toJson();
-    };
-
-    struct CameraTargetOffset
-    {
-        //Constructor
-        CameraTargetOffset();
-
-        //Parameter
-        float left;
-        float right;
-        float up;
-        float down;
-
-        //Function
-        nlohmann::json      toJson();
+        Object::Ptr     target;
+        float           offsetLeft;
+        float           offsetRight;
+        float           offsetUp;
+        float           offsetDown;
+        bool            followTarget;
     };
 
     //
