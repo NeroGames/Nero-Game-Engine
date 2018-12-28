@@ -24,6 +24,7 @@
 #include <future>
 ////////////////////////////////////////////////////////////
 #ifndef NERO_ENGINE_DEVELOPMENT
+namespace
 {
     class EarlyInit
     {
@@ -31,13 +32,13 @@
             static bool initLog()
             {
                 //Create Log configuration if not exit
-                if(!fileExist(CONFIGURATION_FOLDER + "/" + LOG_CONFIGURATION))
+                if(!nero::fileExist(nero::CONFIGURATION_FOLDER + "/" + nero::LOG_CONFIGURATION))
                 {
-                    saveFile(CONFIGURATION_FOLDER + "/" + LOG_CONFIGURATION, log_config_txt, log_config_txt_len);
+                    nero::saveFile(nero::CONFIGURATION_FOLDER + "/" + nero::LOG_CONFIGURATION, log_config_txt, log_config_txt_len);
                 }
 
                 //Load Log configuration
-                el::Configurations logSetting(CONFIGURATION_FOLDER + "/" + LOG_CONFIGURATION);
+                el::Configurations logSetting(nero::CONFIGURATION_FOLDER + "/" + nero::LOG_CONFIGURATION);
                 el::Loggers::reconfigureAllLoggers(logSetting);
 
                 return true;
@@ -45,7 +46,7 @@
 
             static bool initDirectory()
             {
-                buildEngineDirectory();
+                nero::buildEngineDirectory();
                 return true;
             }
     };

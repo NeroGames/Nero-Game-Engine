@@ -34,11 +34,11 @@ include_directories (include)
 include_directories(extlibs)
 file(GLOB_RECURSE NERO_SOURCES *.h *.cpp *.hpp *.cc)
 
-
 find_package(SFML 2.4 REQUIRED COMPONENTS graphics window  network audio system)
 find_package(SFGUI REQUIRED)
 find_package(BOX2D REQUIRED)
 find_package(LUA REQUIRED)
+find_package(OpenGL)
 
 set(Boost_USE_STATIC_LIBS OFF) 
 set(Boost_USE_MULTITHREADED ON)  
@@ -59,7 +59,7 @@ else()
 endif()
 
 # Link Depedencies
-target_link_libraries(nero ${SFML_LIBRARIES} ${SFGUI_LIBRARY} ${BOX2D_LIBRARY} ${LUA_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(nero ${SFML_LIBRARIES} ${SFGUI_LIBRARY} ${BOX2D_LIBRARY} ${LUA_LIBRARIES} ${Boost_LIBRARIES}   ${OPENGL_gl_LIBRARY})
 
 # Setup the output library
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
