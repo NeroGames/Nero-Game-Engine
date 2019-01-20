@@ -9,6 +9,7 @@
 #include <Nero/utility/Utility.h>
 #include <SFGUI/Separator.hpp>
 #include <boost/filesystem.hpp>
+#include <Nero/utility/data/EngineHelp.h>
 bool IMGUI_COLOR_PICKER_OPEN;
 
 ////////////////////////////////////////////////////////////
@@ -92,6 +93,14 @@ namespace nero
             //Mouse wheel event
             case sf::Event::MouseWheelScrolled:
                 handleMouseWheelInput(event.mouseWheelScroll);
+                break;
+
+            //Mouse button event
+            case sf::Event::MouseButtonPressed:
+                handleMouseButtonInput(event.mouseButton, true);
+                break;
+            case sf::Event::MouseButtonReleased:
+                handleMouseButtonInput(event.mouseButton, false);
                 break;
         }
     }
@@ -344,6 +353,34 @@ namespace nero
                 m_Camera->setZoom(setting.defaultZoom);
             }
         }
+    }
+
+    ////////////////////////////////////////////////////////////
+    void DevEngineUI::handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
+    {
+        if(isPressed)
+        {
+            if(mouse.button == sf::Mouse::Middle && m_MouseOnCanvas)
+            {
+                if (ALT())
+                {
+                    CameraSetting& setting = m_FrontScreen ? m_SceneManager->getScreenCameraSetting() : m_SceneManager->getCameraSetting();
+
+                    setting.defaultPosition = m_Camera->getPosition();
+                    setting.defaultRotation = m_Camera->getRotation();
+                    setting.defaultZoom     = m_Camera->getZoom();
+                }
+                else
+                {
+                    CameraSetting& setting = m_FrontScreen ? m_SceneManager->getScreenCameraSetting() : m_SceneManager->getCameraSetting();
+
+                    m_Camera->setPosition(setting.defaultPosition);
+                    m_Camera->setRotation(setting.defaultRotation);
+                    m_Camera->setZoom(setting.defaultZoom);
+                }
+            }
+        }
+
     }
 
     ////////////////////////////////////////////////////////////
@@ -914,7 +951,7 @@ namespace nero
         render_canvas_window->Add(m_RenderCanvas);
 
         m_RenderCanvas->GetSignal(sfg::Canvas::OnMouseEnter).Connect([this](){m_MouseOnCanvas = true; m_RenderCanvas->GrabFocus();});
-        m_RenderCanvas->GetSignal(sfg::Canvas::OnMouseLeave).Connect([this](){m_MouseOnCanvas = false;});
+        m_RenderCanvas->GetSignal(sfg::Canvas::OnMouseLeave).Connect([this](){m_MouseOnCanvas = false; m_Camera->cancelAction();});
 
         //Log_Window
         m_LogLabel = sfg::Label::Create();
@@ -1051,7 +1088,7 @@ namespace nero
         m_LoadButton                = sfg::Button::Create("Load");
         m_AutoSaveChekButton        = sfg::CheckButton::Create("Auto save");
 
-        m_AccessLearningButton      = sfg::Button::Create("Learning ");
+        m_AccessLearningButton      = sfg::Button::Create("Learn    ");
         m_AccessSnippetButton       = sfg::Button::Create("Snippet   ");
         m_AccessAPIButton           = sfg::Button::Create("Engine API");
         m_AccessForumButton         = sfg::Button::Create("Forum     ");
@@ -1624,7 +1661,7 @@ namespace nero
         help_window->SetScrollbarPolicy(sfg::ScrolledWindow::VERTICAL_ALWAYS  | sfg::ScrolledWindow::HORIZONTAL_NEVER);
         help_window->AddWithViewport(help_box);
         help_window->SetId("help_window");
-        auto helpLabel = sfg::Label::Create("Nero Game Engine v1.0");
+        auto helpLabel = sfg::Label::Create(ENGINE_HELP);
         help_box->Pack(helpLabel);
 
         //Right_End
@@ -2585,10 +2622,13 @@ namespace nero
         sf::Color color(m_RedAdjustment->GetValue(), m_GreenAdjustment->GetValue(), m_BlueAdjustment->GetValue(), m_AlphaAdjustment->GetValue());
 
         //update picker
-        m_ColorPickerColor.x = color.r/255.f;
-        m_ColorPickerColor.y = color.g/255.f;
-        m_ColorPickerColor.z = color.b/255.f;
-        m_ColorPickerColor.w = color.a/255.f;
+        if(!IMGUI_COLOR_PICKER_OPEN)
+        {
+            m_ColorPickerColor.x = color.r/255.f;
+            m_ColorPickerColor.y = color.g/255.f;
+            m_ColorPickerColor.z = color.b/255.f;
+            m_ColorPickerColor.w = color.a/255.f;
+        }
 
         if(m_LayerColorRadioButton->IsActive())
         {
@@ -2923,9 +2963,9 @@ namespace nero
     void DevEngineUI::onAccessForumButton()
     {
         #ifdef _WIN32
-            ShellExecute(NULL, "open", "https://nero-game.com/forum", NULL, NULL, SW_SHOWNORMAL);
+            ShellExecute(NULL, "open", "https://nero-game.com/forum/index.php", NULL, NULL, SW_SHOWNORMAL);
         #else
-            system("https://nero-game.com/forum");
+            system("https://nero-game.com/forum/index.php");
         #endif // _WIN32
     }
 
@@ -2941,9 +2981,9 @@ namespace nero
      void DevEngineUI::onAccessAPIButton()
     {
         #ifdef _WIN32
-            ShellExecute(NULL, "open", "https://nero-game.com/engine", NULL, NULL, SW_SHOWNORMAL);
+            ShellExecute(NULL, "open", "https://nero-game.com/documentation", NULL, NULL, SW_SHOWNORMAL);
         #else
-            system("https://nero-game.com/engine");
+            system("https://nero-game.com/documentation");
         #endif // _WIN32
     }
 

@@ -58,7 +58,7 @@ namespace nero
     {
         auto frame = m_FrameTable[m_CurrentFrame++];
 
-        if(m_CurrentFrame == m_FrameTable.size())
+        if(m_CurrentFrame >= m_FrameTable.size())
         {
             m_Loop ? reset() : lock();
         }

@@ -55,7 +55,8 @@ namespace nero
             bool            removeObject(sf::String name);
 
             //
-            void            checkAllObject(std::vector<sf::String> objectNameTab);
+            void            checkWorldObject(std::vector<sf::String> objectNameTab);
+            void            checkScreenObject(std::string screen, std::vector<sf::String> objectNameTab);
             //
             void            removeDeadPhysicObject();
 
@@ -94,6 +95,7 @@ namespace nero
             b2World*            m_World;
             PhysicObjectTab     m_DeadPhysicObject;
             std::vector<Screen::Ptr>& m_ScreenTable;
+            LayerObject::Ptr    m_CustomLayer;
     };
 }
 #endif // SCENEOBJECTMANAGER_H

@@ -135,7 +135,7 @@ namespace nero
     {
         auto found = m_SequenceMap.find(animationName);
 
-        return found->second.find("idle")->second[0];
+        return found->second.find(getDefaultSequence(animationName))->second[0];
     }
 
     std::map<std::string, std::vector<sf::IntRect>> AnimationHolder::getSequenceMap(std::string animationName) const
@@ -145,4 +145,18 @@ namespace nero
         return found->second;
     }
 
+    std::string AnimationHolder::getDefaultSequence(std::string animationName) const
+    {
+        auto foundAnimation = m_SequenceMap.find(animationName);
+        auto foundSequence =  foundAnimation->second.find("idle");
+
+        if(foundSequence != foundAnimation->second.end())
+        {
+            return "idle";
+        }
+        else
+        {
+            return foundAnimation->second.begin()->first;
+        }
+    }
 }

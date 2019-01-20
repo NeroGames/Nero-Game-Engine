@@ -25,6 +25,7 @@ namespace nero
             sf::Texture&				        getTexture(std::string animationName);
             const sf::Texture&			        getTexture(std::string animationName) const;
             sf::IntRect                         getAnimationBound(std::string animationName) const;
+            std::string                         getDefaultSequence(std::string animationName) const;
             const std::vector<std::string>&     getAnimationTable() const;
 
             std::map<std::string, std::vector<sf::IntRect>>            getSequenceMap(std::string animationName) const;

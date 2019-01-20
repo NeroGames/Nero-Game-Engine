@@ -30,6 +30,8 @@ namespace nero
             void            handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
             void            handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse);
 
+            void            cancelAction();
+
 
         private:
             bool            m_IsPanningUp;

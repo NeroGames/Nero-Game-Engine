@@ -97,6 +97,7 @@ namespace nero
             m_RestartScene = true;
         };
         //initialization
+        m_Scene->checkSceneObject();
         m_Scene->init();
     }
 

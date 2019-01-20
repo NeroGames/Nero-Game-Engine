@@ -235,6 +235,8 @@ namespace nero
 
     bool Collision::isCollising(sf::String catA, sf::String catB)
     {
+        if(!getObjectA() || !getObjectB()) return false;
+
         return  (   getObjectA()->getCategory() == catA &&
                     getObjectB()->getCategory() == catB   ) ||
                 (   getObjectA()->getCategory() == catB &&

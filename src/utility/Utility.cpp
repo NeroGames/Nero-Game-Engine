@@ -1061,12 +1061,6 @@ namespace
         {
             saveFile(RESOURCE_FOLDER + "/" + SHADER_FOLDER + "/" + SIMPLE_VERTEX, simple_vertex_ver, simple_vertex_ver_len);
         }
-
-        //Create conception folder
-        //conception (use marked)
-        //conception/markdown guide line, explain how to use markdown
-        //conception/project management, give some update (git, gitkraken, time start small)
-        //conception/project(date, team, leader, etc)
     }
 
     nlohmann::json toJson(sf::Color color)
@@ -1074,10 +1068,10 @@ namespace
         return  {{"r", color.r}, {"g", color.g}, {"b", color.b}, {"a", color.a}};
     }
 
-     sf::Color colorFromJson(nlohmann::json json)
-     {
+    sf::Color colorFromJson(nlohmann::json json)
+    {
         return sf::Color(json["r"], json["g"], json["b"], json["a"]);
-     }
+    }
  }
 
 

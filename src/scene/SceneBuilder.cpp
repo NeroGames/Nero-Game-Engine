@@ -884,7 +884,7 @@ namespace nero
 
                 animation.setSprite(sprite);
                 animation.setTexture(label);
-                animation.setSequence("idle");
+                animation.setSequence(m_ResourceManager->animation.getDefaultSequence(label));
 
                 AnimationObject::Ptr animation_object(new AnimationObject());
                 animation_object->setAnimation(animation);
@@ -917,7 +917,7 @@ namespace nero
 
                 animation.setSprite(sprite);
                 animation.setTexture(label);
-                animation.setSequence("idle");
+                animation.setSequence(m_ResourceManager->animation.getDefaultSequence(label));
 
 
                 AnimationObject::Ptr animation_object(new AnimationObject());
@@ -1338,7 +1338,7 @@ namespace nero
                             break;
 
                         PhysicObject::Ptr physic_object = m_PhysicObjectManager.createObject(mesh_object->getMesh());
-                        physic_object->setSecondType(Object::Solid_Object);
+                        physic_object->setSecondType(Object::Animation_Solid_Object);
                         physic_object->setName(mesh_object->getName());
                         physic_object->setCategory(mesh_object->getCategory());
                         physic_object->setId(mesh_object->getId());
@@ -1839,7 +1839,7 @@ namespace nero
 
         animation.setSprite(sprite);
         animation.setTexture(label);
-        animation.setSequence("idle");
+        animation.setSequence(m_ResourceManager->animation.getDefaultSequence(label));
 
         animation_object->setAnimation(animation);
 
@@ -1862,7 +1862,7 @@ namespace nero
 
     void SceneBuilder::moveObjectUp()
     {
-        if(!m_SelectedLayer && !m_SelectedObject)
+        if(!m_SelectedLayer || !m_SelectedObject)
             return;
 
         auto childTable = m_SelectedLayer->getAllChild();
@@ -1881,7 +1881,7 @@ namespace nero
 
     void SceneBuilder::moveObjectDown()
     {
-        if(!m_SelectedLayer && !m_SelectedObject)
+        if(!m_SelectedLayer || !m_SelectedObject)
             return;
 
         auto childTable = m_SelectedLayer->getAllChild();

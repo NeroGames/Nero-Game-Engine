@@ -88,6 +88,7 @@ namespace nero
             void                        handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
             void                        handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
             void                        handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse);
+            void                        handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
 
             void                        updatePositionLabel();
             void                        updateSceneSetting();

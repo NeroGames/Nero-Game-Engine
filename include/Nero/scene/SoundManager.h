@@ -53,6 +53,7 @@ namespace nero
 
         private:
             sf::Sound&          getSound();
+            void                clampVolume(float& volume);
 
         private:
             MusicHolder&                    m_MusicHolder;

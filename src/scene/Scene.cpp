@@ -379,8 +379,14 @@ namespace nero
         }
     }
 
-
+    ////////////////////////////////////////////////////////////
     void Scene::init()
+    {
+        //Empty
+    }
+
+    ////////////////////////////////////////////////////////////
+    void Scene::checkSceneObject()
     {
         //Empty
     }
@@ -653,4 +659,10 @@ namespace nero
     {
         m_Resolution = sf::Vector2f(width, height);
     }
+
+    b2World* Scene::getPhysicWorld()
+    {
+        return m_PhysicWorld;
+    }
+
 }

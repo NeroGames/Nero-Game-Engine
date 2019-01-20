@@ -214,6 +214,7 @@ namespace nero
             m_AdvancedScene->m_Scene->m_ScreenTable.push_back(screen);
         }
 
+        m_AdvancedScene->m_Scene->checkSceneObject();
         m_AdvancedScene->m_Scene->init();
     }
 
@@ -444,8 +445,35 @@ namespace nero
 
     Scene::Ptr SceneManager::getScene()
     {
-        m_AdvancedScene->m_Scene->m_CameraSetting  = m_AdvancedScene->m_CameraSetting;
-        return m_AdvancedScene->m_Scene;
+        Scene::Ptr scene = m_SceneFactoryMap[m_AdvancedScene->m_SceneName].second();
+        scene->m_UpdateLog = m_UpdateLog;
+        scene->m_UpdateLogIf = m_UpdateLogIf;
+
+        //World
+        m_AdvancedScene->m_SceneBuilder->setPhysicWorld(scene->m_PhysicWorld);
+        m_AdvancedScene->m_SceneBuilder->buildScene(scene->m_World);
+        //Screen
+        for(auto& devScreen : m_AdvancedScene->m_FrontScreenTable)
+        {
+            Screen::Ptr screen = Screen::Ptr(new Screen());
+
+            //FrontScreen
+            screen->screen  = Object::Ptr(new Object());
+            screen->screenUI = UIObject::Ptr(new UIObject());
+
+            devScreen.screenBuilder->buildScene(screen->screen);
+            devScreen.screenBuilder->buildUI(screen->screenUI);
+
+            screen->name = devScreen.name;
+            screen->hide = true;
+            screen->canvasColor = devScreen.screenBuilder->getCanvasColor();
+
+            scene->m_ScreenTable.push_back(screen);
+        }
+
+        scene->m_CameraSetting  = m_AdvancedScene->m_CameraSetting;
+
+        return scene;
     }
 
 

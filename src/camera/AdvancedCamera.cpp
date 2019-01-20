@@ -174,7 +174,7 @@ namespace nero
                     zoomOut();
                 }
             }
-            else if (CTRL())
+            else if (ALT())
             {
                 if(mouse.delta > 0.f)
                 {
@@ -189,7 +189,7 @@ namespace nero
                     panDown();
                 }
             }
-            else if (ALT())
+            else if (CTRL())
             {
                 if(mouse.delta > 0.f)
                 {
@@ -241,5 +241,15 @@ namespace nero
         }
     }
 
-
+    void AdvancedCamera::cancelAction()
+    {
+        m_IsPanningUp       = false;
+        m_IsPanningDown     = false;
+        m_IsPanningLeft     = false;
+        m_IsPanningRight    = false;
+        m_IsRotatingLeft    = false;
+        m_IsRotatingRight   = false;
+        m_IsZoomingIn       = false;
+        m_IsZoomingOut      = false;
+    }
 }

@@ -42,6 +42,7 @@ namespace nero
 
         protected:
             virtual void                init();
+            virtual void                checkSceneObject();
             //Collision
             virtual void                handleCollisionContactBegin(Collision collision);
             virtual void                handleCollisionContactEnd(Collision collision);
@@ -69,6 +70,7 @@ namespace nero
             const std::string&          getSceneName() const;
             const Context&              getContext() const;
             Object::Ptr                 getWorld();
+            b2World*                    getPhysicWorld();
             void                        setCanvasColor(const sf::Color& color);
             const sf::Color&            getCanvasColor() const;
             const sf::Color&            getScreenCanvasColor(const std::string& name) const;

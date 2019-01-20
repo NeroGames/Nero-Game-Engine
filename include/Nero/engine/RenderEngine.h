@@ -165,6 +165,7 @@ namespace nero
 
                 //Finish
                 m_Scene->m_QuitEngine = [this](){ m_Window.close();};
+                m_Scene->checkSceneObject();
                 m_Scene->init();
                 m_Scene->m_ResetScene = [this]()
                 {

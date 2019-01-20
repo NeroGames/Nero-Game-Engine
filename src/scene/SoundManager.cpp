@@ -58,11 +58,15 @@ namespace nero
     void SoundManager::setSoundVolume(float volume)
     {
         m_SoundVolume = volume;
+
+        clampVolume(m_SoundVolume);
     }
 
     void SoundManager::setMusicVolume(float volume)
     {
         m_MusicVolume = volume;
+
+        clampVolume(m_MusicVolume);
 
         if(m_CurrentMusic != "")
         {
@@ -141,6 +145,8 @@ namespace nero
     {
         m_MusicVolume += offset;
 
+        clampVolume(m_MusicVolume);
+
         if(m_CurrentMusic != "")
         {
             auto& music = m_MusicHolder.getMusic(m_CurrentMusic);
@@ -153,6 +159,8 @@ namespace nero
     float SoundManager::decreaseMusicVolume(float offset)
     {
         m_MusicVolume -= offset;
+
+        clampVolume(m_MusicVolume);
 
         if(m_CurrentMusic != "")
         {
@@ -167,6 +175,8 @@ namespace nero
     {
         m_SoundVolume += offset;
 
+        clampVolume(m_SoundVolume);
+
         return m_SoundVolume;
     }
 
@@ -174,7 +184,21 @@ namespace nero
     {
         m_SoundVolume -= offset;
 
+        clampVolume(m_SoundVolume);
+
         return m_SoundVolume;
+    }
+
+    void SoundManager::clampVolume(float& volume)
+    {
+        if (volume < 0)
+        {
+            volume = 0;
+        }
+        else if (volume > 100)
+        {
+            volume = 100;
+        }
     }
 }
 

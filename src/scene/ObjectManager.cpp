@@ -10,7 +10,14 @@ namespace nero
         ,m_DeadPhysicObject()
         ,m_ScreenTable(screenTable)
     {
-        //ctr
+        m_CustomLayer =  LayerObject::Ptr(new LayerObject());
+        m_CustomLayer->setId(-1);
+        m_CustomLayer->setIsVisible(true);
+        m_CustomLayer->setIsSelected(false);
+        m_CustomLayer->setName("custom");
+        m_CustomLayer->setOrder(0);
+        m_RootObject->addChild(m_CustomLayer);
+
     }
 
     ObjectManager::~ObjectManager()
@@ -194,14 +201,24 @@ namespace nero
     ///////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////
     //Checking
-    void ObjectManager::checkAllObject(std::vector<sf::String> objectNameTab)
+    void ObjectManager::checkWorldObject(std::vector<sf::String> objectNameTab)
     {
         for(sf::String object_name : objectNameTab)
         {
-            //&& !findUIObject(object_name) && findFrontObject(object_name)
             if(!findObject(object_name))
             {
                 throw std::runtime_error("Object [" + _s(object_name) + "] not found, please check that you have entered the correct object name");
+            }
+        }
+    }
+
+    void ObjectManager::checkScreenObject(std::string screen, std::vector<sf::String> objectNameTab)
+    {
+        for(sf::String object_name : objectNameTab)
+        {
+            if(!findScreenUIObject(screen, object_name) && !findScreenObject(screen, object_name))
+            {
+                throw std::runtime_error("Object [" + _s(object_name) + "] not found in Screen [" + _s(screen) + "], please check that you have entered the correct object name");
             }
         }
     }
@@ -291,7 +308,7 @@ namespace nero
             if((*it)->getId() == child->getId())
             {
                 if((object->getSecondType() == Object::Physic_Object || object->getSecondType() == Object::Solid_Object || object->getSecondType() == Object::Animation_Solid_Object) &&
-                   (*it)->getSecondType() == Object::Physic_Object)
+                   (*it)->getSecondType() != Object::None)
                 {
                     PhysicObject::Ptr physic_Object = PhysicObject::Cast(*it);
                     physic_Object->setSensor(true);
@@ -361,7 +378,7 @@ namespace nero
 
     void ObjectManager::addObject(Object::Ptr object)
     {
-        m_RootObject->addChild(object);
+        m_CustomLayer->addChild(object);
     }
 
     Object::Ptr ObjectManager::findScreenUIObject(std::string screenName, std::string ObjectName)
