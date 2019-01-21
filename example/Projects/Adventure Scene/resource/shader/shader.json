@@ -1,0 +1,16 @@
+{"shader_list": 
+	[
+		{
+			"vertex" : "simpleVertex.ver",
+			"fragment" : "simpleFragment.frag"
+		},
+
+		{
+			"vertex" : "simpleVertex.ver"
+		},
+
+		{
+			"fragment" : "simpleFragment.frag"
+		}
+	]
+}
