@@ -58,7 +58,7 @@ In you want to work on another environement you can still build the Engine.
 ## Links
 - [Website](https://www.nero-game.com/) 	Download the Engine and learn how to use it
 - [Twitter](https://twitter.com/nerogameengine) Don't miss any news
-- [Youtube]() Find some videos here. There may be some videos tutorials in the future
+- [Youtube](https://www.youtube.com/channel/UCIR0nDUMGzJ3Pkpa3gDCUeQ?view_as=subscriber) Find some videos here. There may be some videos tutorials in the future
 - [Forum](https://www.nero-game.com/forum/) Ask any questions here
 
 ## How to Build
