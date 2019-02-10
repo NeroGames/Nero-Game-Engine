@@ -29,21 +29,21 @@ int main()
 {
     nero_log("hello world");
 
-nero::DevEngine engine;
-    engine.addScene<NewScene>("new scene");
-engine.run();
+	nero::DevEngine engine;
+	    engine.addScene<NewScene>("new scene");
+	engine.run();
 
-return 0;
+	return 0;
 }
 
 //Scene class
 class NewScene : public nero::Scene
 {
-public:
-    NewScene(nero::Context context): nero::Scene(context)
-    {
-	//Ctr
-    }
+	public:
+	    NewScene(nero::Context context): nero::Scene(context)
+	    {
+		//Ctr
+	    }
 };
 ```
 
