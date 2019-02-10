@@ -312,6 +312,7 @@ namespace nero
                 {
                     PhysicObject::Ptr physic_Object = PhysicObject::Cast(*it);
                     physic_Object->setSensor(true);
+                    physic_Object->setDead(true);
                     physic_Object->setSecondType(Object::None);
                     m_DeadPhysicObject.push_back(physic_Object);
 
@@ -361,7 +362,7 @@ namespace nero
 
         for(auto object = m_DeadPhysicObject.begin(); object != m_DeadPhysicObject.end(); object++)
         {
-            if((*object)->isSensor())
+            if((*object)->isDead())
             {
                 m_World->DestroyBody((*object)->getBody());
                 removeObject((*object));

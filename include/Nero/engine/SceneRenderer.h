@@ -19,6 +19,7 @@ namespace nero
 
             void                setScene(Scene::Ptr scene);
             void                setRestartScene(std::function<void()> fn);
+            void                setQuit(std::function<void()> fn);
 
 
         private: //Methods
@@ -30,6 +31,7 @@ namespace nero
 
         private: //Attribute
             friend class        DevEngine;
+            friend class        DevEngineUI;
             friend class        Scene;
 
             Camera::Ptr         m_Camera;
@@ -39,6 +41,7 @@ namespace nero
             ShapeRenderer       m_ShapeRenderer;
             bool                m_RestartScene;
             std::function<void()>       m_RestartSceneFn;
+            std::function<void()>       m_QuitFn;
 
     };
 }

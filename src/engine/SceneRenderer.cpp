@@ -9,6 +9,9 @@ namespace nero
         ,m_RestartScene(false)
 
     {
+         m_Window.setVerticalSyncEnabled(true);
+        m_Window.resetGLStates();
+
         m_FrontView = m_Window.getView();
         m_FrontView.setCenter(windowWidth/2.f, windowHeight/2.f);
         m_FrontView.setSize(sf::Vector2f(windowWidth, windowHeight));
@@ -36,7 +39,7 @@ namespace nero
                 case sf::Event::Closed:
                 {
                     m_Scene->getSoundManager()->stopMusic();
-                    m_Window.close();
+                    m_QuitFn();
                 }break;
             }
         }
@@ -89,7 +92,7 @@ namespace nero
         m_Scene->m_QuitEngine = [this]()
         {
             m_Scene->getSoundManager()->stopMusic();
-            m_Window.close();
+            m_QuitFn();
         };
 
         m_Scene->m_ResetScene = [this]()
@@ -155,5 +158,11 @@ namespace nero
     {
         m_RestartSceneFn = fn;
     }
+
+    void SceneRenderer::setQuit(std::function<void()> fn)
+    {
+        m_QuitFn = fn;
+    }
+
 
 }

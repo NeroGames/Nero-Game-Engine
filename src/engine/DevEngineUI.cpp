@@ -38,6 +38,7 @@ namespace nero
         ,m_ColorPickerColor(1.0f,1.0f,1.0f,1.0f)
         ,m_ColorPickerLastColor(1.0f,1.0f,1.0f,1.0f)
         ,m_RenderColorPicker(false)
+        ,m_RendererActive(false)
     {
         //Empty
     }
@@ -45,6 +46,8 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::handleEvent(sf::Event& event)
     {
+        if(m_RendererActive) return;
+
         //IMGUI
         if(m_RenderColorPicker)
         {
@@ -108,6 +111,8 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::update(const sf::Time& timeStep)
     {
+        if(m_RendererActive) return;
+
         //UI
         m_Desktop.Update(timeStep.asSeconds());
 
@@ -154,6 +159,8 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::render()
     {
+        if(m_RendererActive) return;
+
         //Render Canvas
         m_RenderCanvas->Clear(m_CanvasColor);
 
@@ -194,9 +201,10 @@ namespace nero
         m_Sfgui.Display(m_Window);
 
         //Render Scene
-        if(m_RenderScene)
+        if(m_RenderScene && !m_SceneRenderer)
         {
             m_RenderScene = false;
+            m_RendererActive = true;
             onRenderButton();
         }
 
@@ -714,27 +722,43 @@ namespace nero
     {
         if(m_EngineMode == SCENE && m_EngineSubMode == OBJECT)
         {
-            //build the scene
-            m_SceneManager->buildScene();
-
-            //create a scene renderer
-            sf::Vector2f resolution = m_SceneManager->getSceneResolution();
-            std::string  name       = m_SceneComboBox->GetSelectedText();
-            m_SceneRenderer         = SceneRenderer::Ptr(new SceneRenderer(resolution.x, resolution.y, name));
-
-            //scene the scene to the renderer
-            m_SceneRenderer->setScene(m_SceneManager->getScene());
-            m_SceneRenderer->setRestartScene([this]()
-            {
-                m_SceneManager->buildScene();
-                m_SceneRenderer->setScene(m_SceneManager->getScene());
-
-            });
-
             //launch the render
-            m_SceneRenderer->run();
+            m_RendererFuture = std::async(std::launch::async, [this]()
+            {
+                //create the scene
+                Scene::Ptr scene = m_SceneManager->getScene();
+                //create the renderer
+                sf::Vector2f resolution = m_SceneManager->getSceneResolution(scene);
+                std::string  name       = m_SceneComboBox->GetSelectedText();
+                m_SceneRenderer         = SceneRenderer::Ptr(new SceneRenderer(resolution.x, resolution.y, name));
+
+                //scene the scene to the renderer
+                m_SceneRenderer->setScene(scene);
+                m_SceneRenderer->setRestartScene([this]()
+                {
+                    m_SceneRenderer->setScene(m_SceneManager->getScene());
+                });
+
+                m_SceneRenderer->setQuit([this]()
+                {
+                    closeRenderer();
+                });
+
+                m_SceneRenderer->run();
+
+                m_SceneRenderer = nullptr;
+
+                return 0;
+            });
         }
     }
+
+    void DevEngineUI::closeRenderer()
+    {
+        m_RendererActive = false;
+        m_SceneRenderer->m_Window.close();
+    }
+
 
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onPauseButton()

@@ -18,7 +18,8 @@
 namespace nero
 {
     PhysicObject::PhysicObject(b2Body* body):
-        m_Body(body)
+         m_Body(body)
+        ,m_Dead(false)
     {
         setFirstType(Object::Physic_Object);
         setSecondType(Object::Physic_Object);
@@ -336,5 +337,13 @@ namespace nero
        setAngularVelocity(0.f);
     }
 
+     bool PhysicObject::isDead() const
+     {
+         return m_Dead;
+     }
 
+    void PhysicObject::setDead(bool flag)
+    {
+        m_Dead = flag;
+    }
 }

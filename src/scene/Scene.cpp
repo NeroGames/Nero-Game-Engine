@@ -275,8 +275,14 @@ namespace nero
         int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
         int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-        collision.setObjectA(PhysicObject::Cast(m_ObjectManager->findObject(id_A)));
-        collision.setObjectB(PhysicObject::Cast(m_ObjectManager->findObject(id_B)));
+        auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
+        auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+
+        if(objectA->isDead() || objectB->isDead())
+            return;
+
+        collision.setObjectA(objectA);
+        collision.setObjectB(objectB);
 
         handleCollisionPreSolveContact(collision);
     }
@@ -289,8 +295,14 @@ namespace nero
         int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
         int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-        collision.setObjectA(PhysicObject::Cast(m_ObjectManager->findObject(id_A)));
-        collision.setObjectB(PhysicObject::Cast(m_ObjectManager->findObject(id_B)));
+        auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
+        auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+
+        if(objectA->isDead() || objectB->isDead())
+            return;
+
+        collision.setObjectA(objectA);
+        collision.setObjectB(objectB);
 
         handleCollisionPostSolveContact(collision);
     }
@@ -303,8 +315,14 @@ namespace nero
         int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
         int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-        collision.setObjectA(PhysicObject::Cast(m_ObjectManager->findObject(id_A)));
-        collision.setObjectB(PhysicObject::Cast(m_ObjectManager->findObject(id_B)));
+        auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
+        auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+
+        if(objectA->isDead() || objectB->isDead())
+            return;
+
+        collision.setObjectA(objectA);
+        collision.setObjectB(objectB);
 
         handleCollisionContactBegin(collision);
     }
@@ -317,8 +335,14 @@ namespace nero
         int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
         int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-        collision.setObjectA(PhysicObject::Cast(m_ObjectManager->findObject(id_A)));
-        collision.setObjectB(PhysicObject::Cast(m_ObjectManager->findObject(id_B)));
+        auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
+        auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+
+        if(objectA->isDead() || objectB->isDead())
+            return;
+
+        collision.setObjectA(objectA);
+        collision.setObjectB(objectB);
 
         handleCollisionContactEnd(collision);
     }

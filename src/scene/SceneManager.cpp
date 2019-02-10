@@ -476,5 +476,8 @@ namespace nero
         return scene;
     }
 
-
+    sf::Vector2f SceneManager::getSceneResolution(Scene::Ptr scene)
+    {
+        return scene->m_Resolution;
+    }
 }

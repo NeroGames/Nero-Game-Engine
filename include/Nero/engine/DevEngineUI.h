@@ -46,6 +46,8 @@
 //IMGUI
 #include <imgui/imgui.h>
 #include <imgui/imgui-SFML.h>
+//
+#include <future>
 ////////////////////////////////////////////////////////////
 
 namespace nero
@@ -397,6 +399,11 @@ namespace nero
             bool                                m_RenderColorPicker;
             void                                renderColorPicker();
             void                                onColorNotebook();
+            std::future<int>                    m_RendererFuture;
+            void                                closeRenderer();
+
+            bool                                m_RendererActive;
+
     };
 
     template <typename T>

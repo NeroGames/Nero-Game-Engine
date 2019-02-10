@@ -95,12 +95,16 @@ namespace nero
             sf::Vector2f        getAxis_x() const;
             sf::Vector2f        getAxis_y() const;
 
+            bool                isDead() const;
+            void                setDead(bool flag);
+
 
         private:
             void            updateObject(sf::Time time_step);
 
         protected:
             b2Body*         m_Body;
+            bool            m_Dead;
     };
 }
 

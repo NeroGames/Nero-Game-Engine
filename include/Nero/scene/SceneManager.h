@@ -37,6 +37,7 @@ namespace nero
             const sf::Vector2f                  getSceneResolution() const;
 
             Scene::Ptr                          getScene();
+            sf::Vector2f                        getSceneResolution(Scene::Ptr scene);
 
             void                                setUpdateUI(std::function<void()>  fn);
             void                                setUpdateUndo(std::function<void()>  fn);
