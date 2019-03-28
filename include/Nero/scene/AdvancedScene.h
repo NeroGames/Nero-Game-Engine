@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
-////////////////////////////////////////////////////////////
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef ADVANCEDSCENE_H
 #define ADVANCEDSCENE_H
 ///////////////////////////HEADERS//////////////////////////
@@ -82,7 +82,7 @@ namespace nero
             bool                            renameScreen(const std::string& name, const std::string& newName);
             void                            setScreenCanvasColor(const sf::Color& color);
             void                            setUpdateLog(std::function<void(std::string)>  fn);
-
+            void                            destroyBomb();
 
         private:
             struct FrontScreen
@@ -134,7 +134,6 @@ namespace nero
             b2Profile                   m_TotalProfile;
 
             std::function<void(std::string)>    m_UpdateLog;
-
     };
 }
 #endif // ADVANCEDSCENE_H

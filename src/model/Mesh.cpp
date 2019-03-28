@@ -1,38 +1,32 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
+///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/model/Mesh.h>
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
     Mesh::Mesh(Shape shape,  sf::Vector2f position, float size, Type type):
-        m_Id(-1),
-        m_Shape(shape),
-        m_Type(type),
-        m_IsValid(true),
-        //
-        m_Position(position),
-        m_Size(size),
-        m_Color(STATIC_MESH_COLOR),
-        //
-        m_FixedRotation(false),
-        m_IsSensor(false),
-        m_AllowSleep(true),
-        m_Density(1.f),
-        m_Friction(0.1f),
-        m_Restitution(0.1f),
-        m_GravityScale(3.f),
-        //
-        m_VertexTab(),
-        m_LineTab(),
-        m_PolygonTab(),
-        m_CircleShape()
+         m_Id(-1)
+        ,m_Shape(shape)
+        ,m_Type(type)
+        ,m_IsValid(true)
+        ,m_Position(position)
+        ,m_Size(size)
+        ,m_Color(STATIC_MESH_COLOR)
+        ,m_FixedRotation(false)
+        ,m_IsSensor(false)
+        ,m_AllowSleep(true)
+        ,m_Density(1.f)
+        ,m_Friction(0.1f)
+        ,m_Restitution(0.1f)
+        ,m_GravityScale(3.f)
+        ,m_VertexTab()
+        ,m_LineTab()
+        ,m_PolygonTab()
+        ,m_CircleShape()
     {
         switch(shape)
         {
@@ -376,6 +370,29 @@ namespace nero
         return m_VertexTab.size();
     }
 
+    sf::Vector2f Mesh::getSize()
+    {
+        sf::FloatRect bound = getGlobalBounds();
+
+        switch(m_Shape)
+        {
+            case Mesh::Circle_Mesh:
+            {
+                bound.height = bound.height - 14.f;
+                bound.width = bound.width - 14.f;
+            }break;
+
+            default:
+            {
+                bound.height = bound.height - 20.f;
+                bound.width = bound.width - 20.f;
+            }break;
+        }
+
+        return sf::Vector2f(bound.width, bound.height);
+    }
+
+
     sf::FloatRect Mesh::getGlobalBounds() const
     {
         sf::FloatRect boundRect;
@@ -389,12 +406,10 @@ namespace nero
                 boundRect.top = boundRect.top  -10.f;
                 boundRect.height = boundRect.height + 20.f;
                 boundRect.width = boundRect.width + 20.f;
-            }
-                break;
+            }break;
 
             case Mesh::Circle_Mesh:
             {
-                //boundRect = circleShape.getLocalBounds();
                 boundRect = getTransform().transformRect(m_CircleShape.getGlobalBounds());
                 boundRect.left = boundRect.left - 7.f;
                 boundRect.top = boundRect.top  -7.f;
@@ -431,7 +446,7 @@ namespace nero
         return boundRect;
     }
 
-     void Mesh::updateShape()
+    void Mesh::updateShape()
     {
         if(m_Shape == Polygon_Mesh)
         {
@@ -704,6 +719,4 @@ namespace nero
 
         return center;
     }
-
-
 }

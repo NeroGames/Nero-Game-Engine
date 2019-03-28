@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -123,8 +123,6 @@ namespace nero
 
         if(!m_HideWorld)
         {
-            m_ObjectManager->setWorld(m_PhysicWorld);
-
             if(!m_PhysicWorld->IsLocked())
                 m_ObjectManager->removeDeadPhysicObject();
 
@@ -278,6 +276,9 @@ namespace nero
         auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
         auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
 
+        if(!objectA || !objectB)
+            return;
+
         if(objectA->isDead() || objectB->isDead())
             return;
 
@@ -297,6 +298,9 @@ namespace nero
 
         auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
         auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+
+        if(!objectA || !objectB)
+            return;
 
         if(objectA->isDead() || objectB->isDead())
             return;
@@ -318,6 +322,9 @@ namespace nero
         auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
         auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
 
+        if(!objectA || !objectB)
+            return;
+
         if(objectA->isDead() || objectB->isDead())
             return;
 
@@ -337,6 +344,9 @@ namespace nero
 
         auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
         auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+
+        if(!objectA || !objectB)
+            return;
 
         if(objectA->isDead() || objectB->isDead())
             return;
@@ -582,21 +592,25 @@ namespace nero
 
     void Scene::log(const std::string& content, int level)
     {
-        nero_log(content, level);
-
         if(!isRenderEngine())
         {
             m_UpdateLog(content, level);
+        }
+        else
+        {
+            nero_log(content, level);
         }
     }
 
     void Scene::logIf(const std::string& content, bool condition, int level)
     {
-        nero_log_if(content, condition, level);
-
         if(!isRenderEngine())
         {
             m_UpdateLogIf(content, condition, level);
+        }
+        else
+        {
+            nero_log_if(content, condition, level);
         }
     }
 
@@ -689,4 +703,43 @@ namespace nero
         return m_PhysicWorld;
     }
 
+    void Scene::disableLayer(const std::string& name)
+    {
+        Object::Ptr layer = m_ObjectManager->findLayerObject(name);
+
+        if(!layer)
+            return;
+
+        layer->setIsVisible(false);
+        layer->setIsUpdateable(false);
+
+        if(layer->getSecondType() == Object::Physic_Object || layer->getSecondType() == Object::Solid_Object || layer->getSecondType() == Object::Animation_Solid_Object)
+        {
+            auto childTable = layer->getAllChild();
+            for(Object::Ptr object : *childTable)
+            {
+                PhysicObject::Cast(object)->setActive(false);
+            }
+        }
+    }
+
+    void Scene::enableLayer(const std::string& name)
+    {
+        Object::Ptr layer = m_ObjectManager->findLayerObject(name);
+
+        if(!layer)
+            return;
+
+        layer->setIsVisible(true);
+        layer->setIsUpdateable(true);
+
+        if(layer->getSecondType() == Object::Physic_Object || layer->getSecondType() == Object::Solid_Object || layer->getSecondType() == Object::Animation_Solid_Object)
+        {
+            auto childTable = layer->getAllChild();
+            for(Object::Ptr object : *childTable)
+            {
+                PhysicObject::Cast(object)->setActive(true);
+            }
+        }
+    }
 }

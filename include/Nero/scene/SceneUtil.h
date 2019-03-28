@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
-////////////////////////////////////////////////////////////
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef SCENE_UTIL_H
 #define SCENE_UTIL_H
 ///////////////////////////HEADERS//////////////////////////
@@ -33,7 +33,6 @@ namespace nero
         ResourceManager::Ptr    resourceManager;
         bool                    renderEngine;
     };
-
 
     //
     struct ContactPoint
@@ -138,7 +137,4 @@ namespace nero
     //
     const int32 k_maxContactPoints = 2048;
 }
-
-
-
 #endif // SCENE_UTIL_H

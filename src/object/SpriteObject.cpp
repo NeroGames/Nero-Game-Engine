@@ -1,12 +1,7 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/object/SpriteObject.h>
@@ -15,13 +10,11 @@
 //BOX2D
 #include <Box2D/Dynamics/b2Body.h>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
-    SpriteObject::SpriteObject():
-        Object(),
-        m_TextureName(""),
-        m_ParentLastPosition(sf::Vector2f(0.f,0.f))
+    SpriteObject::SpriteObject(): Object()
+        ,m_TextureName("")
+        ,m_ParentLastPosition(sf::Vector2f(0.f,0.f))
     {
         setFirstType(Object::Sprite_Object);
         setSecondType(Object::Sprite_Object);

@@ -1,12 +1,7 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/engine/RenderEngine.h>
@@ -16,12 +11,11 @@
 //SFGUI
 #include <SFGUI/Window.hpp>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     ////////////////////////////////////////////////////////////
     RenderEngine::RenderEngine(StartupScreen::Ptr startupScreen, const float& windowWidth, const float& windowHeight, const sf::String& title):
-        Engine(windowWidth, windowHeight, title)
+         Engine(windowWidth, windowHeight, title)
         ,m_StartupScreen(startupScreen)
         ,m_Sfgui()
         ,m_EngineStarted(false)
@@ -29,23 +23,20 @@ namespace nero
         ,m_ResourceManager(nullptr)
         ,m_RestartScene(false)
     {
-         //Setup the SFML window
+        //Setup the SFML window
         m_Window.setVerticalSyncEnabled(true);
         m_Window.resetGLStates();
-
         //Build the Loading Screen
         m_StartupScreen->setRenderWindow(&m_Window);
         m_StartupScreen->init();
-
         m_Task = [](){};
-
         //Load resource in a separated  thread
         m_StartEngineFuture = std::async(std::launch::async, &RenderEngine::startEngine, this, std::ref(m_EngineStarted), m_StartupScreen->getMinTime());
     }
 
     ////////////////////////////////////////////////////////////
     RenderEngine::RenderEngine(const float& windowWidth, const float& windowHeight, const sf::String& title):
-        Engine(windowWidth, windowHeight, title)
+         Engine(windowWidth, windowHeight, title)
         ,m_StartupScreen(nullptr)
         ,m_Sfgui()
         ,m_EngineStarted(true)
@@ -162,23 +153,6 @@ namespace nero
     void RenderEngine::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
     {
         //Handle only key pressed inputs
-        if(isPressed)
-        {
-            // R to reset the scene
-            if(key == sf::Keyboard::R && CTRL())
-            {
-//                m_Camera->reinitialize();
-//                m_Scene = m_CreateScene();
-//                m_SceneBuilder->loadScene(m_SceneJson);
-//                m_SceneBuilder->setPhysicWorld(m_Scene->m_PhysicWorld);
-//                m_SceneBuilder->buildScene(m_Scene->m_RootObject);
-//                m_Scene->init();
-            }
-
-            // P to pause the scene
-            else if(key == sf::Keyboard::P && CTRL())
-                m_Scene->m_SceneSetting.pause = !m_Scene->m_SceneSetting.pause;
-        }
     }
 
     ////////////////////////////////////////////////////////////
@@ -234,9 +208,10 @@ namespace nero
         return 0;
     }
 
+    ////////////////////////////////////////////////////////////
     void RenderEngine::resetScene()
     {
        m_RestartScene = true;
     }
-
 }
+////////////////////////////////////////////////////////////

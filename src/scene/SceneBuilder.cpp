@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -1281,20 +1281,10 @@ namespace nero
                         physic_object->setId(mesh_object->getId());
                         physic_object->setUserData((void*)physic_object->getId());
 
-
                         Object::Ptr sprite_object = (*it)->clone();
                         sprite_object->setSecondType(Object::Sprite_Object);
                         sprite_object->setIsUpdateable(true);
-
-                        if(mesh_object->getMesh()->getShape() == Mesh::Circle_Mesh)
-                        {
-                            sf::Vector2f pos;
-                            pos.x = - mesh_object->getMesh()->getPosition().x + (*it)->getPosition().x;
-                            pos.y = - mesh_object->getMesh()->getPosition().y + (*it)->getPosition().y;
-
-                            sprite_object->setPosition(pos);
-                        }
-
+                        sprite_object->setPosition(sprite_object->getPosition()-mesh_object->getMesh()->getCenter());
 
                         physic_object->addChild(sprite_object);
 
@@ -1347,15 +1337,7 @@ namespace nero
 
                         Object::Ptr animation_object = (*it)->clone();
                         animation_object->setSecondType(Object::Animation_Object);
-
-                        if(mesh_object->getMesh()->getShape() == Mesh::Circle_Mesh)
-                        {
-                            sf::Vector2f pos;
-                            pos.x = - mesh_object->getMesh()->getPosition().x + (*it)->getPosition().x;
-                            pos.y = - mesh_object->getMesh()->getPosition().y + (*it)->getPosition().y;
-
-                            animation_object->setPosition(pos);
-                        }
+                        animation_object->setPosition(animation_object->getPosition()-mesh_object->getMesh()->getCenter());
 
                         physic_object->addChild(animation_object);
 
@@ -2003,5 +1985,10 @@ namespace nero
     void SceneBuilder::setCanvasColor(const sf::Color& color)
     {
         m_CanvasColor = color;
+    }
+
+    int SceneBuilder::getObjectCount()
+    {
+        return m_ObjectCount;
     }
 }

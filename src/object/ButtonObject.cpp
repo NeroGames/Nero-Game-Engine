@@ -1,11 +1,17 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
+///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/object/ButtonObject.h>
 #include <Nero/utility/Utility.h>
 #include <Nero/utility/LogUtility.h>
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
    ButtonObject::ButtonObject():
-       UIObject()
+        UIObject()
        ,m_MouseEnter(false)
     {
         setSecondType(Object::Button_Object);
@@ -85,6 +91,5 @@ namespace nero
     {
         m_OnMouseClick = callback;
     }
-
 }
 

@@ -1,9 +1,14 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef FRONTSCREEN_H
 #define FRONTSCREEN_H
-
+///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/object/Object.h>
 #include <Nero/object/UIObject.h>
-
+/////////////////////////////////////////////////////////////
 namespace nero
 {
     struct Screen
@@ -17,8 +22,4 @@ namespace nero
         sf::Color       canvasColor;
     };
 }
-
-
-
-
 #endif // FRONTSCREEN_H

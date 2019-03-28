@@ -1,15 +1,9 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 #ifndef OBJECT_H
 #define OBJECT_H
-
 ///////////////////////////HEADERS//////////////////////////
 //SFML
 #include <SFML/Graphics/Transformable.hpp>
@@ -25,7 +19,6 @@
 #include <vector>
 #include <memory>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     class Object : public sf::Transformable, public sf::Drawable
@@ -135,5 +128,4 @@ namespace nero
         object->setIsSelected(isSelected());
     }
 }
-
 #endif // OBJECT_H

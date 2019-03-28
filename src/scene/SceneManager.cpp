@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -12,15 +12,15 @@
 namespace nero
 {
     SceneManager::SceneManager(Context context):
-    m_Context(context),
-    m_IsLeftShift(false),
-    m_IsMouseRightButton(false),
-    m_IsShiftOriginUp(false),
-    m_IsShiftOriginDown(false),
-    m_IsShiftOriginLeft(false),
-    m_IsShiftOriginRight(false),
-    m_ShitftOriginSpeed(0.5f),
-    m_ViewCenter(0.0f, 20.0f)
+         m_Context(context)
+        ,m_IsLeftShift(false)
+        ,m_IsMouseRightButton(false)
+        ,m_IsShiftOriginUp(false)
+        ,m_IsShiftOriginDown(false)
+        ,m_IsShiftOriginLeft(false)
+        ,m_IsShiftOriginRight(false)
+        ,m_ShitftOriginSpeed(0.5f)
+        ,m_ViewCenter(0.0f, 20.0f)
     {
         //
     }
@@ -181,7 +181,9 @@ namespace nero
     {
         if(m_AdvancedScene->m_Scene)
         {
+            m_AdvancedScene->m_SceneBuilder->setPhysicWorld(m_AdvancedScene->m_Scene->m_PhysicWorld);
             m_AdvancedScene->m_SceneBuilder->destroyAllPhysicObject(m_AdvancedScene->m_Scene->m_World);
+            m_AdvancedScene->destroyBomb();
             m_AdvancedScene->m_Scene->m_World->removeAllChild();
             m_AdvancedScene->m_Scene = nullptr;
         }
@@ -214,6 +216,9 @@ namespace nero
             m_AdvancedScene->m_Scene->m_ScreenTable.push_back(screen);
         }
 
+
+        m_AdvancedScene->m_Scene->m_ObjectManager->setObjectCount(m_AdvancedScene->m_SceneBuilder->getObjectCount());
+        m_AdvancedScene->m_Scene->m_ObjectManager->setPhysicWorld(m_AdvancedScene->m_Scene->m_PhysicWorld);
         m_AdvancedScene->m_Scene->checkSceneObject();
         m_AdvancedScene->m_Scene->init();
     }
@@ -471,6 +476,7 @@ namespace nero
             scene->m_ScreenTable.push_back(screen);
         }
 
+        scene->m_ObjectManager->setObjectCount(m_AdvancedScene->m_SceneBuilder->getObjectCount());
         scene->m_CameraSetting  = m_AdvancedScene->m_CameraSetting;
 
         return scene;

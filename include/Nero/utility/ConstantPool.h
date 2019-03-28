@@ -1,10 +1,16 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
 #ifndef CONSTANTPOOL_H_INCLUDED
 #define CONSTANTPOOL_H_INCLUDED
-
+///////////////////////////HEADERS//////////////////////////
+//STD
 #include <string>
+//SFML
 #include <SFML/Graphics/Shader.hpp>
 #include <SFML/Graphics/Color.hpp>
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
     //INT
@@ -42,11 +48,7 @@ namespace nero
     const std::string   SHADER_LIST                             = "shader.json";
     const std::string   SIMPLE_FRAGMENT                         = "simpleFragment.frag";
     const std::string   SIMPLE_VERTEX                           = "simpleVertex.ver";
-    const std::string   ENGINE_VERSION                          = "v 0.9.0";
-    const std::string   ENGINE_COPYRIGHT                        = "Copyright (c) 2016 - 2019 Sanou A. K. Landry";
+    const std::string   ENGINE_VERSION                          = "v1.0.0";
+    const std::string   ENGINE_COPYRIGHT                        = "Copyright (c) 2016-2019 SANOU A. K. Landry";
 }
-
-
-
-
 #endif // CONSTANTPOOL_H_INCLUDED

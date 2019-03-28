@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -30,8 +30,8 @@ namespace
     auto RandomEngine = createRandomEngine();
 }
 
- namespace nero
- {
+namespace nero
+{
     bool CTRL()
     {
         return  sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
@@ -190,26 +190,12 @@ namespace
 
     float distance(sf::Vector2f line_vect1, sf::Vector2f line_vect2, sf::Vector2f vect3)
     {
-        /*float segment_d = distance(line_vect1, line_vect2);
-
-        if (segment_d == 0.f)
-            return distance(line_vect1, vect3);
-
-        float t = dot_product(vect3 - line_vect1, line_vect2 - line_vect1) / (segment_d*segment_d);
-
-        t = std::max(0.f, std::min(1.f, t));
-        sf::Vector2f p = line_vect1 - t * (line_vect2-line_vect1);
-
-        //returning shortest distance
-        return sqrt(distance(vect3, p));*/
-
         float x = vect3.x;
         float y = vect3.y;
         float x1 = line_vect1.x;
         float y1 = line_vect1.y;
         float x2 = line_vect2.x;
         float y2 = line_vect2.y;
-
 
         float A = x - x1;
         float B = y - y1;
@@ -382,7 +368,6 @@ namespace
         return sf::Color(color.r, color.g, color.b, transparency);
     }
 
-
     bool isConvex(std::vector<sf::RectangleShape> polygon)
     {
         std::vector<Point> points;
@@ -401,7 +386,6 @@ namespace
     bool isConvexPolygon(std::vector<Point> polygon)
     {
         //Thanks to http://www.sunshine2k.de/coding/java/Polygon/Convex/polygon.htm
-
         if (polygon.size() < 3) return false;
 
         Point p;
@@ -430,7 +414,6 @@ namespace
         }
         return true;
     }
-
 
     std::string toString(sf::Keyboard::Key key)
     {
@@ -544,7 +527,6 @@ namespace
 
         return "";
     }
-
 
     std::vector<PointTab> concave_to_convex(PointTab pVerticesVec)
     {
@@ -697,12 +679,10 @@ namespace
         return figsVec;
     }
 
-
     float det(float x1, float y1, float x2, float y2, float x3, float y3)
     {
         return x1*y2+x2*y3+x3*y1-y1*x2-y2*x3-y3*x1;
     }
-
 
     sf::Vector2f* hitRay(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
     {
@@ -713,7 +693,6 @@ namespace
         float t5 = x4-x3;
         float t6 = y4-y3;
         float t7 = t4*t5-t3*t6;
-
 
         //DBZ Error. Undefined hit segment.
         if(t7 == 0) return nullptr;
@@ -729,9 +708,6 @@ namespace
         }
         return nullptr;
     }
-
-
-
 
     bool isOnSegment(float px, float py, float x1, float y1, float x2, float y2)
     {
@@ -1072,9 +1048,4 @@ namespace
     {
         return sf::Color(json["r"], json["g"], json["b"], json["a"]);
     }
- }
-
-
-
-
-
+}

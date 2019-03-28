@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef LOADINGSCREEN_H
 #define LOADINGSCREEN_H
@@ -26,9 +26,7 @@ namespace nero
         public:
                                     LoadingScreen();
 
-        public:
             void                    init();
-
             void                    handleEvent(sf::Event& event);
             void                    update(const sf::Time& timeStep);
             void                    render();

@@ -1,20 +1,17 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
+///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/object/SpriteActionObject.h>
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
    SpriteActionObject::SpriteActionObject():
-        m_SpriteObject(nullptr),
-        m_ActionTable(),
-        m_TimeStep(TIME_PER_FRAME)
+         m_SpriteObject(nullptr)
+        ,m_ActionTable()
+        ,m_TimeStep(TIME_PER_FRAME)
     {
 
     }

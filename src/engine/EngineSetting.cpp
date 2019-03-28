@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -9,6 +9,7 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
+    ////////////////////////////////////////////////////////////
     EngineSetting::EngineSetting()
     {
         autoSave        = true;
@@ -19,6 +20,7 @@ namespace nero
         lastScene       = DEFAULT_SCENE;
     }
 
+    ////////////////////////////////////////////////////////////
     nlohmann::json EngineSetting::toJson()
     {
         nlohmann::json json;
@@ -33,6 +35,7 @@ namespace nero
         return json;
     }
 
+    ////////////////////////////////////////////////////////////
     EngineSetting EngineSetting::fromJson(nlohmann::json json)
     {
         EngineSetting setting;
@@ -46,5 +49,4 @@ namespace nero
 
         return setting;
     }
-
 }

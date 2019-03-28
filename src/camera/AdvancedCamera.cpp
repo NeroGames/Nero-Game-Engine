@@ -1,37 +1,34 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2018 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/camera/AdvancedCamera.h>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     ////////////////////////////////////////////////////////////
     AdvancedCamera::AdvancedCamera(const sf::Vector2f& viewSize, sfg::Canvas::Ptr renderCanvas, const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio):
-            Camera(viewSize, defaultPos, panSpeed, rotSpeed, zRatio),
-            m_RenderCanvas(renderCanvas),
-            m_IsPanningDown(false),
-            m_IsPanningLeft(false),
-            m_IsPanningRight(false),
-            m_IsPanningUp(false),
-            //Rotation
-            m_IsRotatingLeft(false),
-            m_IsRotatingRight(false),
-            //Zooming
-            m_IsZoomingIn(false),
-            m_IsZoomingOut(false)
+         Camera(viewSize, defaultPos, panSpeed, rotSpeed, zRatio)
+        ,m_RenderCanvas(renderCanvas)
+        ,m_IsPanningDown(false)
+        ,m_IsPanningLeft(false)
+        ,m_IsPanningRight(false)
+        ,m_IsPanningUp(false)
+        ,m_IsRotatingLeft(false)
+        ,m_IsRotatingRight(false)
+        ,m_IsZoomingIn(false)
+        ,m_IsZoomingOut(false)
     {
         m_xAxis.setSize(sf::Vector2f(20.f, -2.f));
         m_xAxis.setFillColor(sf::Color::Red);
-        m_xAxis.setPosition(sf::Vector2f(30.f, viewSize.y - 30.f));
+        m_xAxis.setPosition(sf::Vector2f(20.f, 20.f));
 
         m_yAxis.setSize(sf::Vector2f(20.f, -2.f));
         m_yAxis.setFillColor(sf::Color::Green);
-        m_yAxis.setPosition(sf::Vector2f(30.f, viewSize.y - 30.f));
-        m_yAxis.setRotation(-90.f);
+        m_yAxis.setPosition(sf::Vector2f(20.f, 20.f));
+        m_yAxis.setRotation(90.f);
     }
 
     ////////////////////////////////////////////////////////////
@@ -80,7 +77,7 @@ namespace nero
        Camera::update(deltaTime);
 
        m_xAxis.setRotation(-m_View.getRotation());
-       m_yAxis.setRotation(-m_View.getRotation() - 90.f);
+       m_yAxis.setRotation(-m_View.getRotation() + 90.f);
     }
 
     ////////////////////////////////////////////////////////////
@@ -155,6 +152,7 @@ namespace nero
 
     }
 
+    ////////////////////////////////////////////////////////////
     void AdvancedCamera::handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse)
     {
         if (mouse.wheel == sf::Mouse::VerticalWheel)
@@ -241,6 +239,7 @@ namespace nero
         }
     }
 
+    ////////////////////////////////////////////////////////////
     void AdvancedCamera::cancelAction()
     {
         m_IsPanningUp       = false;

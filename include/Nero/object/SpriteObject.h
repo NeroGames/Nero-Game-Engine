@@ -1,15 +1,9 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
-////////////////////////////////////////////////////////////
-
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef SPRITEOBJECT_H
 #define SPRITEOBJECT_H
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/object/Object.h>
@@ -19,7 +13,6 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     class SpriteObject : public Object
@@ -55,7 +48,4 @@ namespace nero
             sf::Vector2f                    m_ParentLastPosition;
     };
 }
-
-
-
 #endif // SPRITEOBJECT_H

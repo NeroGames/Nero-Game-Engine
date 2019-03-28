@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef RENDERENGINE_H
 #define RENDERENGINE_H
@@ -54,7 +54,7 @@ namespace
     bool result2 = EarlyInit::initLog();
 }
 #endif // NERO_ENGINE_DEVELOPMENT
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
     class RenderEngine : public Engine
@@ -71,7 +71,6 @@ namespace nero
             void                            handleEvent();
             void                            update(const sf::Time& timeStep);
             void                            render();
-
             void                            handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
 
         private: //Start thread function
@@ -94,7 +93,6 @@ namespace nero
             ResourceManager::Ptr            m_ResourceManager;
             SceneSetting                    m_SceneSetting;
             StartupScreen::Ptr              m_StartupScreen;
-
 
             std::future<int>                m_StartEngineFuture;
             bool                            m_EngineStarted;
@@ -164,17 +162,20 @@ namespace nero
                 }
 
                 //Finish
-                m_Scene->m_QuitEngine = [this](){ m_Window.close();};
+                m_Scene->m_ObjectManager->setObjectCount(sceneBuilder->getObjectCount());
+                m_Scene->m_ObjectManager->setPhysicWorld(m_Scene->m_PhysicWorld);
                 m_Scene->checkSceneObject();
                 m_Scene->init();
+
                 m_Scene->m_ResetScene = [this]()
                 {
                     this->resetScene();
                 };
+
+                m_Scene->m_QuitEngine = [this](){ m_Window.close();};
+
             }
         };
     }
 }
-
-
 #endif // RENDERENGINE_H

@@ -1,23 +1,16 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/object/LayerObject.h>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
-    LayerObject::LayerObject():
-        Object(),
-        m_Order(-1),
-        m_Color(sf::Color::Black)
+    LayerObject::LayerObject(): Object()
+        ,m_Order(-1)
+        ,m_Color(sf::Color::Black)
     {
         setFirstType(Object::Layer_Object);
     }

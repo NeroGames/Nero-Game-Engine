@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
-////////////////////////////////////////////////////////////
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef SCENEMANAGER_H
 #define SCENEMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
@@ -93,11 +93,10 @@ namespace nero
             b2Vec2                              m_ViewCenter;
             float                               m_ShitftOriginSpeed;
 
-            std::function<void()>               m_UpdateUI;
-            std::function<void()>               m_UpdateUndo;
-            std::function<void(const std::string&, int)>            m_UpdateLog;
-            std::function<void(const std::string&, bool, int)>      m_UpdateLogIf;
-
+            std::function<void()>                               m_UpdateUI;
+            std::function<void()>                               m_UpdateUndo;
+            std::function<void(const std::string&, int)>        m_UpdateLog;
+            std::function<void(const std::string&, bool, int)>  m_UpdateLogIf;
             std::map<std::string, std::pair<AdvancedScene::Ptr, std::function<Scene::Ptr()>>>   m_SceneFactoryMap;
     };
 
@@ -139,5 +138,4 @@ namespace nero
         nero_log("scene registration complete");
     }
 }
-
 #endif // SCENEMANAGER_H

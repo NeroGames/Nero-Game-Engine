@@ -1,15 +1,9 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
-////////////////////////////////////////////////////////////
-
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef MESHEDOBJECT_H
 #define MESHEDOBJECT_H
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/object/Object.h>
@@ -18,7 +12,6 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     class MeshObject : public Object
@@ -65,8 +58,6 @@ namespace nero
             Object::Ptr                 clone()                         const;
             virtual nlohmann::json      toJson()                        const;
 
-
-
         private:
             void	                    drawObject(sf::RenderTarget& target, sf::RenderStates states) const;
             void                        updateObject(sf::Time time_step);
@@ -78,5 +69,4 @@ namespace nero
             sf::Vector2f                m_ParentLastScale;
     };
 }
-
 #endif // MESHEDOBJECT_H

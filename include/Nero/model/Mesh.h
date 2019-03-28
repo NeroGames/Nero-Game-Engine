@@ -1,15 +1,9 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
-////////////////////////////////////////////////////////////
-
+// Copyright (c) 2016-2019 Sanou A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef MESH_H
 #define MESH_H
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/utility/Utility.h>
@@ -25,7 +19,6 @@
 //JSON
 #include <json/json.hpp>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     struct Mesh : public sf::Transformable, public sf::Drawable
@@ -106,6 +99,7 @@ namespace nero
 
             VertexTab*                  getAllVertex();
 
+            sf::Vector2f                getSize();
 
         private: //Method
             void                        updateLine(bool loop);
@@ -144,6 +138,5 @@ namespace nero
             float                       m_Restitution;
             float                       m_GravityScale;
     };
-
 }
 #endif // MESH_H

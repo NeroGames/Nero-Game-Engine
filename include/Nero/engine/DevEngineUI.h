@@ -1,11 +1,11 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef DEVENGINEUI_H_INCLUDED
 #define DEVENGINEUI_H_INCLUDED
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+//NERO
 #include <Nero/resource/ResourceManager.h>
 #include <Nero/scene/SceneManager.h>
 #include <Nero/utility/EnumUtil.h>
@@ -46,10 +46,9 @@
 //IMGUI
 #include <imgui/imgui.h>
 #include <imgui/imgui-SFML.h>
-//
+//STD
 #include <future>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     class DevEngineUI
@@ -141,6 +140,7 @@ namespace nero
             void                                build_color_box(sfg::Box::Ptr color_box);
             void                                build_mesh_window(sfg::Window::Ptr mesh_window);
             void                                build_text_window(sfg::Window::Ptr text_window);
+            void                                build_help_box(sfg::Box::Ptr help_box);
             //Utility
             sfg::RadioButton::Ptr               m_ObjectModeRadioButton;
             sfg::RadioButton::Ptr               m_MeshModeRadioButton;
@@ -412,5 +412,4 @@ namespace nero
         m_SceneManager->addScene<T>(sceneName);
     }
 }
-
 #endif // DEVENGINEUI_H_INCLUDED

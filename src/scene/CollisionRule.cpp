@@ -1,7 +1,13 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
+///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/scene/CollisionRule.h>
-#include <Nero/object/PhysicObject.h>
-
+//STD
 #include <iostream>
+////////////////////////////////////////////////////////////
 namespace nero
 {
    CollisionRule::CollisionRule()
@@ -190,5 +196,14 @@ namespace nero
                 }
             }
         }
+    }
+
+    PhysicObject::Rule  CollisionRule::getCollisionData(std::string category)
+    {
+        PhysicObject::Rule rule;
+        rule.categoryBits = m_CollisionRuleMap[category].first;
+        rule.maskBits = m_CollisionRuleMap[category].second;
+
+        return rule;
     }
 }

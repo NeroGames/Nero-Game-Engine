@@ -1,27 +1,33 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
+///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/engine/SceneRenderer.h>
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
+    ////////////////////////////////////////////////////////////
     SceneRenderer::SceneRenderer(const float& windowWidth, const float& windowHeight, const sf::String& title):
          Engine(windowWidth, windowHeight, title)
         ,m_Camera(new Camera(sf::Vector2f(windowWidth, windowHeight)))
         ,m_ShapeRenderer(&m_Window)
         ,m_RestartScene(false)
-
     {
-         m_Window.setVerticalSyncEnabled(true);
+        m_Window.setVerticalSyncEnabled(true);
         m_Window.resetGLStates();
 
         m_FrontView = m_Window.getView();
         m_FrontView.setCenter(windowWidth/2.f, windowHeight/2.f);
         m_FrontView.setSize(sf::Vector2f(windowWidth, windowHeight));
         m_Window.setPosition(sf::Vector2i(m_Window.getPosition().x, 15));
-
     }
 
+    ////////////////////////////////////////////////////////////
     SceneRenderer::~SceneRenderer()
     {
-        //dtor
+        //Empty
     }
 
     ////////////////////////////////////////////////////////////
@@ -51,7 +57,7 @@ namespace nero
         }
     }
 
-     ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     void SceneRenderer::update(const sf::Time& timeStep)
     {
         m_Camera->update(timeStep);
@@ -74,6 +80,7 @@ namespace nero
         m_Window.display();
     }
 
+    ////////////////////////////////////////////////////////////
     void SceneRenderer::setScene(Scene::Ptr scene)
     {
         //scene
@@ -100,11 +107,12 @@ namespace nero
             m_RestartScene = true;
         };
         //initialization
+        m_Scene->m_ObjectManager->setPhysicWorld(m_Scene->m_PhysicWorld);
         m_Scene->checkSceneObject();
         m_Scene->init();
     }
 
-
+    ////////////////////////////////////////////////////////////
     void SceneRenderer::renderScene()
     {
         if(!m_Scene->m_HideWorld)
@@ -124,6 +132,7 @@ namespace nero
         }
     }
 
+    ////////////////////////////////////////////////////////////
     void SceneRenderer::renderSceneFront()
     {
         if(m_Scene->isRenderEngine())
@@ -154,15 +163,15 @@ namespace nero
         }
     }
 
+    ////////////////////////////////////////////////////////////
     void SceneRenderer::setRestartScene(std::function<void()> fn)
     {
         m_RestartSceneFn = fn;
     }
 
+    ////////////////////////////////////////////////////////////
     void SceneRenderer::setQuit(std::function<void()> fn)
     {
         m_QuitFn = fn;
     }
-
-
 }

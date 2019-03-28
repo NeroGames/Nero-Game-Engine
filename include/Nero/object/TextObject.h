@@ -1,11 +1,17 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef TEXTOBJECT_H
 #define TEXTOBJECT_H
-
+///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/object/Object.h>
+//SFML
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
-
+/////////////////////////////////////////////////////////////
 namespace nero
 {
     class TextObject : public Object
@@ -70,7 +76,4 @@ namespace nero
             bool                            m_IsStrikeThrough;
     };
 }
-
-
-
 #endif // TEXTOBJECT_H

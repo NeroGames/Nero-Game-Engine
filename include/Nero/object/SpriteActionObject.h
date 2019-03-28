@@ -1,18 +1,14 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
-////////////////////////////////////////////////////////////
-
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef SPRITEACTIONOBJECT_H
 #define SPRITEACTIONOBJECT_H
-
+///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/object/SpriteObject.h>
 #include <Nero/model/Action.h>
-
+/////////////////////////////////////////////////////////////
 namespace nero
 {
     class SpriteActionObject : public Object
@@ -52,5 +48,4 @@ namespace nero
         m_ActionTable[name] = SpriteAction::Ptr(new T(action));
     }
 }
-
 #endif // SPRITEACTIONOBJECT_H

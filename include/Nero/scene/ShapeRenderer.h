@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
-////////////////////////////////////////////////////////////
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef SHAPERENDERER_H
 #define SHAPERENDERER_H
 ///////////////////////////HEADERS//////////////////////////
@@ -36,7 +36,6 @@ namespace nero
             sf::RenderWindow*       m_RenderWindow;
             float                   m_Thickness;
             int                     m_Tranparency;
-
     };
 }
 #endif // SHAPERENDERER_H

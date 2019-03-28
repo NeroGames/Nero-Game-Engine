@@ -1,14 +1,21 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
+///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/scene/ObjectManager.h>
-
 #include <Nero/utility/Utility.h>
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
     ObjectManager::ObjectManager(Object::Ptr root_object, b2World* world,  std::vector<Screen::Ptr>& screenTable):
-        m_RootObject(root_object)
-        ,m_World(world)
+         m_RootObject(root_object)
+        ,m_PhysicWorld(world)
         ,m_DeadPhysicObject()
         ,m_ScreenTable(screenTable)
+        ,m_JointCount(0)
+        ,m_ObjectCount(0)
     {
         m_CustomLayer =  LayerObject::Ptr(new LayerObject());
         m_CustomLayer->setId(-1);
@@ -22,8 +29,8 @@ namespace nero
 
     ObjectManager::~ObjectManager()
     {
-        m_World = nullptr;
-        delete m_World;
+        m_PhysicWorld = nullptr;
+        delete m_PhysicWorld;
     }
 
 
@@ -364,7 +371,7 @@ namespace nero
         {
             if((*object)->isDead())
             {
-                m_World->DestroyBody((*object)->getBody());
+                m_PhysicWorld->DestroyBody((*object)->getBody());
                 removeObject((*object));
             }
         }
@@ -372,9 +379,9 @@ namespace nero
         m_DeadPhysicObject.clear();
     }
 
-    void ObjectManager::setWorld(b2World* world)
+    void ObjectManager::setPhysicWorld(b2World* world)
     {
-        m_World = world;
+        m_PhysicWorld = world;
     }
 
     void ObjectManager::addObject(Object::Ptr object)
@@ -396,5 +403,393 @@ namespace nero
         return findObject((*screen)->screen, ObjectName);
     }
 
+    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, DistanceJointProperty property)
+    {
+        DistanceJoint::Ptr joint = DistanceJoint::Ptr(new DistanceJoint());
+        joint->setJointId(++m_JointCount);
+
+        b2DistanceJointDef jointDef;
+        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.collideConnected = property.collideConnected;
+        jointDef.userData = (void *)joint->getJointId();
+        jointDef.localAnchorA = sf_to_b2(property.localAnchorA, SCALE);
+        jointDef.localAnchorB = sf_to_b2(property.localAnchorB, SCALE);
+        jointDef.length = property.length / SCALE;
+        jointDef.frequencyHz = property.frequencyHz;
+        jointDef.dampingRatio = property.dampingRatio;
+
+        joint->setJoint((b2DistanceJoint*)m_PhysicWorld->CreateJoint(&jointDef));
+
+        joint->setName(property.name);
+        joint->setObjectAId(objectA->getId());
+        joint->setObjectBId(objectB->getId());
+        joint->setObjectAName(objectA->getName());
+        joint->setObjectBName(objectB->getName());
+
+        m_PhysicJointTable.push_back(joint);
+    }
+
+    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, FrictionJointProperty property)
+    {
+        FrictionJoint::Ptr joint = FrictionJoint::Ptr(new FrictionJoint());
+        joint->setJointId(++m_JointCount);
+
+        b2FrictionJointDef jointDef;
+        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.collideConnected = property.collideConnected;
+        jointDef.userData = (void *)joint->getJointId();
+        jointDef.localAnchorA = sf_to_b2(property.localAnchorA, SCALE);
+        jointDef.localAnchorB = sf_to_b2(property.localAnchorB, SCALE);
+        jointDef.maxForce = property.maxForce;
+        jointDef.maxTorque = property.maxTorque;
+
+        joint->setJoint((b2FrictionJoint*)m_PhysicWorld->CreateJoint(&jointDef));
+
+        joint->setName(property.name);
+        joint->setObjectAId(objectA->getId());
+        joint->setObjectBId(objectB->getId());
+        joint->setObjectAName(objectA->getName());
+        joint->setObjectBName(objectB->getName());
+
+        m_PhysicJointTable.push_back(joint);
+    }
+
+    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, MotorJointProperty property)
+    {
+        MotorJoint::Ptr joint = MotorJoint::Ptr(new MotorJoint());
+        joint->setJointId(++m_JointCount);
+
+        b2MotorJointDef jointDef;
+        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.collideConnected = property.collideConnected;
+        jointDef.userData = (void *)joint->getJointId();
+        jointDef.linearOffset = sf_to_b2(property.linearOffset, SCALE);
+        jointDef.angularOffset = toRadian(property.angularOffset);
+        jointDef.maxForce = property.maxForce;
+        jointDef.maxTorque = property.maxTorque;
+        jointDef.correctionFactor = property.correctionFactor;
+
+        joint->setJoint((b2MotorJoint*)m_PhysicWorld->CreateJoint(&jointDef));
+
+        joint->setName(property.name);
+        joint->setObjectAId(objectA->getId());
+        joint->setObjectBId(objectB->getId());
+        joint->setObjectAName(objectA->getName());
+        joint->setObjectBName(objectB->getName());
+
+        m_PhysicJointTable.push_back(joint);
+    }
+
+    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, MouseJointProperty property)
+    {
+        MouseJoint::Ptr joint = MouseJoint::Ptr(new MouseJoint());
+        joint->setJointId(++m_JointCount);
+
+        b2MouseJointDef jointDef;
+        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.collideConnected = property.collideConnected;
+        jointDef.userData = (void *)joint->getJointId();
+        jointDef.target = sf_to_b2(property.target, SCALE);;
+        jointDef.maxForce = property.maxForce;
+        jointDef.frequencyHz = property.frequencyHz;
+        jointDef.dampingRatio = property.dampingRatio;
+
+        joint->setJoint((b2MouseJoint*)m_PhysicWorld->CreateJoint(&jointDef));
+
+        joint->setName(property.name);
+        joint->setObjectAId(objectA->getId());
+        joint->setObjectBId(objectB->getId());
+        joint->setObjectAName(objectA->getName());
+        joint->setObjectBName(objectB->getName());
+
+        m_PhysicJointTable.push_back(joint);
+    }
+
+    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, RopeJointProperty property)
+    {
+        RopeJoint::Ptr joint = RopeJoint::Ptr(new RopeJoint());
+        joint->setJointId(++m_JointCount);
+
+        b2RopeJointDef jointDef;
+        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.collideConnected = property.collideConnected;
+        jointDef.userData = (void *)joint->getJointId();
+        jointDef.localAnchorA = sf_to_b2(property.localAnchorA, SCALE);
+        jointDef.localAnchorB = sf_to_b2(property.localAnchorB, SCALE);
+        jointDef.maxLength = property.maxLength / SCALE;
+
+        joint->setJoint((b2RopeJoint*)m_PhysicWorld->CreateJoint(&jointDef));
+
+        joint->setName(property.name);
+        joint->setObjectAId(objectA->getId());
+        joint->setObjectBId(objectB->getId());
+        joint->setObjectAName(objectA->getName());
+        joint->setObjectBName(objectB->getName());
+
+        m_PhysicJointTable.push_back(joint);
+    }
+
+    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, WeldJointProperty property)
+    {
+        WeldJoint::Ptr joint = WeldJoint::Ptr(new WeldJoint());
+        joint->setJointId(++m_JointCount);
+
+        b2WeldJointDef jointDef;
+        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.collideConnected = property.collideConnected;
+        jointDef.userData = (void *)joint->getJointId();
+        jointDef.localAnchorA = sf_to_b2(property.localAnchorA, SCALE);
+        jointDef.localAnchorB = sf_to_b2(property.localAnchorB, SCALE);
+        jointDef.referenceAngle = toRadian(property.referenceAngle);
+        jointDef.frequencyHz = property.frequencyHz;
+        jointDef.dampingRatio = property.dampingRatio;
+
+        joint->setJoint((b2WeldJoint*)m_PhysicWorld->CreateJoint(&jointDef));
+
+        joint->setName(property.name);
+        joint->setObjectAId(objectA->getId());
+        joint->setObjectBId(objectB->getId());
+        joint->setObjectAName(objectA->getName());
+        joint->setObjectBName(objectB->getName());
+
+        m_PhysicJointTable.push_back(joint);
+    }
+
+    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, WheelJointProperty property)
+    {
+        WheelJoint::Ptr joint = WheelJoint::Ptr(new WheelJoint());
+        joint->setJointId(++m_JointCount);
+
+        b2WheelJointDef jointDef;
+        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.collideConnected = property.collideConnected;
+        jointDef.userData = (void *)joint->getJointId();
+        jointDef.localAnchorA = sf_to_b2(property.localAnchorA, SCALE);
+        jointDef.localAnchorB = sf_to_b2(property.localAnchorB, SCALE);
+        jointDef.localAxisA = sf_to_b2(property.localAnchorA, SCALE);
+        jointDef.enableMotor = property.enableMotor;
+        jointDef.maxMotorTorque = property.maxMotorForce;
+        jointDef.motorSpeed = property.motorSpeed;
+        jointDef.frequencyHz = property.frequencyHz;
+        jointDef.dampingRatio = property.dampingRatio;
+
+        joint->setJoint((b2WheelJoint*)m_PhysicWorld->CreateJoint(&jointDef));
+
+        joint->setName(property.name);
+        joint->setObjectAId(objectA->getId());
+        joint->setObjectBId(objectB->getId());
+        joint->setObjectAName(objectA->getName());
+        joint->setObjectBName(objectB->getName());
+
+        m_PhysicJointTable.push_back(joint);
+    }
+
+    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, PulleyJointProperty property)
+    {
+        PulleyJoint::Ptr joint = PulleyJoint::Ptr(new PulleyJoint());
+        joint->setJointId(++m_JointCount);
+
+        b2PulleyJointDef jointDef;
+        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.collideConnected = property.collideConnected;
+        jointDef.userData = (void *)joint->getJointId();
+        jointDef.groundAnchorA = sf_to_b2(property.groundAnchorA, SCALE);
+        jointDef.groundAnchorB = sf_to_b2(property.groundAnchorB, SCALE);
+        jointDef.localAnchorA = sf_to_b2(property.localAnchorA, SCALE);
+        jointDef.localAnchorB = sf_to_b2(property.localAnchorB, SCALE);
+        jointDef.lengthA = property.lengthA/SCALE;
+        jointDef.lengthB = property.lengthB/SCALE;
+        jointDef.ratio = property.ratio;
+
+        joint->setJoint((b2PulleyJoint*)m_PhysicWorld->CreateJoint(&jointDef));
+
+        joint->setName(property.name);
+        joint->setObjectAId(objectA->getId());
+        joint->setObjectBId(objectB->getId());
+        joint->setObjectAName(objectA->getName());
+        joint->setObjectBName(objectB->getName());
+
+        m_PhysicJointTable.push_back(joint);
+    }
+
+    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, PrismaticJointProperty property)
+    {
+        PrismaticJoint::Ptr joint = PrismaticJoint::Ptr(new PrismaticJoint());
+        joint->setJointId(++m_JointCount);
+
+        b2PrismaticJointDef jointDef;
+        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.collideConnected = property.collideConnected;
+        jointDef.userData = (void *)joint->getJointId();
+        jointDef.localAnchorA = sf_to_b2(property.localAnchorA, SCALE);
+        jointDef.localAnchorB = sf_to_b2(property.localAnchorB, SCALE);
+        jointDef.localAxisA = sf_to_b2(property.localAxisA, SCALE);
+        jointDef.referenceAngle = toRadian(property.referenceAngle);
+        jointDef.enableLimit = property.enableLimit;
+        jointDef.lowerTranslation = property.lowerTranslation/SCALE;
+        jointDef.upperTranslation = property.upperTranslation/SCALE;
+        jointDef.enableMotor = property.enableMotor;
+        jointDef.maxMotorForce = property.maxMotorForce;
+        jointDef.motorSpeed = property.motorSpeed;
+
+        joint->setJoint((b2PrismaticJoint*)m_PhysicWorld->CreateJoint(&jointDef));
+
+        joint->setName(property.name);
+        joint->setObjectAId(objectA->getId());
+        joint->setObjectBId(objectB->getId());
+        joint->setObjectAName(objectA->getName());
+        joint->setObjectBName(objectB->getName());
+
+        m_PhysicJointTable.push_back(joint);
+    }
+
+    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, RevoluteJointProperty property)
+    {
+        RevoluteJoint::Ptr joint = RevoluteJoint::Ptr(new RevoluteJoint());
+        joint->setJointId(++m_JointCount);
+
+        b2RevoluteJointDef jointDef;
+        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.collideConnected = property.collideConnected;
+        jointDef.userData = (void *)joint->getJointId();
+        jointDef.localAnchorA = sf_to_b2(property.localAnchorA, SCALE);
+        jointDef.localAnchorB = sf_to_b2(property.localAnchorB, SCALE);
+        jointDef.referenceAngle = toRadian(property.referenceAngle);
+        jointDef.enableLimit = property.enableLimit;
+        jointDef.lowerAngle = toRadian(property.lowerAngle);
+        jointDef.upperAngle = toRadian(property.upperAngle);
+        jointDef.enableMotor = property.enableMotor;
+        jointDef.motorSpeed = property.motorSpeed;
+        jointDef.maxMotorTorque = property.maxMotorForce;
+
+        joint->setJoint((b2RevoluteJoint*)m_PhysicWorld->CreateJoint(&jointDef));
+
+        joint->setName(property.name);
+        joint->setObjectAId(objectA->getId());
+        joint->setObjectBId(objectB->getId());
+        joint->setObjectAName(objectA->getName());
+        joint->setObjectBName(objectB->getName());
+
+        m_PhysicJointTable.push_back(joint);
+    }
+
+    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, GearJointProperty property)
+    {
+        PhysicJoint::Ptr jointA = findJoint(property.jointAId);
+        PhysicJoint::Ptr jointB = findJoint(property.jointBId);
+
+        if(jointA->getType() != PhysicJoint::Prismatic_Joint && jointA->getType() != PhysicJoint::Revolute_Joint) return;
+        if(jointB->getType() != PhysicJoint::Prismatic_Joint && jointB->getType() != PhysicJoint::Revolute_Joint) return;
+
+        GearJoint::Ptr joint = GearJoint::Ptr(new GearJoint());
+        joint->setJointId(++m_JointCount);
+
+        b2GearJointDef jointDef;
+        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.collideConnected = property.collideConnected;
+        jointDef.userData = (void *)joint->getJointId();
+        jointDef.joint1 = jointA->getType() == PhysicJoint::Prismatic_Joint ? (b2Joint*)PrismaticJoint::Cast(jointA)->getJoint() : (b2Joint*)RevoluteJoint::Cast(jointA)->getJoint();
+        jointDef.joint2 = jointB->getType() == PhysicJoint::Prismatic_Joint ? (b2Joint*)PrismaticJoint::Cast(jointB)->getJoint() : (b2Joint*)RevoluteJoint::Cast(jointB)->getJoint();
+        jointDef.ratio  = property.ratio;
+
+        joint->setJoint((b2GearJoint*)m_PhysicWorld->CreateJoint(&jointDef));
+
+        joint->setName(property.name);
+        joint->setObjectAId(objectA->getId());
+        joint->setObjectBId(objectB->getId());
+        joint->setObjectAName(objectA->getName());
+        joint->setObjectBName(objectB->getName());
+
+        m_PhysicJointTable.push_back(joint);
+    }
+
+    PhysicJoint::Ptr ObjectManager::findJoint(int jointId)
+    {
+        for(PhysicJoint::Ptr joint : m_PhysicJointTable)
+        {
+            if(joint->getJointId() == jointId)
+                return joint;
+        }
+
+        return nullptr;
+    }
+
+    PhysicJoint::Ptr ObjectManager::findJoint(const std::string& jointName)
+    {
+        for(PhysicJoint::Ptr joint : m_PhysicJointTable)
+        {
+            if(joint->getName() == jointName)
+                return joint;
+        }
+
+        return nullptr;
+    }
+
+    bool ObjectManager::removeJoint(int jointId)
+    {
+        for(PhysicJoint::Ptr joint : m_PhysicJointTable)
+        {
+            if(joint->getJointId() == jointId)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool ObjectManager::removeJoint(const std::string& jointName)
+    {
+        int i = 0;
+        for(PhysicJoint::Ptr joint : m_PhysicJointTable)
+        {
+            if(joint->getName() == jointName)
+            {
+                m_PhysicWorld->DestroyJoint(joint->getGenericJoint());
+                m_PhysicJointTable.erase(m_PhysicJointTable.begin() + i);
+
+                return true;
+            }
+
+            i++;
+        }
+
+        return false;
+    }
+
+    bool ObjectManager::removeLayer(std::string name)
+    {
+        auto layer = findLayerObject(name);
+
+        if(!layer) return false;
+
+        auto childTab = layer->getAllChild();
+
+        for (auto it = childTab->begin(); it != childTab->end(); it++)
+            removeObject(*it);
+
+        return true;
+    }
+
+    int ObjectManager::getNewObjectId()
+    {
+        return ++m_ObjectCount;
+    }
+
+    void ObjectManager::setObjectCount(int count)
+    {
+        m_ObjectCount = count;
+    }
 }
 

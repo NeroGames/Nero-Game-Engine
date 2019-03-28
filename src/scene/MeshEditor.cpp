@@ -1,25 +1,18 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/scene/MeshEditor.h>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     MeshEditor::MeshEditor(sfg::Canvas::Ptr renderCanvas):
-        m_RenderCanvas(renderCanvas),
-        m_LastMousePosition(0.f, 0.f),
-        //
-        m_SelectedMesh(nullptr),
-        m_MeshCount(0)
+         m_RenderCanvas(renderCanvas)
+        ,m_LastMousePosition(0.f, 0.f)
+        ,m_SelectedMesh(nullptr)
+        ,m_MeshCount(0)
     {
         m_UpdateUndo    = [](){};
     }
@@ -605,5 +598,4 @@ namespace nero
     {
         m_UpdateLogIf = fn;
     }
-
 }

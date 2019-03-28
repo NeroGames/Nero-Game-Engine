@@ -1,22 +1,15 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
-////////////////////////////////////////////////////////////
-
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef PHYSICOBJECT_H
 #define PHYSICOBJECT_H
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/object/Object.h>
 //BOX2D
 #include <Box2D/Dynamics/b2Body.h>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     class PhysicObject : public Object
@@ -33,14 +26,13 @@ namespace nero
             };
 
         public:
-                            PhysicObject(b2Body* body);
+                                PhysicObject(b2Body* body);
 
-            b2Body*         getBody();
-            void            setUserData(void* userData);
-            void            setCollisionRule(const Rule& rule);
+            b2Body*             getBody();
+            void                setUserData(void* userData);
+            void                setCollisionRule(const Rule& rule);
 
             //Body related methods
-
             float               getAngle()                  const;
             float               getAngularDamping()         const;
             float               getAngularVelocity()        const;
@@ -87,8 +79,8 @@ namespace nero
 
             void                 clearForce();
             void                 clearVelocity();
-            void                 clearVelocity_x();
-            void                 clearVelocity_y();
+            void                 clearHorizontalVelocity();
+            void                 clearVerticalVelocity();
             void                 clearAngularVelocity();
             void                 setAngle(float angle);
 
@@ -98,6 +90,9 @@ namespace nero
             bool                isDead() const;
             void                setDead(bool flag);
 
+            void                setSize(const sf::Vector2f& size);
+            sf::Vector2f        getSize();
+            virtual sf::FloatRect           getGlobalBounds()   const;
 
         private:
             void            updateObject(sf::Time time_step);
@@ -105,9 +100,7 @@ namespace nero
         protected:
             b2Body*         m_Body;
             bool            m_Dead;
+            sf::Vector2f    m_Size;
     };
 }
-
-
-
 #endif // PHYSICOBJECT_H

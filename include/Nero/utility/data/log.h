@@ -1,6 +1,10 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
 #ifndef LOG_CONFIG_H_INCLUDED
 #define LOG_CONFIG_H_INCLUDED
-
+////////////////////////////////////////////////////////////
 const unsigned char log_config_txt[] = {
   0x2a, 0x20, 0x47, 0x4c, 0x4f, 0x42, 0x41, 0x4c, 0x3a, 0x09, 0x23, 0x23,
   0x20, 0x45, 0x71, 0x75, 0x69, 0x76, 0x61, 0x6c, 0x65, 0x6e, 0x74, 0x20,
@@ -62,6 +66,5 @@ const unsigned char log_config_txt[] = {
   0x6e, 0x67, 0x2e, 0x74, 0x78, 0x74, 0x22, 0x0d, 0x0a
 };
 const unsigned int log_config_txt_len = 693;
-
-
+////////////////////////////////////////////////////////////
 #endif // LOG_CONFIG_H_INCLUDED

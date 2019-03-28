@@ -1,20 +1,17 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
+///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/object/PhysicActionObject.h>
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
     PhysicActionObject::PhysicActionObject():
-        m_PhysicObject(nullptr),
-        m_ActionTable(),
-        m_TimeStep(TIME_PER_FRAME)
+        m_PhysicObject(nullptr)
+        ,m_ActionTable()
+        ,m_TimeStep(TIME_PER_FRAME)
     {
 
     }

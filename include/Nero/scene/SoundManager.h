@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
-////////////////////////////////////////////////////////////
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef SOUNDMANAGER_H
 #define SOUNDMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
@@ -16,7 +16,6 @@
 //STD
 #include <memory>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
    class SoundManager
@@ -42,11 +41,11 @@ namespace nero
             float               increaseSoundVolume(float offset = 1.f);
             float               decreaseSoundVolume(float offset = 1.f);
 
-            //Listener
-//            void                setGlobalVolume(float volume);
-//            void                setListenerPosition(const sf::Vector3f& position);
-//            void                setListenerDirection(const sf::Vector3f& direction);
-//            void                setListenerUpVector(const sf::Vector3f& upVector);
+            /*//Listener
+            void                setGlobalVolume(float volume);
+            void                setListenerPosition(const sf::Vector3f& position);
+            void                setListenerDirection(const sf::Vector3f& direction);
+            void                setListenerUpVector(const sf::Vector3f& upVector);*/
 
             nlohmann::json      toJson();
             void                fromJson(nlohmann::json json);
@@ -64,6 +63,4 @@ namespace nero
             float                           m_SoundVolume;
     };
 }
-
-
 #endif // SOUNDMANAGER_H

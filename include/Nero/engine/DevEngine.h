@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef DEVENGINE_H
 #define DEVENGINE_H
@@ -18,7 +18,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 //BOOST
 #include <boost/filesystem.hpp>
-//EASY_LOGGING
+//EASYLOG
 #include <easyloggingpp/easylogging++.h>
 //STD
 #include <future>
@@ -55,7 +55,7 @@ namespace
     bool result2 = EarlyInit::initLog();
 }
 #endif // NERO_ENGINE_DEVELOPMENT
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
     class DevEngine : public Engine
@@ -115,5 +115,5 @@ namespace nero
         });
     }
 }
-
-#endif // DEVENGINE_Hr
+////////////////////////////////////////////////////////////
+#endif // DEVENGINE_H

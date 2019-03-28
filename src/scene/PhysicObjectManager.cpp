@@ -1,15 +1,22 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
+///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/scene/PhysicObjectManager.h>
-
+#include <Nero/utility/Utility.h>
+//BOX2D
 #include <Box2D/Collision/Shapes/b2EdgeShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
 #include <Box2D/Collision/Shapes/b2ChainShape.h>
-#include <Nero/utility/Utility.h>
+////////////////////////////////////////////////////////////
 namespace nero
 {
     PhysicObjectManager::PhysicObjectManager():
-        m_World(nullptr),
-        m_ObjectCount(0)
+         m_World(nullptr)
+        ,m_ObjectCount(0)
     {
         //ctor
     }
@@ -45,17 +52,17 @@ namespace nero
                 break;
         }
 
-        m_BodyDef.position      = sf_to_b2(mesh.getPosition(), SCALE);
-        m_BodyDef.angle         = mesh.getRotation();
+        m_BodyDef.position      = b2Vec2(0.f, 0.f);
+        m_BodyDef.angle         = 0.f;
+        m_BodyDef.allowSleep    = true;
         m_BodyDef.fixedRotation = mesh.getFixedRotation();
-        m_BodyDef.allowSleep    = mesh.getAllowSleep();
         m_BodyDef.gravityScale  = mesh.getGravityScale();
     }
 
     void PhysicObjectManager::setupVertexTab(b2Vec2* tab, Mesh& mesh)
     {
         for(int i = 0; i < mesh.getAllVertex()->size(); i++)
-            tab[i] = sf_to_b2(mesh.getAllVertex()->at(i).getPosition(), SCALE);
+            tab[i] = sf_to_b2(mesh.getAllVertex()->at(i).getPosition() - mesh.getCenter(), SCALE);
     }
 
     void PhysicObjectManager::setupFixtureDef(Mesh& mesh)
@@ -129,6 +136,9 @@ namespace nero
                 m_FixtureDef.shape = &shape;
                 object.getBody()->CreateFixture(&m_FixtureDef);
 
+                object.getBody()->SetTransform(sf_to_b2(mesh->getCenter(), SCALE), 0.f);
+                object.setSize(mesh->getSize());
+
                 return std::make_shared<PhysicObject>(object);
             }
             break;
@@ -144,6 +154,9 @@ namespace nero
                 setupFixtureDef(*mesh);
                 m_FixtureDef.shape = &shape;
                 object.getBody()->CreateFixture(&m_FixtureDef);
+
+                object.getBody()->SetTransform(sf_to_b2(mesh->getCenter(), SCALE), 0.f);
+                object.setSize(mesh->getSize());
 
                 return std::make_shared<PhysicObject>(object);
             }
@@ -165,6 +178,9 @@ namespace nero
 
                 computePolygonBody(object.getBody(), &m_FixtureDef, &vectTab, SCALE);
 
+                object.getBody()->SetTransform(sf_to_b2(mesh->getCenter(), SCALE), 0.f);
+                object.setSize(mesh->getSize());
+
                 return std::make_shared<PhysicObject>(object);
 
             }
@@ -184,6 +200,9 @@ namespace nero
                 m_FixtureDef.shape = &shape;
                 object.getBody()->CreateFixture(&m_FixtureDef);
 
+                object.getBody()->SetTransform(sf_to_b2(mesh->getCenter(), SCALE), 0.f);
+                object.setSize(mesh->getSize());
+
                 return std::make_shared<PhysicObject>(object);
 
             }
@@ -195,8 +214,6 @@ namespace nero
     {
         m_World = world;
     }
-
-
 }
 
 

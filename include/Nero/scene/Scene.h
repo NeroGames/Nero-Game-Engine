@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
-////////////////////////////////////////////////////////////
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef SCENE_H
 #define SCENE_H
 ///////////////////////////HEADERS//////////////////////////
@@ -93,6 +93,9 @@ namespace nero
             //resolution
             const sf::Vector2f          getResolution() const;
             void                        setResolution(const float& width, const float& height);
+            //
+            void                        disableLayer(const std::string& name);
+            void                        enableLayer(const std::string& name);
 
         private:
             void                        BeginContact(b2Contact* contact);

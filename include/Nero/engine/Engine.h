@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef ENGINE_H
 #define ENGINE_H
@@ -132,5 +132,4 @@ namespace nero
             float               m_TimePerFrame;     /*!< Duration of one frame */
     };
 }
-
 #endif // ENGINE_H

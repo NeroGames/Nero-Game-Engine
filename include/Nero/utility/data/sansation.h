@@ -1,6 +1,10 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
 #ifndef SANSATION_FONT_H_INCLUDED
 #define SANSATION_FONT_H_INCLUDED
-
+////////////////////////////////////////////////////////////
 const unsigned char sansation_ttf[] =
 {
   0x00, 0x01, 0x00, 0x00, 0x00, 0x11, 0x01, 0x00, 0x00, 0x04, 0x00, 0x10,
@@ -2415,6 +2419,6 @@ const unsigned char sansation_ttf[] =
   0x01, 0x02, 0x00, 0x00
 };
 const unsigned int sansation_ttf_len = 28912;
-
+////////////////////////////////////////////////////////////
 #endif // SANSATION_FONT_H_INCLUDED
 

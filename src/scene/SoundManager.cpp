@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -9,7 +9,7 @@
 namespace nero
 {
     SoundManager::SoundManager(MusicHolder& musicHolder, SoundHolder& soundHolder):
-        m_MusicHolder(musicHolder)
+         m_MusicHolder(musicHolder)
         ,m_SoundHolder(soundHolder)
         ,m_CurrentMusic("")
         ,m_MusicVolume(50.f)

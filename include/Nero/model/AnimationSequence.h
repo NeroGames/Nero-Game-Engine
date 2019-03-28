@@ -1,15 +1,17 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef ANIMATIONSEQUENCE_H
 #define ANIMATIONSEQUENCE_H
-
-#include <string>
-#include <vector>
+///////////////////////////HEADERS//////////////////////////
+//SFML
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Time.hpp>
-
+//STD
+#include <string>
+#include <vector>
+////////////////////////////////////////////////////////////
 namespace nero
 {
     class AnimationSequence
@@ -35,6 +37,4 @@ namespace nero
             int                             m_CurrentFrame;
     };
 }
-
-
 #endif // ANIMATIONSEQUENCE_H

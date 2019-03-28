@@ -1,23 +1,26 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
+//STD
 #include <windows.h>
 #include <stdio.h>
+//NERO
 #include <Nero/engine/DevEngineUI.h>
 #include <Nero/utility/Utility.h>
+//SFGUI
 #include <SFGUI/Separator.hpp>
+//BOOST
 #include <boost/filesystem.hpp>
-#include <Nero/utility/data/EngineHelp.h>
+//IMGUI
 bool IMGUI_COLOR_PICKER_OPEN;
-
 ////////////////////////////////////////////////////////////
 namespace nero
 {
     ////////////////////////////////////////////////////////////
     DevEngineUI::DevEngineUI(sf::RenderWindow& window):
-        m_Sfgui()
+         m_Sfgui()
         ,m_Window(window)
         ,m_EngineMode(SCENE)
         ,m_EngineSubMode(OBJECT)
@@ -46,7 +49,15 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::handleEvent(sf::Event& event)
     {
-        if(m_RendererActive) return;
+        if(m_RendererActive)
+        {
+            if(event.type == sf::Event::Closed)
+            {
+                onQuitButton();
+            }
+
+            return;
+        }
 
         //IMGUI
         if(m_RenderColorPicker)
@@ -67,7 +78,19 @@ namespace nero
 
         //Scene Manager
         if(m_EngineMode == SCENE && m_EngineSubMode == PLAY && !IMGUI_COLOR_PICKER_OPEN)
-            m_SceneManager->handleEvent(event);
+        {
+            try
+            {
+                m_SceneManager->handleEvent(event);
+            }
+            catch(std::exception const& e)
+            {
+                updateLog(e.what());
+                onResetButton();
+                setEngineSubMode(OBJECT);
+            }
+        }
+
 
         //Camera
         if(m_MouseOnCanvas)
@@ -111,7 +134,8 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::update(const sf::Time& timeStep)
     {
-        if(m_RendererActive) return;
+        if(m_RendererActive)
+            return;
 
         //UI
         m_Desktop.Update(timeStep.asSeconds());
@@ -126,7 +150,16 @@ namespace nero
 
         //Scene Manager
         if(m_EngineMode == SCENE && m_EngineSubMode == PLAY)
-            m_SceneManager->update(timeStep);
+        {
+            try
+            {
+               m_SceneManager->update(timeStep);
+            }
+            catch(std::exception const& e)
+            {
+                updateLog(e.what());
+            }
+        }
 
         //Update the current Scene camera Setting
         updateCameraSetting();
@@ -219,13 +252,13 @@ namespace nero
     {
         //UI properties
         m_Desktop.SetProperty("Label#little_font_size", "FontSize", 11.f);
-        m_Desktop.SetProperty("Entry#sprite_layer", "BackgroundColor", sf::Color(249, 187,140, 100));
+        m_Desktop.SetProperty("Entry#sprite_layer", "BackgroundColor", sf::Color(143, 130, 114));
         m_Desktop.SetProperty("Entry#mesh_layer", "BackgroundColor", sf::Color(53, 80, 57));
         m_Desktop.SetProperty("Entry#meshed_layer", "BackgroundColor", sf::Color(53, 85, 101));
-        m_Desktop.SetProperty("Entry#animation_layer", "BackgroundColor", sf::Color(229,162,8));
-        m_Desktop.SetProperty("Entry#animation_meshed_layer", "BackgroundColor", sf::Color(128,168,202));
+        m_Desktop.SetProperty("Entry#animation_layer", "BackgroundColor", sf::Color(218, 77, 77));
+        m_Desktop.SetProperty("Entry#animation_meshed_layer", "BackgroundColor", sf::Color(135, 104, 110));
         m_Desktop.SetProperty("Entry#button_layer", "BackgroundColor", sf::Color(128,10,202));
-        m_Desktop.SetProperty("Entry#text_layer", "BackgroundColor", sf::Color(128,202,10));
+        m_Desktop.SetProperty("Entry#text_layer", "BackgroundColor", sf::Color(34, 123, 108));
         m_Desktop.SetProperty("Entry#grid_entry" , "FontSize", 8.f);
         m_Desktop.SetProperty("Entry#little_font_size" , "FontSize", 10.f);
         m_Desktop.SetProperty("SpinButton#little_font_size" , "FontSize", 10.f);
@@ -280,22 +313,24 @@ namespace nero
     {
         if(isPressed)
         {
-            if(key == sf::Keyboard::Return && !CTRL_SHIFT_ALT() && m_MouseOnCanvas)
+            if(key == sf::Keyboard::Return && !CTRL_SHIFT_ALT() && m_MouseOnCanvas && m_EngineSubMode == OBJECT)
                 onPlayButton();
 
-            else if(key == sf::Keyboard::Return && !CTRL_SHIFT_ALT())
+            else if(key == sf::Keyboard::Return && !CTRL_SHIFT_ALT() && m_MouseOnCanvas && m_EngineSubMode == PLAY)
                 onPauseButton();
 
-            else if(key == sf::Keyboard::Return && CTRL())
-                onResetButton();
+            else if(key == sf::Keyboard::Return && CTRL() && m_EngineMode == SCENE && m_EngineSubMode == OBJECT)
+            {
+                m_RenderScene = true;
+            }
 
-            else if(key == sf::Keyboard::Left && CTRL())
+            else if(key == sf::Keyboard::Up && CTRL())
                 onPauseButton();
 
             else if(key == sf::Keyboard::Right && CTRL())
                 onStepButton();
 
-            else if(key == sf::Keyboard::Up && CTRL())
+            else if(key == sf::Keyboard::Left && CTRL())
                 onResetButton();
 
             else if(key == sf::Keyboard::Z && CTRL())
@@ -306,6 +341,9 @@ namespace nero
 
             else if(key == sf::Keyboard::S && CTRL())
                 onSaveButton();
+
+            else if(key == sf::Keyboard::L && CTRL())
+                onLoadButton();
 
             else if(key == sf::Keyboard::Space && !CTRL_SHIFT_ALT() && m_MouseOnCanvas)
                 switchEngineSubMode();
@@ -344,6 +382,8 @@ namespace nero
             //Update Camera default state
             else if(key == sf::Keyboard::Numpad5 && ALT() && m_MouseOnCanvas)
             {
+                updateLog("saving camera state");
+
                 CameraSetting& setting = m_FrontScreen ? m_SceneManager->getScreenCameraSetting() : m_SceneManager->getCameraSetting();
 
                 setting.defaultPosition = m_Camera->getPosition();
@@ -354,6 +394,8 @@ namespace nero
             //Rest Camera to default state
             if(key == sf::Keyboard::Numpad5 && !CTRL_SHIFT_ALT() && m_MouseOnCanvas)
             {
+                updateLog("loading camera state");
+
                 CameraSetting& setting = m_FrontScreen ? m_SceneManager->getScreenCameraSetting() : m_SceneManager->getCameraSetting();
 
                 m_Camera->setPosition(setting.defaultPosition);
@@ -372,6 +414,8 @@ namespace nero
             {
                 if (ALT())
                 {
+                    updateLog("saving camera state");
+
                     CameraSetting& setting = m_FrontScreen ? m_SceneManager->getScreenCameraSetting() : m_SceneManager->getCameraSetting();
 
                     setting.defaultPosition = m_Camera->getPosition();
@@ -380,6 +424,8 @@ namespace nero
                 }
                 else
                 {
+                    updateLog("loading camera state");
+
                     CameraSetting& setting = m_FrontScreen ? m_SceneManager->getScreenCameraSetting() : m_SceneManager->getCameraSetting();
 
                     m_Camera->setPosition(setting.defaultPosition);
@@ -436,8 +482,11 @@ namespace nero
 
         m_LogLabel->SetText(m_LogLabel->GetText() + _level + " " +  message + "\n");
         m_LogAdjustment->SetValue(m_LogAdjustment->GetUpper());
+
+        nero_log(message, level);
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::updateLogIf(const std::string& message, bool condition, int level)
     {
         if(condition)
@@ -452,6 +501,8 @@ namespace nero
 
             m_LogLabel->SetText(m_LogLabel->GetText() + _level + " " + " " +  message + "\n");
             m_LogAdjustment->SetValue(m_LogAdjustment->GetUpper());
+
+             nero_log_if(message, condition, level);
         }
     }
 
@@ -634,8 +685,6 @@ namespace nero
                 m_ActiveSceneBuilder->updateAllLayerAlpha(DEFAULT_ALPHA);
                 m_ObjectModeRadioButton->SetActive(true);
 
-                updateLog("current mode : Scene - Object");
-
             }break;
 
             case MESH:
@@ -644,16 +693,12 @@ namespace nero
                 m_ActiveSceneBuilder->updateAllLayerAlpha(MESH_MODE_ALPHA);
                 m_MeshModeRadioButton->SetActive(true);
 
-                updateLog("current mode : Scene - Mesh");
-
             }break;
 
             case PLAY:
             {
                 m_EngineSubMode = PLAY;
                 m_PlayModeRadioButton->SetActive(true);
-
-                //updateLog("current mode : Scene - Play");
 
             }break;
         }
@@ -712,12 +757,20 @@ namespace nero
     {
         if(!m_FrontScreen && m_EngineMode == SCENE && m_EngineSubMode == OBJECT)
         {
-            m_SceneManager->buildScene();
-            setEngineSubMode(PLAY);
+            try
+            {
+                m_SceneManager->buildScene();
+                setEngineSubMode(PLAY);
+            }
+            catch(std::exception const& e)
+            {
+                updateLog(e.what());
+            }
+
         }
     }
 
-     ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onRenderButton()
     {
         if(m_EngineMode == SCENE && m_EngineSubMode == OBJECT)
@@ -733,7 +786,18 @@ namespace nero
                 m_SceneRenderer         = SceneRenderer::Ptr(new SceneRenderer(resolution.x, resolution.y, name));
 
                 //scene the scene to the renderer
-                m_SceneRenderer->setScene(scene);
+                try
+                {
+                    m_SceneRenderer->setScene(scene);
+                }
+                catch(std::exception const& e)
+                {
+                    updateLog(e.what());
+                    closeRenderer();
+                }
+
+                //m_SceneRenderer->setScene(scene);
+
                 m_SceneRenderer->setRestartScene([this]()
                 {
                     m_SceneRenderer->setScene(m_SceneManager->getScene());
@@ -753,12 +817,12 @@ namespace nero
         }
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::closeRenderer()
     {
         m_RendererActive = false;
         m_SceneRenderer->m_Window.close();
     }
-
 
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onPauseButton()
@@ -799,10 +863,8 @@ namespace nero
 
         //Save Engine Setting
         saveFile(CONFIGURATION_FOLDER + "/" + ENGINE_CONFIGURATION + ".json", m_EngineSetting.toJson().dump(3));
-
         //Save all Scene
         m_SceneManager->saveAllScene();
-
         //Quit
         m_Window.close();
     }
@@ -874,8 +936,7 @@ namespace nero
         updateSceneScreen();
     }
 
-
-
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::buildCenter(sfg::Box::Ptr main_box)
     {
         ////////////////////////////////////////////////////////////
@@ -907,16 +968,16 @@ namespace nero
         m_UndoButton                = sfg::Button::Create("<--");
         m_RedoButton                = sfg::Button::Create("-->");
 
-        black_color_button->GetSignal(sfg::Button::OnLeftClick).Connect([this](){m_CanvasColor = sf::Color::Black; onColorRadioButton(); saveCanvasColor(m_CanvasColor);});
-        gray_color_button->GetSignal(sfg::Button::OnLeftClick).Connect([this](){m_CanvasColor = sf::Color(119, 119, 119); onColorRadioButton(); saveCanvasColor(m_CanvasColor);});
-        blue_color_button->GetSignal(sfg::Button::OnLeftClick).Connect([this](){m_CanvasColor = sf::Color(130, 177, 205); onColorRadioButton(); saveCanvasColor(m_CanvasColor);});
-        white_color_button->GetSignal(sfg::Button::OnLeftClick).Connect([this](){m_CanvasColor = sf::Color::White; onColorRadioButton(); saveCanvasColor(m_CanvasColor);});
+        black_color_button->GetSignal(sfg::Button::OnLeftClick).Connect([this](){updateLog("changing canvas color to black"); m_CanvasColor = sf::Color::Black; onColorRadioButton(); saveCanvasColor(m_CanvasColor);});
+        gray_color_button->GetSignal(sfg::Button::OnLeftClick).Connect([this](){updateLog("changing canvas color to grey"); m_CanvasColor = sf::Color(119, 119, 119); onColorRadioButton(); saveCanvasColor(m_CanvasColor);});
+        blue_color_button->GetSignal(sfg::Button::OnLeftClick).Connect([this](){updateLog("changing canvas color to blue"); m_CanvasColor = sf::Color(130, 177, 205); onColorRadioButton(); saveCanvasColor(m_CanvasColor);});
+        white_color_button->GetSignal(sfg::Button::OnLeftClick).Connect([this](){updateLog("changing canvas color to white"); m_CanvasColor = sf::Color::White; onColorRadioButton(); saveCanvasColor(m_CanvasColor);});
 
         m_PlayButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onPlayButton, this));
         m_PauseButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onPauseButton, this));
         m_StepButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onStepButton, this));
         m_ResetButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onResetButton, this));
-        m_RenderButton->GetSignal(sfg::Button::OnMouseLeftRelease).Connect([this](){m_RenderScene = true;});
+        m_RenderButton->GetSignal(sfg::Button::OnMouseLeftRelease).Connect([this](){if(m_EngineMode == SCENE && m_EngineSubMode == OBJECT){m_RenderScene = true;}});
         m_QuitButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onQuitButton, this));
         m_UndoButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onUndoButton, this));
         m_RedoButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onRedoButton, this));
@@ -939,7 +1000,6 @@ namespace nero
         utility_button_box_2->Pack(m_RenderButton);
         utility_button_box_2->Pack(m_QuitButton);
         utility_button_box_2->Pack(m_RedoButton);
-
 
         utility_button_box->Pack(utility_button_box_1);
         utility_button_box->Pack(utility_button_box_2);
@@ -1011,7 +1071,6 @@ namespace nero
         float win_width = m_Window.getSize().x;
         float win_height = m_Window.getSize().y;
 
-        ////////////////////////////////////////////////////////////
         //Top_Notebook : Utility | Music
         //Utility
         auto utility_view_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f);
@@ -1034,7 +1093,6 @@ namespace nero
         top_notebook->AppendPage(music_view_box, sfg::Label::Create("Music"));
         top_notebook->AppendPage(grid_view_box, sfg::Label::Create("Grid"));
 
-        ////////////////////////////////////////////////////////////
         //Bottom_Notebook : Sprite | Animation | Color | Mesh
         //Sprite
         auto sprite_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 2.f);
@@ -1077,7 +1135,6 @@ namespace nero
         sequence_window->SetScrollbarPolicy(sfg::ScrolledWindow::VERTICAL_ALWAYS | sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC);
         sequence_window->AddWithViewport(m_SequenceNoteBook);
         sequence_window->SetRequisition(sf::Vector2f(win_width*0.14f, win_height*0.53f));
-
         //
         m_ColorNotebook = sfg::Notebook::Create();
         m_ColorNotebook->AppendPage(sprite_window, sfg::Label::Create("Sprite"));
@@ -1221,14 +1278,11 @@ namespace nero
         //Listener
         auto listener_table = sfg::Table::Create();
 
-
         auto music_frame = sfg::Frame::Create("Play Music");
         music_frame->Add(m_MusicComboBox);
 
         auto sound_frame = sfg::Frame::Create("Play Sound");
         sound_frame->Add(m_SoundComboBox);
-
-
 
         auto volume_frame = sfg::Frame::Create("Volume");
         volume_frame->Add(volume_table);
@@ -1248,7 +1302,6 @@ namespace nero
         stopMusicButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onStopMusic, this));
         m_MusicAdjustment->GetSignal(sfg::Adjustment::OnChange).Connect(std::bind(&DevEngineUI::onMusicAdjustment, this));
         m_SoundAdjustment->GetSignal(sfg::Adjustment::OnChange).Connect(std::bind(&DevEngineUI::onSoundAdjustment, this));
-
     }
 
     ////////////////////////////////////////////////////////////
@@ -1356,7 +1409,6 @@ namespace nero
         green_scale->GetSignal(sfg::Scale::OnMouseLeftRelease).Connect([this](){updateUndo();});
         blue_scale->GetSignal(sfg::Scale::OnMouseLeftRelease).Connect([this](){updateUndo();});
 
-
         //
         auto alpha_spin = sfg::SpinButton::Create(m_AlphaAdjustment);
         alpha_spin->SetRequisition(sf::Vector2f(80.f, 0.f));
@@ -1402,12 +1454,9 @@ namespace nero
         auto spinner_frame = sfg::Frame::Create("Spinner");
         spinner_frame->Add(spin_table);
 
-        //auto color_window_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f);
-            color_box->Pack(frame, false);
-            color_box->Pack(slider_frame, false);
-            color_box->Pack(spinner_frame, false);
-
-        //color_box->Add(color_window_box);
+        color_box->Pack(frame, false);
+        color_box->Pack(slider_frame, false);
+        color_box->Pack(spinner_frame, false);
 
         m_AlphaAdjustment->GetSignal(sfg::Adjustment::OnChange).Connect(std::bind(&DevEngineUI::onColorAdjustment, this));
         m_RedAdjustment->GetSignal(sfg::Adjustment::OnChange).Connect(std::bind(&DevEngineUI::onColorAdjustment, this));
@@ -1433,7 +1482,6 @@ namespace nero
         m_MeshFrictionSpinButton            = sfg::SpinButton::Create(0.f, 10.f, 1.f);
         m_MeshRestitutionSpinButton         = sfg::SpinButton::Create(0.f, 10.f, 1.f);
         m_MeshGravityScaleSpinButton        = sfg::SpinButton::Create(0.f, 10.f, 1.f);
-
 
         m_MeshDensitySpinButton->SetRequisition(sf::Vector2f(70.f, 0.f));
 
@@ -1479,7 +1527,6 @@ namespace nero
 
         m_AddTextButton = sfg::Button::Create("Add Text");
 
-
         m_TextFontSize          = sfg::SpinButton::Create(1.f, 100.f, 1.f);
         m_TextLetterSpacing     = sfg::SpinButton::Create(1.f, 100.f, 1.f);
         m_TextLineSpacing       = sfg::SpinButton::Create(1.f, 100.f, 1.f);
@@ -1492,16 +1539,15 @@ namespace nero
 
         m_TextFontSize->SetRequisition(sf::Vector2f(70.f, 0.f));
 
-
         auto table = sfg::Table::Create();
         table->Attach(sfg::Label::Create("Font Size     "), sf::Rect<sf::Uint32>( 0, 0, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
         table->Attach(m_TextFontSize, sf::Rect<sf::Uint32>( 1, 0, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
         table->Attach(sfg::Label::Create("Outline        "), sf::Rect<sf::Uint32>( 0, 1, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
         table->Attach(m_TextOutlineThickness, sf::Rect<sf::Uint32>( 1, 1, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
-//        table->Attach(sfg::Label::Create("Letter Space"), sf::Rect<sf::Uint32>( 0, 2, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
-//        table->Attach(m_TextLetterSpacing, sf::Rect<sf::Uint32>( 1, 2, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
-//        table->Attach(sfg::Label::Create("Line Space  "), sf::Rect<sf::Uint32>( 0, 3, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
-//        table->Attach(m_TextLineSpacing, sf::Rect<sf::Uint32>( 1, 3, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
+        //table->Attach(sfg::Label::Create("Letter Space"), sf::Rect<sf::Uint32>( 0, 2, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
+        //table->Attach(m_TextLetterSpacing, sf::Rect<sf::Uint32>( 1, 2, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
+        //table->Attach(sfg::Label::Create("Line Space  "), sf::Rect<sf::Uint32>( 0, 3, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
+        //table->Attach(m_TextLineSpacing, sf::Rect<sf::Uint32>( 1, 3, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
 
         auto frame = sfg::Frame::Create("Style");
         auto frame_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 4.f);
@@ -1567,7 +1613,6 @@ namespace nero
                 return;
 
         m_ActiveSceneBuilder->setTextFont(m_FontComboBox->GetSelectedText());
-
     }
 
     ////////////////////////////////////////////////////////////
@@ -1576,17 +1621,8 @@ namespace nero
         if(m_EngineMode != SCENE || m_EngineSubMode != OBJECT)
                 return;
 
-//        std::vector<std::string> lineTable = splitString(m_TextEntry->GetText(), m_EngineSetting.carriageReturn.at(0));
-//
-//        std::string text = "";
-//        for(auto line : lineTable)
-//        {
-//             text += line + "\n";
-//        }
-
         std::string text = m_TextEntry->GetText();
         std::replace(text.begin(), text.end(), m_EngineSetting.carriageReturn.at(0), '\n');
-//        text.pop_back();
 
         m_ActiveSceneBuilder->setTextContent(text);
     }
@@ -1680,24 +1716,24 @@ namespace nero
         scene_box->Pack(right_box);
 
          //Help
-        auto help_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
+        auto help_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 10.f);
         auto help_window = sfg::ScrolledWindow::Create();
         help_window->SetScrollbarPolicy(sfg::ScrolledWindow::VERTICAL_ALWAYS  | sfg::ScrolledWindow::HORIZONTAL_NEVER);
         help_window->AddWithViewport(help_box);
+        help_box->SetRequisition(sf::Vector2f(350.f, 0.f));
         help_window->SetId("help_window");
-        auto helpLabel = sfg::Label::Create(ENGINE_HELP);
-        help_box->Pack(helpLabel);
+        build_help_box(help_box);
 
         //Right_End
         m_EngineModeNotebook = sfg::Notebook::Create();
         m_EngineModeNotebook->AppendPage(scene_box, sfg::Label::Create("Scene"));
-        m_EngineModeNotebook->AppendPage(help_window, sfg::Label::Create("Help"));
+        m_EngineModeNotebook->AppendPage(help_window, sfg::Label::Create("Engine Help"));
         m_EngineModeNotebook->GetSignal(sfg::Notebook::OnTabChange).Connect(std::bind(&DevEngineUI::onEngineModeNotebook, this));
 
         main_box->Pack(m_EngineModeNotebook);
     }
 
-      ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::build_mesh_box(sfg::Box::Ptr main_box)
     {
         m_MeshComboBox = sfg::ComboBox::Create();
@@ -1716,7 +1752,6 @@ namespace nero
         table->Attach(sfg::Label::Create("Type "), sf::Rect<sf::Uint32>( 0, 1, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
         table->Attach(m_MeshTypeComboBox, sf::Rect<sf::Uint32>( 1, 1, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
 
-
         auto frame = sfg::Frame::Create("Mesh");
         frame->Add(table);
 
@@ -1726,20 +1761,19 @@ namespace nero
         m_MeshTypeComboBox->GetSignal(sfg::ComboBox::OnSelect).Connect(std::bind(&DevEngineUI::onMeshTypeComboBox, this));
     }
 
-     void DevEngineUI::build_object_box(sfg::Box::Ptr main_box)
+    ////////////////////////////////////////////////////////////
+    void DevEngineUI::build_object_box(sfg::Box::Ptr main_box)
     {
         m_ObjectNameEntry           = sfg::Entry::Create();
         m_ObjectCategoryEntry       = sfg::Entry::Create();
         m_ObjectMoveUpButton        = sfg::Button::Create("Move Up");
         m_ObjectMoveDownButton      = sfg::Button::Create("Move Down");
 
-
         m_ObjectNameEntry->SetRequisition(sf::Vector2f(100.f, 0.f));
         m_ObjectCategoryEntry->SetRequisition(sf::Vector2f(100.f, 0.f));
 
         m_ObjectNameEntry->SetId("little_font_size");
         m_ObjectCategoryEntry->SetId("little_font_size");
-
 
         auto table = sfg::Table::Create();
         table->Attach(sfg::Label::Create("Name    "), sf::Rect<sf::Uint32>( 0, 0, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
@@ -1767,7 +1801,7 @@ namespace nero
         m_ObjectMoveDownButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onMoveObjectDown, this));
     }
 
-     ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::build_layer_box(sfg::Box::Ptr main_box)
     {
         //Create Buttons
@@ -1796,16 +1830,14 @@ namespace nero
 
         //Pack buttons
         auto button_box = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL);
-            button_box->Pack(m_AddLayerButton);
-            button_box->Pack(m_DeleteLayerButton);
-            button_box->Pack(m_UpLayerButton);
-            button_box->Pack(m_DownLayerButton);
-
-
+        button_box->Pack(m_AddLayerButton);
+        button_box->Pack(m_DeleteLayerButton);
+        button_box->Pack(m_UpLayerButton);
+        button_box->Pack(m_DownLayerButton);
 
         auto button_box_2 = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL);
-            button_box_2->Pack(m_MergeUpLayerButton);
-            button_box_2->Pack(m_MergeDownLayerButton);
+        button_box_2->Pack(m_MergeUpLayerButton);
+        button_box_2->Pack(m_MergeDownLayerButton);
 
         //Pack all
         auto layer_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f);
@@ -1831,7 +1863,7 @@ namespace nero
         m_MergeDownLayerButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onMergeDownLayerButton, this));
     }
 
-      ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::build_scene_box(sfg::Box::Ptr main_box)
     {
         m_SceneComboBox = sfg::ComboBox::Create();
@@ -1841,7 +1873,6 @@ namespace nero
 
         m_yGravitySpinButton = sfg::SpinButton::Create(-100.f, 100.f, 1.f);
         m_yGravitySpinButton->SetRequisition( sf::Vector2f(50.f, 0.f ));
-
 
         m_VelocityIterationSpinButton = sfg::SpinButton::Create(0.f, 500.f, 1.f);
         m_VelocityIterationSpinButton->SetRequisition( sf::Vector2f(50.f, 0.f ));
@@ -1938,7 +1969,7 @@ namespace nero
         m_DrawProfileCheckButton->GetSignal(sfg::ToggleButton::OnLeftClick).Connect(std::bind(&DevEngineUI::onSceneCheckButton, this));
     }
 
-     ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::build_grid_box(sfg::Box::Ptr main_box)
     {
         m_GridWidthSpinButton       =   sfg::SpinButton::Create(5.f, MAX_VALUE, 1.f);
@@ -1961,7 +1992,6 @@ namespace nero
         m_GridYSizeSpinButton->SetId("grid_entry");
         m_GridXOffsetSpinButton->SetId("grid_entry");
         m_GridYOffsetSpinButton->SetId("grid_entry");
-
 
         auto tile_table = sfg::Table::Create();
         tile_table->Attach(sfg::Label::Create("Width"), sf::Rect<sf::Uint32>( 0, 0, 1, 1 ), sfg::Table::FILL | sfg::Table::EXPAND, sfg::Table::EXPAND, sf::Vector2f( 2.f, 2.f ) );
@@ -1988,7 +2018,6 @@ namespace nero
         auto frame = sfg::Frame::Create("Grid Cell");
         frame->Add(box);
 
-
         main_box->Pack(frame);
 
         m_GridWidthSpinButton->GetSignal(sfg::SpinButton::OnValueChanged).Connect(std::bind(&DevEngineUI::onGridXSizeChange, this));
@@ -1999,7 +2028,7 @@ namespace nero
         m_GridYOffsetSpinButton->GetSignal(sfg::SpinButton::OnValueChanged).Connect(std::bind(&DevEngineUI::onGridYMove, this));
     }
 
-     ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     std::function<void ()> DevEngineUI::onSpriteButton(const std::string &label)
     {
         return [&, label]()
@@ -2076,15 +2105,15 @@ namespace nero
     std::function<void ()> DevEngineUI::onAnimationButtonMouseOver(const std::string &label)
     {
         return [&, label]()
-            {
-                m_PreviewTexture = m_ResourceManager->animation.getTexture(label);
-                sf::IntRect bound = m_ResourceManager->animation.getAnimationBound(label);
-                m_Preview.setTexture(m_PreviewTexture);
-                m_Preview.setTextureRect(bound);
-                m_Preview.setOrigin(bound.width/2.f, bound.height/2.f);
-                m_Preview.setPosition(m_CanvasFrontView.getSize().x/2.f, bound.height/2.f + 100.f);
-                m_Preview.setColor(sf::Color(255, 255, 255, 100));
-            };
+        {
+            m_PreviewTexture = m_ResourceManager->animation.getTexture(label);
+            sf::IntRect bound = m_ResourceManager->animation.getAnimationBound(label);
+            m_Preview.setTexture(m_PreviewTexture);
+            m_Preview.setTextureRect(bound);
+            m_Preview.setOrigin(bound.width/2.f, bound.height/2.f);
+            m_Preview.setPosition(m_CanvasFrontView.getSize().x/2.f, bound.height/2.f + 100.f);
+            m_Preview.setColor(sf::Color(255, 255, 255, 100));
+        };
     }
 
     ////////////////////////////////////////////////////////////
@@ -2093,8 +2122,7 @@ namespace nero
         m_Preview = sf::Sprite();
     }
 
-
-
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::updateUI()
     {
         Object::Ptr object = m_ActiveSceneBuilder->getSelectedObject();
@@ -2223,6 +2251,7 @@ namespace nero
 
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::updateUndo()
     {
         m_ActiveUndoManager->add(m_ActiveSceneBuilder->saveScene());
@@ -2262,7 +2291,7 @@ namespace nero
         updateLayerBox();
     }
 
-     ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::createLayer(LayerObject::Ptr layerObject)
     {
         LayerUI layer;
@@ -2337,7 +2366,7 @@ namespace nero
         };
     }
 
-     ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onAddLayerButton()
     {
         if(m_EngineMode != SCENE || m_EngineSubMode != OBJECT)
@@ -2406,7 +2435,6 @@ namespace nero
         updateLayerBox();
     }
 
-
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onDownLayerButton()
     {
@@ -2449,7 +2477,7 @@ namespace nero
         updateLayerBox();
     }
 
-     ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onMergeDownLayerButton()
     {
         if(m_EngineMode != SCENE || m_EngineSubMode != OBJECT)
@@ -2472,7 +2500,7 @@ namespace nero
         updateLayerBox();
     }
 
-    ///////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onObjectNameEntry()
     {
         if(m_EngineMode == SCENE && m_EngineSubMode == OBJECT)
@@ -2522,37 +2550,37 @@ namespace nero
             m_ActiveSceneBuilder->setMeshType(m_MeshTypeComboBox->GetSelectedText());
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onPlayMusic()
     {
         m_ActiveSoundManager->playMusic(toString(m_MusicComboBox->GetSelectedText()));
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onPlaySound()
     {
          m_ActiveSoundManager->playSound(toString(m_SoundComboBox->GetSelectedText()));
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onStopMusic()
     {
         m_ActiveSoundManager->stopMusic(toString(m_MusicComboBox->GetSelectedText()));
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onMusicAdjustment()
     {
         m_ActiveSoundManager->setMusicVolume(m_MusicAdjustment->GetValue());
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onSoundAdjustment()
     {
         m_ActiveSoundManager->setSoundVolume(m_SoundAdjustment->GetValue());
     }
 
-
-
-
-
-
-
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::updatePositionLabel()
     {
         std::string cameraPositionText = "Camera: x = " + toString(m_Camera->getPosition().x) + "   y = " + toString(m_Camera->getPosition().y);
@@ -2560,11 +2588,7 @@ namespace nero
         m_PositionLabel->SetText(m_MousePositionText + cameraPositionText);
     }
 
-
-
-
-
-     ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onColorRadioButton()
     {
         if(m_SpriteColorRadioButton->IsActive())
@@ -2681,11 +2705,13 @@ namespace nero
         }
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::saveCanvasColor(const sf::Color& color)
     {
         m_ActiveSceneBuilder->setCanvasColor(color);
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::updateSceneSetting()
     {
         SceneSetting& setting = m_SceneManager->getSceneSetting();
@@ -2716,7 +2742,7 @@ namespace nero
         m_DrawProfileCheckButton->SetActive(setting.drawProfile);
     }
 
-     ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onScenePinButton()
     {
         SceneSetting& setting = m_SceneManager->getSceneSetting();
@@ -2752,6 +2778,7 @@ namespace nero
         setting.drawProfile           = m_DrawProfileCheckButton->IsActive();
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::updateCameraSetting()
     {
         CameraSetting& setting = m_FrontScreen ? m_SceneManager->getScreenCameraSetting() : m_SceneManager->getCameraSetting();
@@ -2761,6 +2788,7 @@ namespace nero
         setting.zoom        = m_Camera->getZoom();
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::autoSave()
     {
         if(m_EngineMode == SCENE && m_EngineSubMode == OBJECT && m_EngineSetting.autoSave)
@@ -2834,6 +2862,7 @@ namespace nero
         m_ActiveGrid->update(tileSize, m_ActiveGrid->getTileCount());
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onGridYSizeChange()
     {
         //update the grid
@@ -2844,6 +2873,7 @@ namespace nero
         m_ActiveGrid->update(tileSize, m_ActiveGrid->getTileCount());
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onGridXCountChange()
     {
         //update the grid
@@ -2854,6 +2884,7 @@ namespace nero
         m_ActiveGrid->update(m_ActiveGrid->getTileSize(), tileCount);
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onGridYCountChange()
     {
         //update the grid
@@ -2874,6 +2905,7 @@ namespace nero
         m_ActiveGrid->updatePosition(position);
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onGridYMove()
     {
         sf::Vector2i position;
@@ -2883,6 +2915,7 @@ namespace nero
         m_ActiveGrid->updatePosition(position);
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::updateGridSetting()
     {
         m_GridWidthSpinButton->SetValue(m_ActiveGrid->getTileSize().x);
@@ -2893,12 +2926,14 @@ namespace nero
         m_GridYOffsetSpinButton->SetValue(m_ActiveGrid->getPosition().y);
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::updateSoundSetting()
     {
         m_SoundAdjustment->SetValue(m_ActiveSoundManager->getSoundVolume());
         m_MusicAdjustment->SetValue(m_ActiveSoundManager->getMusicVolume());
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::updateCamera(const CameraSetting& cameraSetting)
     {
         m_Camera->setPosition(cameraSetting.position);
@@ -2906,11 +2941,9 @@ namespace nero
         m_Camera->setZoom(cameraSetting.zoom);
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::updateSceneScreen()
     {
-//        if(m_FrontScreen && m_ScreenComboBoxSecond->GetSelectedText() == m_ScreenComboBoxFirst->GetSelectedText())
-//            disableFrontScreen();
-
         m_ScreenComboBoxFirst->Clear();
         m_ScreenComboBoxSecond->Clear();
 
@@ -2926,6 +2959,7 @@ namespace nero
         m_ScreenComboBoxSecond->SelectItem(0);
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::disableFrontScreen()
     {
         //Return to world view
@@ -2936,6 +2970,7 @@ namespace nero
         }
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onAddFrontScreen()
     {
         if(m_SceneManager->addScreen(m_FrontScreenNameEntry->GetText()))
@@ -2946,6 +2981,7 @@ namespace nero
         }
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onDeleteFrontScreen()
     {
         if(m_SceneManager->deleteScreen(m_ScreenComboBoxSecond->GetSelectedText()))
@@ -2955,6 +2991,7 @@ namespace nero
         }
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onRenameFrontScreen()
     {
         if(m_SceneManager->renameScreen(m_ScreenComboBoxSecond->GetSelectedText(), m_FrontScreenNameEntry->GetText()))
@@ -2965,6 +3002,7 @@ namespace nero
         }
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onSelectFrontScreen()
     {
         m_SceneManager->selectScreen(m_ScreenComboBoxFirst->GetSelectedText());
@@ -2975,47 +3013,61 @@ namespace nero
         }
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onAccessLearningButton()
     {
         #ifdef _WIN32
+            updateLog("openning browser at : https://nero-game.com/learn");
             ShellExecute(NULL, "open", "https://nero-game.com/learn", NULL, NULL, SW_SHOWNORMAL);
         #else
+            updateLog("openning browser at : https://nero-game.com/learn");
             system("https://nero-game.com/learn");
         #endif // _WIN32
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onAccessForumButton()
     {
         #ifdef _WIN32
+            updateLog("openning browser at : https://nero-game.com/forum/index.php");
             ShellExecute(NULL, "open", "https://nero-game.com/forum/index.php", NULL, NULL, SW_SHOWNORMAL);
         #else
+            updateLog("openning browser at : https://nero-game.com/forum/index.php");
             system("https://nero-game.com/forum/index.php");
         #endif // _WIN32
     }
 
-     void DevEngineUI::onAccessSnippetButton()
+    ////////////////////////////////////////////////////////////
+    void DevEngineUI::onAccessSnippetButton()
     {
         #ifdef _WIN32
+            updateLog("openning browser at : https://nero-game.com/snippet");
             ShellExecute(NULL, "open", "https://nero-game.com/snippet", NULL, NULL, SW_SHOWNORMAL);
         #else
+            updateLog("openning browser at : https://nero-game.com/snippet");
             system("https://nero-game.com/snippet");
         #endif // _WIN32
     }
 
-     void DevEngineUI::onAccessAPIButton()
+    ////////////////////////////////////////////////////////////
+    void DevEngineUI::onAccessAPIButton()
     {
         #ifdef _WIN32
+            updateLog("openning browser at : https://nero-game.com/documentation");
             ShellExecute(NULL, "open", "https://nero-game.com/documentation", NULL, NULL, SW_SHOWNORMAL);
         #else
+            updateLog("openning browser at : https://nero-game.com/documentation");
             system("https://nero-game.com/documentation");
         #endif // _WIN32
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::buildCamera()
     {
         m_Camera = AdvancedCamera::Ptr(new AdvancedCamera(sf::Vector2f(m_Window.getSize().x*0.15f*3.63f, m_Window.getSize().y*0.75f), m_RenderCanvas));
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::buildSceneManger()
     {
         m_SceneManager = SceneManager::Ptr(new SceneManager(Context(m_RenderCanvas, m_CanvasFrontView, m_Camera, m_ResourceManager, false)));
@@ -3026,22 +3078,26 @@ namespace nero
 
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::setResourceManager(ResourceManager::Ptr resourceManager)
     {
         m_ResourceManager = resourceManager;
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::updateFrameRate(const float& frameRate, const float& frameTime)
     {
         m_FrameRate = frameRate;
         m_FrameTime = frameTime;
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::updateInfo()
     {
         m_InfoText.setString(m_CurrentView + "  |  " + toString(m_FrameRate) + " fps  |  " + toString(m_FrameTime * 1000.f) + " ms");
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::renderColorPicker()
     {
         ImGui::SFML::Update(m_Window, TIME_PER_FRAME);
@@ -3054,10 +3110,10 @@ namespace nero
         }
         ImGui::End();
 
-
         ImGui::SFML::Render(m_Window);
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngineUI::onColorNotebook()
     {
         switch(m_ColorNotebook->GetCurrentPage())
@@ -3072,5 +3128,200 @@ namespace nero
                 m_RenderColorPicker = false;
             }
         }
+    }
+
+    ////////////////////////////////////////////////////////////
+    void DevEngineUI::build_help_box(sfg::Box::Ptr help_box)
+    {
+        int countHelp = 0;
+        auto addHelp = [&help_box, &countHelp](const std::string& header, const std::string& content)
+        {
+            if(countHelp > 0)
+            {
+                help_box->Pack(sfg::Separator::Create());
+            }
+            auto help = sfg::Label::Create(header + "\n-------------------------------------------------------------------\n\n" + content + "\n");
+            help->SetLineWrap(true);
+            auto frame = sfg::Frame::Create("#-" + toString(countHelp++));
+            frame->Add(help);
+            help_box->Pack(frame);
+        };
+
+        addHelp("Engine Quick Help",
+                "Welcome to the help section ! Here you can learn how to interact with the Engine, for more information please access the Engine Learning-Page using the button [ Learn ] on the left");
+
+        addHelp("Access Buttons",
+                std::string() + "On the Engine left you have four buttons : Learn - Forum - Snippet - Engine API. Those buttons let you access quickly to some sections of the Engine website"
+                + "\n\n" + "- [Learn] Learn how to build games"
+                + "\n\n" + "- [Forum] Ask any question here"
+                + "\n\n" + "- [Snippet] Find some useful chunks of code"
+                + "\n\n" + "- [Engine API] Access the Engine C++ Classes definition");
+
+        addHelp("The Canvas",
+                std::string("")+ "The Canvas is the big black area on the middle. The grid is visible by default on the canvas."
+                + "you can change the canvas color as you want. Try clicking on the buttons [Black] [Grey] [Blue] [White] located on top of the Canvas in the left and right corner");
+
+        addHelp("Log View",
+                "Below the Canvas you can find the Log-View, From time to time it is good to get a look to the logs");
+
+        addHelp("Mouse on Canvas",
+                std::string("") + "Certain actions are possible only when the mouse is on the Canvas. Example :"
+                + "\n\n" + "- Control the camera with the Numpad or the Mouse"
+                + "\n\n" + "- Change the Engine Scene Mode with the SpaceBar");
+
+        addHelp("Control Overview",
+                std::string("") + "The Engine uses the following Keys"
+                + "\n\n" + "- Modifier : CTRL, SHIFT, ALT"
+                + "\n\n" + "- Mouse Buttons : Left, Right, Middle"
+                + "\n\n" + "- Mouse Wheel"
+                + "\n\n" + "- Numpad : 1 to 9, Multiply, Divide"
+                + "\n\n" + "- B, Y, Z, S, SpaceBar, Return, Delete, Arrows (Left, Up, Right), PageUp, PageDown");
+
+        addHelp("The Camera",
+                std::string("") + "The Camera can be controlled with the Numpad or the Mouse"
+                + "\n\n" + "- Numpad_4 : move left"
+                + "\n\n" + "- Numpad_6 : move right"
+                + "\n\n" + "- Numpad_8 : move up"
+                + "\n\n" + "- Numpad_2 : move down"
+                + "\n\n" + "- Numpad_7 : rotate left"
+                + "\n\n" + "- Numpad_9 : rotate right"
+                + "\n\n" + "- Numpad_Multiply : zoom in"
+                + "\n\n" + "- Numpad_Divide : zoom out"
+                + "\n\n" + "- Numpad_5 : reset camera state"
+                + "\n\n" + "- ALT + Numpad_5 : save camera state"
+                + "\n\n" + "- CTRL + MouseWheel : move left or right"
+                + "\n\n" + "- ALT + MouseWheel : move up or down"
+                + "\n\n" + "- SHIFT + MouseWheel : rotate left/right"
+                + "\n\n" + "- ALT + Mouse MiddleButton : save camera state"
+                + "\n\n" + "- Mouse MiddleButton : reset camera state"
+                + "\n\n" + "- MouseWheel : zoom in or out");
+
+        addHelp("Select a Scene",
+                std::string("") + "The Scene is main the component of The Engine. A Scene represent a Game. "
+                + "On the right in the [Scene] Tab you have a selection box that allows to select a Scene you want to work on. "
+                + "\n\n" +
+                + "It is also possible to change the Scene with the keys PageUp and PageDown");
+
+        addHelp("The Three(3) Scene Mode",
+                std::string("") + "The Engine has three (3) Scene Mode : Object, Mesh, Play"
+                + "\n\n" + "- Object Mode :"
+                + "\n\n" + "Add, Modify, Duplicate, Delete Objects"
+                + "\n\n" + "- Mesh Mode :"
+                + "\n\n" + "Modify mesh (add vertices, extrude lines"
+                + "\n\n" + "- Play Mode :"
+                + "\n\n" + "Test your Scene in real time"
+                + "\n\n"
+                + "\n\n"
+                + "The SpaceBar hollows to switch between the Modes"
+                + "\n\n" + "- Press SpaceBar : switch between Object and Mesh modes"
+                + "\n\n" + "- CTRL + SpaceBar : access Play mode");
+
+        addHelp("Undo and Redo",
+                std::string("") + "Most actions on Objects can be canceled on re-applied"
+                + "\n\n" + "- Undo : Ctrl + Z"
+                + "\n\n" + "- Redo : Ctrl + Y");
+
+        addHelp("Save and Load Scene",
+                std::string("") + "A Scene can be Saved or Loaded at any moment"
+                + "\n\n" + "- Save : Ctrl + S"
+                + "\n\n" + "- Load : Ctrl + L"
+                + "\n\n"
+                + "By default the Engine performs a Auto-Save each thirty (30) seconds");
+
+        addHelp("World View and Screen View",
+                std::string("") + "On the right, in the Tab [Scene] there is a button called [Screen View]. "
+                + "This button allows to switch between the World View and the Screen View of your Current Scene. "
+                + "Not all types of Object can be added on each View mode."
+                + "\n\n"
+                + "- World View : "
+                + "\n\n"
+                + "Sprite_Object, Animation_Object, Mesh_Object, Meshed_Sprite_Object, Meshed_Animation_Object, Text_Object"
+                + "\n\n"
+                + "- Screen View : "
+                + "\n\n"
+                + "Sprite_Object, Animation_Object, Text_Object, Button_Object");
+
+        addHelp("Add Objects on the Canvas",
+                std::string("") + "The way of adding Object on the Canvas differ with the type of Object."
+                + "Object can be added only on Object Mode"
+                + "\n\n" +
+                + "- Add Sprite_Object : click on a [Sprite_Button] in the [Sprite] Tab located on the left"
+                + "\n\n" +
+                + "- Add Animation_Object : click on a [Animation_Button] in the [Animation] Tab located on the left"
+                + "\n\n" +
+                + "- Add Meshed_Sprite_Object : hold CTRL and click on a [Sprite_Button]"
+                + "\n\n" +
+                + "- Add Meshed_Animation_Object : hold CTRL and click on a [Animation_Button]"
+                + "\n\n" +
+                + "- Add Mesh_Object : Select a Mesh [Polygon, Circle, Line] from the DropDown on the right"
+                + "\n\n" +
+                + "- Add Text_Object : click on the button [Add Text] in the [Text] Tab located on the left"
+                + "\n\n" +
+                + "- Add Button_Object : hold SHIFT and click on a [Sprite_Button]");
+
+        addHelp("Remove Objects from the Canvas",
+                std::string("") + "When an Object is selected it can be remove by two ways"
+                + "\n\n" + "- ALT + Mouse Left Button"+
+                + "\n\n" + "- Delete Button");
+
+        addHelp("Play with Objects",
+                std::string("") + "Objects can be selected with the Mouse Right Button. "
+                + "When an Object is selected there are various actions that can be on it."
+                + "\n\n" +
+                + "The following actions can be applied to any Object"
+                + "\n\n" + "- CTRL + Numpad_4 : move left"
+                + "\n\n" + "- CTRL + Numpad_6 : move right"
+                + "\n\n" + "- CTRL + Numpad_8 : move up"
+                + "\n\n" + "- CTRL + Numpad_2 : move down"
+                + "\n\n" + "- CTRL + Numpad_7 : rotate left"
+                + "\n\n" + "- CTRL + Numpad_9 : rotate right"
+                + "\n\n" + "- CTRL + Numpad_Multiply : zoom in"
+                + "\n\n" + "- CTRL + Numpad_Divide : zoom out"
+                + "\n\n" + "- CTRL + Mouse Move Up or Down : zoom in or out"
+                + "\n\n" + "- SHIFT + Mouse Move Up or Down : rotate left or right"
+                + "\n\n" +
+                + "The following actions can be applied to Objects containing a Sprite that means:\n"
+                + "Sprite_Object, Animation_Object, Meshed_Sprite_Object, Meshed_Animation_Object"
+                + "\n\n" + "- CTRL + Numpad_1 : flip horizontally"
+                + "\n\n" + "- CTRL + Numpad_3 : flip vertically"
+                + "\n\n" +
+                + "The following actions can be applied to Layers"
+                + "\n\n" + "- CTRL + ALT + Numpad_4 : move left"
+                + "\n\n" + "- CTRL + ALT + Numpad_6 : move right"
+                + "\n\n" + "- CTRL + ALT + Numpad_8 : move up"
+                + "\n\n" + "- CTRL + ALT + Numpad_2 : move down");
+
+        addHelp("Play, Pause, Reset, Step",
+                std::string("") + "When you want to test a test a Scene you can perform the followings actions"
+                + "\n\n" + "- Play the Scene : press the Return key when in Object Mode"
+                + "\n\n" + "- Pause the Scene : CRTL + Arrow Up when in Play Mode"
+                + "\n\n" + "- Step the Scene : CRTL + Arrow Left when in Play Mode"
+                + "\n\n" + "- Reset the Scene : CRTL + Arrow Left when in Play Mode");
+
+        addHelp("The Scene Renderer",
+                std::string("") + "The Scene Renderer allows to preview the final result of your game."
+                + "\n\n" + "Press CTRL + Return in Object to launch the Scene Renderer");
+
+        addHelp("The Color Picker",
+            std::string("")  + "The color picker is hidden by default, it appears" +
+            "when the Color_Tab becomes active");
+
+        addHelp("Special Action #1 : Drop Bomb",
+                "In Play Mode, press B to drop a random Bomb");
+
+        addHelp("Special Action #1 : Fire Bomb",
+                std::string("") + "In Play Mode, hold SHIFT then click and drag the Mouse on the Canvas."
+                + "Choose the direction you want by moving the mouse "
+                + "then release the mouse to fire a Bomb");
+
+        addHelp("Resouces",
+                std::string("") + "The Engine load all resources when it starts."
+                + "\n\n" + "Currently five (5) types of resource are available"
+                + "\n\n" + "- Font"
+                + "\n\n" + "- Texture"
+                + "\n\n" + "- Animation"
+                + "\n\n" + "- Sound"
+                + "\n\n" + "- Music"
+                + "\n\n" + "for a resource to be loaded, it just has to be place under the right folder under the [resource] folder");
     }
 }

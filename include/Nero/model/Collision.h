@@ -1,84 +1,76 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 #ifndef COLLISION_H
 #define COLLISION_H
-
+///////////////////////////HEADERS//////////////////////////
+//NERO
+#include <Nero/object/PhysicObject.h>
+//BOX2D
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
-#include <Nero/object/PhysicObject.h>
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
     class Collision
     {
         public:
-                                Collision(b2Contact* contact, const b2Manifold* oldManifold, const b2ContactImpulse*   m_ContactImpulse);
-                                ~Collision();
+                                        Collision(b2Contact* contact, const b2Manifold* oldManifold, const b2ContactImpulse*   m_ContactImpulse);
+                                       ~Collision();
             //Initialize Collision
-            void                setObjectA(PhysicObject::Ptr objectA);
-            void                setObjectB(PhysicObject::Ptr objectB);
+            void                        setObjectA(PhysicObject::Ptr objectA);
+            void                        setObjectB(PhysicObject::Ptr objectB);
 
-            PhysicObject::Ptr   getObjectA();
-            PhysicObject::Ptr   getObjectB();
+            PhysicObject::Ptr           getObjectA();
+            PhysicObject::Ptr           getObjectB();
 
             //Contact
-            float               getFriction();
-            float               getRestition();
-            float               getTangentSpeed();
+            float                       getFriction();
+            float                       getRestition();
+            float                       getTangentSpeed();
 
-            bool                isEnabled();
-            bool                isTouching();
+            bool                        isEnabled();
+            bool                        isTouching();
 
-            void                resetFriction();
-            void                resetRestitution();
+            void                        resetFriction();
+            void                        resetRestitution();
 
-            void                setEnabled(bool flag);
-            void                setFriction(float friction);
-            void                setRestitution(float restitution);
-            void                setTangentSpeed(float speed);
+            void                        setEnabled(bool flag);
+            void                        setFriction(float friction);
+            void                        setRestitution(float restitution);
+            void                        setTangentSpeed(float speed);
 
             //Contact Manifold
-            sf::Vector2f        getLocalNormal();
-            sf::Vector2f        getLocalPoint();
-            int                 getPointCount();
-            float               getNormalImpulse(int index);
-            float               getTangentImpulse(int index);
+            sf::Vector2f                getLocalNormal();
+            sf::Vector2f                getLocalPoint();
+            int                         getPointCount();
+            float                       getNormalImpulse(int index);
+            float                       getTangentImpulse(int index);
 
             //Contact world Manifold
-            sf::Vector2f                    getNormal();
-            std::vector<sf::Vector2f>       getPoints();
-            std::vector<float>              getSeparations();
+            sf::Vector2f                getNormal();
+            std::vector<sf::Vector2f>   getPoints();
+            std::vector<float>          getSeparations();
 
             //Old Manifold
-            sf::Vector2f        getOldLocalNormal();
-            sf::Vector2f        getOldLocalPoint();
-            int                 getOldPointCount();
-            float               getOldNormalImpulse(int index);
-            float               getOldTangentImpulse(int index);
-
-            //Old World Manifold
-
+            sf::Vector2f                getOldLocalNormal();
+            sf::Vector2f                getOldLocalPoint();
+            int                         getOldPointCount();
+            float                       getOldNormalImpulse(int index);
+            float                       getOldTangentImpulse(int index);
 
             //Contact Impulse : PostSolve
             int                         getImpulseCount();
             std::vector<float>          getNormalImpulses();
             std::vector<float>          getTangentImpulses();
-
             //
-            bool                    isCollising(sf::String catA);
-            bool                    isCollising(sf::String catA, sf::String catB);
+            bool                        isCollising(sf::String catA);
+            bool                        isCollising(sf::String catA, sf::String catB);
+            bool                        isObjectCollising(sf::String nameA);
+            bool                        isObjectCollising(sf::String nameA, sf::String nameB);
 
-            bool                    isObjectCollising(sf::String nameA);
-            bool                    isObjectCollising(sf::String nameA, sf::String nameB);
-
-            PhysicObject::Ptr       getObject(sf::String indicator);
+            PhysicObject::Ptr           getObject(sf::String indicator);
 
         private:
             b2Contact*                  m_Contact;
@@ -88,9 +80,5 @@ namespace nero
             PhysicObject::Ptr           m_ObjectA;
             PhysicObject::Ptr           m_ObjectB;
     };
-
 }
-
-
-
 #endif // COLLIION_H

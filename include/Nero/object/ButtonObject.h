@@ -1,9 +1,15 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef BUTTONOBJECT_H
 #define BUTTONOBJECT_H
-
+///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/object/UIObject.h>
+//STD
 #include <functional>
-
+/////////////////////////////////////////////////////////////
 namespace nero
 {
     class ButtonObject : public UIObject
@@ -32,7 +38,6 @@ namespace nero
             std::function<void()>       m_OnMouseLeave;
             std::function<void()>       m_OnMouseClick;
             bool                        m_MouseEnter;
-
     };
 }
 #endif // BUTTONOBJECT_H

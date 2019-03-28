@@ -1,12 +1,7 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/object/PhysicObject.h>
@@ -14,12 +9,12 @@
 //BOX2D
 #include <Box2D/Dynamics/b2Fixture.h>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     PhysicObject::PhysicObject(b2Body* body):
          m_Body(body)
         ,m_Dead(false)
+        ,m_Size(sf::Vector2f(0.f, 0.f))
     {
         setFirstType(Object::Physic_Object);
         setSecondType(Object::Physic_Object);
@@ -322,12 +317,12 @@ namespace nero
         setLinearVelocity(sf::Vector2f(0.f, 0.f));
     }
 
-    void PhysicObject::clearVelocity_x()
+    void PhysicObject::clearHorizontalVelocity()
     {
         setLinearVelocity(sf::Vector2f(0.f, getLinearVelocity().y));
     }
 
-    void PhysicObject::clearVelocity_y()
+    void PhysicObject::clearVerticalVelocity()
     {
         setLinearVelocity(sf::Vector2f(getLinearVelocity().x, 0.f));
     }
@@ -345,5 +340,30 @@ namespace nero
     void PhysicObject::setDead(bool flag)
     {
         m_Dead = flag;
+    }
+
+    void PhysicObject::setSize(const sf::Vector2f& size)
+    {
+        m_Size = size;
+    }
+
+    sf::Vector2f PhysicObject::getSize()
+    {
+        return m_Size;
+    }
+
+    sf::FloatRect PhysicObject::getGlobalBounds() const
+    {
+        sf::FloatRect bound;
+
+        bound.width = m_Size.x;
+        bound.height = m_Size.y;
+
+        sf::Vector2f position = getWorldCenter();
+
+        bound.left = position.x - m_Size.x / 2.f;
+        bound.top = position.y - m_Size.y / 2.f;
+
+        return bound;
     }
 }

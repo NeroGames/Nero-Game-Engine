@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016 - 2019 Sanou A. K. Landry (sk-landry)
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -10,14 +10,14 @@
 #include <SFML/Graphics/View.hpp>
 #include <SFML/System/Sleep.hpp>
 #include <SFML/Window/Context.hpp>
-//EASY_LOG
+//EASYLOG
 #include <easyloggingpp/easylogging++.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
     ////////////////////////////////////////////////////////////
     DevEngine::DevEngine(const unsigned int& windowWidth, const unsigned int& windowHeight, const std::string& windowTitle):
-        Engine(windowWidth, windowHeight, windowTitle)
+         Engine(windowWidth, windowHeight, windowTitle)
         ,m_LoadingScreen(nullptr)
         ,m_EngineUI(nullptr)
         ,m_ResourceManager(nullptr)
@@ -25,7 +25,7 @@ namespace nero
         ,m_EngineSetting()
     {
         std::cout << "----------------------------------------------------------------------------\n\n";
-        nero_log("nero game engine " + ENGINE_VERSION + " " + ENGINE_COPYRIGHT + "\n");
+        nero_log("Nero Game Engine " + ENGINE_VERSION + " " + ENGINE_COPYRIGHT);
         nero_log("nero development engine starting");
 
         nero_log("loading engine configuration");
@@ -119,6 +119,7 @@ namespace nero
         }
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngine::setupRenderWindow()
     {
         m_Window.setVerticalSyncEnabled(true);
@@ -129,6 +130,7 @@ namespace nero
         ImGui::SFML::Init(m_Window);
     }
 
+    ////////////////////////////////////////////////////////////
     void DevEngine::buildStartupScreen()
     {
         m_LoadingScreen = make_unique<LoadingScreen>();
@@ -208,6 +210,8 @@ namespace nero
 
         //exit
         engineStarted = true;
+
         return 0;
     }
 }
+////////////////////////////////////////////////////////////

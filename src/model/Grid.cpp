@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -142,5 +142,4 @@ namespace nero
         m_Position  = vectorFromJson<sf::Vector2i>(json["position"]);
         m_Color     = colorFromJson(json["color"]);
     }
-
 }

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -9,16 +9,19 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
+    ////////////////////////////////////////////////////////////
     LoadingScreen::LoadingScreen(): StartupScreen()
     {
 
     }
 
+    ////////////////////////////////////////////////////////////
     void LoadingScreen::handleEvent(sf::Event& event)
     {
         //Empty
     }
 
+    ////////////////////////////////////////////////////////////
     void LoadingScreen::update(const sf::Time& timeStep)
     {
         //move right left
@@ -36,16 +39,14 @@ namespace nero
         {
             float boo = m_LoadingBall.getPosition().x/m_MaxLeft;
 
-
              m_LoadingBall.move(sf::Vector2f(-2.f*boo*boo*boo, 0.f));
 
              if(m_LoadingBall.getPosition().x <= m_MaxLeft)
                 m_Direction = -m_Direction;
         }
-
-
     }
 
+    ////////////////////////////////////////////////////////////
     void LoadingScreen::render()
     {
         m_RenderWindow->draw(m_LogoSprite);
@@ -55,16 +56,19 @@ namespace nero
         m_RenderWindow->draw(m_CopyrightsSprite);
     }
 
+    ////////////////////////////////////////////////////////////
     const sf::Color LoadingScreen::getBackgroundColor() const
     {
         return sf::Color::White;
     }
 
+    ////////////////////////////////////////////////////////////
     const float LoadingScreen::getMinTime() const
     {
         return LOAD_RESOURCE_MIN_TIME;
     }
 
+    ////////////////////////////////////////////////////////////
     void LoadingScreen::init()
     {
         //Build the logo sprite
@@ -87,17 +91,14 @@ namespace nero
         m_LoadingRectLeft.setOrigin(sf::Vector2f(10.f, 10.f));
         m_LoadingRectLeft.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f - 250.f, (m_RenderWindow->getSize().y / 3.f) + 300.f));
         m_LoadingRectLeft.setRotation(45.f);
-
         //Build the right loading rectangle
         m_LoadingRectRight = m_LoadingRectLeft;
         m_LoadingRectRight.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f + 250.f, (m_RenderWindow->getSize().y / 3.f) + 300.f));
-
         //Build the loading ball
         m_LoadingBall.setRadius(5.f);
         m_LoadingBall.setOrigin(sf::Vector2f(5.f, 5.f));
         m_LoadingBall.setFillColor(sf::Color::Black);
         m_LoadingBall.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f, (m_RenderWindow->getSize().y / 3.f) + 300.f));
-
         //Set default parameters for the ball movement
         m_MaxLeft = m_LoadingRectLeft.getPosition().x + 30.f;
         m_MaxRight = m_LoadingRectRight.getPosition().x - 30.f;

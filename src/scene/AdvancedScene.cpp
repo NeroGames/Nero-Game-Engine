@@ -1,9 +1,11 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
+//NERO
 #include <Nero/scene/AdvancedScene.h>
+//BOOST
 #include <boost/algorithm/string.hpp>
 ////////////////////////////////////////////////////////////
 namespace nero
@@ -57,7 +59,7 @@ namespace nero
         m_SoundManager              = SoundManager::Ptr(new SoundManager(context.resourceManager->music, context.resourceManager->sound));
         //World
         m_SceneBuilder              = SceneBuilder::Ptr(new SceneBuilder(context.renderCanvas, context.resourceManager, m_SceneSetting));
-        m_UndoManager                = UndoManager::Ptr(new UndoManager());
+        m_UndoManager               = UndoManager::Ptr(new UndoManager());
         m_Grid                      = Grid::Ptr(new Grid());
 
         //Front Screen
@@ -425,6 +427,15 @@ namespace nero
         b2Vec2 v = -5.0f * p;
         launchBomb(p, v);
     }
+    ////////////////////////////////////////////////////////////
+    void AdvancedScene::destroyBomb()
+    {
+        if (m_Bomb)
+        {
+            m_Scene->m_PhysicWorld->DestroyBody(m_Bomb);
+            m_Bomb = nullptr;
+        }
+    }
 
     ////////////////////////////////////////////////////////////
     void AdvancedScene::launchBomb(const b2Vec2& position, const b2Vec2& velocity)
@@ -432,7 +443,7 @@ namespace nero
         if (m_Bomb)
         {
             m_Scene->m_PhysicWorld->DestroyBody(m_Bomb);
-            m_Bomb = NULL;
+            m_Bomb = nullptr;
         }
 
         b2BodyDef bd;

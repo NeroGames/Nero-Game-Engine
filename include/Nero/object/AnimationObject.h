@@ -1,9 +1,14 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
 #ifndef ANIMATIONOBJECT_H
 #define ANIMATIONOBJECT_H
-
+///////////////////////////HEADERS//////////////////////////
+//Nero
 #include <Nero/object/Object.h>
 #include <Nero/model/Animation.h>
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
     class AnimationObject : public Object
@@ -25,16 +30,12 @@ namespace nero
         virtual const sf::Color&        getColor()                      const;
 
 
-        const Animation::SequenceMap&            getSequenceMap() const;
-        void            setSequence(std::string name);
-        void            setFrameRate(float frameRate);
-        void            setLoop(bool flag);
-        void            verticalFlip();
-        void            horizontalFlip();
-
-
-
-
+        const Animation::SequenceMap&   getSequenceMap()                const;
+        void                            setSequence(std::string name);
+        void                            setFrameRate(float frameRate);
+        void                            setLoop(bool flag);
+        void                            verticalFlip();
+        void                            horizontalFlip();
 
         private:
             virtual void                drawObject(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -45,7 +46,4 @@ namespace nero
             Animation                   m_Animation;
     };
 }
-
-
-
 #endif // ANIMATIONOBJECT_H

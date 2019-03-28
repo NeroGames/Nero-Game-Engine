@@ -1,17 +1,23 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
 #ifndef ANIMATION_H
 #define ANIMATION_H
-
+///////////////////////////HEADERS//////////////////////////
+//NERO
+#include <Nero/model/AnimationSequence.h>
+//SFML
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
-#include <Nero/model/AnimationSequence.h>
-
+//STD
 #include <map>
 #include <vector>
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
     class Animation : public sf::Transformable, public sf::Drawable
@@ -25,14 +31,12 @@ namespace nero
             void                        setTexture(std::string texture);
             void                        addSequence(std::string name, AnimationSequence sequence);
             void                        setSequence(std::string name);
-            //void                        playSequence(std::string name);
-            //void                        playSequence(std::string name, bool hide);
             sf::FloatRect               getGlobalBounds() const;
             std::string                 getTexture() const;
 
             void                        update(sf::Time timeStep);
 
-            void                       setColor(const sf::Color& color);
+            void                        setColor(const sf::Color& color);
             const sf::Color&            getColor()                      const;
 
             const SequenceMap&          getSequenceMap() const;
@@ -43,7 +47,6 @@ namespace nero
             void                        horizontalFlip();
             void                        play();
             void                        pause();
-
 
         private:
             virtual void			    draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -57,5 +60,4 @@ namespace nero
             bool                        m_pause;
     };
 }
-
 #endif // ANIMATION_H

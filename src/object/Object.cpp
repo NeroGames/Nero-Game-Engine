@@ -1,12 +1,7 @@
 ////////////////////////////////////////////////////////////
-//
 // Nero Game Engine
-// Author : SANOU A. K. Landry
-//
-// All rights reserved
-//
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/object/Object.h>
@@ -14,21 +9,20 @@
 #include <algorithm>
 #include <cassert>
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     Object::Object():
-        m_Id(-1),
-        m_Parent(nullptr),
-        m_Name("no_name"),
-        m_Category("no_category"),
-        m_IsVisible(true),
-        m_IsUpdateable(true),
-        m_IsSelectable(true),
-        m_IsSelected(false),
-        m_FirstType(Object::None),
-        m_SecondType(Object::None),
-        m_ChildTab()
+         m_Id(-1)
+        ,m_Parent(nullptr)
+        ,m_Name("no_name")
+        ,m_Category("no_category")
+        ,m_IsVisible(true)
+        ,m_IsUpdateable(true)
+        ,m_IsSelectable(true)
+        ,m_IsSelected(false)
+        ,m_FirstType(Object::None)
+        ,m_SecondType(Object::None)
+        ,m_ChildTab()
     {
         //Empty
     }
@@ -312,7 +306,5 @@ namespace nero
     {
         return sf::Vector2f();
     }
-
-
 }
 

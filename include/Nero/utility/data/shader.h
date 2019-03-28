@@ -1,6 +1,10 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
 #ifndef SHADER_H_INCLUDED
 #define SHADER_H_INCLUDED
-
+////////////////////////////////////////////////////////////
 const unsigned char shader_json[] =
 {
   0x7b, 0x22, 0x73, 0x68, 0x61, 0x64, 0x65, 0x72, 0x5f, 0x6c, 0x69, 0x73,
@@ -77,5 +81,5 @@ const unsigned char simple_vertex_ver[] =
   0x7d
 };
 const unsigned int simple_vertex_ver_len = 289;
-
+////////////////////////////////////////////////////////////
 #endif // SHADER_H_INCLUDED

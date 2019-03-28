@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2019 SANOU A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef UTILITY_H_INCLUDED
 #define UTILITY_H_INCLUDED
@@ -42,32 +42,28 @@ namespace sf
     class Sprite;
     class Text;
 }
-////////////////////////////////////////////////////////////
 namespace nero
 {
     //Type Definition
-    typedef std::map<std::string, nlohmann::json> SceneJsonMap;
-    typedef std::vector<sf::Vector2f> PointTab;
+    typedef std::map<std::string, nlohmann::json>   SceneJsonMap;
+    typedef std::vector<sf::Vector2f>               PointTab;
 
-    //
-        sf::Color           b2_to_sf(const b2Color& color, int transparency = 255);
+    sf::Color b2_to_sf(const b2Color& color, int transparency = 255);
 
-
-    const sf::Time  TIME_PER_FRAME      = sf::seconds(1.f/60.f);
-    const sf::Time  AUTO_SAVE_TIME      = sf::seconds(30.f);
-    const float SCALE                   = 50.f;
-    const float GRAVITY                 = 9.8f;
-    const int RAND_LIMIT	            = 32767;
-    const int SPRITE_LAYER_MAX          = 1000;
-    const float PI                      = 3.141592653589793238462643383f;
-    const int MAX_VALUE                 = 2147483647;
+    const sf::Time  TIME_PER_FRAME              = sf::seconds(1.f/60.f);
+    const sf::Time  AUTO_SAVE_TIME              = sf::seconds(30.f);
+    const float SCALE                           = 50.f;
+    const float GRAVITY                         = 9.8f;
+    const int RAND_LIMIT	                    = 32767;
+    const int SPRITE_LAYER_MAX                  = 1000;
+    const float PI                              = 3.141592653589793238462643383f;
+    const int MAX_VALUE                         = 2147483647;
     const sf::Color STATIC_MESH_COLOR           = b2_to_sf(b2Color(0.5f, 0.9f, 0.5f)); // sf::Color(0, 255, 0);
     const sf::Color DYNAMIC_MESH_COLOR          = b2_to_sf(b2Color(0.9f, 0.7f, 0.7f)); //sf::Color(219, 112, 147);
     const sf::Color KINEMATIC_MESH_COLOR        = b2_to_sf(b2Color(0.5f, 0.5f, 0.9f)); //sf::Color(0, 0, 255);
     const sf::Color SELECTED_MESH_COLOR         = sf::Color(255, 140, 0);
     const sf::Color INVALIDE_MESH_COLOR         = sf::Color(255, 0, 0);
-
-    const sf::String NERO_FOLDER        = "NERO";
+    const sf::String NERO_FOLDER                = "NERO";
 
     bool CTRL();
     bool SHIFT();
@@ -77,17 +73,11 @@ namespace nero
     bool SHIFT_ALT();
     bool CTRL_SHIFT_ALT();
 
-
-    //void                centerOrigin(sf::Sprite& sprite);
-    //void                centerOrigin(sf::Text& text);
-
     std::string         getdate(std::string delim = "/");
     std::string         getTime(std::string delim = ":");
 
-    //sf::Color           b2_to_sf(const b2Color& color, int transparency = 255);
     sf::Vector2f        b2_to_sf(b2Vec2 vect, float scale = 1.f);
     sf::Vector2f        b2_to_sf(float x, float y, float scale = 1.f);
-
     b2Color             sf_to_b2(const sf::Color& color);
     b2Vec2              sf_to_b2(const sf::Vector2f& vect, float scale = 1.f);
     b2Vec2              sf_to_b2(float x, float y, float scale = 1.f);
@@ -119,14 +109,11 @@ namespace nero
     float               distance(sf::Vector2f line_vect1, sf::Vector2f line_vect2, sf::Vector2f vect3);
     float               dot_product(const sf::Vector2f& vect1, const sf::Vector2f& vect2);
 
-
-
     std::string         loadText(std::string filename);
 
     void                centerOrigin(sf::Sprite& sprite);
     void                centerOrigin(sf::Text& text);
 
-    //------------------------------------------
     struct Point
     {
         float x;
@@ -150,12 +137,10 @@ namespace nero
     sf::Vector2f getLineCenter(const sf::Vector2f& a, const sf::Vector2f& b);
     sf::Vector2f rotateVertex(sf::Vector2f c, float angle, sf::Vector2f p);
 
-    //------------------------------------------------------------------------------------------
     sf::IntRect         getViewport(const sfg::Canvas::Ptr& renderWindow);
     sf::Vector2f        canvas_to_world(const sf::Vector2f& point, const sfg::Canvas::Ptr& renderWindow);
     sf::Vector2f        world_to_canvas(const sf::Vector2f& point, const sfg::Canvas::Ptr& renderWindow);
 
-    //-----------------------------------------------------------------
     enum Log {Info, Debug, Warning};
 
     template <typename T>
@@ -168,9 +153,7 @@ namespace nero
 
     std::string toString(const sf::String& value);
 
-
     //configuration
-
     nlohmann::json loadConfiguration(const std::string& name);
     nlohmann::json loadJson(const std::string& path);
 
@@ -222,6 +205,4 @@ namespace nero
         return point;
     }
 }
-
-
 #endif // UTILITY_H_INCLUDED
