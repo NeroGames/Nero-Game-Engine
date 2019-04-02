@@ -16,7 +16,7 @@ namespace nero
                 typedef std::shared_ptr<SceneManager> Ptr;
 
         public:
-                                                SceneManager(Context context);
+                                                SceneManager(Scene::Context context);
             //Scene Manager
             template <typename T>
             void                                addScene(std::string name);
@@ -81,7 +81,7 @@ namespace nero
 
             AdvancedScene::Ptr                  m_AdvancedScene;
             std::vector<sf::String>             m_SceneTable;
-            Context                             m_Context;
+            Scene::Context                      m_Context;
 
             bool                                m_IsShiftOriginUp;
             bool                                m_IsShiftOriginDown;

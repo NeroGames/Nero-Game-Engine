@@ -15,6 +15,8 @@ namespace nero
         ,m_MeshCount(0)
     {
         m_UpdateUndo    = [](){};
+        m_UpdateLog     = [](const std::string&, int){};
+        m_UpdateLogIf   = [](const std::string&, bool, int){};
     }
 
     MeshEditor::~MeshEditor()

@@ -1,5 +1,5 @@
 {
-   "scene_name": "AdventureScene",
+   "scene_name": "Adventure Scene",
    "scene_setting": {
       "draw_aabbs": false,
       "draw_axis": true,
@@ -10,19 +10,19 @@
       "draw_grid": true,
       "draw_joints": false,
       "draw_profile": false,
-      "draw_shapes": true,
+      "draw_shapes": false,
       "draw_stats": false,
       "enable_continuous": true,
       "enable_sleep": true,
       "enable_sub_stepping": false,
       "enable_warm_starting": true,
-      "frequency": 40.0,
+      "frequency": 48.0,
       "gravity": {
          "x": 0.0,
          "y": 10.0
       },
       "position_iterations": 3,
-      "velocity_iterations": 8,
+      "velocity_iterations": 20,
       "view_center": {
          "x": 0.0,
          "y": 0.0
@@ -38,11 +38,11 @@
             "default_rotation": 0.0,
             "default_zoom": 0.0,
             "position": {
-               "x": 392.221923828125,
-               "y": 256.136260986328
+               "x": 485.400054931641,
+               "y": 234.092193603516
             },
             "rotation": 0.0,
-            "zoom": -47.0
+            "zoom": -12.0
          },
          "canvas_color": {
             "a": 255,
@@ -77,7 +77,7 @@
                "child_count": 1,
                "first_type": "layer_object",
                "is_selectable": true,
-               "is_selected": true,
+               "is_selected": false,
                "is_updateable": true,
                "is_visible": false,
                "name": "background_layer",
@@ -335,7 +335,7 @@
                "child_count": 2,
                "first_type": "layer_object",
                "is_selectable": true,
-               "is_selected": false,
+               "is_selected": true,
                "is_updateable": true,
                "is_visible": true,
                "name": "start_screen_button_layer",
@@ -346,7 +346,7 @@
             }
          ],
          "name": "start_screen",
-         "object_count": 440
+         "object_count": 919
       },
       {
          "camera_setting": {
@@ -593,7 +593,7 @@
             }
          ],
          "name": "pause_screen",
-         "object_count": 448
+         "object_count": 927
       },
       {
          "camera_setting": {
@@ -1036,7 +1036,7 @@
             }
          ],
          "name": "options_screen",
-         "object_count": 414
+         "object_count": 893
       },
       {
          "camera_setting": {
@@ -1047,11 +1047,11 @@
             "default_rotation": 0.0,
             "default_zoom": 0.0,
             "position": {
-               "x": 400.0,
-               "y": 303.0
+               "x": 237.939666748047,
+               "y": 102.441375732422
             },
             "rotation": 0.0,
-            "zoom": -29.0
+            "zoom": 30.0
          },
          "canvas_color": {
             "a": 255,
@@ -1277,7 +1277,7 @@
          "default_rotation": 0.0,
          "default_zoom": -12.0,
          "position": {
-            "x": 462.986450195312,
+            "x": 3420.72192382812,
             "y": 280.627685546875
          },
          "rotation": 0.0,
@@ -1285,9 +1285,9 @@
       },
       "canvas_color": {
          "a": 255,
-         "b": 0,
-         "g": 0,
-         "r": 0
+         "b": 205,
+         "g": 177,
+         "r": 130
       },
       "grid_setting": {
          "color": {
@@ -1309,11 +1309,11 @@
             "y": 50
          }
       },
-      "layer_count": 22,
+      "layer_count": 23,
       "layer_table": [
          {
             "category": "no_category",
-            "child_count": 4,
+            "child_count": 3,
             "first_type": "layer_object",
             "is_selectable": true,
             "is_selected": false,
@@ -1341,13 +1341,13 @@
                   "name": "no_name",
                   "object_id": 112,
                   "position": {
-                     "x": 207.048248291016,
-                     "y": 99.2572937011719
+                     "x": 432.286102294922,
+                     "y": -105.40771484375
                   },
                   "rotation": 0.0,
                   "scale": {
-                     "x": 1.16193056106567,
-                     "y": 1.16193056106567
+                     "x": 1.55405962467194,
+                     "y": 1.55405962467194
                   },
                   "second_type": "sprite_object",
                   "sprite": "uncolored_talltrees"
@@ -1367,15 +1367,15 @@
                   "is_updateable": false,
                   "is_visible": true,
                   "name": "no_name",
-                  "object_id": 116,
+                  "object_id": 637,
                   "position": {
-                     "x": 1396.86511230469,
-                     "y": 99.2572937011719
+                     "x": 2023.64318847656,
+                     "y": -105.40771484375
                   },
                   "rotation": 0.0,
                   "scale": {
-                     "x": 1.16193056106567,
-                     "y": 1.16193056106567
+                     "x": 1.55405962467194,
+                     "y": 1.55405962467194
                   },
                   "second_type": "sprite_object",
                   "sprite": "uncolored_talltrees"
@@ -1395,43 +1395,15 @@
                   "is_updateable": false,
                   "is_visible": true,
                   "name": "no_name",
-                  "object_id": 388,
+                  "object_id": 638,
                   "position": {
-                     "x": 2586.68212890625,
-                     "y": 99.2572937011719
+                     "x": 3615.00048828125,
+                     "y": -105.40771484375
                   },
                   "rotation": 0.0,
                   "scale": {
-                     "x": 1.16193056106567,
-                     "y": 1.16193056106567
-                  },
-                  "second_type": "sprite_object",
-                  "sprite": "uncolored_talltrees"
-               },
-               {
-                  "category": "no_category",
-                  "child_count": 0,
-                  "color": {
-                     "a": 255,
-                     "b": 255,
-                     "g": 255,
-                     "r": 255
-                  },
-                  "first_type": "sprite_object",
-                  "is_selectable": true,
-                  "is_selected": false,
-                  "is_updateable": false,
-                  "is_visible": true,
-                  "name": "no_name",
-                  "object_id": 389,
-                  "position": {
-                     "x": 3776.4990234375,
-                     "y": 99.2572937011719
-                  },
-                  "rotation": 0.0,
-                  "scale": {
-                     "x": 1.16193056106567,
-                     "y": 1.16193056106567
+                     "x": 1.55405962467194,
+                     "y": 1.55405962467194
                   },
                   "second_type": "sprite_object",
                   "sprite": "uncolored_talltrees"
@@ -1447,7 +1419,7 @@
             "is_selected": false,
             "is_updateable": true,
             "is_visible": true,
-            "name": "sky_tree_layer",
+            "name": "Layer 21",
             "object_id": 604,
             "order": 1,
             "second_type": "sprite_object",
@@ -2014,7 +1986,7 @@
                      "allow_sleep": true,
                      "density": 1.0,
                      "fixed_rotation": false,
-                     "friction": 0.400000005960464,
+                     "friction": 0.300000011920929,
                      "gravity_scale": 3.0,
                      "is_sensor": false,
                      "is_valid": true,
@@ -7165,7 +7137,7 @@
                   "is_updateable": false,
                   "is_visible": true,
                   "name": "no_name",
-                  "object_id": 632,
+                  "object_id": 639,
                   "position": {
                      "x": 3474.37084960938,
                      "y": 217.56657409668
@@ -7193,7 +7165,7 @@
                   "is_updateable": false,
                   "is_visible": true,
                   "name": "no_name",
-                  "object_id": 633,
+                  "object_id": 640,
                   "position": {
                      "x": 3474.37084960938,
                      "y": 149.542129516602
@@ -7221,7 +7193,7 @@
                   "is_updateable": false,
                   "is_visible": true,
                   "name": "no_name",
-                  "object_id": 634,
+                  "object_id": 641,
                   "position": {
                      "x": 3474.37084960938,
                      "y": 81.5176849365234
@@ -7249,7 +7221,7 @@
                   "is_updateable": false,
                   "is_visible": true,
                   "name": "no_name",
-                  "object_id": 635,
+                  "object_id": 642,
                   "position": {
                      "x": 3474.37084960938,
                      "y": 13.4932403564453
@@ -7277,10 +7249,10 @@
                   "is_updateable": false,
                   "is_visible": true,
                   "name": "no_name",
-                  "object_id": 636,
+                  "object_id": 643,
                   "position": {
                      "x": 3474.37084960938,
-                     "y": -54.5311965942383
+                     "y": -54.5312042236328
                   },
                   "rotation": 0.0,
                   "scale": {
@@ -7305,10 +7277,10 @@
                   "is_updateable": false,
                   "is_visible": true,
                   "name": "no_name",
-                  "object_id": 637,
+                  "object_id": 644,
                   "position": {
                      "x": 3474.37084960938,
-                     "y": -122.555633544922
+                     "y": -122.555648803711
                   },
                   "rotation": 0.0,
                   "scale": {
@@ -7333,10 +7305,10 @@
                   "is_updateable": false,
                   "is_visible": true,
                   "name": "no_name",
-                  "object_id": 638,
+                  "object_id": 645,
                   "position": {
                      "x": 3474.37084960938,
-                     "y": -190.580078125
+                     "y": -190.580093383789
                   },
                   "rotation": 0.0,
                   "scale": {
@@ -7390,7 +7362,7 @@
                         },
                         "jump": {
                            "frame_rate": 0.0416666679084301,
-                           "loop": true
+                           "loop": false
                         },
                         "look": {
                            "frame_rate": 0.200000002980232,
@@ -7422,7 +7394,7 @@
                         "allow_sleep": true,
                         "density": 1.0,
                         "fixed_rotation": true,
-                        "friction": 0.300000011920929,
+                        "friction": 0.200000002980232,
                         "gravity_scale": 3.0,
                         "is_sensor": false,
                         "is_valid": true,
@@ -7482,30 +7454,40 @@
                   "mesh": {
                      "allow_sleep": true,
                      "density": 1.0,
-                     "fixed_rotation": false,
+                     "fixed_rotation": true,
                      "friction": 0.100000001490116,
                      "gravity_scale": 3.0,
                      "is_sensor": false,
                      "is_valid": true,
-                     "restitution": 0.100000001490116,
-                     "shape": "circle_mesh",
+                     "restitution": 0.0,
+                     "shape": "polygon_mesh",
                      "type": "dynamic_mesh",
-                     "vertex_count": 2,
+                     "vertex_count": 4,
                      "vertex_table": [
                         {
                            "order": 0,
-                           "x": 352.968475341797,
-                           "y": 443.743103027344
+                           "x": 370.399505615234,
+                           "y": 484.493621826172
                         },
                         {
                            "order": 1,
-                           "x": 374.596588134766,
-                           "y": 443.743103027344
+                           "x": 334.871856689453,
+                           "y": 484.49365234375
+                        },
+                        {
+                           "order": 2,
+                           "x": 334.871856689453,
+                           "y": 425.688201904297
+                        },
+                        {
+                           "order": 3,
+                           "x": 370.399505615234,
+                           "y": 425.688171386719
                         }
                      ]
                   },
                   "name": "player_body",
-                  "object_id": 79,
+                  "object_id": 636,
                   "second_type": "mesh_object"
                }
             ],
@@ -7910,7 +7892,7 @@
                   }
                }
             ],
-            "name": "stars_layer",
+            "name": "star_layer",
             "object_id": 244,
             "order": 6,
             "second_type": "meshed_object",
@@ -8042,13 +8024,13 @@
                         "vertex_table": [
                            {
                               "order": 0,
-                              "x": 3287.9541015625,
-                              "y": 233.892776489258
+                              "x": 3286.79052734375,
+                              "y": 245.052429199219
                            },
                            {
                               "order": 1,
-                              "x": 2930.14379882812,
-                              "y": 233.89274597168
+                              "x": 2928.98022460938,
+                              "y": 245.052398681641
                            },
                            {
                               "order": 2,
@@ -8062,7 +8044,7 @@
                            }
                         ]
                      },
-                     "name": "platform_1_0",
+                     "name": "platform_part_1",
                      "object_id": 528,
                      "second_type": "mesh_object"
                   },
@@ -8080,7 +8062,7 @@
                      "is_selected": false,
                      "is_updateable": true,
                      "is_visible": true,
-                     "name": "platform_1_0",
+                     "name": "platform_part_1",
                      "object_id": 527,
                      "position": {
                         "x": 3244.56420898438,
@@ -8096,7 +8078,7 @@
                   }
                }
             ],
-            "name": "platform_part1_layer",
+            "name": "Layer 18",
             "object_id": 526,
             "order": 8,
             "second_type": "meshed_object",
@@ -8110,7 +8092,7 @@
             "is_selected": false,
             "is_updateable": true,
             "is_visible": true,
-            "name": "platform_part2_layer",
+            "name": "Layer 19",
             "object_id": 530,
             "order": 9,
             "second_type": "sprite_object",
@@ -8129,7 +8111,7 @@
                   "is_selected": false,
                   "is_updateable": false,
                   "is_visible": true,
-                  "name": "platform_1_1",
+                  "name": "platform_part_2",
                   "object_id": 532,
                   "position": {
                      "x": 3153.00244140625,
@@ -8157,7 +8139,7 @@
                   "is_selected": false,
                   "is_updateable": false,
                   "is_visible": true,
-                  "name": "platform_1_2",
+                  "name": "platform_part_3",
                   "object_id": 533,
                   "position": {
                      "x": 3062.4619140625,
@@ -8185,7 +8167,7 @@
                   "is_selected": false,
                   "is_updateable": false,
                   "is_visible": true,
-                  "name": "platform_1_3",
+                  "name": "platform_part_4",
                   "object_id": 534,
                   "position": {
                      "x": 2971.92138671875,
@@ -8201,6 +8183,330 @@
                }
             ],
             "type": "sprite_layer"
+         },
+         {
+            "category": "no_category",
+            "child_count": 4,
+            "first_type": "layer_object",
+            "is_selectable": true,
+            "is_selected": true,
+            "is_updateable": true,
+            "is_visible": true,
+            "meshed_table": [
+               {
+                  "mesh": {
+                     "category": "platform",
+                     "child_count": 0,
+                     "first_type": "mesh_object",
+                     "is_selectable": false,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "mesh": {
+                        "allow_sleep": true,
+                        "density": 1.0,
+                        "fixed_rotation": false,
+                        "friction": 0.100000001490116,
+                        "gravity_scale": 3.0,
+                        "is_sensor": false,
+                        "is_valid": true,
+                        "restitution": 0.100000001490116,
+                        "shape": "polygon_mesh",
+                        "type": "static_mesh",
+                        "vertex_count": 4,
+                        "vertex_table": [
+                           {
+                              "order": 0,
+                              "x": 2424.81494140625,
+                              "y": 208.502380371094
+                           },
+                           {
+                              "order": 1,
+                              "x": 2327.66357421875,
+                              "y": 208.502380371094
+                           },
+                           {
+                              "order": 2,
+                              "x": 2327.66357421875,
+                              "y": 177.170211791992
+                           },
+                           {
+                              "order": 3,
+                              "x": 2424.81494140625,
+                              "y": 177.170211791992
+                           }
+                        ]
+                     },
+                     "name": "no_name",
+                     "object_id": 586,
+                     "second_type": "mesh_object"
+                  },
+                  "sprite": {
+                     "category": "platform",
+                     "child_count": 1,
+                     "color": {
+                        "a": 255,
+                        "b": 255,
+                        "g": 255,
+                        "r": 255
+                     },
+                     "first_type": "sprite_object",
+                     "is_selectable": true,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "name": "no_name",
+                     "object_id": 585,
+                     "position": {
+                        "x": 2375.66357421875,
+                        "y": 225.427841186523
+                     },
+                     "rotation": 0.0,
+                     "scale": {
+                        "x": 0.785942137241364,
+                        "y": 0.785942137241364
+                     },
+                     "second_type": "meshed_object",
+                     "sprite": "grassHalf"
+                  }
+               },
+               {
+                  "mesh": {
+                     "category": "platform",
+                     "child_count": 0,
+                     "first_type": "mesh_object",
+                     "is_selectable": false,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "mesh": {
+                        "allow_sleep": true,
+                        "density": 1.0,
+                        "fixed_rotation": false,
+                        "friction": 0.100000001490116,
+                        "gravity_scale": 3.0,
+                        "is_sensor": false,
+                        "is_valid": true,
+                        "restitution": 0.100000001490116,
+                        "shape": "polygon_mesh",
+                        "type": "static_mesh",
+                        "vertex_count": 4,
+                        "vertex_table": [
+                           {
+                              "order": 0,
+                              "x": 2324.21435546875,
+                              "y": 107.901779174805
+                           },
+                           {
+                              "order": 1,
+                              "x": 2227.06298828125,
+                              "y": 107.901779174805
+                           },
+                           {
+                              "order": 2,
+                              "x": 2227.06298828125,
+                              "y": 76.5696105957031
+                           },
+                           {
+                              "order": 3,
+                              "x": 2324.21435546875,
+                              "y": 76.5696105957031
+                           }
+                        ]
+                     },
+                     "name": "no_name",
+                     "object_id": 590,
+                     "second_type": "mesh_object"
+                  },
+                  "sprite": {
+                     "category": "platform",
+                     "child_count": 1,
+                     "color": {
+                        "a": 255,
+                        "b": 255,
+                        "g": 255,
+                        "r": 255
+                     },
+                     "first_type": "sprite_object",
+                     "is_selectable": true,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "name": "no_name",
+                     "object_id": 589,
+                     "position": {
+                        "x": 2275.06298828125,
+                        "y": 124.827239990234
+                     },
+                     "rotation": 0.0,
+                     "scale": {
+                        "x": 0.785942137241364,
+                        "y": 0.785942137241364
+                     },
+                     "second_type": "meshed_object",
+                     "sprite": "grassHalf"
+                  }
+               },
+               {
+                  "mesh": {
+                     "category": "platform",
+                     "child_count": 0,
+                     "first_type": "mesh_object",
+                     "is_selectable": false,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "mesh": {
+                        "allow_sleep": true,
+                        "density": 1.0,
+                        "fixed_rotation": false,
+                        "friction": 0.100000001490116,
+                        "gravity_scale": 3.0,
+                        "is_sensor": false,
+                        "is_valid": true,
+                        "restitution": 0.100000001490116,
+                        "shape": "polygon_mesh",
+                        "type": "static_mesh",
+                        "vertex_count": 4,
+                        "vertex_table": [
+                           {
+                              "order": 0,
+                              "x": 2223.61376953125,
+                              "y": 7.30119323730469
+                           },
+                           {
+                              "order": 1,
+                              "x": 2126.46240234375,
+                              "y": 7.30119323730469
+                           },
+                           {
+                              "order": 2,
+                              "x": 2126.46240234375,
+                              "y": -24.0309753417969
+                           },
+                           {
+                              "order": 3,
+                              "x": 2223.61376953125,
+                              "y": -24.0309753417969
+                           }
+                        ]
+                     },
+                     "name": "no_name",
+                     "object_id": 592,
+                     "second_type": "mesh_object"
+                  },
+                  "sprite": {
+                     "category": "platform",
+                     "child_count": 1,
+                     "color": {
+                        "a": 255,
+                        "b": 255,
+                        "g": 255,
+                        "r": 255
+                     },
+                     "first_type": "sprite_object",
+                     "is_selectable": true,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "name": "no_name",
+                     "object_id": 591,
+                     "position": {
+                        "x": 2174.46240234375,
+                        "y": 24.2266540527344
+                     },
+                     "rotation": 0.0,
+                     "scale": {
+                        "x": 0.785942137241364,
+                        "y": 0.785942137241364
+                     },
+                     "second_type": "meshed_object",
+                     "sprite": "grassHalf"
+                  }
+               },
+               {
+                  "mesh": {
+                     "category": "platform",
+                     "child_count": 0,
+                     "first_type": "mesh_object",
+                     "is_selectable": false,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "mesh": {
+                        "allow_sleep": true,
+                        "density": 1.0,
+                        "fixed_rotation": false,
+                        "friction": 0.100000001490116,
+                        "gravity_scale": 3.0,
+                        "is_sensor": false,
+                        "is_valid": true,
+                        "restitution": 0.100000001490116,
+                        "shape": "polygon_mesh",
+                        "type": "static_mesh",
+                        "vertex_count": 4,
+                        "vertex_table": [
+                           {
+                              "order": 0,
+                              "x": 2022.41259765625,
+                              "y": 7.30119323730469
+                           },
+                           {
+                              "order": 1,
+                              "x": 1925.26123046875,
+                              "y": 7.30119323730469
+                           },
+                           {
+                              "order": 2,
+                              "x": 1925.26123046875,
+                              "y": -24.0309753417969
+                           },
+                           {
+                              "order": 3,
+                              "x": 2022.41259765625,
+                              "y": -24.0309753417969
+                           }
+                        ]
+                     },
+                     "name": "no_name",
+                     "object_id": 596,
+                     "second_type": "mesh_object"
+                  },
+                  "sprite": {
+                     "category": "platform",
+                     "child_count": 1,
+                     "color": {
+                        "a": 255,
+                        "b": 255,
+                        "g": 255,
+                        "r": 255
+                     },
+                     "first_type": "sprite_object",
+                     "is_selectable": true,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "name": "no_name",
+                     "object_id": 595,
+                     "position": {
+                        "x": 1973.26123046875,
+                        "y": 24.2266540527344
+                     },
+                     "rotation": 0.0,
+                     "scale": {
+                        "x": 0.785942137241364,
+                        "y": 0.785942137241364
+                     },
+                     "second_type": "meshed_object",
+                     "sprite": "grassHalf"
+                  }
+               }
+            ],
+            "name": "Layer 20",
+            "object_id": 584,
+            "order": 10,
+            "second_type": "meshed_object",
+            "type": "meshed_layer"
          },
          {
             "animation_meshed_table": [
@@ -11792,7 +12098,7 @@
                      "name": "no_name",
                      "object_id": 622,
                      "position": {
-                        "x": 2176.45458984375,
+                        "x": 2175.45458984375,
                         "y": -117.15966796875
                      },
                      "rotation": 0.0,
@@ -11831,22 +12137,22 @@
                         "vertex_table": [
                            {
                               "order": 0,
-                              "x": 2193.17138671875,
+                              "x": 2192.17138671875,
                               "y": -99.2477188110352
                            },
                            {
                               "order": 1,
-                              "x": 2160.52392578125,
+                              "x": 2159.52392578125,
                               "y": -99.2477188110352
                            },
                            {
                               "order": 2,
-                              "x": 2160.52392578125,
+                              "x": 2159.52392578125,
                               "y": -135.071655273438
                            },
                            {
                               "order": 3,
-                              "x": 2193.17138671875,
+                              "x": 2192.17138671875,
                               "y": -135.071655273438
                            }
                         ]
@@ -12104,344 +12410,269 @@
                      "object_id": 631,
                      "second_type": "mesh_object"
                   }
+               },
+               {
+                  "animation": {
+                     "animation": "coin",
+                     "category": "coin",
+                     "child_count": 1,
+                     "color": {
+                        "a": 255,
+                        "b": 255,
+                        "g": 255,
+                        "r": 255
+                     },
+                     "first_type": "animation_object",
+                     "is_selectable": true,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "name": "no_name",
+                     "object_id": 646,
+                     "position": {
+                        "x": 1732.94995117188,
+                        "y": -81.4494400024414
+                     },
+                     "rotation": 0.0,
+                     "scale": {
+                        "x": 0.7289999127388,
+                        "y": 0.7289999127388
+                     },
+                     "second_type": "meshed_object",
+                     "sequence_table": {
+                        "coin": {
+                           "frame_rate": 0.200000002980232,
+                           "loop": true
+                        }
+                     }
+                  },
+                  "mesh": {
+                     "category": "coin",
+                     "child_count": 0,
+                     "first_type": "mesh_object",
+                     "is_selectable": false,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "mesh": {
+                        "allow_sleep": true,
+                        "density": 1.0,
+                        "fixed_rotation": false,
+                        "friction": 0.100000001490116,
+                        "gravity_scale": 3.0,
+                        "is_sensor": false,
+                        "is_valid": true,
+                        "restitution": 0.100000001490116,
+                        "shape": "polygon_mesh",
+                        "type": "static_mesh",
+                        "vertex_count": 4,
+                        "vertex_table": [
+                           {
+                              "order": 0,
+                              "x": 1749.66674804688,
+                              "y": -63.537483215332
+                           },
+                           {
+                              "order": 1,
+                              "x": 1717.01928710938,
+                              "y": -63.537483215332
+                           },
+                           {
+                              "order": 2,
+                              "x": 1717.01928710938,
+                              "y": -99.3614654541016
+                           },
+                           {
+                              "order": 3,
+                              "x": 1749.66674804688,
+                              "y": -99.3614654541016
+                           }
+                        ]
+                     },
+                     "name": "no_name",
+                     "object_id": 647,
+                     "second_type": "mesh_object"
+                  }
+               },
+               {
+                  "animation": {
+                     "animation": "coin",
+                     "category": "coin",
+                     "child_count": 1,
+                     "color": {
+                        "a": 255,
+                        "b": 255,
+                        "g": 255,
+                        "r": 255
+                     },
+                     "first_type": "animation_object",
+                     "is_selectable": true,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "name": "no_name",
+                     "object_id": 648,
+                     "position": {
+                        "x": 1658.10510253906,
+                        "y": -81.4494400024414
+                     },
+                     "rotation": 0.0,
+                     "scale": {
+                        "x": 0.7289999127388,
+                        "y": 0.7289999127388
+                     },
+                     "second_type": "meshed_object",
+                     "sequence_table": {
+                        "coin": {
+                           "frame_rate": 0.200000002980232,
+                           "loop": true
+                        }
+                     }
+                  },
+                  "mesh": {
+                     "category": "coin",
+                     "child_count": 0,
+                     "first_type": "mesh_object",
+                     "is_selectable": false,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "mesh": {
+                        "allow_sleep": true,
+                        "density": 1.0,
+                        "fixed_rotation": false,
+                        "friction": 0.100000001490116,
+                        "gravity_scale": 3.0,
+                        "is_sensor": false,
+                        "is_valid": true,
+                        "restitution": 0.100000001490116,
+                        "shape": "polygon_mesh",
+                        "type": "static_mesh",
+                        "vertex_count": 4,
+                        "vertex_table": [
+                           {
+                              "order": 0,
+                              "x": 1674.82189941406,
+                              "y": -63.537483215332
+                           },
+                           {
+                              "order": 1,
+                              "x": 1642.17443847656,
+                              "y": -63.537483215332
+                           },
+                           {
+                              "order": 2,
+                              "x": 1642.17443847656,
+                              "y": -99.3614654541016
+                           },
+                           {
+                              "order": 3,
+                              "x": 1674.82189941406,
+                              "y": -99.3614654541016
+                           }
+                        ]
+                     },
+                     "name": "no_name",
+                     "object_id": 649,
+                     "second_type": "mesh_object"
+                  }
+               },
+               {
+                  "animation": {
+                     "animation": "coin",
+                     "category": "coin",
+                     "child_count": 1,
+                     "color": {
+                        "a": 255,
+                        "b": 255,
+                        "g": 255,
+                        "r": 255
+                     },
+                     "first_type": "animation_object",
+                     "is_selectable": true,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "name": "no_name",
+                     "object_id": 650,
+                     "position": {
+                        "x": 1576.27954101562,
+                        "y": -81.4494400024414
+                     },
+                     "rotation": 0.0,
+                     "scale": {
+                        "x": 0.7289999127388,
+                        "y": 0.7289999127388
+                     },
+                     "second_type": "meshed_object",
+                     "sequence_table": {
+                        "coin": {
+                           "frame_rate": 0.200000002980232,
+                           "loop": true
+                        }
+                     }
+                  },
+                  "mesh": {
+                     "category": "coin",
+                     "child_count": 0,
+                     "first_type": "mesh_object",
+                     "is_selectable": false,
+                     "is_selected": false,
+                     "is_updateable": true,
+                     "is_visible": true,
+                     "mesh": {
+                        "allow_sleep": true,
+                        "density": 1.0,
+                        "fixed_rotation": false,
+                        "friction": 0.100000001490116,
+                        "gravity_scale": 3.0,
+                        "is_sensor": false,
+                        "is_valid": true,
+                        "restitution": 0.100000001490116,
+                        "shape": "polygon_mesh",
+                        "type": "static_mesh",
+                        "vertex_count": 4,
+                        "vertex_table": [
+                           {
+                              "order": 0,
+                              "x": 1592.99633789062,
+                              "y": -63.537483215332
+                           },
+                           {
+                              "order": 1,
+                              "x": 1560.34887695312,
+                              "y": -63.537483215332
+                           },
+                           {
+                              "order": 2,
+                              "x": 1560.34887695312,
+                              "y": -99.3614654541016
+                           },
+                           {
+                              "order": 3,
+                              "x": 1592.99633789062,
+                              "y": -99.3614654541016
+                           }
+                        ]
+                     },
+                     "name": "no_name",
+                     "object_id": 651,
+                     "second_type": "mesh_object"
+                  }
                }
             ],
             "category": "no_category",
-            "child_count": 47,
+            "child_count": 50,
             "first_type": "layer_object",
             "is_selectable": true,
             "is_selected": false,
             "is_updateable": true,
             "is_visible": true,
-            "name": "coins_layer",
+            "name": "coin_layer",
             "object_id": 265,
-            "order": 10,
+            "order": 11,
             "second_type": "animation_meshed_object",
             "type": "animation_meshed_layer"
-         },
-         {
-            "category": "no_category",
-            "child_count": 4,
-            "first_type": "layer_object",
-            "is_selectable": true,
-            "is_selected": true,
-            "is_updateable": true,
-            "is_visible": true,
-            "meshed_table": [
-               {
-                  "mesh": {
-                     "category": "platform",
-                     "child_count": 0,
-                     "first_type": "mesh_object",
-                     "is_selectable": false,
-                     "is_selected": false,
-                     "is_updateable": true,
-                     "is_visible": true,
-                     "mesh": {
-                        "allow_sleep": true,
-                        "density": 1.0,
-                        "fixed_rotation": false,
-                        "friction": 0.100000001490116,
-                        "gravity_scale": 3.0,
-                        "is_sensor": false,
-                        "is_valid": true,
-                        "restitution": 0.100000001490116,
-                        "shape": "polygon_mesh",
-                        "type": "static_mesh",
-                        "vertex_count": 4,
-                        "vertex_table": [
-                           {
-                              "order": 0,
-                              "x": 2424.81494140625,
-                              "y": 207.755828857422
-                           },
-                           {
-                              "order": 1,
-                              "x": 2327.66357421875,
-                              "y": 207.755828857422
-                           },
-                           {
-                              "order": 2,
-                              "x": 2327.66357421875,
-                              "y": 176.42366027832
-                           },
-                           {
-                              "order": 3,
-                              "x": 2424.81494140625,
-                              "y": 176.42366027832
-                           }
-                        ]
-                     },
-                     "name": "no_name",
-                     "object_id": 586,
-                     "second_type": "mesh_object"
-                  },
-                  "sprite": {
-                     "category": "platform",
-                     "child_count": 1,
-                     "color": {
-                        "a": 255,
-                        "b": 255,
-                        "g": 255,
-                        "r": 255
-                     },
-                     "first_type": "sprite_object",
-                     "is_selectable": true,
-                     "is_selected": false,
-                     "is_updateable": true,
-                     "is_visible": true,
-                     "name": "no_name",
-                     "object_id": 585,
-                     "position": {
-                        "x": 2375.66357421875,
-                        "y": 225.427841186523
-                     },
-                     "rotation": 0.0,
-                     "scale": {
-                        "x": 0.785942137241364,
-                        "y": 0.785942137241364
-                     },
-                     "second_type": "meshed_object",
-                     "sprite": "grassHalf"
-                  }
-               },
-               {
-                  "mesh": {
-                     "category": "platform",
-                     "child_count": 0,
-                     "first_type": "mesh_object",
-                     "is_selectable": false,
-                     "is_selected": false,
-                     "is_updateable": true,
-                     "is_visible": true,
-                     "mesh": {
-                        "allow_sleep": true,
-                        "density": 1.0,
-                        "fixed_rotation": false,
-                        "friction": 0.100000001490116,
-                        "gravity_scale": 3.0,
-                        "is_sensor": false,
-                        "is_valid": true,
-                        "restitution": 0.100000001490116,
-                        "shape": "polygon_mesh",
-                        "type": "static_mesh",
-                        "vertex_count": 4,
-                        "vertex_table": [
-                           {
-                              "order": 0,
-                              "x": 2324.21435546875,
-                              "y": 106.408683776855
-                           },
-                           {
-                              "order": 1,
-                              "x": 2227.06298828125,
-                              "y": 106.408683776855
-                           },
-                           {
-                              "order": 2,
-                              "x": 2227.06298828125,
-                              "y": 75.0765151977539
-                           },
-                           {
-                              "order": 3,
-                              "x": 2324.21435546875,
-                              "y": 75.0765151977539
-                           }
-                        ]
-                     },
-                     "name": "no_name",
-                     "object_id": 590,
-                     "second_type": "mesh_object"
-                  },
-                  "sprite": {
-                     "category": "platform",
-                     "child_count": 1,
-                     "color": {
-                        "a": 255,
-                        "b": 255,
-                        "g": 255,
-                        "r": 255
-                     },
-                     "first_type": "sprite_object",
-                     "is_selectable": true,
-                     "is_selected": false,
-                     "is_updateable": true,
-                     "is_visible": true,
-                     "name": "no_name",
-                     "object_id": 589,
-                     "position": {
-                        "x": 2275.06298828125,
-                        "y": 124.827239990234
-                     },
-                     "rotation": 0.0,
-                     "scale": {
-                        "x": 0.785942137241364,
-                        "y": 0.785942137241364
-                     },
-                     "second_type": "meshed_object",
-                     "sprite": "grassHalf"
-                  }
-               },
-               {
-                  "mesh": {
-                     "category": "platform",
-                     "child_count": 0,
-                     "first_type": "mesh_object",
-                     "is_selectable": false,
-                     "is_selected": false,
-                     "is_updateable": true,
-                     "is_visible": true,
-                     "mesh": {
-                        "allow_sleep": true,
-                        "density": 1.0,
-                        "fixed_rotation": false,
-                        "friction": 0.100000001490116,
-                        "gravity_scale": 3.0,
-                        "is_sensor": false,
-                        "is_valid": true,
-                        "restitution": 0.100000001490116,
-                        "shape": "polygon_mesh",
-                        "type": "static_mesh",
-                        "vertex_count": 4,
-                        "vertex_table": [
-                           {
-                              "order": 0,
-                              "x": 2223.61376953125,
-                              "y": 5.06155204772949
-                           },
-                           {
-                              "order": 1,
-                              "x": 2126.46240234375,
-                              "y": 5.06155204772949
-                           },
-                           {
-                              "order": 2,
-                              "x": 2126.46240234375,
-                              "y": -26.2706165313721
-                           },
-                           {
-                              "order": 3,
-                              "x": 2223.61376953125,
-                              "y": -26.2706165313721
-                           }
-                        ]
-                     },
-                     "name": "no_name",
-                     "object_id": 592,
-                     "second_type": "mesh_object"
-                  },
-                  "sprite": {
-                     "category": "platform",
-                     "child_count": 1,
-                     "color": {
-                        "a": 255,
-                        "b": 255,
-                        "g": 255,
-                        "r": 255
-                     },
-                     "first_type": "sprite_object",
-                     "is_selectable": true,
-                     "is_selected": false,
-                     "is_updateable": true,
-                     "is_visible": true,
-                     "name": "no_name",
-                     "object_id": 591,
-                     "position": {
-                        "x": 2174.46240234375,
-                        "y": 24.2266540527344
-                     },
-                     "rotation": 0.0,
-                     "scale": {
-                        "x": 0.785942137241364,
-                        "y": 0.785942137241364
-                     },
-                     "second_type": "meshed_object",
-                     "sprite": "grassHalf"
-                  }
-               },
-               {
-                  "mesh": {
-                     "category": "platform",
-                     "child_count": 0,
-                     "first_type": "mesh_object",
-                     "is_selectable": false,
-                     "is_selected": false,
-                     "is_updateable": true,
-                     "is_visible": true,
-                     "mesh": {
-                        "allow_sleep": true,
-                        "density": 1.0,
-                        "fixed_rotation": false,
-                        "friction": 0.100000001490116,
-                        "gravity_scale": 3.0,
-                        "is_sensor": false,
-                        "is_valid": true,
-                        "restitution": 0.100000001490116,
-                        "shape": "polygon_mesh",
-                        "type": "static_mesh",
-                        "vertex_count": 4,
-                        "vertex_table": [
-                           {
-                              "order": 0,
-                              "x": 2022.41259765625,
-                              "y": 5.06155109405518
-                           },
-                           {
-                              "order": 1,
-                              "x": 1925.26123046875,
-                              "y": 5.06155109405518
-                           },
-                           {
-                              "order": 2,
-                              "x": 1925.26123046875,
-                              "y": -26.2706184387207
-                           },
-                           {
-                              "order": 3,
-                              "x": 2022.41259765625,
-                              "y": -26.2706184387207
-                           }
-                        ]
-                     },
-                     "name": "no_name",
-                     "object_id": 596,
-                     "second_type": "mesh_object"
-                  },
-                  "sprite": {
-                     "category": "platform",
-                     "child_count": 1,
-                     "color": {
-                        "a": 255,
-                        "b": 255,
-                        "g": 255,
-                        "r": 255
-                     },
-                     "first_type": "sprite_object",
-                     "is_selectable": true,
-                     "is_selected": false,
-                     "is_updateable": true,
-                     "is_visible": true,
-                     "name": "no_name",
-                     "object_id": 595,
-                     "position": {
-                        "x": 1973.26123046875,
-                        "y": 24.2266540527344
-                     },
-                     "rotation": 0.0,
-                     "scale": {
-                        "x": 0.785942137241364,
-                        "y": 0.785942137241364
-                     },
-                     "second_type": "meshed_object",
-                     "sprite": "grassHalf"
-                  }
-               }
-            ],
-            "name": "sky_ground_layer",
-            "object_id": 584,
-            "order": 11,
-            "second_type": "meshed_object",
-            "type": "meshed_layer"
          },
          {
             "category": "no_category",
@@ -12476,22 +12707,22 @@
                         {
                            "order": 0,
                            "x": 1820.90942382812,
-                           "y": -38.2958221435547
+                           "y": -35.3096313476562
                         },
                         {
                            "order": 1,
                            "x": 1144.43518066406,
-                           "y": -38.2958221435547
+                           "y": -35.3096313476562
                         },
                         {
                            "order": 2,
                            "x": 1145.53076171875,
-                           "y": -58.574951171875
+                           "y": -55.5887603759766
                         },
                         {
                            "order": 3,
                            "x": 1822.00500488281,
-                           "y": -58.574951171875
+                           "y": -55.5887603759766
                         }
                      ]
                   },
@@ -12500,13 +12731,13 @@
                   "second_type": "mesh_object"
                }
             ],
-            "name": "sky_tree_ground_layer",
+            "name": "Layer 22",
             "object_id": 618,
             "order": 12,
             "second_type": "mesh_object",
             "type": "mesh_layer"
          }
       ],
-      "object_count": 639
+      "object_count": 652
    }
 }

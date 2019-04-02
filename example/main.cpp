@@ -12,7 +12,7 @@
     int main()
     {
         nero::DevEngine engine;
-            engine.addScene<ng::AdventureScene>("AdventureScene");
+            engine.addScene<ng::AdventureScene>("Adventure Scene");
         engine.run();
 
         return 0;
@@ -28,7 +28,7 @@
         auto startupScreen = std::make_shared<ng::LoadingScreen>();
 
         nero::RenderEngine engine(startupScreen);
-            engine.setScene<ng::AdventureScene>("AdventureScene");
+            engine.setScene<ng::AdventureScene>("Adventure Scene");
         engine.run();
 
         return 0;

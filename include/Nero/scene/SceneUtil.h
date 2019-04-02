@@ -22,18 +22,6 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    ///\brief Store resources provided by the engine
-    struct Context
-    {
-        Context(sfg::Canvas::Ptr renderCanvas, sf::View& frontView, Camera::Ptr camera, ResourceManager::Ptr resourceManager, bool renderEngine);
-
-        sfg::Canvas::Ptr        renderCanvas;
-        sf::View&               frontView;
-        Camera::Ptr             camera;
-        ResourceManager::Ptr    resourceManager;
-        bool                    renderEngine;
-    };
-
     //
     struct ContactPoint
     {

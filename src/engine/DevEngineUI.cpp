@@ -13,6 +13,8 @@
 #include <SFGUI/Separator.hpp>
 //BOOST
 #include <boost/filesystem.hpp>
+//STD
+#include <string>
 //IMGUI
 bool IMGUI_COLOR_PICKER_OPEN;
 ////////////////////////////////////////////////////////////
@@ -350,7 +352,7 @@ namespace nero
         }
         else
         {
-            if(key == sf::Keyboard::PageUp && !CTRL_SHIFT_ALT())
+            if(key == sf::Keyboard::PageDown && !CTRL_SHIFT_ALT())
             {
                 setEngineSubMode(OBJECT);
 
@@ -365,7 +367,7 @@ namespace nero
                 onSceneSelection();
             }
 
-            else if(key == sf::Keyboard::PageDown && !CTRL_SHIFT_ALT())
+            else if(key == sf::Keyboard::PageUp && !CTRL_SHIFT_ALT())
             {
                 setEngineSubMode(OBJECT);
 
@@ -502,7 +504,7 @@ namespace nero
             m_LogLabel->SetText(m_LogLabel->GetText() + _level + " " + " " +  message + "\n");
             m_LogAdjustment->SetValue(m_LogAdjustment->GetUpper());
 
-             nero_log_if(message, condition, level);
+            nero_log_if(message, condition, level);
         }
     }
 
@@ -562,6 +564,8 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onSceneSelection()
     {
+        updateLog("## -- current Scene [" + m_SceneComboBox->GetSelectedText() + "] -- ## \n");
+
         //Stop Music
         if(m_ActiveSoundManager)
         {
@@ -714,6 +718,8 @@ namespace nero
 
         if(m_FrontScreen)
         {
+            updateLog("changing View Mode to Screen View");
+
             //Update the Active Managers
             m_ActiveSceneBuilder          = m_SceneManager->getScreenBuilder();
             m_ActiveUndoManager           = m_SceneManager->getScreenUndoManager();
@@ -733,6 +739,8 @@ namespace nero
         }
         else
         {
+            updateLog("changing View Mode to World View");
+
             //Update the Active Managers
             m_ActiveSceneBuilder          = m_SceneManager->getSceneBuilder();
             m_ActiveMeshEditor            = m_SceneManager->getMeshEditor();
@@ -759,6 +767,8 @@ namespace nero
         {
             try
             {
+                updateLog("playing [" + m_SceneComboBox->GetSelectedText() + "]");
+
                 m_SceneManager->buildScene();
                 setEngineSubMode(PLAY);
             }
@@ -775,6 +785,8 @@ namespace nero
     {
         if(m_EngineMode == SCENE && m_EngineSubMode == OBJECT)
         {
+            updateLog("launching Scene Renderer with Scene [" + m_SceneComboBox->GetSelectedText() + "]");
+
             //launch the render
             m_RendererFuture = std::async(std::launch::async, [this]()
             {
@@ -820,6 +832,8 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::closeRenderer()
     {
+        updateLog("closing Scene Renderer for Scene [" + m_SceneComboBox->GetSelectedText() + "]");
+
         m_RendererActive = false;
         m_SceneRenderer->m_Window.close();
     }
@@ -829,6 +843,8 @@ namespace nero
     {
         if(m_EngineMode == SCENE && m_EngineSubMode == PLAY)
         {
+            updateLog("pausing Scene [" + m_SceneComboBox->GetSelectedText() + "]");
+
             m_SceneManager->getSceneSetting().pause = !m_SceneManager->getSceneSetting().pause;
         }
     }
@@ -838,6 +854,7 @@ namespace nero
     {
         if(m_EngineMode == SCENE && m_EngineSubMode == PLAY)
         {
+            updateLog("stepping Scene [" + m_SceneComboBox->GetSelectedText() + "]");
             m_SceneManager->getSceneSetting().pause         = true;
             m_SceneManager->getSceneSetting().singleStep    = true;
         }
@@ -855,6 +872,8 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onQuitButton()
     {
+        updateLog("closing the Engine");
+
         //Stop Music
         if(m_ActiveSoundManager)
         {
@@ -862,11 +881,15 @@ namespace nero
         }
 
         //Save Engine Setting
+        updateLog("saving Engine Settings");
         saveFile(CONFIGURATION_FOLDER + "/" + ENGINE_CONFIGURATION + ".json", m_EngineSetting.toJson().dump(3));
         //Save all Scene
+        updateLog("saving all Scenes");
         m_SceneManager->saveAllScene();
         //Quit
         m_Window.close();
+
+        updateLog("\n ## -- Engine closed at " + getdate() + " " + getTime() + "-- ###\n");
     }
 
     ////////////////////////////////////////////////////////////
@@ -1214,13 +1237,17 @@ namespace nero
         m_PlayModeRadioButton->GetSignal(sfg::ToggleButton::OnToggle).Connect(std::bind(&DevEngineUI::onEngineSubModeButton, this));
         m_SaveButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onSaveButton, this));
         m_LoadButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onLoadButton, this));
-        m_AutoSaveChekButton->GetSignal(sfg::CheckButton::OnLeftClick).Connect([this](){m_EngineSetting.autoSave = m_AutoSaveChekButton->IsActive();});
+        m_AutoSaveChekButton->GetSignal(sfg::CheckButton::OnLeftClick).Connect([this]()
+        {
+            m_AutoSaveChekButton->IsActive() ? updateLog("enabling Auto Save") : updateLog("disabling Auto Save");
+
+            m_EngineSetting.autoSave = m_AutoSaveChekButton->IsActive();
+        });
 
         m_AccessLearningButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onAccessLearningButton, this));
         m_AccessForumButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onAccessForumButton, this));
         m_AccessSnippetButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onAccessSnippetButton, this));
         m_AccessAPIButton->GetSignal(sfg::Button::OnLeftClick).Connect(std::bind(&DevEngineUI::onAccessAPIButton, this));
-
     }
 
     ////////////////////////////////////////////////////////////
@@ -2191,17 +2218,22 @@ namespace nero
 
                 selectButton->GetSignal(sfg::Button::OnLeftClick).Connect([this, animation_object, sequence]()
                 {
+                    updateLog("changing animation object [" + animation_object->getName() + "] sequence to [" + sequence + "]");
                     animation_object->setSequence(sequence);
                 });
 
                 spinButton->GetSignal(sfg::SpinButton::OnValueChanged).Connect([this, animation_object, spinButton, sequence]()
                 {
+                    updateLog("changing sequence [" + sequence + "] frame rate to [" + toString(1.f/spinButton->GetValue()) + "] in animation object [" + animation_object->getName() + "]");
                     animation_object->setSequence(sequence);
                     animation_object->setFrameRate(1.f/spinButton->GetValue());
                 });
 
                 checkButton->GetSignal(sfg::CheckButton::OnLeftClick).Connect([this, animation_object, checkButton, sequence]()
                 {
+                    std::string status = checkButton->IsActive() ? "enabling" : "disabling";
+                    updateLog(status + " loop for sequence [" + sequence + "] in animation object [" + animation_object->getName() + "]");
+
                     animation_object->setSequence(sequence);
                     animation_object->setLoop(checkButton->IsActive());
                 });
@@ -2518,7 +2550,9 @@ namespace nero
     void DevEngineUI::onMoveObjectUp()
     {
         if(m_EngineMode == SCENE && m_EngineSubMode == OBJECT)
-            m_ActiveSceneBuilder->moveObjectUp();
+        {
+             m_ActiveSceneBuilder->moveObjectUp();
+        }
     }
 
     ////////////////////////////////////////////////////////////
@@ -2533,8 +2567,6 @@ namespace nero
     {
         if(m_EngineMode == SCENE && m_EngineSubMode == OBJECT && !m_FrontScreen)
         {
-            updateLog("adding Mesh Object : " + m_MeshComboBox->GetSelectedText() + " Mesh");
-
             sf::Vector2f screen_pos     = sf::Vector2f(m_RenderCanvas->GetAbsolutePosition().x + m_RenderCanvas->GetAllocation().width/2.f, m_RenderCanvas->GetAllocation().top + 150.f);
             sf::Vector2f world_pos      = canvas_to_world(screen_pos, m_RenderCanvas);
 
@@ -2547,24 +2579,29 @@ namespace nero
     void DevEngineUI::onMeshTypeComboBox()
     {
         if(m_EngineMode == SCENE && m_EngineSubMode == OBJECT)
+        {
             m_ActiveSceneBuilder->setMeshType(m_MeshTypeComboBox->GetSelectedText());
+        }
     }
 
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onPlayMusic()
     {
+        updateLog("playing music [" + toString(m_MusicComboBox->GetSelectedText()) + "]");
         m_ActiveSoundManager->playMusic(toString(m_MusicComboBox->GetSelectedText()));
     }
 
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onPlaySound()
     {
-         m_ActiveSoundManager->playSound(toString(m_SoundComboBox->GetSelectedText()));
+        updateLog("playing sound [" + toString(m_SoundComboBox->GetSelectedText()) + "]");
+        m_ActiveSoundManager->playSound(toString(m_SoundComboBox->GetSelectedText()));
     }
 
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onStopMusic()
     {
+        updateLog("stopping music");
         m_ActiveSoundManager->stopMusic(toString(m_MusicComboBox->GetSelectedText()));
     }
 
@@ -2608,12 +2645,12 @@ namespace nero
         }
         else if(m_LayerColorRadioButton->IsActive())
         {
-            /*sf::Color c = m_ActiveSceneBuilder->getLayerColor();
+            sf::Color c = m_ActiveSceneBuilder->getLayerColor();
 
             m_AlphaAdjustment->SetValue(c.a);
             m_RedAdjustment->SetValue(c.r);
             m_GreenAdjustment->SetValue(c.g);
-            m_BlueAdjustment->SetValue(c.b);*/
+            m_BlueAdjustment->SetValue(c.b);
 
         }
         else if (m_CanvasColorRadioButton->IsActive())
@@ -3005,6 +3042,8 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onSelectFrontScreen()
     {
+        updateLog("changing Screen to " + m_ScreenComboBoxFirst->GetSelectedText());
+
         m_SceneManager->selectScreen(m_ScreenComboBoxFirst->GetSelectedText());
 
         if(m_FrontScreen)
@@ -3070,7 +3109,7 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::buildSceneManger()
     {
-        m_SceneManager = SceneManager::Ptr(new SceneManager(Context(m_RenderCanvas, m_CanvasFrontView, m_Camera, m_ResourceManager, false)));
+        m_SceneManager = SceneManager::Ptr(new SceneManager(Scene::Context(m_RenderCanvas, m_CanvasFrontView, m_Camera, m_ResourceManager, false)));
         m_SceneManager->setUpdateUI(std::bind(&DevEngineUI::updateUI, this));
         m_SceneManager->setUpdateUndo(std::bind(&DevEngineUI::updateUndo, this));
         m_SceneManager->setUpdateLog(std::bind(&DevEngineUI::updateLog, this, std::placeholders::_1, std::placeholders::_2));
@@ -3162,20 +3201,22 @@ namespace nero
                 + "you can change the canvas color as you want. Try clicking on the buttons [Black] [Grey] [Blue] [White] located on top of the Canvas in the left and right corner");
 
         addHelp("Log View",
-                "Below the Canvas you can find the Log-View, From time to time it is good to get a look to the logs");
+                "Below the Canvas you can find the Log-View, From time to time it is good to get a look at the logs");
 
         addHelp("Mouse on Canvas",
                 std::string("") + "Certain actions are possible only when the mouse is on the Canvas. Example :"
                 + "\n\n" + "- Control the camera with the Numpad or the Mouse"
-                + "\n\n" + "- Change the Engine Scene Mode with the SpaceBar");
+                + "\n\n" + "- Change the Engine Scene Mode with the SpaceBar"
+                + "\n\n" + "- Play, Pause, Reset, Step a Scene via shortcuts");
 
         addHelp("Control Overview",
                 std::string("") + "The Engine uses the following Keys"
                 + "\n\n" + "- Modifier : CTRL, SHIFT, ALT"
-                + "\n\n" + "- Mouse Buttons : Left, Right, Middle"
-                + "\n\n" + "- Mouse Wheel"
+                + "\n\n" + "- Mouse : Buttons (Left, Right, Middle), Wheel"
                 + "\n\n" + "- Numpad : 1 to 9, Multiply, Divide"
-                + "\n\n" + "- B, Y, Z, S, SpaceBar, Return, Delete, Arrows (Left, Up, Right), PageUp, PageDown");
+                + "\n\n" + "- B, Y, Z, S, L"
+                + "\n\n" + "- Arrows : Left, Up, Right"
+                + "\n\n" + "- SpaceBar, Return, Delete, PageUp, PageDown");
 
         addHelp("The Camera",
                 std::string("") + "The Camera can be controlled with the Numpad or the Mouse"
@@ -3197,7 +3238,7 @@ namespace nero
                 + "\n\n" + "- MouseWheel : zoom in or out");
 
         addHelp("Select a Scene",
-                std::string("") + "The Scene is main the component of The Engine. A Scene represent a Game. "
+                std::string("") + "The Scene is main the component of the Engine. A Scene represents a Game. "
                 + "On the right in the [Scene] Tab you have a selection box that allows to select a Scene you want to work on. "
                 + "\n\n" +
                 + "It is also possible to change the Scene with the keys PageUp and PageDown");
@@ -3230,7 +3271,7 @@ namespace nero
 
         addHelp("World View and Screen View",
                 std::string("") + "On the right, in the Tab [Scene] there is a button called [Screen View]. "
-                + "This button allows to switch between the World View and the Screen View of your Current Scene. "
+                + "This button allows to switch between the World View and the Screen View of your current Scene. "
                 + "Not all types of Object can be added on each View mode."
                 + "\n\n"
                 + "- World View : "
@@ -3242,7 +3283,7 @@ namespace nero
                 + "Sprite_Object, Animation_Object, Text_Object, Button_Object");
 
         addHelp("Add Objects on the Canvas",
-                std::string("") + "The way of adding Object on the Canvas differ with the type of Object."
+                std::string("") + "The way you add an Object onto the Canvas differs with the type of Object. Also"
                 + "Object can be added only on Object Mode"
                 + "\n\n" +
                 + "- Add Sprite_Object : click on a [Sprite_Button] in the [Sprite] Tab located on the left"
@@ -3265,9 +3306,11 @@ namespace nero
                 + "\n\n" + "- Delete Button");
 
         addHelp("Play with Objects",
-                std::string("") + "Objects can be selected with the Mouse Right Button. "
+                std::string("") + "Objects can be selected with the Mouse Right Button."
                 + "When an Object is selected there are various actions that can be on it."
-                + "\n\n" +
+                + "\n\n" + "- Select Object : Mouse Right click"
+                + "\n\n" + "- Un-select Object : Mouse Left on empty space"
+                + "\n\n"
                 + "The following actions can be applied to any Object"
                 + "\n\n" + "- CTRL + Numpad_4 : move left"
                 + "\n\n" + "- CTRL + Numpad_6 : move right"
@@ -3279,20 +3322,52 @@ namespace nero
                 + "\n\n" + "- CTRL + Numpad_Divide : zoom out"
                 + "\n\n" + "- CTRL + Mouse Move Up or Down : zoom in or out"
                 + "\n\n" + "- SHIFT + Mouse Move Up or Down : rotate left or right"
-                + "\n\n" +
-                + "The following actions can be applied to Objects containing a Sprite that means:\n"
+                + "\n\n" + "- ALT + Numpad_4 : copy left"
+                + "\n\n" + "- ALT + Numpad_6 : copy right"
+                + "\n\n" + "- ALT + Numpad_8 : copy up"
+                + "\n\n" + "- ALT + Numpad_2 : copy down"
+                + "\n\n" + "- ALT + Numpad_7 : copy up left"
+                + "\n\n" + "- ALT + Numpad_9 : copy up right"
+                + "\n\n" + "- ALT + Numpad_1 : copy down left"
+                + "\n\n" + "- ALT + Numpad_3 : copy down right"
+                + "\n\n"
+                + "The following actions can be applied to a Text_Object or all Objects containing a Sprite that means:\n"
                 + "Sprite_Object, Animation_Object, Meshed_Sprite_Object, Meshed_Animation_Object"
                 + "\n\n" + "- CTRL + Numpad_1 : flip horizontally"
                 + "\n\n" + "- CTRL + Numpad_3 : flip vertically"
-                + "\n\n" +
+                + "\n\n"
                 + "The following actions can be applied to Layers"
                 + "\n\n" + "- CTRL + ALT + Numpad_4 : move left"
                 + "\n\n" + "- CTRL + ALT + Numpad_6 : move right"
                 + "\n\n" + "- CTRL + ALT + Numpad_8 : move up"
                 + "\n\n" + "- CTRL + ALT + Numpad_2 : move down");
 
+        addHelp("Play with Meshes",
+                std::string("") + "When you switch to Mesh Mode, the Mesh_Editor takes control of the Canvas. "
+                "The following can actions can be performed"
+                + "\n\n" + "- Move vertex : Left click + Drag and Drop"
+                + "\n\n" + "- Move Line : Left click + Drag and Drop"
+                + "\n\n" + "- Add Vertex : Right click on any line"
+                + "\n\n" + "- Remove Vertex : Right on any Vertex"
+                + "\n\n" + "- Extrude Line : SHIFT + Left click + Drag and Drop"
+                + "\n\n" + "- Extrude Edge Vertex : SHIFT + Left click + Drag and Drop"
+                + "\n\n" + "When a Mesh is selected it can be Moved, Scaled and Rotated"
+                + "\n\n" + "- Select Mesh : CTRL + Mouse Left click"
+                + "\n\n" + "- Un-select Mesh : Mouse Left on empty space"
+                + "\n\n" + "- CTRL + Numpad_4 : move left"
+                + "\n\n" + "- CTRL + Numpad_6 : move right"
+                + "\n\n" + "- CTRL + Numpad_8 : move up"
+                + "\n\n" + "- CTRL + Numpad_2 : move down"
+                + "\n\n" + "- CTRL + Numpad_7 : rotate left"
+                + "\n\n" + "- CTRL + Numpad_9 : rotate right"
+                + "\n\n" + "- CTRL + Numpad_Multiply : zoom in"
+                + "\n\n" + "- CTRL + Numpad_Divide : zoom out"
+                + "\n\n"
+                + "\n\n" + "Red Mesh"
+                + "\n\n" + "When a Mesh becomes Red, it means that it is invalid. A red mesh will not appear when the Scene is played");
+
         addHelp("Play, Pause, Reset, Step",
-                std::string("") + "When you want to test a test a Scene you can perform the followings actions"
+                std::string("") + "When you want to test a Scene you can perform the followings actions"
                 + "\n\n" + "- Play the Scene : press the Return key when in Object Mode"
                 + "\n\n" + "- Pause the Scene : CRTL + Arrow Up when in Play Mode"
                 + "\n\n" + "- Step the Scene : CRTL + Arrow Left when in Play Mode"
@@ -3303,8 +3378,8 @@ namespace nero
                 + "\n\n" + "Press CTRL + Return in Object to launch the Scene Renderer");
 
         addHelp("The Color Picker",
-            std::string("")  + "The color picker is hidden by default, it appears" +
-            "when the Color_Tab becomes active");
+            std::string("")  + "The color picker is hidden by default, it appears on the Log-View " +
+            "when the Tab [Color] on the left is selected");
 
         addHelp("Special Action #1 : Drop Bomb",
                 "In Play Mode, press B to drop a random Bomb");

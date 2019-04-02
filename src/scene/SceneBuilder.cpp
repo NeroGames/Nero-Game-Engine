@@ -38,8 +38,10 @@ namespace nero
         m_SelectionRect.setOutlineColor(sf::Color::Green);
         m_SelectionRect.setOutlineThickness(-3.f);
 
-        m_UpdateUI  = [](){};
+        m_UpdateUI      = [](){};
         m_UpdateUndo    = [](){};
+        m_UpdateLog     = [](const std::string&, int){};
+        m_UpdateLogIf   = [](const std::string&, bool, int){};
     }
 
     void SceneBuilder::handleEvent(const sf::Event& event)
@@ -419,10 +421,12 @@ namespace nero
 
     const LayerObject::Ptr SceneBuilder::addLayer()
     {
+        int index =  ++m_LayerCount;
+
+        m_UpdateLog("adding new Layer [Layer " + toString(index) + "]", nero::Info);
+
         if(m_SelectedLayer)
             m_SelectedLayer->setIsSelected(false);
-
-        int index =  ++m_LayerCount;
 
         LayerObject::Ptr Layer_object(new LayerObject());
         Layer_object->setId(getNewId());
@@ -447,6 +451,8 @@ namespace nero
         {
             if((*it)->getId() == id)
             {
+                m_UpdateLog("removing Layer [" + (*it)->getName() + "]", nero::Info);
+
                 if(it != m_LayerTable.begin())
                     selectLayer((*(it-1))->getId());
                 else if(it == m_LayerTable.begin() && m_LayerTable.size() != 1)
@@ -467,6 +473,8 @@ namespace nero
         {
             if((*it)->getId() == id && it != m_LayerTable.begin())
             {
+                m_UpdateLog("moving Layer [" + (*it)->getName() + "] Down", nero::Info);
+
                 std::iter_swap(it, it-1);
                 selectLayer((*(it-1))->getId());
 
@@ -483,6 +491,8 @@ namespace nero
         {
             if((*it)->getId() == id && it != (m_LayerTable.end()-1))
             {
+                m_UpdateLog("moving Layer [" + (*it)->getName() + "] Up", nero::Info);
+
                 std::iter_swap(it, it+1);
                 selectLayer((*(it+1))->getId());
 
@@ -503,6 +513,8 @@ namespace nero
             {
                 if((*it)->getSecondType() == (*(it+1))->getSecondType())
                 {
+                    m_UpdateLog("merging Layer Up : Merging [" + (*it)->getName() + "] into [" + (*(it+1))->getName() + "]", nero::Info);
+
                     auto childTable = (*it)->getAllChild();
 
                     for(auto child : *childTable)
@@ -532,6 +544,8 @@ namespace nero
             {
                 if((*it)->getSecondType() == (*(it-1))->getSecondType())
                 {
+                    m_UpdateLog("merging Layer Down : Merging [" + (*it)->getName() + "] into [" + (*(it-1))->getName() + "]", nero::Info);
+
                     auto childTable = (*it)->getAllChild();
 
                     for(auto child : *childTable)
@@ -559,6 +573,8 @@ namespace nero
         {
             if((*it)->getId() == id)
             {
+                (*it)->isVisible() ? m_UpdateLog("Hiding Layer [" + (*it)->getName() + "]", nero::Info) : m_UpdateLog("Showing Layer [" + (*it)->getName() + "]", nero::Info);
+
                 (*it)->setIsVisible(!(*it)->isVisible());
 
                 m_UpdateUndo();
@@ -593,6 +609,8 @@ namespace nero
         {
             if((*it)->getId() == id)
             {
+                m_UpdateLog("Selecting Layer [" + (*it)->getName() + "]", nero::Info);
+
                 m_SelectedLayer = *it;
                 m_SelectedLayer->setIsSelected(true);
                 m_SelectedObject = nullptr;
@@ -611,34 +629,45 @@ namespace nero
             return;
 
         sf::Vector2f pos;
+        std::string pos_string = "";
 
         switch(position)
         {
             case Up:
                 pos = sf::Vector2f(0.f, -m_SelectionRect.getSize().y);
+                pos_string = "Up";
                 break;
             case Down:
                 pos = sf::Vector2f(0.f, m_SelectionRect.getSize().y);
+                pos_string = "Down";
                 break;
             case Left:
                 pos = sf::Vector2f(-m_SelectionRect.getSize().x, 0.f);
+                pos_string = "Left";
                 break;
             case Right:
                 pos = sf::Vector2f(m_SelectionRect.getSize().x, 0.f);
+                pos_string = "Right";
                 break;
             case Up_Left:
                 pos = sf::Vector2f(-m_SelectionRect.getSize().x, -m_SelectionRect.getSize().y);
+                pos_string = "Up_Left";
                 break;
             case Up_Right:
                 pos = sf::Vector2f(m_SelectionRect.getSize().x, -m_SelectionRect.getSize().y);
+                pos_string = "Up_Right";
                 break;
             case Down_Left:
                 pos = sf::Vector2f(-m_SelectionRect.getSize().x, m_SelectionRect.getSize().y);
+                pos_string = "Down_Left";
                 break;
             case Down_Right:
                 pos = sf::Vector2f(m_SelectionRect.getSize().x, m_SelectionRect.getSize().y);
+                pos_string = "Down_Right";
                 break;
         }
+
+        m_UpdateLog("copying Object [" + m_SelectedObject->getName() + "] " + pos_string, nero::Info);
 
         Object::Ptr object = m_SelectedObject->clone(pos);
         object->setId(getNewId());
@@ -677,6 +706,8 @@ namespace nero
     {
         if(m_SelectedLayer->getSecondType() == Object::Mesh_Object)
             return;
+
+        m_SelectedLayer->setColor(color);
 
         auto children = m_SelectedLayer->getAllChild();
 
@@ -743,6 +774,8 @@ namespace nero
         {
             case Object::Sprite_Object:
             {
+                m_UpdateLog("adding Sprite Object with Sprite [" + label + "]", nero::Info);
+
                 sf::Sprite sprite;
                 sf::IntRect rect = m_ResourceManager->texture.getSpriteBound(label);
                 sprite.setTextureRect(rect);
@@ -764,6 +797,8 @@ namespace nero
             {
                 if(!m_SelectedObject)
                 {
+                    m_UpdateLog("adding Mesh Object of Type [" + label + "]", nero::Info);
+
                     Mesh mesh;
 
                     if(label == "Polygon")
@@ -787,6 +822,8 @@ namespace nero
                 }
                 else if(m_SelectedObject && (m_SelectedObject->getSecondType() == Object::Meshed_Object || m_SelectedObject->getSecondType() == Object::Animation_Meshed_Object))
                 {
+                    m_UpdateLog("changing Object [" + m_SelectedObject->getName() + "] Mesh Type to [" + label + "]", nero::Info);
+
                     m_MeshEditor->deleteMesh(m_SelectedObject->getFirstChild()->getId());
                     m_SelectedObject->removeFirstChild();
 
@@ -828,6 +865,8 @@ namespace nero
 
             case Object::Meshed_Object:
             {
+                m_UpdateLog("adding Meshed Sprite Object with Sprite [" + label + "]", nero::Info);
+
                 //Sprite Object
                 sf::Sprite sprite;
                 sf::IntRect rect = m_ResourceManager->texture.getSpriteBound(label);
@@ -864,6 +903,8 @@ namespace nero
 
             case Object::Animation_Object:
             {
+                m_UpdateLog("adding Animation Object with Animation [" + label + "]", nero::Info);
+
                 Animation animation;
                 auto sequenceMap = m_ResourceManager->animation.getSequenceMap(label);
 
@@ -898,6 +939,8 @@ namespace nero
 
             case Object::Animation_Meshed_Object:
             {
+                m_UpdateLog("adding Meshed Animation Object with Animation [" + label + "]", nero::Info);
+
                 Animation animation;
                 auto sequenceMap = m_ResourceManager->animation.getSequenceMap(label);
 
@@ -947,6 +990,8 @@ namespace nero
 
             case Object::Text_Object:
             {
+                m_UpdateLog("adding Text Object with Text [" + label + "]", nero::Info);
+
                 sf::Text text;
                 text.setFont(m_ResourceManager->font.getDefaultFont());
                 text.setString(label);
@@ -964,6 +1009,8 @@ namespace nero
 
             case Object::Button_Object:
             {
+                m_UpdateLog("adding Button Object with Sprite [" + label + "]", nero::Info);
+
                 sf::Sprite sprite;
                 sf::IntRect rect = m_ResourceManager->texture.getSpriteBound(label);
                 sprite.setTextureRect(rect);
@@ -1011,6 +1058,8 @@ namespace nero
 
     void SceneBuilder::deleteObject(Object::Ptr object)
     {
+        m_UpdateLog("removing Object [" + object->getName() + "]", nero::Info);
+
         if(object->getFirstType() == Object::Mesh_Object)
         {
             m_MeshEditor->deleteMesh(object->getId());
@@ -1022,11 +1071,6 @@ namespace nero
         }
 
         m_SelectedLayer->removeChild(object);
-
-//        if(m_SelectedLayer->getChildCount() == 0)
-//        {
-//             m_SelectedLayer->setSecondType(Object::None);
-//        }
 
         m_SelectedObject = nullptr;
 
@@ -1040,6 +1084,8 @@ namespace nero
 
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object && m_SelectedObject->getSecondType() != Object::Meshed_Object && m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
+
+        m_UpdateLog("changing Mesh Type to : " + toString(label) + " Mesh", nero::Info);
 
         Mesh::Type type;
 
@@ -1071,6 +1117,8 @@ namespace nero
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object && m_SelectedObject->getSecondType() != Object::Meshed_Object && m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
+        flag ? m_UpdateLog("enabling fix rotation", nero::Info) :  m_UpdateLog("disabling fix rotation", nero::Info);
+
         MeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
@@ -1092,6 +1140,8 @@ namespace nero
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object && m_SelectedObject->getSecondType() != Object::Meshed_Object && m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
+        flag ? m_UpdateLog("enabling sensor mode", nero::Info) :  m_UpdateLog("disabling sensor mode", nero::Info);
+
         MeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
@@ -1112,6 +1162,8 @@ namespace nero
 
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object && m_SelectedObject->getSecondType() != Object::Meshed_Object && m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
+
+        flag ? m_UpdateLog("enabling allow to sleeping", nero::Info) :  m_UpdateLog("disabling allow to sleeping", nero::Info);
 
         MeshObject::Ptr mesh_object;
 
@@ -1847,6 +1899,8 @@ namespace nero
         if(!m_SelectedLayer || !m_SelectedObject)
             return;
 
+        m_UpdateLog("moving Object [" + m_SelectedObject->getName() +  "] Up", nero::Info);
+
         auto childTable = m_SelectedLayer->getAllChild();
 
         for(auto it = childTable->begin(); it != childTable->end(); it++)
@@ -1865,6 +1919,8 @@ namespace nero
     {
         if(!m_SelectedLayer || !m_SelectedObject)
             return;
+
+        m_UpdateLog("moving Object [" + m_SelectedObject->getName() +  "] Down", nero::Info);
 
         auto childTable = m_SelectedLayer->getAllChild();
 
@@ -1931,6 +1987,8 @@ namespace nero
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
+            m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font to ["+ font +"]", nero::Info);
+
             sf::Text& text = TextObject::Cast(m_SelectedObject)->getText();
             text.setFont(m_ResourceManager->font.getFont(font));
             TextObject::Cast(m_SelectedObject)->setFont(font);
@@ -1941,6 +1999,8 @@ namespace nero
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
+            m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font size to "+ toString(value), nero::Info);
+
             TextObject::Cast(m_SelectedObject)->setFontSize(value);
         }
     }
@@ -1965,6 +2025,8 @@ namespace nero
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
+            m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] outline thickness to "+ toString(value), nero::Info);
+
             TextObject::Cast(m_SelectedObject)->setOutlineThickness(value);
         }
     }
@@ -1973,6 +2035,8 @@ namespace nero
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
+            m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font style", nero::Info);
+
             TextObject::Cast(m_SelectedObject)->setStyle(bold, italic, underLined, strikeThrough);
         }
     }

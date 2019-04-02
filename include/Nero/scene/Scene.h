@@ -31,6 +31,17 @@ namespace nero
         public:
             typedef std::shared_ptr<Scene> Ptr;
 
+            struct Context
+            {
+                Context(sfg::Canvas::Ptr renderCanvas, sf::View& frontView, Camera::Ptr camera, ResourceManager::Ptr resourceManager, bool renderEngine);
+
+                sfg::Canvas::Ptr        renderCanvas;
+                sf::View&               frontView;
+                Camera::Ptr             camera;
+                ResourceManager::Ptr    resourceManager;
+                bool                    renderEngine;
+            };
+
                                         Scene(Context context);
             virtual                    ~Scene();
 
@@ -150,7 +161,6 @@ namespace nero
             std::function<void()>                           m_ResetScene;
             std::function<void(std::string, int)>           m_UpdateLog;
             std::function<void(std::string, bool, int)>     m_UpdateLogIf;
-
     };
 }
 #endif // SCENE_H

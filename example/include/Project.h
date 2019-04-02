@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Project Adventure Scene
-// Copyright (c) 2019 sk-landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 
 /*
@@ -10,7 +10,7 @@
 	Project Name 		: Adventure Scene
 	Project Description	: My Awesome Game Project
 
-	Team Members 		
+	Team Members
 		- sk-landry
 
 	Project Tools

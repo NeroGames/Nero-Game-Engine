@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Project Adventure Scene
-// Copyright (c) 2019 sk-landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef ADVENTURESCENE_H
 #define ADVENTURESCENE_H
@@ -16,7 +16,7 @@ namespace ng
 	class AdventureScene : public nero::Scene
     {
         public:
-                                AdventureScene(nero::Context context);
+                                AdventureScene(nero::Scene::Context context);
             virtual            ~AdventureScene();
 
             void                update(const sf::Time& timeStep);
@@ -33,6 +33,7 @@ namespace ng
             void                setupSceneScreens();
             void                setupSceneCollisions();
             void                setupPlayer();
+            void                setupPlatform();
 
         private:
             Player              mPlayer;

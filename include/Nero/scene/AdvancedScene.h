@@ -39,7 +39,7 @@ namespace nero
         public:
             typedef std::shared_ptr<AdvancedScene> Ptr;
 
-                                        AdvancedScene(Context context);
+                                        AdvancedScene(Scene::Context context);
             virtual                    ~AdvancedScene();
 
             virtual void                update(const sf::Time& timeStep);
@@ -74,15 +74,21 @@ namespace nero
             virtual void                jointDestroyed(b2Joint* joint);
             void                        setName(std::string name);
 
-            bool                            addScreen(const std::string& name);
+            bool                            addScreen(const std::string& name, bool loading = false);
+            bool                            loadScreen(const std::string& name);
             void                            selectScreen(const std::string& name);
             std::vector<std::string>        getScreenTable();
 
             bool                            deleteScreen(const std::string& name);
             bool                            renameScreen(const std::string& name, const std::string& newName);
             void                            setScreenCanvasColor(const sf::Color& color);
-            void                            setUpdateLog(std::function<void(std::string)>  fn);
             void                            destroyBomb();
+
+            void                            setUpdateUI(std::function<void()>  fn);
+            void                            setUpdateUndo(std::function<void()>  fn);
+            void                            setUpdateLog(std::function<void(const std::string&, int)>  fn);
+            void                            setUpdateLogIf(std::function<void(const std::string&, bool, int)>  fn);
+
 
         private:
             struct FrontScreen
@@ -105,7 +111,7 @@ namespace nero
             DestructionListener         m_DestructionListener;
             //Scene
             Scene::Ptr                  m_Scene;
-            Context                     m_Context;
+            Scene::Context              m_Context;
             SceneSetting                m_SceneSetting;
             SoundManager::Ptr           m_SoundManager;
             std::string                 m_SceneName;
@@ -133,7 +139,10 @@ namespace nero
             b2Profile                   m_MaxProfile;
             b2Profile                   m_TotalProfile;
 
-            std::function<void(std::string)>    m_UpdateLog;
+            std::function<void()>                               m_UpdateUI;
+            std::function<void()>                               m_UpdateUndo;
+            std::function<void(const std::string&, int)>        m_UpdateLog;
+            std::function<void(const std::string&, bool, int)>  m_UpdateLogIf;
     };
 }
 #endif // ADVANCEDSCENE_H

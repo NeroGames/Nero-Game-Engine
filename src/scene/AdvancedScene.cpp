@@ -31,7 +31,7 @@ namespace nero
 
     ////////////////////////////////////////////////////////////
     //AdvancedScene
-    AdvancedScene::AdvancedScene(Context context):
+    AdvancedScene::AdvancedScene(Scene::Context context):
          m_Scene(nullptr)
         ,m_Context(context)
         ,m_DestructionListener()
@@ -74,6 +74,12 @@ namespace nero
         //Sets the first num bytes of the block of memory pointed by ptr to the specified value (interpreted as an unsigned char).
         memset(&m_MaxProfile, 0, sizeof(b2Profile));
         memset(&m_TotalProfile, 0, sizeof(b2Profile));
+
+        //callbacks
+        m_UpdateUI      = [](){};
+        m_UpdateUndo    = [](){};
+        m_UpdateLog     = [](const std::string&, int){};
+        m_UpdateLogIf   = [](const std::string&, bool, int){};
     }
 
     ////////////////////////////////////////////////////////////
@@ -482,7 +488,13 @@ namespace nero
         m_CurrentScreen = name;
     }
 
-    bool AdvancedScene::addScreen(const std::string& _name)
+    bool AdvancedScene::loadScreen(const std::string& name)
+    {
+        addScreen(name, true);
+    }
+
+
+    bool AdvancedScene::addScreen(const std::string& _name, bool loading)
     {
         std::string name = _name;
         boost::algorithm::trim(name);
@@ -492,6 +504,11 @@ namespace nero
         {
             if(screen.name == name || name == "")
                 return false;
+        }
+
+        if(m_UpdateLog && !loading)
+        {
+            m_UpdateLog("adding new Screen [" + name +"]", nero::Info);
         }
 
         FrontScreen frontScreen;
@@ -507,6 +524,15 @@ namespace nero
 
         m_FrontScreenTable.back().screenBuilder->addLayer();
 
+        if(m_UpdateUI && m_UpdateUndo && m_UpdateLog && m_UpdateLogIf && !loading)
+        {
+            frontScreen.screenBuilder->setUpdateUI(m_UpdateUI);
+            frontScreen.screenBuilder->setUpdateUndo(m_UpdateUndo);
+            frontScreen.screenBuilder->setUpdateLog(m_UpdateLog);
+            frontScreen.screenBuilder->setUpdateLogIf(m_UpdateLogIf);
+            frontScreen.undoManager->add(frontScreen.screenBuilder->saveScene());
+        }
+
         return true;
     }
 
@@ -518,8 +544,6 @@ namespace nero
         {
            screenTable.push_back(screen.name);
         }
-
-        nero_log("screen table : " + _s(screenTable.size()));
 
         return screenTable;
     }
@@ -539,6 +563,8 @@ namespace nero
         {
             if(it->name == name)
             {
+                m_UpdateLog("removing Screen [" + name +"]", nero::Info);
+
                 m_FrontScreenTable.erase(it);
                 return true;
             }
@@ -564,6 +590,8 @@ namespace nero
         {
             if(it->name == name)
             {
+                m_UpdateLog("renaming Screen [" + name +"] to [" + newName +"]", nero::Info);
+
                 it->name = newName;
                 result = true;
                 break;
@@ -582,8 +610,23 @@ namespace nero
         frontSceen->canvasColor = color;
     }
 
-    void AdvancedScene::setUpdateLog(std::function<void(std::string)>  fn)
+     void AdvancedScene::setUpdateUI(std::function<void()>  fn)
+    {
+        m_UpdateUI = fn;
+    }
+
+    void AdvancedScene::setUpdateUndo(std::function<void()>  fn)
+    {
+        m_UpdateUndo = fn;
+    }
+
+    void AdvancedScene::setUpdateLog(std::function<void(const std::string&, int)>  fn)
     {
         m_UpdateLog = fn;
+    }
+
+    void AdvancedScene::setUpdateLogIf(std::function<void(const std::string&, bool, int)>  fn)
+    {
+        m_UpdateLogIf = fn;
     }
 }

@@ -197,19 +197,19 @@ namespace nero
         nero_log("setting up the engine-ui");
         m_EngineUI->setup();
 
-        //Select the last active Scene
-        nero_log("restoring the last Scene : " + m_EngineSetting.lastScene);
-        m_EngineUI->selectScene(m_EngineSetting.lastScene);
-
         //First log
         nero_log("update engine-ui log");
-        m_EngineUI->updateLog("Nero Game Engine --- Log file " + getdate() + " " + getTime() + "\n");
+        m_EngineUI->updateLog("Nero Game Engine --- Log file " + getdate() + " " + getTime() +"\n");
 
-        nero_log("background task completed");
-        nero_log("nero development engine started successfully");
+        //Select the last active Scene
+        nero_log("Restoring last Scene");
+        m_EngineUI->selectScene(m_EngineSetting.lastScene);
 
         //exit
         engineStarted = true;
+
+        nero_log("Background task completed");
+        nero_log("Nero Development Engine started successfully");
 
         return 0;
     }

@@ -14,7 +14,19 @@
 namespace nero
 {
     ////////////////////////////////////////////////////////////
-    Scene::Scene(Context context):
+    //Context
+    Scene::Context::Context(sfg::Canvas::Ptr renderCanvas, sf::View& frontView, Camera::Ptr camera, ResourceManager::Ptr resourceManager, bool renderEngine):
+        renderCanvas(renderCanvas)
+        ,frontView(frontView)
+        ,camera(camera)
+        ,resourceManager(resourceManager)
+        ,renderEngine(renderEngine)
+    {
+        //Empty
+    }
+
+    ////////////////////////////////////////////////////////////
+    Scene::Scene(Scene::Context context):
          m_Context(context)
         ,m_World(Object::Ptr(new Object))
         ,m_CameraTarget()
@@ -43,7 +55,7 @@ namespace nero
         m_Text.setFont(context.resourceManager->font.getDefaultFont());
         m_Text.setCharacterSize(15.f);
         m_Text.setFillColor(sf::Color::White);
-        m_Text.setPosition(sf::Vector2f(10.f, 10.f));
+        m_Text.setPosition(sf::Vector2f(context.renderCanvas->GetAllocation().width/2.f-55.f, 10.f));
 
         //
         m_QuitEngine = [](){};
@@ -130,7 +142,7 @@ namespace nero
             if(m_SceneSetting.pause && !m_SceneSetting.singleStep)
             {
                 b2TimeStep = 0.0f;
-                m_PauseMessage = "#-- PAUSED --#";
+                m_Context.renderEngine ? m_PauseMessage = "" : m_PauseMessage = "#-- PAUSED --#";
             }
             else
             {
@@ -515,7 +527,7 @@ namespace nero
          return m_SceneName;
      }
 
-    const Context& Scene::getContext() const
+    const Scene::Context& Scene::getContext() const
     {
         return m_Context;
     }

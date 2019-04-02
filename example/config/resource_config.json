@@ -1,0 +1,63 @@
+{
+   "animation": {
+      "extension": [
+         "png",
+         "jpg",
+         "bmp",
+         "dds",
+         "tga",
+         "psd"
+      ],
+      "folder": "resource/animation"
+   },
+   "font": {
+      "default": "Sansation",
+      "extension": [
+         "ttf",
+         "otf"
+      ],
+      "folder": "resource/font"
+   },
+   "music": {
+      "extension": [
+         "wav",
+         "ogg",
+         "flac"
+      ],
+      "folder": "resource/music"
+   },
+   "script": {
+      "extension": [
+         "lua"
+      ],
+      "folder": "resource/script"
+   },
+   "shader": {
+      "descriptor": "resource/shader/shader.json",
+      "extension": [
+         "vert",
+         "frag"
+      ],
+      "folder": "resource/shader"
+   },
+   "sound": {
+      "extension": [
+         "wav",
+         "ogg",
+         "flac"
+      ],
+      "folder": "resource/sound"
+   },
+   "texture": {
+      "extension": [
+         "png",
+         "jpg",
+         "bmp",
+         "dds",
+         "tga",
+         "psd"
+      ],
+      "folder": "resource/texture",
+      "separator": "-"
+   }
+}

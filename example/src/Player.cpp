@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Project Adventure Scene
-// Copyright (c) 2019 sk-landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Adventure Scene
@@ -13,9 +13,9 @@ namespace ng
 {
     ////////////////////////////////////////////////////////////
 	Player::Player(): PhysicActionObject()
-	    ,mMoveSpeed(100.f)
-	    ,mRunSpeed(250.f)
-	    ,mJumpForce(450.f)
+	    ,mMoveSpeed(150.f)
+	    ,mRunSpeed(300.f)
+	    ,mJumpForce(700.f)
 	    ,mIsMovingLeft(false)
 	    ,mIsMovingRight(false)
 	    ,mIsRunning(false)
@@ -205,7 +205,7 @@ namespace ng
 	    if(!mIsJumping)
 	    {
 	        mAnimation->setSequence(PlayerSequencePool.jump);
-	        mPhysic->clearVelocity_y();
+	        mPhysic->clearVerticalVelocity();
 	        callAction(PlayerActionPool.jump);
 	        mIsJumping = true;
 	    }
@@ -219,6 +219,7 @@ namespace ng
 	    {
 	        mIsJumping = false;
 	        mAnimation->setSequence(PlayerSequencePool.idle);
+	        mPhysic->clearVelocity();
 	    }
 	}
 }

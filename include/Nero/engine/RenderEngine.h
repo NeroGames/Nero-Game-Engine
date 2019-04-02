@@ -110,7 +110,7 @@ namespace nero
             //Register a function that can return the Scene that has been set to the engine
             m_CreateScene =     [this] ()
                                 {
-                                    return Scene::Ptr(new T(Context(m_RenderCanvas, m_FrontView, m_Camera, m_ResourceManager, true)));
+                                    return Scene::Ptr(new T(Scene::Context(m_RenderCanvas, m_FrontView, m_Camera, m_ResourceManager, true)));
                                 };
 
             //create the scene

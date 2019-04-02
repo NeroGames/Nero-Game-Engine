@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    SceneManager::SceneManager(Context context):
+    SceneManager::SceneManager(Scene::Context context):
          m_Context(context)
         ,m_IsLeftShift(false)
         ,m_IsMouseRightButton(false)
@@ -22,7 +22,10 @@ namespace nero
         ,m_ShitftOriginSpeed(0.5f)
         ,m_ViewCenter(0.0f, 20.0f)
     {
-        //
+        m_UpdateUI      = [](){};
+        m_UpdateUndo    = [](){};
+        m_UpdateLog     = [](const std::string&, int){};
+        m_UpdateLogIf   = [](const std::string&, bool, int){};
     }
 
     void SceneManager::update(const sf::Time& timeStep)
@@ -40,9 +43,7 @@ namespace nero
             m_AdvancedScene->m_Scene->render();
             m_AdvancedScene->m_Scene->renderShape();
             m_AdvancedScene->renderDebug();
-
         }
-
     }
 
     void SceneManager::renderFrontScreen()
@@ -188,7 +189,6 @@ namespace nero
             m_AdvancedScene->m_Scene = nullptr;
         }
 
-
         m_AdvancedScene->m_Scene = m_SceneFactoryMap[m_AdvancedScene->m_SceneName].second();
         m_AdvancedScene->m_Scene->m_UpdateLog = m_UpdateLog;
         m_AdvancedScene->m_Scene->m_UpdateLogIf = m_UpdateLogIf;
@@ -216,7 +216,6 @@ namespace nero
             m_AdvancedScene->m_Scene->m_ScreenTable.push_back(screen);
         }
 
-
         m_AdvancedScene->m_Scene->m_ObjectManager->setObjectCount(m_AdvancedScene->m_SceneBuilder->getObjectCount());
         m_AdvancedScene->m_Scene->m_ObjectManager->setPhysicWorld(m_AdvancedScene->m_Scene->m_PhysicWorld);
         m_AdvancedScene->m_Scene->checkSceneObject();
@@ -243,9 +242,14 @@ namespace nero
         auto found = m_SceneFactoryMap.find(sceneName);
         auto advanceScene = found->second.first = found->second.first;
 
-        advanceScene->m_CameraSetting.position                               = sf::Vector2f(400.f, 303.f);
-        advanceScene->m_CameraSetting.defaultPosition                        = sf::Vector2f(400.f, 303.f);
-        advanceScene->m_CameraSetting.zoom                                   = -36;
+        advanceScene->setUpdateUI(m_UpdateUI);
+        advanceScene->setUpdateUndo(m_UpdateUndo);
+        advanceScene->setUpdateLog(m_UpdateLog);
+        advanceScene->setUpdateLogIf(m_UpdateLogIf);
+
+        advanceScene->m_CameraSetting.position                                  = sf::Vector2f(400.f, 303.f);
+        advanceScene->m_CameraSetting.defaultPosition                           = sf::Vector2f(400.f, 303.f);
+        advanceScene->m_CameraSetting.zoom                                      = -36;
         advanceScene->m_FrontScreenTable.front().cameraSetting.position        = sf::Vector2f(400.f, 303.f);
         advanceScene->m_FrontScreenTable.front().cameraSetting.defaultPosition = sf::Vector2f(400.f, 303.f);
         advanceScene->m_FrontScreenTable.front().cameraSetting.zoom            = -36;
@@ -308,13 +312,19 @@ namespace nero
         auto found = m_SceneFactoryMap.find(sceneName);
         auto advanceScene = found->second.first;
 
-         //Load Scene
+        advanceScene->setUpdateUI(m_UpdateUI);
+        advanceScene->setUpdateUndo(m_UpdateUndo);
+        advanceScene->setUpdateLog(m_UpdateLog);
+        advanceScene->setUpdateLogIf(m_UpdateLogIf);
+
+        //Load Scene
         loadScene(advanceScene, scene);
 
         //World
         advanceScene->m_SceneBuilder->setUpdateUI(m_UpdateUI);
         advanceScene->m_SceneBuilder->setUpdateUndo(m_UpdateUndo);
         advanceScene->m_SceneBuilder->setUpdateLog(m_UpdateLog);
+        advanceScene->m_SceneBuilder->setUpdateLogIf(m_UpdateLogIf);
         advanceScene->m_UndoManager->add(scene["world_view"]);
         //Screen
         for(auto screen : advanceScene->m_FrontScreenTable)
@@ -322,6 +332,7 @@ namespace nero
             screen.screenBuilder->setUpdateUI(m_UpdateUI);
             screen.screenBuilder->setUpdateUndo(m_UpdateUndo);
             screen.screenBuilder->setUpdateLog(m_UpdateLog);
+            screen.screenBuilder->setUpdateLogIf(m_UpdateLogIf);
             screen.undoManager->add(screen.screenBuilder->saveScene());
         }
     }
@@ -346,7 +357,7 @@ namespace nero
         advanceScene->m_FrontScreenTable.clear();
         for(auto screen : screen_table)
         {
-            advanceScene->addScreen(screen["name"]);
+            advanceScene->loadScreen(screen["name"]);
             advanceScene->m_FrontScreenTable.back().screenBuilder->loadScene(screen);
             advanceScene->m_FrontScreenTable.back().cameraSetting = CameraSetting::fromJson(screen["camera_setting"]);
             advanceScene->m_FrontScreenTable.back().grid->fromJson(screen["grid_setting"]);
@@ -417,9 +428,11 @@ namespace nero
 
     void SceneManager::updateSceneSaveFile()
     {
-        m_AdvancedScene->m_SceneBuilder->updateLayerOrder();
-
         std::string file = WORKSPACE_FOLDER + "/" +  m_AdvancedScene->m_SceneName + "/" + m_AdvancedScene->m_SceneName +  ".json";
+
+        m_UpdateLog("saving Scene [" + m_AdvancedScene->m_SceneName + "] to " + file, nero::Info);
+
+        m_AdvancedScene->m_SceneBuilder->updateLayerOrder();
 
         saveFile(file, saveScene().dump(3));
     }
@@ -427,6 +440,8 @@ namespace nero
     void SceneManager::loadSceneSaveFile()
     {
         std::string file = WORKSPACE_FOLDER + "/" +  m_AdvancedScene->m_SceneName + "/" + m_AdvancedScene->m_SceneName +  ".json";
+
+        m_UpdateLog("loading Scene [" + m_AdvancedScene->m_SceneName + "] from " + file, nero::Info);
 
         loadScene(loadJson(file));
     }

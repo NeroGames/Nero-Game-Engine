@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Project Adventure Scene
-// Copyright (c) 2019 sk-landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Adventure Scene
@@ -10,15 +10,17 @@
 #include <Nero/scene/CollisionRule.h>
 #include <Nero/model/FrontScreen.h>
 #include <Nero/object/TextObject.h>
+#include <Nero/model/JointProperty.h>
+#include <Nero/model/PrismaticJoint.h>
 ////////////////////////////////////////////////////////////
 namespace ng
 {
     ////////////////////////////////////////////////////////////
-	AdventureScene::AdventureScene(nero::Context context): nero::Scene(context)
+	AdventureScene::AdventureScene(nero::Scene::Context context): nero::Scene(context)
 		,mPlayer()
 	    ,mCoinCount(0)
 	    ,mStarCount(0)
-	    ,mPlatform(new nero::SimpleMovingObject(nero::SimpleMovingObject::Right_Left, 70.f, 0.f, 300.f))
+	    ,mPlatform(nullptr)
 	{
 		//Empty
 	}
@@ -47,15 +49,15 @@ namespace ng
         	ObjectPool.player_body,
 	    });
 
-	    /*log("checking Screen Objects ...");
-	    getObjectManager()->checkScreenObject(
-	    {
-	        "screen",
-
+	    log("checking Screen Objects ...");
+	    getObjectManager()->checkScreenObject
+	    (
+	        ScreenPool.start_screen,
 	        {
-
-	        }
-	    });*/
+                ButtonPool.startButton,
+                ButtonPool.quitButton
+            }
+	    );
 
 	    log("Scene Objects checking completed");
     }
@@ -88,12 +90,7 @@ namespace ng
 	    setupPlayer();
 
 	    log("Setting up the platform ...");
-	    auto platformObject = getObjectManager()->findObject(ObjectPool.platform);
-	    mPlatform->setObject(platformObject);
-	    platformObject->addChild(getObjectManager()->moveObject("platform_1_1"));
-	    platformObject->addChild(getObjectManager()->moveObject("platform_1_2"));
-	    platformObject->addChild(getObjectManager()->moveObject("platform_1_3"));
-	    getObjectManager()->addObject(mPlatform);
+        setupPlatform();
 
 	    log("Setting up Scene settings ...");
 	    getSceneSetting().drawShapes = false;
@@ -126,16 +123,16 @@ namespace ng
 
         //There are many Button_Object on our Screens. We retrieve them and configure them
 	    log("Retrieving Button Objects ...");
-	    auto startButton        = getObjectManager()->findScreenUIObject(ScreenPool.start_screen, ObjectPool.startButton);
-	    auto quitButton         = getObjectManager()->findScreenUIObject(ScreenPool.start_screen, ObjectPool.quitButton);
-	    auto resumeButton       = getObjectManager()->findScreenUIObject(ScreenPool.pause_screen, ObjectPool.resumeButton);
-	    auto optionsButton      = getObjectManager()->findScreenUIObject(ScreenPool.pause_screen, ObjectPool.optionsButton);
-	    auto startMenuButton    = getObjectManager()->findScreenUIObject(ScreenPool.pause_screen, ObjectPool.startMenuButton);
-	    auto closeOptionsButton = getObjectManager()->findScreenUIObject(ScreenPool.options_screen, ObjectPool.closeOptionsButton);
-	    auto musicDownButton    = getObjectManager()->findScreenUIObject(ScreenPool.options_screen, ObjectPool.musicDownButton);
-	    auto musicUpButton      = getObjectManager()->findScreenUIObject(ScreenPool.options_screen, ObjectPool.musicUpButton);
-	    auto soundDownButton    = getObjectManager()->findScreenUIObject(ScreenPool.options_screen, ObjectPool.soundDownButton);
-	    auto soundUpButton      = getObjectManager()->findScreenUIObject(ScreenPool.options_screen, ObjectPool.soundUpButton);
+	    auto startButton        = getObjectManager()->findScreenUIObject(ScreenPool.start_screen, ButtonPool.startButton);
+	    auto quitButton         = getObjectManager()->findScreenUIObject(ScreenPool.start_screen, ButtonPool.quitButton);
+	    auto resumeButton       = getObjectManager()->findScreenUIObject(ScreenPool.pause_screen, ButtonPool.resumeButton);
+	    auto optionsButton      = getObjectManager()->findScreenUIObject(ScreenPool.pause_screen, ButtonPool.optionsButton);
+	    auto startMenuButton    = getObjectManager()->findScreenUIObject(ScreenPool.pause_screen, ButtonPool.startMenuButton);
+	    auto closeOptionsButton = getObjectManager()->findScreenUIObject(ScreenPool.options_screen, ButtonPool.closeOptionsButton);
+	    auto musicDownButton    = getObjectManager()->findScreenUIObject(ScreenPool.options_screen, ButtonPool.musicDownButton);
+	    auto musicUpButton      = getObjectManager()->findScreenUIObject(ScreenPool.options_screen, ButtonPool.musicUpButton);
+	    auto soundDownButton    = getObjectManager()->findScreenUIObject(ScreenPool.options_screen, ButtonPool.soundDownButton);
+	    auto soundUpButton      = getObjectManager()->findScreenUIObject(ScreenPool.options_screen, ButtonPool.soundUpButton);
 
 	    //We configure all Buttons to play a sound when the mouse comes over
 	    log("Setting up all buttons on_mouse_enter callback ...");
@@ -207,7 +204,7 @@ namespace ng
 
 	        float volume = getSoundManager()->increaseMusicVolume();
 
-	        auto musicVolumeText = getObjectManager()->findScreenObject(ScreenPool.options_screen, ObjectPool.musicVolumeText);
+	        auto musicVolumeText = getObjectManager()->findScreenObject(ScreenPool.options_screen, TextPool.musicVolumeText);
 	        nero::TextObject::Cast(musicVolumeText)->setContent(nero::toString(volume));
 	    });
 
@@ -218,7 +215,7 @@ namespace ng
 
 	        float volume = getSoundManager()->decreaseMusicVolume();
 
-	        auto musicVolumeText = getObjectManager()->findScreenObject(ScreenPool.options_screen, ObjectPool.musicVolumeText);
+	        auto musicVolumeText = getObjectManager()->findScreenObject(ScreenPool.options_screen, TextPool.musicVolumeText);
 	        nero::TextObject::Cast(musicVolumeText)->setContent(nero::toString(volume));
 	    });
 
@@ -229,7 +226,7 @@ namespace ng
 
 	        float volume = getSoundManager()->increaseSoundVolume();
 
-	        auto soundVolumeText = getObjectManager()->findScreenObject(ScreenPool.options_screen, ObjectPool.soundVolumeText);
+	        auto soundVolumeText = getObjectManager()->findScreenObject(ScreenPool.options_screen, TextPool.soundVolumeText);
 	        nero::TextObject::Cast(soundVolumeText)->setContent(nero::toString(volume));
 	    });
 
@@ -240,16 +237,16 @@ namespace ng
 
 	        float volume = getSoundManager()->decreaseSoundVolume();
 
-	        auto soundVolumeText = getObjectManager()->findScreenObject(ScreenPool.options_screen, ObjectPool.soundVolumeText);
+	        auto soundVolumeText = getObjectManager()->findScreenObject(ScreenPool.options_screen, TextPool.soundVolumeText);
 	        nero::TextObject::Cast(soundVolumeText)->setContent(nero::toString(volume));
 	    });
 
 	    //Update the Music Text_Object in the Options Menu
-	    auto musicVolumeText = getObjectManager()->findScreenObject(ScreenPool.options_screen, ObjectPool.musicVolumeText);
+	    auto musicVolumeText = getObjectManager()->findScreenObject(ScreenPool.options_screen, TextPool.musicVolumeText);
 	    nero::TextObject::Cast(musicVolumeText)->setContent(nero::toString(getSoundManager()->getMusicVolume()));
 
         //Update the Sound Text_Object in the Options Menu
-        auto soundVolumeText = getObjectManager()->findScreenObject(ScreenPool.options_screen, ObjectPool.soundVolumeText);
+        auto soundVolumeText = getObjectManager()->findScreenObject(ScreenPool.options_screen, TextPool.soundVolumeText);
 	    nero::TextObject::Cast(soundVolumeText)->setContent(nero::toString(getSoundManager()->getSoundVolume()));
 
 
@@ -295,17 +292,39 @@ namespace ng
 	    nero::PhysicObject::Ptr playerFoot = nero::PhysicObject::Cast(playerOjbect);
 	    nero::PhysicObject::Ptr playerBody = nero::PhysicObject::Cast(getObjectManager()->findObject(ObjectPool.player_body));
 
-	    b2WeldJointDef jointDef;
-	    jointDef.collideConnected = false;
-	    jointDef.bodyA = playerFoot->getBody();
-	    jointDef.bodyB = playerBody->getBody();
-	    jointDef.localAnchorA = b2Vec2(0.f, -0.5f);
-	    jointDef.localAnchorB =b2Vec2(0.f, 0.25f);
-	    jointDef.frequencyHz = 40.f;
-	    jointDef.referenceAngle = 0.f;
-	    jointDef.dampingRatio = 0.f;
+	    nero::PrismaticJointProperty property;
+	    property.collideConnected = false;
+	    property.enableLimit = true;
+	    property.enableMotor = true;
+	    property.localAxisA = sf::Vector2f(0.f, -1.f);
+	    property.lowerTranslation = playerBody->getSize().y/2.f;
+	    property.upperTranslation = 0.f;
+	    getObjectManager()->createJoint(playerFoot, playerBody, property);
+	}
 
-	    getPhysicWorld()->CreateJoint(&jointDef);
+	void AdventureScene::setupPlatform()
+	{
+	    auto platformObject = getObjectManager()->findObject(ObjectPool.platform_part_1);
+	    mPlatform = nero::SimpleMovingObject::Ptr(new nero::SimpleMovingObject(nero::SimpleMovingObject::Right_Left, 70.f, 0.f, 320.f));
+	    mPlatform->setObject(platformObject);
+
+	    auto plaform_part_2 = getObjectManager()->moveObject(ObjectPool.platform_part_2);
+	    auto plaform_part_3 = getObjectManager()->moveObject(ObjectPool.platform_part_3);
+	    auto plaform_part_4 = getObjectManager()->moveObject(ObjectPool.platform_part_4);
+
+	    sf::Vector2f offset = sf::Vector2f(plaform_part_2->getGlobalBounds().width, 0.f);
+	    sf::Vector2f pos    = platformObject->getFirstChild()->getPosition();
+
+	    plaform_part_2->setPosition(pos - offset);
+	    platformObject->addChild(plaform_part_2);
+
+	    plaform_part_3->setPosition(pos - 2.f*offset);
+	    platformObject->addChild(plaform_part_3);
+
+	    plaform_part_4->setPosition(pos - 3.f*offset);
+	    platformObject->addChild(plaform_part_4);
+
+	    getObjectManager()->addObject(mPlatform);
 	}
 
 	////////////////////////////////////////////////////////////
@@ -352,6 +371,8 @@ namespace ng
 	       collision.isCollising(CategoryPool.player, CategoryPool.platform))
 	    {
 	        mPlayer.resetJump();
+
+	        nero::PhysicObject::Cast(getObjectManager()->findObject(ObjectPool.player_body))->clearVelocity();
 	    }
 
 	    //The Player pickup some coins
@@ -362,7 +383,7 @@ namespace ng
 	        //Remove the coin from the Scene
 	        getObjectManager()->removeObject(collision.getObject(CategoryPool.coin));
 	        //Update the number of coins on the Game Screen
-	        auto text = getObjectManager()->findScreenObject(ScreenPool.game_screen, ObjectPool.countCoinTtext);
+	        auto text = getObjectManager()->findScreenObject(ScreenPool.game_screen, TextPool.countCoinText);
 	        nero::TextObject::Cast(text)->setContent(nero::toString(mCoinCount));
 	        //disable this collision
             collision.setEnabled(false);
@@ -376,7 +397,7 @@ namespace ng
 	        //Remove the start from the Scene
 	        getObjectManager()->removeObject(collision.getObject(CategoryPool.star));
 	        //Update the number of stars on the Game Screen
-	        auto text = getObjectManager()->findScreenObject(ScreenPool.game_screen, ObjectPool.countStarText);
+	        auto text = getObjectManager()->findScreenObject(ScreenPool.game_screen, TextPool.countStarText);
 	        nero::TextObject::Cast(text)->setContent(nero::toString(mStarCount));
 	        //disable this collision
             collision.setEnabled(false);

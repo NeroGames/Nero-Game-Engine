@@ -9,18 +9,6 @@
 namespace nero
 {
     ////////////////////////////////////////////////////////////
-    //Context
-    Context::Context(sfg::Canvas::Ptr renderCanvas, sf::View& frontView, Camera::Ptr camera, ResourceManager::Ptr resourceManager, bool renderEngine):
-        renderCanvas(renderCanvas)
-        ,frontView(frontView)
-        ,camera(camera)
-        ,resourceManager(resourceManager)
-        ,renderEngine(renderEngine)
-    {
-        //Empty
-    }
-
-    ////////////////////////////////////////////////////////////
     //QueryCallback
     QueryCallback::QueryCallback(const b2Vec2& point)
     {
