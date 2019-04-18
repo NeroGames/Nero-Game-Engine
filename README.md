@@ -1,9 +1,11 @@
-## Project Nero Game Engine 2.0
+# Project Nero Game Engine 2.0
 
 ## Development 
 
-#### Environmnet 
-	
+#### Environmen 
+
+| - | - | - |
+| --- | --- | --- |
 | Code Editor | Qt Creator 4.9.0 | [website](https://github.com/SFML/SFML) | 
 | Build Tool | Cmake 3.14.2 | [website](https://cmake.org/) |
 | Compiler | MinGW 7.3.0 [posix thread] |  |
