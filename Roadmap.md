@@ -12,7 +12,7 @@ This phase will consist to rebuild the Engine with a new Interface. The version 
 | status | task | description | 
 | <ul><li>- [x] </li></ul> | Choose a new Code Editor | |
 | <ul><li>- [x] </li></ul> | Upgrade the Compiler | |
-| <ul><li>- [x] </li></ul> | Upgrade the SFML | |
+| <ul><li>- [x] </li></ul> | Upgrade SFML | |
 | <ul><li>- [x] </li></ul> | Remove SFGUI | |
 | <ul><li>- [ ] </li></ul> | Design a New Interface | |
 
