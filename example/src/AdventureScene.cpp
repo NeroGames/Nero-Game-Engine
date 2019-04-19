@@ -63,6 +63,14 @@ namespace ng
     }
 
     ////////////////////////////////////////////////////////////
+    sf::Vector2f AdventureScene::getSceneResolution()
+    {
+        log("Setting up Resolution ...");
+
+	    return sf::Vector2f(800.f, 600.f);
+    }
+
+    ////////////////////////////////////////////////////////////
 	void AdventureScene::init()
 	{
 	     /*
@@ -71,10 +79,7 @@ namespace ng
             --> It's the Second method in your Scene to be called
         */
 
-	    log("Initializing Nero Adventure Scene v0.1");
-
-	    log("Setting up Resolution ...");
-	    setResolution(800.f, 600.f);
+	    log("Initializing Nero Adventure Scene v0.2");
 
 	    log("Setting up Sound and Music Volume ...");
 	    getSoundManager()->setSoundVolume(30.f);

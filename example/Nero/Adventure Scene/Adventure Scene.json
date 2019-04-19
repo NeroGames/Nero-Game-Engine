@@ -346,7 +346,7 @@
             }
          ],
          "name": "start_screen",
-         "object_count": 919
+         "object_count": 922
       },
       {
          "camera_setting": {
@@ -593,7 +593,7 @@
             }
          ],
          "name": "pause_screen",
-         "object_count": 927
+         "object_count": 930
       },
       {
          "camera_setting": {
@@ -1036,7 +1036,7 @@
             }
          ],
          "name": "options_screen",
-         "object_count": 893
+         "object_count": 896
       },
       {
          "camera_setting": {
@@ -1277,7 +1277,7 @@
          "default_rotation": 0.0,
          "default_zoom": -12.0,
          "position": {
-            "x": 3420.72192382812,
+            "x": 462.986450195312,
             "y": 280.627685546875
          },
          "rotation": 0.0,

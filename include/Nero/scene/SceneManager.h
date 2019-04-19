@@ -34,7 +34,6 @@ namespace nero
 
             const std::vector<sf::String>&      getSceneTable() const;
             const int&                          getSceneCount() const;
-            const sf::Vector2f                  getSceneResolution() const;
 
             Scene::Ptr                          getScene();
             sf::Vector2f                        getSceneResolution(Scene::Ptr scene);

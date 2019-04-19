@@ -28,6 +28,8 @@ namespace ng
             void                handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
             void                handleCollisionContactBegin(nero::Collision collision);
 
+            sf::Vector2f        getSceneResolution();
+
         private:
             //Startup Screen
             void                setupSceneScreens();

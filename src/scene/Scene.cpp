@@ -44,7 +44,6 @@ namespace nero
         ,m_PauseMessage("")
         ,m_HideWorld(false)
         ,m_SceenCanvasColor(sf::Color::Transparent)
-        ,m_Resolution(800.f, 600.f)
     {
         //Setup the world
         m_PhysicWorld = new b2World(m_SceneSetting.gravity);
@@ -700,14 +699,9 @@ namespace nero
         }
     }
 
-    const sf::Vector2f Scene::getResolution() const
+    sf::Vector2f Scene::getSceneResolution()
     {
-       return m_Resolution;
-    }
-
-    void Scene::setResolution(const float& width, const float& height)
-    {
-        m_Resolution = sf::Vector2f(width, height);
+       return sf::Vector2f(800.f, 600.f);
     }
 
     b2World* Scene::getPhysicWorld()

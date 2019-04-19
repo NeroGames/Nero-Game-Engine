@@ -62,7 +62,7 @@ namespace nero
     {
         public:
             //Method
-                                    DevEngine(const unsigned int& windowWidth = 1305.f, const unsigned int& windowHeight = 670.f, const std::string& windowTitle = "Nero Game Engine");
+                                    DevEngine(const unsigned int& windowWidth = 1325.f, const unsigned int& windowHeight = 670.f, const std::string& windowTitle = "Nero Game Engine");
             virtual                ~DevEngine();
 
             template <typename T>

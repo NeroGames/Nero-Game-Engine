@@ -458,11 +458,6 @@ namespace nero
         }
     }
 
-    const sf::Vector2f SceneManager::getSceneResolution() const
-    {
-        return m_AdvancedScene->m_Scene->m_Resolution;
-    }
-
     Scene::Ptr SceneManager::getScene()
     {
         Scene::Ptr scene = m_SceneFactoryMap[m_AdvancedScene->m_SceneName].second();
@@ -499,6 +494,6 @@ namespace nero
 
     sf::Vector2f SceneManager::getSceneResolution(Scene::Ptr scene)
     {
-        return scene->m_Resolution;
+        return scene->getSceneResolution();
     }
 }

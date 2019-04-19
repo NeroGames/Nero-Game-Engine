@@ -39,7 +39,7 @@ int main()
 class NewScene : public nero::Scene
 {
 	public:
-	    NewScene(nero::Context context): nero::Scene(context)
+	    NewScene(nero::Scene::Context context): nero::Scene(context)
 	    {
 		//Ctr
 	    }
@@ -64,10 +64,10 @@ If you want to work on another environement you can still build the Engine.
 - [Youtube](https://www.youtube.com/channel/UCIR0nDUMGzJ3Pkpa3gDCUeQ?view_as=subscriber) Find some videos here. There may be some videos tutorials in the future
 - [Forum](https://www.nero-game.com/forum/) Ask any questions here
 
-## Roadmap
+## Release Notes
 
-The current version is v0.9.0 <br>
-The version v1.0.0 will be coming soon.
+[Checkout the Release Notes here](./Release.md)
+
 
 ## How to Build
 
