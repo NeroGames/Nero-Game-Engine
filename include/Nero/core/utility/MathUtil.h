@@ -2,25 +2,9 @@
 // Nero Game Engine
 // Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
+#ifndef MATHUTIL_H
+#define MATHUTIL_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
-#include <Nero/editor/Editor.h>
 ////////////////////////////////////////////////////////////
 
-int main()
-{
-    //instentiate the editor
-    nero::Editor editor;
-
-    //launch the editor
-    editor.run();
-
-    return 0;
-}
-
-
-
-
-
-
-
+#endif // MATHUTIL_H
