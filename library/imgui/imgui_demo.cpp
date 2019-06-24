@@ -2570,7 +2570,7 @@ static void ShowDemoWindowColumns()
     if (ImGui::TreeNode("Basic"))
     {
         ImGui::Text("Without border:");
-        ImGui::Columns(3, "mycolumns3", false);  // 3-ways, no border
+        ImGui::Columns(5, "mycolumns3", false);  // 3-ways, no border
         ImGui::Separator();
         for (int n = 0; n < 14; n++)
         {

@@ -43,6 +43,10 @@ namespace  nero
 
         //ImGui::ShowDemoWindow();
 
+        auto node = ImGui::DockBuilderGetNode(actionBarId);
+        //node->SizeRef.x = 652;
+        node->SizeRef.y = 20;
+
         ImGui::SFML::Render(m_RenderWindow);
     }
 
@@ -106,7 +110,7 @@ namespace  nero
             //ImGuiID dock_id_center = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_None, 0.20f, nullptr, &dock_main_id);
             ImGuiID dock_id_left = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.20f, nullptr, &dock_main_id);
             ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.20f, nullptr, &dock_main_id);
-            ImGuiID dock_id_up = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.20f, nullptr, &dock_main_id);
+            actionBarId = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.20f, nullptr, &dock_main_id);
             ImGuiID dock_id_down = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, nullptr, &dock_main_id);
 
             //ImGui::DockBuilderGetNode(dock_id_left)->LocalFlags = ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_KeepAliveOnly;
@@ -115,14 +119,14 @@ namespace  nero
             ImGui::DockBuilderDockWindow("main_center", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
             ImGui::DockBuilderDockWindow("main_left", dock_id_left);
             ImGui::DockBuilderDockWindow("main_right", dock_id_right);
-            ImGui::DockBuilderDockWindow("main_up", dock_id_up);
+            ImGui::DockBuilderDockWindow("main_up", actionBarId);
             ImGui::DockBuilderDockWindow("main_down", dock_id_down);
             ImGui::DockBuilderFinish(dockspace_id);
 
-            auto node = ImGui::DockBuilderGetNode(dock_id_up);
-
-            node->LocalFlags = ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_SingleDock;
-
+            auto node = ImGui::DockBuilderGetNode(actionBarId);
+            node->SizeRef.x = 652;
+            node->SizeRef.y = 20;
+            node->LocalFlags = ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoSplit |  ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_SingleDock;
             setup_dock = true;
         }
 
@@ -132,20 +136,20 @@ namespace  nero
         ImGui::End();
 
         window_flags = ImGuiWindowFlags_None;
-        window_flags |= ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoTitleBar;
+        window_flags |= ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar;
         ImGui::Begin("main_left");
              ImGui::Button("main_left_button");
         ImGui::End();
 
         ImGui::Begin("main_right");
              ImGui::Button("main_right_button");
-
         ImGui::End();
 
-        ImGui::Begin("main_up");
-             ImGui::Button("main_up_button");
-             ImGui::SetNextWindowSize(sf::Vector2f(20.f, 20.f));
+        //ImGui::SetNextWindowSizeConstraints(ImVec2(652, 38), ImVec2(1000, 40), nullptr, nullptr);
 
+        ImGui::Begin("main_up", nullptr, window_flags);
+             ImGui::Button("main_up_button");
+             //ImGui::SetWindowSize(ImVec2(652, 38));
         ImGui::End();
 
         ImGui::Begin("main_down");
