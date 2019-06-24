@@ -22,7 +22,3 @@
 ## Roadmap 
 
 [Checkout the Roadmap here](./Roadmap.md)
-
-
-
-
