@@ -8,7 +8,7 @@
 //Nero
 #include <Nero/core/engine/CoreEngine.h>
 #include <Nero/core/utility/LogUtil.h>
-#include <Nero/editor/EditorInterface.h>
+#include <Nero/editor/Interface.h>
 //STD
 #include <future>
 ////////////////////////////////////////////////////////////
@@ -21,10 +21,10 @@ namespace nero
             virtual                ~Editor() override;
 
             template <typename T>
-            void                    addScene(const std::string& sceneName);
+            void                    addScene(const std::string& projectName);
 
             template <typename T>
-            void                    addLuaScene(const std::string& sceneName);
+            void                    addLuaScene(const std::string& projectName);
 
     private:
            //game loop
@@ -43,7 +43,7 @@ namespace nero
             //Startup Screen
             //LoadingScreen::Ptr      m_LoadingScreen;
             //Editor Interface
-            EditorInterface::Ptr    m_EditorInterface;
+            Interface::Ptr    m_Interface;
             //Resource Manager
             //ResourceManager::Ptr    m_ResourceManager;
             //Scene Setting
@@ -52,15 +52,15 @@ namespace nero
     };
 
     template <typename T>
-    void Editor::addScene(const std::string& sceneName)
+    void Editor::addScene(const std::string& projectName)
     {
-        nero_log(sceneName);
+        nero_log(projectName);
     }
 
     template <typename T>
-    void Editor::addLuaScene(const std::string& sceneName)
+    void Editor::addLuaScene(const std::string& projectName)
     {
-        nero_log(sceneName);
+        nero_log(projectName);
     }
 
 }

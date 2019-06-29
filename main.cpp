@@ -9,7 +9,7 @@
 
 int main()
 {
-    //instentiate the editor
+    //instantiate the editor
     nero::Editor editor;
 
     //launch the editor

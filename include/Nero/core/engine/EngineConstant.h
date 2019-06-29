@@ -22,7 +22,7 @@ namespace nero
 
         //engine window
         const std::string ENGINE_WINDOW_TITLE   = "Nero Game Engine";
-        const unsigned int ENGINE_WINDOW_WIDTH  = 1024;
+        const unsigned int ENGINE_WINDOW_WIDTH  = 1024 + 256;
         const unsigned int ENGINE_WINDOW_HEIGHT = 720;
 
         //time step

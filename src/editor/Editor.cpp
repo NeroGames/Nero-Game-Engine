@@ -1,5 +1,5 @@
 #include <Nero/editor/Editor.h>
-#include <Nero/editor/EditorInterface.h>
+#include <Nero/editor/Interface.h>
 #include <memory>
 #include <Nero/core/utility/FileUtil.h>
 
@@ -10,7 +10,7 @@ namespace  nero
     {
         setupRenderWindow();
 
-        m_EditorInterface = std::make_unique<EditorInterface>(m_Window);
+        m_Interface = std::make_unique<Interface>(m_Window);
     }
 
     Editor::~Editor()
@@ -31,11 +31,10 @@ namespace  nero
             else
             {
                 //EngineUI Event
-                m_EditorInterface->handleEvent(event);
+                m_Interface->handleEvent(event);
             }
         }
     }
-
 
     void Editor::update(const sf::Time& timeStep)
     {
@@ -47,11 +46,10 @@ namespace  nero
         else
         {
             //Render EngineUI
-            m_EditorInterface->update(timeStep);
-            m_EditorInterface->updateFrameRate(getFrameRate(), getFrameTime());
+            m_Interface->update(timeStep);
+            m_Interface->updateFrameRate(getFrameRate(), getFrameTime());
         }
     }
-
 
     void Editor::render()
     {
@@ -69,12 +67,11 @@ namespace  nero
         {
             m_Window.clear(EngineConstant.CANVAS_CLEAR_COLOR);
 
-                m_EditorInterface->render();
+                m_Interface->render();
 
             m_Window.display();
         }
     }
-
 
     void Editor::setupRenderWindow()
     {
@@ -87,7 +84,6 @@ namespace  nero
         //setup IMGUI
         ImGui::SFML::Init(m_Window);
     }
-
 
     void Editor::buildStartupScreen()
     {

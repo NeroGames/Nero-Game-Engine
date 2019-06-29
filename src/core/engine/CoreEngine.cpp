@@ -37,8 +37,6 @@ namespace  nero
     {
         el::Configurations setting(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_LOGGING}, StringPool.EXTANSION_TEXT));
         el::Loggers::reconfigureAllLoggers(setting);
-
-        nero_log("booo");
     }
 
     void CoreEngine::createEngineWindow()
