@@ -36,6 +36,7 @@ namespace nero
             sf::RenderWindow&       m_RenderWindow;
             bool        setup_dock = false;
             ImGuiID actionBarId;
+            bool            show_project_window = false;
     };
 }
 

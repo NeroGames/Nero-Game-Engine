@@ -41,7 +41,7 @@ namespace  nero
 
         createDockSpace();
 
-        //ImGui::ShowDemoWindow();
+        ImGui::ShowDemoWindow();
 
         auto node = ImGui::DockBuilderGetNode(actionBarId);
         //node->SizeRef.x = 652;
@@ -119,6 +119,7 @@ namespace  nero
             ImGui::DockBuilderDockWindow("main_center", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
             ImGui::DockBuilderDockWindow("main_left", dock_id_left);
             ImGui::DockBuilderDockWindow("main_right", dock_id_right);
+            ImGui::DockBuilderDockWindow("Dear ImGui Demo", dock_id_right);
             ImGui::DockBuilderDockWindow("main_up", actionBarId);
             ImGui::DockBuilderDockWindow("main_down", dock_id_down);
             ImGui::DockBuilderFinish(dockspace_id);
@@ -148,13 +149,76 @@ namespace  nero
         //ImGui::SetNextWindowSizeConstraints(ImVec2(652, 38), ImVec2(1000, 40), nullptr, nullptr);
 
         ImGui::Begin("main_up", nullptr, window_flags);
-             ImGui::Button("main_up_button");
-             //ImGui::SetWindowSize(ImVec2(652, 38));
+             ImGui::Columns(5, "mixed", false);
+
+             ImGui::NextColumn();
+
+             ImGui::NextColumn();
+
+             ImGui::NextColumn();
+
+             ImGui::NextColumn();
+
+
+             //create project button
+             ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(7.0f, 0.6f, 0.6f));
+             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(7.0f, 0.7f, 0.7f));
+             ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(7.0f, 0.8f, 0.8f));
+             if(ImGui::Button("Project"))
+             {
+                show_project_window = true;
+             }
+             ImGui::PopStyleColor(3);
+
+
+             ImGui::Columns(1);
+
         ImGui::End();
 
         ImGui::Begin("main_down");
              ImGui::Button("main_down_button");
         ImGui::End();
+
+        if(show_project_window)
+        {
+            ImGuiWindowFlags project_window_flags = ImGuiWindowFlags_NoDocking;
+
+            ImGuiViewport* viewport = ImGui::GetMainViewport();
+            //ImGui::SetNextWindowPos(viewport->Pos);
+            //ImGui::SetNextWindowSize(viewport->Size);
+            ImVec2 pos;
+            pos.x = viewport->Size.x/2.f - 300.f;
+            pos.y = viewport->Size.y/2.f - 200.f;
+
+            ImGui::SetNextWindowSize(ImVec2(600.f, 400.f));
+            //ImGui::SetNextWindowPos(pos);
+            ImGui::Begin("Nero Project", nullptr, project_window_flags);
+
+
+                //ImGui::SetCursorPosX(0);
+                ImVec2 cursor = ImGui::GetCursorPos();
+                ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(255, 0, 0, 100));
+                ImGui::BeginChild("Child1", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 300.f));
+                    ImGui::Button("sdfsf");
+                ImGui::EndChild();
+                ImGui::PopStyleColor();
+
+                ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() * 0.3f + 9.f);
+                ImGui::SetCursorPosY(cursor.y);
+                ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(255, 255, 0, 100));
+                ImGui::BeginChild("Child2", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.7f, 300.f));
+                    ImGui::Button("ssdfsf");
+                ImGui::EndChild();
+                ImGui::PopStyleColor();
+
+                ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 100.f);
+                if(ImGui::Button("cancel"))
+                {
+                    show_project_window = false;
+                }
+
+            ImGui::End();
+        }
 
     }
 
