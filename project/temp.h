@@ -141,5 +141,58 @@ int main()
     git_libgit2_shutdown();
 }*/
 
+/*
+#include <nativefiledialog/include/nfd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+
+
+int main( void )
+{
+    nfdchar_t *outPath = NULL;
+    nfdresult_t result = NFD_OpenDialog( NULL, NULL, &outPath );
+
+    if ( result == NFD_OKAY ) {
+        puts("Success!");
+        puts(outPath);
+        free(outPath);
+    }
+    else if ( result == NFD_CANCEL ) {
+        puts("User pressed cancel.");
+    }
+    else {
+        printf("Error: %s\n", NFD_GetError() );
+    }
+
+    return 0;
+}
+//*/
+
+/*#include <boost/dll.hpp>
+#include <experimental/string>
+#include <experimental/filesystem>
+#include <experimental/algorithm>
+
+int main()
+{
+    boost::dll::shared_library lib(boost::dll::fs::path("plugins/sfml-system-2.dll"));
+
+    boost::dll::library_info info(boost::dll::fs::path("plugins/sfml-system-2.dll"));
+
+    for(std::string s : info.symbols())
+    {
+        nero_log(s);
+    }
+
+
+    for(std::string s : info.sections())
+    {
+        nero_log(s);
+    }
+
+
+    return 0;
+}*/
 
 #endif // TEMP_H

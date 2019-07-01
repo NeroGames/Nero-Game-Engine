@@ -1,6 +1,9 @@
 #include <Nero/editor/ProjectManager.h>
 
-ProjectManager::ProjectManager()
+namespace nero
 {
+    ProjectManager::ProjectManager()
+    {
 
+    }
 }

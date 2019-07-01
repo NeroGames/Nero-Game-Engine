@@ -1,6 +1,9 @@
 #include <Nero/core/scene/Scene.h>
 
-Scene::Scene()
+namespace nero
 {
+    Scene::Scene(Context context)
+    {
 
+    }
 }

@@ -5,6 +5,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 #include <Nero/core/utility/FileUtil.h>
+#include <nativefiledialog/include/nfd.h>
 
 namespace  nero
 {
@@ -164,7 +165,7 @@ namespace  nero
              ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(7.0f, 0.6f, 0.6f));
              ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(7.0f, 0.7f, 0.7f));
              ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(7.0f, 0.8f, 0.8f));
-             if(ImGui::Button("Project"))
+             if(ImGui::Button("Project", ImVec2(100.f, 0.f)))
              {
 
                 //show_project_window = true;
@@ -278,6 +279,10 @@ namespace  nero
                     {
                         error_message = "Please enter a Project Lead";
                     }
+                    else if (std::string(project_company) == StringPool.BLANK)
+                    {
+                        error_message = "Please enter a Company Name";
+                    }
                     else
                     {
                         error = false;
@@ -285,13 +290,23 @@ namespace  nero
 
                     if (onCreate && error)
                     {
-                        nero_log(error_message);
                         ImGui::OpenPopup("Error Creating Project");
                     }
                     else if(onCreate)
                     {
+                        nlohmann::json projectJson;
+
+                        projectJson["project_name"]         = std::string(project_name);
+                        projectJson["project_lead"]         = std::string(project_lead);
+                        projectJson["project_company"]      = std::string(project_company);
+                        projectJson["project_description"]  = std::string(project_description);
+
                         memset(project_name, 0, sizeof project_name);
                         memset(project_lead, 0, sizeof project_lead);
+                        memset(project_company, 0, sizeof project_company);
+                        memset(project_description, 0, sizeof project_company);
+
+                        createProject(projectJson);
 
                         ImGui::CloseCurrentPopup();
                     }
@@ -310,9 +325,7 @@ namespace  nero
                         ImGui::EndPopup();
                     }
 
-
                 ImGui::EndChild();
-
             ImGui::EndChild();
 
             //Panel 3 : existing project list
@@ -322,6 +335,7 @@ namespace  nero
 
             ImGui::Text("Open Project");
             ImGui::Separator();
+
             ImGui::Dummy(ImVec2(0.0f, 5.0f));
             ImGui::BeginChild("project list", ImVec2(0.f, 0.f), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
                 for(int i = 0 ; i < 10 ; i++)
@@ -343,7 +357,34 @@ namespace  nero
 
             ImGui::Dummy(ImVec2(0.0f, 7.0f));
 
+            cursor = ImGui::GetCursorPos();
+            ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() * 0.33f);
+            if (ImGui::Button("Open Folder", ImVec2(100, 0)))
+            {
+                nfdchar_t *outPath = nullptr;
+                nfdresult_t result = NFD_OpenDialog( nullptr, nullptr, &outPath );
+
+                if ( result == NFD_OKAY ) {
+                    puts("Success!");
+                    puts(outPath);
+                    free(outPath);
+
+                    nero_log(outPath);
+
+                    openProject(std::string(outPath));
+                }
+                else if ( result == NFD_CANCEL ) {
+                    puts("User pressed cancel.");
+                }
+                else {
+                    printf("Error: %s\n", NFD_GetError() );
+                }
+
+                //ImGui::CloseCurrentPopup();
+            }
+
             ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 102.f);
+            ImGui::SetCursorPosY(cursor.y);
             if (ImGui::Button("Close", ImVec2(100, 0)))
             {
                 ImGui::CloseCurrentPopup();
@@ -358,4 +399,65 @@ namespace  nero
             ImGui::EndPopup();
         }
     }
+
+    void Interface::addScene(const std::string& projectName, std::function<Scene::Ptr()>)
+    {
+        //Engine SDK create and open a C++ project [Project_C++]
+
+        bool is_project_exit = false;
+
+        if(is_project_exit)
+        {
+            //load project
+        }
+        else
+        {
+            //create project
+            //save project
+            //load project
+        }
+    }
+
+    void Interface::addLuaScene(const std::string& projectName, std::function<LuaScene::Ptr()>)
+    {
+        //Engine SDK create or open a C++/Lua project [Project_C++_LUA]
+
+        bool is_project_exit = false;
+
+        if(is_project_exit)
+        {
+            //load project
+        }
+        else
+        {
+            //create project
+            //save project
+            //load project
+        }
+    }
+
+    void Interface::createProject(const nlohmann::json& projectJson)
+    {
+        //Engine Editor create then open a Lua project [Project_LUA]
+
+        nero_log(projectJson.dump(3));
+
+        bool is_project_exit = false;
+
+        if(!is_project_exit)
+        {
+            //create project
+            //load project
+        }
+        else
+        {
+            //return error message
+        }
+    }
+
+    void Interface::openProject(const std::string& path)
+    {
+        //Open a Lua project or Select a C++, C++/Lua project
+    }
+
 }

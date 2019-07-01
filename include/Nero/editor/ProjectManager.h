@@ -1,11 +1,20 @@
 #ifndef PROJECTMANAGER_H
 #define PROJECTMANAGER_H
 
+#include <memory>
 
-class ProjectManager
+namespace  nero
 {
-public:
-    ProjectManager();
-};
+    class ProjectManager
+    {
+        public:
+            typedef std::unique_ptr<ProjectManager> Ptr;
+
+        public:
+            ProjectManager();
+    };
+}
+
+
 
 #endif // PROJECTMANAGER_H

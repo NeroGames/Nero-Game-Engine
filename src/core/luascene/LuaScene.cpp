@@ -1,6 +1,10 @@
 #include <Nero/core/luascene/LuaScene.h>
 
-LuaScene::LuaScene()
+namespace  nero
 {
+    LuaScene::LuaScene(Scene::Context context):
+        Scene (context)
+    {
 
+    }
 }

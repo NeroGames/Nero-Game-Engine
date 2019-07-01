@@ -1,11 +1,19 @@
 #ifndef SCENEMANAGER_H
 #define SCENEMANAGER_H
 
+#include <memory>
 
-class SceneManager
+namespace nero
 {
-public:
-    SceneManager();
-};
+    class SceneManager
+    {
+        public:
+            typedef std::unique_ptr<SceneManager> Ptr;
+
+        public:
+            SceneManager();
+    };
+}
+
 
 #endif // SCENEMANAGER_H

@@ -1,6 +1,10 @@
 #include <Nero/editor/SceneManager.h>
 
-SceneManager::SceneManager()
+namespace nero
 {
+    SceneManager::SceneManager()
+    {
 
+    }
 }
+

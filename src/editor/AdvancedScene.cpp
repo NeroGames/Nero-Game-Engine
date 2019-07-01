@@ -1,6 +1,10 @@
 #include <Nero/editor/AdvancedScene.h>
 
-AdvancedScene::AdvancedScene()
+namespace nero
 {
+    AdvancedScene::AdvancedScene()
+    {
 
+    }
 }
+

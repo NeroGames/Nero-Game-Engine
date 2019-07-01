@@ -1,11 +1,13 @@
 #ifndef ADVANCEDSCENE_H
 #define ADVANCEDSCENE_H
 
-
-class AdvancedScene
+namespace nero
 {
-public:
-    AdvancedScene();
-};
+    class AdvancedScene
+    {
+    public:
+        AdvancedScene();
+    };
+}
 
 #endif // ADVANCEDSCENE_H

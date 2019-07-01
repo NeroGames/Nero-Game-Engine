@@ -54,13 +54,13 @@ namespace nero
     template <typename T>
     void Editor::addScene(const std::string& projectName)
     {
-        nero_log(projectName);
+        m_Interface->addScene<T>(projectName);
     }
 
     template <typename T>
     void Editor::addLuaScene(const std::string& projectName)
     {
-        nero_log(projectName);
+        m_Interface->addLuaScene<T>(projectName);
     }
 
 }
