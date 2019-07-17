@@ -32,7 +32,7 @@ namespace nero
            void                     update(const sf::Time& timeStep) override;
            void                     render()                         override;
            //startup
-           int                      startEngine(bool& engineStarted, const float minTime);
+           int                      startEngine(bool& engineStarted, const int duration);
            void                     buildStartupScreen();
            void                     setupRenderWindow();
 
@@ -46,21 +46,26 @@ namespace nero
             Interface::Ptr    m_Interface;
             //Resource Manager
             //ResourceManager::Ptr    m_ResourceManager;
-            //Scene Setting
-            //Task
+            //background tasks
             std::vector<std::function<void()>> m_BackgroundTaskTable;
     };
 
     template <typename T>
     void Editor::addScene(const std::string& projectName)
     {
-        m_Interface->addScene<T>(projectName);
+        m_BackgroundTaskTable.push_back([this, projectName]()
+        {
+            m_Interface->addScene<T>(projectName);
+        });
     }
 
     template <typename T>
     void Editor::addLuaScene(const std::string& projectName)
     {
-        m_Interface->addLuaScene<T>(projectName);
+        m_BackgroundTaskTable.push_back([this, projectName]()
+        {
+            m_Interface->addLuaScene<T>(projectName);
+        });
     }
 
 }

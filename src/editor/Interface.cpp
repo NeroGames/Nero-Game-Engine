@@ -16,6 +16,9 @@ namespace  nero
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         project_manager_texture.loadFromFile("editor_project_manager.png");
 
+        m_ProjectManager = std::make_unique<ProjectManager>();
+        m_SceneManager = std::make_unique<SceneManager>();
+
     }
 
     Interface::~Interface()
@@ -245,24 +248,32 @@ namespace  nero
                     ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 
-
+                    std::string default_value = m_EditorSetting["project_lead"].get<std::string>();
+                    int array_size = default_value.length() < 50 ? 50 : default_value.length();
                     ImGui::Text("Project Lead");
                     ImGui::SameLine(wording_width);
-                    static char project_lead[50] = "";
+                    char project_lead[array_size];
+                    std::strcpy(project_lead, default_value.c_str());
                     ImGui::SetNextItemWidth(input_width);
                     ImGui::InputText("##project_lead", project_lead, IM_ARRAYSIZE(project_lead));
                     ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
+                    default_value = m_EditorSetting["project_company"].get<std::string>();
+                    array_size = default_value.length() < 50 ? 50 : default_value.length();
                     ImGui::Text("Company Name");
                     ImGui::SameLine(wording_width);
-                    static char project_company[50] = "";
+                    char project_company[array_size];
+                    std::strcpy(project_company, default_value.c_str());
                     ImGui::SetNextItemWidth(input_width);
                     ImGui::InputText("##project_company", project_company, IM_ARRAYSIZE(project_company));
                     ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
+                    default_value = m_EditorSetting["project_description"].get<std::string>();
+                    array_size = default_value.length() < 400 ? 400 : default_value.length();
                     ImGui::Text("Description");
                     ImGui::SameLine(wording_width);
-                    static char project_description[50 * 8] = "";
+                    char project_description[array_size];
+                    std::strcpy(project_description, default_value.c_str());
                     static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
                     ImGui::InputTextMultiline("##project_description", project_description, IM_ARRAYSIZE(project_description), ImVec2(input_width, ImGui::GetTextLineHeight() * 5), flags);
                     ImGui::Dummy(ImVec2(0.0f, 5.0f));
@@ -271,9 +282,15 @@ namespace  nero
                     bool onCreate = ImGui::Button("Create", ImVec2(100, 0));
                     std::string error_message = StringPool.BLANK;
                     bool error = true;
+
                     if(std::string(project_name) == StringPool.BLANK)
                     {
                         error_message = "Please enter a Project Name";
+                    }
+                    else if(m_ProjectManager->isProjectExist(std::string(project_name)))
+                    {
+                        error_message = "A project with the same signature already exist,\n"
+                                        "please choose another Project Name";
                     }
                     else if(std::string(project_lead) == StringPool.BLANK)
                     {
@@ -311,11 +328,11 @@ namespace  nero
                         ImGui::CloseCurrentPopup();
                     }
 
-                    ImGui::SetNextWindowSize(ImVec2(250.f, 100.f));
+                    ImGui::SetNextWindowSize(ImVec2(300.f, 120.f));
                     if(ImGui::BeginPopupModal("Error Creating Project", nullptr, window_flags))
                     {
                         ImGui::Text("%s", error_message.c_str());
-                        ImGui::Dummy(ImVec2(0.0f, 25.0f));
+                        ImGui::Dummy(ImVec2(0.0f, 45.0f));
                         ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 95.f);
                         if (ImGui::Button("Close", ImVec2(100, 0)))
                         {
@@ -338,17 +355,67 @@ namespace  nero
 
             ImGui::Dummy(ImVec2(0.0f, 5.0f));
             ImGui::BeginChild("project list", ImVec2(0.f, 0.f), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
-                for(int i = 0 ; i < 10 ; i++)
+
+                for(const nlohmann::json& project : m_ProjectManager->getProjectTable())
                 {
-                    std::string title = "Project " + std::to_string(i);
-                    if (ImGui::CollapsingHeader(title.c_str()))
+                    std::string project_name = project["project_name"].get<std::string>();
+
+                    if (ImGui::CollapsingHeader(project_name.c_str()))
                     {
-                        for (int i = 0; i < 5; i++)
+                                    project_name        = ": " + project_name;
+                        std::string project_id          = ": " + project["project_id"].get<std::string>();
+                        std::string project_lead        = ": " + project["project_lead"].get<std::string>();
+                        std::string project_company     = ": " + project["project_company"].get<std::string>();
+                        std::string project_description = ": " + project["project_description"].get<std::string>();
+                        std::string creation_date       = ": " + project["creation_date"].get<std::string>();
+                        std::string modification_date   = ": " + project["modification_date"].get<std::string>();
+
+                        ImGui::Text("Project Name");
+                        ImGui::SameLine(wording_width);
+                        ImGui::Text(project_name.c_str());
+                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+                        ImGui::Text("Project Id");
+                        ImGui::SameLine(wording_width);
+                        ImGui::Text(project_id.c_str());
+                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+                        ImGui::Text("Project Lead");
+                        ImGui::SameLine(wording_width);
+                        ImGui::Text(project_lead.c_str());
+                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+                        ImGui::Text("Project Company");
+                        ImGui::SameLine(wording_width);
+                        ImGui::Text(project_company.c_str());
+                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+                        ImGui::Text("Create Date");
+                        ImGui::SameLine(wording_width);
+                        ImGui::Text(creation_date.c_str());
+                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+                        ImGui::Text("Modification Date");
+                        ImGui::SameLine(wording_width);
+                        ImGui::Text(modification_date.c_str());
+                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+                        ImGui::Text("Project Description");
+                        ImGui::SameLine(wording_width);
+                        ImGui::Text(project_description.c_str());
+                        ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+
+                        ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 100.f);
+                        if (ImGui::Button("Open Project", ImVec2(100, 0)))
                         {
+                            openProject(project);
 
-                            ImGui::Text("Some content %d", i);
-
+                            ImGui::CloseCurrentPopup();
                         }
+
+                        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
                     }
                 }
              ImGui::EndChild();
@@ -389,75 +456,70 @@ namespace  nero
             {
                 ImGui::CloseCurrentPopup();
             }
-            //ImGui::SetItemDefaultFocus();
-
-            /*if(ImGui::Button("cancel"))
-            {
-                show_project_window = false;
-            }*/
 
             ImGui::EndPopup();
         }
     }
 
-    void Interface::addScene(const std::string& projectName, std::function<Scene::Ptr()>)
+    void Interface::addScene(const std::string& projectName, std::function<Scene::Ptr(Scene::Context)> factory)
     {
         //Engine SDK create and open a C++ project [Project_C++]
 
-        bool is_project_exit = false;
-
-        if(is_project_exit)
+        if(m_ProjectManager->isProjectExist(projectName))
         {
-            //load project
+            m_SceneManager->addSceneFacotry(formatString(projectName), factory);
         }
         else
         {
-            //create project
+            m_ProjectManager->createProject(projectName, ProjectManager::CPP_PROJECT);
+            m_SceneManager->addSceneFacotry(formatString(projectName), factory);
+
             //save project
             //load project
         }
     }
 
-    void Interface::addLuaScene(const std::string& projectName, std::function<LuaScene::Ptr()>)
+    void Interface::addLuaScene(const std::string& projectName, std::function<LuaScene::Ptr(Scene::Context)> factory)
     {
         //Engine SDK create or open a C++/Lua project [Project_C++_LUA]
 
-        bool is_project_exit = false;
-
-        if(is_project_exit)
+        if(m_ProjectManager->isProjectExist(projectName))
         {
-            //load project
+            m_SceneManager->addLuaSceneFacotry(formatString(projectName), factory);
         }
         else
         {
-            //create project
-            //save project
-            //load project
+            m_ProjectManager->createProject(projectName, ProjectManager::LUA_CPP_PROJECT);
+            m_SceneManager->addLuaSceneFacotry(formatString(projectName), factory);
         }
     }
 
     void Interface::createProject(const nlohmann::json& projectJson)
     {
-        //Engine Editor create then open a Lua project [Project_LUA]
-
-        nero_log(projectJson.dump(3));
-
-        bool is_project_exit = false;
-
-        if(!is_project_exit)
-        {
-            //create project
-            //load project
-        }
-        else
-        {
-            //return error message
-        }
+        m_ProjectManager->createProject(projectJson, ProjectManager::LUA_PROJECT);
     }
 
     void Interface::openProject(const std::string& path)
     {
         //Open a Lua project or Select a C++, C++/Lua project
     }
+
+    void Interface::setEditorSetting(const nlohmann::json& setting)
+    {
+        m_EditorSetting = setting;
+
+        m_ProjectManager->setEditorSetting(m_EditorSetting);
+    }
+
+    void Interface::loadAllProject()
+    {
+        m_ProjectManager->loadAllProject();
+    }
+
+    void Interface::openProject(const nlohmann::json& projectJson)
+    {
+
+    }
+
 
 }

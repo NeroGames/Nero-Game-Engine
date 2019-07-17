@@ -21,7 +21,7 @@ namespace nero
     std::string loadText(const std::string& file);
 
     //load Json file
-    nlohmann::json loadJson(const std::string& path);
+    nlohmann::json loadJson(const std::string& path, const bool& path_has_extantion = false);
 
     //load setting file
     nlohmann::json loadSetting(const std::string& name);
@@ -31,6 +31,9 @@ namespace nero
 
     //Check if a file exist
     bool fileExist(const std::string& name);
+
+    //check if a directory exist
+    bool directoryExist(const std::string& name);
 
     //remove file
     bool removeFile(const std::string& name);

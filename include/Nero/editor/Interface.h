@@ -49,10 +49,16 @@ namespace nero
             void                    addLuaScene(const std::string& projectName);
 
             //Start Project
-            void                    addScene(const std::string& projectName, std::function<Scene::Ptr()>);
-            void                    addLuaScene(const std::string& projectName, std::function<LuaScene::Ptr()>);
+            void                    addScene(const std::string& projectName, std::function<Scene::Ptr(Scene::Context)> factory);
+            void                    addLuaScene(const std::string& projectName, std::function<LuaScene::Ptr(Scene::Context)> factory);
             void                    createProject(const nlohmann::json& projectJson);
             void                    openProject(const std::string& path);
+            void                    openProject(const nlohmann::json& projectJson);
+
+            void                    loadAllProject();
+
+            //
+            void                    setEditorSetting(const nlohmann::json& setting);
 
         private:
             friend class            Editor;
@@ -66,23 +72,26 @@ namespace nero
 
             ProjectManager::Ptr     m_ProjectManager;
             SceneManager::Ptr       m_SceneManager;
+
+            //
+             nlohmann::json m_EditorSetting;
     };
 
     template <typename T>
     void Interface::addScene(const std::string& projectName)
     {
-        addScene(projectName, [this] ()
+        addScene(projectName, [this] (Scene::Context context)
         {
-            return Scene::Ptr(new T(m_Context));
+            return Scene::Ptr(new T(context));
         });
     }
 
     template <typename T>
     void Interface::addLuaScene(const std::string& projectName)
     {
-        addLuaScene(projectName, [this] ()
+        addLuaScene(projectName, [this] (Scene::Context context)
         {
-            return LuaScene::Ptr(new T(m_Context));
+            return LuaScene::Ptr(new T(context));
         });
     }
 

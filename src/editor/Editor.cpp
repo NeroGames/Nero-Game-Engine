@@ -6,11 +6,11 @@
 namespace  nero
 {
     Editor::Editor() : CoreEngine()
-      ,m_EngineStarted(true)
+      ,m_EngineStarted(false)
     {
         setupRenderWindow();
 
-        m_Interface = std::make_unique<Interface>(m_Window);
+        m_StartEngineFuture = std::async(std::launch::async, &Editor::startEngine, this, std::ref(m_EngineStarted), 0.001);
     }
 
     Editor::~Editor()
@@ -91,4 +91,27 @@ namespace  nero
         m_LoadingScreen->setRenderWindow(&m_Window);
         m_LoadingScreen->init();*/
     }
+
+    int Editor::startEngine(bool& engineStarted, const int duration)
+    {
+        //create the interface
+        m_Interface = std::make_unique<Interface>(m_Window);
+        m_Interface->setEditorSetting(m_Setting);
+
+        //process background tasks
+        for(unsigned int i=0; i < m_BackgroundTaskTable.size(); i++)
+        {
+            m_BackgroundTaskTable[i]();
+        }
+
+        m_Interface->loadAllProject();
+
+        std::this_thread::sleep_for(std::chrono::seconds(duration));
+
+        //commit
+        engineStarted = true;
+
+        return 0;
+    }
+
 }

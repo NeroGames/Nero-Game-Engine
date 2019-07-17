@@ -66,9 +66,14 @@ namespace nero
         return text;
     }
 
-    nlohmann::json loadJson(const std::string& path)
+    nlohmann::json loadJson(const std::string& path, const bool& path_has_extantion)
     {
-        std::string file  = path + StringPool.EXTANSION_JSON;
+        std::string file  = path;
+
+        if(!path_has_extantion)
+        {
+            file  = file + StringPool.EXTANSION_JSON;
+        }
 
         std::ifstream stream(file);
 
@@ -101,6 +106,12 @@ namespace nero
     {
         using namespace  std::experimental::filesystem;
         return exists(name);
+    }
+
+    bool directoryExist(const std::string& name)
+    {
+        using namespace  std::experimental::filesystem;
+        return is_directory(name);
     }
 
     void  saveFile(const std::string& fileName, const std::string& content, bool overwrite)
