@@ -31,7 +31,6 @@ namespace  nero
            nlohmann::json      m_EditorSetting;
            std::vector<nlohmann::json>  m_ProjectTable;
 
-
     };
 }
 

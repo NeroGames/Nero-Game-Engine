@@ -6,6 +6,7 @@
 #define STRINGUTIL_H
 ///////////////////////////HEADERS//////////////////////////
 #include <string>
+#include <sstream>
 ////////////////////////////////////////////////////////////
 
 namespace nero
@@ -35,6 +36,19 @@ namespace nero
     };
 
     std::string formatString(const std::string& input, String_Format format = String_Format::DEFAULT);
+
+    template <typename T>
+    std::string         toString(T const& value);
+
+
+
+    template <typename T>
+    std::string toString(T const& value)
+    {
+        std::stringstream stream;
+        stream << value;
+        return stream.str();
+    }
 }
 
 #endif // STRINGUTIL_H

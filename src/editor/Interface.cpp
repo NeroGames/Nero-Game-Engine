@@ -6,6 +6,8 @@
 #include <imgui/imgui_internal.h>
 #include <Nero/core/utility/FileUtil.h>
 #include <nativefiledialog/include/nfd.h>
+#include <SFML/Graphics/RenderTexture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 namespace  nero
 {
@@ -31,6 +33,24 @@ namespace  nero
         if(event.type == sf::Event::Closed)
         {
             quitEditor();
+        }
+
+        if(event.type == sf::Event::MouseButtonPressed)
+        {
+            sf::Vector2f position;
+            position.x = event.mouseButton.x;
+            position.y = event.mouseButton.y;
+
+            if(event.mouseButton.button == sf::Mouse::Left)
+            {
+                m_SceneManager->addCircleShape(position);
+
+            }
+            else
+            {
+                m_SceneManager->removeCircleShape(position);
+            }
+
         }
 
         ImGui::SFML::ProcessEvent(event);
@@ -101,26 +121,14 @@ namespace  nero
         if(!setup_dock && !fileExist(getPath({"imgui"}, ".ini")))
         {
             ImGuiID dock_main_id = dockspace_id; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
-            //ImGuiID dock_id_prop = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.20f, nullptr, &dock_main_id);
-            //ImGuiID dock_id_bottom = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, nullptr, &dock_main_id);
-
-            /*ImGui::DockBuilderDockWindow("Logfff", dock_id_bottom);
-            ImGui::DockBuilderDockWindow("Properties", dock_id_prop);
-            ImGui::DockBuilderDockWindow("Mesh", dock_id_prop);
-            ImGui::DockBuilderDockWindow("Extra", dock_id_prop);
-            ImGui::DockBuilderFinish(dockspace_id);*/
 
             //split main dock in five
-            //ImGuiID dock_id_center = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_None, 0.20f, nullptr, &dock_main_id);
             ImGuiID dock_id_left = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.20f, nullptr, &dock_main_id);
             ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.20f, nullptr, &dock_main_id);
             actionBarId = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.20f, nullptr, &dock_main_id);
             ImGuiID dock_id_down = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, nullptr, &dock_main_id);
 
-            //ImGui::DockBuilderGetNode(dock_id_left)->LocalFlags = ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_KeepAliveOnly;
-            //ImGui::DockBuilderGetNode(dock_id_up)->LocalFlags = ImGuiDockNodeFlags_KeepAliveOnly | ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_NoSplit  | ImGuiDockNodeFlags_AutoHideTabBar;
-
-            ImGui::DockBuilderDockWindow("main_center", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
+            ImGui::DockBuilderDockWindow("Scene", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
             ImGui::DockBuilderDockWindow("main_left", dock_id_left);
             ImGui::DockBuilderDockWindow("main_right", dock_id_right);
             ImGui::DockBuilderDockWindow("Dear ImGui Demo", dock_id_right);
@@ -133,11 +141,29 @@ namespace  nero
             node->SizeRef.y = 20;
             node->LocalFlags = ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoSplit |  ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_SingleDock;
             setup_dock = true;
+
+            auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
+            right_node->SizeRef.x = 400;
         }
 
 
-        ImGui::Begin("main_center");
-            ImGui::Button("main_center_button");
+        ImGui::Begin("Scene");
+
+            sf::Vector2f window_position    = ImGui::GetWindowPos();
+            sf::Vector2f window_size        = ImGui::GetWindowSize();
+            sf::Vector2f mouse_position     = ImGui::GetMousePos();
+            float title_bar_height          = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
+            sf::Vector2f window_padding     = ImGui::GetStyle().WindowPadding;
+
+            SceneManager::RenderContext renderContext;
+            renderContext.canvas_position   = sf::Vector2f(window_position.x + window_padding.x, window_position.y + title_bar_height + window_padding.y);
+            renderContext.canvas_size       = sf::Vector2f(window_size.x - window_padding.x * 2, window_size.y - title_bar_height - window_padding.y * 2);
+            renderContext.mouse_position    = sf::Vector2f(mouse_position.x - renderContext.canvas_position.x, mouse_position.y - renderContext.canvas_position.y);
+
+            sf::RenderTexture& renderTexture = m_SceneManager->render(renderContext);
+
+            ImGui::Image(flipTexture(renderTexture.getTexture()));
+
         ImGui::End();
 
         window_flags = ImGuiWindowFlags_None;
@@ -186,11 +212,6 @@ namespace  nero
         ImGui::Begin("main_down");
              ImGui::Button("main_down_button");
         ImGui::End();
-
-        /*if(show_project_window)
-        {
-            showProjectManagerWindow();
-        }*/
 
     }
 
@@ -242,38 +263,24 @@ namespace  nero
 
                     ImGui::Text("Project Name");
                     ImGui::SameLine(wording_width);
-                    static char project_name[50] = "";
                     ImGui::SetNextItemWidth(input_width);
                     ImGui::InputText("##project_name", project_name, IM_ARRAYSIZE(project_name));
                     ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
-
-                    std::string default_value = m_EditorSetting["project_lead"].get<std::string>();
-                    int array_size = default_value.length() < 50 ? 50 : default_value.length();
                     ImGui::Text("Project Lead");
                     ImGui::SameLine(wording_width);
-                    char project_lead[array_size];
-                    std::strcpy(project_lead, default_value.c_str());
                     ImGui::SetNextItemWidth(input_width);
                     ImGui::InputText("##project_lead", project_lead, IM_ARRAYSIZE(project_lead));
                     ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
-                    default_value = m_EditorSetting["project_company"].get<std::string>();
-                    array_size = default_value.length() < 50 ? 50 : default_value.length();
                     ImGui::Text("Company Name");
                     ImGui::SameLine(wording_width);
-                    char project_company[array_size];
-                    std::strcpy(project_company, default_value.c_str());
                     ImGui::SetNextItemWidth(input_width);
                     ImGui::InputText("##project_company", project_company, IM_ARRAYSIZE(project_company));
                     ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
-                    default_value = m_EditorSetting["project_description"].get<std::string>();
-                    array_size = default_value.length() < 400 ? 400 : default_value.length();
                     ImGui::Text("Description");
                     ImGui::SameLine(wording_width);
-                    char project_description[array_size];
-                    std::strcpy(project_description, default_value.c_str());
                     static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
                     ImGui::InputTextMultiline("##project_description", project_description, IM_ARRAYSIZE(project_description), ImVec2(input_width, ImGui::GetTextLineHeight() * 5), flags);
                     ImGui::Dummy(ImVec2(0.0f, 5.0f));
@@ -509,6 +516,16 @@ namespace  nero
         m_EditorSetting = setting;
 
         m_ProjectManager->setEditorSetting(m_EditorSetting);
+
+        //
+        std::string default_value = m_EditorSetting["project_lead"].get<std::string>();
+        std::strcpy(project_lead, default_value.c_str());
+
+        default_value = m_EditorSetting["project_company"].get<std::string>();
+        std::strcpy(project_company, default_value.c_str());
+
+        default_value = m_EditorSetting["project_description"].get<std::string>();
+        std::strcpy(project_description, default_value.c_str());
     }
 
     void Interface::loadAllProject()
@@ -520,6 +537,15 @@ namespace  nero
     {
 
     }
+
+    sf::Sprite Interface::flipTexture(const sf::Texture& texture)
+    {
+        sf::Vector2u size = texture.getSize();
+        sf::Sprite sprite(texture, sf::IntRect(0, size.y, size.x, -size.y));
+
+        return sprite;
+    }
+
 
 
 }

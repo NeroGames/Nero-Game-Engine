@@ -126,6 +126,4 @@ namespace nero
     {
         return m_ProjectTable;
     }
-
-
 }

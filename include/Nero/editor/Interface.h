@@ -60,6 +60,8 @@ namespace nero
             //
             void                    setEditorSetting(const nlohmann::json& setting);
 
+            sf::Sprite             flipTexture(const sf::Texture& texture);
+
         private:
             friend class            Editor;
             sf::RenderWindow&       m_RenderWindow;
@@ -75,6 +77,15 @@ namespace nero
 
             //
              nlohmann::json m_EditorSetting;
+
+             //project creation
+             char project_name[100];
+             char project_lead[100];
+             char project_company[100];
+             char project_description[400];
+
+             std::string test_log;
+
     };
 
     template <typename T>
