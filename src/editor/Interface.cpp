@@ -300,8 +300,10 @@ namespace  nero
 
             auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
             right_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
-
         }
+
+        //auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
+
     }
 
     void Interface::showProjectManagerWindow()
