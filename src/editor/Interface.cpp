@@ -13,6 +13,7 @@ namespace  nero
 {
     Interface::Interface(sf::RenderWindow& window):
         m_RenderWindow(window)
+        ,fristLoad(true)
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -44,11 +45,14 @@ namespace  nero
             if(event.mouseButton.button == sf::Mouse::Left)
             {
                 m_SceneManager->addCircleShape(position);
+                m_LoggerApplication.AddLog("adding a circle\n");
 
             }
             else
             {
                 m_SceneManager->removeCircleShape(position);
+                m_LoggerApplication.AddLog("removing a circle\n");
+
             }
 
         }
@@ -67,7 +71,6 @@ namespace  nero
 
         createDockSpace();
 
-        ImGui::ShowDemoWindow();
 
         auto node = ImGui::DockBuilderGetNode(actionBarId);
         //node->SizeRef.x = 652;
@@ -103,12 +106,48 @@ namespace  nero
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
         ImGui::Begin("DockSpace Demo", nullptr, window_flags);
 
+
+
         ImGui::PopStyleVar();
 
         ImGui::PopStyleVar(2);
 
         ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+
+        if (ImGui::BeginMenuBar())
+        {
+            if (ImGui::BeginMenu("File"))
+            {
+                ImGui::MenuItem("action_1", nullptr, nullptr);
+                ImGui::MenuItem("action_2", nullptr, nullptr);
+
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Views"))
+            {
+                ImGui::MenuItem("action_3", nullptr, nullptr);
+                ImGui::MenuItem("action_4", nullptr, nullptr);
+
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Download"))
+            {
+                ImGui::MenuItem("action_3", nullptr, nullptr);
+                ImGui::MenuItem("action_4", nullptr, nullptr);
+
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Helps"))
+            {
+                ImGui::MenuItem("action_3", nullptr, nullptr);
+                ImGui::MenuItem("action_4", nullptr, nullptr);
+
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndMenuBar();
+        }
 
         ImGui::End();
 
@@ -123,17 +162,23 @@ namespace  nero
             ImGuiID dock_main_id = dockspace_id; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
 
             //split main dock in five
-            ImGuiID dock_id_left = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.20f, nullptr, &dock_main_id);
-            ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.20f, nullptr, &dock_main_id);
+            ImGuiID dock_id_left_up = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.20f, nullptr, &dock_main_id);
+            ImGuiID dock_id_left_bottom = ImGui::DockBuilderSplitNode(dock_id_left_up, ImGuiDir_Down, 0.20f, nullptr, &dock_id_left_up);
+            dock_id_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.20f, nullptr, &dock_main_id);
             actionBarId = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.20f, nullptr, &dock_main_id);
             ImGuiID dock_id_down = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, nullptr, &dock_main_id);
 
-            ImGui::DockBuilderDockWindow("Scene", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
-            ImGui::DockBuilderDockWindow("main_left", dock_id_left);
-            ImGui::DockBuilderDockWindow("main_right", dock_id_right);
+            ImGui::DockBuilderDockWindow("Scene     ", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
+            ImGui::DockBuilderDockWindow("Game     ", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
+            ImGui::DockBuilderDockWindow("Project     ", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
+            ImGui::DockBuilderDockWindow("Utility", dock_id_left_up);
+            ImGui::DockBuilderDockWindow("Mesh    ", dock_id_left_bottom);
+            ImGui::DockBuilderDockWindow("Scene Tools", dock_id_right);
+            ImGui::DockBuilderDockWindow("Resource", dock_id_right);
+            ImGui::DockBuilderDockWindow("Engine Help", dock_id_right);
             ImGui::DockBuilderDockWindow("Dear ImGui Demo", dock_id_right);
             ImGui::DockBuilderDockWindow("main_up", actionBarId);
-            ImGui::DockBuilderDockWindow("main_down", dock_id_down);
+            ImGui::DockBuilderDockWindow("Logging", dock_id_down);
             ImGui::DockBuilderFinish(dockspace_id);
 
             auto node = ImGui::DockBuilderGetNode(actionBarId);
@@ -144,36 +189,70 @@ namespace  nero
 
             auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
             right_node->SizeRef.x = 400;
+
+            auto bottom_node = ImGui::DockBuilderGetNode(dock_id_down);
+            bottom_node->SizeRef.y = 150;
+
+            auto left_bottom_node = ImGui::DockBuilderGetNode(dock_id_left_bottom);
+            left_bottom_node->SizeRef.y = 800;
+
         }
 
 
-        ImGui::Begin("Scene");
+        ImGui::Begin("Scene     ");
 
-            sf::Vector2f window_position    = ImGui::GetWindowPos();
-            sf::Vector2f window_size        = ImGui::GetWindowSize();
-            sf::Vector2f mouse_position     = ImGui::GetMousePos();
-            float title_bar_height          = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
-            sf::Vector2f window_padding     = ImGui::GetStyle().WindowPadding;
+            if(ImGui::IsWindowFocused)
+            {
 
-            SceneManager::RenderContext renderContext;
-            renderContext.canvas_position   = sf::Vector2f(window_position.x + window_padding.x, window_position.y + title_bar_height + window_padding.y);
-            renderContext.canvas_size       = sf::Vector2f(window_size.x - window_padding.x * 2, window_size.y - title_bar_height - window_padding.y * 2);
-            renderContext.mouse_position    = sf::Vector2f(mouse_position.x - renderContext.canvas_position.x, mouse_position.y - renderContext.canvas_position.y);
+                sf::Vector2f window_position    = ImGui::GetWindowPos();
+                sf::Vector2f window_size        = ImGui::GetWindowSize();
+                sf::Vector2f mouse_position     = ImGui::GetMousePos();
+                float title_bar_height          = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
+                sf::Vector2f window_padding     = ImGui::GetStyle().WindowPadding;
 
-            sf::RenderTexture& renderTexture = m_SceneManager->render(renderContext);
+                SceneManager::RenderContext renderContext;
+                renderContext.canvas_position   = sf::Vector2f(window_position.x + window_padding.x, window_position.y + title_bar_height + window_padding.y);
+                renderContext.canvas_size       = sf::Vector2f(window_size.x - window_padding.x * 2, window_size.y - title_bar_height - window_padding.y * 2);
+                renderContext.mouse_position    = sf::Vector2f(mouse_position.x - renderContext.canvas_position.x, mouse_position.y - renderContext.canvas_position.y);
 
-            ImGui::Image(flipTexture(renderTexture.getTexture()));
+                sf::RenderTexture& renderTexture = m_SceneManager->render(renderContext);
+
+                ImGui::Image(flipTexture(renderTexture.getTexture()));
+            }
 
         ImGui::End();
+
+        ImGui::Begin("Game     ");
+
+        ImGui::End();
+
+        ImGui::Begin("Project     ");
+
+        ImGui::End();
+
+
 
         window_flags = ImGuiWindowFlags_None;
         window_flags |= ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar;
-        ImGui::Begin("main_left");
-             ImGui::Button("main_left_button");
+        ImGui::Begin("Utility");
+
         ImGui::End();
 
-        ImGui::Begin("main_right");
-             ImGui::Button("main_right_button");
+        ImGui::Begin("Mesh    ");
+
+        ImGui::End();
+
+
+        ImGui::Begin("Scene Tools");
+
+        ImGui::End();
+
+        ImGui::Begin("Resource");
+
+        ImGui::End();
+
+        ImGui::Begin("Engine Help");
+
         ImGui::End();
 
         //ImGui::SetNextWindowSizeConstraints(ImVec2(652, 38), ImVec2(1000, 40), nullptr, nullptr);
@@ -209,10 +288,20 @@ namespace  nero
 
         ImGui::End();
 
-        ImGui::Begin("main_down");
-             ImGui::Button("main_down_button");
-        ImGui::End();
+        //logging window
+        showLogWindow();
 
+        ImGui::ShowDemoWindow();
+
+        if(fristLoad)
+        {
+            ImGui::SetWindowFocus("Scene     ");
+            fristLoad = false;
+
+            auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
+            right_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
+
+        }
     }
 
     void Interface::showProjectManagerWindow()
@@ -545,6 +634,16 @@ namespace  nero
 
         return sprite;
     }
+
+    void Interface::showLogWindow()
+    {
+
+        ImGui::Begin("Logging");
+
+        // Actually call in the regular Log helper (which will Begin() into the same window as we just did)
+        m_LoggerApplication.Draw("Logging");
+    }
+
 
 
 

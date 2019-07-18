@@ -17,6 +17,8 @@
 #include <Nero/core/scene/Scene.h>
 #include <Nero/core/luascene/LuaScene.h>
 #include <json/json.hpp>
+#include <Nero/editor/LoggerApplication.h>
+
 ////////////////////////////////////////////////////////////
 
 namespace nero
@@ -62,11 +64,14 @@ namespace nero
 
             sf::Sprite             flipTexture(const sf::Texture& texture);
 
+            void                    showLogWindow();
+
         private:
             friend class            Editor;
             sf::RenderWindow&       m_RenderWindow;
             bool        setup_dock = false;
             ImGuiID actionBarId;
+            ImGuiID dock_id_right;
             bool            show_project_window = false;
             sf::Texture     project_manager_texture;
 
@@ -85,6 +90,11 @@ namespace nero
              char project_description[400];
 
              std::string test_log;
+
+             LoggerApplication m_LoggerApplication;
+
+             bool   fristLoad;
+
 
     };
 
