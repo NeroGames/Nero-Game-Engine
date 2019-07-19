@@ -46,7 +46,7 @@ find_package(OpenGL)
 #SFML
 set(SFML_LIBS "-lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-network")
 #Box2d
-set(Box2d_LIBS "")
+set(Box2d_LIBS "libBox2D.dll")
 #Zilb
 set(ZLIB_LIBS "-lzlib.dll")
 #OpenSSL

@@ -201,7 +201,7 @@ namespace  nero
 
         ImGui::Begin("Scene     ");
 
-            if(ImGui::IsWindowFocused)
+            //if(ImGui::IsWindowFocused())
             {
 
                 sf::Vector2f window_position    = ImGui::GetWindowPos();
@@ -527,7 +527,8 @@ namespace  nero
             if (ImGui::Button("Open Folder", ImVec2(100, 0)))
             {
                 nfdchar_t *outPath = nullptr;
-                nfdresult_t result = NFD_OpenDialog( nullptr, nullptr, &outPath );
+                nfdresult_t result = NFD_PickFolder(nullptr, &outPath); //NFD_OpenDialog( nullptr, nullptr, &outPath );
+
 
                 if ( result == NFD_OKAY ) {
                     puts("Success!");
