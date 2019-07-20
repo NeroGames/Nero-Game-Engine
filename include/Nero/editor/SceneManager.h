@@ -22,6 +22,7 @@ namespace nero
                sf::Vector2f canvas_position;
                sf::Vector2f canvas_size;
                sf::Vector2f mouse_position;
+               bool         focus;
             };
 
         public:
@@ -47,6 +48,7 @@ namespace nero
             RenderContext m_RenderContext;
 
             std::vector<sf::CircleShape> m_CircleTable;
+            sf::View            m_Camera;
     };
 }
 

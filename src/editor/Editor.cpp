@@ -10,7 +10,9 @@ namespace  nero
     {
         setupRenderWindow();
 
-        m_StartEngineFuture = std::async(std::launch::async, &Editor::startEngine, this, std::ref(m_EngineStarted), 0.001);
+        buildStartupScreen();
+
+        m_StartEngineFuture = std::async(std::launch::async, &Editor::startEngine, this, std::ref(m_EngineStarted), m_LoadingScreen->getMinTime());
     }
 
     Editor::~Editor()
@@ -26,7 +28,7 @@ namespace  nero
             if(!m_EngineStarted)
             {
                 //StartupScreen Event
-                //m_LoadingScreen->handleEvent(event);
+                m_LoadingScreen->handleEvent(event);
             }
             else
             {
@@ -41,7 +43,7 @@ namespace  nero
         if(!m_EngineStarted)
         {
             //Update StartupScreen
-             //m_LoadingScreen->update(timeStep);
+             m_LoadingScreen->update(timeStep);
         }
         else
         {
@@ -56,11 +58,11 @@ namespace  nero
         //Render StartupScreen
         if(!m_EngineStarted)
         {
-            /*m_Window.clear(m_LoadingScreen->getBackgroundColor());
+            m_Window.clear(m_LoadingScreen->getBackgroundColor());
 
                 m_LoadingScreen->render();
 
-            m_Window.display();*/
+            m_Window.display();
         }
         //Render EngineUI
         else
@@ -87,9 +89,9 @@ namespace  nero
 
     void Editor::buildStartupScreen()
     {
-        /*m_LoadingScreen = make_unique<LoadingScreen>();
+        m_LoadingScreen = std::make_unique<LoadingScreen>();
         m_LoadingScreen->setRenderWindow(&m_Window);
-        m_LoadingScreen->init();*/
+        m_LoadingScreen->init();
     }
 
     int Editor::startEngine(bool& engineStarted, const int duration)

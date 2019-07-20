@@ -18,9 +18,12 @@ namespace nero
 
     sf::RenderTexture& SceneManager::render(RenderContext renderContext)
     {
+        m_Camera.move(1.f, 0.f);
         //update render context;
         m_RenderContext = renderContext;
         renderTexture.create(renderContext.canvas_size.x, renderContext.canvas_size.y);
+        m_Camera.setSize(renderContext.canvas_size.x, renderContext.canvas_size.y);
+        renderTexture.setView(m_Camera);
         renderTexture.clear(sf::Color::Black);
 
 
@@ -36,7 +39,7 @@ namespace nero
 
     void SceneManager::addCircleShape(sf::Vector2f position)
     {
-        if(!isMouseOnCanvas(m_RenderContext.mouse_position))
+        if(!isMouseOnCanvas(m_RenderContext.mouse_position) || !m_RenderContext.focus)
         {
             return;
         }
@@ -45,7 +48,10 @@ namespace nero
         circle.setFillColor(sf::Color::Green);
         circle.setOrigin(50.f, 50.f);
 
-        circle.setPosition(m_RenderContext.mouse_position);
+        auto new_pos = renderTexture.mapPixelToCoords(sf::Vector2i(m_RenderContext.mouse_position.x, m_RenderContext.mouse_position.y), m_Camera);
+
+
+        circle.setPosition(new_pos);
 
         m_CircleTable.push_back(circle);
 
@@ -60,7 +66,7 @@ namespace nero
 
     void SceneManager::removeCircleShape(sf::Vector2f position)
     {
-        if(!isMouseOnCanvas(m_RenderContext.mouse_position))
+        if(!isMouseOnCanvas(m_RenderContext.mouse_position) || !m_RenderContext.focus)
         {
             return;
         }

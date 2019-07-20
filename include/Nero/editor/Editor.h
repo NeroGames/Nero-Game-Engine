@@ -11,6 +11,8 @@
 #include <Nero/editor/Interface.h>
 //STD
 #include <future>
+#include <Nero/editor/LoadingScreen.h>
+
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -41,7 +43,7 @@ namespace nero
             std::future<int>        m_StartEngineFuture;
             bool                    m_EngineStarted;
             //Startup Screen
-            //LoadingScreen::Ptr      m_LoadingScreen;
+            LoadingScreen::Ptr      m_LoadingScreen;
             //Editor Interface
             Interface::Ptr    m_Interface;
             //Resource Manager

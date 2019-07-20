@@ -40,9 +40,7 @@ namespace nero
             void        updateFrameRate(const float& frameRate, const float& frameTime);
 
             void        quitEditor();
-            void        createDockSpace();
 
-            void        showProjectManagerWindow();
 
             template <typename T>
             void                    addScene(const std::string& projectName);
@@ -64,7 +62,22 @@ namespace nero
 
             sf::Sprite             flipTexture(const sf::Texture& texture);
 
+            //editor view
+            void                    createDockSpace();
+                //upper left
+            void                    showUtilityWindow();
+            void                    showSceneChunckWindow();
+            void                    showSceneScreenWindow();
+                //right
+            void                    showCurrentSceneWindow();
+
+            void                    showProjectManagerWindow();
             void                    showLogWindow();
+                //terminate
+            void                    interfaceFirstDraw();
+
+            //utility
+            void                    showToggleButton(bool toggle, const std::string& label, std::function<void()> callback);
 
         private:
             friend class            Editor;
@@ -72,6 +85,8 @@ namespace nero
             bool        setup_dock = false;
             ImGuiID actionBarId;
             ImGuiID dock_id_right;
+            ImGuiID dock_id_upper_left;
+
             bool            show_project_window = false;
             sf::Texture     project_manager_texture;
 
@@ -93,7 +108,7 @@ namespace nero
 
              LoggerApplication m_LoggerApplication;
 
-             bool   fristLoad;
+             bool   m_InterfaceFirstDraw;
 
 
     };

@@ -8,12 +8,13 @@
 #include <nativefiledialog/include/nfd.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <Nero/editor/EditorViewPool.h>
 
 namespace  nero
 {
     Interface::Interface(sf::RenderWindow& window):
         m_RenderWindow(window)
-        ,fristLoad(true)
+       ,m_InterfaceFirstDraw(true)
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -71,10 +72,19 @@ namespace  nero
 
         createDockSpace();
 
+        //upper left
+        showUtilityWindow();
+        showSceneChunckWindow();
+        showSceneScreenWindow();
+
+
 
         auto node = ImGui::DockBuilderGetNode(actionBarId);
         //node->SizeRef.x = 652;
         node->SizeRef.y = 20;
+
+        interfaceFirstDraw();
+
 
         ImGui::SFML::Render(m_RenderWindow);
     }
@@ -162,8 +172,8 @@ namespace  nero
             ImGuiID dock_main_id = dockspace_id; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
 
             //split main dock in five
-            ImGuiID dock_id_left_up = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.20f, nullptr, &dock_main_id);
-            ImGuiID dock_id_left_bottom = ImGui::DockBuilderSplitNode(dock_id_left_up, ImGuiDir_Down, 0.20f, nullptr, &dock_id_left_up);
+            dock_id_upper_left = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.20f, nullptr, &dock_main_id);
+            ImGuiID dock_id_left_bottom = ImGui::DockBuilderSplitNode(dock_id_upper_left, ImGuiDir_Down, 0.20f, nullptr, &dock_id_upper_left);
             dock_id_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.20f, nullptr, &dock_main_id);
             actionBarId = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.20f, nullptr, &dock_main_id);
             ImGuiID dock_id_down = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, nullptr, &dock_main_id);
@@ -171,7 +181,11 @@ namespace  nero
             ImGui::DockBuilderDockWindow("Scene     ", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
             ImGui::DockBuilderDockWindow("Game     ", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
             ImGui::DockBuilderDockWindow("Project     ", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
-            ImGui::DockBuilderDockWindow("Utility", dock_id_left_up);
+            //upper left
+            ImGui::DockBuilderDockWindow(ViewPool.UTILITY.c_str(),      dock_id_upper_left);
+            ImGui::DockBuilderDockWindow(ViewPool.SCENE_CHUNCK.c_str(), dock_id_upper_left);
+            ImGui::DockBuilderDockWindow(ViewPool.SCENE_SCREEN.c_str(), dock_id_upper_left);
+
             ImGui::DockBuilderDockWindow("Mesh    ", dock_id_left_bottom);
             ImGui::DockBuilderDockWindow("Scene Tools", dock_id_right);
             ImGui::DockBuilderDockWindow("Resource", dock_id_right);
@@ -194,12 +208,12 @@ namespace  nero
             bottom_node->SizeRef.y = 150;
 
             auto left_bottom_node = ImGui::DockBuilderGetNode(dock_id_left_bottom);
-            left_bottom_node->SizeRef.y = 800;
+            left_bottom_node->SizeRef.y = 400;
 
         }
 
 
-        ImGui::Begin("Scene     ");
+        ImGui::Begin(ViewPool.SCENE.c_str());
 
             //if(ImGui::IsWindowFocused())
             {
@@ -214,6 +228,7 @@ namespace  nero
                 renderContext.canvas_position   = sf::Vector2f(window_position.x + window_padding.x, window_position.y + title_bar_height + window_padding.y);
                 renderContext.canvas_size       = sf::Vector2f(window_size.x - window_padding.x * 2, window_size.y - title_bar_height - window_padding.y * 2);
                 renderContext.mouse_position    = sf::Vector2f(mouse_position.x - renderContext.canvas_position.x, mouse_position.y - renderContext.canvas_position.y);
+                renderContext.focus             = ImGui::IsWindowFocused();
 
                 sf::RenderTexture& renderTexture = m_SceneManager->render(renderContext);
 
@@ -234,18 +249,12 @@ namespace  nero
 
         window_flags = ImGuiWindowFlags_None;
         window_flags |= ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar;
-        ImGui::Begin("Utility");
-
-        ImGui::End();
 
         ImGui::Begin("Mesh    ");
 
         ImGui::End();
 
-
-        ImGui::Begin("Scene Tools");
-
-        ImGui::End();
+        showCurrentSceneWindow();
 
         ImGui::Begin("Resource");
 
@@ -293,14 +302,7 @@ namespace  nero
 
         ImGui::ShowDemoWindow();
 
-        if(fristLoad)
-        {
-            ImGui::SetWindowFocus("Scene     ");
-            fristLoad = false;
 
-            auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
-            right_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
-        }
 
         //auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
 
@@ -320,7 +322,8 @@ namespace  nero
         position.x = (viewport->Size.x - size.x)/2.f;
         position.y = (viewport->Size.y - size.y)/2.f;
         ImGui::SetNextWindowSize(size);
-        ImGui::SetNextWindowPos(position);
+
+        //ImGui::SetNextWindowPos(position);
 
         //project manager window
         if(ImGui::BeginPopupModal("Project Manager", nullptr, window_flags))
@@ -647,7 +650,331 @@ namespace  nero
         m_LoggerApplication.Draw("Logging");
     }
 
+    void Interface::showUtilityWindow()
+    {
+        ImGui::Begin(ViewPool.UTILITY.c_str());
+
+            ImVec2 size = ImGui::GetWindowSize();
+
+            ImGui::BeginChild("scene_mode", ImVec2(0.f, 105.f), true);
+                ImGui::Text("Choose Scene Mode");
+                ImGui::Separator();
+
+                static int e = 0;
+                ImGui::RadioButton("Object", &e, 0);
+                ImGui::RadioButton("Mesh", &e, 1);
+                ImGui::RadioButton("Play", &e, 2);
+
+
+            ImGui::EndChild();
+
+
+            ImGui::BeginChild("save_load", ImVec2(0.f, 85.f), true);
+                ImGui::Text("Save & Load");
+                ImGui::Separator();
+
+                ImGui::Dummy(ImVec2(0.f, 2.f));
+
+                static bool auto_save = false;
+                ImGui::Checkbox("Auto save", &auto_save);
+
+                ImVec2 button_size = ImVec2(90.f, 0.f);
+
+                 if(ImGui::Button("Save", button_size))
+                 {
+
+                 }
+
+                ImGui::SameLine();
+
+                 if(ImGui::Button("Load", button_size))
+                 {
+
+                 }
+
+            ImGui::EndChild();
 
 
 
+            ImGui::BeginChild("access_button", ImVec2(0.f, 90.f), true);
+                ImGui::Text("Access Website");
+                ImGui::Separator();
+
+                ImGui::Dummy(ImVec2(0.f, 2.f));
+
+                 if(ImGui::Button("Learn", button_size))
+                 {
+
+                 }
+
+                ImGui::SameLine();
+
+                 if(ImGui::Button("Forum", button_size))
+                 {
+
+                 }
+
+
+                 if(ImGui::Button("Snippet", button_size))
+                 {
+
+                 }
+
+                 ImGui::SameLine();
+
+                 if(ImGui::Button("Engine API", button_size))
+                 {
+
+                 }
+
+            ImGui::EndChild();
+
+        ImGui::End();
+    }
+
+    void Interface::showSceneScreenWindow()
+    {
+        ImGui::Begin(ViewPool.SCENE_SCREEN.c_str());
+
+            ImGui::Text("Manage Scene Screens");
+            ImGui::Separator();
+            ImGui::Dummy(ImVec2(0.f, 5.f));
+
+            ImVec2 button_size = ImVec2(75.f, 0.f);
+            //addcreen
+            if(ImGui::Button("Add##add_screen", button_size))
+            {
+                //
+            }
+
+            ImGui::SameLine();
+
+            static char new_screen_name[100] = "";
+            ImGui::SetNextItemWidth(130.f);
+            ImGui::InputText("##screen_did", new_screen_name, IM_ARRAYSIZE(new_screen_name));
+
+            if(ImGui::Button("Rename##add_screen", button_size))
+            {
+                //
+            }
+
+            ImGui::SameLine();
+
+            static char rename_screen_name[100] = "";
+            ImGui::SetNextItemWidth(130.f);
+            ImGui::InputText("##screens_id", rename_screen_name, IM_ARRAYSIZE(rename_screen_name));
+
+            if(ImGui::Button("Duplicate##add_screen", button_size))
+            {
+                //
+            }
+
+            ImGui::SameLine();
+
+            static char duplicate_screen_name[100] = "";
+            ImGui::SetNextItemWidth(130.f);
+            ImGui::InputText("##screenssq_id", duplicate_screen_name, IM_ARRAYSIZE(duplicate_screen_name));
+
+            //rename screen
+            //copy
+
+            ImGui::Dummy(ImVec2(0.f, 5.f));
+
+            ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
+            ImGui::BeginChild("scene_screen_list", ImVec2(), true, flags);
+
+                static bool check = false;
+                ImGui::Checkbox("", &check);
+
+                ImGui::SameLine();
+
+                ImGuiInputTextFlags flags2 = ImGuiInputTextFlags_ReadOnly;
+                static char screen_name[100] = "screen one";
+                ImGui::SetNextItemWidth(120.f);
+                ImGui::InputText("##screen_id", screen_name, IM_ARRAYSIZE(screen_name), flags2);
+
+                ImGui::SameLine();
+
+                if(ImGui::Button("X##detele_screen"))
+                {
+                    //
+                }
+
+           ImGui::EndChild();
+
+        ImGui::End();
+    }
+
+    void Interface::showSceneChunckWindow()
+    {
+        ImGui::Begin(ViewPool.SCENE_CHUNCK.c_str());
+
+        ImGui::Text("Manage Scene Chuncks");
+        ImGui::Separator();
+        ImGui::Dummy(ImVec2(0.f, 5.f));
+
+        ImVec2 button_size = ImVec2(75.f, 0.f);
+        //addchunk
+        if(ImGui::Button("Add##add_chunk", button_size))
+        {
+            //
+        }
+
+        ImGui::SameLine();
+
+        static char new_screen_name[100] = "";
+        ImGui::SetNextItemWidth(130.f);
+        ImGui::InputText("##chucnk_did", new_screen_name, IM_ARRAYSIZE(new_screen_name));
+
+        if(ImGui::Button("Rename##rename_chunck", button_size))
+        {
+            //
+        }
+
+        ImGui::SameLine();
+
+        static char rename_screen_name[100] = "";
+        ImGui::SetNextItemWidth(130.f);
+        ImGui::InputText("##screesns_id", rename_screen_name, IM_ARRAYSIZE(rename_screen_name));
+
+        if(ImGui::Button("Duplicate##add_ssfcreen", button_size))
+        {
+            //
+        }
+
+        ImGui::SameLine();
+
+        static char duplicate_screen_name[100] = "";
+        ImGui::SetNextItemWidth(130.f);
+        ImGui::InputText("##screensdsfssq_id", duplicate_screen_name, IM_ARRAYSIZE(duplicate_screen_name));
+
+        //rename screen
+        //copy
+
+        ImGui::Dummy(ImVec2(0.f, 5.f));
+
+        ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
+        ImGui::BeginChild("chunck_screen_list", ImVec2(), true, flags);
+
+            static bool toggle = false;
+            std::string label = toggle ? "hide" : "show";
+            showToggleButton(toggle, label, [this]()
+            {
+                toggle = !toggle;
+            });
+
+            ImGui::SameLine();
+
+            static bool check = false;
+            ImGui::Checkbox("", &check);
+
+            ImGui::SameLine();
+
+            ImGuiInputTextFlags flags2 = ImGuiInputTextFlags_ReadOnly;
+            static char screen_name[100] = "screen one";
+            ImGui::SetNextItemWidth(120.f);
+            ImGui::InputText("##scrdsdeen_id", screen_name, IM_ARRAYSIZE(screen_name), flags2);
+
+            ImGui::SameLine();
+
+            if(ImGui::Button("X##deteldde_screen"))
+            {
+                //
+            }
+
+            ImGui::EndChild();
+
+
+        ImGui::End();
+    }
+
+    void Interface::showToggleButton(bool toggle, const std::string& label, std::function<void()> callback)
+    {
+        if(toggle)
+        {
+            ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
+            ImGui::PushStyleColor(ImGuiCol_Border, ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
+            if(ImGui::Button(label.c_str()))
+            {
+                callback();
+            }
+            ImGui::PopStyleColor();
+            ImGui::PopStyleVar();
+        }
+        else
+        {
+            if(ImGui::Button(label.c_str()))
+            {
+                callback();
+            }
+        }
+    }
+
+    void Interface::interfaceFirstDraw()
+    {
+        if(!m_InterfaceFirstDraw)
+        {
+            return;
+        }
+
+        auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
+        right_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
+
+        auto upper_left_node = ImGui::DockBuilderGetNode(dock_id_upper_left);
+        upper_left_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
+
+        ImGui::SetWindowFocus(ViewPool.SCENE.c_str());
+
+        //commit
+        m_InterfaceFirstDraw = false;
+    }
+
+    void Interface::showCurrentSceneWindow()
+    {
+        ImGui::Begin("Scene Tools");
+
+            ImGui::BeginChild("booosdfsdf", ImVec2(ImGui::GetContentRegionAvailWidth() * 0.5f, 0.f), true);
+
+                ImGui::Text("Scene Screen");
+                ImGui::Separator();
+
+                static bool toggle_screen = false;
+                std::string label = toggle_screen ? "Screen View" : "Screen View";
+                showToggleButton(toggle_screen, label, [this]()
+                {
+                    toggle_screen = !toggle_screen;
+                });
+
+                ImGui::Dummy(ImVec2(0.f, 5.f));
+
+                ImGui::Text("Mesh");
+                ImGui::Separator();
+
+                ImGui::Dummy(ImVec2(0.f, 5.f));
+
+                ImGui::Text("Object");
+                ImGui::Separator();
+
+                ImGui::Dummy(ImVec2(0.f, 5.f));
+
+                ImGui::Text("Layer");
+                ImGui::Separator();
+
+            ImGui::EndChild();
+
+            ImGui::SameLine();
+
+            ImGui::BeginChild("saerzr", ImVec2(), true);
+                ImGui::Text("Scene Chunck");
+                ImGui::Separator();
+
+                ImGui::Dummy(ImVec2(0.f, 5.f));
+
+                ImGui::Text("Draw");
+                ImGui::Separator();
+
+            ImGui::EndChild();
+
+        ImGui::End();
+    }
 }
