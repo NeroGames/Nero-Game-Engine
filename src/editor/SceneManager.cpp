@@ -18,7 +18,10 @@ namespace nero
 
     sf::RenderTexture& SceneManager::render(RenderContext renderContext)
     {
-        m_Camera.move(1.f, 0.f);
+        if(renderContext.focus)
+        {
+            m_Camera.move(1.f, 0.f);
+        }
         //update render context;
         m_RenderContext = renderContext;
         renderTexture.create(renderContext.canvas_size.x, renderContext.canvas_size.y);
