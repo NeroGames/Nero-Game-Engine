@@ -17,9 +17,9 @@ endif()
 # The project 
 project (Nero)
 
-#set(NERO_MAJOR_VERSION 0)
-#set(NERO_MINOR_VERSION 9)
-#set(NERO_REVISION_VERSION 0)
+#set(NERO_MAJOR_VERSION 1)
+#set(NERO_MINOR_VERSION 0)
+#set(NERO_REVISION_VERSION 2)
 
 #set(NERO_BUILD_TYPE	Release CACHE STRING "Choose the build type (Debug / Release)")
 set(NERO_BUILD_SHARED_LIB ON CACHE BOOL "Build shared or static library")

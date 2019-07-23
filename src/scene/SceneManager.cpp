@@ -430,8 +430,6 @@ namespace nero
     {
         std::string file = WORKSPACE_FOLDER + "/" +  m_AdvancedScene->m_SceneName + "/" + m_AdvancedScene->m_SceneName +  ".json";
 
-        m_UpdateLog("saving Scene [" + m_AdvancedScene->m_SceneName + "] to " + file, nero::Info);
-
         m_AdvancedScene->m_SceneBuilder->updateLayerOrder();
 
         saveFile(file, saveScene().dump(3));

@@ -938,6 +938,10 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onSaveButton()
     {
+        std::string scene_name  = m_SceneComboBox->GetSelectedText();
+        std::string file        = WORKSPACE_FOLDER + "/" +  scene_name + "/" + scene_name +  ".json";
+        updateLog("saving Scene [" + scene_name + "] to " + file, nero::Info);
+        
         m_SceneManager->updateSceneSaveFile();
     }
 
@@ -2836,7 +2840,7 @@ namespace nero
             if(m_ElapseTime > sf::seconds(m_EngineSetting.autoSaveTime))
             {
                 m_ElapseTime -= sf::seconds(m_EngineSetting.autoSaveTime);
-                onSaveButton();
+                m_SceneManager->updateSceneSaveFile();
             }
         }
     }
