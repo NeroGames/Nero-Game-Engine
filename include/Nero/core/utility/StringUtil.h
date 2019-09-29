@@ -1,12 +1,14 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef STRINGUTIL_H
 #define STRINGUTIL_H
 ///////////////////////////HEADERS//////////////////////////
 #include <string>
 #include <sstream>
+#include <vector>
+
 ////////////////////////////////////////////////////////////
 
 namespace nero
@@ -39,6 +41,9 @@ namespace nero
 
     template <typename T>
     std::string         toString(T const& value);
+
+    std::vector<std::string> &splitString(const std::string &s, char delim,std::vector<std::string> &elems);
+    std::vector<std::string> splitString(const std::string &s, char delim);
 
 
 

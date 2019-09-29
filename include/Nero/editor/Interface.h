@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef INTERFACE_H
 #define INTERFACE_H
@@ -16,8 +16,10 @@
 #include <functional>
 #include <Nero/core/scene/Scene.h>
 #include <Nero/core/luascene/LuaScene.h>
+#include <Nero/core/engine/GameProject.h>
 #include <json/json.hpp>
 #include <Nero/editor/LoggerApplication.h>
+#include <Nero/core/utility/StringUtil.h>
 
 ////////////////////////////////////////////////////////////
 
@@ -42,16 +44,15 @@ namespace nero
             void        quitEditor();
 
 
-            template <typename T>
+            /*template <typename T>
             void                    addScene(const std::string& projectName);
 
             template <typename T>
-            void                    addLuaScene(const std::string& projectName);
+            void                    addLuaScene(const std::string& projectName);*/
 
             //Start Project
             void                    addScene(const std::string& projectName, std::function<Scene::Ptr(Scene::Context)> factory);
             void                    addLuaScene(const std::string& projectName, std::function<LuaScene::Ptr(Scene::Context)> factory);
-            void                    createProject(const nlohmann::json& projectJson);
             void                    openProject(const std::string& path);
             void                    openProject(const nlohmann::json& projectJson);
 
@@ -71,8 +72,9 @@ namespace nero
                 //right
             void                    showCurrentSceneWindow();
 
-            void                    showProjectManagerWindow();
             void                    showLogWindow();
+            void                    showResourceCategoryWindow();
+            void                    showResourceWindow();
                 //terminate
             void                    interfaceFirstDraw();
 
@@ -92,28 +94,65 @@ namespace nero
 
             Scene::Context      m_Context;
 
-            ProjectManager::Ptr     m_ProjectManager;
             SceneManager::Ptr       m_SceneManager;
-
             //
-             nlohmann::json m_EditorSetting;
+            nlohmann::json m_EditorSetting;
 
-             //project creation
-             char project_name[100];
-             char project_lead[100];
-             char project_company[100];
-             char project_description[400];
+            //project creation
 
-             std::string test_log;
+            std::string test_log;
 
-             LoggerApplication m_LoggerApplication;
+            LoggerApplication m_LoggerApplication;
+            bool   m_InterfaceFirstDraw;
+            bool open_sprite_browser = false;
+            ImGuiIO baseio;
+            ImGuiID dockspace_id;
+            ////////////////////////Tool Bar////////////////////////
+            void                        showToolbarWindow();
+            sf::Texture                 m_ProjectButtonTexture;
+            sf::Texture                 m_CompileButtonTexture;
+            sf::Texture                 m_ReloadButtonTexture;
+            sf::Texture                 m_EditButtonTexture;
+            sf::Texture                 m_BlankButtonTexture;
 
-             bool   m_InterfaceFirstDraw;
-
-
+            ////////////////////////Project and Workspace////////////////////////
+            //General
+            ProjectManager::Ptr         m_ProjectManager;
+            GameProject::Ptr            m_CurrentProject;
+            ImVec2                      m_ProjectManagerWindowSize;
+            //Project Workspace
+            nlohmann::json              m_WorkspaceTable;               //list of available workspaces
+            int                         m_WorksapceStatus;              //0 : no_worksapce, 1 : redirect_user, 2 worksapce_available
+            char                        m_InputWorksapceFolder[256];    //read workspace path
+            char                        m_InputWorkspaceName[100];
+            char                        m_InputWorkspaceCompany[100];
+            char                        m_InputWorkspaceLead[100];
+            const char*                 m_SelectedWorkpsapce;
+            int                         m_SelectedWorkpsapceIdex;
+            //Game Project
+            char                        m_InputProjectName[100];        //read project name
+            char                        m_InputProjectLead[100];        //read project lead
+            char                        m_InputProjectCompany[100];     //read project company
+            char                        m_InputProjectDescription[512]; //read project description
+            //Tabs
+            int                         m_ProjectManagerSelectedTab;    //0 : Create Project, 1 : Open Project, 2 : Recent Project, 3 : Worksapce
+            //Banner
+            sf::Texture                 m_ProjectManagerBannerTexture;
+            //show view
+            void                        showProjectManagerWindow();
+            void                        showCreateProjectWindow();
+            void                        showOpenPorjectWindow();
+            void                        showRecentProjectWindow();
+            void                        showWorkspaceWindow();
+            //function
+            void                        createProject(const nlohmann::json& projectJson);
+            void                        createWorkspace(const nlohmann::json& workspaceJson);
+            void                        compileProject();
+            void                        editProject();
+            void                        reloadProject();
     };
 
-    template <typename T>
+    /*template <typename T>
     void Interface::addScene(const std::string& projectName)
     {
         addScene(projectName, [this] (Scene::Context context)
@@ -129,7 +168,7 @@ namespace nero
         {
             return LuaScene::Ptr(new T(context));
         });
-    }
+    }*/
 
 }
 

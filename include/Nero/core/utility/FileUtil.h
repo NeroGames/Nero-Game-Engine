@@ -46,6 +46,9 @@ namespace nero
 
     //Save binary date to a file
     void  saveFile(const std::string& name, const unsigned char* content, const unsigned int length, bool overwrite = false);
+
+    //Current path
+    std::string getCurrentPath();
 }
 
 

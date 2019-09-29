@@ -1,0 +1,26 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2020 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
+#ifndef GAMEPROJECT_H
+#define GAMEPROJECT_H
+///////////////////////////HEADERS///////////////////////////
+//STD
+#include <memory>
+/////////////////////////////////////////////////////////////
+
+
+namespace nero
+{
+    class GameProject
+    {
+        public:
+            typedef std::unique_ptr<GameProject> Ptr;
+
+        public:
+            GameProject();
+    };
+}
+
+
+#endif // GAMEPROJECT_H

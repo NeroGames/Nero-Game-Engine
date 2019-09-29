@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef EDITOR_H
 #define EDITOR_H
@@ -22,11 +22,11 @@ namespace nero
                                     Editor();
             virtual                ~Editor() override;
 
-            template <typename T>
+            /*template <typename T>
             void                    addScene(const std::string& projectName);
 
             template <typename T>
-            void                    addLuaScene(const std::string& projectName);
+            void                    addLuaScene(const std::string& projectName);*/
 
     private:
            //game loop
@@ -52,7 +52,7 @@ namespace nero
             std::vector<std::function<void()>> m_BackgroundTaskTable;
     };
 
-    template <typename T>
+    /*template <typename T>
     void Editor::addScene(const std::string& projectName)
     {
         m_BackgroundTaskTable.push_back([this, projectName]()
@@ -68,7 +68,7 @@ namespace nero
         {
             m_Interface->addLuaScene<T>(projectName);
         });
-    }
+    }*/
 
 }
 

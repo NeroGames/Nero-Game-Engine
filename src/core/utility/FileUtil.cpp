@@ -174,6 +174,14 @@ namespace nero
         return true;
     }
 
+    std::string getCurrentPath()
+    {
+        using namespace  std::experimental::filesystem;
+
+        return getCurrentPath();
+    }
+
+
 }
 
 
