@@ -7,8 +7,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/core/engine/CoreEngine.h>
-#include <Nero/core/utility/LogUtil.h>
-#include <Nero/editor/Interface.h>
+#include <Nero/editor/EditorInterface.h>
 //STD
 #include <future>
 #include <Nero/editor/LoadingScreen.h>
@@ -45,7 +44,7 @@ namespace nero
             //Startup Screen
             LoadingScreen::Ptr      m_LoadingScreen;
             //Editor Interface
-            Interface::Ptr    m_Interface;
+            EditorInterface::Ptr    m_Interface;
             //Resource Manager
             //ResourceManager::Ptr    m_ResourceManager;
             //background tasks

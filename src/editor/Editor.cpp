@@ -1,5 +1,5 @@
 #include <Nero/editor/Editor.h>
-#include <Nero/editor/Interface.h>
+#include <Nero/editor/EditorInterface.h>
 #include <memory>
 #include <Nero/core/utility/FileUtil.h>
 
@@ -80,7 +80,7 @@ namespace  nero
         m_Window.setVerticalSyncEnabled(true);
         m_Window.resetGLStates();
         m_Window.setPosition(sf::Vector2i(m_Window.getPosition().x, 15));
-
+        setWindowIcon("icon.png");
         removeFile(getPath({"imgui"}, ".ini"));
 
         //setup IMGUI
@@ -97,8 +97,12 @@ namespace  nero
     int Editor::startEngine(bool& engineStarted, const int duration)
     {
         //create the interface
-        m_Interface = std::make_unique<Interface>(m_Window);
+        m_Interface = EditorInterface::Ptr(new EditorInterface(m_Window));
         m_Interface->setEditorSetting(m_Setting);
+        m_Interface->setUpdateWindowTitle([this](const std::string& title)
+        {
+            setWindowTitle("Nero Game Engine - " +  title);
+        });
 
         //process background tasks
         for(unsigned int i=0; i < m_BackgroundTaskTable.size(); i++)

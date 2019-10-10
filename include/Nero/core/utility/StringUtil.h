@@ -8,7 +8,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
-
+#include <functional>
 ////////////////////////////////////////////////////////////
 
 namespace nero
@@ -22,6 +22,9 @@ namespace nero
         const std::string EXTANSION_JSON    = ".json";
         const std::string EXTANSION_TEXT    = ".txt";
         const std::string EXTANSION_LUA     = ".lua";
+        const std::string EXTANSION_DLL     = ".dll";
+        const std::string EXTANSION_CPP_HEADER     = ".h";
+        const std::string EXTANSION_CPP_SOURCE     = ".cpp";
 
         //
         const std::string UNDERSCORE        = "_";
@@ -54,6 +57,11 @@ namespace nero
         stream << value;
         return stream.str();
     }
+
+   void fillCharTable(const char** charTab, const std::vector<std::string>& stringTab);
+   void fillCharArray(char* charArray, int arraySize, const std::string& string);
+
+   std::vector<std::string> getWordTable(std::string string);
 }
 
 #endif // STRINGUTIL_H

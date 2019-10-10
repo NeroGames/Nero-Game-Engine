@@ -82,6 +82,8 @@ namespace  nero
             computeFrameRate(elapsedTime);
             //4... render the game
             render();
+
+            el::Loggers::flushAll();
         }
     }
 
@@ -170,6 +172,14 @@ namespace  nero
     void CoreEngine::quitEngine()
     {
         m_Window.close();
+    }
+
+    void CoreEngine::setWindowIcon(std::string icon)
+    {
+        if (m_WindowIcon.loadFromFile(icon))
+        {
+            m_Window.setIcon(m_WindowIcon.getSize().x, m_WindowIcon.getSize().y, m_WindowIcon.getPixelsPtr());
+        }
     }
 
 }

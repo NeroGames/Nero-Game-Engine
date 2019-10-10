@@ -3,10 +3,13 @@
 
 #include <memory>
 #include <json/json.hpp>
-#include <Nero/core/engine/GameProject.h>
+#include <Nero/editor/GameProject.h>
 #include <Nero/core/scene/Scene.h>
 #include <Nero/core/luascene/LuaScene.h>
 #include <boost/function.hpp>
+#include <Nero/core/utility/StringUtil.h>
+#include <Nero/core/utility/LogUtil.h>
+
 
 namespace  nero
 {
@@ -22,7 +25,7 @@ namespace  nero
         public:
             ProjectManager();
 
-           void createProject(const nlohmann::json& projectJson);
+           void createProject(const nlohmann::json& projectJson, int& status);
            void createWorkspace(const nlohmann::json& workspaceJson);
 
            bool isProjectExist(const std::string& projectName);
@@ -33,12 +36,33 @@ namespace  nero
 
            const std::vector<nlohmann::json>& getProjectTable() const;
 
-           void compileProject();
+           const std::vector<nlohmann::json> getWorkspaceProjectTable(const std::string& workpsace);
+
+
+           const nlohmann::json getWorkspaceTable() const;
+           const std::vector<std::string> getWorkspaceNameTable() const;
+
+           const nlohmann::json findWorkspace(const std::string& name) const;
+
+           void compileProject(const std::string& projectDirectory = StringPool.BLANK);
            void editProject();
 
            void loadLibrary();
 
             std::string exec(const char* cmd);
+            std::string formatSceneClassName(std::vector<std::string> wordTable);
+            std::string formatHeaderGard(std::vector<std::string> wordTable);
+            std::string formatCmakeProjectName(std::vector<std::string> wordTable);
+            std::string formatCmakeProjectLibrary(std::vector<std::string> wordTable);
+
+
+            std::string getEngineDirectory() const;
+
+            GameProject::Ptr openProject(const std::string& project_name);
+            nlohmann::json findProject(const std::string& workspace_name, const std::string& project_name);
+
+            void openEditor(std::string cmake_project);
+
 
 
 

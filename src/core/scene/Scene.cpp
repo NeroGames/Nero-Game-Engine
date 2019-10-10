@@ -13,6 +13,7 @@ namespace nero
 
     Scene::Scene(Context context)
     {
+        m_RenderTexture.create(800.f, 600.f);
 
     }
 
@@ -20,6 +21,32 @@ namespace nero
     {
         destroyScene();
     }
+
+    void Scene::handleEvent(const sf::Event& event)
+    {
+
+    }
+
+    void Scene::update(const sf::Time& timeStep)
+    {
+
+    }
+
+    void    Scene::renderScene()
+    {
+        m_RenderTexture.clear(sf::Color::Black);
+
+        render();
+
+        m_RenderTexture.display();
+    }
+
+
+    void Scene::render()
+    {
+
+    }
+
 
     void Scene::destroyScene()
     {
@@ -37,4 +64,10 @@ namespace nero
     {
         return  "Load Scene from DLL work";
     }
+
+    sf::RenderTexture& Scene::getRenderTexture()
+    {
+        return m_RenderTexture;
+    }
+
 }

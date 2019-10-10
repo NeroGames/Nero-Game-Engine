@@ -2,8 +2,8 @@
 // Nero Game Engine
 // Copyright (c) 2016-2020 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-#ifndef INTERFACE_H
-#define INTERFACE_H
+#ifndef EDITORINTERFACE_H
+#define EDITORINTERFACE_H
 ///////////////////////////HEADERS//////////////////////////
 //IMGUI
 #include <imgui/imgui.h>
@@ -16,23 +16,27 @@
 #include <functional>
 #include <Nero/core/scene/Scene.h>
 #include <Nero/core/luascene/LuaScene.h>
-#include <Nero/core/engine/GameProject.h>
+#include <Nero/editor/GameProject.h>
 #include <json/json.hpp>
 #include <Nero/editor/LoggerApplication.h>
 #include <Nero/core/utility/StringUtil.h>
+#include <Nero/core/utility/LogUtil.h>
+#include <Nero/editor/AdvancedScene.h>
+
+#include <future>
 
 ////////////////////////////////////////////////////////////
 
 namespace nero
 {
-    class Interface
+    class EditorInterface
     {
 
         public:
-            typedef std::unique_ptr<Interface> Ptr;
+            typedef std::unique_ptr<EditorInterface> Ptr;
 
-                        Interface(sf::RenderWindow& window);
-                       ~Interface();
+                        EditorInterface(sf::RenderWindow& window);
+                       ~EditorInterface();
 
         private:
             void        handleEvent(const sf::Event& event);
@@ -53,8 +57,6 @@ namespace nero
             //Start Project
             void                    addScene(const std::string& projectName, std::function<Scene::Ptr(Scene::Context)> factory);
             void                    addLuaScene(const std::string& projectName, std::function<LuaScene::Ptr(Scene::Context)> factory);
-            void                    openProject(const std::string& path);
-            void                    openProject(const nlohmann::json& projectJson);
 
             void                    loadAllProject();
 
@@ -98,6 +100,8 @@ namespace nero
             //
             nlohmann::json m_EditorSetting;
 
+            bool renderImgui = false;
+
             //project creation
 
             std::string test_log;
@@ -107,6 +111,19 @@ namespace nero
             bool open_sprite_browser = false;
             ImGuiIO baseio;
             ImGuiID dockspace_id;
+            std::stringstream buffer;
+            std::streambuf * old;
+
+            void setUpdateWindowTitle(std::function<void (const std::string&)> fn);
+
+            std::function<void (const std::string&)> m_UpdateWindowTile;
+
+            //
+            void                        showGameProjectWindow();
+            void                        showGameSettingWindow();
+            void                        showSceneWindow();
+
+
             ////////////////////////Tool Bar////////////////////////
             void                        showToolbarWindow();
             sf::Texture                 m_ProjectButtonTexture;
@@ -124,16 +141,24 @@ namespace nero
             nlohmann::json              m_WorkspaceTable;               //list of available workspaces
             int                         m_WorksapceStatus;              //0 : no_worksapce, 1 : redirect_user, 2 worksapce_available
             char                        m_InputWorksapceFolder[256];    //read workspace path
+            char                        m_InputWorksapceImportFolder[256];    //read workspace path
             char                        m_InputWorkspaceName[100];
             char                        m_InputWorkspaceCompany[100];
             char                        m_InputWorkspaceLead[100];
+            char                        m_InputWorkspaceNamespace[10];
             const char*                 m_SelectedWorkpsapce;
             int                         m_SelectedWorkpsapceIdex;
             //Game Project
             char                        m_InputProjectName[100];        //read project name
             char                        m_InputProjectLead[100];        //read project lead
             char                        m_InputProjectCompany[100];     //read project company
+            char                        m_InputProjectNamespace[10];
             char                        m_InputProjectDescription[512]; //read project description
+            const char*                 m_SelectedProjectType;
+            std::future<int>            m_CreateProjectFuture;
+            int                         m_ProjectCreationStatus;
+            std::string                 m_LastCreatedProject;
+
             //Tabs
             int                         m_ProjectManagerSelectedTab;    //0 : Create Project, 1 : Open Project, 2 : Recent Project, 3 : Worksapce
             //Banner
@@ -145,11 +170,16 @@ namespace nero
             void                        showRecentProjectWindow();
             void                        showWorkspaceWindow();
             //function
-            void                        createProject(const nlohmann::json& projectJson);
+            int                         createProject(const nlohmann::json& projectJson, int& status);
             void                        createWorkspace(const nlohmann::json& workspaceJson);
+            void                        openProject(const std::string& project_name);
             void                        compileProject();
             void                        editProject();
             void                        reloadProject();
+
+            //
+            GameProject::Ptr            m_GameProject;
+            AdvancedScene::Ptr          m_AdvancedScene;
     };
 
     /*template <typename T>
@@ -172,4 +202,4 @@ namespace nero
 
 }
 
-#endif // INTERFACE_H
+#endif // EDITORINTERFACE_H

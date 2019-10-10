@@ -49,6 +49,10 @@ namespace nero
 
     //Current path
     std::string getCurrentPath();
+
+    //
+    std::string removeFileExtension(const std::string& filename);
+
 }
 
 

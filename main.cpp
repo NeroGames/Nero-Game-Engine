@@ -6,14 +6,14 @@
 //Nero
 #include <Nero/editor/Editor.h>
 ////////////////////////////////////////////////////////////
-
 int main()
 {
-    //instantiate the editor
-    nero::Editor editor;
 
-    //launch the editor
-    editor.run();
+	//Instantiate the editor
+	nero::Editor editor;
+
+	//Launch the editor
+	editor.run();
 
     return 0;
 }

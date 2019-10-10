@@ -11,6 +11,9 @@
 #include <Box2D/Dynamics/b2TimeStep.h>
 #include <Nero/editor/SceneBuilder.h>
 #include <Nero/editor/UndoManager.h>
+#include <Nero/core/scene/Scene.h>
+#include <SFML/Graphics/RenderTexture.hpp>
+#include <memory>
 
 namespace nero
 {
@@ -40,8 +43,9 @@ namespace nero
 
             struct SceneScreen
             {
-                SceneBuilder::Ptr           m_SceneBuilder;
-                UndoManager::Ptr            m_UndoManager;
+                std::string             name;
+                SceneBuilder::Ptr       sceneBuilder;
+                UndoManager::Ptr        undoManager;
             };
 
             struct SceneResource
@@ -49,12 +53,32 @@ namespace nero
 
             };
 
+            struct RenderContext
+            {
+               sf::Vector2f canvas_position;
+               sf::Vector2f canvas_size;
+               sf::Vector2f mouse_position;
+               bool         focus;
+            };
+
         public:
-            AdvancedScene();
+            typedef std::shared_ptr<AdvancedScene> Ptr;
+
+
+        public:
+                            AdvancedScene();
+
+                            void                        handleEvent(const sf::Event& event);
+                            void                        update(const sf::Time& timeStep);
+                             sf::RenderTexture&         render(const RenderContext& renderContext);
+
+                             void setScene(Scene::Ptr scene);
 
         private:
 
             void                        init();
+
+
 
 
 
@@ -82,6 +106,11 @@ namespace nero
             int32                       m_StepCount;
             b2Profile                   m_MaxProfile;
             b2Profile                   m_TotalProfile;
+
+            Scene::Ptr                  m_Scene;
+            sf::RenderTexture           m_RenderTexture;
+            RenderContext               m_RenderContext;
+
     };
 }
 

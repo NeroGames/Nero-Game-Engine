@@ -1,5 +1,7 @@
 #include <Nero/core/utility/StringUtil.h>
 #include <boost/algorithm/string.hpp>
+#include <fstream>
+
 namespace nero
 {
     std::string formatString(const std::string& input, String_Format format)
@@ -47,4 +49,29 @@ namespace nero
         return elems;
     }
 
+    void fillCharTable(const char** charTab, const std::vector<std::string>& stringTab)
+    {
+        for(std::size_t i = 0; i < stringTab.size(); i++)
+        {
+            charTab[i] = const_cast<const char*>(stringTab[i].c_str());
+        }
+    };
+
+    void fillCharArray(char* charArray, int arraySize, const std::string& string)
+    {
+        strncpy(charArray, string.c_str(), arraySize - 1);
+        charArray[arraySize - 1] = 0;
+    }
+
+    std::vector<std::string> getWordTable(std::string string)
+    {
+        boost::algorithm::trim_left(string);
+        boost::algorithm::trim_right(string);
+
+        auto result = splitString(string, ' ');
+
+        std::remove_if(result.begin(), result.end(), [](std::string word){return word == StringPool.BLANK;});
+
+        return result;
+    }
 }

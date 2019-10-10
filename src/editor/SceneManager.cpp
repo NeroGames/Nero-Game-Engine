@@ -16,11 +16,17 @@ namespace nero
         m_LuaSceneFactoryMap[projectId] = factory;
     }
 
-    sf::RenderTexture& SceneManager::render(RenderContext renderContext)
+    /*sf::RenderTexture& SceneManager::render(RenderContext renderContext)
     {
-        if(renderContext.focus)
+        if(renderContext.canvas_size.x < 50.f ||  renderContext.canvas_size.y < 50.f)
         {
-            m_Camera.move(1.f, 0.f);
+            renderContext.canvas_size.x = 50.f;
+            renderContext.canvas_size.y = 50.f;
+        }
+
+            if(renderContext.focus)
+        {
+            //m_Camera.move(1.f, 0.f);
         }
         //update render context;
         m_RenderContext = renderContext;
@@ -38,11 +44,11 @@ namespace nero
         renderTexture.display();
 
         return renderTexture;
-    }
+    }*/
 
     void SceneManager::addCircleShape(sf::Vector2f position)
     {
-        if(!isMouseOnCanvas(m_RenderContext.mouse_position) || !m_RenderContext.focus)
+        /*if(!isMouseOnCanvas(m_RenderContext.mouse_position) || !m_RenderContext.focus)
         {
             return;
         }
@@ -56,20 +62,20 @@ namespace nero
 
         circle.setPosition(new_pos);
 
-        m_CircleTable.push_back(circle);
+        m_CircleTable.push_back(circle);*/
 
     }
 
     bool SceneManager::isMouseOnCanvas(sf::Vector2f position)
     {
-        return (position.x >= 0.f && position.y >= 0.f
+        /*return (position.x >= 0.f && position.y >= 0.f
                 && position.x <= m_RenderContext.canvas_size.x
-                && position.y <= m_RenderContext.canvas_size.y);
+                && position.y <= m_RenderContext.canvas_size.y);*/
     }
 
     void SceneManager::removeCircleShape(sf::Vector2f position)
     {
-        if(!isMouseOnCanvas(m_RenderContext.mouse_position) || !m_RenderContext.focus)
+        /*if(!isMouseOnCanvas(m_RenderContext.mouse_position) || !m_RenderContext.focus)
         {
             return;
         }
@@ -79,7 +85,7 @@ namespace nero
             return;
         }
 
-        m_CircleTable.erase(m_CircleTable.end()-1);
+        m_CircleTable.erase(m_CircleTable.end()-1);*/
     }
 
 }

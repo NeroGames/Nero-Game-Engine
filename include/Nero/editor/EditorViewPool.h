@@ -7,9 +7,9 @@ namespace  nero
 {
     struct _ViewPool
     {
-            const std::string SCENE_SCREEN  = "Screen   ";
-            const std::string SCENE_CHUNCK  = "Chunck   ";
-            const std::string UTILITY       = "Utility  ";
+            const std::string SCENE_SCREEN  = "Screen";
+            const std::string SCENE_CHUNCK  = "Chunck";
+            const std::string UTILITY       = "Utility";
             const std::string SCENE         = "Scene     ";
 
             const std::string PROJECT_MANAGER   = "Project Manager";
@@ -21,7 +21,11 @@ namespace  nero
             const std::string ERROR_CREATING_PROJECT    = "Error Creating Project";
 
 
-            const std::string Toolbar    = "Toolbar";
+            const std::string GAME_SETTING    = "Game Settings";
+            const std::string GAME_PROJECT    = "Game Project";
+
+
+            const std::string Toolbar       = "Toolbar";
 
     };
 

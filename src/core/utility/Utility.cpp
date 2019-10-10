@@ -13,4 +13,5 @@ namespace nero
         sf::FloatRect bounds = text.getLocalBounds();
         text.setOrigin(std::floor(bounds.width / 2.f), std::floor(bounds.height / 2.f));
     }
+
 }

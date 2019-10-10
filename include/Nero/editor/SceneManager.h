@@ -17,21 +17,13 @@ namespace nero
         public:
             typedef std::unique_ptr<SceneManager> Ptr;
 
-            struct RenderContext
-            {
-               sf::Vector2f canvas_position;
-               sf::Vector2f canvas_size;
-               sf::Vector2f mouse_position;
-               bool         focus;
-            };
-
         public:
             SceneManager();
 
             void addSceneFacotry(const std::string& projectId, std::function<Scene::Ptr(Scene::Context)> factory);
             void addLuaSceneFacotry(const std::string& projectId, std::function<LuaScene::Ptr(Scene::Context)> factory);
 
-            sf::RenderTexture& render(RenderContext renderContext);
+            //sf::RenderTexture& render(RenderContext renderContext);
             void addCircleShape(sf::Vector2f position);
             void removeCircleShape(sf::Vector2f position);
 
@@ -45,7 +37,7 @@ namespace nero
             std::map<std::string, std::function<Scene::Ptr(Scene::Context)>>   m_SceneFactoryMap;
 
             sf::RenderTexture renderTexture;
-            RenderContext m_RenderContext;
+            //RenderContext m_RenderContext;
 
             std::vector<sf::CircleShape> m_CircleTable;
             sf::View            m_Camera;

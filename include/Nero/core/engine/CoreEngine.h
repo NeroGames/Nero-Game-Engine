@@ -7,8 +7,6 @@
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/core/utility/LogUtil.h>
-
-
 #include<Nero/core/engine/EngineConstant.h>
 //SFML
 #include <SFML/Window/Event.hpp>
@@ -42,6 +40,7 @@ namespace nero
             float               getFrameTime()      const;
                 //set
             void                setWindowTitle(const std::string& title);
+            void                setWindowIcon(std::string icon);
 
 
         private:
@@ -57,6 +56,7 @@ namespace nero
             std::string         m_WindowTitle;      /*!< The engine window title */
             unsigned int        m_WindowWidth;      /*!< The engine window width */
             unsigned int        m_WindowHeight;     /*!< the engine window height */
+            sf::Image           m_WindowIcon;
             //framerate
             sf::Time			m_ElapsedTime;      /*!< Temporary variable to store the amount of elapsed time*/
             int 	            m_FrameCount;       /*!< Temporary variable to store the amount of frame*/

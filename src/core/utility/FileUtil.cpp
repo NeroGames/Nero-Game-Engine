@@ -47,23 +47,10 @@ namespace nero
             throw std::runtime_error("failed to load text from " + file);
         }
 
-        std::string text("");
-        std::string word;
+        std::stringstream buffer;
+        buffer << stream.rdbuf();
 
-        while(stream >> word)
-        {
-            if(word == "\\n")
-            {
-                text += "\n";
-
-            }
-            else
-            {
-                text += word + " ";
-            }
-        }
-
-        return text;
+        return buffer.str();
     }
 
     nlohmann::json loadJson(const std::string& path, const bool& path_has_extantion)
@@ -180,6 +167,16 @@ namespace nero
 
         return getCurrentPath();
     }
+
+    std::string removeFileExtension(const std::string& filename)
+   {
+       size_t lastdot = filename.find_last_of(".");
+
+       if (lastdot == std::string::npos)
+           return filename;
+
+       return filename.substr(0, lastdot);
+   }
 
 
 }

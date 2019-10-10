@@ -15,6 +15,10 @@
 #include <vector>
 #include <boost/config.hpp>
 
+#include <SFML/System/Time.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
+
 /////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -33,25 +37,33 @@ namespace nero
 
         public: //Constructor
                                             Scene(Context context);
-              virtual                             ~Scene();
+            virtual                        ~Scene();
+
+			virtual void                    handleEvent(const sf::Event& event);
+			virtual void                    update(const sf::Time& timeStep);
+			virtual void                    render();
+
+			void    renderScene();
+
+            sf::RenderTexture&              getRenderTexture();
 
         private:
             void                            destroyScene();
 
-        private:
+        protected:
             //Base Attributs
             Context                             m_SceneContext;
             b2World*                            m_PhysicWorld;
             GameObject                          m_GameWorld;
             //Containers
             std::vector<GameObject::Ptr>        m_WorldChunkTable;
+            //
+            sf::RenderTexture                   m_RenderTexture;
 
         public: //test
             virtual std::string                         getName();
 
     };
 }
-
-
 
 #endif // SCENE_H
