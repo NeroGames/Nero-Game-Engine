@@ -178,6 +178,27 @@ namespace nero
        return filename.substr(0, lastdot);
    }
 
+	bool checkExtention(const std::string& extention, nlohmann::json extentionTab)
+	{
+	   bool result = false;
+
+	   for (auto& ext : extentionTab)
+	   {
+		   if(extention == "." + ext.get<std::string>())
+		   {
+			   result = true;
+			   break;
+		   }
+	   }
+
+	   return result;
+	}
+
+	std::string replaceFileExtension(const std::string& filename, const std::string& extension)
+	{
+	   return removeFileExtension(filename) + "." + extension;
+	}
+
 
 }
 

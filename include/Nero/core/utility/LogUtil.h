@@ -28,7 +28,7 @@
 
 namespace nero
 {
-	enum LOG_LEVEL
+    enum class LOG_LEVEL
     {
         INFO,
         DEBUG,

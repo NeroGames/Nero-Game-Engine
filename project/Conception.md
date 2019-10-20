@@ -8,7 +8,17 @@
 ### Download and Install Cmake
 ### Download and Install Git
 ### Download and Install GitKraken
+### Donwload and Install Android Studio (optional)
+### Download and Install Android SDK
+### Donwload and Install Android NDK
 ### Check Program Paths
+
+## Nero Game Engine Installation Package
+### C++ Compiler
+### Android NDK
+### Android SDK
+### Nero Engine Library
+### Other Library and Source
 
 ## Project Workspace
 
@@ -27,4 +37,10 @@
 scene.lua
 MyScene -> nero::Scene
 MyScene -> nero::LuaScene
+
+## Game Scene
+    Game World
+    Physic World
+    Game Level
+    World Junck
 

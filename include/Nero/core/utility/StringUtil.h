@@ -15,8 +15,10 @@ namespace nero
 {
     struct _StringPool
     {
-        const std::string BLANK = "";
+		const std::string BLANK = "";
         const std::string SPACE = " ";
+		const std::string NEW_LINE = "\n";
+
 
         //file extension
         const std::string EXTANSION_JSON    = ".json";

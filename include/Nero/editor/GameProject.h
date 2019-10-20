@@ -12,6 +12,8 @@
 #include <boost/function.hpp>
 #include <Nero/core/scene/Scene.h>
 #include <Nero/core/luascene/LuaScene.h>
+#include <Nero/core/engine/BackgroundTask.h>
+
 /////////////////////////////////////////////////////////////
 
 
@@ -62,6 +64,11 @@ namespace nero
             std::string m_ProjectLibraryFile;
             std::string m_ProjectLibraryCopyFile;
 
+			std::vector<BackgroundTask>& getBackgroundTaskTable();
+
+		private:
+			BackgroundTask& createBackgroundTask(const std::string& name, const std::string& category);
+			std::vector<BackgroundTask>  m_BackgroundTaskTable;
     };
 }
 

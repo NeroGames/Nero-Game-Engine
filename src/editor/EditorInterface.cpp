@@ -17,6 +17,7 @@ namespace  nero
     EditorInterface::EditorInterface(sf::RenderWindow& window):
         m_RenderWindow(window)
        ,m_InterfaceFirstDraw(true)
+	   ,m_ResourceManager()
        ////////////////////////Project and Workspace////////////////////////
        ,m_WorksapceStatus(0)
        ,m_InputWorksapceFolder("")
@@ -28,6 +29,7 @@ namespace  nero
        ,m_SelectedWorkpsapceIdex(0)
        ,m_ProjectCreationStatus(0)
       ,m_AdvancedScene(new AdvancedScene())
+	   ,g_Context(nullptr)
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -44,12 +46,17 @@ namespace  nero
 
         //old = std::cout.rdbuf(buffer.rdbuf());
 
+		g_Context = ax::NodeEditor::CreateEditor();
+
+		m_ResourceManager.texture.load();
+
 
     }
 
     EditorInterface::~EditorInterface()
     {
        //Empty
+		ax::NodeEditor::DestroyEditor(g_Context);
     }
 
     void EditorInterface::handleEvent(const sf::Event& event)
@@ -65,7 +72,7 @@ namespace  nero
     }
 
     void EditorInterface::update(const sf::Time& timeStep)
-    {
+	{
         m_AdvancedScene->update(timeStep);
     }
 
@@ -82,15 +89,8 @@ namespace  nero
         showGameProjectWindow();
 
 
-        ImGui::Begin("Mesh    ");
+		showCurrentSceneWindow();
 
-        ImGui::End();
-
-        showCurrentSceneWindow();
-
-        ImGui::Begin("Resource");
-
-        ImGui::End();
 
         ImGui::Begin("Engine Help");
 
@@ -108,16 +108,28 @@ namespace  nero
         ImGui::ShowDemoWindow();
 
         //upper left
-        showUtilityWindow();
+		showUtilityWindow();
+		showMusicWindow();
+
+		showSceneLevelWindow();
         showSceneChunckWindow();
         showSceneScreenWindow();
+		showSceneLayerWindow();
+
 
 
 
         interfaceFirstDraw();
 
-        ImGui::SFML::Render(m_RenderWindow);
-    }
+		if(m_GameProject)
+		{
+			showBackgroundTaskWindow();
+
+		}
+
+		ImGui::SFML::Render(m_RenderWindow);
+
+	}
 
     void EditorInterface::showSceneWindow()
     {
@@ -149,6 +161,26 @@ namespace  nero
     void EditorInterface::showGameSettingWindow()
     {
         ImGui::Begin(ViewPool.GAME_SETTING.c_str());
+
+		ax::NodeEditor::SetCurrentEditor(g_Context);
+
+		   ax::NodeEditor::Begin("My Editor");
+
+		   int uniqueId = 1;
+
+		   // Start drawing nodes.
+		   ax::NodeEditor::BeginNode(uniqueId++);
+			   ImGui::Text("Node A");
+			   ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+				   ImGui::Text("-> In");
+			   ax::NodeEditor::EndPin();
+			   ImGui::SameLine();
+			   ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+				   ImGui::Text("Out ->");
+			   ax::NodeEditor::EndPin();
+		   ax::NodeEditor::EndNode();
+
+		   ax::NodeEditor::End();
 
         ImGui::End();
     }
@@ -252,7 +284,7 @@ namespace  nero
             auto left_node = ImGui::DockBuilderGetNode(dock_id_upper_left);
             left_node->SizeRef.x = 180.f;
 
-            ImGuiID dock_id_left_bottom = ImGui::DockBuilderSplitNode(dock_id_upper_left, ImGuiDir_Down, 0.20f, nullptr, &dock_id_upper_left);
+			dock_id_left_bottom = ImGui::DockBuilderSplitNode(dock_id_upper_left, ImGuiDir_Down, 0.20f, nullptr, &dock_id_upper_left);
             dock_id_right               = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.20f, nullptr, &dock_main_id);
             actionBarId                 = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.20f, nullptr, &dock_main_id);
             ImGuiID dock_id_down        = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, nullptr, &dock_main_id);
@@ -261,13 +293,16 @@ namespace  nero
             ImGui::DockBuilderDockWindow(ViewPool.GAME_SETTING.c_str(), ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
             ImGui::DockBuilderDockWindow(ViewPool.GAME_PROJECT.c_str(), ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
             //upper left
-            ImGui::DockBuilderDockWindow(ViewPool.UTILITY.c_str(),      dock_id_upper_left);
-            ImGui::DockBuilderDockWindow(ViewPool.SCENE_CHUNCK.c_str(), dock_id_upper_left);
-            ImGui::DockBuilderDockWindow(ViewPool.SCENE_SCREEN.c_str(), dock_id_upper_left);
+			ImGui::DockBuilderDockWindow(ViewPool.UTILITY.c_str(),      dock_id_upper_left);
+			ImGui::DockBuilderDockWindow(ViewPool.Music.c_str(), dock_id_upper_left);
 
-            ImGui::DockBuilderDockWindow("Mesh    ", dock_id_left_bottom);
-            ImGui::DockBuilderDockWindow("Scene Tools", dock_id_right);
-            ImGui::DockBuilderDockWindow("Resource", dock_id_right);
+			ImGui::DockBuilderDockWindow(ViewPool.SCENE_LEVEL.c_str(), dock_id_left_bottom);
+			ImGui::DockBuilderDockWindow(ViewPool.SCENE_CHUNCK.c_str(), dock_id_left_bottom);
+			ImGui::DockBuilderDockWindow(ViewPool.SCENE_SCREEN.c_str(), dock_id_left_bottom);
+			ImGui::DockBuilderDockWindow(ViewPool.SCENE_LAYER.c_str(), dock_id_left_bottom);
+
+			ImGui::DockBuilderDockWindow(ViewPool.SCENE_EXPLORER.c_str(), dock_id_right);
+			//ImGui::DockBuilderDockWindow("Resource", dock_id_right);
             ImGui::DockBuilderDockWindow("Engine Help", dock_id_right);
             ImGui::DockBuilderDockWindow("Resource Browser", dock_id_right);
             ImGui::DockBuilderDockWindow("Dear ImGui Demo", dock_id_right);
@@ -282,7 +317,7 @@ namespace  nero
             node->LocalFlags = ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_SingleDock;
 
             auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
-            right_node->SizeRef.x = 400;
+			right_node->SizeRef.x = 300;
 
 
 
@@ -290,7 +325,7 @@ namespace  nero
             bottom_node->SizeRef.y = 150;
 
             auto left_bottom_node = ImGui::DockBuilderGetNode(dock_id_left_bottom);
-            left_bottom_node->SizeRef.y = 400.f;
+			left_bottom_node->SizeRef.y = 580.f;
 
             //auto center_node = ImGui::DockBuilderGetCentralNode(dockspace_id);
             //left_bottom_node->SizeRef.x = 600.f;
@@ -1331,12 +1366,18 @@ namespace  nero
 
     void EditorInterface::compileProject()
     {
-        if(m_GameProject)
-        {
-            m_GameProject->compileProject();
+		m_CompileProjectFuture = std::async(std::launch::async, [this]()
+		{
+			if(m_GameProject)
+			{
+				m_GameProject->compileProject();
 
-        }
-    }
+			}
+
+			return 0;
+		});
+
+	}
 
     void EditorInterface::editProject()
     {
@@ -1442,14 +1483,68 @@ namespace  nero
 
     void EditorInterface::showResourceCategoryWindow()
     {
-        ImGui::Begin("Resource");
+		ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
+		ImGui::Begin("Resource", nullptr, flags);
 
-        if(ImGui::Button("Sprite##open_sprite_resource", ImVec2(100.f, 0.f)))
+		if(ImGui::Button("Sprite##open_sprite_resource", ImVec2(100.f, 100.f)))
         {
             open_sprite_browser = true;
         }
 
-        ImGui::End();
+		ImGui::SameLine();
+
+
+		if(ImGui::Button("Animation##open_sprite_resource", ImVec2(100.f, 100.f)))
+		{
+			open_sprite_browser = true;
+		}
+
+		ImGui::SameLine();
+
+
+		if(ImGui::Button("Mesh##open_sprite_resource", ImVec2(100.f, 100.f)))
+		{
+			open_sprite_browser = true;
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button("Shape##open_shape_resource", ImVec2(100.f, 100.f)))
+		{
+			open_sprite_browser = true;
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button("Particle##open_shape_resource", ImVec2(100.f, 100.f)))
+		{
+			open_sprite_browser = true;
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button("Light##open_shape_resource", ImVec2(100.f, 100.f)))
+		{
+			open_sprite_browser = true;
+		}
+
+
+		ImGui::SameLine();
+
+		if(ImGui::Button("Font##open_shape_resource", ImVec2(100.f, 100.f)))
+		{
+			open_sprite_browser = true;
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button("Custom##open_shape_resource", ImVec2(100.f, 100.f)))
+		{
+			open_sprite_browser = true;
+		}
+
+
+		ImGui::End();
     }
 
     void EditorInterface::showResourceWindow()
@@ -1516,7 +1611,69 @@ namespace  nero
 
                 ImGui::Separator();
 
-            ImGui::End();
+
+				auto& spriteTable = m_ResourceManager.texture.getSpriteTable();
+				int sprite_count = spriteTable.size();
+				ImGuiStyle& style = ImGui::GetStyle();
+				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+				for (int n = 0; n < sprite_count; n++)
+				{
+					sf::Vector2u boo = m_ResourceManager.texture.getSpriteTexture(spriteTable[n]).getSize();
+					sf::Vector2u zoo = boo;
+					if(n < sprite_count-1)
+					{
+						zoo = m_ResourceManager.texture.getSpriteTexture(spriteTable[n+1]).getSize();
+					}
+
+					std::function<sf::Vector2f(sf::Vector2f, float)> loo = [](sf::Vector2f koo, float size){
+
+						if(koo.x > size)
+						{
+							float scale = size / koo.x;
+							koo.x = size;
+							koo.y = koo.y * scale;
+						}
+						if(koo.y > size)
+						{
+							float scale = size / koo.y;
+							koo.y = size;
+							koo.x = koo.x * scale;
+						}
+
+						return koo;
+					};
+
+					sf::Vector2f sprite_size(boo.x, boo.y);
+					sprite_size = loo(sprite_size, 250);
+
+					sf::Vector2f next_sprite_size(zoo.x, zoo.y);
+					next_sprite_size = loo(next_sprite_size, 250);
+
+
+					ImVec2 button_size(sprite_size.x, sprite_size.y);
+
+					if(ImGui::ImageButton(m_ResourceManager.texture.getSpriteTexture(spriteTable[n]), button_size))
+					{
+					   ImGui::OpenPopup(ViewPool.PROJECT_MANAGER.c_str());
+					}
+
+					float last_button_x2 = ImGui::GetItemRectMax().x;
+					float next_button_x2 = last_button_x2 + style.ItemSpacing.x + next_sprite_size.x;
+					if (n + 1 < sprite_count && next_button_x2 < window_visible_x2)
+						ImGui::SameLine();
+				}
+
+
+				/*for(std::string sprite : spriteTable)
+				{
+					if(ImGui::ImageButton(m_ResourceManager.texture.getSpriteTexture(sprite)))
+					{
+					   ImGui::OpenPopup(ViewPool.PROJECT_MANAGER.c_str());
+					}
+				}*/
+
+			ImGui::End();
         }
 
 
@@ -1604,48 +1761,57 @@ namespace  nero
         ImGui::End();
     }
 
+	void EditorInterface::showMusicWindow()
+	{
+		ImGui::Begin(ViewPool.Music.c_str());
+
+		ImGui::End();
+	}
+
     void EditorInterface::showSceneScreenWindow()
     {
         ImGui::Begin(ViewPool.SCENE_SCREEN.c_str());
 
             ImGui::Text("Manage Scene Screens");
             ImGui::Separator();
-            ImGui::Dummy(ImVec2(0.f, 5.f));
+			ImGui::Dummy(ImVec2(0.f, 2.f));
 
-            ImVec2 button_size = ImVec2(75.f, 0.f);
+			float width = 82.f;
+			static char new_screen_name[100] = "";
+			ImGui::SetNextItemWidth(width*2.f + 8.f);
+			ImGui::InputText("##screen_did", new_screen_name, IM_ARRAYSIZE(new_screen_name));
+
+			ImGui::Dummy(ImVec2(0.f, 2.f));
+
+			ImVec2 button_size = ImVec2(width, 0.f);
             //addcreen
-            if(ImGui::Button("Add##add_screen", button_size))
+			if(ImGui::Button("Add##add_screen", button_size))
             {
                 //
             }
 
-            ImGui::SameLine();
+			ImGui::SameLine();
 
-            static char new_screen_name[100] = "";
-            ImGui::SetNextItemWidth(130.f);
-            ImGui::InputText("##screen_did", new_screen_name, IM_ARRAYSIZE(new_screen_name));
+			if(ImGui::Button("Rename##add_screen", button_size))
+			{
+				//
+			}
 
-            if(ImGui::Button("Rename##add_screen", button_size))
-            {
-                //
-            }
 
-            ImGui::SameLine();
+			if(ImGui::Button("Duplicate##add_screen", button_size))
+			{
+				//
+			}
 
-            static char rename_screen_name[100] = "";
-            ImGui::SetNextItemWidth(130.f);
-            ImGui::InputText("##screens_id", rename_screen_name, IM_ARRAYSIZE(rename_screen_name));
+			ImGui::SameLine();
 
-            if(ImGui::Button("Duplicate##add_screen", button_size))
-            {
-                //
-            }
+			if(ImGui::Button("Remove##add_screen", button_size))
+			{
+				//
+			}
 
-            ImGui::SameLine();
 
-            static char duplicate_screen_name[100] = "";
-            ImGui::SetNextItemWidth(130.f);
-            ImGui::InputText("##screenssq_id", duplicate_screen_name, IM_ARRAYSIZE(duplicate_screen_name));
+
 
             //rename screen
             //copy
@@ -1653,29 +1819,163 @@ namespace  nero
             ImGui::Dummy(ImVec2(0.f, 5.f));
 
             ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
-            ImGui::BeginChild("scene_screen_list", ImVec2(), true, flags);
+			ImGui::BeginChild("scene_screen_list", ImVec2(), true);
 
                 static bool check = false;
-                ImGui::Checkbox("", &check);
+				ImGui::Checkbox("", &check);
 
                 ImGui::SameLine();
 
                 ImGuiInputTextFlags flags2 = ImGuiInputTextFlags_ReadOnly;
                 static char screen_name[100] = "screen one";
-                ImGui::SetNextItemWidth(120.f);
-                ImGui::InputText("##screen_id", screen_name, IM_ARRAYSIZE(screen_name), flags2);
-
-                ImGui::SameLine();
-
-                if(ImGui::Button("X##detele_screen"))
-                {
-                    //
-                }
+				ImGui::SetNextItemWidth(130.f);
+                ImGui::InputText("##screen_id", screen_name, IM_ARRAYSIZE(screen_name), flags2);               
 
            ImGui::EndChild();
 
         ImGui::End();
     }
+
+	void EditorInterface::showSceneLayerWindow()
+	{
+		ImGui::Begin(ViewPool.SCENE_LAYER.c_str());
+
+		ImGui::Text("Manage Scene Level");
+		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0.f, 2.f));
+
+		float width = 82.f;
+		static char input_level_name[100] = "";
+		ImGui::SetNextItemWidth(width*2.f + 8.f);
+		ImGui::InputText("##level_id", input_level_name, IM_ARRAYSIZE(input_level_name));
+
+		ImGui::Dummy(ImVec2(0.f, 2.f));
+
+		ImVec2 button_size = ImVec2(width, 0.f);
+		//addcreen
+		if(ImGui::Button("Add##add_level", button_size))
+		{
+			//
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button("Rename##rename_level", button_size))
+		{
+			//
+		}
+
+
+		if(ImGui::Button("Duplicate##duplicate_level", button_size))
+		{
+			//
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button("Remove##remove_level", button_size))
+		{
+			//
+		}
+
+		//rename screen
+		//copy
+
+		ImGui::Dummy(ImVec2(0.f, 5.f));
+
+		ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
+		ImGui::BeginChild("scene_level_list", ImVec2(), true);
+
+			static bool check = false;
+			ImGui::Checkbox("", &check);
+
+			ImGui::SameLine();
+
+			ImGuiInputTextFlags flags2 = ImGuiInputTextFlags_ReadOnly;
+			static char screen_name[100] = "screen one";
+			ImGui::SetNextItemWidth(130.f);
+			ImGui::InputText("##level_id", screen_name, IM_ARRAYSIZE(screen_name), flags2);
+
+	   ImGui::EndChild();
+
+
+		ImGui::End();
+	}
+
+	void EditorInterface::showSceneLevelWindow()
+	{
+		ImGui::Begin(ViewPool.SCENE_LEVEL.c_str());
+
+		ImGui::Text("Manage Scene Level");
+		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0.f, 2.f));
+
+		float width = 82.f;
+		static char input_level_name[100] = "";
+		ImGui::SetNextItemWidth(width*2.f + 8.f);
+		ImGui::InputText("##level_id", input_level_name, IM_ARRAYSIZE(input_level_name));
+
+		ImGui::Dummy(ImVec2(0.f, 2.f));
+
+		ImVec2 button_size = ImVec2(width, 0.f);
+		//addcreen
+		if(ImGui::Button("Add##add_level", button_size))
+		{
+			//
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button("Rename##rename_level", button_size))
+		{
+			//
+		}
+
+
+		if(ImGui::Button("Duplicate##duplicate_level", button_size))
+		{
+			//
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button("Remove##remove_level", button_size))
+		{
+			//
+		}
+
+		//rename screen
+		//copy
+
+		ImGui::Dummy(ImVec2(0.f, 5.f));
+
+		ImGui::Separator();
+
+		ImGui::Dummy(ImVec2(0.f, 5.f));
+
+		//ImGui::BeginChild("scene_level_list", ImVec2());
+
+			static int e = 0;
+
+			ImGui::RadioButton("##bsdf", &e, 0);
+
+			ImGui::SameLine();
+
+			static bool sdfsfs = false;
+			ImGui::Checkbox("##bsdf2", &sdfsfs);
+
+			ImGui::SameLine();
+
+			ImGuiInputTextFlags flags2 = ImGuiInputTextFlags_ReadOnly;
+			static char screen_name[100] = "screen one";
+			ImGui::SetNextItemWidth(118.f);
+			ImGui::InputText("##level_id", screen_name, IM_ARRAYSIZE(screen_name), flags2);
+
+	   //ImGui::EndChild();
+
+
+		ImGui::End();
+	};
 
     void EditorInterface::showSceneChunckWindow()
     {
@@ -1683,79 +1983,61 @@ namespace  nero
 
         ImGui::Text("Manage Scene Chuncks");
         ImGui::Separator();
-        ImGui::Dummy(ImVec2(0.f, 5.f));
+		ImGui::Dummy(ImVec2(0.f, 2.f));
 
-        ImVec2 button_size = ImVec2(75.f, 0.f);
-        //addchunk
-        if(ImGui::Button("Add##add_chunk", button_size))
-        {
-            //
-        }
+		float width = 82.f;
+		static char input_level_name[100] = "";
+		ImGui::SetNextItemWidth(width*2.f + 8.f);
+		ImGui::InputText("##level_id", input_level_name, IM_ARRAYSIZE(input_level_name));
 
-        ImGui::SameLine();
+		ImGui::Dummy(ImVec2(0.f, 2.f));
 
-        static char new_screen_name[100] = "";
-        ImGui::SetNextItemWidth(130.f);
-        ImGui::InputText("##chucnk_did", new_screen_name, IM_ARRAYSIZE(new_screen_name));
+		ImVec2 button_size = ImVec2(width, 0.f);
+		//addcreen
+		if(ImGui::Button("Add##add_level", button_size))
+		{
+			//
+		}
 
-        if(ImGui::Button("Rename##rename_chunck", button_size))
-        {
-            //
-        }
+		ImGui::SameLine();
 
-        ImGui::SameLine();
+		if(ImGui::Button("Rename##rename_level", button_size))
+		{
+			//
+		}
 
-        static char rename_screen_name[100] = "";
-        ImGui::SetNextItemWidth(130.f);
-        ImGui::InputText("##screesns_id", rename_screen_name, IM_ARRAYSIZE(rename_screen_name));
 
-        if(ImGui::Button("Duplicate##add_ssfcreen", button_size))
-        {
-            //
-        }
+		if(ImGui::Button("Duplicate##duplicate_level", button_size))
+		{
+			//
+		}
 
-        ImGui::SameLine();
+		ImGui::SameLine();
 
-        static char duplicate_screen_name[100] = "";
-        ImGui::SetNextItemWidth(130.f);
-        ImGui::InputText("##screensdsfssq_id", duplicate_screen_name, IM_ARRAYSIZE(duplicate_screen_name));
+		if(ImGui::Button("Remove##remove_level", button_size))
+		{
+			//
+		}
 
-        //rename screen
-        //copy
+		//rename screen
+		//copy
 
-        ImGui::Dummy(ImVec2(0.f, 5.f));
+		ImGui::Dummy(ImVec2(0.f, 5.f));
 
-        ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
-        ImGui::BeginChild("chunck_screen_list", ImVec2(), true, flags);
+		ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
+		ImGui::BeginChild("scene_level_list", ImVec2(), true);
 
-            static bool toggle = false;
-            std::string label = toggle ? "hide" : "show";
-            showToggleButton(toggle, label, [this]()
-            {
-                toggle = !toggle;
-            });
+			static bool check = false;
+			ImGui::Checkbox("", &check);
 
-            ImGui::SameLine();
+			ImGui::SameLine();
 
-            static bool check = false;
-            ImGui::Checkbox("", &check);
+			ImGuiInputTextFlags flags2 = ImGuiInputTextFlags_ReadOnly;
+			static char screen_name[100] = "screen one";
+			ImGui::SetNextItemWidth(130.f);
+			ImGui::InputText("##level_id", screen_name, IM_ARRAYSIZE(screen_name), flags2);
 
-            ImGui::SameLine();
-
-            ImGuiInputTextFlags flags2 = ImGuiInputTextFlags_ReadOnly;
-            static char screen_name[100] = "screen one";
-            ImGui::SetNextItemWidth(120.f);
-            ImGui::InputText("##scrdsdeen_id", screen_name, IM_ARRAYSIZE(screen_name), flags2);
-
-            ImGui::SameLine();
-
-            if(ImGui::Button("X##deteldde_screen"))
-            {
-                //
-            }
-
-            ImGui::EndChild();
-
+	   ImGui::EndChild();
 
         ImGui::End();
     }
@@ -1792,8 +2074,12 @@ namespace  nero
         auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
         right_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
 
-        auto upper_left_node = ImGui::DockBuilderGetNode(dock_id_upper_left);
+		auto upper_left_node = ImGui::DockBuilderGetNode(dock_id_upper_left);
         upper_left_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
+
+		auto left_bottom_node = ImGui::DockBuilderGetNode(dock_id_left_bottom);
+		left_bottom_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
+
 
         ImGui::SetWindowFocus(ViewPool.SCENE.c_str());
 
@@ -1802,52 +2088,71 @@ namespace  nero
     }
 
     void EditorInterface::showCurrentSceneWindow()
-    {
-        ImGui::Begin("Scene Tools");
+	{
+		ImGui::Begin(ViewPool.SCENE_EXPLORER.c_str());
 
-            ImGui::BeginChild("booosdfsdf", ImVec2(ImGui::GetContentRegionAvailWidth() * 0.5f, 0.f), true);
+		if (ImGui::CollapsingHeader("Scene Graph"))
+		{
 
-                ImGui::Text("Scene Screen");
-                ImGui::Separator();
+		}
 
-                static bool toggle_screen = false;
-                std::string label = toggle_screen ? "Screen View" : "Screen View";
-                showToggleButton(toggle_screen, label, [this]()
-                {
-                    toggle_screen = !toggle_screen;
-                });
+		if (ImGui::CollapsingHeader("Current Level"))
+		{
 
-                ImGui::Dummy(ImVec2(0.f, 5.f));
+		}
 
-                ImGui::Text("Mesh");
-                ImGui::Separator();
+		if (ImGui::CollapsingHeader("Current Chunk"))
+		{
 
-                ImGui::Dummy(ImVec2(0.f, 5.f));
+		}
 
-                ImGui::Text("Object");
-                ImGui::Separator();
+		if (ImGui::CollapsingHeader("Current Layer"))
+		{
 
-                ImGui::Dummy(ImVec2(0.f, 5.f));
+		}
 
-                ImGui::Text("Layer");
-                ImGui::Separator();
+		if (ImGui::CollapsingHeader("Selected Object"))
+		{
 
-            ImGui::EndChild();
+		}
 
-            ImGui::SameLine();
-
-            ImGui::BeginChild("saerzr", ImVec2(), true);
-                ImGui::Text("Scene Chunck");
-                ImGui::Separator();
-
-                ImGui::Dummy(ImVec2(0.f, 5.f));
-
-                ImGui::Text("Draw");
-                ImGui::Separator();
-
-            ImGui::EndChild();
-
-        ImGui::End();
+		ImGui::End();
     }
+
+	void EditorInterface::showBackgroundTaskWindow()
+	{
+		// FIXME-VIEWPORT: Select a default viewport
+		const float DISTANCE = 10.0f;
+		static int corner = 3;
+		ImGuiIO& io = ImGui::GetIO();
+		if (corner != -1)
+		{
+			ImGuiViewport* viewport = ImGui::GetMainViewport();
+			ImVec2 window_pos = ImVec2((corner & 1) ? (viewport->Pos.x + viewport->Size.x - DISTANCE) : (viewport->Pos.x + DISTANCE), (corner & 2) ? (viewport->Pos.y + viewport->Size.y - DISTANCE) : (viewport->Pos.y + DISTANCE));
+			ImVec2 window_pos_pivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
+			ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
+			ImGui::SetNextWindowViewport(viewport->ID);
+		}
+		//ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.f);
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.000f, 1.000f, 1.000f, 1.00f));
+		ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.911f, 0.499f, 0.146f, 1.000f));
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.000f, 0.000f, 0.000f, 1.00f));
+		if (ImGui::Begin("##background_task_window", nullptr, (corner != -1 ? ImGuiWindowFlags_NoMove : 0) | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
+		{
+			auto taskTable = m_GameProject->getBackgroundTaskTable();
+
+			for(BackgroundTask& task : taskTable)
+			{
+				if(!task.isCompleted())
+				{
+					ImGui::Text(task.printMessage().c_str());
+				}
+			}
+		}
+		ImGui::End();
+		ImGui::PopStyleColor(3);
+		ImGui::PopStyleVar();
+	}
 
 }

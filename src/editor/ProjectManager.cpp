@@ -396,7 +396,7 @@ namespace nero
             m_GameScene = m_CreateCppSceneFn(Scene::Context());
 
 
-            nero_log(m_GameScene->getName());
+			//nero_log(m_GameScene->getName());
      }
 
      std::string ProjectManager::formatSceneClassName(std::vector<std::string> wordTable)
@@ -498,7 +498,10 @@ namespace nero
         //workspace
         for(auto workspace : workspaceTable)
         {
+			nero_log("initializing project 1");
+
             project = findProject(workspace["workspace_name"].get<std::string>(), project_name);
+			nero_log("initializing project 2");
 
             if(!project.empty())
             {
@@ -512,10 +515,14 @@ namespace nero
         {
             m_GameProject = GameProject::Ptr(new GameProject());
 
+			nero_log("initializing project");
             m_GameProject->init(project, project_workpsace);
-            m_GameProject->loadProject();
-            m_GameProject->loadProjectLibrary();
-            m_GameProject->openEditor();
+			nero_log("loading project");
+			m_GameProject->loadProject();
+			nero_log("loading project library");
+			m_GameProject->loadProjectLibrary();
+			nero_log("openning editor");
+			m_GameProject->openEditor();
         }
 
         return m_GameProject;

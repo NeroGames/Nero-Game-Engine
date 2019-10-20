@@ -21,12 +21,6 @@ namespace nero
                                     Editor();
             virtual                ~Editor() override;
 
-            /*template <typename T>
-            void                    addScene(const std::string& projectName);
-
-            template <typename T>
-            void                    addLuaScene(const std::string& projectName);*/
-
     private:
            //game loop
            void                     handleEvent()                    override;
@@ -50,24 +44,6 @@ namespace nero
             //background tasks
             std::vector<std::function<void()>> m_BackgroundTaskTable;
     };
-
-    /*template <typename T>
-    void Editor::addScene(const std::string& projectName)
-    {
-        m_BackgroundTaskTable.push_back([this, projectName]()
-        {
-            m_Interface->addScene<T>(projectName);
-        });
-    }
-
-    template <typename T>
-    void Editor::addLuaScene(const std::string& projectName)
-    {
-        m_BackgroundTaskTable.push_back([this, projectName]()
-        {
-            m_Interface->addLuaScene<T>(projectName);
-        });
-    }*/
 
 }
 

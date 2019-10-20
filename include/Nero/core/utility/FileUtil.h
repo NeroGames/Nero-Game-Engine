@@ -53,6 +53,11 @@ namespace nero
     //
     std::string removeFileExtension(const std::string& filename);
 
+	bool checkExtention(const std::string& extention, nlohmann::json extentionTab);
+
+	std::string replaceFileExtension(const std::string& filename, const std::string& extension);
+
+
 }
 
 

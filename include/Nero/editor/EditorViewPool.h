@@ -7,10 +7,14 @@ namespace  nero
 {
     struct _ViewPool
     {
-            const std::string SCENE_SCREEN  = "Screen";
-            const std::string SCENE_CHUNCK  = "Chunck";
-            const std::string UTILITY       = "Utility";
-            const std::string SCENE         = "Scene     ";
+			const std::string SCENE_LEVEL		= "Level";
+			const std::string SCENE_CHUNCK		= "Chunck";
+			const std::string SCENE_SCREEN		= "Screen";
+			const std::string SCENE_LAYER		= "Layer";
+			const std::string UTILITY			= "Utility";
+			const std::string Music				= "Music";
+			const std::string SCENE				= "Scene     ";
+			const std::string SCENE_EXPLORER	= "Explorer";
 
             const std::string PROJECT_MANAGER   = "Project Manager";
             const std::string CREATE_PROJECT    = "Create Project";

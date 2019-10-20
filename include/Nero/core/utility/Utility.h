@@ -11,6 +11,14 @@ namespace nero
 {
     void                centerOrigin(sf::Sprite& sprite);
     void                centerOrigin(sf::Text& text);
+
+	bool CTRL();
+	   bool SHIFT();
+	   bool ALT();
+	   bool CTRL_SHIFT();
+	   bool CTRL_ALT();
+	   bool SHIFT_ALT();
+	   bool CTRL_SHIFT_ALT();
 }
 
 #endif // UTILITY_H

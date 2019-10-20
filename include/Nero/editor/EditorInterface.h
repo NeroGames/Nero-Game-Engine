@@ -22,8 +22,11 @@
 #include <Nero/core/utility/StringUtil.h>
 #include <Nero/core/utility/LogUtil.h>
 #include <Nero/editor/AdvancedScene.h>
+#include <Nero/core/resource/ResourceManager.h>
 
 #include <future>
+
+# include <nodeeditor/imgui_node_editor.h>
 
 ////////////////////////////////////////////////////////////
 
@@ -47,13 +50,6 @@ namespace nero
 
             void        quitEditor();
 
-
-            /*template <typename T>
-            void                    addScene(const std::string& projectName);
-
-            template <typename T>
-            void                    addLuaScene(const std::string& projectName);*/
-
             //Start Project
             void                    addScene(const std::string& projectName, std::function<Scene::Ptr(Scene::Context)> factory);
             void                    addLuaScene(const std::string& projectName, std::function<LuaScene::Ptr(Scene::Context)> factory);
@@ -68,8 +64,11 @@ namespace nero
             //editor view
             void                    createDockSpace();
                 //upper left
-            void                    showUtilityWindow();
-            void                    showSceneChunckWindow();
+			void                    showMusicWindow();
+			void                    showUtilityWindow();
+			void                    showSceneLevelWindow();
+			void                    showSceneChunckWindow();
+			void					showSceneLayerWindow();
             void                    showSceneScreenWindow();
                 //right
             void                    showCurrentSceneWindow();
@@ -88,8 +87,9 @@ namespace nero
             sf::RenderWindow&       m_RenderWindow;
             bool        setup_dock = false;
             ImGuiID actionBarId;
-            ImGuiID dock_id_right;
+			ImGuiID dock_id_right;
             ImGuiID dock_id_upper_left;
+			ImGuiID dock_id_left_bottom;
 
             bool            show_project_window = false;
             sf::Texture     project_manager_texture;
@@ -122,6 +122,8 @@ namespace nero
             void                        showGameProjectWindow();
             void                        showGameSettingWindow();
             void                        showSceneWindow();
+			void						showBackgroundTaskWindow();
+
 
 
             ////////////////////////Tool Bar////////////////////////
@@ -156,6 +158,8 @@ namespace nero
             char                        m_InputProjectDescription[512]; //read project description
             const char*                 m_SelectedProjectType;
             std::future<int>            m_CreateProjectFuture;
+			std::future<int>            m_CompileProjectFuture;
+
             int                         m_ProjectCreationStatus;
             std::string                 m_LastCreatedProject;
 
@@ -180,25 +184,11 @@ namespace nero
             //
             GameProject::Ptr            m_GameProject;
             AdvancedScene::Ptr          m_AdvancedScene;
+
+			ax::NodeEditor::EditorContext*	g_Context;
+
+			ResourceManager		m_ResourceManager;
     };
-
-    /*template <typename T>
-    void Interface::addScene(const std::string& projectName)
-    {
-        addScene(projectName, [this] (Scene::Context context)
-        {
-            return Scene::Ptr(new T(context));
-        });
-    }
-
-    template <typename T>
-    void Interface::addLuaScene(const std::string& projectName)
-    {
-        addLuaScene(projectName, [this] (Scene::Context context)
-        {
-            return LuaScene::Ptr(new T(context));
-        });
-    }*/
 
 }
 

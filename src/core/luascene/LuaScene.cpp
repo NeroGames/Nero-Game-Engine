@@ -26,13 +26,13 @@ namespace  nero
 
 
 			m_NeroTable["scene"] = LuaScene::Ptr(this);
-			m_LuaState.new_usertype<LuaScene>("LuaScene", "getName", &LuaScene::getName);
+			//m_LuaState.new_usertype<LuaScene>("LuaScene", "getName", &LuaScene::getName);
 	}
 
 	void LuaScene::bindLogging()
 	{
 		//
-		m_NeroTable["logging"] = m_LuaState.create_table("logging");
+		/*m_NeroTable["logging"] = m_LuaState.create_table("logging");
 
 		m_NeroTable["logging"]["info"]		= LOG_LEVEL::INFO;
 		m_NeroTable["logging"]["warning"]	= LOG_LEVEL::WARNING;
@@ -56,7 +56,7 @@ namespace  nero
 		m_NeroTable.set_function("log_if", [](const std::string& message, bool condition, int level)
 		{
 			nero_log_if(message, condition, level);
-		});
+		});*/
 
 	}
 

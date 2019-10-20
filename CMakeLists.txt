@@ -36,8 +36,8 @@ add_definitions(-DSOL_USING_CXX_LUA)
 # Get the engine source files
 include_directories ("include")
 include_directories("library")
-include_directories("project")
-include_directories("example")
+#include_directories("project")
+#include_directories("example")
 
 # Engine Editor Source
 file(GLOB_RECURSE NERO_GAME_ENGINE_SOURCES
@@ -75,11 +75,15 @@ set(HTTP_PARSER "-lhttp_parser")
 set(LIBGIT2_LIBS "-lgit2.dll")
 #Lua
 set(LUA_LIBS "-llua")
+#CPP_FILESYSTEM
+set(CPP_FILESYSTEM "stdc++fs")
+
+
+# Build Nero Game Core
+add_library(nerogame-core ${NERO_GAME_CORE_SOURCES} )
+target_link_libraries(nerogame-core ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2d_LIBS})
 
 # Build Nero Game Editor
 add_executable(Editor "main.cpp" ${NERO_GAME_ENGINE_SOURCES})
-target_link_libraries(Editor comctl32.lib stdc++fs ${SFML_LIBS} ${Box2d_LIBS} ${OPENGL_gl_LIBRARY} ${ZLIB_LIBS} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${HTTP_PARSER} ${LIBGIT2_LIBS} ${LUA_LIBS})
+target_link_libraries(Editor comctl32.lib ${CPP_FILESYSTEM} ${SFML_LIBS} ${Box2d_LIBS} ${OPENGL_gl_LIBRARY} ${ZLIB_LIBS} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${HTTP_PARSER} ${LIBGIT2_LIBS} ${LUA_LIBS})
 
-# Build Nero Game Core
-add_library(nerogame-core SHARED ${NERO_GAME_CORE_SOURCES})
-target_link_libraries(nerogame-core stdc++fs ${SFML_LIBS} ${Box2d_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS})

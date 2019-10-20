@@ -8,6 +8,7 @@
 #include <Nero/core/utility/FileUtil.h>
 #include <boost/dll.hpp>
 #include <boost/algorithm/string.hpp>
+#include <thread>
 /////////////////////////////////////////////////////////////
 
 namespace nero
@@ -51,9 +52,6 @@ namespace nero
 
     void GameProject::loadProjectLibrary()
     {
-
-        nero_log(m_ProjectLibraryFile);
-
         if(!boost::dll::fs::exists(m_ProjectLibraryFile))
         {
             return;
@@ -78,24 +76,36 @@ namespace nero
 
         std::string copy_command = "copy \"" + boo + "\" \"" + zoo + "\"";
 
-        nero_log(copy_command);
+		nero_log(copy_command);
 
         system(copy_command.c_str());
 
-        nero_log("copy done");
+		nero_log("copy done");
 
 
-        nero_log(removeFileExtension(m_ProjectLibraryCopyFile));
+		nero_log(removeFileExtension(m_ProjectLibraryCopyFile));
 
-            boost::dll::fs::path library_path(removeFileExtension(m_ProjectLibraryCopyFile));
+			boost::dll::fs::path library_path(removeFileExtension(m_ProjectLibraryCopyFile));
 
-            nero_log("loading scene library");
+			nero_log("loading scene library");
 
-           m_CreateCppSceneFn = boost::dll::import_alias<CreateCppSceneFn>(library_path, "createScene", boost::dll::load_mode::append_decorations);
+			try
+			{
+				boost::dll::shared_library lib(m_ProjectLibraryCopyFile);
 
-           nero_log("loading done");
+				nero_log_if("ok ok ok ", lib.is_loaded());
 
-           m_AdvancedScene->setScene(m_CreateCppSceneFn(Scene::Context()));
+				m_CreateCppSceneFn = boost::dll::import_alias<CreateCppSceneFn>(library_path, "createScene", boost::dll::load_mode::append_decorations);
+
+				m_AdvancedScene->setScene(m_CreateCppSceneFn(Scene::Context()));
+
+				nero_log("loading succeed");
+
+			}
+			catch (std::exception e)
+			{
+				nero_log("loading failed");
+			}
     }
 
     void GameProject::openEditor()
@@ -161,21 +171,44 @@ namespace nero
 
     void GameProject::compileProject()
     {
-        m_ProjectCompilationStatus = 1;
+		BackgroundTask& backgroundTask =  createBackgroundTask("Compile Project", "Game Project");
 
-        m_CleanProjectResult = system(m_CleanProjectCommand.c_str());
+		backgroundTask.setStatus(1);
+		backgroundTask.addMessage("Cleaning Project ...");
+		backgroundTask.setErrorCode(
+					system(m_CleanProjectCommand.c_str()));
 
-        m_ProjectCompilationStatus = 2;
+		backgroundTask.setStatus(2);
+		backgroundTask.addMessage("Configuring Project ...");
+		backgroundTask.setErrorCode(
+					system(m_ConfigureProjectCommand.c_str()));
 
-        m_ConfigureProjectResult = system(m_ConfigureProjectCommand.c_str());
+		backgroundTask.setStatus(3);
+		backgroundTask.addMessage("Building Project ...");
+		backgroundTask.setErrorCode(
+					system(m_BuildProjectCommand.c_str()));
 
-        m_ProjectCompilationStatus = 3;
+		backgroundTask.setStatus(4);
+		backgroundTask.addMessage("Compilation Completed !!");
 
-        m_BuildProjectResult = system(m_BuildProjectCommand.c_str());
+		std::this_thread::sleep_for(std::chrono::seconds(2));
 
-        m_ProjectCompilationStatus = 4;
+		backgroundTask.setCompleted(true);
 
     }
+
+	BackgroundTask& GameProject::createBackgroundTask(const std::string& name, const std::string& category)
+	{
+		m_BackgroundTaskTable.push_back(BackgroundTask(name, category));
+
+		return m_BackgroundTaskTable.back();
+	}
+
+	std::vector<BackgroundTask>& GameProject::getBackgroundTaskTable()
+	{
+		return m_BackgroundTaskTable;
+	}
+
 
     AdvancedScene::Ptr GameProject::getAdvancedScene()
     {

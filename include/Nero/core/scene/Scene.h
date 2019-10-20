@@ -8,25 +8,22 @@
 //NERO
 #include <Nero/core/object/GameObject.h>
 //SFML
+#include <SFML/System/Time.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 //BOX2D
 #include <Box2D/Dynamics/b2World.h>
 //STD
 #include <memory>
 #include <vector>
-#include <boost/config.hpp>
-
-#include <SFML/System/Time.hpp>
-#include <SFML/Window/Event.hpp>
-#include <SFML/Graphics/RenderTexture.hpp>
-
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class  Scene
+	class  Scene
     {
         public: //Types Definiton
-            typedef std::shared_ptr<Scene> Ptr;
-            typedef std::vector<GameObject::Ptr> WorldChunkTab;
+			typedef std::shared_ptr<Scene> Ptr;
+			typedef std::vector<GameObject::Ptr> WorldChunkTab;
 
         public: //Utility Class
             struct Context
@@ -35,9 +32,9 @@ namespace nero
             };
 
 
-        public: //Constructor
-                                            Scene(Context context);
-            virtual                        ~Scene();
+		public: //Constructor
+											Scene(Context context);
+			virtual                        ~Scene();
 
 			virtual void                    handleEvent(const sf::Event& event);
 			virtual void                    update(const sf::Time& timeStep);
@@ -46,6 +43,8 @@ namespace nero
 			void    renderScene();
 
             sf::RenderTexture&              getRenderTexture();
+			virtual std::string             getName();
+
 
         private:
             void                            destroyScene();
@@ -59,9 +58,7 @@ namespace nero
             std::vector<GameObject::Ptr>        m_WorldChunkTable;
             //
             sf::RenderTexture                   m_RenderTexture;
-
-        public: //test
-            virtual std::string                         getName();
+			Context								m_Context;
 
     };
 }

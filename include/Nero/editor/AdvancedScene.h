@@ -14,7 +14,8 @@
 #include <Nero/core/scene/Scene.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <memory>
-
+#include <SFML/System/Time.hpp>
+#include <SFML/Window/Event.hpp>
 namespace nero
 {
     //Forward declaration
@@ -68,7 +69,7 @@ namespace nero
         public:
                             AdvancedScene();
 
-                            void                        handleEvent(const sf::Event& event);
+							void                        handleEvent(const sf::Event& event);
                             void                        update(const sf::Time& timeStep);
                              sf::RenderTexture&         render(const RenderContext& renderContext);
 

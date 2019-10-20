@@ -11,13 +11,12 @@ namespace nero
 
     }
 
-    Scene::Scene(Context context)
-    {
-        m_RenderTexture.create(800.f, 600.f);
+	Scene::Scene(Context context)
+	{
 
-    }
+	}
 
-    Scene::~Scene()
+	Scene::~Scene()
     {
         destroyScene();
     }
@@ -32,21 +31,20 @@ namespace nero
 
     }
 
-    void    Scene::renderScene()
+	void Scene::renderScene()
     {
         m_RenderTexture.clear(sf::Color::Black);
+		m_RenderTexture.create(800.f, 600.f);
 
         render();
 
         m_RenderTexture.display();
     }
 
-
     void Scene::render()
     {
 
     }
-
 
     void Scene::destroyScene()
     {
@@ -68,6 +66,6 @@ namespace nero
     sf::RenderTexture& Scene::getRenderTexture()
     {
         return m_RenderTexture;
-    }
+	}
 
 }

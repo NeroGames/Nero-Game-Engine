@@ -195,4 +195,12 @@ int main()
     return 0;
 }*/
 
+/*
+ static bool toggle_screen = false;
+std::string label = toggle_screen ? "Screen View" : "Screen View";
+showToggleButton(toggle_screen, label, [this]()
+{
+	toggle_screen = !toggle_screen;
+});*/
+
 #endif // TEMP_H
