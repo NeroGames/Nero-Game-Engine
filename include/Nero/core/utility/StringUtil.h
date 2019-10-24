@@ -21,12 +21,14 @@ namespace nero
 
 
         //file extension
-        const std::string EXTANSION_JSON    = ".json";
-        const std::string EXTANSION_TEXT    = ".txt";
-        const std::string EXTANSION_LUA     = ".lua";
-        const std::string EXTANSION_DLL     = ".dll";
-        const std::string EXTANSION_CPP_HEADER     = ".h";
-        const std::string EXTANSION_CPP_SOURCE     = ".cpp";
+		const std::string EXTENSION_JSON			= ".json";
+		const std::string EXTENSION_TEXT			= ".txt";
+		const std::string EXTENSION_LUA				= ".lua";
+		const std::string EXTENSION_DLL				= ".dll";
+		const std::string EXTENSION_CPP_HEADER		= ".h";
+		const std::string EXTENSION_CPP_SOURCE		= ".cpp";
+		const std::string EXTENSION_NERO			= ".nero";
+		const std::string EXTENSION_INI				= ".ini";
 
         //
         const std::string UNDERSCORE        = "_";

@@ -66,7 +66,7 @@ namespace nero
         status = 2;
 
         //save project json
-        saveFile(getPath({projectFolder, "nero_project"}, StringPool.EXTANSION_JSON), project_json.dump(3));
+        saveFile(getPath({projectFolder, "nero_project"}, StringPool.EXTENSION_JSON), project_json.dump(3));
 
         //Step 2 : Generate file
         std::string cmake_template = loadText("template/cpp-project/CMakeLists.txt");
@@ -99,9 +99,9 @@ namespace nero
         boost::algorithm::replace_all(cmake_template, "::Project_Library::", formatCmakeProjectLibrary(wordTable));
 
 
-        saveFile(getPath({projectFolder, "Source", "CMakeLists"}, StringPool.EXTANSION_TEXT), cmake_template);
-        saveFile(getPath({projectFolder, "Source", scene_class}, StringPool.EXTANSION_CPP_HEADER), scene_header_template);
-        saveFile(getPath({projectFolder, "Source", scene_class}, StringPool.EXTANSION_CPP_SOURCE), scene_source_template);
+        saveFile(getPath({projectFolder, "Source", "CMakeLists"}, StringPool.EXTENSION_TEXT), cmake_template);
+        saveFile(getPath({projectFolder, "Source", scene_class}, StringPool.EXTENSION_CPP_HEADER), scene_header_template);
+        saveFile(getPath({projectFolder, "Source", scene_class}, StringPool.EXTENSION_CPP_SOURCE), scene_source_template);
 
         status = 3;
 
@@ -127,7 +127,7 @@ namespace nero
         }
 
         //check if project file exist
-        std::string project_file = getPath({m_EditorSetting["workspace_folder"].get<std::string>(), formatString(projectName), "nero_project"}, StringPool.EXTANSION_JSON);
+        std::string project_file = getPath({m_EditorSetting["workspace_folder"].get<std::string>(), formatString(projectName), "nero_project"}, StringPool.EXTENSION_JSON);
         if(!fileExist(project_file))
         {
             return false;
@@ -158,7 +158,7 @@ namespace nero
         while (it != directory_iterator{})
         {
             std::string project_folder = it->path().string();
-            std::string project_file = getPath({project_folder, "nero_project"}, StringPool.EXTANSION_JSON);
+            std::string project_file = getPath({project_folder, "nero_project"}, StringPool.EXTENSION_JSON);
 
             if(fileExist(project_file))
             {
@@ -187,7 +187,7 @@ namespace nero
         while (it != directory_iterator{})
         {
             std::string project_folder = it->path().string();
-            std::string project_file = getPath({project_folder, "nero_project"}, StringPool.EXTANSION_JSON);
+            std::string project_file = getPath({project_folder, "nero_project"}, StringPool.EXTENSION_JSON);
 
             if(fileExist(project_file))
             {
@@ -208,7 +208,7 @@ namespace nero
         std::string workspace_directory = getPath({workspaceJson["workspace_folder"].get<std::string>(), workspaceJson["workspace_name"].get<std::string>()});
         createDirectory(workspace_directory);
         //create nero_workspace.json
-        saveFile(getPath({workspace_directory, "nero_workspace"}, StringPool.EXTANSION_JSON), workspaceJson.dump(3));
+        saveFile(getPath({workspace_directory, "nero_workspace"}, StringPool.EXTENSION_JSON), workspaceJson.dump(3));
 
         //update workspace setting
         auto worksapceSetting = loadJson(getPath({"workspace", "workspace"}));
@@ -224,7 +224,7 @@ namespace nero
 
         worksapceSetting.push_back(workspace);
 
-        saveFile(getPath({"workspace", "workspace"}, StringPool.EXTANSION_JSON), worksapceSetting.dump(3), true);
+        saveFile(getPath({"workspace", "workspace"}, StringPool.EXTENSION_JSON), worksapceSetting.dump(3), true);
     }
 
     const nlohmann::json ProjectManager::getWorkspaceTable() const

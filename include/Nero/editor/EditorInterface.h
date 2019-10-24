@@ -83,10 +83,15 @@ namespace nero
             void                    showToggleButton(bool toggle, const std::string& label, std::function<void()> callback);
 
         private:
-            friend class            Editor;
-            sf::RenderWindow&       m_RenderWindow;
+			friend class						Editor;
+			sf::RenderWindow&					m_RenderWindow;
+			//Docksapce
+			ImGuiID								m_DockspaceID;
+			bool								m_BuildDockspaceLayout;
+			bool								m_SetupDockspaceLayout;
+
             bool        setup_dock = false;
-            ImGuiID actionBarId;
+			ImGuiID actionBarId;
 			ImGuiID dock_id_right;
             ImGuiID dock_id_upper_left;
 			ImGuiID dock_id_left_bottom;

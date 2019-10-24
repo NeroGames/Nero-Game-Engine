@@ -81,7 +81,7 @@ namespace  nero
         m_Window.resetGLStates();
         m_Window.setPosition(sf::Vector2i(m_Window.getPosition().x, 15));
         setWindowIcon("icon.png");
-        removeFile(getPath({"imgui"}, ".ini"));
+		//removeFile(getPath({"imgui"}, ".ini"));
 
         //setup IMGUI
         ImGui::SFML::Init(m_Window);

@@ -32,6 +32,8 @@ namespace  nero
 	   ,m_ProjectCreationStatus(0)
       ,m_AdvancedScene(new AdvancedScene())
 	   ,g_Context(nullptr)
+	  ,m_BuildDockspaceLayout(true)
+	  ,m_SetupDockspaceLayout(true)
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -41,7 +43,6 @@ namespace  nero
         m_ReloadButtonTexture.loadFromFile("reload_button.png");
         m_EditButtonTexture.loadFromFile("edit_button.png");
         m_BlankButtonTexture.loadFromFile("blank_button.png");
-
 
         m_ProjectManager = std::make_unique<ProjectManager>();
         m_SceneManager = std::make_unique<SceneManager>();
@@ -135,7 +136,7 @@ namespace  nero
 
     void EditorInterface::showSceneWindow()
     {
-		ImGui::Begin(EditorConstant.SCENE.c_str());
+		ImGui::Begin(EditorConstant.WINDOW_GAME_SCENE.c_str());
 
             //if(ImGui::IsWindowFocused())
             {
@@ -162,7 +163,7 @@ namespace  nero
 
     void EditorInterface::showGameSettingWindow()
     {
-		ImGui::Begin(EditorConstant.GAME_SETTING.c_str());
+		ImGui::Begin(EditorConstant.WINDOW_GAME_SETTING.c_str());
 
 		ax::NodeEditor::SetCurrentEditor(g_Context);
 
@@ -189,7 +190,7 @@ namespace  nero
 
     void EditorInterface::showGameProjectWindow()
     {
-		ImGui::Begin(EditorConstant.GAME_PROJECT.c_str());
+		ImGui::Begin(EditorConstant.WINDOW_GAME_PROJECT.c_str());
 
         ImGui::End();
     }
@@ -215,128 +216,147 @@ namespace  nero
         ImGui::SetNextWindowPos(viewport->Pos);
         ImGui::SetNextWindowSize(viewport->Size);
         ImGui::SetNextWindowViewport(viewport->ID);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+
+		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
+		//add style
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-        ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+
+		ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+
+			//remove style
+			ImGui::PopStyleVar(3);
+
+			//save dockspace id
+			m_DockspaceID = ImGui::GetID(EditorConstant.DOCKSPACE_ID.c_str());
+
+			//create the dockspace
+			ImGui::DockSpace(m_DockspaceID, viewport_size, dockspace_flags);
+
+			if(m_BuildDockspaceLayout && !fileExist(getPath({EditorConstant.FILE_INTERFACE_LAYOUT}, StringPool.EXTENSION_INI)))
+			{
+				//split main dockspace in six
+				ImGuiID upperLeftDockspaceID	= ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Left,	0.20f, nullptr, &m_DockspaceID);
+					ImGui::DockBuilderGetNode(upperLeftDockspaceID)->SizeRef.x = 180.f;
+				ImGuiID lowerLeftDockspaceID	= ImGui::DockBuilderSplitNode(upperLeftDockspaceID,	ImGuiDir_Down,	0.20f, nullptr, &upperLeftDockspaceID);
+				ImGuiID rightDockspaceID        = ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Right, 0.20f, nullptr, &m_DockspaceID);
+				ImGuiID toolbarDockspaceID		= ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Up,	0.20f, nullptr, &m_DockspaceID);
+				ImGuiID bottomDockspaceID       = ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Down,	0.20f, nullptr, &m_DockspaceID);
+				ImGuiID centralDockspaceID		= ImGui::DockBuilderGetCentralNode(m_DockspaceID)->ID;
+
+				//lay windows
+					//tool bar
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_TOOLBAR.c_str(),				toolbarDockspaceID);
+					//upper left
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_UTILITY.c_str(),				upperLeftDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_MUSIC.c_str(),				upperLeftDockspaceID);
+					//lower left
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LEVEL.c_str(),				lowerLeftDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_CHUNCK.c_str(),				lowerLeftDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_SCREEN.c_str(),				lowerLeftDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LAYER.c_str(),				lowerLeftDockspaceID);
+					//right
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_EXPLORER.c_str(),			rightDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_HELP.c_str(),				rightDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_RESOURCE_BROWSER.c_str(),	rightDockspaceID);
+					//bottom
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LOGGING.c_str(),				bottomDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_RESOURCE.c_str(),			bottomDockspaceID);
+					//center
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_GAME_SCENE.c_str(),			centralDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_GAME_SETTING.c_str(),		centralDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_GAME_PROJECT.c_str(),		centralDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_FACTORY.c_str(),				centralDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_IMGUI_DEMO.c_str(),			centralDockspaceID);
+
+				//commit dockspace
+				ImGui::DockBuilderFinish(m_DockspaceID);
+
+				//save dockspace ids
+				nlohmann::json dockspaceTable;
+				dockspaceTable["upper-left-dockspace"]	= upperLeftDockspaceID;
+				dockspaceTable["lower-left-dockspace"]	= lowerLeftDockspaceID;
+				dockspaceTable["right-dockspace"]		= rightDockspaceID;
+				dockspaceTable["toolbar-dockspace"]		= toolbarDockspaceID;
+				dockspaceTable["bottom-dockspace"]		= bottomDockspaceID;
+				dockspaceTable["central-dockspace"]		= centralDockspaceID;
+
+				saveFile(getPath({"setting", "dockspace"}, StringPool.EXTENSION_JSON), dockspaceTable.dump(3));
+
+				m_BuildDockspaceLayout = !m_BuildDockspaceLayout;
+			}
+
+			if(m_SetupDockspaceLayout && !m_BuildDockspaceLayout)
+			{
+				nlohmann::json dockspaceTable = loadJson(getPath({"setting", "dockspace"}));
+
+				//toolbar
+				ImGuiID toolbarDockspaceID			= dockspaceTable["toolbar-dockspace"];
+				ImGuiDockNode* toobalDockNode		= ImGui::DockBuilderGetNode(toolbarDockspaceID);
+				toobalDockNode->SizeRef.y			= 16.8f;
+				toobalDockNode->LocalFlags			= ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_SingleDock;
+				//lower left dockspace
+				ImGuiID lowerLeftDockspaceID		= dockspaceTable["lower-left-dockspace"];
+				ImGuiDockNode* lowerLeftDockNode	= ImGui::DockBuilderGetNode(lowerLeftDockspaceID);
+				lowerLeftDockNode->SizeRef.y = 580;
+				//right dockspace
+				ImGuiID rightDockspaceID			= dockspaceTable["right-dockspace"];
+				ImGuiDockNode* rightDockNode		= ImGui::DockBuilderGetNode(rightDockspaceID);
+				rightDockNode->SizeRef.x = 300;
+				//bottom dockspace
+				ImGuiID bottomDockspaceID			= dockspaceTable["bottom-dockspace"];
+				ImGuiDockNode* bottomDockNode		= ImGui::DockBuilderGetNode(bottomDockspaceID);
+				bottomDockNode->SizeRef.y = 150;
+
+				//clean pointer
+				toobalDockNode		= nullptr;
+				lowerLeftDockNode	= nullptr;
+				rightDockNode		= nullptr;
+				bottomDockNode		= nullptr;
+
+				m_SetupDockspaceLayout = !m_SetupDockspaceLayout;
+			}
 
 
 
-        ImGui::PopStyleVar();
 
-        ImGui::PopStyleVar(2);
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				ImGui::MenuItem("action_1", nullptr, nullptr);
+				ImGui::MenuItem("action_2", nullptr, nullptr);
 
-        if(!setup_dock)
-        {
-            dockspace_id = ImGui::GetID("MyDockSpace");
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Views"))
+			{
+				ImGui::MenuItem("action_3", nullptr, nullptr);
+				ImGui::MenuItem("action_4", nullptr, nullptr);
 
-        }
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Download"))
+			{
+				ImGui::MenuItem("action_3", nullptr, nullptr);
+				ImGui::MenuItem("action_4", nullptr, nullptr);
 
-        ImGui::DockSpace(dockspace_id, viewport_size, dockspace_flags);
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Helps"))
+			{
+				ImGui::MenuItem("action_3", nullptr, nullptr);
+				ImGui::MenuItem("action_4", nullptr, nullptr);
 
+				ImGui::EndMenu();
+			}
 
-
-        if (ImGui::BeginMenuBar())
-        {
-            if (ImGui::BeginMenu("File"))
-            {
-                ImGui::MenuItem("action_1", nullptr, nullptr);
-                ImGui::MenuItem("action_2", nullptr, nullptr);
-
-                ImGui::EndMenu();
-            }
-            if (ImGui::BeginMenu("Views"))
-            {
-                ImGui::MenuItem("action_3", nullptr, nullptr);
-                ImGui::MenuItem("action_4", nullptr, nullptr);
-
-                ImGui::EndMenu();
-            }
-            if (ImGui::BeginMenu("Download"))
-            {
-                ImGui::MenuItem("action_3", nullptr, nullptr);
-                ImGui::MenuItem("action_4", nullptr, nullptr);
-
-                ImGui::EndMenu();
-            }
-            if (ImGui::BeginMenu("Helps"))
-            {
-                ImGui::MenuItem("action_3", nullptr, nullptr);
-                ImGui::MenuItem("action_4", nullptr, nullptr);
-
-                ImGui::EndMenu();
-            }
-
-            ImGui::EndMenuBar();
-        }
-
-        ImGui::End();
-
-        if(!setup_dock && !fileExist(getPath({"imgui"}, ".ini")))
-        {
-            ImGuiID dock_main_id = dockspace_id; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
-
-            //split main dock in five
-            //ImGuiID dock_id_bottom        = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, nullptr, &dock_main_id);
-            dock_id_upper_left          = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Left, 0.20f, nullptr, &dock_main_id);
-
-            auto left_node = ImGui::DockBuilderGetNode(dock_id_upper_left);
-            left_node->SizeRef.x = 180.f;
-
-			dock_id_left_bottom = ImGui::DockBuilderSplitNode(dock_id_upper_left, ImGuiDir_Down, 0.20f, nullptr, &dock_id_upper_left);
-            dock_id_right               = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.20f, nullptr, &dock_main_id);
-            actionBarId                 = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.20f, nullptr, &dock_main_id);
-            ImGuiID dock_id_down        = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, nullptr, &dock_main_id);
-
-			ImGui::DockBuilderDockWindow(EditorConstant.SCENE.c_str(), ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
-			ImGui::DockBuilderDockWindow(EditorConstant.GAME_SETTING.c_str(), ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
-			ImGui::DockBuilderDockWindow(EditorConstant.GAME_PROJECT.c_str(), ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
-			ImGui::DockBuilderDockWindow("Dear ImGui Demo", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
-			//upper left
-			ImGui::DockBuilderDockWindow(EditorConstant.UTILITY.c_str(),      dock_id_upper_left);
-			ImGui::DockBuilderDockWindow(EditorConstant.Music.c_str(), dock_id_upper_left);
-
-			ImGui::DockBuilderDockWindow(EditorConstant.SCENE_LEVEL.c_str(), dock_id_left_bottom);
-			ImGui::DockBuilderDockWindow(EditorConstant.SCENE_CHUNCK.c_str(), dock_id_left_bottom);
-			ImGui::DockBuilderDockWindow(EditorConstant.SCENE_SCREEN.c_str(), dock_id_left_bottom);
-			ImGui::DockBuilderDockWindow(EditorConstant.SCENE_LAYER.c_str(), dock_id_left_bottom);
-
-			ImGui::DockBuilderDockWindow(EditorConstant.SCENE_EXPLORER.c_str(), dock_id_right);
-            ImGui::DockBuilderDockWindow("Engine Help", dock_id_right);
-            ImGui::DockBuilderDockWindow("Resource Browser", dock_id_right);
-			ImGui::DockBuilderDockWindow(EditorConstant.Toolbar.c_str(), actionBarId);
-            ImGui::DockBuilderDockWindow("Logging", dock_id_down);
-            ImGui::DockBuilderDockWindow("Resource", dock_id_down);
-            //ImGui::DockBuilderDockWindow("Bottom", dock_id_bottom);
-
-
-            auto node = ImGui::DockBuilderGetNode(actionBarId);
-            node->SizeRef.y = 16.8f;
-            node->LocalFlags = ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_SingleDock;
-
-            auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
-			right_node->SizeRef.x = 300;
-
-
-
-            auto bottom_node = ImGui::DockBuilderGetNode(dock_id_down);
-            bottom_node->SizeRef.y = 150;
-
-            auto left_bottom_node = ImGui::DockBuilderGetNode(dock_id_left_bottom);
-			left_bottom_node->SizeRef.y = 580.f;
-
-            //auto center_node = ImGui::DockBuilderGetCentralNode(dockspace_id);
-            //left_bottom_node->SizeRef.x = 600.f;
-
-            ImGui::DockBuilderFinish(dockspace_id);
-
-
-            setup_dock = true;
-
-        }
+			ImGui::EndMenuBar();
+		}
+		ImGui::End();
     }
 
     void EditorInterface::showToolbarWindow()
@@ -345,7 +365,7 @@ namespace  nero
         window_flags |= ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar;
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8.f, 2.f));
-		ImGui::Begin(EditorConstant.Toolbar.c_str(), nullptr, window_flags);
+		ImGui::Begin(EditorConstant.WINDOW_TOOLBAR.c_str(), nullptr, window_flags);
 
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.5f, 2.5f));
 
@@ -1711,7 +1731,7 @@ namespace  nero
 
     void EditorInterface::showUtilityWindow()
     {
-		ImGui::Begin(EditorConstant.UTILITY.c_str());
+		ImGui::Begin(EditorConstant.WINDOW_UTILITY.c_str());
 
             ImVec2 size = ImGui::GetWindowSize();
 
@@ -1793,14 +1813,14 @@ namespace  nero
 
 	void EditorInterface::showMusicWindow()
 	{
-		ImGui::Begin(EditorConstant.Music.c_str());
+		ImGui::Begin(EditorConstant.WINDOW_MUSIC.c_str());
 
 		ImGui::End();
 	}
 
     void EditorInterface::showSceneScreenWindow()
     {
-		ImGui::Begin(EditorConstant.SCENE_SCREEN.c_str());
+		ImGui::Begin(EditorConstant.WINDOW_SCREEN.c_str());
 
             ImGui::Text("Manage Scene Screens");
             ImGui::Separator();
@@ -1868,7 +1888,7 @@ namespace  nero
 
 	void EditorInterface::showSceneLayerWindow()
 	{
-		ImGui::Begin(EditorConstant.SCENE_LAYER.c_str());
+		ImGui::Begin(EditorConstant.WINDOW_LAYER.c_str());
 
 		ImGui::Text("Manage Scene Level");
 		ImGui::Separator();
@@ -1934,7 +1954,7 @@ namespace  nero
 
 	void EditorInterface::showSceneLevelWindow()
 	{
-		ImGui::Begin(EditorConstant.SCENE_LEVEL.c_str());
+		ImGui::Begin(EditorConstant.WINDOW_LEVEL.c_str());
 
 		ImGui::Text("Manage Scene Level");
 		ImGui::Separator();
@@ -2009,7 +2029,7 @@ namespace  nero
 
     void EditorInterface::showSceneChunckWindow()
     {
-		ImGui::Begin(EditorConstant.SCENE_CHUNCK.c_str());
+		ImGui::Begin(EditorConstant.WINDOW_CHUNCK.c_str());
 
         ImGui::Text("Manage Scene Chuncks");
         ImGui::Separator();
@@ -2101,17 +2121,17 @@ namespace  nero
             return;
         }
 
-        auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
+		/*auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
         right_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
 
 		auto upper_left_node = ImGui::DockBuilderGetNode(dock_id_upper_left);
         upper_left_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
 
 		auto left_bottom_node = ImGui::DockBuilderGetNode(dock_id_left_bottom);
-		left_bottom_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
+		left_bottom_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;*/
 
 
-		ImGui::SetWindowFocus(EditorConstant.SCENE.c_str());
+		ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
 
         //commit
         m_InterfaceFirstDraw = false;
@@ -2119,7 +2139,7 @@ namespace  nero
 
     void EditorInterface::showCurrentSceneWindow()
 	{
-		ImGui::Begin(EditorConstant.SCENE_EXPLORER.c_str());
+		ImGui::Begin(EditorConstant.WINDOW_EXPLORER.c_str());
 
 		if (ImGui::CollapsingHeader("Scene Graph"))
 		{

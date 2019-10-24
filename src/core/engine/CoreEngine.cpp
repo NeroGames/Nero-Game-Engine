@@ -35,7 +35,7 @@ namespace  nero
 
     void CoreEngine::loadLoggingSetting()
     {
-        el::Configurations setting(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_LOGGING}, StringPool.EXTANSION_TEXT));
+        el::Configurations setting(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_LOGGING}, StringPool.EXTENSION_TEXT));
         el::Loggers::reconfigureAllLoggers(setting);
     }
 
@@ -45,7 +45,7 @@ namespace  nero
         m_WindowWidth  = m_Setting["window_width"].get<unsigned int>();
         m_WindowHeight = m_Setting["window_height"].get<unsigned int>();
 
-        m_Window.create(sf::VideoMode(m_WindowWidth, m_WindowHeight), m_WindowTitle, sf::Style::Default);
+		m_Window.create(sf::VideoMode(m_WindowWidth, m_WindowHeight), m_WindowTitle, sf::Style::Default);
     }
 
     CoreEngine::~CoreEngine()
@@ -161,11 +161,11 @@ namespace  nero
 
         //create main files
         //engine setting
-        saveFile(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_ENGINE}, StringPool.EXTANSION_JSON), StringPool.BLANK);
+        saveFile(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_ENGINE}, StringPool.EXTENSION_JSON), StringPool.BLANK);
         //logging setting
-        saveFile(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_LOGGING}, StringPool.EXTANSION_TEXT), StringPool.BLANK);
+        saveFile(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_LOGGING}, StringPool.EXTENSION_TEXT), StringPool.BLANK);
         //resource setting
-        saveFile(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_RESOURCE}, StringPool.EXTANSION_JSON), StringPool.BLANK);
+        saveFile(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_RESOURCE}, StringPool.EXTENSION_JSON), StringPool.BLANK);
 
     }
 

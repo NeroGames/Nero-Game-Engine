@@ -29,7 +29,7 @@ namespace nero
         m_ProjectSourceDirectory  = getPath({m_ProjectDirectory, "Source"});
         m_ProjectBuildDirectory   = getPath({m_ProjectDirectory, "Build"});
 
-        m_CmakeListFile = getPath({project_workpsace["workspace_directory"].get<std::string>(), project["project_id"].get<std::string>(), "Source", "CMakeLists"}, StringPool.EXTANSION_TEXT);
+        m_CmakeListFile = getPath({project_workpsace["workspace_directory"].get<std::string>(), project["project_id"].get<std::string>(), "Source", "CMakeLists"}, StringPool.EXTENSION_TEXT);
 
 
         m_CleanProjectCommand       = "mingw32-make -C \"" + m_ProjectBuildDirectory + "\" -k clean";
@@ -39,8 +39,8 @@ namespace nero
 
         boost::algorithm::replace_all(project_id, StringPool.UNDERSCORE, StringPool.BLANK);
 
-        m_ProjectLibraryFile = getPath({m_ProjectBuildDirectory, "libnerogame-" + project_id}, StringPool.EXTANSION_DLL);
-        m_ProjectLibraryCopyFile = getPath({m_ProjectBuildDirectory, "libnerogame-" + project_id + "-copy"}, StringPool.EXTANSION_DLL);
+        m_ProjectLibraryFile = getPath({m_ProjectBuildDirectory, "libnerogame-" + project_id}, StringPool.EXTENSION_DLL);
+        m_ProjectLibraryCopyFile = getPath({m_ProjectBuildDirectory, "libnerogame-" + project_id + "-copy"}, StringPool.EXTENSION_DLL);
 
         m_AdvancedScene = AdvancedScene::Ptr(new AdvancedScene());
     }

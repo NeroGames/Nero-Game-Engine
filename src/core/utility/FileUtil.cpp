@@ -59,7 +59,7 @@ namespace nero
 
         if(!path_has_extantion)
         {
-            file  = file + StringPool.EXTANSION_JSON;
+            file  = file + StringPool.EXTENSION_JSON;
         }
 
         std::ifstream stream(file);
