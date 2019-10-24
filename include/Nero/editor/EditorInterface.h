@@ -61,8 +61,7 @@ namespace nero
 
             sf::Sprite             flipTexture(const sf::Texture& texture);
 
-            //editor view
-            void                    createDockSpace();
+			//editor view
                 //upper left
 			void                    showMusicWindow();
 			void                    showUtilityWindow();
@@ -89,6 +88,8 @@ namespace nero
 			ImGuiID								m_DockspaceID;
 			bool								m_BuildDockspaceLayout;
 			bool								m_SetupDockspaceLayout;
+			void								createDockSpace();
+			void								createEditorMenuBar();
 
             bool        setup_dock = false;
 			ImGuiID actionBarId;

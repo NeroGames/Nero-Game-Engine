@@ -207,25 +207,23 @@ namespace  nero
 
     void EditorInterface::createDockSpace()
     {
-        static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-
+		//tranfer viewport state to dockspace window
         ImGuiViewport* viewport = ImGui::GetMainViewport();
-        ImVec2 viewport_size = viewport->Size;
-        viewport_size.y -= 20.f;
         ImGui::SetNextWindowPos(viewport->Pos);
         ImGui::SetNextWindowSize(viewport->Size);
         ImGui::SetNextWindowViewport(viewport->ID);
 
-		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+		//create dockspace window style
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+										ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+										ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
 		//add style
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-		ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+		ImGui::Begin(EditorConstant.WINDOW_EDITOR_DOCKSPACE.c_str(), nullptr, window_flags);
 
 			//remove style
 			ImGui::PopStyleVar(3);
@@ -234,8 +232,12 @@ namespace  nero
 			m_DockspaceID = ImGui::GetID(EditorConstant.DOCKSPACE_ID.c_str());
 
 			//create the dockspace
-			ImGui::DockSpace(m_DockspaceID, viewport_size, dockspace_flags);
+			ImGui::DockSpace(m_DockspaceID, ImVec2(viewport->Size.x, viewport->Size.y - 20.f), ImGuiDockNodeFlags_None);
 
+			//clean pointer
+			viewport = nullptr;
+
+			//build dockspace layout : this is done only once, when the editor is launched the first time
 			if(m_BuildDockspaceLayout && !fileExist(getPath({EditorConstant.FILE_INTERFACE_LAYOUT}, StringPool.EXTENSION_INI)))
 			{
 				//split main dockspace in six
@@ -289,7 +291,7 @@ namespace  nero
 				m_BuildDockspaceLayout = !m_BuildDockspaceLayout;
 			}
 
-			if(m_SetupDockspaceLayout && !m_BuildDockspaceLayout)
+			if(m_SetupDockspaceLayout)
 			{
 				nlohmann::json dockspaceTable = loadJson(getPath({"setting", "dockspace"}));
 
@@ -320,44 +322,47 @@ namespace  nero
 				m_SetupDockspaceLayout = !m_SetupDockspaceLayout;
 			}
 
-
-
-
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
+			if (ImGui::BeginMenuBar())
 			{
-				ImGui::MenuItem("action_1", nullptr, nullptr);
-				ImGui::MenuItem("action_2", nullptr, nullptr);
+				createEditorMenuBar();
 
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Views"))
-			{
-				ImGui::MenuItem("action_3", nullptr, nullptr);
-				ImGui::MenuItem("action_4", nullptr, nullptr);
-
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Download"))
-			{
-				ImGui::MenuItem("action_3", nullptr, nullptr);
-				ImGui::MenuItem("action_4", nullptr, nullptr);
-
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Helps"))
-			{
-				ImGui::MenuItem("action_3", nullptr, nullptr);
-				ImGui::MenuItem("action_4", nullptr, nullptr);
-
-				ImGui::EndMenu();
+				ImGui::EndMenuBar();
 			}
 
-			ImGui::EndMenuBar();
-		}
-		ImGui::End();
+		ImGui::End(); //end dockspace window
     }
+
+	void EditorInterface::createEditorMenuBar()
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			ImGui::MenuItem("action_1", nullptr, nullptr);
+			ImGui::MenuItem("action_2", nullptr, nullptr);
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Views"))
+		{
+			ImGui::MenuItem("action_3", nullptr, nullptr);
+			ImGui::MenuItem("action_4", nullptr, nullptr);
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Download"))
+		{
+			ImGui::MenuItem("action_3", nullptr, nullptr);
+			ImGui::MenuItem("action_4", nullptr, nullptr);
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Helps"))
+		{
+			ImGui::MenuItem("action_3", nullptr, nullptr);
+			ImGui::MenuItem("action_4", nullptr, nullptr);
+
+			ImGui::EndMenu();
+		}
+	}
 
     void EditorInterface::showToolbarWindow()
     {

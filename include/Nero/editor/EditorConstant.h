@@ -42,6 +42,8 @@ namespace nero
 		const std::string WINDOW_GAME_PROJECT			= "Game Project";
 		const std::string WINDOW_FACTORY				= "Factory";
 		const std::string WINDOW_IMGUI_DEMO				= "Dear ImGui Demo";
+			//dockspace
+		const std::string WINDOW_EDITOR_DOCKSPACE		= "editor-dockspace";
 
 		//Window and View
 
