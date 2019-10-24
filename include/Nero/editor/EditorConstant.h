@@ -6,13 +6,14 @@
 #define EDITORCONSTANT_H
 ///////////////////////////HEADERS///////////////////////////
 #include <string>
+#include <SFML/System/Vector2.hpp>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
 	struct _EditorConstant
 	{
 		//ImGUI ID
-		const std::string DOCKSPACE_ID					= "editor-dockspace";
+		const std::string ID_DOCKSPACE					= "editor-dockspace";
 
 		//ImGUI layout file
 		const std::string FILE_INTERFACE_LAYOUT			= "imgui";
@@ -44,16 +45,21 @@ namespace nero
 		const std::string WINDOW_IMGUI_DEMO				= "Dear ImGui Demo";
 			//dockspace
 		const std::string WINDOW_EDITOR_DOCKSPACE		= "editor-dockspace";
+			//project manager
+		const std::string WINDOW_PROJECT_MANAGER		= "Project Manager";
+		sf::Vector2f	  WINDOW_PROJECT_MANAGER_SIZE	= sf::Vector2f(800.f, 500.f);
 
 		//Window and View
 
-		const std::string PROJECT_MANAGER				= "Project Manager";
 		const std::string CREATE_PROJECT				= "Create Project";
 		const std::string OPEN_PROJECT					= "Open Project";
 		const std::string RECENT_PROJECT				= "Recent Project";
 		const std::string WORKSPACE						= "Workspace";
 		const std::string ERROR_CREATING_WORKSPACE		= "Error Creating Workspace";
 		const std::string ERROR_CREATING_PROJECT		= "Error Creating Project";
+
+		//Texture
+		const std::string TEXTURE_PROJECT_BUTTON		= "project_button";
 
 
 

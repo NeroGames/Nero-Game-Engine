@@ -11,15 +11,17 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    TextureHolder::TextureHolder()
+	TextureHolder::TextureHolder():
+		m_ResourceDictory(StringPool.BLANK)
     {
 		m_Configuration = loadJson("setting/resource_setting")["texture"];
+		m_ResourceDictory = m_Configuration["folder"].get<std::string>();
 
     }
 
     void TextureHolder::load()
     {
-        const std::string folder_name = m_Configuration["folder"].get<std::string>();
+		const std::string folder_name = m_ResourceDictory;
 
         nero_log("Resource path : " + folder_name);
 
@@ -199,4 +201,10 @@ namespace nero
         for(std::string sprite : m_SpriteTable)
             nero_log(sprite);
     }
+
+	void TextureHolder::setResourceDirectory(const std::string& resourceDictory)
+	{
+		m_ResourceDictory = resourceDictory;
+	}
+
 }

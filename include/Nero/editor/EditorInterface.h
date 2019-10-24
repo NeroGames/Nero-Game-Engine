@@ -84,6 +84,7 @@ namespace nero
         private:
 			friend class						Editor;
 			sf::RenderWindow&					m_RenderWindow;
+			TextureHolder						m_TextureHolder;
 			//Docksapce
 			ImGuiID								m_DockspaceID;
 			bool								m_BuildDockspaceLayout;
@@ -144,7 +145,6 @@ namespace nero
             //General
             ProjectManager::Ptr         m_ProjectManager;
             GameProject::Ptr            m_CurrentProject;
-            ImVec2                      m_ProjectManagerWindowSize;
             //Project Workspace
             nlohmann::json              m_WorkspaceTable;               //list of available workspaces
             int                         m_WorksapceStatus;              //0 : no_worksapce, 1 : redirect_user, 2 worksapce_available

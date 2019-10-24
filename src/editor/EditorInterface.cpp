@@ -24,7 +24,6 @@ namespace  nero
        ,m_InputWorkspaceName("")
        ,m_InputWorkspaceCompany("")
        ,m_InputWorkspaceLead("")
-       ,m_ProjectManagerWindowSize(800.f, 500.f)
        ,m_SelectedWorkpsapce(nullptr)
 	  ,m_SelectedWorkpsapceIdex(0)
 	  ,m_SelectedProjectTypeIdex(0)
@@ -34,6 +33,7 @@ namespace  nero
 	   ,g_Context(nullptr)
 	  ,m_BuildDockspaceLayout(true)
 	  ,m_SetupDockspaceLayout(true)
+	  ,m_TextureHolder()
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -52,6 +52,9 @@ namespace  nero
 		g_Context = ax::NodeEditor::CreateEditor();
 
 		m_ResourceManager.texture.load();
+
+		m_TextureHolder.setResourceDirectory("resource/texture");
+		m_TextureHolder.load();
 
 
     }
@@ -81,11 +84,13 @@ namespace  nero
 
     void EditorInterface::render()
     {
-
         ImGui::SFML::Update(m_RenderWindow, EngineConstant.TIME_PER_FRAME);
 
-		//Create Interface Dockspace
+		//create editor dockspace & display menubar
         createDockSpace();
+		//display toolbar
+		showToolbarWindow();
+
 
         showSceneWindow();
         showGameSettingWindow();
@@ -100,7 +105,6 @@ namespace  nero
         ImGui::End();
 
 
-		showToolbarWindow();
 
         showLogWindow();
 
@@ -205,6 +209,7 @@ namespace  nero
         m_RenderWindow.close();
     }
 
+	//1- create workspace
     void EditorInterface::createDockSpace()
     {
 		//tranfer viewport state to dockspace window
@@ -229,7 +234,7 @@ namespace  nero
 			ImGui::PopStyleVar(3);
 
 			//save dockspace id
-			m_DockspaceID = ImGui::GetID(EditorConstant.DOCKSPACE_ID.c_str());
+			m_DockspaceID = ImGui::GetID(EditorConstant.ID_DOCKSPACE.c_str());
 
 			//create the dockspace
 			ImGui::DockSpace(m_DockspaceID, ImVec2(viewport->Size.x, viewport->Size.y - 20.f), ImGuiDockNodeFlags_None);
@@ -332,6 +337,7 @@ namespace  nero
 		ImGui::End(); //end dockspace window
     }
 
+	//2- create menu bar
 	void EditorInterface::createEditorMenuBar()
 	{
 		if (ImGui::BeginMenu("File"))
@@ -364,6 +370,7 @@ namespace  nero
 		}
 	}
 
+	//3-  show toolbar
     void EditorInterface::showToolbarWindow()
     {
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
@@ -410,9 +417,9 @@ namespace  nero
              ImGui::SameLine(width - 72.f);
 
 
-             if(ImGui::ImageButton(m_ProjectButtonTexture))
+			 if(ImGui::ImageButton(m_TextureHolder.getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
              {
-				ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
+				ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
              }
 
              ImGui::SameLine(width - 72.f - 24.f - 3.f - 10.f);
@@ -445,26 +452,26 @@ namespace  nero
 		ImGui::PopStyleVar();
     }
 
-
-    ////////////////////////Project and Workspace////////////////////////
+	//4- project manager
     void EditorInterface::showProjectManagerWindow()
     {
         //Window flags
-        ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize  | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
+										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
         //Winsow size
-        ImVec2 winsow_size              = m_ProjectManagerWindowSize;
+		ImVec2 winsow_size              = EditorConstant.WINDOW_PROJECT_MANAGER_SIZE;
 
         //Project manager window
         ImGui::SetNextWindowSize(winsow_size);
         //Begin window
-		if(ImGui::BeginPopupModal(EditorConstant.PROJECT_MANAGER.c_str(), nullptr, window_flags))
+		if(ImGui::BeginPopupModal(EditorConstant.WINDOW_PROJECT_MANAGER.c_str(), nullptr, window_flags))
         {
             //Save cursor position
             ImVec2 cursor = ImGui::GetCursorPos();
 
             //Panel 1 : Engine Banner
-            ImGui::BeginChild("##project_manager_panel_1", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.33f, winsow_size.y - 20.f));
-                ImGui::Image(m_ProjectManagerBannerTexture);
+			ImGui::BeginChild("##project_manager_panel_1", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.33f, winsow_size.y - 20.f));
+				ImGui::Image(m_TextureHolder.getTexture("editor_project_manager"));
             ImGui::EndChild();
 
             //Panel 2 : Window tabs
@@ -476,6 +483,13 @@ namespace  nero
                 {
                     ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
+					if (ImGui::BeginTabItem(EditorConstant.RECENT_PROJECT.c_str()))
+					{
+						showRecentProjectWindow();
+
+						ImGui::EndTabItem();
+					}
+
 					if (ImGui::BeginTabItem(EditorConstant.CREATE_PROJECT.c_str()))
                     {
                         showCreateProjectWindow();
@@ -486,13 +500,6 @@ namespace  nero
 					if (ImGui::BeginTabItem(EditorConstant.OPEN_PROJECT.c_str()))
                     {
                         showOpenPorjectWindow();
-
-                        ImGui::EndTabItem();
-                    }
-
-					if (ImGui::BeginTabItem(EditorConstant.RECENT_PROJECT.c_str()))
-                    {
-                        showRecentProjectWindow();
 
                         ImGui::EndTabItem();
                     }
@@ -519,232 +526,100 @@ namespace  nero
             ImGui::EndPopup();
         }
     }
-            /*float wording_width = 130.f;
-
-                float input_width = ImGui::GetWindowContentRegionWidth() - 150.f;
-
-                ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_AutoSelectNewTabs;
-                if (ImGui::BeginTabBar("ProjectManagerTab", tab_bar_flags))
-                {
-                    ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-                    if (ImGui::BeginTabItem("Create Project"))
-                    {
-
-                        ImGui::EndTabItem();
-
-                    }
-
-                    if (ImGui::BeginTabItem("Open Project"))
-                    {
-
-                        ImGui::EndTabItem();
-
-                    }
-
-                    if (ImGui::BeginTabItem("Recent Project"))
-                    {
-                        ImGui::EndTabItem();
-
-                    }
-
-                    ImGuiTabItemFlags flags = ImGuiTabItemFlags_None;
-                    if(m_WorksapceStatus == 1)
-                    {
-                       flags = ImGuiTabItemFlags_SetSelected;
-                       m_WorksapceStatus = 0;
-                    }
-
-                    if (ImGui::BeginTabItem("Workspace", nullptr, flags))
-                    {
-                        wording_width = 150.f;
-                        input_width = ImGui::GetWindowContentRegionWidth() - wording_width;
-
-                        ImGui::Text("Workspace Folder");
-                        ImGui::SameLine(wording_width);
-                        ImGui::SetNextItemWidth(input_width - 65.f);
-                        ImGui::InputText("##workspace_folder", m_InputWorksapceFolder, IM_ARRAYSIZE(m_InputWorksapceFolder));
-                        ImGui::SameLine(wording_width + input_width - 60.f);
-
-                        if (ImGui::Button("Browse##choose_folder", ImVec2(60, 0)))
-                        {
-                            nfdchar_t *outPath = nullptr;
-                            nfdresult_t result = NFD_PickFolder(nullptr, &outPath);
 
 
-                            if ( result == NFD_OKAY ) {
-                               //puts("Success!");
-                               //puts(outPath);
-                                free(outPath);
+	void EditorInterface::showRecentProjectWindow()
+	{
+		ImGui::Text("Open a recent project and continuous where you left");
+		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0.0f, 16.0f));
 
-                                strncpy(m_InputWorksapceFolder, outPath, sizeof(m_InputWorksapceFolder) - 1);
-                                m_InputWorksapceFolder[sizeof(m_InputWorksapceFolder) - 1] = 0;
+		//list of recent project
 
-                            }
-                            else if ( result == NFD_CANCEL ) {
-                               //puts("User pressed cancel.");
-                            }
-                            else {
-                               //printf("Error: %s\n", NFD_GetError() );
-                            }
-                        }
-                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		ImVec2 button_sz(150, 100);
+		float spacing = (ImGui::GetWindowContentRegionWidth() - 3 * 150)/2.f;
 
+		std::function<std::string (const std::string&, int)> wrapString = [](const std::string& message, int maxLetter)
+		{
+			if(message.size() <= maxLetter)
+			{
+				return message;
+			}
 
-                        ImGui::Text("Workspace Name");
-                        ImGui::SameLine(wording_width);
-                        ImGui::SetNextItemWidth(input_width);
-                        ImGui::InputText("##workspace_name", m_InputWorkspaceName, IM_ARRAYSIZE(m_InputWorkspaceName));
-                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+			std::string result = StringPool.BLANK;
 
-                        ImGui::Text("Default Project Lead");
-                        ImGui::SameLine(wording_width);
-                        ImGui::SetNextItemWidth(input_width);
-                        ImGui::InputText("##workspace_lead", m_InputWorkspaceLead, IM_ARRAYSIZE(m_InputWorkspaceLead));
-                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+			auto wordTable = getWordTable(message);
 
-                        ImGui::Text("Default Company Name");
-                        ImGui::SameLine(wording_width);
-                        ImGui::SetNextItemWidth(input_width);
-                        ImGui::InputText("##workspace_company", m_InputWorkspaceCompany, IM_ARRAYSIZE(m_InputWorkspaceCompany));
-                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+			std::string line = StringPool.BLANK;
+			for(const std::string& word : wordTable)
+			{
+				if((line.size() + word.size() + 1) <= maxLetter)
+				{
+					line += word + StringPool.SPACE;
+				}
+				else
+				{
+					result += line + StringPool.NEW_LINE;
+					line = word + StringPool.SPACE;
+				}
+			}
 
-                        ImGui::SameLine(wording_width + input_width - 130.f);
-                        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10.f);
-                        if (ImGui::Button("Create Workspace##create_workspace_button", ImVec2(130.f, 0)))
-                        {
-
-                        }
-
-                        ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-                        ImGui::BeginChild("workspace list", ImVec2(0.f, 0.f), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
-
-                        ImGui::EndChild(),
+			result += line;
 
 
-                        ImGui::EndTabItem();
 
-                    }
+			return result;
+		};
 
-                    ImGui::EndTabBar();
-                }
-            ImGui::EndChild();*/
-
-            /*//Panel 3 : existing project list
-            ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() * 0.33f);
-            ImGui::SetCursorPosY(cursor.y + size.y * 0.5f);
-            ImGui::BeginChild("Open Project", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.67f, size.y * 0.5f - 75.f));
-
-            ImGui::Text("Open Project");
-            ImGui::Separator();
-
-            ImGui::Dummy(ImVec2(0.0f, 5.0f));
-            ImGui::BeginChild("project list", ImVec2(0.f, 0.f), true, ImGuiWindowFlags_AlwaysVerticalScrollbar);
-
-                for(const nlohmann::json& project : m_ProjectManager->getProjectTable())
-                {
-                    std::string project_name = project["project_name"].get<std::string>();
-
-                    if (ImGui::CollapsingHeader(project_name.c_str()))
-                    {
-                                    project_name        = ": " + project_name;
-                        std::string project_id          = ": " + project["project_id"].get<std::string>();
-                        std::string project_lead        = ": " + project["project_lead"].get<std::string>();
-                        std::string project_company     = ": " + project["project_company"].get<std::string>();
-                        std::string project_description = ": " + project["project_description"].get<std::string>();
-                        std::string creation_date       = ": " + project["creation_date"].get<std::string>();
-                        std::string modification_date   = ": " + project["modification_date"].get<std::string>();
-
-                        ImGui::Text("Project Name");
-                        ImGui::SameLine(wording_width);
-                        ImGui::Text(project_name.c_str());
-                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
-                        ImGui::Text("Project Id");
-                        ImGui::SameLine(wording_width);
-                        ImGui::Text(project_id.c_str());
-                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
-                        ImGui::Text("Project Lead");
-                        ImGui::SameLine(wording_width);
-                        ImGui::Text(project_lead.c_str());
-                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
-                        ImGui::Text("Project Company");
-                        ImGui::SameLine(wording_width);
-                        ImGui::Text(project_company.c_str());
-                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
-                        ImGui::Text("Create Date");
-                        ImGui::SameLine(wording_width);
-                        ImGui::Text(creation_date.c_str());
-                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
-                        ImGui::Text("Modification Date");
-                        ImGui::SameLine(wording_width);
-                        ImGui::Text(modification_date.c_str());
-                        ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
-                        ImGui::Text("Project Description");
-                        ImGui::SameLine(wording_width);
-                        ImGui::Text(project_description.c_str());
-                        ImGui::Dummy(ImVec2(0.0f, 5.0f));
+		ImGuiStyle& style = ImGui::GetStyle();
+		int buttons_count = 6;
+		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+		for (int n = 0; n < buttons_count; n++)
+		{
+			std::string project_name =  wrapString("Oblivion the Great Journey", 20);
+			ImGui::PushID(n);
+			ImGui::Button(project_name.c_str(), button_sz);
+			float last_button_x2 = ImGui::GetItemRectMax().x;
+			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
+			if (n + 1 < buttons_count && next_button_x2 < window_visible_x2)
+				ImGui::SameLine(0.f, spacing);
+			else {
+				ImGui::Dummy(ImVec2(0.0f, spacing));
+			}
+			ImGui::PopID();
+		}
 
 
-                        ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 100.f);
-                        if (ImGui::Button("Open Project", ImVec2(100, 0)))
-                        {
-                            openProject(project);
 
-                            ImGui::CloseCurrentPopup();
-                        }
-
-                        ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-                    }
-                }
-             ImGui::EndChild();
-
-            ImGui::EndChild();*/
-
-            /*ImGui::Dummy(ImVec2(0.0f, 7.0f));
-
-            cursor = ImGui::GetCursorPos();*/
-            /*ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() * 0.33f);
-            if (ImGui::Button("Open Folder", ImVec2(100, 0)))
-            {
-                nfdchar_t *outPath = nullptr;
-                nfdresult_t result = NFD_PickFolder(nullptr, &outPath); //NFD_OpenDialog( nullptr, nullptr, &outPath );
+		ImGui::SetCursorPosY(EditorConstant.WINDOW_PROJECT_MANAGER_SIZE.y * 0.70f);
 
 
-                if ( result == NFD_OKAY ) {
-                   //puts("Success!");
-                   //puts(outPath);
-                    free(outPath);
+		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
-                    nero_log(outPath);
-
-                    openProject(std::string(outPath));
-                }
-                else if ( result == NFD_CANCEL ) {
-                   //puts("User pressed cancel.");
-                }
-                else {
-                   //printf("Error: %s\n", NFD_GetError() );
-                }
-
-                //ImGui::CloseCurrentPopup();
-            }*/
+		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionWidth() - 450.f)/2.f);
 
 
+		if(ImGui::Button("Create A New Project##recent_project_create_project", ImVec2(200.f, 40.f)))
+		{
+
+		}
+
+		ImGui::SameLine(0.f, 50.f);
+
+		if(ImGui::Button("Open Another Project##recent_project_open_project", ImVec2(200.f, 40.f)))
+		{
+
+		}
+
+	}
 
     void EditorInterface::showCreateProjectWindow()
     {
         //Window flags
         ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize  | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
         //Winsow size
-        ImVec2 winsow_size              = m_ProjectManagerWindowSize;
+		ImVec2 winsow_size              = EditorConstant.WINDOW_PROJECT_MANAGER_SIZE;
 
         float wording_width = 130.f;
         float input_width = ImGui::GetWindowContentRegionWidth() - 150.f;
@@ -1159,11 +1034,6 @@ namespace  nero
             }
 
          ImGui::EndChild();
-    }
-
-    void EditorInterface::showRecentProjectWindow()
-    {
-
     }
 
     void EditorInterface::showWorkspaceWindow()
@@ -1710,7 +1580,7 @@ namespace  nero
 
 					if(ImGui::ImageButton(m_ResourceManager.texture.getSpriteTexture(spriteTable[n]), button_size))
 					{
-					   ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
+					  // ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
 					}
 
 					float last_button_x2 = ImGui::GetItemRectMax().x;

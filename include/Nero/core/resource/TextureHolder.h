@@ -30,6 +30,8 @@ namespace nero
             int                                 getSpriteCount()                            const;
             void                                printSpriteTable()                          const;
 
+			void								setResourceDirectory(const std::string& resourceDictory);
+
         private:
             void                                addTexture(std::string textureId, std::unique_ptr<sf::Texture> texture);
             void                                addSpriteBound(std::string textureId, std::string spriteId, sf::IntRect spriteRect);
@@ -39,6 +41,7 @@ namespace nero
             std::map<std::string, std::map<std::string, sf::IntRect>>       m_SpriteMap;
             std::vector<std::string>                                        m_SpriteTable;
             nlohmann::json                                                  m_Configuration;
+			std::string														m_ResourceDictory;
     };
 }
 #endif // TEXTUREHOLDER_H
