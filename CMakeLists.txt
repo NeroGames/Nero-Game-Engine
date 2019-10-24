@@ -40,18 +40,22 @@ include_directories("library")
 #include_directories("example")
 
 # Engine Editor Source
-file(GLOB_RECURSE NERO_GAME_ENGINE_SOURCES
+file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/project/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/library/*")
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/imgui/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/nativefiledialog/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/imgui/nodeeditor*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/imgui/easyloggingpp/*")
+
 
 # Engine Core Source
 file(GLOB_RECURSE NERO_GAME_CORE_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/core/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/library/*")
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/easyloggingpp/*")
 
 # setup Library
 include_directories("../../Library/include")
@@ -84,6 +88,6 @@ add_library(nerogame-core ${NERO_GAME_CORE_SOURCES} )
 target_link_libraries(nerogame-core ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2d_LIBS})
 
 # Build Nero Game Editor
-add_executable(Editor "main.cpp" ${NERO_GAME_ENGINE_SOURCES})
+add_executable(Editor "main.cpp" ${NERO_GAME_EDITOR_SOURCES})
 target_link_libraries(Editor comctl32.lib ${CPP_FILESYSTEM} ${SFML_LIBS} ${Box2d_LIBS} ${OPENGL_gl_LIBRARY} ${ZLIB_LIBS} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${HTTP_PARSER} ${LIBGIT2_LIBS} ${LUA_LIBS})
 

@@ -8,7 +8,7 @@
 #include <nativefiledialog/include/nfd.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include <Nero/editor/EditorViewPool.h>
+#include <Nero/editor/EditorConstant.h>
 #include <functional>
 #include <vector>
 
@@ -26,8 +26,10 @@ namespace  nero
        ,m_InputWorkspaceLead("")
        ,m_ProjectManagerWindowSize(800.f, 500.f)
        ,m_SelectedWorkpsapce(nullptr)
-       ,m_SelectedWorkpsapceIdex(0)
-       ,m_ProjectCreationStatus(0)
+	  ,m_SelectedWorkpsapceIdex(0)
+	  ,m_SelectedProjectTypeIdex(0)
+	  ,m_SelectedCodeEditorIdex(0)
+	   ,m_ProjectCreationStatus(0)
       ,m_AdvancedScene(new AdvancedScene())
 	   ,g_Context(nullptr)
     {
@@ -81,7 +83,7 @@ namespace  nero
 
         ImGui::SFML::Update(m_RenderWindow, EngineConstant.TIME_PER_FRAME);
 
-
+		//Create Interface Dockspace
         createDockSpace();
 
         showSceneWindow();
@@ -97,7 +99,7 @@ namespace  nero
         ImGui::End();
 
 
-        showToolbarWindow();
+		showToolbarWindow();
 
         showLogWindow();
 
@@ -133,7 +135,7 @@ namespace  nero
 
     void EditorInterface::showSceneWindow()
     {
-        ImGui::Begin(ViewPool.SCENE.c_str());
+		ImGui::Begin(EditorConstant.SCENE.c_str());
 
             //if(ImGui::IsWindowFocused())
             {
@@ -160,7 +162,7 @@ namespace  nero
 
     void EditorInterface::showGameSettingWindow()
     {
-        ImGui::Begin(ViewPool.GAME_SETTING.c_str());
+		ImGui::Begin(EditorConstant.GAME_SETTING.c_str());
 
 		ax::NodeEditor::SetCurrentEditor(g_Context);
 
@@ -187,7 +189,7 @@ namespace  nero
 
     void EditorInterface::showGameProjectWindow()
     {
-        ImGui::Begin(ViewPool.GAME_PROJECT.c_str());
+		ImGui::Begin(EditorConstant.GAME_PROJECT.c_str());
 
         ImGui::End();
     }
@@ -289,24 +291,23 @@ namespace  nero
             actionBarId                 = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Up, 0.20f, nullptr, &dock_main_id);
             ImGuiID dock_id_down        = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Down, 0.20f, nullptr, &dock_main_id);
 
-            ImGui::DockBuilderDockWindow(ViewPool.SCENE.c_str(), ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
-            ImGui::DockBuilderDockWindow(ViewPool.GAME_SETTING.c_str(), ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
-            ImGui::DockBuilderDockWindow(ViewPool.GAME_PROJECT.c_str(), ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
-            //upper left
-			ImGui::DockBuilderDockWindow(ViewPool.UTILITY.c_str(),      dock_id_upper_left);
-			ImGui::DockBuilderDockWindow(ViewPool.Music.c_str(), dock_id_upper_left);
+			ImGui::DockBuilderDockWindow(EditorConstant.SCENE.c_str(), ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
+			ImGui::DockBuilderDockWindow(EditorConstant.GAME_SETTING.c_str(), ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
+			ImGui::DockBuilderDockWindow(EditorConstant.GAME_PROJECT.c_str(), ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
+			ImGui::DockBuilderDockWindow("Dear ImGui Demo", ImGui::DockBuilderGetCentralNode(dockspace_id)->ID);
+			//upper left
+			ImGui::DockBuilderDockWindow(EditorConstant.UTILITY.c_str(),      dock_id_upper_left);
+			ImGui::DockBuilderDockWindow(EditorConstant.Music.c_str(), dock_id_upper_left);
 
-			ImGui::DockBuilderDockWindow(ViewPool.SCENE_LEVEL.c_str(), dock_id_left_bottom);
-			ImGui::DockBuilderDockWindow(ViewPool.SCENE_CHUNCK.c_str(), dock_id_left_bottom);
-			ImGui::DockBuilderDockWindow(ViewPool.SCENE_SCREEN.c_str(), dock_id_left_bottom);
-			ImGui::DockBuilderDockWindow(ViewPool.SCENE_LAYER.c_str(), dock_id_left_bottom);
+			ImGui::DockBuilderDockWindow(EditorConstant.SCENE_LEVEL.c_str(), dock_id_left_bottom);
+			ImGui::DockBuilderDockWindow(EditorConstant.SCENE_CHUNCK.c_str(), dock_id_left_bottom);
+			ImGui::DockBuilderDockWindow(EditorConstant.SCENE_SCREEN.c_str(), dock_id_left_bottom);
+			ImGui::DockBuilderDockWindow(EditorConstant.SCENE_LAYER.c_str(), dock_id_left_bottom);
 
-			ImGui::DockBuilderDockWindow(ViewPool.SCENE_EXPLORER.c_str(), dock_id_right);
-			//ImGui::DockBuilderDockWindow("Resource", dock_id_right);
+			ImGui::DockBuilderDockWindow(EditorConstant.SCENE_EXPLORER.c_str(), dock_id_right);
             ImGui::DockBuilderDockWindow("Engine Help", dock_id_right);
             ImGui::DockBuilderDockWindow("Resource Browser", dock_id_right);
-            ImGui::DockBuilderDockWindow("Dear ImGui Demo", dock_id_right);
-            ImGui::DockBuilderDockWindow(ViewPool.Toolbar.c_str(), actionBarId);
+			ImGui::DockBuilderDockWindow(EditorConstant.Toolbar.c_str(), actionBarId);
             ImGui::DockBuilderDockWindow("Logging", dock_id_down);
             ImGui::DockBuilderDockWindow("Resource", dock_id_down);
             //ImGui::DockBuilderDockWindow("Bottom", dock_id_bottom);
@@ -344,7 +345,7 @@ namespace  nero
         window_flags |= ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar;
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8.f, 2.f));
-        ImGui::Begin(ViewPool.Toolbar.c_str(), nullptr, window_flags);
+		ImGui::Begin(EditorConstant.Toolbar.c_str(), nullptr, window_flags);
 
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.5f, 2.5f));
 
@@ -386,7 +387,7 @@ namespace  nero
 
              if(ImGui::ImageButton(m_ProjectButtonTexture))
              {
-                ImGui::OpenPopup(ViewPool.PROJECT_MANAGER.c_str());
+				ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
              }
 
              ImGui::SameLine(width - 72.f - 24.f - 3.f - 10.f);
@@ -410,13 +411,13 @@ namespace  nero
                 compileProject();
              }
 
-
              ImGui::PopStyleVar();
-             showProjectManagerWindow();
+
+			 //show project manager window
+			 showProjectManagerWindow();
 
         ImGui::End();
-        //ImGui::PopStyleColor();
-         ImGui::PopStyleVar();
+		ImGui::PopStyleVar();
     }
 
 
@@ -431,7 +432,7 @@ namespace  nero
         //Project manager window
         ImGui::SetNextWindowSize(winsow_size);
         //Begin window
-        if(ImGui::BeginPopupModal(ViewPool.PROJECT_MANAGER.c_str(), nullptr, window_flags))
+		if(ImGui::BeginPopupModal(EditorConstant.PROJECT_MANAGER.c_str(), nullptr, window_flags))
         {
             //Save cursor position
             ImVec2 cursor = ImGui::GetCursorPos();
@@ -450,28 +451,28 @@ namespace  nero
                 {
                     ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-                    if (ImGui::BeginTabItem(ViewPool.CREATE_PROJECT.c_str()))
+					if (ImGui::BeginTabItem(EditorConstant.CREATE_PROJECT.c_str()))
                     {
                         showCreateProjectWindow();
 
                         ImGui::EndTabItem();
                     }
 
-                    if (ImGui::BeginTabItem(ViewPool.OPEN_PROJECT.c_str()))
+					if (ImGui::BeginTabItem(EditorConstant.OPEN_PROJECT.c_str()))
                     {
                         showOpenPorjectWindow();
 
                         ImGui::EndTabItem();
                     }
 
-                    if (ImGui::BeginTabItem(ViewPool.RECENT_PROJECT.c_str()))
+					if (ImGui::BeginTabItem(EditorConstant.RECENT_PROJECT.c_str()))
                     {
                         showRecentProjectWindow();
 
                         ImGui::EndTabItem();
                     }
 
-                    if (ImGui::BeginTabItem(ViewPool.WORKSPACE.c_str()))
+					if (ImGui::BeginTabItem(EditorConstant.WORKSPACE.c_str()))
                     {
                         showWorkspaceWindow();
 
@@ -729,6 +730,16 @@ namespace  nero
         ImGui::BeginChild("project form", ImVec2(0.f, 0.f), true);
         ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
+		ImGui::Text("Project Name");
+		ImGui::SameLine(wording_width);
+		ImGui::SetNextItemWidth(input_width);
+		ImGui::InputText("##project_name", m_InputProjectName, IM_ARRAYSIZE(m_InputProjectName));
+		ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+		ImGui::Separator();
+
+		ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
         ImGui::Text("Workspace");
         ImGui::SameLine(wording_width);
         ImGui::SetNextItemWidth(input_width);
@@ -782,16 +793,13 @@ namespace  nero
         delete[] workspaceComboTable ;
         workspaceComboTable = nullptr;
 
-        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
         ImGui::Text("Project Type");
         ImGui::SameLine(wording_width);
         ImGui::SetNextItemWidth(input_width);
-
-
-
         const char* projectTypeComboTable[] = {"CPP Project", "Lua Project", "CPP and Lua Project"};
-        m_SelectedProjectType = projectTypeComboTable[0];            // Here our selection is a single pointer stored outside the object.
+		m_SelectedProjectType = projectTypeComboTable[m_SelectedProjectTypeIdex];            // Here our selection is a single pointer stored outside the object.
         if (ImGui::BeginCombo("##project_type_combo", m_SelectedProjectType, ImGuiComboFlags())) // The second parameter is the label previewed before opening the combo.
         {
             for (int n = 0; n < IM_ARRAYSIZE(projectTypeComboTable); n++)
@@ -801,6 +809,7 @@ namespace  nero
                 if (ImGui::Selectable(projectTypeComboTable[n], is_selected))
                 {
                     m_SelectedProjectType = projectTypeComboTable[n];
+					m_SelectedProjectTypeIdex = n;
                 }
 
                 if (is_selected)
@@ -812,11 +821,32 @@ namespace  nero
         }
         ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
-        ImGui::Text("Project Name");
-        ImGui::SameLine(wording_width);
-        ImGui::SetNextItemWidth(input_width);
-        ImGui::InputText("##project_name", m_InputProjectName, IM_ARRAYSIZE(m_InputProjectName));
-        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+		ImGui::Text("Code Editor");
+		ImGui::SameLine(wording_width);
+		ImGui::SetNextItemWidth(input_width);
+		const char* codeEditorComboTable[] = {"Qt Creator", "Visual Studio 2019"};
+		m_SelectedCodeEditor = codeEditorComboTable[m_SelectedCodeEditorIdex];
+		if (ImGui::BeginCombo("##code-editor-combo", m_SelectedCodeEditor, ImGuiComboFlags()))
+		{
+			for (int n = 0; n < IM_ARRAYSIZE(codeEditorComboTable); n++)
+			{
+				bool is_selected = (m_SelectedCodeEditor == codeEditorComboTable[n]);
+
+				if (ImGui::Selectable(codeEditorComboTable[n], is_selected))
+				{
+					m_SelectedCodeEditor = codeEditorComboTable[n];
+					m_SelectedCodeEditorIdex = n;
+				}
+
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+		ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
         ImGui::Text("Project Lead");
         ImGui::SameLine(wording_width);
@@ -1195,7 +1225,7 @@ namespace  nero
 
         if (onCreate && error)
         {
-            ImGui::OpenPopup(ViewPool.ERROR_CREATING_WORKSPACE.c_str());
+			ImGui::OpenPopup(EditorConstant.ERROR_CREATING_WORKSPACE.c_str());
         }
         else if(onCreate)
         {
@@ -1322,7 +1352,7 @@ namespace  nero
 
 
         ImGui::SetNextWindowSize(ImVec2(300.f, 120.f));
-        if(ImGui::BeginPopupModal(ViewPool.ERROR_CREATING_WORKSPACE.c_str()))
+		if(ImGui::BeginPopupModal(EditorConstant.ERROR_CREATING_WORKSPACE.c_str()))
         {
             ImGui::Text("%s", error_message.c_str());
 
@@ -1655,7 +1685,7 @@ namespace  nero
 
 					if(ImGui::ImageButton(m_ResourceManager.texture.getSpriteTexture(spriteTable[n]), button_size))
 					{
-					   ImGui::OpenPopup(ViewPool.PROJECT_MANAGER.c_str());
+					   ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
 					}
 
 					float last_button_x2 = ImGui::GetItemRectMax().x;
@@ -1669,7 +1699,7 @@ namespace  nero
 				{
 					if(ImGui::ImageButton(m_ResourceManager.texture.getSpriteTexture(sprite)))
 					{
-					   ImGui::OpenPopup(ViewPool.PROJECT_MANAGER.c_str());
+					   ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
 					}
 				}*/
 
@@ -1681,7 +1711,7 @@ namespace  nero
 
     void EditorInterface::showUtilityWindow()
     {
-        ImGui::Begin(ViewPool.UTILITY.c_str());
+		ImGui::Begin(EditorConstant.UTILITY.c_str());
 
             ImVec2 size = ImGui::GetWindowSize();
 
@@ -1763,14 +1793,14 @@ namespace  nero
 
 	void EditorInterface::showMusicWindow()
 	{
-		ImGui::Begin(ViewPool.Music.c_str());
+		ImGui::Begin(EditorConstant.Music.c_str());
 
 		ImGui::End();
 	}
 
     void EditorInterface::showSceneScreenWindow()
     {
-        ImGui::Begin(ViewPool.SCENE_SCREEN.c_str());
+		ImGui::Begin(EditorConstant.SCENE_SCREEN.c_str());
 
             ImGui::Text("Manage Scene Screens");
             ImGui::Separator();
@@ -1838,7 +1868,7 @@ namespace  nero
 
 	void EditorInterface::showSceneLayerWindow()
 	{
-		ImGui::Begin(ViewPool.SCENE_LAYER.c_str());
+		ImGui::Begin(EditorConstant.SCENE_LAYER.c_str());
 
 		ImGui::Text("Manage Scene Level");
 		ImGui::Separator();
@@ -1904,7 +1934,7 @@ namespace  nero
 
 	void EditorInterface::showSceneLevelWindow()
 	{
-		ImGui::Begin(ViewPool.SCENE_LEVEL.c_str());
+		ImGui::Begin(EditorConstant.SCENE_LEVEL.c_str());
 
 		ImGui::Text("Manage Scene Level");
 		ImGui::Separator();
@@ -1979,7 +2009,7 @@ namespace  nero
 
     void EditorInterface::showSceneChunckWindow()
     {
-        ImGui::Begin(ViewPool.SCENE_CHUNCK.c_str());
+		ImGui::Begin(EditorConstant.SCENE_CHUNCK.c_str());
 
         ImGui::Text("Manage Scene Chuncks");
         ImGui::Separator();
@@ -2081,7 +2111,7 @@ namespace  nero
 		left_bottom_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
 
 
-        ImGui::SetWindowFocus(ViewPool.SCENE.c_str());
+		ImGui::SetWindowFocus(EditorConstant.SCENE.c_str());
 
         //commit
         m_InterfaceFirstDraw = false;
@@ -2089,7 +2119,7 @@ namespace  nero
 
     void EditorInterface::showCurrentSceneWindow()
 	{
-		ImGui::Begin(ViewPool.SCENE_EXPLORER.c_str());
+		ImGui::Begin(EditorConstant.SCENE_EXPLORER.c_str());
 
 		if (ImGui::CollapsingHeader("Scene Graph"))
 		{

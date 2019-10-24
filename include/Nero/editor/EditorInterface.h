@@ -149,14 +149,18 @@ namespace nero
             char                        m_InputWorkspaceLead[100];
             char                        m_InputWorkspaceNamespace[10];
             const char*                 m_SelectedWorkpsapce;
-            int                         m_SelectedWorkpsapceIdex;
+			int                         m_SelectedWorkpsapceIdex;
+			int                         m_SelectedProjectTypeIdex;
+			int                         m_SelectedCodeEditorIdex;
+
             //Game Project
             char                        m_InputProjectName[100];        //read project name
             char                        m_InputProjectLead[100];        //read project lead
             char                        m_InputProjectCompany[100];     //read project company
             char                        m_InputProjectNamespace[10];
             char                        m_InputProjectDescription[512]; //read project description
-            const char*                 m_SelectedProjectType;
+			const char*                 m_SelectedProjectType;
+			const char*                 m_SelectedCodeEditor;
             std::future<int>            m_CreateProjectFuture;
 			std::future<int>            m_CompileProjectFuture;
 

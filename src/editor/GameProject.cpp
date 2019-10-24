@@ -110,6 +110,13 @@ namespace nero
 
     void GameProject::openEditor()
     {
+		//Visual Studio
+		 //./devenv.exe "C:\Users\sk-landry\Desktop\My Workspace\my_third_project\Source"
+		/* first time*/ // devenv.exe "C:\Users\sk-landry\Desktop\My Workspace\my_third_project\Source"
+		/* after */ // devenv.exe "C:\Users\sk-landry\Desktop\My Workspace\my_third_project\Source\filename /edit"
+
+		//std::string list_process    = "tasklist \/fo csv\| findstr \/i \"devenv\"";
+
         nero_log("cmake project : " + m_CmakeListFile);
 
         //get the list of qtcreator process

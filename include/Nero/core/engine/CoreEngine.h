@@ -40,7 +40,7 @@ namespace nero
             float               getFrameTime()      const;
                 //set
             void                setWindowTitle(const std::string& title);
-            void                setWindowIcon(std::string icon);
+			void                setWindowIcon(const std::string& icon);
 
 
         private:

@@ -174,7 +174,7 @@ namespace  nero
         m_Window.close();
     }
 
-    void CoreEngine::setWindowIcon(std::string icon)
+	void CoreEngine::setWindowIcon(const std::string& icon)
     {
         if (m_WindowIcon.loadFromFile(icon))
         {

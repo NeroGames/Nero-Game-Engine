@@ -22,6 +22,11 @@
 
 ## Project Workspace
 
+Project
+Setting
+Resource
+workspace.nero
+
 ## Game Project
 
 ### CPP Game Project
