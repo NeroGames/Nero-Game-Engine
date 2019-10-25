@@ -34,6 +34,7 @@ namespace  nero
 	  ,m_BuildDockspaceLayout(true)
 	  ,m_SetupDockspaceLayout(true)
 	  ,m_TextureHolder()
+	  ,m_ProjectManagerTabBarSwith()
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -56,8 +57,14 @@ namespace  nero
 		m_TextureHolder.setResourceDirectory("resource/texture");
 		m_TextureHolder.load();
 
-
-    }
+		m_ProjectManagerTabBarSwith.registerTabTable(
+		{
+			EditorConstant.TAB_RECENT_PROJECT,
+			EditorConstant.TAB_CREATE_PROJECT,
+			EditorConstant.TAB_OPEN_PROJECT,
+			EditorConstant.TAB_WORKSPACE
+		});
+	}
 
     EditorInterface::~EditorInterface()
     {
@@ -479,40 +486,44 @@ namespace  nero
             ImGui::SetCursorPosY(cursor.y);
             ImGui::BeginChild("##project_manager_panel_2", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.67f, winsow_size.y * 0.85f));
 
-                if (ImGui::BeginTabBar("##project_manager_tabbar"))
-                {
-                    ImGui::Dummy(ImVec2(0.0f, 10.0f));
+			//ImGuiTabBarFlags flags = ImGuiTabBarFlags_NoTabListScrollingButtons | ImGuiTabBarFlags_NoCloseWithMiddleMouseButton;
 
-					if (ImGui::BeginTabItem(EditorConstant.RECENT_PROJECT.c_str()))
+				if (ImGui::BeginTabBar("##project_manager_tabbar"))
+                {
+					ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+					if (ImGui::BeginTabItem(EditorConstant.TAB_RECENT_PROJECT.c_str(), nullptr, m_ProjectManagerTabBarSwith.getTabStatus(EditorConstant.TAB_RECENT_PROJECT)))
 					{
 						showRecentProjectWindow();
 
 						ImGui::EndTabItem();
 					}
 
-					if (ImGui::BeginTabItem(EditorConstant.CREATE_PROJECT.c_str()))
+					if (ImGui::BeginTabItem(EditorConstant.TAB_CREATE_PROJECT.c_str(), nullptr, m_ProjectManagerTabBarSwith.getTabStatus(EditorConstant.TAB_CREATE_PROJECT)))
                     {
                         showCreateProjectWindow();
 
                         ImGui::EndTabItem();
                     }
 
-					if (ImGui::BeginTabItem(EditorConstant.OPEN_PROJECT.c_str()))
+					if (ImGui::BeginTabItem(EditorConstant.TAB_OPEN_PROJECT.c_str(), nullptr, m_ProjectManagerTabBarSwith.getTabStatus(EditorConstant.TAB_OPEN_PROJECT)))
                     {
                         showOpenPorjectWindow();
 
                         ImGui::EndTabItem();
                     }
 
-					if (ImGui::BeginTabItem(EditorConstant.WORKSPACE.c_str()))
+					if (ImGui::BeginTabItem(EditorConstant.TAB_WORKSPACE.c_str(), nullptr, m_ProjectManagerTabBarSwith.getTabStatus(EditorConstant.TAB_WORKSPACE)))
                     {
                         showWorkspaceWindow();
 
                         ImGui::EndTabItem();
-                    }
+					}
 
                     ImGui::EndTabBar();
                 }
+
+				m_ProjectManagerTabBarSwith.resetSwith();
 
             ImGui::EndChild();
 
@@ -602,14 +613,14 @@ namespace  nero
 
 		if(ImGui::Button("Create A New Project##recent_project_create_project", ImVec2(200.f, 40.f)))
 		{
-
+			m_ProjectManagerTabBarSwith.selectTab(EditorConstant.TAB_CREATE_PROJECT);
 		}
 
 		ImGui::SameLine(0.f, 50.f);
 
 		if(ImGui::Button("Open Another Project##recent_project_open_project", ImVec2(200.f, 40.f)))
 		{
-
+			m_ProjectManagerTabBarSwith.selectTab(EditorConstant.TAB_OPEN_PROJECT);
 		}
 
 	}

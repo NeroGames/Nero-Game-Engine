@@ -23,6 +23,7 @@
 #include <Nero/core/utility/LogUtil.h>
 #include <Nero/editor/AdvancedScene.h>
 #include <Nero/core/resource/ResourceManager.h>
+#include <Nero/editor/EditorInterfaceUtility.h>
 
 #include <future>
 
@@ -174,6 +175,7 @@ namespace nero
             std::string                 m_LastCreatedProject;
 
             //Tabs
+			TabBarSwitch				m_ProjectManagerTabBarSwith;
             int                         m_ProjectManagerSelectedTab;    //0 : Create Project, 1 : Open Project, 2 : Recent Project, 3 : Worksapce
             //Banner
             sf::Texture                 m_ProjectManagerBannerTexture;

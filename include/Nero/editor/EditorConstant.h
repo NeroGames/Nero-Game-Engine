@@ -51,10 +51,10 @@ namespace nero
 
 		//Window and View
 
-		const std::string CREATE_PROJECT				= "Create Project";
-		const std::string OPEN_PROJECT					= "Open Project";
-		const std::string RECENT_PROJECT				= "Recent Project";
-		const std::string WORKSPACE						= "Workspace";
+		const std::string TAB_CREATE_PROJECT				= "Create Project";
+		const std::string TAB_OPEN_PROJECT					= "Open Project";
+		const std::string TAB_RECENT_PROJECT				= "Recent Project";
+		const std::string TAB_WORKSPACE						= "Workspace";
 		const std::string ERROR_CREATING_WORKSPACE		= "Error Creating Workspace";
 		const std::string ERROR_CREATING_PROJECT		= "Error Creating Project";
 
