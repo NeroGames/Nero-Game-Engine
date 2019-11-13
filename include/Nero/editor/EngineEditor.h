@@ -2,24 +2,24 @@
 // Nero Game Engine
 // Copyright (c) 2016-2020 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
-#ifndef EDITOR_H
-#define EDITOR_H
+#ifndef ENGINEEDITOR_H
+#define ENGINEEDITOR_H
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/core/engine/CoreEngine.h>
+#include <Nero/core/engine/Setting.h>
+#include <Nero/editor/LoadingScreen.h>
 #include <Nero/editor/EditorInterface.h>
 //STD
 #include <future>
-#include <Nero/editor/LoadingScreen.h>
-
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class Editor : public CoreEngine
+	class EngineEditor : public CoreEngine
     {
         public:
-                                    Editor();
-            virtual                ~Editor() override;
+									EngineEditor();
+			virtual                ~EngineEditor() override;
 
     private:
            //game loop
@@ -28,23 +28,27 @@ namespace nero
            void                     render()                         override;
            //startup
            int                      startEngine(bool& engineStarted, const int duration);
-           void                     buildStartupScreen();
-           void                     setupRenderWindow();
+		   void                     createRenderWindow();
+		   void                     createLoadingScreen();
+		   void						startBackgroundTask();
+		   void						loadSetting();
+		   void						initializeLogging();
+		   //destroy
+		   void						destroyEditor();
 
          private:
             //Startup Thread
-            std::future<int>        m_StartEngineFuture;
-            bool                    m_EngineStarted;
+			std::future<int>        m_StartEditorFuture;
+			bool                    m_EditorStarted;
             //Startup Screen
             LoadingScreen::Ptr      m_LoadingScreen;
             //Editor Interface
             EditorInterface::Ptr    m_Interface;
             //Resource Manager
             //ResourceManager::Ptr    m_ResourceManager;
-            //background tasks
-            std::vector<std::function<void()>> m_BackgroundTaskTable;
+			//
+			Setting					m_Setting;
     };
-
 }
 
-#endif // EDITOR_H
+#endif // ENGINEEDITOR_H

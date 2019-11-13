@@ -1,5 +1,6 @@
 #include <Nero/editor/AdvancedScene.h>
 #include <SFML/Graphics/Sprite.hpp>
+
 namespace nero
 {
     ////////////////////////////////////////////////////////////
@@ -21,8 +22,60 @@ namespace nero
        }
    }
 
-    AdvancedScene::AdvancedScene()
+	AdvancedScene::AdvancedScene():
+		m_LightEngine(true)
     {
+		// Create the LightSystem
+		m_LightEngine.create({ -1000.f, -1000.f, 2000.f, 2000.f }, sf::Vector2u(800.f, 800.f));
+
+		// Load light texture
+		/*sf::Texture pointLightTexture;
+		pointLightTexture.loadFromFile("pointLightTexture.png");
+		pointLightTexture.setSmooth(true);
+		sf::Texture spookyLightTexture;
+		spookyLightTexture.loadFromFile("spookyLightTexture.png");
+		spookyLightTexture.setSmooth(true);
+		sf::Texture backgroundTexture;
+		backgroundTexture.loadFromFile("background.png");
+		sf::Texture backgroundTextureNormals;
+		backgroundTextureNormals.loadFromFile("background_NORMALS.png");
+		sf::Texture headTexture;
+		headTexture.loadFromFile("head.png");
+		sf::Texture headTextureNormals;
+		headTextureNormals.loadFromFile("head_NORMALS.png");
+
+		// Add a sun light
+		ltbl::LightDirectionEmission* sun = m_LightEngine.createLightDirectionEmission();
+		sun->setColor(sf::Color(255, 255, 255, 50));
+
+		// Add a light point
+		ltbl::LightPointEmission* mlight = m_LightEngine.createLightPointEmission();
+		mlight->setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f, pointLightTexture.getSize().y * 0.5f));
+		mlight->setTexture(pointLightTexture);
+		mlight->setScale(3.f, 3.f);
+		mlight->setColor(sf::Color::White);
+
+		// Create a shape
+		std::vector<sf::RectangleShape> shapes;
+		sf::RectangleShape blocker;
+		blocker.setSize({ 200.f, 50.f });
+		blocker.setPosition({ 500.f, 300.f });
+		blocker.setFillColor(sf::Color::Red);
+		shapes.push_back(blocker);
+
+		// Create a light shape with the same shape
+		m_LightEngine.createLightShape(blocker);
+
+		ltbl::Sprite background;
+		background.setTexture(backgroundTexture);
+		background.setNormalsTexture(backgroundTextureNormals);
+		m_LightEngine.addSprite(background);
+
+		ltbl::Sprite head;
+		head.setTexture(headTexture);
+		head.setNormalsTexture(headTextureNormals);
+		head.setPosition(300.f, 200.f);
+		m_LightEngine.addSprite(head);*/
 
     }
 
@@ -62,9 +115,9 @@ namespace nero
 			m_RenderTexture.draw(sf::Sprite(renderTexture.getTexture()));
         }
 
+		//m_LightEngine.render(m_RenderTexture);
 
         return  m_RenderTexture;
-
     }
 
     void AdvancedScene::setScene(Scene::Ptr scene)

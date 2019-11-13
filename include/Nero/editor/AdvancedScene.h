@@ -16,6 +16,8 @@
 #include <memory>
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
+#include "ltbl/LightSystem.hpp"
+
 namespace nero
 {
     //Forward declaration
@@ -111,7 +113,7 @@ namespace nero
             Scene::Ptr                  m_Scene;
             sf::RenderTexture           m_RenderTexture;
             RenderContext               m_RenderContext;
-
+			ltbl::LightSystem			m_LightEngine;
     };
 }
 

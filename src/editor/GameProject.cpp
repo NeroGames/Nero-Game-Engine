@@ -23,6 +23,37 @@ namespace nero
 
     void GameProject::init(const nlohmann::json& project, const nlohmann::json& project_workpsace)
     {
+		//
+		char *a 				= getenv("NERO_GAME_HOME"); // C:\\Program Files (x86)\\Nero Game Engine
+		char *b		= getenv("NERO_GAME_QT_CREATOR"); // C:\\Qt\\Tools\\QtCreator\bin\\qtcreator.exe
+		char *c	= getenv("NERO_GAME_VISUAL_STUDIO");
+
+		if(a)
+		{
+			m_NeroGameNome  = std::string(a);
+		}
+
+		if(b)
+		{
+			m_QTCreatorExcecutable  = std::string(a);
+		}
+
+		if(c)
+		{
+			m_VisualStutionExecutable  = std::string(a);
+		}
+		//m_NeroGameNome				= getenv("NERO_GAME_HOME"); // C:\\Program Files (x86)\\Nero Game Engine
+		//m_QTCreatorExcecutable		= getenv("NERO_GAME_QT_CREATOR"); // C:\\Qt\\Tools\\QtCreator\bin\\qtcreator.exe
+		//m_VisualStutionExecutable	= getenv("NERO_GAME_VISUAL_STUDIO");
+
+		nero_log(m_NeroGameNome);
+		nero_log(m_QTCreatorExcecutable);
+		nero_log(m_VisualStutionExecutable);
+
+
+		//C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.com
+		//C:\Program Files (x86)\Microsoft Visual Studio\2019\Preview\Common7\IDE\devenv.com
+
         std::string project_id = project["project_id"].get<std::string>();
         m_ProjectDirectory = getPath({project_workpsace["workspace_directory"].get<std::string>(), project_id});
 

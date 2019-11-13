@@ -68,10 +68,42 @@ namespace nero
         boost::algorithm::trim_left(string);
         boost::algorithm::trim_right(string);
 
+		boost::algorithm::replace_all(string, StringPool.NEW_LINE, StringPool.BLANK);
+
         auto result = splitString(string, ' ');
 
         std::remove_if(result.begin(), result.end(), [](std::string word){return word == StringPool.BLANK;});
 
         return result;
     }
+
+	std::string wrapString(const std::string& message, int maxLetter)
+	{
+		if(message.size() <= maxLetter)
+		{
+			return message;
+		}
+
+		std::string result = StringPool.BLANK;
+
+		auto wordTable = getWordTable(message);
+
+		std::string line = StringPool.BLANK;
+		for(const std::string& word : wordTable)
+		{
+			if((line.size() + word.size() + 1) <= maxLetter)
+			{
+				line += word + StringPool.SPACE;
+			}
+			else
+			{
+				result += line + StringPool.NEW_LINE;
+				line = word + StringPool.SPACE;
+			}
+		}
+
+		result += line;
+
+		return result;
+	};
 }

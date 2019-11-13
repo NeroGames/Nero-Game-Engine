@@ -66,6 +66,8 @@ namespace nero
    void fillCharArray(char* charArray, int arraySize, const std::string& string);
 
    std::vector<std::string> getWordTable(std::string string);
+
+   std::string wrapString(const std::string& message, int maxLetter);
 }
 
 #endif // STRINGUTIL_H

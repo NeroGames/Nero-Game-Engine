@@ -80,7 +80,9 @@ namespace nero
 
     nlohmann::json loadSetting(const std::string& name)
     {
-        return loadJson(getPath({EngineConstant.FOLDER_SETTING, name}));
+		//TODO
+		return nlohmann::json();
+		//return loadJson(getPath({EngineConstant.FOLDER_SETTING, name}));
     }
 
     void createDirectory(const std::string& name)

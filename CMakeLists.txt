@@ -55,7 +55,8 @@ file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
 file(GLOB_RECURSE NERO_GAME_CORE_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/core/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/library/easyloggingpp/*")
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/easyloggingpp/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/lighting/*")
 
 # setup Library
 include_directories("../../Library/include")

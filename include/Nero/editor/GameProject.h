@@ -58,7 +58,9 @@ namespace nero
              AdvancedScene::Ptr getAdvancedScene();
             //File
 
-            //Command(
+			std::string m_NeroGameNome;
+			std::string m_QTCreatorExcecutable;
+			std::string m_VisualStutionExecutable;
 
             //Library
             std::string m_ProjectLibraryFile;

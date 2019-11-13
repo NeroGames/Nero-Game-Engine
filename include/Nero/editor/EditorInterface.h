@@ -83,7 +83,7 @@ namespace nero
             void                    showToggleButton(bool toggle, const std::string& label, std::function<void()> callback);
 
         private:
-			friend class						Editor;
+			friend class						EngineEditor;
 			sf::RenderWindow&					m_RenderWindow;
 			TextureHolder						m_TextureHolder;
 			//Docksapce
@@ -122,7 +122,7 @@ namespace nero
             std::stringstream buffer;
             std::streambuf * old;
 
-            void setUpdateWindowTitle(std::function<void (const std::string&)> fn);
+			void setCallbackWindowTitle(std::function<void (const std::string&)> fn);
 
             std::function<void (const std::string&)> m_UpdateWindowTile;
 

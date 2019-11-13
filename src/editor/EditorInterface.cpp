@@ -74,10 +74,13 @@ namespace  nero
 
     void EditorInterface::handleEvent(const sf::Event& event)
     {
-        if(event.type == sf::Event::Closed)
-        {
-            quitEditor();
-        }
+		switch(event.type)
+		{
+			case sf::Event::Closed:
+			{
+				quitEditor();
+			}break;
+		}
 
         m_AdvancedScene->handleEvent(event);
 
@@ -213,6 +216,23 @@ namespace  nero
 
     void EditorInterface::quitEditor()
     {
+		//save size and position
+		std::string file = getPath({"setting", "window_setting"}, StringPool.EXTENSION_JSON);
+
+		if(fileExist(file))
+		{
+			sf::Vector2u windowSize		= m_RenderWindow.getSize();
+			sf::Vector2i windowPosition = m_RenderWindow.getPosition();
+
+			auto loaded = loadJson(file, true);
+			loaded["window_width"]		= windowSize.x;
+			loaded["window_height"]		= windowSize.y;
+			loaded["window_position_x"] = windowPosition.x;
+			loaded["window_position_y"] = windowPosition.y;
+
+			saveFile(file, loaded.dump(3), true);
+		}
+
         m_RenderWindow.close();
     }
 
@@ -486,8 +506,6 @@ namespace  nero
             ImGui::SetCursorPosY(cursor.y);
             ImGui::BeginChild("##project_manager_panel_2", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.67f, winsow_size.y * 0.85f));
 
-			//ImGuiTabBarFlags flags = ImGuiTabBarFlags_NoTabListScrollingButtons | ImGuiTabBarFlags_NoCloseWithMiddleMouseButton;
-
 				if (ImGui::BeginTabBar("##project_manager_tabbar"))
                 {
 					ImGui::Dummy(ImVec2(0.0f, 10.0f));
@@ -527,8 +545,10 @@ namespace  nero
 
             ImGui::EndChild();
 
-            ImGui::SetCursorPosX(winsow_size.x/2.f);
-            ImGui::SetCursorPosY(winsow_size.y - 30.f);
+			ImGui::SetCursorPosY(winsow_size.y - 38.f);
+			ImGui::Separator();
+			ImGui::Dummy(ImVec2(0.0f, 4.0f));
+			ImGui::SetCursorPosX(winsow_size.x/2.f - 50.f);
             if (ImGui::Button("Close##close_project_manager_window", ImVec2(100, 0)))
             {
                 ImGui::CloseCurrentPopup();
@@ -547,51 +567,22 @@ namespace  nero
 
 		//list of recent project
 
-		ImVec2 button_sz(150, 100);
+		ImVec2 button_sz(130, 100);
+
 		float spacing = (ImGui::GetWindowContentRegionWidth() - 3 * 150)/2.f;
-
-		std::function<std::string (const std::string&, int)> wrapString = [](const std::string& message, int maxLetter)
-		{
-			if(message.size() <= maxLetter)
-			{
-				return message;
-			}
-
-			std::string result = StringPool.BLANK;
-
-			auto wordTable = getWordTable(message);
-
-			std::string line = StringPool.BLANK;
-			for(const std::string& word : wordTable)
-			{
-				if((line.size() + word.size() + 1) <= maxLetter)
-				{
-					line += word + StringPool.SPACE;
-				}
-				else
-				{
-					result += line + StringPool.NEW_LINE;
-					line = word + StringPool.SPACE;
-				}
-			}
-
-			result += line;
-
-
-
-			return result;
-		};
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		int buttons_count = 6;
 		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 		for (int n = 0; n < buttons_count; n++)
 		{
-			std::string project_name =  wrapString("Oblivion the Great Journey", 20);
+			ImGui::Image(m_TextureHolder.getTexture("recent_project_" + toString(n+1)));
+			ImGui::SameLine(0.f, 5.f);
+			std::string project_name =  wrapString("Oblivion the Great Journey", 17);
 			ImGui::PushID(n);
 			ImGui::Button(project_name.c_str(), button_sz);
 			float last_button_x2 = ImGui::GetItemRectMax().x;
-			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
+			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x + 20.f; // Expected position if next button was on same line
 			if (n + 1 < buttons_count && next_button_x2 < window_visible_x2)
 				ImGui::SameLine(0.f, spacing);
 			else {
@@ -602,33 +593,42 @@ namespace  nero
 
 
 
-		ImGui::SetCursorPosY(EditorConstant.WINDOW_PROJECT_MANAGER_SIZE.y * 0.70f);
+		ImGui::SetCursorPosY(EditorConstant.WINDOW_PROJECT_MANAGER_SIZE.y * 0.74f);
 
 
-		ImGui::Separator();
+		//ImGui::Separator();
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionWidth() - 450.f)/2.f);
 
 
-		if(ImGui::Button("Create A New Project##recent_project_create_project", ImVec2(200.f, 40.f)))
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.f, 0.f));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.f, 0.f, 0.f, 0.f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.f, 0.f, 0.f, 0.f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.f, 0.f, 0.f, 0.f));
+		if(ImGui::ImageButton(m_TextureHolder.getTexture("recent_project_create_project")))
 		{
 			m_ProjectManagerTabBarSwith.selectTab(EditorConstant.TAB_CREATE_PROJECT);
 		}
 
 		ImGui::SameLine(0.f, 50.f);
 
-		if(ImGui::Button("Open Another Project##recent_project_open_project", ImVec2(200.f, 40.f)))
+		if(ImGui::ImageButton(m_TextureHolder.getTexture("recent_project_open_project")))
 		{
 			m_ProjectManagerTabBarSwith.selectTab(EditorConstant.TAB_OPEN_PROJECT);
 		}
+
+		ImGui::PopStyleVar();
+		ImGui::PopStyleColor(3);
 
 	}
 
     void EditorInterface::showCreateProjectWindow()
     {
         //Window flags
-        ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize  | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal |
+										  ImGuiWindowFlags_NoResize  | ImGuiWindowFlags_NoCollapse |
+										  ImGuiWindowFlags_NoScrollbar;
         //Winsow size
 		ImVec2 winsow_size              = EditorConstant.WINDOW_PROJECT_MANAGER_SIZE;
 
@@ -780,9 +780,11 @@ namespace  nero
 
         ImGui::Text("Description");
         ImGui::SameLine(wording_width);
-        static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
-        ImGui::InputTextMultiline("##project_description", m_InputProjectDescription, IM_ARRAYSIZE(m_InputProjectDescription), ImVec2(input_width, ImGui::GetTextLineHeight() * 5), flags);
+		static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
+		ImGui::InputTextMultiline("##project_description", m_InputProjectDescription, IM_ARRAYSIZE(m_InputProjectDescription), ImVec2(input_width, ImGui::GetTextLineHeight() * 5), flags);
         ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+
 
         ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 102.f);
         ImGui::SetCursorPosY(winsow_size.y * 0.85f - 100.f);
@@ -1294,7 +1296,7 @@ namespace  nero
          m_UpdateWindowTile(project_name);
     }
 
-    void EditorInterface::setUpdateWindowTitle(std::function<void (const std::string&)> fn)
+	void EditorInterface::setCallbackWindowTitle(std::function<void (const std::string&)> fn)
     {
         m_UpdateWindowTile = fn;
     }
@@ -1588,6 +1590,7 @@ namespace  nero
 
 
 					ImVec2 button_size(sprite_size.x, sprite_size.y);
+
 
 					if(ImGui::ImageButton(m_ResourceManager.texture.getSpriteTexture(spriteTable[n]), button_size))
 					{

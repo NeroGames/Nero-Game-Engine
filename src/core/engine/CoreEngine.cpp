@@ -3,49 +3,27 @@
 // Copyright (c) 2016-2020 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-///Nero
+//Nero
 #include <Nero/core/engine/CoreEngine.h>
-#include <Nero/core/utility/FileUtil.h>
 ////////////////////////////////////////////////////////////
 namespace  nero
 {
-    CoreEngine::CoreEngine():
+	CoreEngine::CoreEngine(bool createWindow):
          m_ElapsedTime()
         ,m_FrameCount(0)
         ,m_FramePerSecond(0.f)
         ,m_TimePerFrame(0.f)
     {
-        //build directory
-        buildDirectory();
-
-        //load logging setting
-        loadLoggingSetting();
-
-        //load engine setting
-        loadEngineSetting();
-
         //create render window
-        createEngineWindow();
-    }
-
-    void CoreEngine::loadEngineSetting()
-    {
-        m_Setting = loadSetting(EngineConstant.FILE_SETTING_ENGINE);
-    }
-
-    void CoreEngine::loadLoggingSetting()
-    {
-        el::Configurations setting(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_LOGGING}, StringPool.EXTENSION_TEXT));
-        el::Loggers::reconfigureAllLoggers(setting);
+		if(createWindow)
+		{
+			createEngineWindow();
+		}
     }
 
     void CoreEngine::createEngineWindow()
     {
-        m_WindowTitle  = m_Setting["window_title"].get<std::string>();
-        m_WindowWidth  = m_Setting["window_width"].get<unsigned int>();
-        m_WindowHeight = m_Setting["window_height"].get<unsigned int>();
-
-		m_Window.create(sf::VideoMode(m_WindowWidth, m_WindowHeight), m_WindowTitle, sf::Style::Default);
+		m_RenderWindow.create(sf::VideoMode(EngineConstant.ENGINE_WINDOW_WIDTH, EngineConstant.ENGINE_WINDOW_HEIGHT), EngineConstant.ENGINE_WINDOW_TITLE, sf::Style::Default);
     }
 
     CoreEngine::~CoreEngine()
@@ -59,7 +37,7 @@ namespace  nero
         sf::Clock clock;
         sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
-        while(m_Window.isOpen())
+		while(m_RenderWindow.isOpen())
         {
             //Accumulate the time elapsed at each loop
             sf::Time elapsedTime = clock.restart();
@@ -82,8 +60,6 @@ namespace  nero
             computeFrameRate(elapsedTime);
             //4... render the game
             render();
-
-            el::Loggers::flushAll();
         }
     }
 
@@ -106,29 +82,35 @@ namespace  nero
 
     std::string CoreEngine::getWindowTitle() const
     {
-        return m_WindowTitle;
+		return m_WindowTitle;
     }
 
     void CoreEngine::setWindowTitle(const std::string& title)
     {
         m_WindowTitle = title;
 
-        m_Window.setTitle(title);
+		m_RenderWindow.setTitle(m_WindowTitle);
     }
 
-    unsigned int CoreEngine::getWindowWidth()
+	unsigned int CoreEngine::getWindowWidth() const
     {
-        m_WindowWidth = m_Window.getSize().x;
-
-        return m_WindowWidth;
+		return m_RenderWindow.getSize().x;
     }
 
-    unsigned int CoreEngine::getWindowHeight()
+	unsigned int CoreEngine::getWindowHeight() const
     {
-        m_WindowHeight = m_Window.getSize().y;
-
-        return m_WindowHeight;
+		return m_RenderWindow.getSize().y;
     }
+
+	sf::Vector2f CoreEngine::getWindowSize() const
+	{
+		return sf::Vector2f(m_RenderWindow.getSize().x, m_RenderWindow.getSize().y);
+	}
+
+	sf::Vector2f CoreEngine::getWindowPosition() const
+	{
+		return sf::Vector2f(m_RenderWindow.getPosition() .x, m_RenderWindow.getPosition().y);
+	}
 
     float CoreEngine::getFrameRate() const
     {
@@ -140,48 +122,19 @@ namespace  nero
         return m_TimePerFrame;
     }
 
-    void CoreEngine::buildDirectory()
-    {
-        //create main folders
-        createDirectory(getPath({EngineConstant.FOLDER_SETTING}));
-        createDirectory(getPath({EngineConstant.FOLDER_LOGGING}));
-        createDirectory(getPath({EngineConstant.FOLDER_RESOURCE}));
-        createDirectory(getPath({EngineConstant.FOLDER_WORKSPACE}));
-        createDirectory(getPath({EngineConstant.FOLDER_STARTUP}));
-
-        //create resource sub folders
-        createDirectory(getPath({EngineConstant.FOLDER_RESOURCE, EngineConstant.FOLDER_RESOURCE_TEXTURE}));
-        createDirectory(getPath({EngineConstant.FOLDER_RESOURCE, EngineConstant.FOLDER_RESOURCE_FONT}));
-        createDirectory(getPath({EngineConstant.FOLDER_RESOURCE, EngineConstant.FOLDER_RESOURCE_MUSIC}));
-        createDirectory(getPath({EngineConstant.FOLDER_RESOURCE, EngineConstant.FOLDER_RESOURCE_SOUND}));
-        createDirectory(getPath({EngineConstant.FOLDER_RESOURCE, EngineConstant.FOLDER_RESOURCE_SCRIPT}));
-        createDirectory(getPath({EngineConstant.FOLDER_RESOURCE, EngineConstant.FOLDER_RESOURCE_SHADER}));
-        createDirectory(getPath({EngineConstant.FOLDER_RESOURCE, EngineConstant.FOLDER_RESOURCE_LANGUAGE}));
-        createDirectory(getPath({EngineConstant.FOLDER_RESOURCE, EngineConstant.FOLDER_RESOURCE_ANIMATION}));
-
-        //create main files
-        //engine setting
-        saveFile(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_ENGINE}, StringPool.EXTENSION_JSON), StringPool.BLANK);
-        //logging setting
-        saveFile(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_LOGGING}, StringPool.EXTENSION_TEXT), StringPool.BLANK);
-        //resource setting
-        saveFile(getPath({EngineConstant.FOLDER_SETTING, EngineConstant.FILE_SETTING_RESOURCE}, StringPool.EXTENSION_JSON), StringPool.BLANK);
-
-    }
 
     void CoreEngine::quitEngine()
     {
-        m_Window.close();
+		m_RenderWindow.close();
     }
 
 	void CoreEngine::setWindowIcon(const std::string& icon)
     {
         if (m_WindowIcon.loadFromFile(icon))
         {
-            m_Window.setIcon(m_WindowIcon.getSize().x, m_WindowIcon.getSize().y, m_WindowIcon.getPixelsPtr());
+			m_RenderWindow.setIcon(m_WindowIcon.getSize().x, m_WindowIcon.getSize().y, m_WindowIcon.getPixelsPtr());
         }
     }
-
 }
 
 

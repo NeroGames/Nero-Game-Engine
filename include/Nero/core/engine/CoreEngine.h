@@ -6,8 +6,7 @@
 #define COREENGINE_H
 ///////////////////////////HEADERS//////////////////////////
 //Nero
-#include <Nero/core/utility/LogUtil.h>
-#include<Nero/core/engine/EngineConstant.h>
+#include <Nero/core/engine/EngineConstant.h>
 //SFML
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -19,7 +18,7 @@ namespace nero
     class CoreEngine
     {
         public:
-                                CoreEngine();
+								CoreEngine(bool createWindow = true);
             virtual            ~CoreEngine();
 
             virtual void        run();
@@ -29,41 +28,35 @@ namespace nero
             virtual void        handleEvent()                       = 0;
             virtual void        update(const sf::Time& timeStep)    = 0;
             virtual void        render()                            = 0;
-            //quit engine
+			//quit engine+
             virtual void        quitEngine();
             //utility
                 //get
             std::string         getWindowTitle()    const;
-            unsigned int        getWindowWidth();
-            unsigned int        getWindowHeight();
+			unsigned int        getWindowWidth()	const;
+			unsigned int        getWindowHeight()	const;
+			sf::Vector2f		getWindowSize()		const;
+			sf::Vector2f		getWindowPosition() const;
             float               getFrameRate()      const;
             float               getFrameTime()      const;
                 //set
             void                setWindowTitle(const std::string& title);
 			void                setWindowIcon(const std::string& icon);
 
-
         private:
-            void                buildDirectory();
-            void                loadLoggingSetting();
-            void                loadEngineSetting();
-            void                createEngineWindow();
+			void                createEngineWindow();
             void                computeFrameRate(sf::Time timeStep);
 
         protected:
             //window
-            sf::RenderWindow    m_Window;           /*!< The engine window */
-            std::string         m_WindowTitle;      /*!< The engine window title */
-            unsigned int        m_WindowWidth;      /*!< The engine window width */
-            unsigned int        m_WindowHeight;     /*!< the engine window height */
-            sf::Image           m_WindowIcon;
+			sf::RenderWindow    m_RenderWindow;
+			std::string         m_WindowTitle;
+			sf::Image           m_WindowIcon;
             //framerate
-            sf::Time			m_ElapsedTime;      /*!< Temporary variable to store the amount of elapsed time*/
-            int 	            m_FrameCount;       /*!< Temporary variable to store the amount of frame*/
-            float               m_FramePerSecond;   /*!< Number of frame per second */
-            float               m_TimePerFrame;     /*!< Duration of one frame */
-            //setting
-            nlohmann::json      m_Setting;
+			sf::Time			m_ElapsedTime;
+			int 	            m_FrameCount;
+			float               m_FramePerSecond;
+			float               m_TimePerFrame;
     };
 }
 #endif // COREENGINE_H
