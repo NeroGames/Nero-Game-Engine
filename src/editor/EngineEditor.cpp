@@ -183,9 +183,9 @@ namespace  nero
 		char* visualStudio	= getenv("NERO_GAME_VISUAL_STUDIO");
 		char* qtCreator		= getenv("NERO_GAME_QT_CREATOR");
 
-		m_Setting.setString("nero_game_home",	(neroGameHome != nullptr) ? std::string(neroGameHome)	: StringPool.BLANK);
-		m_Setting.setString("visual_studio",	(neroGameHome != nullptr) ? std::string(visualStudio)	: StringPool.BLANK);
-		m_Setting.setString("qt_creator",		(neroGameHome != nullptr) ? std::string(qtCreator)		: StringPool.BLANK);
+		m_Setting.setString("nero_game_home", (neroGameHome != nullptr) ? std::string(neroGameHome)	: StringPool.BLANK);
+		m_Setting.setString("visual_studio", (visualStudio != nullptr) ? std::string(visualStudio) : StringPool.BLANK);
+		m_Setting.setString("qt_creator", (qtCreator != nullptr) ? std::string(qtCreator) : StringPool.BLANK);
 
         std::this_thread::sleep_for(std::chrono::seconds(duration));
 
