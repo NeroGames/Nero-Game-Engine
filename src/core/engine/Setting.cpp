@@ -22,21 +22,21 @@ namespace nero
 		m_Directory = directory;
 	}
 
-	void Setting::load(const std::string& setting)
+	void Setting::loadSetting(const std::string& setting)
 	{
 		std::string file = StringPool.BLANK;
 
 		if(m_Directory != StringPool.BLANK)
 		{
-			file = getPath({m_Directory, setting});
+			file = getPath({m_Directory, setting + StringPool.SUFFIX_SETTING});
 		}
 		else
 		{
-			file = getPath({setting});
+			file = getPath({setting  + StringPool.SUFFIX_SETTING});
 		}
 
 		auto loaded = loadJson(file);
-		m_Setting.insert(loaded.begin(), loaded.end());
+		m_Setting[setting] = loaded;
 	}
 
 	void Setting::load()
@@ -49,7 +49,7 @@ namespace nero
 		return m_Setting.dump(3);
 	}
 
-	unsigned int Setting::getUInt(std::string setting)
+	unsigned int Setting::getUInt(const std::string& setting)
 	{
 		return m_Setting[setting].get<unsigned int>();
 	}

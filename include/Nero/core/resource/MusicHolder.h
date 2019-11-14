@@ -18,6 +18,9 @@ namespace nero
 {
     class MusicHolder
     {
+		public: //utility
+			typedef std::shared_ptr<MusicHolder>    Ptr;
+
         public:
                                                 MusicHolder();
 

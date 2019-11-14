@@ -22,19 +22,28 @@ namespace nero
 			virtual                ~EngineEditor() override;
 
     private:
-           //game loop
-           void                     handleEvent()                    override;
-           void                     update(const sf::Time& timeStep) override;
-           void                     render()                         override;
-           //startup
-           int                      startEngine(bool& engineStarted, const int duration);
-		   void                     createRenderWindow();
-		   void                     createLoadingScreen();
-		   void						startBackgroundTask();
-		   void						loadSetting();
-		   void						initializeLogging();
-		   //destroy
-		   void						destroyEditor();
+			//game loop
+			void                    handleEvent()                    override;
+			void                    update(const sf::Time& timeStep) override;
+			void                    render()                         override;
+			//startup
+			int                     startEngine(bool& engineStarted, const int duration);
+			void                    createRenderWindow();
+			void					createLoadingScreen();
+			void					startBackgroundTask();
+			void					loadWindowSetting();
+			void					initializeLogging();
+			//destroy
+			void					destroyEditor();
+			//background task
+			void					buildDirectory();
+			void					loadSetting();
+			void					checkEveniromentVariable();
+			void					loadEditorResource();
+			void					loadStarterResourcePack();
+			void					loadWorkspaceResource();
+			void					createEditorInterface();
+			void					openLastProject();
 
          private:
             //Startup Thread
@@ -45,9 +54,12 @@ namespace nero
             //Editor Interface
             EditorInterface::Ptr    m_Interface;
             //Resource Manager
-            //ResourceManager::Ptr    m_ResourceManager;
+			ResourceManager::Ptr    m_ResourceManager;
+			//editor resource
+			TextureHolder::Ptr		m_EditorTextureHolder;
+			SoundHolder::Ptr		m_EditorSoundHolder;
 			//
-			Setting					m_Setting;
+			Setting					m_SettingHolder;
     };
 }
 

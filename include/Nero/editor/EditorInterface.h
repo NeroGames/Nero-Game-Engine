@@ -63,19 +63,21 @@ namespace nero
             sf::Sprite             flipTexture(const sf::Texture& texture);
 
 			//editor view
-                //upper left
+				//upper left
 			void                    showMusicWindow();
 			void                    showUtilityWindow();
+				//bottom left
 			void                    showSceneLevelWindow();
 			void                    showSceneChunckWindow();
 			void					showSceneLayerWindow();
             void                    showSceneScreenWindow();
                 //right
-            void                    showCurrentSceneWindow();
-
-            void                    showLogWindow();
-            void                    showResourceCategoryWindow();
+			void                    showExplorerWindow();
+			void                    showResourceBrowserWindow();
+			void					showHelpWindow();
+				//bottom
             void                    showResourceWindow();
+			void                    showLoggingWindow();
                 //terminate
             void                    interfaceFirstDraw();
 
@@ -175,8 +177,8 @@ namespace nero
             std::string                 m_LastCreatedProject;
 
             //Tabs
-			TabBarSwitch				m_ProjectManagerTabBarSwith;
-            int                         m_ProjectManagerSelectedTab;    //0 : Create Project, 1 : Open Project, 2 : Recent Project, 3 : Worksapce
+			TabBarSwitch				m_ProjectManagerTabBarSwitch;
+			TabBarSwitch				m_BottomDockspaceTabBarSwitch;
             //Banner
             sf::Texture                 m_ProjectManagerBannerTexture;
             //show view

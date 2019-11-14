@@ -20,7 +20,7 @@ namespace nero
 
 		public:
 			void					setDirectory(const std::string& directory);
-			void					load(const std::string& setting);
+			void					loadSetting(const std::string& setting);
 			void					load();
 
 			unsigned int			getUInt(const std::string& setting);

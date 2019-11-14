@@ -782,12 +782,12 @@ static const char* kDefaultLogFile                         =      ELPP_DEFAULT_L
 #else
 #  if ELPP_OS_UNIX
 #      if ELPP_OS_ANDROID
-static const char* kDefaultLogFile                         =      "logging/log_info.txt";
+static const char* kDefaultLogFile                         =      "logging/info_logging.txt";
 #      else
-static const char* kDefaultLogFile                         =      "logging/log_info.txt";
+static const char* kDefaultLogFile                         =      "logging/info_logging.txt";
 #      endif  // ELPP_OS_ANDROID
 #  elif ELPP_OS_WINDOWS
-static const char* kDefaultLogFile                         =      "logging\\log_info.txt";
+static const char* kDefaultLogFile                         =      "logging\\info_logging.txt";
 #  endif  // ELPP_OS_UNIX
 #endif  // defined(ELPP_DEFAULT_LOG_FILE)
 #if !defined(ELPP_DISABLE_LOG_FILE_FROM_ARG)

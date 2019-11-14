@@ -18,6 +18,9 @@ namespace nero
 {
     class TextureHolder
     {
+		public: //utility
+			typedef std::shared_ptr<TextureHolder>    Ptr;
+
         public:
                                                 TextureHolder();
             void						        load();

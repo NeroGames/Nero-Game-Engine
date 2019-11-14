@@ -2,8 +2,8 @@
 // Nero Game Engine
 // Copyright (c) 2016-2019 SANOU A. K. Landry
 /////////////////////////////////////////////////////////////
-#ifndef RESOURCEMANAGER_H_INCLUDED
-#define RESOURCEMANAGER_H_INCLUDED
+#ifndef RESOURCEMANAGER_H
+#define RESOURCEMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/core/resource/FontHolder.h>
@@ -16,44 +16,36 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    struct ResourceManager
+	class ResourceManager
     {
-        typedef std::shared_ptr<ResourceManager>    Ptr;
+		public: //utility
+			typedef std::shared_ptr<ResourceManager>    Ptr;
 
-        //HolderList Nero Engine v1.0
-        //Count : 7
-		FontHolder          font;
-        SoundHolder         sound;
-        MusicHolder         music;
-        ShaderHolder        shader;
-        ScriptHolder        script;
-        TextureHolder       texture;
-		AnimationHolder     animation;
+		public:
+										ResourceManager();
+									   ~ResourceManager();
+
+			void						addDirectory();
+			void						loadResource();
+			void						reloadResource();
+			void						clearResource();
+
+			FontHolder::Ptr				getFontHolder();
+			SoundHolder::Ptr			getSoundHolder();
+			MusicHolder::Ptr			getMusicHolder();
+			ShaderHolder::Ptr			getShaderHolder();
+			ScriptHolder::Ptr			getLuaScriptHolder();
+			TextureHolder::Ptr			getTextureHolder();
+			AnimationHolder::Ptr		getAnimationHolder();
+
+		private:
+			FontHolder::Ptr				m_FontHolder;
+			SoundHolder::Ptr			m_SoundHolder;
+			MusicHolder::Ptr			m_MusicHolder;
+			ShaderHolder::Ptr			m_ShaderHolder;
+			ScriptHolder::Ptr			m_LuaScriptHolder;
+			TextureHolder::Ptr			m_TextureHolder;
+			AnimationHolder::Ptr		m_AnimationHolder;
     };
 }
-#endif // RESOURCEMANAGER_H_INCLUDED
-
-/**
-    \class nero::ResourceManager
-    \ingroup resource
-
-    The nero::ResourceManager is the central class to manager all resource.
-    The class store several resource holders that handle each type of resources
-
-    - nero::FontHolder
-    - nero::SoundHolder
-    - nero::MusicHolder
-    - nero::ShaderHolder
-    - nero::ScriptHolder
-    - nero::TextureHolder
-    - nero::AnimationHolder
-
-    Configuration file
-    \file /config/resource-config.json
-
-    Usage example:
-    \code
-        nero::ResourceManager  resourceManager;
-        resourceManager.font.load();
-    \endcode
-*/
+#endif // RESOURCEMANAGER_H

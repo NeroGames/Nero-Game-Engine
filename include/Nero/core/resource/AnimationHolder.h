@@ -18,6 +18,9 @@ namespace nero
 {
     class AnimationHolder
     {
+		public: //utility
+			typedef std::shared_ptr<AnimationHolder>    Ptr;
+
         public:
                                                 AnimationHolder();
             void                                load();

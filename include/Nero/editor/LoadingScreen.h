@@ -31,8 +31,8 @@ namespace nero
             void                    update(const sf::Time& timeStep);
             void                    render();
 
-            const sf::Color         getBackgroundColor()    const;
-            const float             getMinTime()            const;
+			const sf::Color         getCanvasColor()		const;
+			const float             getDuration()            const;
 
         private:
             sf::Texture             m_LogoTexture;

@@ -15,26 +15,27 @@
 namespace  nero
 {
     EditorInterface::EditorInterface(sf::RenderWindow& window):
-        m_RenderWindow(window)
-       ,m_InterfaceFirstDraw(true)
-	   ,m_ResourceManager()
-       ////////////////////////Project and Workspace////////////////////////
-       ,m_WorksapceStatus(0)
-       ,m_InputWorksapceFolder("")
-       ,m_InputWorkspaceName("")
-       ,m_InputWorkspaceCompany("")
-       ,m_InputWorkspaceLead("")
-       ,m_SelectedWorkpsapce(nullptr)
-	  ,m_SelectedWorkpsapceIdex(0)
-	  ,m_SelectedProjectTypeIdex(0)
-	  ,m_SelectedCodeEditorIdex(0)
-	   ,m_ProjectCreationStatus(0)
-      ,m_AdvancedScene(new AdvancedScene())
-	   ,g_Context(nullptr)
-	  ,m_BuildDockspaceLayout(true)
-	  ,m_SetupDockspaceLayout(true)
-	  ,m_TextureHolder()
-	  ,m_ProjectManagerTabBarSwith()
+		 m_RenderWindow(window)
+		,m_InterfaceFirstDraw(true)
+		,m_ResourceManager()
+		////////////////////////Project and Workspace////////////////////////
+		,m_WorksapceStatus(0)
+		,m_InputWorksapceFolder("")
+		,m_InputWorkspaceName("")
+		,m_InputWorkspaceCompany("")
+		,m_InputWorkspaceLead("")
+		,m_SelectedWorkpsapce(nullptr)
+		,m_SelectedWorkpsapceIdex(0)
+		,m_SelectedProjectTypeIdex(0)
+		,m_SelectedCodeEditorIdex(0)
+		,m_ProjectCreationStatus(0)
+		,m_AdvancedScene(new AdvancedScene())
+		,g_Context(nullptr)
+		,m_BuildDockspaceLayout(true)
+		,m_SetupDockspaceLayout(true)
+		,m_TextureHolder()
+		,m_ProjectManagerTabBarSwitch()
+		,m_BottomDockspaceTabBarSwitch()
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -57,12 +58,18 @@ namespace  nero
 		m_TextureHolder.setResourceDirectory("resource/texture");
 		m_TextureHolder.load();
 
-		m_ProjectManagerTabBarSwith.registerTabTable(
+		m_ProjectManagerTabBarSwitch.registerTabTable(
 		{
 			EditorConstant.TAB_RECENT_PROJECT,
 			EditorConstant.TAB_CREATE_PROJECT,
 			EditorConstant.TAB_OPEN_PROJECT,
 			EditorConstant.TAB_WORKSPACE
+		});
+
+		m_BottomDockspaceTabBarSwitch.registerTabTable(
+		{
+			EditorConstant.WINDOW_RESOURCE,
+			EditorConstant.WINDOW_LOGGING,
 		});
 	}
 
@@ -98,54 +105,48 @@ namespace  nero
 
 		//create editor dockspace & display menubar
         createDockSpace();
-		//display toolbar
+
+		//central dockspcace
+			//display toolbar
 		showToolbarWindow();
+			//viewport
+		showSceneWindow();
+			//game setting
+		showGameSettingWindow();
+			//game project
+		showGameProjectWindow();
+			//imgui demo
+		ImGui::ShowDemoWindow();
 
 
-        showSceneWindow();
-        showGameSettingWindow();
-        showGameProjectWindow();
-
-
-		showCurrentSceneWindow();
-
-
-        ImGui::Begin("Engine Help");
-
-        ImGui::End();
-
-
-
-        showLogWindow();
-
-        showResourceCategoryWindow();
-
-        showResourceWindow();
-
-        ImGui::ShowDemoWindow();
-
-        //upper left
+		//left dockspace
+			//upper left
 		showUtilityWindow();
 		showMusicWindow();
-
+			//bottom left
 		showSceneLevelWindow();
-        showSceneChunckWindow();
-        showSceneScreenWindow();
+		showSceneChunckWindow();
+		showSceneScreenWindow();
 		showSceneLayerWindow();
 
+		//right dockspace
+		showExplorerWindow();
+		showHelpWindow();
+		showResourceBrowserWindow();
 
+		//bottom dockspacer
+		showLoggingWindow();
+		showResourceWindow();
 
-
+		//init
         interfaceFirstDraw();
 
-		if(m_GameProject)
-		{
-			showBackgroundTaskWindow();
+		//background task
+		showBackgroundTaskWindow();
 
-		}
 
+		//commit
 		ImGui::SFML::Render(m_RenderWindow);
-
 	}
 
     void EditorInterface::showSceneWindow()
@@ -318,14 +319,14 @@ namespace  nero
 				dockspaceTable["bottom-dockspace"]		= bottomDockspaceID;
 				dockspaceTable["central-dockspace"]		= centralDockspaceID;
 
-				saveFile(getPath({"setting", "dockspace"}, StringPool.EXTENSION_JSON), dockspaceTable.dump(3));
+				saveFile(getPath({"setting", "dockspace_setting"}, StringPool.EXTENSION_JSON), dockspaceTable.dump(3));
 
 				m_BuildDockspaceLayout = !m_BuildDockspaceLayout;
 			}
 
 			if(m_SetupDockspaceLayout)
 			{
-				nlohmann::json dockspaceTable = loadJson(getPath({"setting", "dockspace"}));
+				nlohmann::json dockspaceTable = loadJson(getPath({"setting", "dockspace_setting"}));
 
 				//toolbar
 				ImGuiID toolbarDockspaceID			= dockspaceTable["toolbar-dockspace"];
@@ -510,28 +511,28 @@ namespace  nero
                 {
 					ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-					if (ImGui::BeginTabItem(EditorConstant.TAB_RECENT_PROJECT.c_str(), nullptr, m_ProjectManagerTabBarSwith.getTabStatus(EditorConstant.TAB_RECENT_PROJECT)))
+					if (ImGui::BeginTabItem(EditorConstant.TAB_RECENT_PROJECT.c_str(), nullptr, m_ProjectManagerTabBarSwitch.getTabStatus(EditorConstant.TAB_RECENT_PROJECT)))
 					{
 						showRecentProjectWindow();
 
 						ImGui::EndTabItem();
 					}
 
-					if (ImGui::BeginTabItem(EditorConstant.TAB_CREATE_PROJECT.c_str(), nullptr, m_ProjectManagerTabBarSwith.getTabStatus(EditorConstant.TAB_CREATE_PROJECT)))
+					if (ImGui::BeginTabItem(EditorConstant.TAB_CREATE_PROJECT.c_str(), nullptr, m_ProjectManagerTabBarSwitch.getTabStatus(EditorConstant.TAB_CREATE_PROJECT)))
                     {
                         showCreateProjectWindow();
 
                         ImGui::EndTabItem();
                     }
 
-					if (ImGui::BeginTabItem(EditorConstant.TAB_OPEN_PROJECT.c_str(), nullptr, m_ProjectManagerTabBarSwith.getTabStatus(EditorConstant.TAB_OPEN_PROJECT)))
+					if (ImGui::BeginTabItem(EditorConstant.TAB_OPEN_PROJECT.c_str(), nullptr, m_ProjectManagerTabBarSwitch.getTabStatus(EditorConstant.TAB_OPEN_PROJECT)))
                     {
                         showOpenPorjectWindow();
 
                         ImGui::EndTabItem();
                     }
 
-					if (ImGui::BeginTabItem(EditorConstant.TAB_WORKSPACE.c_str(), nullptr, m_ProjectManagerTabBarSwith.getTabStatus(EditorConstant.TAB_WORKSPACE)))
+					if (ImGui::BeginTabItem(EditorConstant.TAB_WORKSPACE.c_str(), nullptr, m_ProjectManagerTabBarSwitch.getTabStatus(EditorConstant.TAB_WORKSPACE)))
                     {
                         showWorkspaceWindow();
 
@@ -541,7 +542,7 @@ namespace  nero
                     ImGui::EndTabBar();
                 }
 
-				m_ProjectManagerTabBarSwith.resetSwith();
+				m_ProjectManagerTabBarSwitch.resetSwith();
 
             ImGui::EndChild();
 
@@ -608,14 +609,14 @@ namespace  nero
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.f, 0.f, 0.f, 0.f));
 		if(ImGui::ImageButton(m_TextureHolder.getTexture("recent_project_create_project")))
 		{
-			m_ProjectManagerTabBarSwith.selectTab(EditorConstant.TAB_CREATE_PROJECT);
+			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_CREATE_PROJECT);
 		}
 
 		ImGui::SameLine(0.f, 50.f);
 
 		if(ImGui::ImageButton(m_TextureHolder.getTexture("recent_project_open_project")))
 		{
-			m_ProjectManagerTabBarSwith.selectTab(EditorConstant.TAB_OPEN_PROJECT);
+			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_OPEN_PROJECT);
 		}
 
 		ImGui::PopStyleVar();
@@ -1410,7 +1411,7 @@ namespace  nero
         return sprite;
     }
 
-    void EditorInterface::showLogWindow()
+	void EditorInterface::showLoggingWindow()
     {
 
         ImGui::Begin("Logging");
@@ -1419,7 +1420,7 @@ namespace  nero
         m_LoggerApplication.Draw("Logging");
     }
 
-    void EditorInterface::showResourceCategoryWindow()
+	void EditorInterface::showResourceWindow()
     {
 		ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::Begin("Resource", nullptr, flags);
@@ -1485,7 +1486,7 @@ namespace  nero
 		ImGui::End();
     }
 
-    void EditorInterface::showResourceWindow()
+	void EditorInterface::showResourceBrowserWindow()
     {
         //project manager window
         if(open_sprite_browser)
@@ -2026,7 +2027,15 @@ namespace  nero
         m_InterfaceFirstDraw = false;
     }
 
-    void EditorInterface::showCurrentSceneWindow()
+	void EditorInterface::showHelpWindow()
+	{
+		ImGui::Begin(EditorConstant.WINDOW_HELP.c_str());
+
+		ImGui::End();
+	}
+
+
+	void EditorInterface::showExplorerWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_EXPLORER.c_str());
 
@@ -2060,6 +2069,11 @@ namespace  nero
 
 	void EditorInterface::showBackgroundTaskWindow()
 	{
+		if(!m_GameProject)
+		{
+			return;
+		}
+
 		// FIXME-VIEWPORT: Select a default viewport
 		const float DISTANCE = 10.0f;
 		static int corner = 3;

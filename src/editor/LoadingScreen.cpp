@@ -57,13 +57,13 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    const sf::Color LoadingScreen::getBackgroundColor() const
+	const sf::Color LoadingScreen::getCanvasColor() const
     {
         return sf::Color::White;
     }
 
     ////////////////////////////////////////////////////////////
-    const float LoadingScreen::getMinTime() const
+	const float LoadingScreen::getDuration() const
     {
         return 3.f;
     }

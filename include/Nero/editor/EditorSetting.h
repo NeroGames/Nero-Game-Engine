@@ -15,11 +15,11 @@ namespace nero
 		_EditorSetting()
 		{
 			//window setting
-			windowSetting["window_width"]		= 1245;
-			windowSetting["window_height"]		= 700;
-			windowSetting["window_position_x"]	= 20;
-			windowSetting["window_position_y"]	= 20;
-			windowSetting["window_icon"]		= "icon.png";
+			windowSetting["width"]			= 1245;
+			windowSetting["height"]			= 700;
+			windowSetting["position_x"]		= 20;
+			windowSetting["position_y"]		= 20;
+			windowSetting["icon_file"]		= "icon.png";
 		}
 
 		nlohmann::json windowSetting;

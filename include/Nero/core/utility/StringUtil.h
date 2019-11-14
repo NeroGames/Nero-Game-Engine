@@ -31,9 +31,12 @@ namespace nero
 		const std::string EXTENSION_INI				= ".ini";
 
         //
-        const std::string UNDERSCORE        = "_";
-        const std::string SLASH             = "/";
-        const std::string ANTI_SLASH        = "\\";
+		const std::string UNDERSCORE				= "_";
+		const std::string SLASH						= "/";
+		const std::string ANTI_SLASH				= "\\";
+
+		//suffix
+		const std::string SUFFIX_SETTING			= "_setting";
 
     };
 
