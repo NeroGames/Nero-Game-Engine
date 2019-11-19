@@ -163,6 +163,35 @@ namespace  nero
                 ImGui::Image(flipTexture(renderTexture.getTexture()));
             }
 
+			if (ImGui::BeginPopupContextWindow())
+			{
+				if (ImGui::Button("Switch to Screen Builder"))
+				{
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::Button("Switch to Object Builder"))
+				{
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::Text("Get Help");
+				ImGui::Separator();
+				if(ImGui::Button("Learn Game Development"))
+				{
+
+				}
+
+				if(ImGui::Button("Ask Question"))
+				{
+
+				}
+
+				/*if (ImGui::Button("Close"))
+					ImGui::CloseCurrentPopup();*/
+				ImGui::EndPopup();
+			}
+
         ImGui::End();
     }
 
@@ -1581,6 +1610,18 @@ namespace  nero
 			if(ImGui::ImageButton(m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]), button_size))
 			{
 			  // ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
+			}
+
+			if (ImGui::BeginPopupContextItem())
+			{
+				if (ImGui::Button("Delete"))
+				{
+					ImGui::CloseCurrentPopup();
+				}
+
+				/*if (ImGui::Button("Close"))
+					ImGui::CloseCurrentPopup();*/
+				ImGui::EndPopup();
 			}
 
 			if(ImGui::IsItemHovered())
