@@ -23,7 +23,7 @@ namespace nero
 		public: //utility
 			typedef std::shared_ptr<ShaderHolder>    Ptr;
 			using ResourceHolder::loadDirectory;
-
+			using	ResourceHolder::loadFile;
 
         public:
                         ShaderHolder();

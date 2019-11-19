@@ -49,4 +49,22 @@ namespace nero
 		}
 	}
 
+	sf::Vector2f formatSize(sf::Vector2f original, float size)
+	{
+		if(original.x > size)
+		{
+			float scale = size / original.x;
+			original.x = size;
+			original.y = original.y * scale;
+		}
+		if(original.y > size)
+		{
+			float scale = size / original.y;
+			original.y = size;
+			original.x = original.x * scale;
+		}
+
+		return original;
+	};
+
 }

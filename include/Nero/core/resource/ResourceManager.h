@@ -13,6 +13,7 @@
 #include <Nero/core/resource/ScriptHolder.h>
 #include <Nero/core/resource/TextureHolder.h>
 #include <Nero/core/resource/AnimationHolder.h>
+#include <Nero/core/resource/ResourceUtility.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -23,15 +24,22 @@ namespace nero
 
 		public:
 										ResourceManager();
+										ResourceManager(const Setting& setting);
 									   ~ResourceManager();
 
 			void						setSetting(const Setting& setting);
+
 			void						loadDirectory(const std::string& directory);
-			void						loadDirectory();
-			void						addDirectory(const Setting& setting, bool autoSelect = false);
-			void						loadResource();
-			void						reloadResource();
-			void						clearResource();
+			void						loadFile(ResourceType type, const std::string& file);
+			void						loadFile(ResourceType type, const std::vector<std::string> fileTable);
+
+			//void						loadDirectory();
+			//void						addDirectory(const Setting& setting, bool autoSelect = false);
+			//void						loadResource();
+			//void						reloadResource();
+			//void						clearResource();
+
+			void						destroy();
 
 			FontHolder::Ptr				getFontHolder();
 			SoundHolder::Ptr			getSoundHolder();
@@ -49,6 +57,8 @@ namespace nero
 			ScriptHolder::Ptr			m_LuaScriptHolder;
 			TextureHolder::Ptr			m_TextureHolder;
 			AnimationHolder::Ptr		m_AnimationHolder;
+
+			Setting						m_Setting;
     };
 }
 #endif // RESOURCEMANAGER_H

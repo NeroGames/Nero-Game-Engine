@@ -63,7 +63,7 @@ struct Config
     void*                   UserPointer;
 
     Config()
-        : SettingsFile("NodeEditor.json")
+		: SettingsFile("setting/node_editor.json")
         , BeginSaveSession(nullptr)
         , EndSaveSession(nullptr)
         , SaveSettings(nullptr)

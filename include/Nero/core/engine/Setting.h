@@ -42,6 +42,8 @@ namespace nero
 			void							setFloat(const std::string& setting, const float value);
 			void							setInt(const std::string& setting, const int value);
 			void							setBool(const std::string& setting, const int value);
+			void							setSetting(const std::string& name, const Setting& setting);
+
 			//dump
 			std::string						toString() const;
 

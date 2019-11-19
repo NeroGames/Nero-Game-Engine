@@ -36,7 +36,7 @@ namespace nero
 		const std::string ANTI_SLASH				= "\\";
 
 		//suffix
-		const std::string SUFFIX_SETTING			= "_setting";
+		const std::string SUFFIX_SETTING			= "";
 
     };
 

@@ -101,7 +101,6 @@ namespace nero
 			ImGuiID dock_id_left_bottom;
 
             bool            show_project_window = false;
-            sf::Texture     project_manager_texture;
 
             Scene::Context      m_Context;
 
@@ -117,7 +116,6 @@ namespace nero
 
             LoggerApplication m_LoggerApplication;
             bool   m_InterfaceFirstDraw;
-            bool open_sprite_browser = false;
             ImGuiIO baseio;
             ImGuiID dockspace_id;
             std::stringstream buffer;
@@ -137,11 +135,6 @@ namespace nero
 
             ////////////////////////Tool Bar////////////////////////
             void                        showToolbarWindow();
-            sf::Texture                 m_ProjectButtonTexture;
-            sf::Texture                 m_CompileButtonTexture;
-            sf::Texture                 m_ReloadButtonTexture;
-            sf::Texture                 m_EditButtonTexture;
-            sf::Texture                 m_BlankButtonTexture;
 
             ////////////////////////Project and Workspace////////////////////////
             //General
@@ -179,7 +172,6 @@ namespace nero
 			TabBarSwitch				m_ProjectManagerTabBarSwitch;
 			TabBarSwitch				m_BottomDockspaceTabBarSwitch;
             //Banner
-            sf::Texture                 m_ProjectManagerBannerTexture;
             //show view
             void                        showProjectManagerWindow();
             void                        showCreateProjectWindow();
@@ -211,6 +203,12 @@ namespace nero
 			void		setEditorTextureHolder(TextureHolder::Ptr textureHolder);
 			void		setEditorSoundHolder(SoundHolder::Ptr soundHolder);
 			void		setResourceManager(ResourceManager::Ptr resourceManager);
+
+			ResourceType				m_ResourceBrowserType;
+
+			void		showSpriteResource();
+			void		showAnimationResource();
+
 	};
 
 }

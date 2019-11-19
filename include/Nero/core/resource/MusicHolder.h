@@ -23,7 +23,7 @@ namespace nero
 		public: //utility
 			typedef std::shared_ptr<MusicHolder>    Ptr;
 			using ResourceHolder::loadDirectory;
-
+			using	ResourceHolder::loadFile;
 
         public:
                                                 MusicHolder();

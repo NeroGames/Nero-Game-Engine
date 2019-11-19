@@ -11,7 +11,7 @@ namespace nero
 {
     ScriptHolder::ScriptHolder()
 	{
-		m_Configuration = loadJson("setting/resource_setting")["script"];
+		m_Configuration = loadJson("setting/resource")["script"];
     }
 
     void ScriptHolder::load()

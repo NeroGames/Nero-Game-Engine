@@ -60,6 +60,9 @@ namespace nero
 
 		//Texture
 		const std::string TEXTURE_PROJECT_BUTTON		= "project_button";
+		const std::string TEXTURE_EDIT_BUTTON			= "edit_button";
+		const std::string TEXTURE_COMPILE_BUTTON		= "compile_button";
+		const std::string TEXTURE_RELOAD_BUTTON			= "reload_button";
 
 		//Evenrionnment variable
 		const std::string NERO_GAME_HOME				= "NERO_GAME_HOME";

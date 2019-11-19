@@ -46,7 +46,7 @@ namespace  nero
 	}
 
 	void EngineEditor::handleEvent()
-    {
+	{
         sf::Event event;
 		while(m_RenderWindow.pollEvent(event))
         {
@@ -64,7 +64,7 @@ namespace  nero
     }
 
 	void EngineEditor::update(const sf::Time& timeStep)
-    {
+	{
 		if(!m_EditorStarted)
         {
 			//update loading screen
@@ -79,7 +79,7 @@ namespace  nero
     }
 
 	void EngineEditor::render()
-    {
+	{
 		if(!m_EditorStarted)
         {
 			//render loading screen
@@ -98,7 +98,7 @@ namespace  nero
 
 	void EngineEditor::initializeLogging()
 	{
-		std::string file = getPath({"setting", "logging_setting"}, StringPool.EXTENSION_TEXT);
+		std::string file = getPath({"setting", "logging"}, StringPool.EXTENSION_TEXT);
 
 		if(!fileExist(file))
 		{
@@ -118,14 +118,14 @@ namespace  nero
 
 	void EngineEditor::loadEarlySetting()
 	{
-		std::string file = getPath({"setting", "window_setting"}, StringPool.EXTENSION_JSON);
+		std::string file = getPath({"setting", "window"}, StringPool.EXTENSION_JSON);
 
 		if(!fileExist(file))
 		{
 			saveFile(file, EditorSetting.windowSetting.dump(3));
 		}
 
-		file = getPath({"setting", "resource_setting"}, StringPool.EXTENSION_JSON);
+		file = getPath({"setting", "resource"}, StringPool.EXTENSION_JSON);
 		if(!fileExist(file))
 		{
 			//saveFile(file, EditorSetting.resourceSetting.dump(3));
@@ -226,7 +226,9 @@ namespace  nero
 		std::this_thread::sleep_for(std::chrono::seconds(time < 0 ? 0 : time));
 
 		//commit
-        engineStarted = true;
+		engineStarted = true;
+
+		nero_log("starting completed");
 
         return 0;
     }
@@ -270,7 +272,7 @@ namespace  nero
 		//logging_setting, window_setting already exist
 
 			//setting
-		/*std::string resource_setting = getPath({"setting", "resource_setting"}, StringPool.EXTENSION_JSON);
+		/*std::string resource_setting = getPath({"setting", "resource"}, StringPool.EXTENSION_JSON);
 		if(!fileExist(resource_setting))
 		{
 			//saveFile(editor_setting, EditorSetting.resourceSetting.dump(3));
@@ -302,10 +304,13 @@ namespace  nero
 		char* visualStudio	= getenv("NERO_GAME_VISUAL_STUDIO");
 		char* qtCreator		= getenv("NERO_GAME_QT_CREATOR");
 
+		Setting environment;
 
-		m_Setting->setString("nero_game_home", (neroGameHome != nullptr) ? std::string(neroGameHome)	: StringPool.BLANK);
-		m_Setting->setString("visual_studio", (visualStudio != nullptr) ? std::string(visualStudio) : StringPool.BLANK);
-		m_Setting->setString("qt_creator", (qtCreator != nullptr) ? std::string(qtCreator) : StringPool.BLANK);
+		environment.setString("nero_game_home", (neroGameHome != nullptr) ? std::string(neroGameHome)	: StringPool.BLANK);
+		environment.setString("visual_studio", (visualStudio != nullptr) ? std::string(visualStudio) : StringPool.BLANK);
+		environment.setString("qt_creator", (qtCreator != nullptr) ? std::string(qtCreator) : StringPool.BLANK);
+
+		m_Setting->setSetting("environment", environment);
 
 		neroGameHome	= nullptr;
 		visualStudio	= nullptr;
@@ -327,8 +332,8 @@ namespace  nero
 	{
 		nero_log("loading starter pack resource");
 
-		m_ResourceManager = ResourceManager::Ptr(new ResourceManager());
-		//m_ResourceManager->loadDirectory("resource/starterpack");
+		m_ResourceManager = ResourceManager::Ptr(new ResourceManager(m_Setting->getSetting("resource")));
+		m_ResourceManager->loadDirectory("resource/starterpack");
 	}
 
 	void EngineEditor::loadWorkspaceResource()
@@ -337,7 +342,7 @@ namespace  nero
 
 		if(m_Setting->getSetting("recent_project").getString("last_workspace") != StringPool.BLANK)
 		{
-			//m_ResourceManager->loadDirectory(getPath({m_Setting->getSetting("recent_project").getString("last_workspace"), "Resource"}));
+			m_ResourceManager->loadDirectory(getPath({m_Setting->getSetting("recent_project").getString("last_workspace"), "Resource"}));
 		}
 	}
 

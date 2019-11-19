@@ -36,15 +36,10 @@ namespace  nero
 		,m_ProjectManagerTabBarSwitch()
 		,m_BottomDockspaceTabBarSwitch()
 		,m_Setting(nullptr)
+		,m_ResourceBrowserType(ResourceType::None)
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        m_ProjectManagerBannerTexture.loadFromFile("editor_project_manager.png");
-        m_ProjectButtonTexture.loadFromFile("project_button.png");
-        m_CompileButtonTexture.loadFromFile("compile_button.png");
-        m_ReloadButtonTexture.loadFromFile("reload_button.png");
-        m_EditButtonTexture.loadFromFile("edit_button.png");
-        m_BlankButtonTexture.loadFromFile("blank_button.png");
 
         m_ProjectManager = std::make_unique<ProjectManager>();
         m_SceneManager = std::make_unique<SceneManager>();
@@ -134,7 +129,7 @@ namespace  nero
 		showResourceWindow();
 
 		//init
-        interfaceFirstDraw();
+		interfaceFirstDraw();
 
 		//background task
 		showBackgroundTaskWindow();
@@ -213,12 +208,17 @@ namespace  nero
     void EditorInterface::quitEditor()
     {
 		//save size and position
-		std::string file = getPath({"setting", "window_setting"}, StringPool.EXTENSION_JSON);
+		std::string file = getPath({"setting", "window"}, StringPool.EXTENSION_JSON);
 
 		if(fileExist(file))
 		{
 			sf::Vector2u windowSize		= m_RenderWindow.getSize();
 			sf::Vector2i windowPosition = m_RenderWindow.getPosition();
+
+			if(windowPosition.y < 0 || windowPosition.y < 0)
+			{
+				return;
+			}
 
 			auto loaded = loadJson(file, true);
 			loaded["width"]		= windowSize.x;
@@ -266,7 +266,7 @@ namespace  nero
 			viewport = nullptr;
 
 			//build dockspace layout : this is done only once, when the editor is launched the first time
-			if(m_BuildDockspaceLayout && !fileExist(getPath({EditorConstant.FILE_INTERFACE_LAYOUT}, StringPool.EXTENSION_INI)))
+			if(m_BuildDockspaceLayout && !fileExist(getPath({"setting", EditorConstant.FILE_INTERFACE_LAYOUT}, StringPool.EXTENSION_INI)))
 			{
 				//split main dockspace in six
 				ImGuiID upperLeftDockspaceID	= ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Left,	0.20f, nullptr, &m_DockspaceID);
@@ -314,14 +314,14 @@ namespace  nero
 				dockspaceTable["bottom-dockspace"]		= bottomDockspaceID;
 				dockspaceTable["central-dockspace"]		= centralDockspaceID;
 
-				saveFile(getPath({"setting", "dockspace_setting"}, StringPool.EXTENSION_JSON), dockspaceTable.dump(3));
+				saveFile(getPath({"setting", "dockspace"}, StringPool.EXTENSION_JSON), dockspaceTable.dump(3));
 
 				m_BuildDockspaceLayout = !m_BuildDockspaceLayout;
 			}
 
 			if(m_SetupDockspaceLayout)
 			{
-				nlohmann::json dockspaceTable = loadJson(getPath({"setting", "dockspace_setting"}));
+				nlohmann::json dockspaceTable = loadJson(getPath({"setting", "dockspace"}));
 
 				//toolbar
 				ImGuiID toolbarDockspaceID			= dockspaceTable["toolbar-dockspace"];
@@ -447,21 +447,21 @@ namespace  nero
 
              ImGui::SameLine(width - 72.f - 24.f - 3.f - 10.f);
 
-             if(ImGui::ImageButton(m_ReloadButtonTexture))
+			 if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_RELOAD_BUTTON)))
              {
                 reloadProject();
              }
 
              ImGui::SameLine(width - 72.f - 48.f - 6.f - 20.f);
 
-             if(ImGui::ImageButton(m_EditButtonTexture))
+			 if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_EDIT_BUTTON)))
              {
                 editProject();
              }
 
              ImGui::SameLine(width - 72.f - 72.f - 9.f - 30.f);
 
-             if(ImGui::ImageButton(m_CompileButtonTexture))
+			 if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_COMPILE_BUTTON)))
              {
                 compileProject();
              }
@@ -1422,7 +1422,7 @@ namespace  nero
 
 		if(ImGui::Button("Sprite##open_sprite_resource", ImVec2(100.f, 100.f)))
         {
-            open_sprite_browser = true;
+			m_ResourceBrowserType = ResourceType::Texture;
         }
 
 		ImGui::SameLine();
@@ -1430,7 +1430,7 @@ namespace  nero
 
 		if(ImGui::Button("Animation##open_sprite_resource", ImVec2(100.f, 100.f)))
 		{
-			open_sprite_browser = true;
+			m_ResourceBrowserType = ResourceType::Animation;
 		}
 
 		ImGui::SameLine();
@@ -1438,28 +1438,28 @@ namespace  nero
 
 		if(ImGui::Button("Mesh##open_sprite_resource", ImVec2(100.f, 100.f)))
 		{
-			open_sprite_browser = true;
+			m_ResourceBrowserType = ResourceType::Mesh;
 		}
 
 		ImGui::SameLine();
 
 		if(ImGui::Button("Shape##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
-			open_sprite_browser = true;
+			m_ResourceBrowserType = ResourceType::Shape;
 		}
 
 		ImGui::SameLine();
 
 		if(ImGui::Button("Particle##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
-			open_sprite_browser = true;
+			m_ResourceBrowserType = ResourceType::Particle;
 		}
 
 		ImGui::SameLine();
 
 		if(ImGui::Button("Light##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
-			open_sprite_browser = true;
+			m_ResourceBrowserType = ResourceType::Light;
 		}
 
 
@@ -1467,14 +1467,14 @@ namespace  nero
 
 		if(ImGui::Button("Font##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
-			open_sprite_browser = true;
+			m_ResourceBrowserType = ResourceType::Font;
 		}
 
 		ImGui::SameLine();
 
-		if(ImGui::Button("Custom##open_shape_resource", ImVec2(100.f, 100.f)))
+		if(ImGui::Button("Composite##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
-			open_sprite_browser = true;
+			m_ResourceBrowserType = ResourceType::Composite;
 		}
 
 
@@ -1484,7 +1484,7 @@ namespace  nero
 	void EditorInterface::showResourceBrowserWindow()
     {
         //project manager window
-        if(open_sprite_browser)
+		if(m_ResourceBrowserType != ResourceType::None)
         {
             ImGui::Begin("Resource Browser", nullptr, ImGuiWindowFlags());
 
@@ -1540,79 +1540,118 @@ namespace  nero
 
                 if(ImGui::Button("Close##close_sprite_resource", ImVec2(60.f, 0.f)))
                 {
-                    open_sprite_browser = false;
+					m_ResourceBrowserType = ResourceType::None;
                 }
 
                 ImGui::Separator();
 
-
-				auto& spriteTable = m_ResourceManager->getTextureHolder()->getSpriteTable();
-				int sprite_count = spriteTable.size();
-				ImGuiStyle& style = ImGui::GetStyle();
-				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
-				for (int n = 0; n < sprite_count; n++)
+				switch (m_ResourceBrowserType)
 				{
-					sf::Vector2u boo = m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]).getSize();
-					sf::Vector2u zoo = boo;
-					if(n < sprite_count-1)
+					case ResourceType::Texture:
 					{
-						zoo = m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n+1]).getSize();
-					}
+						showSpriteResource();
+					}break;
 
-					std::function<sf::Vector2f(sf::Vector2f, float)> loo = [](sf::Vector2f koo, float size){
-
-						if(koo.x > size)
-						{
-							float scale = size / koo.x;
-							koo.x = size;
-							koo.y = koo.y * scale;
-						}
-						if(koo.y > size)
-						{
-							float scale = size / koo.y;
-							koo.y = size;
-							koo.x = koo.x * scale;
-						}
-
-						return koo;
-					};
-
-					sf::Vector2f sprite_size(boo.x, boo.y);
-					sprite_size = loo(sprite_size, 250);
-
-					sf::Vector2f next_sprite_size(zoo.x, zoo.y);
-					next_sprite_size = loo(next_sprite_size, 250);
-
-
-					ImVec2 button_size(sprite_size.x, sprite_size.y);
-
-
-					if(ImGui::ImageButton(m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]), button_size))
+					case ResourceType::Animation:
 					{
-					  // ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
-					}
+						showAnimationResource();
+					}break;
 
-					float last_button_x2 = ImGui::GetItemRectMax().x;
-					float next_button_x2 = last_button_x2 + style.ItemSpacing.x + next_sprite_size.x;
-					if (n + 1 < sprite_count && next_button_x2 < window_visible_x2)
-						ImGui::SameLine();
 				}
-
-
-				/*for(std::string sprite : spriteTable)
-				{
-					if(ImGui::ImageButton(m_EditorTextureHolder->getSpriteTexture(sprite)))
-					{
-					   ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
-					}
-				}*/
 
 			ImGui::End();
         }
-
-
     }
+
+	void EditorInterface::showSpriteResource()
+	{
+		auto& spriteTable = m_ResourceManager->getTextureHolder()->getSpriteTable();
+		int sprite_count = spriteTable.size();
+		ImGuiStyle& style = ImGui::GetStyle();
+		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+		for (int n = 0; n < sprite_count; n++)
+		{
+			sf::Vector2u boo = m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]).getSize();
+			sf::Vector2u zoo = boo;
+			if(n < sprite_count-1)
+			{
+				zoo = m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n+1]).getSize();
+			}
+
+
+
+			sf::Vector2f sprite_size(boo.x, boo.y);
+			sprite_size = formatSize(sprite_size, 250);
+
+			sf::Vector2f next_sprite_size(zoo.x, zoo.y);
+			next_sprite_size = formatSize(next_sprite_size, 250);
+
+
+			ImVec2 button_size(sprite_size.x, sprite_size.y);
+
+
+			if(ImGui::ImageButton(m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]), button_size))
+			{
+			  // ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
+			}
+
+			float last_button_x2 = ImGui::GetItemRectMax().x;
+			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + next_sprite_size.x;
+			if (n + 1 < sprite_count && next_button_x2 < window_visible_x2)
+				ImGui::SameLine();
+		}
+	}
+
+	void EditorInterface::showAnimationResource()
+	{
+		auto& animationTable = m_ResourceManager->getAnimationHolder()->getAnimationTable();
+		int animationCount = animationTable.size();
+
+		ImGuiStyle& style = ImGui::GetStyle();
+		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+		for (int i = 0; i < animationCount; i++)
+		{
+			sf::Texture& texture = m_ResourceManager->getAnimationHolder()->getTexture(animationTable[i]);
+			sf::IntRect bound = m_ResourceManager->getAnimationHolder()->getAnimationBound(animationTable[i]);
+
+			return;
+			sf::Vector2u boo = sf::Vector2u(bound.width, bound.height);
+			sf::Vector2u zoo = boo;
+			/*if(n < animationCount-1)
+			{
+				sf::IntRect bound2 = m_ResourceManager->getAnimationHolder()->getAnimationBound(animationTable[n+1]);
+
+				zoo = sf::Vector2u(bound2.width, bound2.height);
+			}*/
+
+			//sf::Texture temp;
+			//temp.loadFromImage(texture.copyToImage(), bound);
+
+			sf::Vector2f sprite_size(boo.x, boo.y);
+			sprite_size = formatSize(sprite_size, 250);
+
+			sf::Vector2f next_sprite_size(zoo.x, zoo.y);
+			next_sprite_size = formatSize(next_sprite_size, 250);
+
+
+			ImVec2 button_size(sprite_size.x, sprite_size.y);
+
+
+			if(ImGui::ImageButton(texture, button_size))
+			{
+			  // ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
+			}
+
+			float last_button_x2 = ImGui::GetItemRectMax().x;
+			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + next_sprite_size.x;
+			if (i + 1 < animationCount && next_button_x2 < window_visible_x2)
+				ImGui::SameLine();
+		}
+	}
+
+
 
     void EditorInterface::showUtilityWindow()
     {
@@ -2001,29 +2040,28 @@ namespace  nero
 
     void EditorInterface::interfaceFirstDraw()
     {
-        if(!m_InterfaceFirstDraw)
+		if(m_InterfaceFirstDraw && !m_SetupDockspaceLayout)
         {
-            return;
-        }
 
-		//toolbar
-		ImGuiID rightDockspaceID		= m_Setting->getSetting("dockspace").getUInt("right-dockspace");
-		ImGuiID upperLeftDockspaceID	= m_Setting->getSetting("dockspace").getUInt("upper-left-dockspace");
-		ImGuiID lowerLeftDockspaceID	= m_Setting->getSetting("dockspace").getUInt("lower-left-dockspace");
+			//toolbar
+			ImGuiID rightDockspaceID		= m_Setting->getSetting("dockspace").getUInt("right-dockspace");
+			ImGuiID upperLeftDockspaceID	= m_Setting->getSetting("dockspace").getUInt("upper-left-dockspace");
+			ImGuiID lowerLeftDockspaceID	= m_Setting->getSetting("dockspace").getUInt("lower-left-dockspace");
 
-		auto right_node = ImGui::DockBuilderGetNode(rightDockspaceID);
-        right_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
+			auto right_node = ImGui::DockBuilderGetNode(rightDockspaceID);
+			right_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
 
-		auto upper_left_node = ImGui::DockBuilderGetNode(upperLeftDockspaceID);
-        upper_left_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
+			auto upper_left_node = ImGui::DockBuilderGetNode(upperLeftDockspaceID);
+			upper_left_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
 
-		auto left_bottom_node = ImGui::DockBuilderGetNode(lowerLeftDockspaceID);
-		left_bottom_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
+			auto left_bottom_node = ImGui::DockBuilderGetNode(lowerLeftDockspaceID);
+			left_bottom_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
 
-		ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
+			ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
 
-        //commit
-        m_InterfaceFirstDraw = false;
+			//commit
+			m_InterfaceFirstDraw = !m_InterfaceFirstDraw;
+		}
     }
 
 	void EditorInterface::showHelpWindow()

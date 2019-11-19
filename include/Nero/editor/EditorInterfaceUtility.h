@@ -22,6 +22,9 @@ namespace nero
 		private:
 			std::map<std::string, bool> m_SwitchMap;
 	};
+
+	sf::Vector2f formatSize(sf::Vector2f original, float size);
+
 }
 
 

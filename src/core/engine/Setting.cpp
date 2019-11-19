@@ -28,11 +28,11 @@ namespace nero
 
 		if(m_Directory != StringPool.BLANK)
 		{
-			file = getPath({m_Directory, setting + StringPool.SUFFIX_SETTING});
+			file = getPath({m_Directory, setting});
 		}
 		else
 		{
-			file = getPath({setting  + StringPool.SUFFIX_SETTING});
+			file = getPath({setting});
 		}
 
 		auto loaded = loadJson(file);
@@ -105,6 +105,11 @@ namespace nero
 	std::vector<std::string> Setting::getStringTable(const std::string& setting)  const
 	{
 		return m_Setting[setting];
+	}
+
+	void Setting::setSetting(const std::string& name, const Setting& setting)
+	{
+		m_Setting[name] = setting.m_Setting;
 	}
 
 }

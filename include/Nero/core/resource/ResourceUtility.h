@@ -1,0 +1,29 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
+#ifndef RESOURCEUTILITY_H
+#define RESOURCEUTILITY_H
+///////////////////////////HEADERS///////////////////////////
+
+/////////////////////////////////////////////////////////////
+namespace nero
+{
+	enum class ResourceType
+	{
+		None,
+		Texture,
+		Animation,
+		Sound,
+		Music,
+		Font,
+		Mesh,
+		Light,
+		Shape,
+		Particle,
+		Composite
+	};
+
+}
+
+#endif // RESOURCEUTILITY_H

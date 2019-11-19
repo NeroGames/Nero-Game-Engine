@@ -19,6 +19,7 @@ namespace nero
 		public: //utility
 			typedef std::shared_ptr<SoundHolder> Ptr;
 			using	ResourceHolder::loadDirectory;
+			using	ResourceHolder::loadFile;
 
         public:
 												SoundHolder();

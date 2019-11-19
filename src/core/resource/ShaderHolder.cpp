@@ -13,7 +13,7 @@ namespace nero
 {
     ShaderHolder::ShaderHolder()
     {
-		m_Configuration = loadJson("setting/resource_setting")["shader"];
+		m_Configuration = loadJson("setting/resource")["shader"];
 
         m_ShaderAvailable = sf::Shader::isAvailable();
     }

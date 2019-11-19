@@ -23,7 +23,7 @@ namespace nero
 		public: //utility
 			typedef std::shared_ptr<AnimationHolder>    Ptr;
 			using	ResourceHolder::loadDirectory;
-
+			using	ResourceHolder::loadFile;
 
         public:
                                                 AnimationHolder();
@@ -53,7 +53,6 @@ namespace nero
             std::map<std::string, std::unique_ptr<sf::Texture>>	                        m_TextureMap;
             std::map<std::string, std::map<std::string, std::vector<sf::IntRect>>>      m_SequenceMap;
             std::vector<std::string>                                                    m_AnimationTable;
-            nlohmann::json                                                              m_Configuration;
     };
 
 }
