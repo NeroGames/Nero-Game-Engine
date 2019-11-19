@@ -5,6 +5,8 @@
 #ifndef FONTHOLDER_H
 #define FONTHOLDER_H
 ///////////////////////////HEADERS//////////////////////////
+//Nero
+#include <Nero/core/resource/ResourceHolder.h>
 //SFML
 #include <SFML/Graphics/Font.hpp>
 //JSON
@@ -14,28 +16,33 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class FontHolder
+	class FontHolder : public ResourceHolder
     {
 		public: //utility
-			typedef std::shared_ptr<FontHolder>    Ptr;
+			typedef std::shared_ptr<FontHolder>		Ptr;
+			using	ResourceHolder::loadDirectory;
 
         public:
-                        FontHolder();
-            void        load();
+												FontHolder();
+												FontHolder(const Setting& setting);
+			virtual							   ~FontHolder()						override;
 
-                        sf::Font& getFont(std::string name);
-            const       sf::Font& getFont(std::string name) const;
-            const       sf::Font& getDefaultFont()          const;
+			virtual void						loadDirectory()						override;
+			virtual void						loadFile(const std::string& file)	override;
+			virtual void						destroy()							override;
 
-            const std::vector<std::string>& getFontTable()  const;
+												sf::Font& getFont(std::string name);
+			const								sf::Font& getFont(std::string name) const;
+			const								sf::Font& getDefaultFont()          const;
+
+			const std::vector<std::string>&		getFontTable()						const;
 
         private:
-            void    addFont(std::string name, std::unique_ptr<sf::Font> font);
+			void								addFont(std::string name, std::unique_ptr<sf::Font> font);
 
         private:
             std::map<std::string, std::unique_ptr<sf::Font>>     m_FontMap;
             std::vector<std::string>                             m_FontTable;
-            nlohmann::json                                       m_Configuration;
     };
 }
 #endif // FONTHOLDER_H

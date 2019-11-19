@@ -72,14 +72,12 @@ namespace nero
     void LoadingScreen::init()
     {
         //Build the logo sprite
-        m_LogoTexture.loadFromFile("startup/nero_logo.png");
-        m_LogoSprite.setTexture(m_LogoTexture);
+		m_LogoSprite.setTexture(m_TextureHolder->getTexture("nero_logo"));
         centerOrigin(m_LogoSprite);
         m_LogoSprite.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f, m_RenderWindow->getSize().y / 3.f));
         m_LogoSprite.setScale(sf::Vector2f(1.001f, 1.001f));
         //Build the copyrights sprite
-        m_CopyrightsTexture.loadFromFile("startup/copyrights.png");
-        m_CopyrightsSprite.setTexture(m_CopyrightsTexture);
+		m_CopyrightsSprite.setTexture(m_TextureHolder->getTexture("copyrights"));
         centerOrigin(m_CopyrightsSprite);
         m_CopyrightsSprite.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f, m_RenderWindow->getSize().y - 50.f));
         m_CopyrightsSprite.setScale(sf::Vector2f(1.001f, 1.001f));

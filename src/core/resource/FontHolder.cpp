@@ -14,9 +14,25 @@ namespace nero
 {
     FontHolder::FontHolder()
     {
-		m_Configuration = loadJson("setting/resource_setting")["font"];
 
     }
+
+	FontHolder::FontHolder(const Setting& setting) : ResourceHolder (setting)
+	{
+
+	}
+
+
+	FontHolder::~FontHolder()
+	{
+		destroy();
+	}
+
+	void FontHolder::destroy()
+	{
+
+	}
+
 
     void FontHolder::addFont(std::string name, std::unique_ptr<sf::Font> font)
     {
@@ -42,9 +58,9 @@ namespace nero
         return *found->second;
     }
 
-    const   sf::Font& FontHolder::getDefaultFont()  const
+	const sf::Font& FontHolder::getDefaultFont()  const
     {
-        return getFont(m_Configuration["default"].get<std::string>());
+		return getFont(m_Setting.getString("default"));
     }
 
     const std::vector<std::string>& FontHolder::getFontTable() const
@@ -52,40 +68,50 @@ namespace nero
         return m_FontTable;
     }
 
-    void FontHolder::load()
+	void FontHolder::loadFile(const std::string &file)
+	{
+		std::experimental::filesystem::path filePath(file);
+
+		std::unique_ptr<sf::Font> font = std::make_unique<sf::Font>();
+
+		const std::string name = filePath.filename().stem().string();
+
+		if (!font->loadFromFile(filePath.string()))
+		{
+			nero_log("failed to load font : " + name);
+			assert(false);
+		}
+
+		addFont(name, std::move(font));
+
+		nero_log("loaded : " + name);
+	}
+
+	void FontHolder::loadDirectory()
     {
-        const std::string folder_name = m_Configuration["folder"].get<std::string>();
+		if(m_SelectedDirectory == StringPool.BLANK)
+		{
+			nero_log("failed to load directory");
+			return;
+		}
 
-        nero_log("Resource path : " + folder_name);
+		nero_log("Resource path : " + m_SelectedDirectory);
 
-		using namespace  std::experimental::filesystem;;
-        path folder_path(folder_name);
+		std::experimental::filesystem::path folderPath(m_SelectedDirectory);
 
-        if(!exists(folder_name))
+		if(!directoryExist(m_SelectedDirectory))
         {
             nero_log("unable to load font resource");
-            nero_log("folder not found : " + folder_name);
+			nero_log("folder not found : " + m_SelectedDirectory);
             assert(false);
         }
 
-        directory_iterator it{folder_path};
-        while(it != directory_iterator{})
+		std::experimental::filesystem::directory_iterator it{folderPath};
+		while(it != std::experimental::filesystem::directory_iterator{})
         {
-            if(checkExtention(it->path().extension().string(), m_Configuration["extension"]))
+			if(checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
             {
-				std::unique_ptr<sf::Font> font = std::make_unique<sf::Font>();
-
-                const std::string name = it->path().filename().stem().string();
-
-                if (!font->loadFromFile(it->path().string()))
-                {
-                    nero_log("failed to load font : " + name);
-                    assert(false);
-                }
-
-                addFont(name, std::move(font));
-
-                nero_log("loaded : " + name);
+				loadFile(it->path().string());
             }
 
             it++;

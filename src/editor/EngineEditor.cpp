@@ -17,12 +17,13 @@ namespace  nero
 		,m_EditorStarted(false)
 		,m_EditorTextureHolder(nullptr)
 		,m_EditorSoundHolder(nullptr)
+		,m_Setting(nullptr)
 	{
 		//initialize log
 		initializeLogging();
 
 		//load window setting
-		loadWindowSetting();
+		loadEarlySetting();
 
 		//create the rendering window
 		createRenderWindow();
@@ -115,7 +116,7 @@ namespace  nero
 		nero_log("Lean more at https://nero-game.com/");
 	}
 
-	void EngineEditor::loadWindowSetting()
+	void EngineEditor::loadEarlySetting()
 	{
 		std::string file = getPath({"setting", "window_setting"}, StringPool.EXTENSION_JSON);
 
@@ -124,44 +125,53 @@ namespace  nero
 			saveFile(file, EditorSetting.windowSetting.dump(3));
 		}
 
-		m_SettingHolder.setDirectory("setting");
-		m_SettingHolder.loadSetting("window");
+		file = getPath({"setting", "resource_setting"}, StringPool.EXTENSION_JSON);
+		if(!fileExist(file))
+		{
+			//saveFile(file, EditorSetting.resourceSetting.dump(3));
+		}
+
+		m_Setting = std::make_shared<Setting>();
+
+		m_Setting->setDirectory("setting");
+		m_Setting->loadSetting("window");
+		m_Setting->loadSetting("resource");
 
 		#ifdef NERO_GAME_DEBUG
-			nero_log(m_SettingHolder.toString());
+			nero_log(m_Setting->toString());
 		#endif
 	}
 
 	void EngineEditor::createRenderWindow()
     {
 		//create render window
-		m_RenderWindow.create(sf::VideoMode(m_SettingHolder.getSetting("window").getUInt("width"), m_SettingHolder.getSetting("window").getUInt("height")), EngineConstant.ENGINE_WINDOW_TITLE, sf::Style::Default);
+		m_RenderWindow.create(sf::VideoMode(m_Setting->getSetting("window").getUInt("width"), m_Setting->getSetting("window").getUInt("height")), EngineConstant.ENGINE_WINDOW_TITLE, sf::Style::Default);
 		m_RenderWindow.setVerticalSyncEnabled(true);
 		m_RenderWindow.resetGLStates();
-		m_RenderWindow.setPosition(sf::Vector2i(m_SettingHolder.getSetting("window").getUInt("position_x"), m_SettingHolder.getSetting("window").getUInt("position_y")));
-		setWindowIcon(m_SettingHolder.getSetting("window").getString("icon_file"));
+		m_RenderWindow.setPosition(sf::Vector2i(m_Setting->getSetting("window").getUInt("position_x"), m_Setting->getSetting("window").getUInt("position_y")));
+		setWindowIcon(m_Setting->getSetting("window").getString("icon_file"));
 
 		//setup imgui
 		ImGui::SFML::Init(m_RenderWindow);
-    }
+	}
 
 	void EngineEditor::createLoadingScreen()
     {
 		//load resource
 			//font
-		FontHolder::Ptr	fontHolder = std::make_shared<FontHolder>();
+		FontHolder::Ptr	fontHolder = std::make_shared<FontHolder>(m_Setting->getSetting("resource").getSetting("font"));
 		fontHolder->loadDirectory("resource/startup/font");
 			//texture
-		TextureHolder::Ptr textureHolder = std::make_shared<TextureHolder>();
+		TextureHolder::Ptr textureHolder = std::make_shared<TextureHolder>(m_Setting->getSetting("resource").getSetting("texture"));
 		textureHolder->loadDirectory("resource/startup/texture");
 			//animation
-		AnimationHolder::Ptr animationHolder = std::make_shared<AnimationHolder>();
+		AnimationHolder::Ptr animationHolder = std::make_shared<AnimationHolder>(m_Setting->getSetting("resource").getSetting("animation"));
 		animationHolder->loadDirectory("resource/startup/animation");
 			//sound
-		SoundHolder::Ptr soundHolder = std::make_shared<SoundHolder>();
+		SoundHolder::Ptr soundHolder = std::make_shared<SoundHolder>(m_Setting->getSetting("resource").getSetting("sound"));
 		soundHolder->loadDirectory("resource/startup/sound");
 			//music
-		MusicHolder::Ptr musicHolder = std::make_shared<MusicHolder>();
+		MusicHolder::Ptr musicHolder = std::make_shared<MusicHolder>(m_Setting->getSetting("resource").getSetting("music"));
 		musicHolder->loadDirectory("resource/startup/music");
 
 		//build startup screen
@@ -194,7 +204,7 @@ namespace  nero
 		loadSetting();
 
 		//check everionment variable
-		checkEveniromentVariable();
+		checkEnvironmentVariable();
 
 		//load editor resource
 		loadEditorResource();
@@ -223,6 +233,8 @@ namespace  nero
 
 	void EngineEditor::buildDirectory()
 	{
+		nero_log("building engine editor directory");
+
 		//create directory
 		//createDirectory(getPath({"setting"})); //already created
 		createDirectory(getPath({"logging"}));
@@ -267,31 +279,33 @@ namespace  nero
 
 	void EngineEditor::loadSetting()
 	{
+		nero_log("loading setting");
+
 		//logging setting	: already loaded
 		//window setting	: already loaded
 
 		//recent project setting
-		m_SettingHolder.loadSetting("recent_project");
+		m_Setting->loadSetting("recent_project");
 
 		//list of workspace
-		m_SettingHolder.loadSetting("worksapce");
+		m_Setting->loadSetting("worksapce");
 
 		//dockspace ids
-		m_SettingHolder.loadSetting("docksapce");
-
-		//resource setting
-		m_SettingHolder.loadSetting("resource");
+		m_Setting->loadSetting("dockspace");
 	}
 
-	void EngineEditor::checkEveniromentVariable()
+	void EngineEditor::checkEnvironmentVariable()
 	{
+		nero_log("checking environment variable");
+
 		char* neroGameHome	= getenv("NERO_GAME_HOME");
 		char* visualStudio	= getenv("NERO_GAME_VISUAL_STUDIO");
 		char* qtCreator		= getenv("NERO_GAME_QT_CREATOR");
 
-		m_SettingHolder.setString("nero_game_home", (neroGameHome != nullptr) ? std::string(neroGameHome)	: StringPool.BLANK);
-		m_SettingHolder.setString("visual_studio", (visualStudio != nullptr) ? std::string(visualStudio) : StringPool.BLANK);
-		m_SettingHolder.setString("qt_creator", (qtCreator != nullptr) ? std::string(qtCreator) : StringPool.BLANK);
+
+		m_Setting->setString("nero_game_home", (neroGameHome != nullptr) ? std::string(neroGameHome)	: StringPool.BLANK);
+		m_Setting->setString("visual_studio", (visualStudio != nullptr) ? std::string(visualStudio) : StringPool.BLANK);
+		m_Setting->setString("qt_creator", (qtCreator != nullptr) ? std::string(qtCreator) : StringPool.BLANK);
 
 		neroGameHome	= nullptr;
 		visualStudio	= nullptr;
@@ -300,33 +314,45 @@ namespace  nero
 
 	void EngineEditor::loadEditorResource()
 	{
-		m_EditorTextureHolder = TextureHolder::Ptr(new TextureHolder());
+		nero_log("loading editor resource");
+
+		m_EditorTextureHolder = std::make_shared<TextureHolder>(m_Setting->getSetting("resource").getSetting("texture"));
 		m_EditorTextureHolder->loadDirectory("resource/editor/texture");
 
-		m_EditorSoundHolder = SoundHolder::Ptr(new SoundHolder());
+		m_EditorSoundHolder = std::make_shared<SoundHolder>(m_Setting->getSetting("resource").getSetting("sound"));
 		m_EditorSoundHolder->loadDirectory("resource/editor/sound");
 	}
 
 	void EngineEditor::loadStarterResourcePack()
 	{
+		nero_log("loading starter pack resource");
+
 		m_ResourceManager = ResourceManager::Ptr(new ResourceManager());
-		m_ResourceManager->loadDirectory("resource/starterpack");
+		//m_ResourceManager->loadDirectory("resource/starterpack");
 	}
 
 	void EngineEditor::loadWorkspaceResource()
 	{
-		if(m_SettingHolder.getSetting("recent_project").getString("last_workspace") != StringPool.BLANK)
+		nero_log("loading workspace resource");
+
+		if(m_Setting->getSetting("recent_project").getString("last_workspace") != StringPool.BLANK)
 		{
-			m_ResourceManager->loadDirectory(getPath({m_SettingHolder.getSetting("recent_project").getString("last_workspace"), "Resource"}));
+			//m_ResourceManager->loadDirectory(getPath({m_Setting->getSetting("recent_project").getString("last_workspace"), "Resource"}));
 		}
 	}
 
 	void EngineEditor::createEditorInterface()
 	{
+		nero_log("creating editor interface");
+
 		m_Interface = EditorInterface::Ptr(new EditorInterface(m_RenderWindow));
 
 		//let the interface access to the editor setting
-		m_Interface->setSettingHolder(m_SettingHolder);
+		m_Interface->setSetting(m_Setting);
+
+		m_Interface->setEditorTextureHolder(m_EditorTextureHolder);
+		m_Interface->setEditorSoundHolder(m_EditorSoundHolder);
+		m_Interface->setResourceManager(m_ResourceManager);
 
 		//set callback, allow interface to change window title
 		m_Interface->setCallbackWindowTitle([this](const std::string& title)
@@ -337,9 +363,11 @@ namespace  nero
 
 	void EngineEditor::openLastProject()
 	{
-		if(m_SettingHolder.getSetting("recent_project").getString("last_project") != StringPool.BLANK)
+		nero_log("opening last project");
+
+		if(m_Setting->getSetting("recent_project").getString("last_project") != StringPool.BLANK)
 		{
-			m_Interface->openProject(m_SettingHolder.getSetting("recent_project").getString("last_project"));
+			m_Interface->openProject(m_Setting->getSetting("recent_project").getString("last_project"));
 		}
 	}
 }

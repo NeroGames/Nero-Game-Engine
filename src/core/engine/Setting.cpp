@@ -49,27 +49,27 @@ namespace nero
 		return m_Setting.dump(3);
 	}
 
-	unsigned int Setting::getUInt(const std::string& setting)
+	unsigned int Setting::getUInt(const std::string& setting) const
 	{
 		return m_Setting[setting].get<unsigned int>();
 	}
 
-	int Setting::getInt(const std::string& setting)
+	int Setting::getInt(const std::string& setting) const
 	{
 		return m_Setting[setting].get<int>();
 	}
 
-	float Setting::getFloat(const std::string& setting)
+	float Setting::getFloat(const std::string& setting) const
 	{
 		return m_Setting[setting].get<float>();
 	}
 
-	std::string Setting::getString(const std::string& setting)
+	std::string Setting::getString(const std::string& setting) const
 	{
 		return m_Setting[setting].get<std::string>();
 	}
 
-	Setting Setting::getSetting(const std::string& setting)
+	Setting Setting::getSetting(const std::string& setting) const
 	{
 		Setting subSetting;
 
@@ -78,7 +78,7 @@ namespace nero
 		return subSetting;
 	}
 
-	bool Setting::getBool(const std::string& setting)
+	bool Setting::getBool(const std::string& setting) const
 	{
 		return m_Setting[setting].get<bool>();
 	}
@@ -101,5 +101,11 @@ namespace nero
 	{
 		m_Setting[setting] = value;
 	}
+
+	std::vector<std::string> Setting::getStringTable(const std::string& setting)  const
+	{
+		return m_Setting[setting];
+	}
+
 }
 

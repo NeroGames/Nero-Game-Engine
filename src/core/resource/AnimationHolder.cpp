@@ -12,90 +12,114 @@ namespace nero
 {
     AnimationHolder::AnimationHolder()
     {
-		m_Configuration = loadJson("setting/resource_setting")["animation"];
+
     }
 
-    void AnimationHolder::load()
+	AnimationHolder::AnimationHolder(const Setting& setting) : ResourceHolder (setting)
+	{
+
+	}
+
+	AnimationHolder::~AnimationHolder()
+	{
+		destroy();
+	}
+
+	void AnimationHolder::destroy()
+	{
+
+	}
+
+	void AnimationHolder::loadFile(const std::string& file)
+	{
+		std::experimental::filesystem::path filePath(file);
+
+		//Load the Texture
+		std::unique_ptr<sf::Texture> texture = std::make_unique<sf::Texture>();
+
+		const std::string textureName = filePath.filename().stem().string();
+
+		if (!texture->loadFromFile(filePath.string()))
+		{
+			nero_log("failed to load texture : " + textureName);
+
+			return;
+		}
+
+		//Get the JSON helper file
+		std::string jsonHelper  = replaceFileExtension(filePath.string(), "json");
+		if (!fileExist(jsonHelper))
+		{
+			nero_log("failed to load animation resource");
+			nero_log("file not found : " + jsonHelper);
+			return;
+		}
+
+		nlohmann::json helper = loadJson(jsonHelper);
+
+		if (helper.find("type") == helper.end()) //Texture packer animation
+		{
+			nlohmann::json frame_table = helper["frames"];
+
+			for (auto& frame : frame_table)
+			{
+				std::string frameName                   = removeFileExtension(frame["filename"].get<std::string>());
+				std::vector<std::string> splitResult    = splitString(frameName, '/');
+
+				std::string sequenceName    = splitResult[0];
+				frameName                   = splitResult[1];
+
+				int rectLeft                = frame["frame"]["x"];
+				int rectTop                 = frame["frame"]["y"];
+				int rectWidth               = frame["frame"]["w"];
+				int rectHeight              = frame["frame"]["h"];
+
+				sf::IntRect frameBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
+
+				if(m_SequenceMap.find(textureName) == m_SequenceMap.end())
+				{
+					m_SequenceMap[textureName][sequenceName] = std::vector<sf::IntRect>();
+				}
+
+				//nero_log("loaded : " + textureName + "-" + sequenceName + " " + _s(frameBound.width) + " " + _s(frameBound.height));
+				m_SequenceMap[textureName][sequenceName].push_back(frameBound);
+			}
+		}
+
+		m_AnimationTable.push_back(textureName);
+		addTexture(textureName, std::move(texture));
+	}
+
+
+	void AnimationHolder::loadDirectory()
     {
-        const std::string folder_name = m_Configuration["folder"].get<std::string>();
+		if(m_SelectedDirectory == StringPool.BLANK)
+		{
+			nero_log("failed to load directory");
+			return;
+		}
 
-        nero_log("Resource path : " + folder_name);
+		nero_log("Resource path : " + m_SelectedDirectory);
 
-		using namespace  std::experimental::filesystem;;
-		path folder_path(folder_name);
+		std::experimental::filesystem::path folderPath(m_SelectedDirectory);
 
-        if(!exists(folder_name))
+		if(!directoryExist(m_SelectedDirectory))
         {
             nero_log("failed to load animation resource");
-            nero_log("folder not found : " + folder_name);
+			nero_log("folder not found : " + m_SelectedDirectory);
             return;
         }
 
-        directory_iterator it{folder_path};
-        while(it != directory_iterator{})
+		std::experimental::filesystem::directory_iterator it{folderPath};
+		while(it != std::experimental::filesystem::directory_iterator{})
         {
             if(checkExtention(it->path().extension().string(), m_Configuration["extension"]))
             {
-                //Load the Texture
-				std::unique_ptr<sf::Texture> texture = std::make_unique<sf::Texture>();
+				loadFile(it->path().string());
 
-                const std::string textureName = it->path().filename().stem().string();
-
-                if (!texture->loadFromFile(it->path().string()))
-				{
-                    nero_log("failed to load texture : " + textureName);
-                    it++;
-                    continue;
-                }
-
-                //Get the JSON helper file
-                std::string jsonHelper  = replaceFileExtension(it->path().string(), "json");
-                if (!exists(jsonHelper))
-                {
-                    nero_log("failed to load animation resource");
-                    nero_log("file not found : " + jsonHelper);
-                    it++;
-                    continue;
-                }
-
-                nlohmann::json helper = loadJson(jsonHelper);
-
-                if (helper.find("type") == helper.end()) //Texture packer animation
-                {
-                    nlohmann::json frame_table = helper["frames"];
-
-                    for (auto& frame : frame_table)
-                    {
-                        std::string frameName                   = removeFileExtension(frame["filename"].get<std::string>());
-                        std::vector<std::string> splitResult    = splitString(frameName, '/');
-
-                        std::string sequenceName    = splitResult[0];
-                        frameName                   = splitResult[1];
-
-                        int rectLeft                = frame["frame"]["x"];
-                        int rectTop                 = frame["frame"]["y"];
-                        int rectWidth               = frame["frame"]["w"];
-                        int rectHeight              = frame["frame"]["h"];
-
-                        sf::IntRect frameBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
-
-                        if(m_SequenceMap.find(textureName) == m_SequenceMap.end())
-                        {
-                            m_SequenceMap[textureName][sequenceName] = std::vector<sf::IntRect>();
-                        }
-
-                        //nero_log("loaded : " + textureName + "-" + sequenceName + " " + _s(frameBound.width) + " " + _s(frameBound.height));
-                        m_SequenceMap[textureName][sequenceName].push_back(frameBound);
-                    }
-                }
-
-                m_AnimationTable.push_back(textureName);
-                addTexture(textureName, std::move(texture));
-            }
-
-            it++;
+				it++;
+			}
         }
-
     }
 
     void AnimationHolder::addTexture(std::string textureName, std::unique_ptr<sf::Texture> texture)

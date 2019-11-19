@@ -28,7 +28,7 @@ namespace nero
 
 		public: //method to override
             virtual void                    init()                                      = 0;
-            virtual void                    handleEvent(sf::Event& event)               = 0;
+			virtual void                    handleEvent(sf::Event& event)               = 0;
             virtual void                    update(const sf::Time& timeStep)            = 0;
             virtual void                    render()                                    = 0;
 			virtual const sf::Color         getCanvasColor()	const					= 0;

@@ -12,49 +12,73 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    MusicHolder::MusicHolder()
+	MusicHolder::MusicHolder()
     {
-		m_Configuration = loadJson("setting/resource_setting")["music"];
 
     }
 
-    void MusicHolder::load()
+	MusicHolder::MusicHolder(const Setting& setting) : ResourceHolder (setting)
+	{
+
+	}
+
+	MusicHolder::~MusicHolder()
+	{
+		destroy();
+	}
+
+	void MusicHolder::destroy()
+	{
+
+	}
+
+	void MusicHolder::loadFile(const std::string &file)
+	{
+		std::experimental::filesystem::path filePath(file);
+
+		std::unique_ptr<sf::Music> music = std::make_unique<sf::Music>();
+
+		const std::string musicName = filePath.filename().stem().string();
+
+		if (!music->openFromFile(filePath.string()))
+		{
+			nero_log("failed to load music : " + musicName);
+			return;
+		}
+
+		music->setLoop(true);
+
+		addMusic(musicName, std::move(music));
+		m_MusicTable.push_back(musicName);
+
+		nero_log("loaded : " + musicName);
+	}
+
+	void MusicHolder::loadDirectory()
     {
-        const std::string folder_name = m_Configuration["folder"].get<std::string>();
+		if(m_SelectedDirectory == StringPool.BLANK)
+		{
+			nero_log("failed to load directory");
+			return;
+		}
 
-        nero_log("Resource path : " + folder_name);
+		nero_log("Resource path : " + m_SelectedDirectory);
 
-		using namespace  std::experimental::filesystem;;
-        path folder_path(folder_name);
+		std::experimental::filesystem::path folderPath(m_SelectedDirectory);
 
-        if(!exists(folder_name))
+		if(!fileExist(m_SelectedDirectory))
         {
             nero_log("unable to load music resource");
-            nero_log("folder not found : " + folder_name);
-            assert(false);
-        }
+			nero_log("folder not found : " + m_SelectedDirectory);
+			return;
+		}
 
-        directory_iterator it{folder_path};
-        while(it != directory_iterator{})
+		std::experimental::filesystem::directory_iterator it{folderPath};
+		while(it != std::experimental::filesystem::directory_iterator{})
         {
-            if(checkExtention(it->path().extension().string(), m_Configuration["extension"]))
+			if(checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
             {
-				std::unique_ptr<sf::Music> music = std::make_unique<sf::Music>();
-
-                const std::string musicName = it->path().filename().stem().string();
-
-                if (!music->openFromFile(it->path().string()))
-                {
-                    nero_log("failed to load music : " + musicName);
-                    continue;
-                }
-
-                music->setLoop(true);
-
-                addMusic(musicName, std::move(music));
-                m_MusicTable.push_back(musicName);
-
-                nero_log("loaded : " + musicName);
+				loadFile(it->path().string());
             }
 
             it++;

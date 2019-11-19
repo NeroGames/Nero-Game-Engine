@@ -5,6 +5,8 @@
 #ifndef SCRIPTHOLDER_H
 #define SCRIPTHOLDER_H
 ///////////////////////////HEADERS//////////////////////////
+//Nero
+#include <Nero/core/resource/ResourceHolder.h>
 //JSON
 #include <json/json.hpp>
 //STD
@@ -13,10 +15,11 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ScriptHolder
+	class ScriptHolder : public ResourceHolder
     {
 		public: //utility
 			typedef std::shared_ptr<ScriptHolder>    Ptr;
+			using ResourceHolder::loadDirectory;
 
         public:
                         ScriptHolder();

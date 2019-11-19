@@ -5,6 +5,8 @@
 #ifndef SHADERHOLDER_H
 #define SHADERHOLDER_H
 ///////////////////////////HEADERS//////////////////////////
+//Nero
+#include <Nero/core/resource/ResourceHolder.h>
 //SFML
 #include <SFML/Graphics/Shader.hpp>
 //JSON
@@ -16,10 +18,12 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ShaderHolder
+	class ShaderHolder : public ResourceHolder
     {
 		public: //utility
 			typedef std::shared_ptr<ShaderHolder>    Ptr;
+			using ResourceHolder::loadDirectory;
+
 
         public:
                         ShaderHolder();

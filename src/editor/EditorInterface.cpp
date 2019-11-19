@@ -17,7 +17,7 @@ namespace  nero
     EditorInterface::EditorInterface(sf::RenderWindow& window):
 		 m_RenderWindow(window)
 		,m_InterfaceFirstDraw(true)
-		,m_ResourceManager()
+		,m_EditorTextureHolder(nullptr)
 		////////////////////////Project and Workspace////////////////////////
 		,m_WorksapceStatus(0)
 		,m_InputWorksapceFolder("")
@@ -33,9 +33,9 @@ namespace  nero
 		,g_Context(nullptr)
 		,m_BuildDockspaceLayout(true)
 		,m_SetupDockspaceLayout(true)
-		,m_TextureHolder()
 		,m_ProjectManagerTabBarSwitch()
 		,m_BottomDockspaceTabBarSwitch()
+		,m_Setting(nullptr)
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -52,11 +52,6 @@ namespace  nero
         //old = std::cout.rdbuf(buffer.rdbuf());
 
 		g_Context = ax::NodeEditor::CreateEditor();
-
-		m_ResourceManager.texture.load();
-
-		m_TextureHolder.setResourceDirectory("resource/texture");
-		m_TextureHolder.load();
 
 		m_ProjectManagerTabBarSwitch.registerTabTable(
 		{
@@ -226,10 +221,10 @@ namespace  nero
 			sf::Vector2i windowPosition = m_RenderWindow.getPosition();
 
 			auto loaded = loadJson(file, true);
-			loaded["window_width"]		= windowSize.x;
-			loaded["window_height"]		= windowSize.y;
-			loaded["window_position_x"] = windowPosition.x;
-			loaded["window_position_y"] = windowPosition.y;
+			loaded["width"]		= windowSize.x;
+			loaded["height"]		= windowSize.y;
+			loaded["position_x"] = windowPosition.x;
+			loaded["position_y"] = windowPosition.y;
 
 			saveFile(file, loaded.dump(3), true);
 		}
@@ -336,7 +331,7 @@ namespace  nero
 				//lower left dockspace
 				ImGuiID lowerLeftDockspaceID		= dockspaceTable["lower-left-dockspace"];
 				ImGuiDockNode* lowerLeftDockNode	= ImGui::DockBuilderGetNode(lowerLeftDockspaceID);
-				lowerLeftDockNode->SizeRef.y = 580;
+				lowerLeftDockNode->SizeRef.y = 400;
 				//right dockspace
 				ImGuiID rightDockspaceID			= dockspaceTable["right-dockspace"];
 				ImGuiDockNode* rightDockNode		= ImGui::DockBuilderGetNode(rightDockspaceID);
@@ -445,7 +440,7 @@ namespace  nero
              ImGui::SameLine(width - 72.f);
 
 
-			 if(ImGui::ImageButton(m_TextureHolder.getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
+			 if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
              {
 				ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
              }
@@ -499,7 +494,7 @@ namespace  nero
 
             //Panel 1 : Engine Banner
 			ImGui::BeginChild("##project_manager_panel_1", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.33f, winsow_size.y - 20.f));
-				ImGui::Image(m_TextureHolder.getTexture("editor_project_manager"));
+				ImGui::Image(m_EditorTextureHolder->getTexture("editor_project_manager"));
             ImGui::EndChild();
 
             //Panel 2 : Window tabs
@@ -577,7 +572,7 @@ namespace  nero
 		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 		for (int n = 0; n < buttons_count; n++)
 		{
-			ImGui::Image(m_TextureHolder.getTexture("recent_project_" + toString(n+1)));
+			ImGui::Image(m_EditorTextureHolder->getTexture("recent_project_" + toString(n+1)));
 			ImGui::SameLine(0.f, 5.f);
 			std::string project_name =  wrapString("Oblivion the Great Journey", 17);
 			ImGui::PushID(n);
@@ -607,14 +602,14 @@ namespace  nero
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.f, 0.f, 0.f, 0.f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.f, 0.f, 0.f, 0.f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.f, 0.f, 0.f, 0.f));
-		if(ImGui::ImageButton(m_TextureHolder.getTexture("recent_project_create_project")))
+		if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("recent_project_create_project")))
 		{
 			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_CREATE_PROJECT);
 		}
 
 		ImGui::SameLine(0.f, 50.f);
 
-		if(ImGui::ImageButton(m_TextureHolder.getTexture("recent_project_open_project")))
+		if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("recent_project_open_project")))
 		{
 			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_OPEN_PROJECT);
 		}
@@ -1551,18 +1546,18 @@ namespace  nero
                 ImGui::Separator();
 
 
-				auto& spriteTable = m_ResourceManager.texture.getSpriteTable();
+				auto& spriteTable = m_ResourceManager->getTextureHolder()->getSpriteTable();
 				int sprite_count = spriteTable.size();
 				ImGuiStyle& style = ImGui::GetStyle();
 				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
 				for (int n = 0; n < sprite_count; n++)
 				{
-					sf::Vector2u boo = m_ResourceManager.texture.getSpriteTexture(spriteTable[n]).getSize();
+					sf::Vector2u boo = m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]).getSize();
 					sf::Vector2u zoo = boo;
 					if(n < sprite_count-1)
 					{
-						zoo = m_ResourceManager.texture.getSpriteTexture(spriteTable[n+1]).getSize();
+						zoo = m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n+1]).getSize();
 					}
 
 					std::function<sf::Vector2f(sf::Vector2f, float)> loo = [](sf::Vector2f koo, float size){
@@ -1593,7 +1588,7 @@ namespace  nero
 					ImVec2 button_size(sprite_size.x, sprite_size.y);
 
 
-					if(ImGui::ImageButton(m_ResourceManager.texture.getSpriteTexture(spriteTable[n]), button_size))
+					if(ImGui::ImageButton(m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]), button_size))
 					{
 					  // ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
 					}
@@ -1607,7 +1602,7 @@ namespace  nero
 
 				/*for(std::string sprite : spriteTable)
 				{
-					if(ImGui::ImageButton(m_ResourceManager.texture.getSpriteTexture(sprite)))
+					if(ImGui::ImageButton(m_EditorTextureHolder->getSpriteTexture(sprite)))
 					{
 					   ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
 					}
@@ -2011,15 +2006,19 @@ namespace  nero
             return;
         }
 
-		/*auto right_node = ImGui::DockBuilderGetNode(dock_id_right);
+		//toolbar
+		ImGuiID rightDockspaceID		= m_Setting->getSetting("dockspace").getUInt("right-dockspace");
+		ImGuiID upperLeftDockspaceID	= m_Setting->getSetting("dockspace").getUInt("upper-left-dockspace");
+		ImGuiID lowerLeftDockspaceID	= m_Setting->getSetting("dockspace").getUInt("lower-left-dockspace");
+
+		auto right_node = ImGui::DockBuilderGetNode(rightDockspaceID);
         right_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
 
-		auto upper_left_node = ImGui::DockBuilderGetNode(dock_id_upper_left);
+		auto upper_left_node = ImGui::DockBuilderGetNode(upperLeftDockspaceID);
         upper_left_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
 
-		auto left_bottom_node = ImGui::DockBuilderGetNode(dock_id_left_bottom);
-		left_bottom_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;*/
-
+		auto left_bottom_node = ImGui::DockBuilderGetNode(lowerLeftDockspaceID);
+		left_bottom_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
 
 		ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
 
@@ -2107,5 +2106,26 @@ namespace  nero
 		ImGui::PopStyleColor(3);
 		ImGui::PopStyleVar();
 	}
+
+	void EditorInterface::setSetting(Setting::Ptr setting)
+	{
+		m_Setting = setting;
+	}
+
+	void EditorInterface::setEditorTextureHolder(TextureHolder::Ptr textureHolder)
+	{
+		m_EditorTextureHolder = textureHolder;
+	}
+
+	void EditorInterface::setEditorSoundHolder(SoundHolder::Ptr soundHolder)
+	{
+		m_EditorSoundHolder = soundHolder;
+	}
+
+	void EditorInterface::setResourceManager(ResourceManager::Ptr resourceManager)
+	{
+		m_ResourceManager = resourceManager;
+	}
+
 
 }

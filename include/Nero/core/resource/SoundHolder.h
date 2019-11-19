@@ -5,6 +5,8 @@
 #ifndef SOUNDHOLDER_H
 #define SOUNDHOLDER_H
 ///////////////////////////HEADERS//////////////////////////
+//Nero
+#include <Nero/core/resource/ResourceHolder.h>
 //SFML
 #include <SFML/Audio/SoundBuffer.hpp>
 //JSON
@@ -12,27 +14,31 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class SoundHolder
+	class SoundHolder : public ResourceHolder
     {
 		public: //utility
-			typedef std::shared_ptr<SoundHolder>    Ptr;
+			typedef std::shared_ptr<SoundHolder> Ptr;
+			using	ResourceHolder::loadDirectory;
 
         public:
-                    SoundHolder();
-            void    load();
+												SoundHolder();
+												SoundHolder(const Setting& setting);
+			virtual							   ~SoundHolder()						override;
 
-                    sf::SoundBuffer& getSoundBuffer(std::string name);
-            const   sf::SoundBuffer& getSoundBuffer(std::string name)   const;
+			virtual void						loadDirectory()						override;
+			virtual void						loadFile(const std::string& file)	override;
+			virtual void						destroy()							override;
 
-            const std::vector<std::string>& getSoundBufferTable()       const;
+				  sf::SoundBuffer&				getSoundBuffer(std::string name);
+			const sf::SoundBuffer&				getSoundBuffer(std::string name)	const;
+			const std::vector<std::string>&		getSoundBufferTable()				const;
 
         private:
-            void    addSoundBuffer(std::string name, std::unique_ptr<sf::SoundBuffer> soundBuffer);
+			void								addSoundBuffer(std::string name, std::unique_ptr<sf::SoundBuffer> soundBuffer);
 
         private:
             std::map<std::string, std::unique_ptr<sf::SoundBuffer>>     m_SoundBufferMap;
             std::vector<std::string>                                    m_SoundBufferTable;
-            nlohmann::json                                              m_Configuration;
     };
 }
 #endif // SOUNDHOLDER_H

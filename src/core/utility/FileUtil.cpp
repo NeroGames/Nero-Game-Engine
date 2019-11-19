@@ -180,13 +180,13 @@ namespace nero
        return filename.substr(0, lastdot);
    }
 
-	bool checkExtention(const std::string& extention, nlohmann::json extentionTab)
+	bool checkExtention(const std::string& extention, const std::vector<std::string>& extentionTable)
 	{
 	   bool result = false;
 
-	   for (auto& ext : extentionTab)
+	   for (const std::string& ext : extentionTable)
 	   {
-		   if(extention == "." + ext.get<std::string>())
+		   if(extention == "." + ext)
 		   {
 			   result = true;
 			   break;

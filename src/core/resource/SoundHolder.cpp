@@ -13,8 +13,24 @@ namespace nero
 {
     SoundHolder::SoundHolder()
     {
-		m_Configuration = loadJson("setting/resource_setting")["sound"];
+
     }
+
+	SoundHolder::SoundHolder(const Setting& setting) : ResourceHolder (setting)
+	{
+
+	}
+
+
+	SoundHolder::~SoundHolder()
+	{
+		destroy();
+	};
+
+	void SoundHolder::destroy()
+	{
+
+	}
 
     void SoundHolder::addSoundBuffer(std::string name, std::unique_ptr<sf::SoundBuffer> soundBuffer)
     {
@@ -45,41 +61,51 @@ namespace nero
         return m_SoundBufferTable;
     }
 
-    void SoundHolder::load()
+	void SoundHolder::loadFile(const std::string& file)
+	{
+		std::experimental::filesystem::path filePath(file);
+
+		std::unique_ptr<sf::SoundBuffer> soundBuffer = std::make_unique<sf::SoundBuffer>();
+
+		const std::string name = filePath.filename().stem().string();
+
+		if (!soundBuffer->loadFromFile(filePath.string()))
+		{
+			nero_log("unable to load sound : " + name);
+			return;
+		}
+
+		addSoundBuffer(name, std::move(soundBuffer));
+
+		nero_log("loaded : " + name);
+	}
+
+
+	void SoundHolder::loadDirectory()
     {
-        const std::string folder_name = m_Configuration["folder"].get<std::string>();
+		if(m_SelectedDirectory == StringPool.BLANK)
+		{
+			nero_log("failed to load directory");
+			return;
+		}
 
-        nero_log("resource path : " + folder_name);
+		nero_log("resource path : " + m_SelectedDirectory);
 
-		using namespace  std::experimental::filesystem;;
-        path folder_path(folder_name);
+		std::experimental::filesystem::path folderPath(m_SelectedDirectory);
 
-        if(!exists(folder_name))
+		if(!directoryExist(m_SelectedDirectory))
         {
             nero_log("unable to load sound resource");
-            nero_log("folder not found : " + folder_name);
+			nero_log("folder not found : " + m_SelectedDirectory);
             assert(false);
         }
 
-        directory_iterator it{folder_path};
-        while(it != directory_iterator{})
+		std::experimental::filesystem::directory_iterator it{folderPath};
+		while(it != std::experimental::filesystem::directory_iterator{})
         {
-            if(checkExtention(it->path().extension().string(), m_Configuration["extension"]))
+			if(checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
             {
-
-				std::unique_ptr<sf::SoundBuffer> soundBuffer = std::make_unique<sf::SoundBuffer>();
-
-                const std::string name = it->path().filename().stem().string();
-
-                if (!soundBuffer->loadFromFile(it->path().string()))
-                {
-                    nero_log("unable to load sound : " + name);
-                    assert(false);
-                }
-
-                addSoundBuffer(name, std::move(soundBuffer));
-
-                nero_log("loaded : " + name);
+				loadFile(it->path().string());
             }
 
             it++;

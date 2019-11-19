@@ -5,25 +5,33 @@
 #ifndef TEXTUREHOLDER_H
 #define TEXTUREHOLDER_H
 ///////////////////////////HEADERS//////////////////////////
+//Nero
+#include <Nero/core/resource/ResourceHolder.h>
 //SFML
 #include <SFML/Graphics/Texture.hpp>
 //JSON
 #include <json/json.hpp>
 //STD
 #include <memory>
-#include <map>
 #include <vector>
+#include <map>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class TextureHolder
+	class TextureHolder : public ResourceHolder
     {
 		public: //utility
 			typedef std::shared_ptr<TextureHolder>    Ptr;
+			using ResourceHolder::loadDirectory;
 
         public:
                                                 TextureHolder();
-            void						        load();
+												TextureHolder(const Setting& setting);
+			virtual							   ~TextureHolder() override;
+
+			virtual void						loadDirectory() override;
+			virtual void						loadFile(const std::string& file) override;
+			virtual void						destroy() override;
 
             sf::Texture&				        getTexture(std::string textureName);
             const sf::Texture&			        getTexture(std::string textureName)         const;
@@ -43,8 +51,6 @@ namespace nero
             std::map<std::string, std::unique_ptr<sf::Texture>>	            m_TextureMap;
             std::map<std::string, std::map<std::string, sf::IntRect>>       m_SpriteMap;
             std::vector<std::string>                                        m_SpriteTable;
-            nlohmann::json                                                  m_Configuration;
-			std::string														m_ResourceDictory;
     };
 }
 #endif // TEXTUREHOLDER_H

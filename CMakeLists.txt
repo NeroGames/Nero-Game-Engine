@@ -31,6 +31,7 @@ add_definitions(-DBOOST_ALL_NO_LIB)
 add_definitions(-DBOOST_DLL_USE_STD_FS)
 add_definitions(-DSOL_ALL_SAFETIES_ON=1)
 add_definitions(-DSOL_USING_CXX_LUA)
+add_definitions(-DNERO_GAME_DEBUG)
 
 
 # Get the engine source files

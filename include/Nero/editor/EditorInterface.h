@@ -87,7 +87,6 @@ namespace nero
         private:
 			friend class						EngineEditor;
 			sf::RenderWindow&					m_RenderWindow;
-			TextureHolder						m_TextureHolder;
 			//Docksapce
 			ImGuiID								m_DockspaceID;
 			bool								m_BuildDockspaceLayout;
@@ -195,14 +194,24 @@ namespace nero
             void                        editProject();
             void                        reloadProject();
 
+			void						setSetting(Setting::Ptr setting);
+
             //
             GameProject::Ptr            m_GameProject;
             AdvancedScene::Ptr          m_AdvancedScene;
 
 			ax::NodeEditor::EditorContext*	g_Context;
 
-			ResourceManager		m_ResourceManager;
-    };
+			TextureHolder::Ptr			m_EditorTextureHolder;
+			SoundHolder::Ptr			m_EditorSoundHolder;
+			ResourceManager::Ptr		m_ResourceManager;
+
+			Setting::Ptr				m_Setting;
+
+			void		setEditorTextureHolder(TextureHolder::Ptr textureHolder);
+			void		setEditorSoundHolder(SoundHolder::Ptr soundHolder);
+			void		setResourceManager(ResourceManager::Ptr resourceManager);
+	};
 
 }
 

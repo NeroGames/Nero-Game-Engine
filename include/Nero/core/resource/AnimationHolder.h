@@ -5,6 +5,8 @@
 #ifndef ANIMATIONHOLDER_H
 #define ANIMATIONHOLDER_H
 ///////////////////////////HEADERS//////////////////////////
+//Nero
+#include <Nero/core/resource/ResourceHolder.h>
 //SFML
 #include <SFML/Graphics/Texture.hpp>
 //JSON
@@ -16,14 +18,22 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class AnimationHolder
+	class AnimationHolder : public ResourceHolder
     {
 		public: //utility
 			typedef std::shared_ptr<AnimationHolder>    Ptr;
+			using	ResourceHolder::loadDirectory;
+
 
         public:
                                                 AnimationHolder();
-            void                                load();
+												AnimationHolder(const Setting& setting);
+			virtual							   ~AnimationHolder()					override;
+
+			virtual void						loadDirectory()						override;
+			virtual void						loadFile(const std::string& file)	override;
+			virtual void						destroy()							override;
+
 
             sf::Texture&				        getTexture(std::string animationName);
             const sf::Texture&			        getTexture(std::string animationName) const;

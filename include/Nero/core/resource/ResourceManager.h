@@ -25,7 +25,10 @@ namespace nero
 										ResourceManager();
 									   ~ResourceManager();
 
-			void						addDirectory();
+			void						setSetting(const Setting& setting);
+			void						loadDirectory(const std::string& directory);
+			void						loadDirectory();
+			void						addDirectory(const Setting& setting, bool autoSelect = false);
 			void						loadResource();
 			void						reloadResource();
 			void						clearResource();

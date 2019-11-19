@@ -31,14 +31,14 @@ namespace nero
 			void                    createRenderWindow();
 			void					createLoadingScreen();
 			void					startBackgroundTask();
-			void					loadWindowSetting();
+			void					loadEarlySetting();
 			void					initializeLogging();
 			//destroy
 			void					destroyEditor();
 			//background task
 			void					buildDirectory();
 			void					loadSetting();
-			void					checkEveniromentVariable();
+			void					checkEnvironmentVariable();
 			void					loadEditorResource();
 			void					loadStarterResourcePack();
 			void					loadWorkspaceResource();
@@ -59,7 +59,7 @@ namespace nero
 			TextureHolder::Ptr		m_EditorTextureHolder;
 			SoundHolder::Ptr		m_EditorSoundHolder;
 			//
-			Setting					m_SettingHolder;
+			Setting::Ptr			m_Setting;
     };
 }
 

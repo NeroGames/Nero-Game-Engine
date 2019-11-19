@@ -11,114 +11,136 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	TextureHolder::TextureHolder():
-		m_ResourceDictory(StringPool.BLANK)
+	TextureHolder::TextureHolder()
     {
-		m_Configuration = loadJson("setting/resource_setting")["texture"];
-		m_ResourceDictory = m_Configuration["folder"].get<std::string>();
 
     }
 
-    void TextureHolder::load()
+	TextureHolder::TextureHolder(const Setting& setting) : ResourceHolder(setting)
+	{
+
+	}
+
+
+	TextureHolder::~TextureHolder()
+	{
+		destroy();
+	}
+
+	void TextureHolder::destroy()
+	{
+
+	}
+
+	void TextureHolder::loadFile(const std::string& file)
+	{
+		std::experimental::filesystem::path filePath(file);
+
+		std::unique_ptr<sf::Texture> texture = std::make_unique<sf::Texture>();
+
+		const std::string textureName = filePath.filename().stem().string();
+
+		if (!texture->loadFromFile(filePath.string()))
+		{
+			nero_log("failed to load texture : " + textureName);
+
+			return;
+		}
+
+		//Read the .txt file to retrieve sprite bound
+		std::string txtHelper   = replaceFileExtension(filePath.string(), "txt");
+		std::string jsonHelper  = replaceFileExtension(filePath.string(), "json");
+
+		if(fileExist(jsonHelper))
+		{
+			nlohmann::json helper = loadJson(jsonHelper);
+
+			nlohmann::json frame_table = helper["frames"];
+
+			for (auto& frame : frame_table)
+			{
+				std::string spriteName      = removeFileExtension(frame["filename"].get<std::string>());
+				int rectLeft                = frame["frame"]["x"];
+				int rectTop                 = frame["frame"]["y"];
+				int rectWidth               = frame["frame"]["w"];
+				int rectHeight              = frame["frame"]["h"];
+
+				sf::IntRect spriteBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
+
+				addSpriteBound(textureName, spriteName, spriteBound);
+				m_SpriteTable.push_back(spriteName);
+
+				nero_log("loaded : " + spriteName);
+			}
+		}
+		else if (fileExist(txtHelper))// .txt helper file exist, the texture get several sprites
+		{
+			std::ifstream inStream(txtHelper);
+			//Split each line to retrieve the necessary information
+			const std::string separatorString = m_Setting.getString("separator");
+			char separator = separatorString[0];
+			std::string line;
+
+			while (std::getline(inStream, line))
+			{
+				std::vector<std::string> sprite = splitString(line, separator);
+
+				std::string spriteName      = sprite[0];
+				int rectLeft                = std::stoi(sprite[1]);
+				int rectTop                 = std::stoi(sprite[2]);
+				int rectWidth               = std::stoi(sprite[3]);
+				int rectHeight              = std::stoi(sprite[4]);
+
+				sf::IntRect spriteBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
+
+				addSpriteBound(textureName, spriteName, spriteBound);
+				m_SpriteTable.push_back(spriteName);
+
+				nero_log("loaded : " + spriteName);
+			}
+		}
+		else //helper file not exist, texture is the sprite
+		{
+			sf::IntRect spriteBound = sf::IntRect(0, 0, texture->getSize().x, texture->getSize().y);
+
+			addSpriteBound(textureName, textureName, spriteBound);
+			m_SpriteTable.push_back(textureName);
+
+			nero_log("loaded : " + textureName);
+		}
+
+		//Insert the texture in m_TextureMap
+		addTexture(textureName, std::move(texture));
+	}
+
+	void TextureHolder::loadDirectory()
     {
-		const std::string folder_name = m_ResourceDictory;
+		if(m_SelectedDirectory == StringPool.BLANK)
+		{
+			nero_log("failed to load directory");
+			return;
+		}
 
-        nero_log("Resource path : " + folder_name);
+		nero_log("loading all texture in directory : " + m_SelectedDirectory);
 
-		using namespace  std::experimental::filesystem;;
-        path folder_path(folder_name);
+		std::experimental::filesystem::path directoryPath(m_SelectedDirectory);
 
-        if(!exists(folder_name))
+		if(!directoryExist(m_SelectedDirectory))
         {
-            nero_log("failed to load texture resource");
-            nero_log("folder not found : " + folder_name);
+			nero_log("failed to load texture resource");
+			nero_log("directory not found : " + m_SelectedDirectory);
             return;
         }
 
         //Iterate over files in the folder
-        directory_iterator it{folder_path};
-        while (it != directory_iterator{})
+		std::experimental::filesystem::directory_iterator it{directoryPath};
+		while (it != std::experimental::filesystem::directory_iterator{})
         {
             //When we found a Texture
-            if(checkExtention(it->path().extension().string(), m_Configuration["extension"]))
+			if(checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
             {
                 //Load the Texture
-
-				std::unique_ptr<sf::Texture> texture = std::make_unique<sf::Texture>();
-
-                const std::string textureName = it->path().filename().stem().string();
-
-                if (!texture->loadFromFile(it->path().string()))
-                {
-                    nero_log("failed to load texture : " + textureName);
-                    it++;
-                    continue;
-                }
-
-                //Read the .txt file to retrieve sprite bound
-                std::string txtHelper   = replaceFileExtension(it->path().string(), "txt");
-                std::string jsonHelper  = replaceFileExtension(it->path().string(), "json");
-
-                if (exists(txtHelper))// .txt helper file exist, the texture get several sprites
-                {
-                    std::ifstream inStream(txtHelper);
-                    //Split each line to retrieve the necessary information
-                    const std::string separatorString = m_Configuration["separator"].get<std::string>();
-                    char separator = separatorString[0];
-                    std::string line;
-
-                    while (std::getline(inStream, line))
-                    {
-                        std::vector<std::string> sprite = splitString(line, separator);
-
-                        std::string spriteName      = sprite[0];
-                        int rectLeft                = std::stoi(sprite[1]);
-                        int rectTop                 = std::stoi(sprite[2]);
-                        int rectWidth               = std::stoi(sprite[3]);
-                        int rectHeight              = std::stoi(sprite[4]);
-
-                        sf::IntRect spriteBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
-
-                        addSpriteBound(textureName, spriteName, spriteBound);
-                        m_SpriteTable.push_back(spriteName);
-
-                        nero_log("loaded : " + spriteName);
-                    }
-                }
-                else if(exists(jsonHelper))
-                {
-                    nlohmann::json helper = loadJson(jsonHelper);
-
-                    nlohmann::json frame_table = helper["frames"];
-
-                    for (auto& frame : frame_table)
-                    {
-                        std::string spriteName      = removeFileExtension(frame["filename"].get<std::string>());
-                        int rectLeft                = frame["frame"]["x"];
-                        int rectTop                 = frame["frame"]["y"];
-                        int rectWidth               = frame["frame"]["w"];
-                        int rectHeight              = frame["frame"]["h"];
-
-                        sf::IntRect spriteBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
-
-                        addSpriteBound(textureName, spriteName, spriteBound);
-                        m_SpriteTable.push_back(spriteName);
-
-                        nero_log("loaded : " + spriteName);
-                    }
-                }
-                else //helper file not exist, texture is the sprite
-                {
-                    sf::IntRect spriteBound = sf::IntRect(0, 0, texture->getSize().x, texture->getSize().y);
-
-                    addSpriteBound(textureName, textureName, spriteBound);
-                    m_SpriteTable.push_back(textureName);
-
-                    nero_log("loaded : " + textureName);
-                }
-
-                //Insert the texture in m_TextureMap
-                addTexture(textureName, std::move(texture));
+				loadFile(it->path().string());
             }
 
             it++;
@@ -201,10 +223,4 @@ namespace nero
         for(std::string sprite : m_SpriteTable)
             nero_log(sprite);
     }
-
-	void TextureHolder::setResourceDirectory(const std::string& resourceDictory)
-	{
-		m_ResourceDictory = resourceDictory;
-	}
-
 }
