@@ -55,7 +55,7 @@ namespace nero
 			return;
 		}
 
-		nlohmann::json helper = loadJson(jsonHelper);
+		nlohmann::json helper = loadJson(jsonHelper, true);
 
 		if (helper.find("type") == helper.end()) //Texture packer animation
 		{

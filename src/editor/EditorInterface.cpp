@@ -1490,49 +1490,32 @@ namespace  nero
 
                 if(ImGui::Button("Import File##import_sprite_resource", ImVec2(100.f, 0.f)))
                 {
-                    //nfdchar_t *outPath = nullptr;
-                    nfdpathset_t *outPaths = nullptr;
-                    nfdresult_t result = NFD_OpenDialogMultiple( nullptr, nullptr, outPaths);
+					nfdpathset_t pathSet;
+					nfdresult_t result = NFD_OpenDialogMultiple( nullptr, nullptr, &pathSet);
 
+					if ( result == NFD_OKAY )
+					{
+						std::vector<std::string> fileTable;
 
-                    if ( result == NFD_OKAY ) {
-                        //puts("Success!");
-                        //puts(outPath);
-                        free(outPaths);
+						size_t i;
+						for ( i = 0; i < NFD_PathSet_GetCount(&pathSet); ++i )
+						{
+							nfdchar_t *path = NFD_PathSet_GetPath(&pathSet, i);
 
-                        nero_log(outPaths);
+							fileTable.push_back(toString(path));
+						}
 
+						m_ResourceManager->loadFile(m_ResourceBrowserType, fileTable);
+
+						NFD_PathSet_Free(&pathSet);
                     }
                     else if ( result == NFD_CANCEL ) {
-                        puts("User pressed cancel.");
+						//puts("User pressed cancel.");
                     }
                     else {
                         //printf("Error: %s\n", NFD_GetError() );
                     }
-                }
 
-                ImGui::SameLine();
-
-                if(ImGui::Button("Import Folder##import2_sprite_resource", ImVec2(100.f, 0.f)))
-                {
-                    nfdchar_t *outPath = nullptr;
-                    nfdresult_t result = NFD_PickFolder(nullptr, &outPath); //NFD_OpenDialog( nullptr, nullptr, &outPath );
-
-
-                    if ( result == NFD_OKAY ) {
-                       //puts("Success!");
-                       //puts(outPath);
-                        free(outPath);
-
-                        nero_log(outPath);
-
-                    }
-                    else if ( result == NFD_CANCEL ) {
-                       //puts("User pressed cancel.");
-                    }
-                    else {
-                       //printf("Error: %s\n", NFD_GetError() );
-                    }
                 }
 
                 ImGui::SameLine();
@@ -1545,19 +1528,23 @@ namespace  nero
 
                 ImGui::Separator();
 
-				switch (m_ResourceBrowserType)
-				{
-					case ResourceType::Texture:
-					{
-						showSpriteResource();
-					}break;
+				ImGui::BeginChild("browser");
 
-					case ResourceType::Animation:
+					switch (m_ResourceBrowserType)
 					{
-						showAnimationResource();
-					}break;
+						case ResourceType::Texture:
+						{
+							showSpriteResource();
+						}break;
 
-				}
+						case ResourceType::Animation:
+						{
+							showAnimationResource();
+						}break;
+
+					}
+
+				ImGui::EndChild();
 
 			ImGui::End();
         }
@@ -1596,6 +1583,11 @@ namespace  nero
 			  // ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
 			}
 
+			if(ImGui::IsItemHovered())
+			{
+				//nero_log("hover animation button");
+			}
+
 			float last_button_x2 = ImGui::GetItemRectMax().x;
 			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + next_sprite_size.x;
 			if (n + 1 < sprite_count && next_button_x2 < window_visible_x2)
@@ -1611,23 +1603,19 @@ namespace  nero
 		ImGuiStyle& style = ImGui::GetStyle();
 		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-		for (int i = 0; i < animationCount; i++)
+		for (int n = 0; n < animationCount; n++)
 		{
-			sf::Texture& texture = m_ResourceManager->getAnimationHolder()->getTexture(animationTable[i]);
-			sf::IntRect bound = m_ResourceManager->getAnimationHolder()->getAnimationBound(animationTable[i]);
+			sf::Texture& texture = m_ResourceManager->getAnimationHolder()->getTexture(animationTable[n]);
+			sf::IntRect bound = m_ResourceManager->getAnimationHolder()->getAnimationBound(animationTable[n]);
 
-			return;
 			sf::Vector2u boo = sf::Vector2u(bound.width, bound.height);
 			sf::Vector2u zoo = boo;
-			/*if(n < animationCount-1)
+			if(n < animationCount-1)
 			{
 				sf::IntRect bound2 = m_ResourceManager->getAnimationHolder()->getAnimationBound(animationTable[n+1]);
 
 				zoo = sf::Vector2u(bound2.width, bound2.height);
-			}*/
-
-			//sf::Texture temp;
-			//temp.loadFromImage(texture.copyToImage(), bound);
+			}
 
 			sf::Vector2f sprite_size(boo.x, boo.y);
 			sprite_size = formatSize(sprite_size, 250);
@@ -1638,15 +1626,23 @@ namespace  nero
 
 			ImVec2 button_size(sprite_size.x, sprite_size.y);
 
+			sf::Sprite sprite(texture, bound);
+			sprite.scale(2.f, 2.f);
 
-			if(ImGui::ImageButton(texture, button_size))
+			if(ImGui::ImageButton(sprite, button_size))
 			{
 			  // ImGui::OpenPopup(EditorConstant.PROJECT_MANAGER.c_str());
 			}
 
+			if(ImGui::IsItemHovered())
+			{
+				//nero_log("hover animation button");
+			}
+
+
 			float last_button_x2 = ImGui::GetItemRectMax().x;
 			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + next_sprite_size.x;
-			if (i + 1 < animationCount && next_button_x2 < window_visible_x2)
+			if (n + 1 < animationCount && next_button_x2 < window_visible_x2)
 				ImGui::SameLine();
 		}
 	}

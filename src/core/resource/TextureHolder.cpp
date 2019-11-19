@@ -53,7 +53,7 @@ namespace nero
 
 		if(fileExist(jsonHelper))
 		{
-			nlohmann::json helper = loadJson(jsonHelper);
+			nlohmann::json helper = loadJson(jsonHelper, true);
 
 			nlohmann::json frame_table = helper["frames"];
 
