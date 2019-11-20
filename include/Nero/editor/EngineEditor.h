@@ -8,6 +8,7 @@
 //Nero
 #include <Nero/core/engine/CoreEngine.h>
 #include <Nero/core/engine/Setting.h>
+#include <Nero/core/camera/AdvancedCamera.h>
 #include <Nero/editor/LoadingScreen.h>
 #include <Nero/editor/EditorInterface.h>
 //STD
@@ -44,6 +45,7 @@ namespace nero
 			void					loadWorkspaceResource();
 			void					createEditorInterface();
 			void					openLastProject();
+			void					createCamera();
 
          private:
             //Startup Thread
@@ -55,9 +57,11 @@ namespace nero
             EditorInterface::Ptr    m_Interface;
             //Resource Manager
 			ResourceManager::Ptr    m_ResourceManager;
-			//editor resource
+			//Editor resource
 			TextureHolder::Ptr		m_EditorTextureHolder;
 			SoundHolder::Ptr		m_EditorSoundHolder;
+			//Editor camera
+			AdvancedCamera::Ptr     m_AdvancedCamera;
 			//
 			Setting::Ptr			m_Setting;
     };

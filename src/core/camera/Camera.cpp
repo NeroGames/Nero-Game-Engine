@@ -8,6 +8,24 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
+	////////////////////////////////////////////////////////////
+	Camera::Camera(const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio):
+		 m_DefaultPosition(defaultPos)
+		,m_PanningSpeed(panSpeed)
+		,m_DefaultPanningSpeed(panSpeed)
+		,m_RotationSpeed(rotSpeed)
+		,m_ZoomingRatio(zRatio)
+		,m_DefaultZoom(0)
+		,m_Pan(0.f, 0.f)
+		,m_Rotation(0.f)
+		,m_DefaultRotation(0.f)
+		,m_Zoom(0)
+		,m_View()
+	{
+		m_View.setCenter(defaultPos);
+		m_View.setSize(sf::Vector2f(100.f, 100.f));
+	}
+
     ////////////////////////////////////////////////////////////
     Camera::Camera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio):
          m_DefaultPosition(defaultPos)
@@ -266,5 +284,10 @@ namespace nero
     {
         return m_View;
     }
+
+	void Camera::updateView(const sf::Vector2f& size)
+	{
+		m_View.setSize(size);
+	}
 }
 ////////////////////////////////////////////////////////////

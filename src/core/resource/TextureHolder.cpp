@@ -218,7 +218,7 @@ namespace nero
 
     void TextureHolder::printSpriteTable() const
     {
-        nero_log("TextureHolder : List of Sprite (" + _s(m_SpriteTable.size()) + ")");
+		nero_log("TextureHolder : List of Sprite (" + nero_ss(m_SpriteTable.size()) + ")");
 
         for(std::string sprite : m_SpriteTable)
             nero_log(sprite);

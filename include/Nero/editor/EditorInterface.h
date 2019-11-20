@@ -23,10 +23,11 @@
 #include <Nero/core/utility/LogUtil.h>
 #include <Nero/editor/AdvancedScene.h>
 #include <Nero/core/resource/ResourceManager.h>
+#include <Nero/core/camera/AdvancedCamera.h>
 #include <Nero/editor/EditorInterfaceUtility.h>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 #include <future>
-
 # include <nodeeditor/imgui_node_editor.h>
 
 ////////////////////////////////////////////////////////////
@@ -191,6 +192,8 @@ namespace nero
             //
             GameProject::Ptr            m_GameProject;
             AdvancedScene::Ptr          m_AdvancedScene;
+			RenderContext				buildRenderContext();
+			void						prepareRenderTexture(const RenderContext& renderContext);
 
 			ax::NodeEditor::EditorContext*	g_Context;
 
@@ -209,6 +212,17 @@ namespace nero
 			void		showSpriteResource();
 			void		showAnimationResource();
 
+			sf::RenderTexture			m_RenderTexture;
+			EditorMode					m_EditorMode;
+
+			sf::RectangleShape      m_CameraXAxis;
+			sf::RectangleShape      m_CameraYAxis;
+
+			AdvancedCamera::Ptr		m_EditorCamera;
+
+			void setCamera(const AdvancedCamera::Ptr& camera);
+			void renderCamera();
+			sf::View				m_CanvasFrontView;
 	};
 
 }

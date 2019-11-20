@@ -89,21 +89,14 @@ namespace nero
 
     }
 
-    sf::RenderTexture& AdvancedScene::render(const RenderContext& renderContext)
+	sf::RenderTexture& AdvancedScene::render(const RenderContext& renderContext)
     {
-        m_RenderContext = renderContext;
+		setRenderContext(renderContext);
 
-        if(m_RenderContext.canvas_size.x < 50.f ||  m_RenderContext.canvas_size.y < 50.f)
-        {
-            m_RenderContext.canvas_size.x = 50.f;
-            m_RenderContext.canvas_size.y = 50.f;
-        }
 
         //render scene builder
-        m_RenderTexture.create(m_RenderContext.canvas_size.x, m_RenderContext.canvas_size.y);
 		//m_Camera.setSize(renderContext.canvas_size.x, renderContext.canvas_size.y);
         //m_RenderTexture.setView(m_Camera);
-        m_RenderTexture.clear(sf::Color::Black);
 
         //render scene
         if(m_Scene)
@@ -124,6 +117,56 @@ namespace nero
     {
         m_Scene = scene;
     }
+
+	void AdvancedScene::setRenderContext(const RenderContext& renderContext)
+	{
+		m_RenderContext = renderContext;
+	}
+
+	void AdvancedScene::handleSceneBuilderEvent(const sf::Event& event)
+	{
+
+	}
+
+	void AdvancedScene::handleScreenBuilderEvent(const sf::Event& event)
+	{
+
+	}
+
+	void AdvancedScene::handleSceneEvent(const sf::Event& event)
+	{
+
+	}
+
+	void AdvancedScene::updateSceneBuilder(const sf::Time& timeStep)
+	{
+
+	}
+
+	void AdvancedScene::updateScreenBuilder(const sf::Time& timeStep)
+	{
+
+	}
+
+	void AdvancedScene::updateScene(const sf::Time& timeStep)
+	{
+
+	}
+
+	void AdvancedScene::renderSceneBuilder(sf::RenderTexture& texture)
+	{
+
+	}
+
+	void AdvancedScene::renderScreenBuilder(sf::RenderTexture& texture)
+	{
+
+	}
+
+	void AdvancedScene::renderScene(sf::RenderTexture& texture)
+	{
+
+	}
 
 }
 

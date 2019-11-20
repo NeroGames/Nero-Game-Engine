@@ -37,6 +37,8 @@ namespace  nero
 		,m_BottomDockspaceTabBarSwitch()
 		,m_Setting(nullptr)
 		,m_ResourceBrowserType(ResourceType::None)
+		,m_EditorMode(EditorMode::WORLD_BUILDER)
+		,m_EditorCamera(nullptr)
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -61,6 +63,15 @@ namespace  nero
 			EditorConstant.WINDOW_RESOURCE,
 			EditorConstant.WINDOW_LOGGING,
 		});
+
+		m_CameraXAxis.setSize(sf::Vector2f(20.f, -2.f));
+		m_CameraXAxis.setFillColor(sf::Color::Red);
+		m_CameraXAxis.setPosition(sf::Vector2f(20.f, 20.f));
+
+		m_CameraYAxis.setSize(sf::Vector2f(20.f, -2.f));
+		m_CameraYAxis.setFillColor(sf::Color::Green);
+		m_CameraYAxis.setPosition(sf::Vector2f(20.f, 20.f));
+		m_CameraYAxis.setRotation(90.f);
 	}
 
     EditorInterface::~EditorInterface()
@@ -81,12 +92,48 @@ namespace  nero
 
         m_AdvancedScene->handleEvent(event);
 
+		switch(m_EditorMode)
+		{
+			case EditorMode::WORLD_BUILDER:
+			{
+				m_AdvancedScene->handleSceneBuilderEvent(event);
+			}break;
+
+			case EditorMode::SCREEN_BUILDER:
+			{
+				m_AdvancedScene->handleScreenBuilderEvent(event);
+			}break;
+
+			case EditorMode::PLAY_GAME:
+			{
+				m_AdvancedScene->handleSceneEvent(event);
+			}break;
+		}
+
         ImGui::SFML::ProcessEvent(event);
     }
 
     void EditorInterface::update(const sf::Time& timeStep)
 	{
         m_AdvancedScene->update(timeStep);
+
+		switch(m_EditorMode)
+		{
+			case EditorMode::WORLD_BUILDER:
+			{
+				m_AdvancedScene->updateSceneBuilder(timeStep);
+			}break;
+
+			case EditorMode::SCREEN_BUILDER:
+			{
+				m_AdvancedScene->updateScreenBuilder(timeStep);
+			}break;
+
+			case EditorMode::PLAY_GAME:
+			{
+				m_AdvancedScene->updateScene(timeStep);
+			}break;
+		}
     }
 
     void EditorInterface::render()
@@ -143,28 +190,67 @@ namespace  nero
     {
 		ImGui::Begin(EditorConstant.WINDOW_GAME_SCENE.c_str());
 
-            //if(ImGui::IsWindowFocused())
-            {
+			RenderContext renderContext = buildRenderContext();
 
-                sf::Vector2f window_position    = ImGui::GetWindowPos();
-                sf::Vector2f window_size        = ImGui::GetWindowSize();
-                sf::Vector2f mouse_position     = ImGui::GetMousePos();
-                float title_bar_height          = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
-                sf::Vector2f window_padding     = ImGui::GetStyle().WindowPadding;
+			prepareRenderTexture(renderContext);
 
-                AdvancedScene::RenderContext renderContext;
-                renderContext.canvas_position   = sf::Vector2f(window_position.x + window_padding.x, window_position.y + title_bar_height + window_padding.y);
-                renderContext.canvas_size       = sf::Vector2f(window_size.x - window_padding.x * 2, window_size.y - title_bar_height - window_padding.y * 2);
-                renderContext.mouse_position    = sf::Vector2f(mouse_position.x - renderContext.canvas_position.x, mouse_position.y - renderContext.canvas_position.y);
-                renderContext.focus             = ImGui::IsWindowFocused();
+			m_AdvancedScene->setRenderContext(renderContext);
 
-                sf::RenderTexture& renderTexture = m_AdvancedScene->render(renderContext);
+			switch(m_EditorMode)
+			{
+				case EditorMode::WORLD_BUILDER:
+				{
+					m_AdvancedScene->renderSceneBuilder(m_RenderTexture);
+				}break;
 
-                ImGui::Image(flipTexture(renderTexture.getTexture()));
-            }
+				case EditorMode::SCREEN_BUILDER:
+				{
+					m_AdvancedScene->renderScreenBuilder(m_RenderTexture);
+				}break;
+
+				case EditorMode::PLAY_GAME:
+				{
+					m_AdvancedScene->renderScene(m_RenderTexture);
+				}break;
+			}
+
+			//Render on Front Screen
+			m_RenderTexture.setView(m_RenderTexture.getDefaultView());
+				renderCamera();
+			m_RenderTexture.setView(m_EditorCamera->getView());
+
+
+			ImGui::Image(flipTexture(m_RenderTexture.getTexture()));
+
 
 			if (ImGui::BeginPopupContextWindow())
 			{
+				if (ImGui::BeginMenu("Menu inside a regular window"))
+				{
+					ImGui::MenuItem("(dummy menu)", NULL, false, false);
+					if (ImGui::MenuItem("New")) {}
+					if (ImGui::MenuItem("Open", "Ctrl+O")) {}
+					if (ImGui::BeginMenu("Open Recent"))
+					{
+						ImGui::MenuItem("fish_hat.c");
+						ImGui::MenuItem("fish_hat.inl");
+						ImGui::MenuItem("fish_hat.h");
+						if (ImGui::BeginMenu("More.."))
+						{
+							ImGui::MenuItem("Hello");
+							ImGui::MenuItem("Sailor");
+							if (ImGui::BeginMenu("Recurse.."))
+							{
+								//ShowExampleMenuFile();
+								ImGui::EndMenu();
+							}
+							ImGui::EndMenu();
+						}
+						ImGui::EndMenu();
+					}
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::Button("Switch to Screen Builder"))
 				{
 					ImGui::CloseCurrentPopup();
@@ -194,6 +280,61 @@ namespace  nero
 
         ImGui::End();
     }
+
+	void EditorInterface::renderCamera()
+	{
+		m_CameraXAxis.setRotation(m_EditorCamera->getView().getRotation());
+		m_CameraYAxis.setRotation(m_EditorCamera->getView().getRotation() + 90.f);
+
+		m_RenderTexture.draw(m_CameraXAxis);
+		m_RenderTexture.draw(m_CameraYAxis);
+	}
+
+	void EditorInterface::setCamera(const AdvancedCamera::Ptr& camera)
+	{
+		m_EditorCamera = camera;
+	}
+
+	RenderContext EditorInterface::buildRenderContext()
+	{
+		sf::Vector2f window_position    = ImGui::GetWindowPos();
+		sf::Vector2f window_size        = ImGui::GetWindowSize();
+		sf::Vector2f mouse_position     = ImGui::GetMousePos();
+		float title_bar_height          = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
+		sf::Vector2f window_padding     = ImGui::GetStyle().WindowPadding;
+
+
+		RenderContext renderContext;
+		renderContext.canvas_position   = sf::Vector2f(window_position.x + window_padding.x, window_position.y + title_bar_height + window_padding.y);
+		renderContext.canvas_size       = sf::Vector2f(window_size.x - window_padding.x * 2, window_size.y - title_bar_height - window_padding.y * 2);
+		renderContext.mouse_position    = sf::Vector2f(mouse_position.x - renderContext.canvas_position.x, mouse_position.y - renderContext.canvas_position.y);
+		renderContext.focus             = ImGui::IsWindowFocused();
+
+		if(renderContext.canvas_size.x < 100.f)
+		{
+			renderContext.canvas_size.x = 100.f;
+		}
+
+		if(renderContext.canvas_size.y < 100.f)
+		{
+			renderContext.canvas_size.y = 100.f;
+		}
+
+		return renderContext;
+	}
+
+	void EditorInterface::prepareRenderTexture(const RenderContext& renderContext)
+	{
+		if(m_RenderTexture.getSize().x != renderContext.canvas_size.x ||
+		   m_RenderTexture.getSize().y != renderContext.canvas_size.y)
+		{
+			m_RenderTexture.create(renderContext.canvas_size.x, renderContext.canvas_size.y);
+			m_EditorCamera->updateView(sf::Vector2f(renderContext.canvas_size.x, renderContext.canvas_size.y));
+		}
+
+		m_RenderTexture.clear(sf::Color::Black);
+		m_RenderTexture.setView(m_EditorCamera->getView());
+	}
 
     void EditorInterface::showGameSettingWindow()
     {
@@ -433,41 +574,64 @@ namespace  nero
 
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.5f, 2.5f));
 
-            float width = ImGui::GetWindowContentRegionWidth();
-
+			float width = ImGui::GetWindowContentRegionWidth();
+			float start = (width - (60.f * 5.f + 10.f * 4.f))/2.f;
+			float buttonSpace = 60.f + 14.f;
             int i = 0;
-            float baseWidth = 24.f + 6.f + 20.f;
 
-            /*ImGui::SameLine(baseWidth * i++);
+			/*if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("world_button")))
+			{
+			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			}*/
 
-            if(ImGui::ImageButton(m_BlankButtonTexture))
-            {
+			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("screen_button")))
+			{
+			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			}
 
-            }
+			ImGui::SameLine(buttonSpace);
 
-            ImGui::SameLine(baseWidth * i++);
+			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("factory_button")))
+			{
+			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			}
 
-            if(ImGui::ImageButton(m_BlankButtonTexture))
-            {
+			ImGui::SameLine(start + buttonSpace*i++);
 
-            }
+			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("play_button")))
+			{
+			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			}
 
-            ImGui::SameLine(baseWidth * i++);
+			ImGui::SameLine(start + buttonSpace*i++);
 
-            if(ImGui::ImageButton(m_BlankButtonTexture))
-            {
+			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("pause_button")))
+			{
+			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			}
 
-            }
+			ImGui::SameLine(start + buttonSpace*i++);
 
-            ImGui::SameLine(baseWidth * i++);
+			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("step_button")))
+			{
+			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			}
 
-            if(ImGui::ImageButton(m_BlankButtonTexture))
-            {
+			ImGui::SameLine(start + buttonSpace*i++);
 
-            }*/
+			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("reset_button")))
+			{
+			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			}
 
-             ImGui::SameLine(width - 72.f);
+			ImGui::SameLine(start + buttonSpace*i++);
 
+			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("render_button")))
+			{
+			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			}
+
+			ImGui::SameLine(width - 72.f);
 
 			 if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
              {
@@ -2201,6 +2365,4 @@ namespace  nero
 	{
 		m_ResourceManager = resourceManager;
 	}
-
-
 }

@@ -7,9 +7,8 @@
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/core/camera/Camera.h>
-//SFML
-#include <SFML/Graphics/RectangleShape.hpp>
-//SFGUI
+//STD
+#include <memory>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -19,11 +18,11 @@ namespace nero
             typedef std::shared_ptr<AdvancedCamera>    Ptr;
 
         public:
+									AdvancedCamera(const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f), const float& panSpeed = 300.f, const float& rotSpeed = 0.5f, const float& zRatio = 0.99f);
 									AdvancedCamera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f), const float& panSpeed = 300.f, const float& rotSpeed = 0.5f, const float& zRatio = 0.99f);
             virtual                ~AdvancedCamera();
 
             void                    update(const sf::Time& deltaTime);
-            void                    render();
             void                    handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
             void                    handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse);
             void                    cancelAction();
@@ -37,8 +36,6 @@ namespace nero
             bool                    m_IsRotatingRight;
             bool                    m_IsZoomingIn;
             bool                    m_IsZoomingOut;
-            sf::RectangleShape      m_xAxis;
-            sf::RectangleShape      m_yAxis;
     };
 }
 #endif // ADVANCEDCAMERA_H

@@ -215,6 +215,9 @@ namespace  nero
 		//load workspace resource
 		loadWorkspaceResource();
 
+		//create camera
+		createCamera();
+
 		//create editor interface
 		createEditorInterface();
 
@@ -346,6 +349,11 @@ namespace  nero
 		}
 	}
 
+	void EngineEditor::createCamera()
+	{
+		m_AdvancedCamera = std::make_shared<AdvancedCamera>();
+	}
+
 	void EngineEditor::createEditorInterface()
 	{
 		nero_log("creating editor interface");
@@ -358,6 +366,7 @@ namespace  nero
 		m_Interface->setEditorTextureHolder(m_EditorTextureHolder);
 		m_Interface->setEditorSoundHolder(m_EditorSoundHolder);
 		m_Interface->setResourceManager(m_ResourceManager);
+		m_Interface->setCamera(m_AdvancedCamera);
 
 		//set callback, allow interface to change window title
 		m_Interface->setCallbackWindowTitle([this](const std::string& title)

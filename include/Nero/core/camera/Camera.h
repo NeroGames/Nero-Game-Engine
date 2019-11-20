@@ -19,8 +19,9 @@ namespace nero
             typedef std::shared_ptr<Camera>    Ptr;
 
         public:
-                                Camera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f), const float& panSpeed = 300.f, const float& rotSpeed = 0.5f, const float& zRatio = 0.99f);
-            virtual            ~Camera();
+								Camera(const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f), const float& panSpeed = 300.f, const float& rotSpeed = 0.5f, const float& zRatio = 0.99f);
+								Camera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f), const float& panSpeed = 300.f, const float& rotSpeed = 0.5f, const float& zRatio = 0.99f);
+			virtual            ~Camera();
 
             virtual void        handleEvent(const sf::Event& event);
             virtual void        update(const sf::Time& timeStep);
@@ -54,6 +55,8 @@ namespace nero
             float               getRotation()   const;
             int                 getZoom()       const;
             sf::View            getView()       const;
+			//
+			void				updateView(const sf::Vector2f& size);
 
         protected:
             sf::View            m_View;

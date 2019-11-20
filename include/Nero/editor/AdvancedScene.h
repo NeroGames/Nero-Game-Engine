@@ -17,6 +17,7 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include "ltbl/LightSystem.hpp"
+#include <Nero/editor/EditorInterfaceUtility.h>
 
 namespace nero
 {
@@ -56,34 +57,36 @@ namespace nero
 
             };
 
-            struct RenderContext
-            {
-               sf::Vector2f canvas_position;
-               sf::Vector2f canvas_size;
-               sf::Vector2f mouse_position;
-               bool         focus;
-            };
-
         public:
             typedef std::shared_ptr<AdvancedScene> Ptr;
 
 
         public:
-                            AdvancedScene();
+			AdvancedScene();
 
-							void                        handleEvent(const sf::Event& event);
-                            void                        update(const sf::Time& timeStep);
-                             sf::RenderTexture&         render(const RenderContext& renderContext);
+			void                        handleEvent(const sf::Event& event);
+			void                        update(const sf::Time& timeStep);
+			sf::RenderTexture&         render(const RenderContext& renderContext);
 
-                             void setScene(Scene::Ptr scene);
+			 void setScene(Scene::Ptr scene);
+			 void						setRenderContext(const RenderContext& renderContext);
+
+			 void handleSceneBuilderEvent(const sf::Event& event);
+			 void handleScreenBuilderEvent(const sf::Event& event);
+			 void handleSceneEvent(const sf::Event& event);
+
+			 void updateSceneBuilder(const sf::Time& timeStep);
+			 void updateScreenBuilder(const sf::Time& timeStep);
+			 void updateScene(const sf::Time& timeStep);
+
+			 void renderSceneBuilder(sf::RenderTexture& texture);
+			 void renderScreenBuilder(sf::RenderTexture& texture);
+			 void renderScene(sf::RenderTexture& texture);
+
 
         private:
 
             void                        init();
-
-
-
-
 
         private:
             //Friend
