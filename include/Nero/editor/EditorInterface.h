@@ -199,12 +199,14 @@ namespace nero
 
 			TextureHolder::Ptr			m_EditorTextureHolder;
 			SoundHolder::Ptr			m_EditorSoundHolder;
+			FontHolder::Ptr				m_EditorFontHolder;
 			ResourceManager::Ptr		m_ResourceManager;
 
 			Setting::Ptr				m_Setting;
 
 			void		setEditorTextureHolder(TextureHolder::Ptr textureHolder);
 			void		setEditorSoundHolder(SoundHolder::Ptr soundHolder);
+			void		setEditorFontHolder(FontHolder::Ptr soundHolder);
 			void		setResourceManager(ResourceManager::Ptr resourceManager);
 
 			ResourceType				m_ResourceBrowserType;
@@ -223,6 +225,13 @@ namespace nero
 			void setCamera(const AdvancedCamera::Ptr& camera);
 			void renderCamera();
 			sf::View				m_CanvasFrontView;
+			sf::Text				m_GameModeInfo;
+
+			void			renderGameModeInfo();
+			float	m_FrameRate;
+			float	m_FrameTime;
+
+			void init();
 	};
 
 }

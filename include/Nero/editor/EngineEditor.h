@@ -59,6 +59,7 @@ namespace nero
 			ResourceManager::Ptr    m_ResourceManager;
 			//Editor resource
 			TextureHolder::Ptr		m_EditorTextureHolder;
+			FontHolder::Ptr			m_EditorFontHolder;
 			SoundHolder::Ptr		m_EditorSoundHolder;
 			//Editor camera
 			AdvancedCamera::Ptr     m_AdvancedCamera;

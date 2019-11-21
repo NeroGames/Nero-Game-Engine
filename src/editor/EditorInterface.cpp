@@ -90,7 +90,7 @@ namespace  nero
 			}break;
 		}
 
-        m_AdvancedScene->handleEvent(event);
+		m_EditorCamera->handleEvent(event);
 
 		switch(m_EditorMode)
 		{
@@ -115,7 +115,7 @@ namespace  nero
 
     void EditorInterface::update(const sf::Time& timeStep)
 	{
-        m_AdvancedScene->update(timeStep);
+		m_EditorCamera->update(timeStep);
 
 		switch(m_EditorMode)
 		{
@@ -217,6 +217,7 @@ namespace  nero
 			//Render on Front Screen
 			m_RenderTexture.setView(m_RenderTexture.getDefaultView());
 				renderCamera();
+				renderGameModeInfo();
 			m_RenderTexture.setView(m_EditorCamera->getView());
 
 
@@ -280,6 +281,27 @@ namespace  nero
 
         ImGui::End();
     }
+
+	void EditorInterface::renderGameModeInfo()
+	{
+		std::string gameMode = "World Builder";
+		std::string frameRate = toString(m_FrameRate) + " fps";
+		std::string frameTime = toString(m_FrameTime * 1000.f) + " ms";
+
+		//m_InfoText.setString(m_CurrentView + "  |  " + toString(m_FrameRate) + " fps  |  " + toString(m_FrameTime * 1000.f) + " ms");
+
+		std::string info = gameMode + "  |  " + frameRate + "  |  " + frameTime;
+
+		m_GameModeInfo.setString(info);
+
+		sf::Vector2f position;
+		position.x = m_RenderTexture.getSize().x - m_GameModeInfo.getLocalBounds().width - 20.f;
+		position.y = m_RenderTexture.getSize().y - m_GameModeInfo.getLocalBounds().height - 20.f;
+
+		m_GameModeInfo.setPosition(position);
+
+		m_RenderTexture.draw(m_GameModeInfo);
+	}
 
 	void EditorInterface::renderCamera()
 	{
@@ -372,7 +394,8 @@ namespace  nero
 
     void EditorInterface::updateFrameRate(const float& frameRate, const float& frameTime)
     {
-
+		m_FrameRate = frameRate;
+		m_FrameTime = frameTime;
     }
 
     void EditorInterface::quitEditor()
@@ -2361,8 +2384,20 @@ namespace  nero
 		m_EditorSoundHolder = soundHolder;
 	}
 
+	void EditorInterface::setEditorFontHolder(FontHolder::Ptr fontHolder)
+	{
+		m_EditorFontHolder = fontHolder;
+	}
+
 	void EditorInterface::setResourceManager(ResourceManager::Ptr resourceManager)
 	{
 		m_ResourceManager = resourceManager;
+	}
+
+	void EditorInterface::init()
+	{
+		m_GameModeInfo.setFont(m_EditorFontHolder->getDefaultFont());
+		m_GameModeInfo.setCharacterSize(13.f);
+		m_GameModeInfo.setFillColor(sf::Color::White);
 	}
 }

@@ -155,7 +155,18 @@ namespace nero
 
 	void AdvancedScene::renderSceneBuilder(sf::RenderTexture& texture)
 	{
+		sf::CircleShape circle;
 
+		circle.setRadius(50.f);
+		circle.setOrigin(50.f, 50.f);
+
+		sf::RectangleShape rectangle(sf::Vector2f(200.f, 50.f));
+
+		rectangle.setPosition(100.f, 0.f);
+		rectangle.setFillColor(sf::Color::Blue);
+
+		texture.draw(circle);
+		texture.draw(rectangle);
 	}
 
 	void AdvancedScene::renderScreenBuilder(sf::RenderTexture& texture)

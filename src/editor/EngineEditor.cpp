@@ -329,6 +329,9 @@ namespace  nero
 
 		m_EditorSoundHolder = std::make_shared<SoundHolder>(m_Setting->getSetting("resource").getSetting("sound"));
 		m_EditorSoundHolder->loadDirectory("resource/editor/sound");
+
+		m_EditorFontHolder = std::make_shared<FontHolder>(m_Setting->getSetting("resource").getSetting("font"));
+		m_EditorFontHolder->loadDirectory("resource/editor/font");
 	}
 
 	void EngineEditor::loadStarterResourcePack()
@@ -365,6 +368,7 @@ namespace  nero
 
 		m_Interface->setEditorTextureHolder(m_EditorTextureHolder);
 		m_Interface->setEditorSoundHolder(m_EditorSoundHolder);
+		m_Interface->setEditorFontHolder(m_EditorFontHolder);
 		m_Interface->setResourceManager(m_ResourceManager);
 		m_Interface->setCamera(m_AdvancedCamera);
 
@@ -373,6 +377,8 @@ namespace  nero
 		{
 			setWindowTitle("Nero Game Engine - " +  title);
 		});
+
+		m_Interface->init();
 	}
 
 	void EngineEditor::openLastProject()
