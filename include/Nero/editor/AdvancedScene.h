@@ -9,8 +9,8 @@
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <Box2D/Dynamics/b2TimeStep.h>
-#include <Nero/editor/SceneBuilder.h>
-#include <Nero/editor/UndoManager.h>
+//#include <Nero/editor/SceneBuilder.h>
+//#include <Nero/editor/UndoManager.h>
 #include <Nero/core/scene/Scene.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <memory>
@@ -41,15 +41,15 @@ namespace nero
             struct SceneTrunk
             {
                 std::string         name;
-                SceneBuilder::Ptr   sceneBuilder;
-                UndoManager::Ptr    undoManager;
+				//SceneBuilder::Ptr   sceneBuilder;
+				//UndoManager::Ptr    undoManager;
             };
 
             struct SceneScreen
             {
                 std::string             name;
-                SceneBuilder::Ptr       sceneBuilder;
-                UndoManager::Ptr        undoManager;
+				//SceneBuilder::Ptr       sceneBuilder;
+				//UndoManager::Ptr        undoManager;
             };
 
             struct SceneResource

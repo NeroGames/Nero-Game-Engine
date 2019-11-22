@@ -600,7 +600,7 @@ namespace  nero
 			float width = ImGui::GetWindowContentRegionWidth();
 			float start = (width - (60.f * 5.f + 10.f * 4.f))/2.f;
 			float buttonSpace = 60.f + 14.f;
-            int i = 0;
+			int i = 0;
 
 			/*if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("world_button")))
 			{
@@ -612,7 +612,7 @@ namespace  nero
 			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
 			}
 
-			ImGui::SameLine(buttonSpace);
+			ImGui::SameLine(buttonSpace + 6.f);
 
 			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("factory_button")))
 			{
