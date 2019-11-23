@@ -37,6 +37,7 @@ namespace nero
 	{
 		WORLD_BUILDER,
 		SCREEN_BUILDER,
+		OBJECT_BUILDER,
 		PLAY_GAME,
 		RENDER_GAME
 	};

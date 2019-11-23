@@ -295,7 +295,7 @@ namespace  nero
 		//list of workspace
 		m_Setting->loadSetting("worksapce");
 
-		//dockspace ids
+		//dockspace setting
 		m_Setting->loadSetting("dockspace");
 	}
 

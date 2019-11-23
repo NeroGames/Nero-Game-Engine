@@ -355,7 +355,7 @@ void ImGui::StyleColorsNero(ImGuiStyle* dst)
     colors[ImGuiCol_TextDisabled]           = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
     colors[ImGuiCol_WindowBg]               = ImVec4(0.199f, 0.199f, 0.199f, 1.f);
     colors[ImGuiCol_ChildBg]                = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    colors[ImGuiCol_PopupBg]                = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
+	colors[ImGuiCol_PopupBg]                = ImVec4(0.118f, 0.118f, 0.118f, 1.000f);
     colors[ImGuiCol_Border]                 = ImVec4(1.000f, 1.000f, 1.000f, 0.500f);//(0.43f, 0.43f, 0.50f, 0.50f);
     colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
     colors[ImGuiCol_FrameBg]                = ImVec4(0.16f, 0.29f, 0.48f, 0.54f);

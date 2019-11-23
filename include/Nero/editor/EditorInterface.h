@@ -65,11 +65,10 @@ namespace nero
 
 			//editor view
 				//upper left
-			void                    showMusicWindow();
 			void                    showUtilityWindow();
-				//bottom left
 			void                    showSceneLevelWindow();
 			void                    showSceneChunckWindow();
+				//bottom left
 			void					showSceneLayerWindow();
             void                    showSceneScreenWindow();
                 //right
@@ -109,8 +108,6 @@ namespace nero
             //
             nlohmann::json m_EditorSetting;
 
-            bool renderImgui = false;
-
             //project creation
 
             std::string test_log;
@@ -118,7 +115,6 @@ namespace nero
             LoggerApplication m_LoggerApplication;
             bool   m_InterfaceFirstDraw;
             ImGuiIO baseio;
-            ImGuiID dockspace_id;
             std::stringstream buffer;
             std::streambuf * old;
 
@@ -192,8 +188,9 @@ namespace nero
             //
             GameProject::Ptr            m_GameProject;
             AdvancedScene::Ptr          m_AdvancedScene;
-			RenderContext				buildRenderContext();
-			void						prepareRenderTexture(const RenderContext& renderContext);
+			void				buildRenderContext();
+			void						prepareRenderTexture();
+			bool				isMouseOnCanvas();
 
 			ax::NodeEditor::EditorContext*	g_Context;
 
@@ -231,7 +228,11 @@ namespace nero
 			float	m_FrameRate;
 			float	m_FrameTime;
 
+			RenderContext m_RenderContext;
+
 			void init();
+			std::string getString(const EditorMode& editorMode);
+
 	};
 
 }

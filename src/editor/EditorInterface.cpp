@@ -90,7 +90,10 @@ namespace  nero
 			}break;
 		}
 
-		m_EditorCamera->handleEvent(event);
+		if(isMouseOnCanvas())
+		{
+			m_EditorCamera->handleEvent(event);
+		}
 
 		switch(m_EditorMode)
 		{
@@ -141,7 +144,7 @@ namespace  nero
         ImGui::SFML::Update(m_RenderWindow, EngineConstant.TIME_PER_FRAME);
 
 		//create editor dockspace & display menubar
-        createDockSpace();
+		createDockSpace();
 
 		//central dockspcace
 			//display toolbar
@@ -159,12 +162,15 @@ namespace  nero
 		//left dockspace
 			//upper left
 		showUtilityWindow();
-		showMusicWindow();
-			//bottom left
-		showSceneLevelWindow();
-		showSceneChunckWindow();
-		showSceneScreenWindow();
+		if(m_EditorMode == EditorMode::WORLD_BUILDER)
+			showSceneLevelWindow();
+		if(m_EditorMode == EditorMode::SCREEN_BUILDER)
+			showSceneScreenWindow();
+
+			//lower left
 		showSceneLayerWindow();
+		if(m_EditorMode == EditorMode::WORLD_BUILDER)
+			showSceneChunckWindow();
 
 		//right dockspace
 		showExplorerWindow();
@@ -190,11 +196,11 @@ namespace  nero
     {
 		ImGui::Begin(EditorConstant.WINDOW_GAME_SCENE.c_str());
 
-			RenderContext renderContext = buildRenderContext();
+			buildRenderContext();
 
-			prepareRenderTexture(renderContext);
+			prepareRenderTexture();
 
-			m_AdvancedScene->setRenderContext(renderContext);
+			m_AdvancedScene->setRenderContext(m_RenderContext);
 
 			switch(m_EditorMode)
 			{
@@ -226,69 +232,83 @@ namespace  nero
 
 			if (ImGui::BeginPopupContextWindow())
 			{
-				if (ImGui::BeginMenu("Menu inside a regular window"))
+				if (ImGui::BeginMenu("Editor Mode"))
 				{
-					ImGui::MenuItem("(dummy menu)", NULL, false, false);
-					if (ImGui::MenuItem("New")) {}
-					if (ImGui::MenuItem("Open", "Ctrl+O")) {}
-					if (ImGui::BeginMenu("Open Recent"))
+					//ImGui::MenuItem("(choose editor mode)", NULL, false, false);
+
+					if (ImGui::MenuItem("World Builder"))
 					{
-						ImGui::MenuItem("fish_hat.c");
-						ImGui::MenuItem("fish_hat.inl");
-						ImGui::MenuItem("fish_hat.h");
-						if (ImGui::BeginMenu("More.."))
-						{
-							ImGui::MenuItem("Hello");
-							ImGui::MenuItem("Sailor");
-							if (ImGui::BeginMenu("Recurse.."))
-							{
-								//ShowExampleMenuFile();
-								ImGui::EndMenu();
-							}
-							ImGui::EndMenu();
-						}
-						ImGui::EndMenu();
+						m_EditorMode = EditorMode::WORLD_BUILDER;
 					}
+
+					if (ImGui::MenuItem("Screen Builder"))
+					{
+					m_EditorMode = EditorMode::SCREEN_BUILDER;
+					}
+
+					if (ImGui::MenuItem("Object Builder"))
+					{
+						m_EditorMode = EditorMode::OBJECT_BUILDER;
+					}
+
 					ImGui::EndMenu();
 				}
 
-				if (ImGui::Button("Switch to Screen Builder"))
-				{
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::Button("Switch to Object Builder"))
-				{
-					ImGui::CloseCurrentPopup();
-				}
-
-				ImGui::Text("Get Help");
 				ImGui::Separator();
-				if(ImGui::Button("Learn Game Development"))
-				{
 
+				if (ImGui::BeginMenu("Website"))
+				{
+					//ImGui::MenuItem("(useful links)", NULL, false, false);
+
+					if (ImGui::MenuItem("Learn"))
+					{
+
+					}
+
+					if (ImGui::MenuItem("Forum"))
+					{
+
+					}
+
+					if (ImGui::MenuItem("Code Snippet"))
+					{
+
+					}
+
+					if (ImGui::MenuItem("Engine API"))
+					{
+
+					}
+
+					ImGui::EndMenu();
 				}
 
-				if(ImGui::Button("Ask Question"))
-				{
 
-				}
-
-				/*if (ImGui::Button("Close"))
-					ImGui::CloseCurrentPopup();*/
 				ImGui::EndPopup();
 			}
 
         ImGui::End();
     }
 
+	std::string EditorInterface::getString(const EditorMode& editorMode)
+	{
+		switch (editorMode)
+		{
+			case EditorMode::WORLD_BUILDER:		return "World Builder";		break;
+			case EditorMode::SCREEN_BUILDER:	return "Screen Builder";	break;
+			case EditorMode::OBJECT_BUILDER:	return "Object Builder";	break;
+			case EditorMode::PLAY_GAME:			return "Play Game";			break;
+			case EditorMode::RENDER_GAME:		return "Render Game";		break;
+
+			default: return StringPool.BLANK; break;
+		}
+	}
+
 	void EditorInterface::renderGameModeInfo()
 	{
-		std::string gameMode = "World Builder";
+		std::string gameMode = getString(m_EditorMode);
 		std::string frameRate = toString(m_FrameRate) + " fps";
 		std::string frameTime = toString(m_FrameTime * 1000.f) + " ms";
-
-		//m_InfoText.setString(m_CurrentView + "  |  " + toString(m_FrameRate) + " fps  |  " + toString(m_FrameTime * 1000.f) + " ms");
 
 		std::string info = gameMode + "  |  " + frameRate + "  |  " + frameTime;
 
@@ -317,7 +337,7 @@ namespace  nero
 		m_EditorCamera = camera;
 	}
 
-	RenderContext EditorInterface::buildRenderContext()
+	void EditorInterface::buildRenderContext()
 	{
 		sf::Vector2f window_position    = ImGui::GetWindowPos();
 		sf::Vector2f window_size        = ImGui::GetWindowSize();
@@ -342,20 +362,29 @@ namespace  nero
 			renderContext.canvas_size.y = 100.f;
 		}
 
-		return renderContext;
+		m_RenderContext = renderContext;
 	}
 
-	void EditorInterface::prepareRenderTexture(const RenderContext& renderContext)
+	void EditorInterface::prepareRenderTexture()
 	{
-		if(m_RenderTexture.getSize().x != renderContext.canvas_size.x ||
-		   m_RenderTexture.getSize().y != renderContext.canvas_size.y)
+		if(m_RenderTexture.getSize().x != m_RenderContext.canvas_size.x ||
+		   m_RenderTexture.getSize().y != m_RenderContext.canvas_size.y)
 		{
-			m_RenderTexture.create(renderContext.canvas_size.x, renderContext.canvas_size.y);
-			m_EditorCamera->updateView(sf::Vector2f(renderContext.canvas_size.x, renderContext.canvas_size.y));
+			m_RenderTexture.create(m_RenderContext.canvas_size.x, m_RenderContext.canvas_size.y);
+			m_EditorCamera->updateView(sf::Vector2f(m_RenderContext.canvas_size.x, m_RenderContext.canvas_size.y));
 		}
 
 		m_RenderTexture.clear(sf::Color::Black);
 		m_RenderTexture.setView(m_EditorCamera->getView());
+	}
+
+	bool EditorInterface::isMouseOnCanvas()
+	{
+		sf::Rect<float> canvas(m_RenderContext.canvas_position.x, m_RenderContext.canvas_position.y, m_RenderContext.canvas_size.x, m_RenderContext.canvas_size.y);
+
+		sf::Vector2i mousePosition = ImGui::GetMousePos();
+
+		return canvas.contains(mousePosition.x, mousePosition.y);
 	}
 
     void EditorInterface::showGameSettingWindow()
@@ -408,9 +437,14 @@ namespace  nero
 			sf::Vector2u windowSize		= m_RenderWindow.getSize();
 			sf::Vector2i windowPosition = m_RenderWindow.getPosition();
 
-			if(windowPosition.y < 0 || windowPosition.y < 0)
+			if(windowPosition.y < 0)
 			{
-				return;
+				windowPosition.y = 0;
+			}
+
+			if(windowPosition.x < -8)
+			{
+				windowPosition.x = -8;
 			}
 
 			auto loaded = loadJson(file, true);
@@ -452,18 +486,18 @@ namespace  nero
 			//save dockspace id
 			m_DockspaceID = ImGui::GetID(EditorConstant.ID_DOCKSPACE.c_str());
 
-			//create the dockspace
+			//create the dockspace from current window
 			ImGui::DockSpace(m_DockspaceID, ImVec2(viewport->Size.x, viewport->Size.y - 20.f), ImGuiDockNodeFlags_None);
 
 			//clean pointer
 			viewport = nullptr;
 
 			//build dockspace layout : this is done only once, when the editor is launched the first time
-			if(m_BuildDockspaceLayout && !fileExist(getPath({"setting", EditorConstant.FILE_INTERFACE_LAYOUT}, StringPool.EXTENSION_INI)))
+			if(m_Setting->getSetting("dockspace").getBool("build_layout") && !fileExist(getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, StringPool.EXTENSION_INI)))
 			{
 				//split main dockspace in six
 				ImGuiID upperLeftDockspaceID	= ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Left,	0.20f, nullptr, &m_DockspaceID);
-					ImGui::DockBuilderGetNode(upperLeftDockspaceID)->SizeRef.x = 180.f;
+				ImGui::DockBuilderGetNode(upperLeftDockspaceID)->SizeRef.x = m_Setting->getSetting("dockspace").getSetting("upper_left_dock").getFloat("width");
 				ImGuiID lowerLeftDockspaceID	= ImGui::DockBuilderSplitNode(upperLeftDockspaceID,	ImGuiDir_Down,	0.20f, nullptr, &upperLeftDockspaceID);
 				ImGuiID rightDockspaceID        = ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Right, 0.20f, nullptr, &m_DockspaceID);
 				ImGuiID toolbarDockspaceID		= ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Up,	0.20f, nullptr, &m_DockspaceID);
@@ -475,12 +509,11 @@ namespace  nero
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_TOOLBAR.c_str(),				toolbarDockspaceID);
 					//upper left
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_UTILITY.c_str(),				upperLeftDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_MUSIC.c_str(),				upperLeftDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LEVEL.c_str(),				upperLeftDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_SCREEN.c_str(),				upperLeftDockspaceID);
 					//lower left
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LEVEL.c_str(),				lowerLeftDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_CHUNCK.c_str(),				lowerLeftDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_SCREEN.c_str(),				lowerLeftDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LAYER.c_str(),				lowerLeftDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_CHUNCK.c_str(),				lowerLeftDockspaceID);
 					//right
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_EXPLORER.c_str(),			rightDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_HELP.c_str(),				rightDockspaceID);
@@ -498,49 +531,40 @@ namespace  nero
 				//commit dockspace
 				ImGui::DockBuilderFinish(m_DockspaceID);
 
-				//save dockspace ids
-				nlohmann::json dockspaceTable;
-				dockspaceTable["upper-left-dockspace"]	= upperLeftDockspaceID;
-				dockspaceTable["lower-left-dockspace"]	= lowerLeftDockspaceID;
-				dockspaceTable["right-dockspace"]		= rightDockspaceID;
-				dockspaceTable["toolbar-dockspace"]		= toolbarDockspaceID;
-				dockspaceTable["bottom-dockspace"]		= bottomDockspaceID;
-				dockspaceTable["central-dockspace"]		= centralDockspaceID;
-
-				saveFile(getPath({"setting", "dockspace"}, StringPool.EXTENSION_JSON), dockspaceTable.dump(3));
-
-				m_BuildDockspaceLayout = !m_BuildDockspaceLayout;
-			}
-
-			if(m_SetupDockspaceLayout)
-			{
-				nlohmann::json dockspaceTable = loadJson(getPath({"setting", "dockspace"}));
-
-				//toolbar
-				ImGuiID toolbarDockspaceID			= dockspaceTable["toolbar-dockspace"];
-				ImGuiDockNode* toobalDockNode		= ImGui::DockBuilderGetNode(toolbarDockspaceID);
-				toobalDockNode->SizeRef.y			= 16.8f;
-				toobalDockNode->LocalFlags			= ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_SingleDock;
 				//lower left dockspace
-				ImGuiID lowerLeftDockspaceID		= dockspaceTable["lower-left-dockspace"];
 				ImGuiDockNode* lowerLeftDockNode	= ImGui::DockBuilderGetNode(lowerLeftDockspaceID);
-				lowerLeftDockNode->SizeRef.y = 400;
+				lowerLeftDockNode->SizeRef.y = m_Setting->getSetting("dockspace").getSetting("lower_left_dock").getFloat("height");
 				//right dockspace
-				ImGuiID rightDockspaceID			= dockspaceTable["right-dockspace"];
 				ImGuiDockNode* rightDockNode		= ImGui::DockBuilderGetNode(rightDockspaceID);
-				rightDockNode->SizeRef.x = 300;
+				rightDockNode->SizeRef.x = m_Setting->getSetting("dockspace").getSetting("right_dock").getFloat("width");
 				//bottom dockspace
-				ImGuiID bottomDockspaceID			= dockspaceTable["bottom-dockspace"];
 				ImGuiDockNode* bottomDockNode		= ImGui::DockBuilderGetNode(bottomDockspaceID);
-				bottomDockNode->SizeRef.y = 150;
+				bottomDockNode->SizeRef.y = m_Setting->getSetting("dockspace").getSetting("bottom_dock").getFloat("height");
 
 				//clean pointer
-				toobalDockNode		= nullptr;
 				lowerLeftDockNode	= nullptr;
 				rightDockNode		= nullptr;
 				bottomDockNode		= nullptr;
 
-				m_SetupDockspaceLayout = !m_SetupDockspaceLayout;
+				//update and save dockspace setting
+				m_Setting->getSetting("dockspace").getSetting("toolbar_dock").setUInt("id", toolbarDockspaceID);
+				m_Setting->getSetting("dockspace").setBool("build_layout", false);
+
+				saveFile(getPath({"setting", "dockspace"}, StringPool.EXTENSION_JSON), m_Setting->getSetting("dockspace").toString(), true);
+			}
+
+			if(m_SetupDockspaceLayout)
+			{
+				//toolbar
+				ImGuiID toolbarDockspaceID			= m_Setting->getSetting("dockspace").getSetting("toolbar_dock").getUInt("id");
+				ImGuiDockNode* toolbarDockNode		= ImGui::DockBuilderGetNode(toolbarDockspaceID);
+				toolbarDockNode->SizeRef.y			= m_Setting->getSetting("dockspace").getSetting("toolbar_dock").getFloat("height");
+				toolbarDockNode->LocalFlags			= ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_SingleDock;
+
+				//clean pointer
+				toolbarDockNode		= nullptr;
+
+				m_SetupDockspaceLayout = false;
 			}
 
 			if (ImGui::BeginMenuBar())
@@ -602,22 +626,38 @@ namespace  nero
 			float buttonSpace = 60.f + 14.f;
 			int i = 0;
 
-			/*if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("world_button")))
+			if(m_EditorMode != EditorMode::WORLD_BUILDER)
 			{
-			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-			}*/
+				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("world_button")))
+				{
+				   m_EditorMode = EditorMode::WORLD_BUILDER;
+				   ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
+				}
 
-			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("screen_button")))
-			{
-			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+				ImGui::SameLine(buttonSpace + 6.f);
 			}
 
-			ImGui::SameLine(buttonSpace + 6.f);
-
-			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("factory_button")))
+			if(m_EditorMode != EditorMode::SCREEN_BUILDER)
 			{
-			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("screen_button")))
+				{
+				   m_EditorMode = EditorMode::SCREEN_BUILDER;
+				   ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
+				}
+
+				ImGui::SameLine(buttonSpace + 6.f);
 			}
+
+
+			if(m_EditorMode != EditorMode::OBJECT_BUILDER)
+			{
+				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("factory_button")))
+				{
+				   m_EditorMode = EditorMode::OBJECT_BUILDER;
+				   ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
+				}
+			}
+
 
 			ImGui::SameLine(start + buttonSpace*i++);
 
@@ -846,6 +886,8 @@ namespace  nero
 
         float wording_width = 130.f;
         float input_width = ImGui::GetWindowContentRegionWidth() - 150.f;
+
+		return;
 
         ImGui::Text("Create a new Project and start a new Adventure");
         ImGui::Dummy(ImVec2(0.0f, 5.0f));
@@ -1693,6 +1735,19 @@ namespace  nero
 			m_ResourceBrowserType = ResourceType::Composite;
 		}
 
+		ImGui::SameLine();
+
+		if(ImGui::Button("Sound##open_shape_resource", ImVec2(100.f, 100.f)))
+		{
+			m_ResourceBrowserType = ResourceType::Sound;
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button("Music##open_shape_resource", ImVec2(100.f, 100.f)))
+		{
+			m_ResourceBrowserType = ResourceType::Music;
+		}
 
 		ImGui::End();
     }
@@ -1958,13 +2013,6 @@ namespace  nero
 
         ImGui::End();
     }
-
-	void EditorInterface::showMusicWindow()
-	{
-		ImGui::Begin(EditorConstant.WINDOW_MUSIC.c_str());
-
-		ImGui::End();
-	}
 
     void EditorInterface::showSceneScreenWindow()
     {
@@ -2264,27 +2312,16 @@ namespace  nero
 
     void EditorInterface::interfaceFirstDraw()
     {
-		if(m_InterfaceFirstDraw && !m_SetupDockspaceLayout)
+		if(m_InterfaceFirstDraw)
         {
-
-			//toolbar
-			ImGuiID rightDockspaceID		= m_Setting->getSetting("dockspace").getUInt("right-dockspace");
-			ImGuiID upperLeftDockspaceID	= m_Setting->getSetting("dockspace").getUInt("upper-left-dockspace");
-			ImGuiID lowerLeftDockspaceID	= m_Setting->getSetting("dockspace").getUInt("lower-left-dockspace");
-
-			auto right_node = ImGui::DockBuilderGetNode(rightDockspaceID);
-			right_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
-
-			auto upper_left_node = ImGui::DockBuilderGetNode(upperLeftDockspaceID);
-			upper_left_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
-
-			auto left_bottom_node = ImGui::DockBuilderGetNode(lowerLeftDockspaceID);
-			left_bottom_node->TabBar->NextSelectedTabId = right_node->TabBar->Tabs.front().ID;
-
+			ImGui::SetWindowFocus(EditorConstant.WINDOW_UTILITY.c_str());
+			ImGui::SetWindowFocus(EditorConstant.WINDOW_LAYER.c_str());
+			ImGui::SetWindowFocus(EditorConstant.WINDOW_RESOURCE.c_str());
+			ImGui::SetWindowFocus(EditorConstant.WINDOW_EXPLORER.c_str());
 			ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
 
 			//commit
-			m_InterfaceFirstDraw = !m_InterfaceFirstDraw;
+			m_InterfaceFirstDraw = false;
 		}
     }
 
@@ -2397,7 +2434,7 @@ namespace  nero
 	void EditorInterface::init()
 	{
 		m_GameModeInfo.setFont(m_EditorFontHolder->getDefaultFont());
-		m_GameModeInfo.setCharacterSize(13.f);
+		m_GameModeInfo.setCharacterSize(18.f);
 		m_GameModeInfo.setFillColor(sf::Color::White);
 	}
 }

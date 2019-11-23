@@ -16,7 +16,7 @@ namespace nero
 		const std::string ID_DOCKSPACE					= "editor-dockspace";
 
 		//ImGUI layout file
-		const std::string FILE_INTERFACE_LAYOUT			= "imgui";
+		const std::string FILE_IMGUI_SETTING			= "imgui";
 
 		//Window
 			//toolbar

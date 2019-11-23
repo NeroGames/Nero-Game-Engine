@@ -18,7 +18,8 @@ namespace nero
 	class Setting
 	{
 		public:
-			typedef std::shared_ptr<Setting>    Ptr;
+			typedef std::shared_ptr<Setting>		Ptr;
+			typedef std::shared_ptr<nlohmann::json> JSONPtr;
 
 		public: //constructor
 											Setting();
@@ -41,14 +42,20 @@ namespace nero
 			void							setString(const std::string& setting, const std::string& value);
 			void							setFloat(const std::string& setting, const float value);
 			void							setInt(const std::string& setting, const int value);
-			void							setBool(const std::string& setting, const int value);
+			void							setUInt(const std::string& setting, const unsigned int value);
+			void							setBool(const std::string& setting, const bool value);
 			void							setSetting(const std::string& name, const Setting& setting);
 
 			//dump
 			std::string						toString() const;
 
 		private:
-			nlohmann::json					m_Setting;
+			nlohmann::json					getCurrentSetting() const;
+			void							updateSetting(nlohmann::json local);
+
+		private:
+			JSONPtr							m_SettingHolder;
+			std::vector<std::string>		m_CurrentSetting;
 			std::string						m_Directory;
 	};
 }
