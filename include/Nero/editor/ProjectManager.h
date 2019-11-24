@@ -9,7 +9,7 @@
 #include <boost/function.hpp>
 #include <Nero/core/utility/StringUtil.h>
 #include <Nero/core/utility/LogUtil.h>
-
+#include <Nero/core/engine/Setting.h>
 
 namespace  nero
 {
@@ -18,7 +18,7 @@ namespace  nero
         public:
             typedef std::unique_ptr<ProjectManager> Ptr;
             typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
-            typedef LuaScene::Ptr (CreateLuaSceneFn)(Scene::Context);
+            typedef LuaScene::Ptr (CreateLuaSceneFn)(Scene::Context); 
 
             enum Project_Type {LUA_PROJECT, CPP_PROJECT, CPP_LUA_PROJECT};
 
@@ -26,11 +26,12 @@ namespace  nero
             ProjectManager();
 
            void createProject(const nlohmann::json& projectJson, int& status);
-           void createWorkspace(const nlohmann::json& workspaceJson);
+		   void createWorkspace(const Setting& parameter);
+		   void importWorkspace(const std::string& directory);
 
            bool isProjectExist(const std::string& projectName);
 
-           void setEditorSetting(const nlohmann::json& setting);
+		   void setSetting(const Setting::Ptr& setting);
 
            void loadAllProject();
 
@@ -78,6 +79,7 @@ namespace  nero
            boost::function<CreateCppSceneFn> m_CreateCppSceneFn;
            boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;
            Scene::Ptr m_GameScene;
+		   Setting::Ptr		m_Setting;
 
 
     };

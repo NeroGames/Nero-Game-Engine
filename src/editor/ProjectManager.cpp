@@ -17,6 +17,7 @@ namespace nero
          m_ProjectTable()
         ,m_EditorPid(StringPool.BLANK)
         ,m_GameProject()
+		,m_Setting(nullptr)
     {
 
     }
@@ -144,9 +145,9 @@ namespace nero
         return true;
     }
 
-    void ProjectManager::setEditorSetting(const nlohmann::json& setting)
+	void ProjectManager::setSetting(const Setting::Ptr& setting)
     {
-        m_EditorSetting = setting;
+		m_Setting = setting;
     }
 
     void ProjectManager::loadAllProject()
@@ -200,20 +201,34 @@ namespace nero
         return result;
     }
 
-    void ProjectManager::createWorkspace(const nlohmann::json& workspaceJson)
+	void ProjectManager::createWorkspace(const Setting& parameter)
     {
-        nero_log("creating new project worksapce");
-        nero_log(workspaceJson.dump(3));
+		nero_log("creating new project worksapce");
+		nero_log(parameter.toString());
 
-        std::string workspace_directory = getPath({workspaceJson["workspace_folder"].get<std::string>(), workspaceJson["workspace_name"].get<std::string>()});
-        createDirectory(workspace_directory);
+		std::string directory = getPath({parameter.getString("location"), parameter.getString("name")});
+		createDirectory(directory);
+		createDirectory(getPath({directory, "Project"}));
+		createDirectory(getPath({directory, "Factory"}));
+		createDirectory(getPath({directory, "Setting"}));
+		createDirectory(getPath({directory, "Resource"}));
+			createDirectory(getPath({directory, "Resource", "texture"}));
+			createDirectory(getPath({directory, "Resource", "animation"}));
+			createDirectory(getPath({directory, "Resource", "font"}));
+			createDirectory(getPath({directory, "Resource", "sound"}));
+			createDirectory(getPath({directory, "Resource", "music"}));
+			createDirectory(getPath({directory, "Resource", "luascript"}));
+			createDirectory(getPath({directory, "Resource", "shader"}));
+			createDirectory(getPath({directory, "Resource", "language"}));
+			createDirectory(getPath({directory, "Resource", "lightmap"}));
+
         //create nero_workspace.json
-        saveFile(getPath({workspace_directory, "nero_workspace"}, StringPool.EXTENSION_JSON), workspaceJson.dump(3));
+		saveFile(getPath({directory, ".workspace"}), parameter.toString());
 
         //update workspace setting
-        auto worksapceSetting = loadJson(getPath({"workspace", "workspace"}));
+		auto worksapceSetting = m_Setting->getSetting("workspace");
 
-        nlohmann::json workspace;
+		/*nlohmann::json workspace;
         workspace["workspace_id"]           = formatString(workspaceJson["workspace_name"].get<std::string>());
         workspace["workspace_name"]         = workspaceJson["workspace_name"];
         workspace["workspace_directory"]    = workspace_directory;
@@ -222,10 +237,16 @@ namespace nero
         workspace["default_namespace"]       = workspaceJson["default_namespace"];
         workspace["count_workspace"]        = worksapceSetting.size() + 1;
 
-        worksapceSetting.push_back(workspace);
+		worksapceSetting.push_back(workspace);*/
 
-        saveFile(getPath({"workspace", "workspace"}, StringPool.EXTENSION_JSON), worksapceSetting.dump(3), true);
+		//saveFile(getPath({"workspace", "workspace"}, StringPool.EXTENSION_JSON), worksapceSetting.dump(3), true);
     }
+
+	void ProjectManager::importWorkspace(const std::string& directory)
+	{
+
+	}
+
 
     const nlohmann::json ProjectManager::getWorkspaceTable() const
     {

@@ -26,6 +26,7 @@
 #include <Nero/core/camera/AdvancedCamera.h>
 #include <Nero/editor/EditorInterfaceUtility.h>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <nativefiledialog/include/nfd.h>
 
 #include <future>
 # include <nodeeditor/imgui_node_editor.h>
@@ -140,11 +141,11 @@ namespace nero
             //Project Workspace
             nlohmann::json              m_WorkspaceTable;               //list of available workspaces
             int                         m_WorksapceStatus;              //0 : no_worksapce, 1 : redirect_user, 2 worksapce_available
-            char                        m_InputWorksapceFolder[256];    //read workspace path
-            char                        m_InputWorksapceImportFolder[256];    //read workspace path
+			char                        m_InputWorksapceLocation[256];    //read workspace path
+			char                        m_InputWorksapceLocationImport[256];    //read workspace path
             char                        m_InputWorkspaceName[100];
             char                        m_InputWorkspaceCompany[100];
-            char                        m_InputWorkspaceLead[100];
+			char                        m_InputWorkspaceLead[100];
             char                        m_InputWorkspaceNamespace[10];
             const char*                 m_SelectedWorkpsapce;
 			int                         m_SelectedWorkpsapceIdex;
@@ -177,7 +178,8 @@ namespace nero
             void                        showWorkspaceWindow();
             //function
             int                         createProject(const nlohmann::json& projectJson, int& status);
-            void                        createWorkspace(const nlohmann::json& workspaceJson);
+			void                        createWorkspace(const Setting& parameter);
+			void						importWorkspace(const std::string& directory);
             void                        openProject(const std::string& project_name);
             void                        compileProject();
             void                        editProject();
@@ -233,6 +235,8 @@ namespace nero
 			void init();
 			std::string getString(const EditorMode& editorMode);
 
+			void selectDirectory(std::function<void(nfdchar_t *outPath)> callback);
+			void clearWorkspaceInput();
 	};
 
 }
