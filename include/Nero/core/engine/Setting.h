@@ -26,7 +26,8 @@ namespace nero
 
 		public:
 			void							setDirectory(const std::string& directory);
-			void							loadSetting(const std::string& setting);
+			void							loadJson(const nlohmann::json& setting);
+			void							loadSetting(const std::string& setting, const bool& path_has_extention = false);
 			void							load();
 			//get primitive
 			unsigned int					getUInt(const std::string& setting) const;

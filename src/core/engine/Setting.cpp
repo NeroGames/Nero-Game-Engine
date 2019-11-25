@@ -24,7 +24,13 @@ namespace nero
 		m_Directory = directory;
 	}
 
-	void Setting::loadSetting(const std::string& setting)
+	void Setting::loadJson(const nlohmann::json& setting)
+	{
+		nlohmann::json& holder = (*m_SettingHolder);
+		holder = setting;
+	}
+
+	void Setting::loadSetting(const std::string& setting, const bool& path_has_extention)
 	{
 		std::string file = StringPool.BLANK;
 
@@ -37,7 +43,7 @@ namespace nero
 			file = getPath({setting});
 		}
 
-		auto loaded = loadJson(file);
+		auto loaded = nero::loadJson(file, path_has_extention);
 
 		(*m_SettingHolder)[setting] = loaded;
 	}

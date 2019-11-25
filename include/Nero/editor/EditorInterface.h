@@ -173,7 +173,7 @@ namespace nero
             //show view
             void                        showProjectManagerWindow();
             void                        showCreateProjectWindow();
-            void                        showOpenPorjectWindow();
+			void                        showOpenProjectWindow();
             void                        showRecentProjectWindow();
             void                        showWorkspaceWindow();
             //function
@@ -237,6 +237,7 @@ namespace nero
 
 			void selectDirectory(std::function<void(nfdchar_t *outPath)> callback);
 			void clearWorkspaceInput();
+			void clearProjectInput();
 	};
 
 }
