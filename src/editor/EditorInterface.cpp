@@ -2378,7 +2378,7 @@ namespace  nero
 
 				ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize()*3);
 				ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-				if(ImGui::TreeNode(std::string(gameLevel->name + "[Level]").c_str()))
+				if(ImGui::TreeNode(std::string("[Level] " + gameLevel->name).c_str()))
 				{
 					int			chunk_node_clicked		= -1;
 					static int	chunk_selection_mask	= (1 << gameLevel->chunkTable.size());
@@ -2393,7 +2393,7 @@ namespace  nero
 							node_flags |= ImGuiTreeNodeFlags_Selected;
 						}
 
-						bool chunk_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_chunk, node_flags, std::string(worldChunk->name + "[Chunk]").c_str(), loop_chunk);
+						bool chunk_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_chunk, node_flags, std::string("[Chunk] " + worldChunk->name).c_str(), loop_chunk);
 
 						if (ImGui::IsItemClicked())
 						{
@@ -2410,17 +2410,19 @@ namespace  nero
 							{
 								ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
-								if (layer_selection_mask & (1 << loop_layer))
+								if ((layer_selection_mask & (1 << loop_layer)) && (chunk_selection_mask & (1 << loop_chunk)))
 								{
 									node_flags |= ImGuiTreeNodeFlags_Selected;
 								}
 
-								bool layer_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_layer, node_flags, std::string(objectLayer->getName() + "[Layer]").c_str(), loop_layer);
+								bool layer_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_layer, node_flags, std::string("[Layer] " + objectLayer->getName()).c_str(), loop_layer);
 
 								if (ImGui::IsItemClicked())
 								{
 									layer_node_clicked = loop_layer;
+									chunk_node_clicked = loop_chunk;
 								}
+
 								if (layer_node_open)
 								{
 									int			object_node_clicked		= -1;
@@ -2432,6 +2434,11 @@ namespace  nero
 										ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 										node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 
+										if ((object_selection_mask & (1 << loop_object)) && (layer_selection_mask & (1 << loop_layer)) && chunk_selection_mask & (1 << loop_chunk))
+										{
+											node_flags |= ImGuiTreeNodeFlags_Selected;
+										}
+
 										std::string object_name = std::string(gameObject->getName());
 
 										ImGui::TreeNodeEx((void*)(intptr_t)loop_object, node_flags, object_name.c_str(), loop_object);
@@ -2439,6 +2446,8 @@ namespace  nero
 										if (ImGui::IsItemClicked())
 										{
 											object_node_clicked = loop_object;
+											layer_node_clicked	= loop_layer;
+											chunk_node_clicked	= loop_chunk;
 										}
 
 										loop_object++;
