@@ -9,6 +9,7 @@
 #include <sstream>
 #include <vector>
 #include <functional>
+#include <boost/algorithm/string.hpp>
 ////////////////////////////////////////////////////////////
 
 namespace nero

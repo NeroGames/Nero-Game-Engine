@@ -46,6 +46,8 @@ namespace nero
 			void					createEditorInterface();
 			void					openLastProject();
 			void					createCamera();
+			void					checkWorkspace();
+
 
          private:
             //Startup Thread

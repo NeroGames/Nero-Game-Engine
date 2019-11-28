@@ -40,7 +40,9 @@ namespace nero
 
         public:
             typedef std::unique_ptr<EditorInterface> Ptr;
+			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 
+		public:
                         EditorInterface(sf::RenderWindow& window);
                        ~EditorInterface();
 
@@ -177,7 +179,7 @@ namespace nero
             void                        showRecentProjectWindow();
             void                        showWorkspaceWindow();
             //function
-            int                         createProject(const nlohmann::json& projectJson, int& status);
+			int                         createProject(const Setting& parameter, int& status);
 			void                        createWorkspace(const Setting& parameter);
 			void						importWorkspace(const std::string& directory);
             void                        openProject(const std::string& project_name);
@@ -213,8 +215,9 @@ namespace nero
 			void		showSpriteResource();
 			void		showAnimationResource();
 
-			sf::RenderTexture			m_RenderTexture;
+			RenderTexturePtr			m_RenderTexture;
 			EditorMode					m_EditorMode;
+			BuilderMode					m_BuilderMode;
 
 			sf::RectangleShape      m_CameraXAxis;
 			sf::RectangleShape      m_CameraYAxis;
@@ -230,7 +233,7 @@ namespace nero
 			float	m_FrameRate;
 			float	m_FrameTime;
 
-			RenderContext m_RenderContext;
+			RenderContextPtr m_RenderContext;
 
 			void init();
 			std::string getString(const EditorMode& editorMode);
@@ -238,6 +241,18 @@ namespace nero
 			void selectDirectory(std::function<void(nfdchar_t *outPath)> callback);
 			void clearWorkspaceInput();
 			void clearProjectInput();
+			void updateProjectInput();
+			void showMeshResource();
+			sf::Vector2f getAddObjectPosition();
+
+			void handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
+			void switchBuilderMode();
+			void showCanvasMenu();
+
+
+
+			std::string m_SelectedChunkNode;
+
 	};
 
 }

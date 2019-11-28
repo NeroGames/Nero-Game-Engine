@@ -293,10 +293,35 @@ namespace  nero
 		m_Setting->loadSetting("recent_project");
 
 		//list of workspace
+		checkWorkspace();
 		m_Setting->loadSetting("worksapce");
 
 		//dockspace setting
 		m_Setting->loadSetting("dockspace");
+	}
+
+	void EngineEditor::checkWorkspace()
+	{
+		if(!fileExist(getPath({"setting", "workspace"}, StringPool.EXTENSION_JSON)))
+		{
+			saveFile(getPath({"setting", "workspace"}, StringPool.EXTENSION_JSON), nlohmann::json::array().dump(3));
+
+			return;
+		}
+
+		auto worksapceTable = loadJson(getPath({"setting", "workspace"}));
+
+		nlohmann::json workspaceSetting;
+
+		for(auto workspace : worksapceTable)
+		{
+			if(fileExist(getPath({workspace["workspace_directory"], ".workspace"})))
+			{
+				workspaceSetting.push_back(workspace);
+			}
+		}
+
+		saveFile(getPath({"setting", "workspace"}, StringPool.EXTENSION_JSON), workspaceSetting.dump(3), true);
 	}
 
 	void EngineEditor::checkEnvironmentVariable()

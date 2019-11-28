@@ -11,10 +11,9 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	SceneBuilder::SceneBuilder(ResourceManager::Ptr resourceManager, SceneSetting& sceneSetting):
+	SceneBuilder::SceneBuilder():
         //Main
-		m_ResourceManager(resourceManager)
-        ,m_PhysicWorld(nullptr)
+		 m_PhysicWorld(nullptr)
         ,m_PhysicObjectManager()
         ,m_SelectionRect()
         ,m_LastMousePosition(0.f, 0.f)
@@ -27,7 +26,7 @@ namespace nero
         ,m_SelectedObject(nullptr)
         ,m_LayerCount(0)
         ,m_ObjectCount(0)
-        ,m_SceneSetting(sceneSetting)
+		,m_RenderContext(nullptr)
     {
 		m_MeshEditor = MeshEditor::Ptr(new MeshEditor());
 
@@ -290,7 +289,7 @@ namespace nero
 
     void SceneBuilder::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
     {
-		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext.mouse_position.x, m_RenderContext.mouse_position.y), m_RenderTexture->getView());
+		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
 
         if(mouse.button == sf::Mouse::Left && isPressed && m_SelectedLayer && m_SelectedLayer->isVisible())
         {
@@ -306,7 +305,10 @@ namespace nero
 
         if (mouse.button == sf::Mouse::Right && isPressed && m_SelectedLayer && m_SelectedLayer->isVisible())
         {
-            m_SelectedObject = findObject(m_SelectedLayer, world_pos);
+			auto founded = findObject(m_SelectedLayer, world_pos);
+
+			if(founded)
+				m_SelectedObject = founded;
 
             if(m_SelectedObject)
                 m_UpdateUI();
@@ -314,14 +316,14 @@ namespace nero
 
         if (mouse.button == sf::Mouse::Left && !isPressed && m_SelectedLayer && m_SelectedObject)
         {
-            m_SelectedObject = nullptr;
+			m_SelectedObject = nullptr;
             m_UpdateUndo();
         }
     }
 
     void  SceneBuilder::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
     {
-		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext.mouse_position.x, m_RenderContext.mouse_position.y), m_RenderTexture->getView());
+		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
 
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && m_SelectedLayer && m_SelectedLayer->isVisible() && m_SelectedObject)
         {
@@ -669,6 +671,45 @@ namespace nero
         Object::Ptr object = m_SelectedObject->clone(pos);
         object->setId(getNewId());
 
+		std::string object_name = StringPool.BLANK;
+
+		switch(object->getSecondType())
+		{
+			case Object::Sprite_Object:
+				object_name = "sprite " + toString(object->getId());
+				break;
+
+			case Object::Mesh_Object:
+				object_name = "mesh " + toString(object->getId());
+				break;
+
+			case Object::Meshed_Object:
+				object_name = "meshed sprite " + toString(object->getId());
+				break;
+
+			case Object::Animation_Object:
+				object_name = "animation " + toString(object->getId());
+				break;
+
+			case Object::Animation_Meshed_Object:
+				object_name = "meshed animation " + toString(object->getId());
+				break;
+
+			case Object::Text_Object:
+				object_name = "sprite " + toString(object->getId());
+				break;
+
+			case Object::Button_Object:
+				object_name = "button " + toString(object->getId());
+				break;
+
+			default:
+				object_name = "object " + toString(object->getId());
+				break;
+		}
+
+		object->setName(object_name);
+
         if(object->getSecondType() == Object::Mesh_Object)
         {
             MeshObject::Ptr mesh_object = MeshObject::Cast(object);
@@ -785,6 +826,8 @@ namespace nero
                 sprite_object->setSecondType(Object::Sprite_Object);
                 sprite_object->setPosition(position);
                 sprite_object->setId(getNewId());
+				std::string object_name = "sprite " + toString(sprite_object->getId());
+				sprite_object->setName(object_name);
 
                 object = sprite_object;
 
@@ -809,6 +852,8 @@ namespace nero
 
                     MeshObject::Ptr mesh_object(new MeshObject());
                     mesh_object->setId(mesh.getId());
+					std::string object_name = "mesh " + toString(mesh.getId());
+					mesh_object->setName(object_name);
                     mesh_object->setMesh(mesh);
                     mesh_object->setPosition(position);
                     mesh_object->setSecondType(Object::Mesh_Object);
@@ -877,13 +922,17 @@ namespace nero
                 sprite_object->setSecondType(Object::Meshed_Object);
                 sprite_object->setPosition(position);
                 sprite_object->setId(getNewId());
-                sprite_object->setIsUpdateable(true);
+				std::string object_name = "sprite " + toString(sprite_object->getId());
+				sprite_object->setName(object_name);
+				sprite_object->setIsUpdateable(true);
 
                 //Mesh Object
                 Mesh mesh = Mesh(Mesh::Polygon_Mesh, sf::Vector2f(0.f, 0.f), 50.f);
                 mesh.setId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getId());
+				object_name = "mesh " + toString(mesh.getId());
+				mesh_object->setName(object_name);
                 mesh_object->setMesh(mesh);
                 mesh_object->setSecondType(Object::Mesh_Object);
                 mesh_object->setIsSelectable(false);
@@ -929,6 +978,8 @@ namespace nero
                 animation_object->setSecondType(Object::Animation_Object);
                 animation_object->setPosition(position);
                 animation_object->setId(getNewId());
+				std::string object_name = "animation " + toString(animation_object->getId());
+				animation_object->setName(object_name);
 
                 object = animation_object;
 
@@ -965,12 +1016,16 @@ namespace nero
                 animation_object->setSecondType(Object::Animation_Meshed_Object);
                 animation_object->setPosition(position);
                 animation_object->setId(getNewId());
+				std::string object_name = "animation " + toString(animation_object->getId());
+				animation_object->setName(object_name);
 
                   //Mesh Object
                 Mesh mesh = Mesh(Mesh::Polygon_Mesh, sf::Vector2f(0.f, 0.f), 50.f);
                 mesh.setId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getId());
+				object_name = "mesh " + toString(mesh.getId());
+				mesh_object->setName(object_name);
                 mesh_object->setMesh(mesh);
                 mesh_object->setSecondType(Object::Mesh_Object);
                 mesh_object->setIsSelectable(false);
@@ -999,6 +1054,8 @@ namespace nero
                 text_object->setText(text);
                 text_object->setPosition(position);
                 text_object->setId(getNewId());
+				std::string object_name = "text " + toString(text_object->getId());
+				text_object->setName(object_name);
 
                 object = text_object;
 
@@ -1020,6 +1077,9 @@ namespace nero
                 sprite_object->setSecondType(Object::Button_Object);
                 sprite_object->setPosition(position);
                 sprite_object->setId(getNewId());
+				std::string object_name = "button " + toString(sprite_object->getId());
+				sprite_object->setName(object_name);
+
                 sprite_object->setColor(sf::Color(255, 255, 255, 150));
 
                 object = sprite_object;
@@ -2053,7 +2113,7 @@ namespace nero
         return m_ObjectCount;
     }
 
-	void SceneBuilder::setRenderContext(const RenderContext& renderContext)
+	void SceneBuilder::setRenderContext(const RenderContextPtr& renderContext)
 	{
 		m_RenderContext = renderContext;
 
@@ -2066,4 +2126,10 @@ namespace nero
 
 		m_MeshEditor->setRenderTexture(renderTexture);
 	}
+
+	void SceneBuilder::setResourceManager(const ResourceManager::Ptr& resourceManager)
+	{
+		m_ResourceManager = resourceManager;
+	}
+
 }

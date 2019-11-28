@@ -8,6 +8,7 @@
 //Nero
 #include <Nero/core/utility/StringUtil.h>
 #include <Nero/core/utility/LogUtil.h>
+#include <Nero/core/utility/PlatformUtil.h>
 
 //JSON
 #include <json/json.hpp>
@@ -15,7 +16,11 @@
 namespace nero
 {
     //get file path : OS dependent
-    std::string getPath(const std::vector<std::string>& list, const std::string& extansion = StringPool.BLANK);
+	std::string getPath(const std::vector<std::string>& list, const std::string& extension = StringPool.BLANK);
+	std::string getWindowsPath(const std::vector<std::string>& list, const std::string& extension = StringPool.BLANK);
+	std::string getLinuxPath(const std::vector<std::string>& list, const std::string& extension = StringPool.BLANK);
+	std::string getWindowsPath(const std::string& path);
+	std::string escapeAntiSlash(const std::string& word);
 
     //get file content
     std::string loadText(const std::string& file);

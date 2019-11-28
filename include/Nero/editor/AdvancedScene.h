@@ -16,8 +16,9 @@
 #include <memory>
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
-#include "ltbl/LightSystem.hpp"
+#include <ltbl/LightSystem.hpp>
 #include <Nero/editor/EditorInterfaceUtility.h>
+#include <Nero/editor/SceneBuilder.h>
 
 namespace nero
 {
@@ -37,51 +38,76 @@ namespace nero
 
     class AdvancedScene
     {
-        public:
-            struct SceneTrunk
-            {
-                std::string         name;
-				//SceneBuilder::Ptr   sceneBuilder;
-				//UndoManager::Ptr    undoManager;
-            };
+		public:
+			typedef std::shared_ptr<AdvancedScene> Ptr;
+			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
+			typedef std::shared_ptr<RenderContext> RenderContextPtr;
 
-            struct SceneScreen
+		public:
+			struct	WorldChunk;
+			struct	GameLevel;
+			struct	GameScreen;
+			typedef std::shared_ptr<GameLevel> GameLevelPtr;
+			typedef std::shared_ptr<WorldChunk> WorldChunkPtr;
+			typedef std::shared_ptr<GameScreen> GameScreenPtr;
+
+			struct WorldChunk
+			{
+				WorldChunk(const std::string& name): name(name)
+				{
+					sceneBuilder = std::make_shared<SceneBuilder>();
+				}
+
+				std::string			name;
+				SceneBuilder::Ptr	sceneBuilder;
+			};
+
+			struct GameLevel
+			{
+				GameLevel(const std::string& name): name(name), chunkTable()
+				{
+					//Empty
+				}
+
+				std::string				name;
+				std::vector<WorldChunkPtr> chunkTable;
+			};
+
+
+			struct GameScreen
             {
+				GameScreen(const std::string& name): name(name)
+				{
+					sceneBuilder = std::make_shared<SceneBuilder>();
+				}
+
                 std::string             name;
-				//SceneBuilder::Ptr       sceneBuilder;
-				//UndoManager::Ptr        undoManager;
+				SceneBuilder::Ptr       sceneBuilder;
             };
-
-            struct SceneResource
-            {
-
-            };
-
-        public:
-            typedef std::shared_ptr<AdvancedScene> Ptr;
-
 
         public:
 			AdvancedScene();
 
-			void                        handleEvent(const sf::Event& event);
-			void                        update(const sf::Time& timeStep);
-			sf::RenderTexture&         render(const RenderContext& renderContext);
+			void                        handleEvent(const sf::Event& event, const EditorMode& editorMode, const BuilderMode& builderMode);
+			void                        update(const sf::Time& timeStep, const EditorMode& editorMode, const BuilderMode& builderMode);
+			void						render(const EditorMode& editorMode, const BuilderMode& builderMode);
 
-			 void setScene(Scene::Ptr scene);
-			 void						setRenderContext(const RenderContext& renderContext);
+			 void						setScene(Scene::Ptr scene);
+			 void						setRenderContext(const RenderContextPtr& renderContext);
+			 void						setRenderTexture(const RenderTexturePtr& renderTexture);
 
-			 void handleSceneBuilderEvent(const sf::Event& event);
-			 void handleScreenBuilderEvent(const sf::Event& event);
-			 void handleSceneEvent(const sf::Event& event);
-
-			 void updateSceneBuilder(const sf::Time& timeStep);
-			 void updateScreenBuilder(const sf::Time& timeStep);
-			 void updateScene(const sf::Time& timeStep);
-
-			 void renderSceneBuilder(sf::RenderTexture& texture);
 			 void renderScreenBuilder(sf::RenderTexture& texture);
 			 void renderScene(sf::RenderTexture& texture);
+
+			 void addGameLevel(const std::string& name);
+			 void addWorldChunk(const std::string& name);
+			 void addGameScreen(const std::string& name);
+
+			 void setResourceManager(const ResourceManager::Ptr& resourceManager);
+			 void initialize();
+			 void addObject(Object::Type type, const sf::String& label, sf::Vector2f position, const EditorMode& editorMode);
+
+			 AdvancedScene::GameLevelPtr			getSelectedGameLevel();
 
 
         private:
@@ -99,8 +125,13 @@ namespace nero
 
 
 
-            std::vector<SceneScreen>    m_SceneScreenTable;
-            std::vector<SceneTrunk>     m_SceneTrunkTable;
+			std::vector<GameLevelPtr>	m_GameLevelTable;
+			GameLevelPtr				m_SelectedGameLevel;
+			WorldChunkPtr				m_SelectedWorldChunk;
+			std::vector<GameScreenPtr>  m_GameScreenTable;
+			SceneBuilder::Ptr			m_SelectedWorldBuilder;
+			SceneBuilder::Ptr			m_SelectedScreenBuilder;
+			GameScreenPtr				m_SelectedGameScreen;
             //other
             b2Body*                     m_Bomb;
             b2Vec2                      m_BombSpawnPoint;
@@ -114,9 +145,10 @@ namespace nero
             b2Profile                   m_TotalProfile;
 
             Scene::Ptr                  m_Scene;
-            sf::RenderTexture           m_RenderTexture;
-            RenderContext               m_RenderContext;
+			RenderContextPtr            m_RenderContext;
 			ltbl::LightSystem			m_LightEngine;
+			ResourceManager::Ptr		m_ResourceManager;
+			RenderTexturePtr			m_RenderTexture;
     };
 }
 

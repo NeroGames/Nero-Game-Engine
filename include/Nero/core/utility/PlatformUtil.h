@@ -8,10 +8,18 @@
 //check OS
 #ifdef _WIN32
     #define NERO_OS_WINDOW32
+
+	#ifndef NERO_OS_WINDOW
+		#define NERO_OS_WINDOW
+	#endif
 #endif
 
 #ifdef _WIN64
     #define NERO_OS_WINDOW64
+
+	#ifndef NERO_OS_WINDOW
+		#define NERO_OS_WINDOW
+	#endif
 #endif
 
 #ifdef __linux__

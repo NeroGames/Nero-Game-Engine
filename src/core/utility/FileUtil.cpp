@@ -7,36 +7,59 @@
 
 namespace nero
 {
-    std::string getPath(const std::vector<std::string>& list, const std::string& extansion)
+	std::string getPath(const std::vector<std::string>& list, const std::string& extension)
     {
-        if(list.size() == 0)
-        {
-            throw std::runtime_error("empty path");
-        }
+		#ifdef NERO_OS_WINDOW
+			return getWindowsPath(list, extension);
+		#endif
 
-        std::string path = StringPool.BLANK;
-
-        //build path Window OS
-        for(const std::string& name : list)
-        {
-            path += name + "/";
-        }
-
-        path.pop_back();
-
-        if(extansion != StringPool.BLANK)
-        {
-            path += extansion;
-        }
-
-        #ifdef NERO_OS_LINUX
-            path = "./" + path;
-        #endif
-
-           //nero_log(path);
-
-        return path;
+		#ifdef NERO_OS_LINUX
+			return getLinuxPath(list, extension);
+		#endif
     }
+
+	std::string escapeAntiSlash(const std::string& word)
+	{
+		return boost::algorithm::replace_all_copy(word, "\\", "\\\\");
+	}
+
+	std::string getWindowsPath(const std::vector<std::string>& list, const std::string& extansion)
+	{
+		if(list.empty())
+		{
+			return StringPool.BLANK;
+		}
+
+
+		std::string path = StringPool.BLANK;
+
+		for(const std::string& name : list)
+		{
+			path += getWindowsPath(name) + "\\";
+		}
+
+		path.pop_back();
+
+		if(extansion != StringPool.BLANK)
+		{
+			path += extansion;
+		}
+
+		return path;
+	}
+
+	std::string getWindowsPath(const std::string& path)
+	{
+		//replace all slash by a double back_slash
+		return boost::algorithm::replace_all_copy(path, "/", "\\\\");
+	}
+
+
+	std::string getLinuxPath(const std::vector<std::string>& list, const std::string& extansion)
+	{
+		//TODO get linux path
+		 return StringPool.BLANK;
+	}
 
     std::string loadText(const std::string& file)
     {

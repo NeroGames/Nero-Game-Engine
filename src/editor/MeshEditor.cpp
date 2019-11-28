@@ -9,9 +9,10 @@
 namespace nero
 {
 	MeshEditor::MeshEditor():
-		m_LastMousePosition(0.f, 0.f)
+		 m_LastMousePosition(0.f, 0.f)
         ,m_SelectedMesh(nullptr)
-        ,m_MeshCount(0)
+		,m_MeshCount(0)
+		,m_RenderContext(nullptr)
     {
         m_UpdateUndo    = [](){};
         m_UpdateLog     = [](const std::string&, int){};
@@ -183,8 +184,11 @@ namespace nero
 
     void MeshEditor::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
     {
-        //Get the mouse position in the world
-		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext.mouse_position.x, m_RenderContext.mouse_position.y), m_RenderTexture->getView());
+		//Get the mouse position in the world
+		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
+
+		//sf::Vector2f screen_pos    = sf::Vector2f(mouse.x - m_RenderContext->canvas_position.x, mouse.y - m_RenderContext->canvas_position.y);
+		//sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(screen_pos.x, screen_pos.y), m_RenderTexture->getView());
 
         //Handle pressing left click
         //Left click is use mostly to drag things
@@ -561,16 +565,16 @@ namespace nero
 
     void  MeshEditor::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
     {
-		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext.mouse_position.x, m_RenderContext.mouse_position.y), m_RenderTexture->getView());
+		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
 
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
             sf::Vector2f diff = world_pos - m_LastMousePosition;
 
-            if(std::abs(diff.x) > std::abs(diff.y))
+			/*if(std::abs(diff.x) > std::abs(diff.y))
                 diff.y = 0.f;
             else
-                diff.x = 0.f;
+				diff.x = 0.f;*/
 
             if(!m_SelectedVertexTab.empty() && m_SelectedMesh)
             {
@@ -600,7 +604,7 @@ namespace nero
         m_UpdateLogIf = fn;
     }
 
-	void MeshEditor::setRenderContext(const RenderContext& renderContext)
+	void MeshEditor::setRenderContext(const RenderContextPtr& renderContext)
 	{
 		m_RenderContext = renderContext;
 	}

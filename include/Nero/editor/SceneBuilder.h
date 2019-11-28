@@ -25,6 +25,8 @@
 //STD
 #include <unordered_map>
 #include <memory>
+#include <Nero/editor/UndoManager.h>
+
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -35,7 +37,7 @@ namespace nero
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 
         public:
-											SceneBuilder(ResourceManager::Ptr resourceManager, SceneSetting& sceneSetting);
+											SceneBuilder();
 
             //Main
             void                            handleEvent(const sf::Event& event);
@@ -116,8 +118,9 @@ namespace nero
 
             int                             getObjectCount();
 
-			void							setRenderContext(const RenderContext& renderContext);
+			void							setRenderContext(const RenderContextPtr& renderContext);
 			void							setRenderTexture(const RenderTexturePtr& renderTexture);
+			void							setResourceManager(const ResourceManager::Ptr& resourceManager);
 
         private:
             Object::Ptr                     findObject(Object::Ptr object, sf::Vector2f pos);
@@ -158,11 +161,11 @@ namespace nero
 
             b2World*                        m_PhysicWorld;
 
-            SceneSetting&                   m_SceneSetting;
+			SceneSetting                    m_SceneSetting;
             sf::Color                       m_CanvasColor;
 
 			RenderTexturePtr                                    m_RenderTexture;
-			RenderContext										m_RenderContext;
+			RenderContextPtr									m_RenderContext;
 
             std::function<void()>                               m_UpdateUI;
             std::function<void()>                               m_UpdateUndo;

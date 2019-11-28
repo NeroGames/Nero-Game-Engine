@@ -25,11 +25,12 @@ namespace  nero
         public:
             ProjectManager();
 
-           void createProject(const nlohmann::json& projectJson, int& status);
+		   void createProject(const Setting& parameter, int& status);
 		   void createWorkspace(const Setting& parameter);
 		   void importWorkspace(const std::string& directory);
 
-           bool isProjectExist(const std::string& projectName);
+		   bool isProjectExist(const std::string& projectName);
+		   bool isWorksapceExist(const std::string& projectName);
 
 		   void setSetting(const Setting::Ptr& setting);
 
@@ -59,12 +60,14 @@ namespace  nero
 
             std::string getEngineDirectory() const;
 
-            GameProject::Ptr openProject(const std::string& project_name);
+			GameProject::Ptr openProject(const std::string& projectPath);
             nlohmann::json findProject(const std::string& workspace_name, const std::string& project_name);
 
             void openEditor(std::string cmake_project);
 
-
+			void createCppProject(const Setting& parameter, int& status);
+			void createLuaProject(const Setting& parameter, int& status);
+			void createCppLuaProject(const Setting& parameter, int& status);
 
 
 

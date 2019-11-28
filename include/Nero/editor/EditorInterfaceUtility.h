@@ -7,6 +7,7 @@
 ///////////////////////////HEADERS///////////////////////////
 #include <map>
 #include <vector>
+#include <memory>
 #include <imgui/imgui.h>
 /////////////////////////////////////////////////////////////
 namespace nero
@@ -33,6 +34,8 @@ namespace nero
 	   bool         focus;
 	};
 
+	typedef std::shared_ptr<RenderContext> RenderContextPtr;
+
 	enum class EditorMode
 	{
 		WORLD_BUILDER,
@@ -40,6 +43,13 @@ namespace nero
 		OBJECT_BUILDER,
 		PLAY_GAME,
 		RENDER_GAME
+	};
+
+	enum class BuilderMode
+	{
+		OBJECT,
+		MESH,
+		JOINT
 	};
 
 }

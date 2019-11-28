@@ -24,6 +24,7 @@ namespace nero
 
 	AdvancedScene::AdvancedScene():
 		m_LightEngine(true)
+	  ,m_RenderTexture(nullptr)
     {
 		// Create the LightSystem
 		m_LightEngine.create({ -1000.f, -1000.f, 2000.f, 2000.f }, sf::Vector2u(800.f, 800.f));
@@ -77,19 +78,96 @@ namespace nero
 		head.setPosition(300.f, 200.f);
 		m_LightEngine.addSprite(head);*/
 
+
     }
 
-    void AdvancedScene::handleEvent(const sf::Event& event)
+	void AdvancedScene::addGameLevel(const std::string& name)
+	{
+		m_GameLevelTable.push_back(std::make_shared<GameLevel>(name));
+		m_SelectedGameLevel = m_GameLevelTable.back();
+
+		addWorldChunk("Game Start");
+	}
+
+	void AdvancedScene::addObject(Object::Type type, const sf::String& label, sf::Vector2f position, const EditorMode& editorMode)
+	{
+		if(editorMode == EditorMode::WORLD_BUILDER)
+		{
+			m_SelectedWorldBuilder->addObject(type, label, position);
+		}
+		else if(editorMode == EditorMode::WORLD_BUILDER)
+		{
+			m_SelectedScreenBuilder->addObject(type, label, position);
+		}
+	}
+
+	void AdvancedScene::addWorldChunk(const std::string& name)
+	{
+		if(m_SelectedGameLevel)
+		{
+			m_SelectedGameLevel->chunkTable.push_back(std::make_shared<WorldChunk>(name));
+			m_SelectedWorldChunk = m_SelectedGameLevel->chunkTable.back();
+			m_SelectedWorldBuilder = m_SelectedWorldChunk->sceneBuilder;
+			m_SelectedWorldBuilder->setResourceManager(m_ResourceManager);
+			m_SelectedWorldBuilder->setRenderTexture(m_RenderTexture);
+			m_SelectedWorldBuilder->setRenderContext(m_RenderContext);
+			m_SelectedWorldBuilder->addLayer();
+		}
+	}
+
+	void AdvancedScene::addGameScreen(const std::string& name)
+	{
+		m_GameScreenTable.push_back(std::make_shared<GameScreen>(name));
+		m_SelectedGameScreen = m_GameScreenTable.back();
+		m_SelectedScreenBuilder = m_SelectedGameScreen->sceneBuilder;
+		m_SelectedScreenBuilder->setResourceManager(m_ResourceManager);
+		m_SelectedWorldBuilder->setRenderTexture(m_RenderTexture);
+		m_SelectedWorldBuilder->setRenderContext(m_RenderContext);
+		m_SelectedScreenBuilder->addLayer();
+	}
+
+	void AdvancedScene::handleEvent(const sf::Event& event, const EditorMode& editorMode, const BuilderMode& builderMode)
     {
-
+		if(editorMode == EditorMode::WORLD_BUILDER && builderMode == BuilderMode::OBJECT)
+		{
+			m_SelectedWorldBuilder->handleEvent(event);
+		}
+		else if(editorMode == EditorMode::WORLD_BUILDER && builderMode == BuilderMode::MESH)
+		{
+			m_SelectedWorldBuilder->getMeshEditor()->handleEvent(event);
+		}
+		else if(editorMode == EditorMode::SCREEN_BUILDER && builderMode == BuilderMode::OBJECT)
+		{
+			m_SelectedScreenBuilder->handleEvent(event);
+		}
     }
 
-    void AdvancedScene::update(const sf::Time& timeStep)
+	void AdvancedScene::update(const sf::Time& timeStep, const EditorMode& editorMode, const BuilderMode& builderMode)
     {
+		if(editorMode == EditorMode::WORLD_BUILDER && builderMode == BuilderMode::OBJECT)
+		{
+			m_SelectedWorldBuilder->update(timeStep);
+		}
+		else if(editorMode == EditorMode::SCREEN_BUILDER && builderMode == BuilderMode::OBJECT)
+		{
+			m_SelectedScreenBuilder->update(timeStep);
+		}
 
-    }
+	}
 
-	sf::RenderTexture& AdvancedScene::render(const RenderContext& renderContext)
+	void AdvancedScene::render(const EditorMode& editorMode, const BuilderMode& builderMode)
+	{
+		if(editorMode == EditorMode::WORLD_BUILDER)
+		{
+			m_SelectedWorldBuilder->render();
+		}
+		else if(editorMode == EditorMode::SCREEN_BUILDER)
+		{
+			m_SelectedScreenBuilder->render();
+		}
+	}
+
+	/*sf::RenderTexture AdvancedScene::render(const RenderContext& renderContext)
     {
 		setRenderContext(renderContext);
 
@@ -105,78 +183,43 @@ namespace nero
 			auto& renderTexture = m_Scene->getRenderTexture();
             //return m_Scene->getRenderTexture();
 
-			m_RenderTexture.draw(sf::Sprite(renderTexture.getTexture()));
+			//m_RenderTexture.draw(sf::Sprite(renderTexture.getTexture()));
         }
 
 		//m_LightEngine.render(m_RenderTexture);
 
-        return  m_RenderTexture;
-    }
+		return  sf::RenderTexture();
+	}*/
 
     void AdvancedScene::setScene(Scene::Ptr scene)
     {
         m_Scene = scene;
     }
 
-	void AdvancedScene::setRenderContext(const RenderContext& renderContext)
+	void AdvancedScene::setRenderContext(const RenderContextPtr& renderContext)
 	{
 		m_RenderContext = renderContext;
 	}
 
-	void AdvancedScene::handleSceneBuilderEvent(const sf::Event& event)
+	void AdvancedScene::setRenderTexture(const RenderTexturePtr& renderTexture)
 	{
-
+		m_RenderTexture = renderTexture;
 	}
 
-	void AdvancedScene::handleScreenBuilderEvent(const sf::Event& event)
+	void AdvancedScene::setResourceManager(const ResourceManager::Ptr& resourceManager)
 	{
-
+		m_ResourceManager = resourceManager;
 	}
 
-	void AdvancedScene::handleSceneEvent(const sf::Event& event)
+	void AdvancedScene::initialize()
 	{
-
+		addGameLevel("Game Start");
+		addGameScreen("Start Screen");
 	}
 
-	void AdvancedScene::updateSceneBuilder(const sf::Time& timeStep)
+	AdvancedScene::GameLevelPtr AdvancedScene::getSelectedGameLevel()
 	{
-
-	}
-
-	void AdvancedScene::updateScreenBuilder(const sf::Time& timeStep)
-	{
-
-	}
-
-	void AdvancedScene::updateScene(const sf::Time& timeStep)
-	{
-
-	}
-
-	void AdvancedScene::renderSceneBuilder(sf::RenderTexture& texture)
-	{
-		sf::CircleShape circle;
-
-		circle.setRadius(50.f);
-		circle.setOrigin(50.f, 50.f);
-
-		sf::RectangleShape rectangle(sf::Vector2f(200.f, 50.f));
-
-		rectangle.setPosition(100.f, 0.f);
-		rectangle.setFillColor(sf::Color::Blue);
-
-		texture.draw(circle);
-		texture.draw(rectangle);
-	}
-
-	void AdvancedScene::renderScreenBuilder(sf::RenderTexture& texture)
-	{
-
-	}
-
-	void AdvancedScene::renderScene(sf::RenderTexture& texture)
-	{
-
+		return m_SelectedGameLevel;
 	}
 
 }

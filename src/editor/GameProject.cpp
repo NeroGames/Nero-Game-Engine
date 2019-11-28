@@ -14,9 +14,9 @@
 namespace nero
 {
     GameProject::GameProject():
-        m_AdvancedScene(nullptr)
-        ,m_Scene(nullptr)
+		m_Scene(nullptr)
         ,m_ProjectCompilationStatus(0)
+		,m_AdvancedScene(AdvancedScene::Ptr(new AdvancedScene()))
     {
 
     }
@@ -73,7 +73,6 @@ namespace nero
         m_ProjectLibraryFile = getPath({m_ProjectBuildDirectory, "libnerogame-" + project_id}, StringPool.EXTENSION_DLL);
         m_ProjectLibraryCopyFile = getPath({m_ProjectBuildDirectory, "libnerogame-" + project_id + "-copy"}, StringPool.EXTENSION_DLL);
 
-        m_AdvancedScene = AdvancedScene::Ptr(new AdvancedScene());
     }
 
     void GameProject::loadProject()
