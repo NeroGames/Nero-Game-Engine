@@ -24,7 +24,7 @@
 #include <Nero/editor/AdvancedScene.h>
 #include <Nero/core/resource/ResourceManager.h>
 #include <Nero/core/camera/AdvancedCamera.h>
-#include <Nero/editor/EditorInterfaceUtility.h>
+#include <Nero/editor/EditorUtility.h>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <nativefiledialog/include/nfd.h>
 
@@ -182,7 +182,7 @@ namespace nero
 			int                         createProject(const Setting& parameter, int& status);
 			void                        createWorkspace(const Setting& parameter);
 			void						importWorkspace(const std::string& directory);
-            void                        openProject(const std::string& project_name);
+			void                        openProject(const std::string& projectDirectory);
             void                        compileProject();
             void                        editProject();
             void                        reloadProject();

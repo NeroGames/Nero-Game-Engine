@@ -49,6 +49,7 @@ namespace nero
 
 			//dump
 			std::string						toString() const;
+			nlohmann::json					toJson() const;
 
 		private:
 			nlohmann::json					getCurrentSetting() const;

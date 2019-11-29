@@ -40,10 +40,17 @@ namespace nero
 		{
 			createCppLuaProject(parameter, status);
 		}
+
+		updateRecentProject(getProjectDirectory(parameter));
     }
 
-	void ProjectManager::
-	createCppProject(const Setting& parameter, int& status)
+	std::string ProjectManager::getProjectDirectory(const Setting& parameter)
+	{
+		std::string workspaceDirectory	= findWorkspace(parameter.getString("workspace_name"))["workspace_directory"].get<std::string>();
+		return getPath({workspaceDirectory, "Project", parameter.getString("project_name")});
+	}
+
+	void ProjectManager::createCppProject(const Setting& parameter, int& status)
 	{
 		//Step 1-1 : Create directory struture
 		status = 1;
@@ -552,9 +559,9 @@ namespace nero
          return "C:/Program Files (x86)/Nero Game Engine";
      }
 
-	 GameProject::Ptr ProjectManager::openProject(const std::string& projectPath)
+	 GameProject::Ptr ProjectManager::openProject(const std::string& projectDirectory)
      {
-		 nero_log("openning project " + projectPath);
+		 nero_log("openning project " + projectDirectory);
 
          //close current project
          nlohmann::json project_workpsace;
@@ -590,10 +597,40 @@ namespace nero
 			//m_GameProject->loadProjectLibrary();
 			nero_log("openning editor");
 			//m_GameProject->openEditor();
+
+			updateRecentProject(projectDirectory);
 		//}
 
         return m_GameProject;
      }
+
+	 void ProjectManager::updateRecentProject(const std::string& projectDirectory)
+	 {
+		 auto recentProject =  loadJson(getPath({"setting", "recent_project"}));
+
+		 Setting projectDucument;
+		 projectDucument.loadJson(loadJson(getPath({projectDirectory, ".project"}), true));
+
+		for(int i = 0; i < recentProject.size(); i++)
+		{
+			if(recentProject[i]["project_name"].get<std::string>() == projectDucument.getString("project_name"))
+			{
+				recentProject.erase(i);
+				break;
+			}
+		}
+
+		Setting recent;
+		recent.setString("project_directory", projectDirectory);
+		recent.setString("project_name", projectDucument.getString("project_name"));
+		recent.setString("workspace_name", projectDucument.getString("workspace_name"));
+
+		recentProject.push_back(recent.toJson());
+
+		saveFile(getPath({"setting", "recent_project"}, StringPool.EXTENSION_JSON), recentProject.dump(3), true);
+
+
+	 }
 
      nlohmann::json ProjectManager::findProject(const std::string& workspace_name, const std::string& project_name)
      {

@@ -10,6 +10,7 @@
 #include <Nero/editor/EditorConstant.h>
 #include <functional>
 #include <vector>
+#include <IconFontCppHeaders/IconsFontAwesome5.h>
 
 namespace  nero
 {
@@ -41,6 +42,16 @@ namespace  nero
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
+
+		io.Fonts->AddFontDefault();
+
+		ImFontConfig config;
+		config.MergeMode = true;
+		config.GlyphMinAdvanceX = 13.0f; // Use if you want to make the icon monospaced
+		static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 13.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 13.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/forkawesome-webfont.ttf", 13.0f, &config, icon_ranges);
 
         m_ProjectManager = std::make_unique<ProjectManager>();
 		m_RenderTexture = std::make_shared<sf::RenderTexture>();
@@ -837,21 +848,36 @@ namespace  nero
 		ImGuiStyle& style = ImGui::GetStyle();
 		int buttons_count = 6;
 		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-		for (int n = 0; n < buttons_count; n++)
+
+		auto recentProjectTable =  loadJson(getPath({"setting", "recent_project"}));
+
+		for (int i = 0; i < buttons_count; i++)
 		{
-			ImGui::Image(m_EditorTextureHolder->getTexture("recent_project_" + toString(n+1)));
-			ImGui::SameLine(0.f, 5.f);
-			std::string project_name =  wrapString("Oblivion the Great Journey", 17);
-			ImGui::PushID(n);
-			ImGui::Button(project_name.c_str(), button_sz);
+			if(i < recentProjectTable.size())
+			{
+				auto project = recentProjectTable[recentProjectTable.size()-i-1];
+
+				ImGui::Image(m_EditorTextureHolder->getTexture("recent_project_" + toString(i+1)));
+				ImGui::SameLine(0.f, 5.f);
+				std::string project_name =  wrapString(project["project_name"].get<std::string>(), 17);
+				ImGui::PushID(i);
+
+				if(ImGui::Button(project_name.c_str(), button_sz))
+				{
+					ImGui::CloseCurrentPopup();
+					openProject(project["project_directory"].get<std::string>());
+				}
+				ImGui::PopID();
+			}
+
 			float last_button_x2 = ImGui::GetItemRectMax().x;
 			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x + 20.f; // Expected position if next button was on same line
-			if (n + 1 < buttons_count && next_button_x2 < window_visible_x2)
+			if (i + 1 < buttons_count && next_button_x2 < window_visible_x2)
 				ImGui::SameLine(0.f, spacing);
 			else {
 				ImGui::Dummy(ImVec2(0.0f, spacing));
 			}
-			ImGui::PopID();
+
 		}
 
 
@@ -1093,7 +1119,7 @@ namespace  nero
 					parameter.setString("description", std::string(m_InputProjectDescription));
 					parameter.setString("code_editor", std::string(m_SelectedCodeEditor));
 
-					m_LastCreatedProject = std::string(m_InputProjectName);
+					m_LastCreatedProject = m_ProjectManager->getProjectDirectory(parameter);
 
 					clearProjectInput();
 					updateProjectInput();
@@ -1562,7 +1588,7 @@ namespace  nero
         return status;
     }
 
-	void EditorInterface::openProject(const std::string& projectPath)
+	void EditorInterface::openProject(const std::string& projectDirectory)
     {
 		/*if(m_GameProject)
 		{
@@ -1575,7 +1601,7 @@ namespace  nero
 			reloadResource();
 		}*/
 
-		 m_GameProject =  m_ProjectManager->openProject(projectPath);
+		 m_GameProject =  m_ProjectManager->openProject(projectDirectory);
          m_AdvancedScene = m_GameProject->getAdvancedScene();
 		 m_AdvancedScene->setRenderTexture(m_RenderTexture);
 		 m_AdvancedScene->setResourceManager(m_ResourceManager);
@@ -2363,7 +2389,7 @@ namespace  nero
 	{
 		ImGui::Begin(EditorConstant.WINDOW_EXPLORER.c_str());
 
-		if (ImGui::CollapsingHeader("Game World", ImGuiTreeNodeFlags_DefaultOpen))
+		if (ImGui::CollapsingHeader("Game World", m_AdvancedScene ? ImGuiTreeNodeFlags_DefaultOpen :ImGuiTreeNodeFlags_None))
 		{
 			if(m_AdvancedScene)
 			{
@@ -2373,10 +2399,11 @@ namespace  nero
 				ImGuiViewport* viewport = ImGui::GetMainViewport();
 				float game_world_window_height = viewport->Size.y * 0.25f;
 				viewport = nullptr;
+				//ImGui::Text( ICON_FA_PASTE "  Paint" );
 
 				ImGui::BeginChild("game_world", ImVec2(0.f, game_world_window_height), true);
 
-				ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize()*3);
+				ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize()*1.5);
 				ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 				if(ImGui::TreeNode(std::string("[Level] " + gameLevel->name).c_str()))
 				{
@@ -2415,6 +2442,7 @@ namespace  nero
 									node_flags |= ImGuiTreeNodeFlags_Selected;
 								}
 
+
 								bool layer_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_layer, node_flags, std::string("[Layer] " + objectLayer->getName()).c_str(), loop_layer);
 
 								if (ImGui::IsItemClicked())
@@ -2431,7 +2459,7 @@ namespace  nero
 									int loop_object = 0;
 									for(const auto& gameObject : *objectLayer->getAllChild())
 									{
-										ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+										ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_None;
 										node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 
 										if ((object_selection_mask & (1 << loop_object)) && (layer_selection_mask & (1 << loop_layer)) && chunk_selection_mask & (1 << loop_chunk))
@@ -2510,6 +2538,16 @@ namespace  nero
 		}
 
 		if (ImGui::CollapsingHeader("Game Level"))
+		{
+
+		}
+
+		if (ImGui::CollapsingHeader("World Chunk"))
+		{
+
+		}
+
+		if (ImGui::CollapsingHeader("Object Layer"))
 		{
 
 		}

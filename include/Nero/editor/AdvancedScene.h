@@ -17,7 +17,7 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <ltbl/LightSystem.hpp>
-#include <Nero/editor/EditorInterfaceUtility.h>
+#include <Nero/editor/EditorUtility.h>
 #include <Nero/editor/SceneBuilder.h>
 
 namespace nero

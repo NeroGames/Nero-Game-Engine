@@ -69,6 +69,10 @@ namespace  nero
 			void createLuaProject(const Setting& parameter, int& status);
 			void createCppLuaProject(const Setting& parameter, int& status);
 
+			void updateRecentProject(const std::string& projectDirectory);
+
+			std::string getProjectDirectory(const Setting& parameter);
+
 
 
         private:

@@ -175,5 +175,11 @@ namespace nero
 
 		updateSetting(local);
 	}
+
+	nlohmann::json Setting::toJson() const
+	{
+		return getCurrentSetting();
+	}
+
 }
 

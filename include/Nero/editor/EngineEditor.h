@@ -47,6 +47,8 @@ namespace nero
 			void					openLastProject();
 			void					createCamera();
 			void					checkWorkspace();
+			void					checkRecentProject();
+
 
 
          private:

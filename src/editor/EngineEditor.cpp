@@ -290,6 +290,7 @@ namespace  nero
 		//window setting	: already loaded
 
 		//recent project setting
+		checkRecentProject();
 		m_Setting->loadSetting("recent_project");
 
 		//list of workspace
@@ -298,6 +299,30 @@ namespace  nero
 
 		//dockspace setting
 		m_Setting->loadSetting("dockspace");
+	}
+
+	void EngineEditor::checkRecentProject()
+	{
+		if(!fileExist(getPath({"setting", "recent_project"}, StringPool.EXTENSION_JSON)))
+		{
+			saveFile(getPath({"setting", "recent_project"}, StringPool.EXTENSION_JSON), nlohmann::json::array().dump(3));
+
+			return;
+		}
+
+		auto recentProjectTable = loadJson(getPath({"setting", "recent_project"}));
+
+		nlohmann::json recentProjectSetting;
+
+		for(auto project : recentProjectTable)
+		{
+			if(fileExist(getPath({project["project_directory"], ".project"})))
+			{
+				recentProjectSetting.push_back(project);
+			}
+		}
+
+		saveFile(getPath({"setting", "recent_project"}, StringPool.EXTENSION_JSON), recentProjectSetting.dump(3), true);
 	}
 
 	void EngineEditor::checkWorkspace()
@@ -369,12 +394,12 @@ namespace  nero
 
 	void EngineEditor::loadWorkspaceResource()
 	{
-		nero_log("loading workspace resource");
+		/*nero_log("loading workspace resource");
 
 		if(m_Setting->getSetting("recent_project").getString("last_workspace") != StringPool.BLANK)
 		{
 			m_ResourceManager->loadDirectory(getPath({m_Setting->getSetting("recent_project").getString("last_workspace"), "Resource"}));
-		}
+		}*/
 	}
 
 	void EngineEditor::createCamera()
@@ -408,11 +433,11 @@ namespace  nero
 
 	void EngineEditor::openLastProject()
 	{
-		nero_log("opening last project");
+		/*nero_log("opening last project");
 
 		if(m_Setting->getSetting("recent_project").getString("last_project") != StringPool.BLANK)
 		{
 			m_Interface->openProject(m_Setting->getSetting("recent_project").getString("last_project"));
-		}
+		}*/
 	}
 }
