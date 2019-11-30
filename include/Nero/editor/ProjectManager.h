@@ -18,7 +18,7 @@ namespace  nero
         public:
             typedef std::unique_ptr<ProjectManager> Ptr;
             typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
-            typedef LuaScene::Ptr (CreateLuaSceneFn)(Scene::Context); 
+			//typedef LuaScene::Ptr (CreateLuaSceneFn)(Scene::Context);
 
             enum Project_Type {LUA_PROJECT, CPP_PROJECT, CPP_LUA_PROJECT};
 
@@ -84,7 +84,7 @@ namespace  nero
            GameProject::Ptr m_GameProject;
 
            boost::function<CreateCppSceneFn> m_CreateCppSceneFn;
-           boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;
+		   //boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;
            Scene::Ptr m_GameScene;
 		   Setting::Ptr		m_Setting;
 

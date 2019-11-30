@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <Nero/editor/ShapeRenderer.h>
+#include <Nero/core/scene/ShapeRenderer.h>
 #include <Nero/core/utility/Utility.h>
 //SFML
 #include <SFML/Graphics/Color.hpp>
@@ -16,9 +16,9 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	ShapeRenderer::ShapeRenderer(const float& thickness, const int& tranparency):
-		m_Thickness(thickness)
-        ,m_Tranparency(tranparency)
+	ShapeRenderer::ShapeRenderer(const float& thickness, const int& transparency):
+		 m_Thickness(thickness)
+		,m_Transparency(transparency)
     {
         //Empty
     }
@@ -46,7 +46,7 @@ namespace nero
         sf::ConvexShape solidPolygon;
             solidPolygon.setOutlineThickness(m_Thickness);
             solidPolygon.setOutlineColor(b2_to_sf(color));
-            solidPolygon.setFillColor(b2_to_sf(color, m_Tranparency));
+			solidPolygon.setFillColor(b2_to_sf(color, m_Transparency));
 
         solidPolygon.setPointCount(vertexCount);
         for(int32 i = 0; i < vertexCount; i++)
@@ -80,7 +80,7 @@ namespace nero
         sf::CircleShape solidCircle;
             solidCircle.setOutlineThickness(m_Thickness);
             solidCircle.setOutlineColor(b2_to_sf(color));
-            solidCircle.setFillColor(b2_to_sf(color, m_Tranparency));
+			solidCircle.setFillColor(b2_to_sf(color, m_Transparency));
 
             float rad = radius * SCALE;
             solidCircle.setPosition(b2_to_sf(center, SCALE));

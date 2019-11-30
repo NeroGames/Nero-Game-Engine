@@ -25,7 +25,9 @@ namespace nero
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 
         public :
-									ShapeRenderer(const float& thickness = -2.f, const int& tranparency = 50);
+									ShapeRenderer(const float& thickness = -2.f, const int& transparency = 50);
+			void					setRenderTexture(const RenderTexturePtr& renderTexture);
+
 
             void                    DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
             void                    DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
@@ -35,12 +37,11 @@ namespace nero
             void                    DrawTransform(const b2Transform& xf);
             void                    DrawPoint(const b2Vec2& p, float32 size, const b2Color& color);
             void                    DrawAABB(b2AABB* aabb, const b2Color& color);
-			void					setRenderTexture(const RenderTexturePtr& renderTexture);
 
         private:
 			RenderTexturePtr        m_RenderTexture;
             float                   m_Thickness;
-            int                     m_Tranparency;
+			int                     m_Transparency;
     };
 }
 #endif // SHAPERENDERER_H

@@ -1,4 +1,4 @@
-#ifndef LUASCENE_H
+/*#ifndef LUASCENE_H
 #define LUASCENE_H
 #include <Nero/core/scene/Scene.h>
 #include <memory>
@@ -29,4 +29,4 @@ namespace  nero
     };
 }
 
-#endif // LUASCENE_H
+#endif // LUASCENE_H*/

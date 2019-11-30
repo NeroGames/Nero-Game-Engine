@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <Nero/editor/PhysicObjectManager.h>
+#include <Nero/core/scene/PhysicObjectManager.h>
 #include <Nero/core/utility/Utility.h>
 //BOX2D
 #include <Box2D/Collision/Shapes/b2EdgeShape.h>

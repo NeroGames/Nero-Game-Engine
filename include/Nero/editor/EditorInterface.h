@@ -12,7 +12,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <Nero/editor/ProjectManager.h>
-#include <Nero/editor/SceneManager.h>
 #include <functional>
 #include <Nero/core/scene/Scene.h>
 #include <Nero/core/luascene/LuaScene.h>
@@ -23,7 +22,7 @@
 #include <Nero/core/utility/LogUtil.h>
 #include <Nero/editor/AdvancedScene.h>
 #include <Nero/core/resource/ResourceManager.h>
-#include <Nero/core/camera/AdvancedCamera.h>
+#include <Nero/editor/AdvancedCamera.h>
 #include <Nero/editor/EditorUtility.h>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <nativefiledialog/include/nfd.h>
@@ -54,10 +53,6 @@ namespace nero
             void        updateFrameRate(const float& frameRate, const float& frameTime);
 
             void        quitEditor();
-
-            //Start Project
-            void                    addScene(const std::string& projectName, std::function<Scene::Ptr(Scene::Context)> factory);
-            void                    addLuaScene(const std::string& projectName, std::function<LuaScene::Ptr(Scene::Context)> factory);
 
             void                    loadAllProject();
 
@@ -105,9 +100,6 @@ namespace nero
 
             bool            show_project_window = false;
 
-            Scene::Context      m_Context;
-
-            SceneManager::Ptr       m_SceneManager;
             //
             nlohmann::json m_EditorSetting;
 

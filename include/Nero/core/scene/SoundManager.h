@@ -8,7 +8,7 @@
 //NERO
 #include <Nero/core/resource/MusicHolder.h>
 #include <Nero/core/resource/SoundHolder.h>
-#include <Nero/core/scene/SceneUtil.h>
+#include <Nero/core/scene/SceneUtility.h>
 //SFML
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/Music.hpp>

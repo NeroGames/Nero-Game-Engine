@@ -20,8 +20,11 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    //
-    struct ContactPoint
+	//constant
+	const int32 MAX_CONTACT_POINT = 2048;
+
+	//contact point
+	struct ContactPoint
     {
         b2Fixture*      fixtureA;
         b2Fixture*      fixtureB;
@@ -33,12 +36,12 @@ namespace nero
         float32         separation;
     };
 
-    //
+	//query callback
     class QueryCallback : public b2QueryCallback
     {
         public:
                             QueryCallback(const b2Vec2& point);
-                            ~QueryCallback();
+						   ~QueryCallback();
 
             bool            ReportFixture(b2Fixture* fixture);
 
@@ -47,7 +50,7 @@ namespace nero
     };
 
 
-    ///\brief Store Scene parameters
+	//leve setting
     struct SceneSetting
     {
         //Constructor
@@ -86,7 +89,7 @@ namespace nero
         static  SceneSetting fromJson(nlohmann::json setting);
     };
 
-    ///\brief Store the Scene current camera state
+	//camera setting
     struct CameraSetting
     {
         //Constructor
@@ -106,6 +109,7 @@ namespace nero
         static  CameraSetting fromJson(nlohmann::json setting);
     };
 
+	//camera target
     struct CameraTarget
     {
         //Constructor
@@ -119,8 +123,5 @@ namespace nero
         float           offsetDown;
         bool            followTarget;
     };
-
-    //
-    const int32 k_maxContactPoints = 2048;
 }
 #endif // SCENE_UTIL_H

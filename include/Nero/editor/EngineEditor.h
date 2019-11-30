@@ -8,7 +8,7 @@
 //Nero
 #include <Nero/core/engine/CoreEngine.h>
 #include <Nero/core/engine/Setting.h>
-#include <Nero/core/camera/AdvancedCamera.h>
+#include <Nero/editor/AdvancedCamera.h>
 #include <Nero/editor/LoadingScreen.h>
 #include <Nero/editor/EditorInterface.h>
 //STD

@@ -24,7 +24,7 @@ namespace nero
         public:
             typedef std::shared_ptr<GameProject> Ptr;
             typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
-            typedef LuaScene::Ptr (CreateLuaSceneFn)(Scene::Context);
+			//typedef LuaScene::Ptr (CreateLuaSceneFn)(Scene::Context);
 
         public:
             GameProject();
@@ -49,7 +49,7 @@ namespace nero
             std::string m_CmakeListFile;
             std::string m_EditorProcessId;
             boost::function<CreateCppSceneFn> m_CreateCppSceneFn;
-            boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;
+			//boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;
             //Directory
             std::string m_ProjectDirectory;
             std::string m_ProjectBuildDirectory;

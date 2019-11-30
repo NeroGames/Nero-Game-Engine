@@ -15,8 +15,8 @@
 #include <Nero/core/object/TextObject.h>
 #include <Nero/core/object/UIObject.h>
 #include <Nero/editor/MeshEditor.h>
-#include <Nero/editor/PhysicObjectManager.h>
-#include <Nero/core/scene/SceneUtil.h>
+#include <Nero/core/scene/PhysicObjectManager.h>
+#include <Nero/core/scene/SceneUtility.h>
 //SFML
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>

@@ -1,4 +1,4 @@
-#include <Nero/core/luascene/LuaScene.h>
+/*#include <Nero/core/luascene/LuaScene.h>
 #include <Nero/core/utility/StringUtil.h>
 #include <Nero/core/utility/LogUtil.h>
 
@@ -32,7 +32,7 @@ namespace  nero
 	void LuaScene::bindLogging()
 	{
 		//
-		/*m_NeroTable["logging"] = m_LuaState.create_table("logging");
+		m_NeroTable["logging"] = m_LuaState.create_table("logging");
 
 		m_NeroTable["logging"]["info"]		= LOG_LEVEL::INFO;
 		m_NeroTable["logging"]["warning"]	= LOG_LEVEL::WARNING;
@@ -56,7 +56,7 @@ namespace  nero
 		m_NeroTable.set_function("log_if", [](const std::string& message, bool condition, int level)
 		{
 			nero_log_if(message, condition, level);
-		});*/
+		});
 
 	}
 
@@ -77,4 +77,4 @@ namespace  nero
 	}
 
 
-}
+}*/
