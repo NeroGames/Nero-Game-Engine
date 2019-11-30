@@ -11,7 +11,7 @@
 #include <Box2D/Dynamics/b2TimeStep.h>
 //#include <Nero/editor/SceneBuilder.h>
 //#include <Nero/editor/UndoManager.h>
-#include <Nero/core/scene/Scene.h>
+#include <Nero/core/cpp/scene/Scene.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <memory>
 #include <SFML/System/Time.hpp>
@@ -88,31 +88,30 @@ namespace nero
         public:
 			AdvancedScene();
 
-			void                        handleEvent(const sf::Event& event, const EditorMode& editorMode, const BuilderMode& builderMode);
-			void                        update(const sf::Time& timeStep, const EditorMode& editorMode, const BuilderMode& builderMode);
-			void						render(const EditorMode& editorMode, const BuilderMode& builderMode);
+			void								handleEvent(const sf::Event& event, const EditorMode& editorMode, const BuilderMode& builderMode);
+			void								update(const sf::Time& timeStep, const EditorMode& editorMode, const BuilderMode& builderMode);
+			void								render(const EditorMode& editorMode, const BuilderMode& builderMode);
 
-			 void						setScene(Scene::Ptr scene);
-			 void						setRenderContext(const RenderContextPtr& renderContext);
-			 void						setRenderTexture(const RenderTexturePtr& renderTexture);
+			void								initialize();
+			 void								setScene(Scene::Ptr scene);
+			 void								setRenderContext(const RenderContextPtr& renderContext);
+			 void								setRenderTexture(const RenderTexturePtr& renderTexture);
+			 void								setResourceMananger(const ResourceManager::Ptr& resourceManager);
+			 void								setCamera(const Camera::Ptr& camera);
+			 void								setSetting(const Setting::Ptr& setting);
 
-			 void renderScreenBuilder(sf::RenderTexture& texture);
-			 void renderScene(sf::RenderTexture& texture);
+			 void								renderScreenBuilder(sf::RenderTexture& texture);
+			 void								renderScene(sf::RenderTexture& texture);
 
-			 void addGameLevel(const std::string& name);
-			 void addWorldChunk(const std::string& name);
-			 void addGameScreen(const std::string& name);
+			 void								addGameLevel(const std::string& name);
+			 void								addWorldChunk(const std::string& name);
+			 void								addGameScreen(const std::string& name);
 
-			 void setResourceManager(const ResourceManager::Ptr& resourceManager);
-			 void initialize();
-			 void addObject(Object::Type type, const sf::String& label, sf::Vector2f position, const EditorMode& editorMode);
+			 void								setResourceManager(const ResourceManager::Ptr& resourceManager);
+			 void								addObject(Object::Type type, const sf::String& label, sf::Vector2f position, const EditorMode& editorMode);
 
-			 AdvancedScene::GameLevelPtr			getSelectedGameLevel();
+			 AdvancedScene::GameLevelPtr		getSelectedGameLevel();
 
-
-        private:
-
-            void                        init();
 
         private:
             //Friend
@@ -122,8 +121,6 @@ namespace nero
             friend class                SceneManager;
             //Destruction Listener
             DestructionListener         m_DestructionListener;
-
-
 
 			std::vector<GameLevelPtr>	m_GameLevelTable;
 			GameLevelPtr				m_SelectedGameLevel;
@@ -149,6 +146,9 @@ namespace nero
 			ltbl::LightSystem			m_LightEngine;
 			ResourceManager::Ptr		m_ResourceManager;
 			RenderTexturePtr			m_RenderTexture;
+			Camera::Ptr					m_Camera;
+			Setting::Ptr					m_EngineSetting;
+
     };
 }
 

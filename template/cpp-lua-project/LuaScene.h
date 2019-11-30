@@ -6,7 +6,7 @@
 #define ::Header_Gard::
 ///////////////////////////HEADERS///////////////////////////
 //NERO
-#include <Nero/core/luascene/LuaScene.h>
+#include <Nero/core/cpp/luascene/LuaScene.h>
 //BOOST
 #include <boost/dll/alias.hpp>
 /////////////////////////////////////////////////////////////

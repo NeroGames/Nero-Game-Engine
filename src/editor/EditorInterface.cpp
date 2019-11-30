@@ -1,10 +1,10 @@
 #include <Nero/editor/EditorInterface.h>
 #include <SFML/Window/Event.hpp>
-#include <Nero/core/engine/EngineConstant.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
-#include <Nero/core/utility/FileUtil.h>
+#include <Nero/core/cpp/utility/FileUtil.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <Nero/editor/EditorConstant.h>
@@ -36,7 +36,6 @@ namespace  nero
 		,m_EditorMode(EditorMode::WORLD_BUILDER)
 		,m_BuilderMode(BuilderMode::OBJECT)
 		,m_EditorCamera(nullptr)
-		,m_RenderContext(std::make_shared<RenderContext>())
 		,m_SelectedChunkNode(StringPool.BLANK)
     {
         ImGuiIO& io = ImGui::GetIO();
@@ -53,8 +52,9 @@ namespace  nero
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 13.0f, &config, icon_ranges);
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/forkawesome-webfont.ttf", 13.0f, &config, icon_ranges);
 
-        m_ProjectManager = std::make_unique<ProjectManager>();
 		m_RenderTexture = std::make_shared<sf::RenderTexture>();
+		m_ProjectManager = std::make_unique<ProjectManager>();
+		m_RenderContext = std::make_shared<RenderContext>();
 
         //old = std::cout.rdbuf(buffer.rdbuf());
 
@@ -89,6 +89,26 @@ namespace  nero
        //Empty
 		ax::NodeEditor::DestroyEditor(g_Context);
     }
+
+	void EditorInterface::init()
+	{
+		//setup game mode information text
+		m_GameModeInfo.setFont(m_EditorFontHolder->getDefaultFont());
+		m_GameModeInfo.setCharacterSize(18.f);
+		m_GameModeInfo.setFillColor(sf::Color::White);
+
+		//clear workspace input
+		clearWorkspaceInput();
+		clearProjectInput();
+		updateProjectInput();
+
+		//
+		m_ProjectManager->setSetting(m_Setting);
+		m_ProjectManager->setRenderTexture(m_RenderTexture);
+		m_ProjectManager->setResourceManager(m_ResourceManager);
+		m_ProjectManager->setRenderContext(m_RenderContext);
+		m_ProjectManager->setCamera(m_EditorCamera);
+	}
 
     void EditorInterface::handleEvent(const sf::Event& event)
     {
@@ -685,7 +705,7 @@ namespace  nero
 
 			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("play_button")))
 			{
-			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			   playScene();
 			}
 
 			ImGui::SameLine(start + buttonSpace*i++);
@@ -1023,7 +1043,7 @@ namespace  nero
 			ImGui::Text("Code Editor");
 			ImGui::SameLine(wording_width);
 			ImGui::SetNextItemWidth(input_width);
-			const char* codeEditorComboTable[] = {"Qt Creator", "Visual Studio 2019"};
+			const char* codeEditorComboTable[] = {"Qt Creator", "Visual Studio"};
 			m_SelectedCodeEditor = codeEditorComboTable[m_SelectedCodeEditorIdex];
 			if (ImGui::BeginCombo("##code-editor-combo", m_SelectedCodeEditor, ImGuiComboFlags()))
 			{
@@ -1603,23 +1623,31 @@ namespace  nero
 
 		 m_GameProject =  m_ProjectManager->openProject(projectDirectory);
          m_AdvancedScene = m_GameProject->getAdvancedScene();
-		 m_AdvancedScene->setRenderTexture(m_RenderTexture);
+		 /*m_AdvancedScene->setRenderTexture(m_RenderTexture);
 		 m_AdvancedScene->setResourceManager(m_ResourceManager);
 		 m_AdvancedScene->setRenderContext(m_RenderContext);
-		 m_AdvancedScene->initialize();
-		 //updateWindowTile(project_name);
+		 m_AdvancedScene->setCamera(m_EditorCamera);
+		 m_AdvancedScene->initialize();*/
+		 updateWindowTitle(m_GameProject->getProjectName());
     }
 
-	/*void EditorInterface::updateWindowTile(const std::string& name)
+	void EditorInterface::updateWindowTitle(const std::string& title)
 	{
-		 m_UpdateWindowTile(project_name);
-	}*/
+		 m_UpdateWindowTile(title);
+	}
 
 	void EditorInterface::setCallbackWindowTitle(std::function<void (const std::string&)> fn)
     {
         m_UpdateWindowTile = fn;
     }
 
+	void EditorInterface::playScene()
+	{
+		if(m_AdvancedScene)
+		{
+			m_EditorMode = EditorMode::PLAY_GAME;
+		}
+	}
 
     void EditorInterface::compileProject()
     {
@@ -2624,22 +2652,6 @@ namespace  nero
 	void EditorInterface::setResourceManager(ResourceManager::Ptr resourceManager)
 	{
 		m_ResourceManager = resourceManager;
-	}
-
-	void EditorInterface::init()
-	{
-		//setup game mode information text
-		m_GameModeInfo.setFont(m_EditorFontHolder->getDefaultFont());
-		m_GameModeInfo.setCharacterSize(18.f);
-		m_GameModeInfo.setFillColor(sf::Color::White);
-
-		//clear workspace input
-		clearWorkspaceInput();
-		clearProjectInput();
-		updateProjectInput();
-
-		//
-		m_ProjectManager->setSetting(m_Setting);
 	}
 
 	void EditorInterface::clearWorkspaceInput()

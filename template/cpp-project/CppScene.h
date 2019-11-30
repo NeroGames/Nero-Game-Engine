@@ -6,7 +6,7 @@
 #define ::Header_Gard::
 ///////////////////////////HEADERS///////////////////////////
 //NERO
-#include <Nero/core/scene/Scene.h>
+#include <Nero/core/cpp/scene/Scene.h>
 //BOOST
 #include <boost/dll/alias.hpp>
 /////////////////////////////////////////////////////////////

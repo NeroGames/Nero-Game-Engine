@@ -140,6 +140,10 @@ namespace nero
 		{
 			m_SelectedScreenBuilder->handleEvent(event);
 		}
+		else if(editorMode == EditorMode::PLAY_GAME && m_Scene)
+		{
+			m_Scene->handleEvent(event);
+		}
     }
 
 	void AdvancedScene::update(const sf::Time& timeStep, const EditorMode& editorMode, const BuilderMode& builderMode)
@@ -151,6 +155,10 @@ namespace nero
 		else if(editorMode == EditorMode::SCREEN_BUILDER && builderMode == BuilderMode::OBJECT)
 		{
 			m_SelectedScreenBuilder->update(timeStep);
+		}
+		else if(editorMode == EditorMode::PLAY_GAME && m_Scene)
+		{
+			m_Scene->update(timeStep);
 		}
 
 	}
@@ -165,31 +173,13 @@ namespace nero
 		{
 			m_SelectedScreenBuilder->render();
 		}
+		else if(editorMode == EditorMode::PLAY_GAME && m_Scene)
+		{
+			m_Scene->render();
+			m_Scene->renderShape();
+		}
+
 	}
-
-	/*sf::RenderTexture AdvancedScene::render(const RenderContext& renderContext)
-    {
-		setRenderContext(renderContext);
-
-
-        //render scene builder
-		//m_Camera.setSize(renderContext.canvas_size.x, renderContext.canvas_size.y);
-        //m_RenderTexture.setView(m_Camera);
-
-        //render scene
-        if(m_Scene)
-        {
-			m_Scene->renderScene();
-			auto& renderTexture = m_Scene->getRenderTexture();
-            //return m_Scene->getRenderTexture();
-
-			//m_RenderTexture.draw(sf::Sprite(renderTexture.getTexture()));
-        }
-
-		//m_LightEngine.render(m_RenderTexture);
-
-		return  sf::RenderTexture();
-	}*/
 
     void AdvancedScene::setScene(Scene::Ptr scene)
     {
@@ -211,6 +201,11 @@ namespace nero
 		m_ResourceManager = resourceManager;
 	}
 
+	void AdvancedScene::setCamera(const Camera::Ptr& camera)
+	{
+	   m_Camera = camera;
+	}
+
 	void AdvancedScene::initialize()
 	{
 		addGameLevel("Game Start");
@@ -222,5 +217,9 @@ namespace nero
 		return m_SelectedGameLevel;
 	}
 
+	void AdvancedScene::setSetting(const Setting::Ptr& setting)
+	{
+		m_EngineSetting = setting;
+	}
 }
 

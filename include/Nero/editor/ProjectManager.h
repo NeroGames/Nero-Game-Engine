@@ -4,20 +4,23 @@
 #include <memory>
 #include <json/json.hpp>
 #include <Nero/editor/GameProject.h>
-#include <Nero/core/scene/Scene.h>
-#include <Nero/core/luascene/LuaScene.h>
+#include <Nero/core/cpp/scene/Scene.h>
+#include <Nero/core/cpp/luascene/LuaScene.h>
 #include <boost/function.hpp>
-#include <Nero/core/utility/StringUtil.h>
-#include <Nero/core/utility/LogUtil.h>
-#include <Nero/core/engine/Setting.h>
+#include <Nero/core/cpp/utility/StringUtil.h>
+#include <Nero/core/cpp/utility/LogUtil.h>
+#include <Nero/core/cpp/engine/Setting.h>
+#include <Nero/editor/AdvancedCamera.h>
 
 namespace  nero
 {
     class ProjectManager
     {
         public:
-            typedef std::unique_ptr<ProjectManager> Ptr;
-            typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
+			typedef std::unique_ptr<ProjectManager> Ptr;
+			typedef std::shared_ptr<RenderContext> RenderContextPtr;
+			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
+			typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
 			//typedef LuaScene::Ptr (CreateLuaSceneFn)(Scene::Context);
 
             enum Project_Type {LUA_PROJECT, CPP_PROJECT, CPP_LUA_PROJECT};
@@ -73,6 +76,13 @@ namespace  nero
 
 			std::string getProjectDirectory(const Setting& parameter);
 
+			void setRenderTexture(const RenderTexturePtr& renderTexture);
+			void setResourceManager(const ResourceManager::Ptr& resourceManager);
+			void setCamera(const Camera::Ptr& camera);
+
+			void setRenderContext(const RenderContextPtr& renderContext);
+
+
 
 
         private:
@@ -85,9 +95,13 @@ namespace  nero
 
            boost::function<CreateCppSceneFn> m_CreateCppSceneFn;
 		   //boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;
-           Scene::Ptr m_GameScene;
-		   Setting::Ptr		m_Setting;
+		   Scene::Ptr					m_GameScene;
+		   Setting::Ptr					m_Setting;
 
+		   RenderTexturePtr				m_RenderTexture;
+		   Camera::Ptr					m_Camera;
+		   ResourceManager::Ptr			m_ResourceManager;
+		   RenderContextPtr				m_RenderContext;
 
     };
 }

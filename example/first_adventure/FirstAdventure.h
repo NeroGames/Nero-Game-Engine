@@ -1,7 +1,7 @@
 #ifndef FIRSTADVENTURE_H
 #define FIRSTADVENTURE_H
 
-#include <Nero/core/scene/Scene.h>
+#include <Nero/core/cpp/scene/Scene.h>
 
 //nero game 1 (ng1)
 namespace ng1

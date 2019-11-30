@@ -1,7 +1,7 @@
 #ifndef SECONDADVENTURE_H
 #define SECONDADVENTURE_H
 
-#include <Nero/core/luascene/LuaScene.h>
+#include <Nero/core/cpp/luascene/LuaScene.h>
 
 namespace ng2
 {

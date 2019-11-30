@@ -1,8 +1,8 @@
 #include <Nero/editor/ProjectManager.h>
-#include <Nero/core/utility/FileUtil.h>
-#include <Nero/core/utility/DateUtil.h>
-#include <Nero/core/utility/LogUtil.h>
-#include <Nero/core/engine/EngineConstant.h>
+#include <Nero/core/cpp/utility/FileUtil.h>
+#include <Nero/core/cpp/utility/DateUtil.h>
+#include <Nero/core/cpp/utility/LogUtil.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
 //STD
 #include <windows.h>
 #include <stdio.h>
@@ -165,7 +165,7 @@ namespace nero
         //check if project_id exist
         nlohmann::json project_json = loadJson(project_file, true);
         std::string project_id = project_json["project_id"].get<std::string>();
-        if(project_id != formatString(projectName))
+		if(project_id != formatString(projectName))
         {
             return false;
         }
@@ -352,185 +352,70 @@ namespace nero
         system(clean.c_str());
         system(run_cmake.c_str());
         system(build.c_str());
-
-        //system("mingw32-make -C \"C:\\Users\\sk-landry\\Desktop\\Bonjour\\startspace\\Build\" -k clean");
-        //system("cmake -G \"MinGW Makefiles\" -S \"C:\\Users\\sk-landry\\Desktop\\Bonjour\\startspace\\Source\" -B \"C:\\Users\\sk-landry\\Desktop\\Bonjour\\startspace\\Build\"");
-        //system("mingw32-make -C \"C:\\Users\\sk-landry\\Desktop\\Bonjour\\startspace\\Build\"");
-
-        //WinExec("mingw32-make -C \"C:\\Users\\sk-landry\\Desktop\\Bonjour\\startspace\\Build\" -k clean", SW_HIDE);
-        //WinExec("cmake -G \"MinGW Makefiles\" -S \"C:\\Users\\sk-landry\\Desktop\\Bonjour\\startspace\\Source\" -B \"C:\\Users\\sk-landry\\Desktop\\Bonjour\\startspace\\Build\"", SW_HIDE);
-        //WinExec("mingw32-make -C \"C:\\Users\\sk-landry\\Desktop\\Bonjour\\startspace\\Build\"", SW_HIDE);
     }
 
-    //Replace popen and pclose with _popen and _pclose for Windows
-    std::string ProjectManager::exec(const char* cmd)
-    {
-        std::stringstream string_buffer;
-        std::streambuf * cout_buffer = std::cout.rdbuf(string_buffer.rdbuf());
-
-        std::array<char, 128> buffer;
-        std::string result;
-        std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
-
-        if (!pipe)
-        {
-            throw std::runtime_error("popen() failed!");
-        }
-
-        while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
-        {
-            result += buffer.data();
-        }
-
-        std::cout.rdbuf(cout_buffer);
-
-        return result;
-    }
-
-    void ProjectManager::openEditor(std::string cmake_project)
-    {
-        nero_log("cmake project : " + cmake_project);
-
-        //get the list of qtcreator process
-        std::string list_process    = "tasklist \/fo csv\| findstr \/i \"qtcreator\"";
-        std::string processCSV      = exec(list_process.c_str());
-
-        nero_log(processCSV);
-
-        //If the Editor has been opened and are still available (has not been closed)
-        if(m_EditorPid != StringPool.BLANK && processCSV.find(m_EditorPid) != std::string::npos)
-        {
-            //open it
-            std::string cmd = "START \"\" qtcreator -pid " + m_EditorPid;
-            nero_log(cmd);
-            system(cmd.c_str());
-        }
-        else
-        {
-            //open a new process
-            std::string open_editor = "START \"\" qtcreator \"" + cmake_project +"\"";
-            system(open_editor.c_str());
-
-            //save the process id
-                 processCSV  = exec(list_process.c_str());
-            auto processTab  = splitString(processCSV, '\r\n');
-
-            nero_log(processTab.size());
-
-
-            m_EditorPid = splitString(processTab.back(), ',').at(1);
-            nero_log(m_EditorPid);
-
-        }
-    }
-
-    void ProjectManager::editProject()
+	void ProjectManager::editProject()
     {
 
     }
 
-     void ProjectManager::loadLibrary()
-     {
+	std::string ProjectManager::formatSceneClassName(std::vector<std::string> wordTable)
+	{
+		 std::string result = StringPool.BLANK;
 
-         boost::dll::fs::path full_path("C:/Users/sk-landry/Desktop/Bonjour/startspace/Build/liblearn-nero.dll");
-         boost::dll::fs::path copy_path("C:/Users/sk-landry/Desktop/Bonjour/startspace/Build/liblearn-nero-copy.dll");
+		 for(std::string s : wordTable)
+		 {
+			 if(s != StringPool.BLANK)
+			 {
+				 boost::algorithm::to_lower(s);
+				 s[0] = std::toupper(s[0]);
+				 result += s;
+			 }
+		 }
 
-         if(!boost::dll::fs::exists(full_path))
-             return;
+		 result += "Scene";
 
+		 return result;
+	}
 
-         if(boost::dll::fs::exists(copy_path))
-         {
-             m_GameScene = nullptr;
-             m_CreateCppSceneFn.clear();
+	std::string ProjectManager::formatHeaderGard(std::vector<std::string> wordTable)
+	{
 
-            boost::dll::fs::remove(copy_path);
-         }
+		 std::string result = StringPool.BLANK;
 
-         system("copy C:\\Users\\sk-landry\\Desktop\\Bonjour\\startspace\\Build\\liblearn-nero.dll C:\\Users\\sk-landry\\Desktop\\Bonjour\\startspace\\Build\\liblearn-nero-copy.dll");
+		 for(std::string s : wordTable)
+		 {
+			 if(s != StringPool.BLANK)
+			 {
+				 boost::algorithm::to_upper(s);
+				 result += s + "_";
+			 }
+		 }
 
+		 result += "H";
 
-             boost::dll::fs::path library_path("C:/Users/sk-landry/Desktop/Bonjour/startspace/Build");
-             library_path /= "liblearn-nero-copy";
+		 return result;
+	}
 
+	std::string ProjectManager::formatCmakeProjectName(std::vector<std::string> wordTable)
+	{
 
-             nero_log("loading scene library");
+		 std::string result = StringPool.BLANK;
 
-            m_CreateCppSceneFn = boost::dll::import_alias<CreateCppSceneFn>(             // type of imported symbol must be explicitly specified
-                 library_path,                                            // path to library
-                 "create_scene",                                                // symbol to import
-                 boost::dll::load_mode::append_decorations                              // do append extensions and prefixes
-             );
+		 for(std::string s : wordTable)
+		 {
+			 if(s != StringPool.BLANK)
+			 {
+				 boost::algorithm::to_lower(s);
+				 s[0] = std::toupper(s[0]);
+				 result += s + " ";
+			 }
+		 }
 
-            nero_log("loading done");
+		 result.pop_back();
 
-
-
-
-            m_GameScene = m_CreateCppSceneFn(Scene::Context());
-
-
-			//nero_log(m_GameScene->getName());
-     }
-
-     std::string ProjectManager::formatSceneClassName(std::vector<std::string> wordTable)
-     {
-         std::string result = StringPool.BLANK;
-
-         for(std::string s : wordTable)
-         {
-             if(s != StringPool.BLANK)
-             {
-                 boost::algorithm::to_lower(s);
-                 s[0] = std::toupper(s[0]);
-                 result += s;
-             }
-         }
-
-         result += "Scene";
-
-         return result;
-     }
-
-     std::string ProjectManager::formatHeaderGard(std::vector<std::string> wordTable)
-     {
-
-         std::string result = StringPool.BLANK;
-
-         for(std::string s : wordTable)
-         {
-             if(s != StringPool.BLANK)
-             {
-                 boost::algorithm::to_upper(s);
-                 result += s + "_";
-             }
-         }
-
-         result += "H";
-
-         return result;
-     }
-
-     std::string ProjectManager::formatCmakeProjectName(std::vector<std::string> wordTable)
-     {
-
-         std::string result = StringPool.BLANK;
-
-         for(std::string s : wordTable)
-         {
-             if(s != StringPool.BLANK)
-             {
-                 boost::algorithm::to_lower(s);
-                 s[0] = std::toupper(s[0]);
-                 result += s + " ";
-             }
-         }
-
-         result.pop_back();
-         result = "Project " + result;
-
-         return result;
-     }
+		 return result;
+	}
 
 
      std::string ProjectManager::formatCmakeProjectLibrary(std::vector<std::string> wordTable)
@@ -563,43 +448,29 @@ namespace nero
      {
 		 nero_log("openning project " + projectDirectory);
 
-         //close current project
-         nlohmann::json project_workpsace;
-         nlohmann::json project;
+		 Setting parameter;
+		 parameter.loadJson(loadJson(getPath({projectDirectory, ".project"}), true));
+		 parameter.setString("project_directory", projectDirectory);
+		 parameter.setString("workspace_directory", getParentDirectory(projectDirectory, 2));
 
-		 //auto workspaceTable = getWorkspaceTable();
+		m_GameProject = GameProject::Ptr(new GameProject());
+		m_GameProject->setSetting(m_Setting);
+		m_GameProject->setRenderTexture(m_RenderTexture);
+		m_GameProject->setResourceManager(m_ResourceManager);
+		m_GameProject->setRenderContext(m_RenderContext);
+		m_GameProject->setCamera(m_Camera);
 
-        //workspace
-		/*for(auto workspace : workspaceTable)
-        {
-			nero_log("initializing project 1");
+		nero_log("initializing project");
+		m_GameProject->init(parameter);
+		nero_log("loading project");
+		m_GameProject->loadProject();
+		nero_log("loading project library");
+		m_GameProject->loadProjectLibrary();
+		nero_log("openning editor");
+		m_GameProject->openEditor();
 
-            project = findProject(workspace["workspace_name"].get<std::string>(), project_name);
-			nero_log("initializing project 2");
+		updateRecentProject(projectDirectory);
 
-            if(!project.empty())
-            {
-                project_workpsace = workspace;
-                break;
-            }
-		}*/
-        //project
-
-		//if(!project_workpsace.empty() && !project.empty())
-		//{
-            m_GameProject = GameProject::Ptr(new GameProject());
-
-			nero_log("initializing project");
-			//m_GameProject->init(project, project_workpsace);
-			nero_log("loading project");
-			//m_GameProject->loadProject();
-			nero_log("loading project library");
-			//m_GameProject->loadProjectLibrary();
-			nero_log("openning editor");
-			//m_GameProject->openEditor();
-
-			updateRecentProject(projectDirectory);
-		//}
 
         return m_GameProject;
      }
@@ -608,12 +479,12 @@ namespace nero
 	 {
 		 auto recentProject =  loadJson(getPath({"setting", "recent_project"}));
 
-		 Setting projectDucument;
-		 projectDucument.loadJson(loadJson(getPath({projectDirectory, ".project"}), true));
+		 Setting projectDocument;
+		 projectDocument.loadJson(loadJson(getPath({projectDirectory, ".project"}), true));
 
 		for(int i = 0; i < recentProject.size(); i++)
 		{
-			if(recentProject[i]["project_name"].get<std::string>() == projectDucument.getString("project_name"))
+			if(recentProject[i]["project_name"].get<std::string>() == projectDocument.getString("project_name"))
 			{
 				recentProject.erase(i);
 				break;
@@ -622,8 +493,8 @@ namespace nero
 
 		Setting recent;
 		recent.setString("project_directory", projectDirectory);
-		recent.setString("project_name", projectDucument.getString("project_name"));
-		recent.setString("workspace_name", projectDucument.getString("workspace_name"));
+		recent.setString("project_name", projectDocument.getString("project_name"));
+		recent.setString("workspace_name", projectDocument.getString("workspace_name"));
 
 		recentProject.push_back(recent.toJson());
 
@@ -653,6 +524,26 @@ namespace nero
 	 bool ProjectManager::isWorksapceExist(const std::string& projectName)
 	 {
 		 return true;
+	 }
+
+	 void ProjectManager::setRenderTexture(const RenderTexturePtr& renderTexture)
+	 {
+		m_RenderTexture = renderTexture;
+	 }
+
+	 void ProjectManager::setResourceManager(const ResourceManager::Ptr& resourceManager)
+	 {
+		m_ResourceManager = resourceManager;
+	 }
+
+	 void ProjectManager::setCamera(const Camera::Ptr& camera)
+	 {
+		m_Camera = camera;
+	 }
+
+	 void ProjectManager::setRenderContext(const RenderContextPtr& renderContext)
+	 {
+		 m_RenderContext = renderContext;
 	 }
 
 }

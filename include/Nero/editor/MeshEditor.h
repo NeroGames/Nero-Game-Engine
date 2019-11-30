@@ -6,7 +6,7 @@
 #define MESHEDITOR_H
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <Nero/core/model/Mesh.h>
+#include <Nero/core/cpp/model/Mesh.h>
 #include <Nero/editor/EditorUtility.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 //STD

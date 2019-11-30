@@ -13,15 +13,15 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <Nero/editor/ProjectManager.h>
 #include <functional>
-#include <Nero/core/scene/Scene.h>
-#include <Nero/core/luascene/LuaScene.h>
+#include <Nero/core/cpp/scene/Scene.h>
+#include <Nero/core/cpp/luascene/LuaScene.h>
 #include <Nero/editor/GameProject.h>
 #include <json/json.hpp>
 #include <Nero/editor/LoggerApplication.h>
-#include <Nero/core/utility/StringUtil.h>
-#include <Nero/core/utility/LogUtil.h>
+#include <Nero/core/cpp/utility/StringUtil.h>
+#include <Nero/core/cpp/utility/LogUtil.h>
 #include <Nero/editor/AdvancedScene.h>
-#include <Nero/core/resource/ResourceManager.h>
+#include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/editor/AdvancedCamera.h>
 #include <Nero/editor/EditorUtility.h>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -178,6 +178,7 @@ namespace nero
             void                        compileProject();
             void                        editProject();
             void                        reloadProject();
+			void						playScene();
 
 			void						setSetting(Setting::Ptr setting);
 
@@ -241,6 +242,7 @@ namespace nero
 			void switchBuilderMode();
 			void showCanvasMenu();
 
+			void updateWindowTitle(const std::string& title);
 
 
 			std::string m_SelectedChunkNode;

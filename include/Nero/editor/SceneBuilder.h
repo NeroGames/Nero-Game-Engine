@@ -6,17 +6,17 @@
 #define SCENEBUILDER_H
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <Nero/core/resource/ResourceManager.h>
-#include <Nero/core/object/MeshObject.h>
-#include <Nero/core/object/SpriteObject.h>
-#include <Nero/core/object/ButtonObject.h>
-#include <Nero/core/object/AnimationObject.h>
-#include <Nero/core/object/LayerObject.h>
-#include <Nero/core/object/TextObject.h>
-#include <Nero/core/object/UIObject.h>
+#include <Nero/core/cpp/resource/ResourceManager.h>
+#include <Nero/core/cpp/object/MeshObject.h>
+#include <Nero/core/cpp/object/SpriteObject.h>
+#include <Nero/core/cpp/object/ButtonObject.h>
+#include <Nero/core/cpp/object/AnimationObject.h>
+#include <Nero/core/cpp/object/LayerObject.h>
+#include <Nero/core/cpp/object/TextObject.h>
+#include <Nero/core/cpp/object/UIObject.h>
 #include <Nero/editor/MeshEditor.h>
-#include <Nero/core/scene/PhysicObjectManager.h>
-#include <Nero/core/scene/SceneUtility.h>
+#include <Nero/core/cpp/scene/PhysicObjectManager.h>
+#include <Nero/core/cpp/scene/SceneUtility.h>
 //SFML
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>

@@ -7,7 +7,7 @@
 #include <Nero/editor/EngineEditor.h>
 #include <Nero/editor/EditorSetting.h>
 #include <Nero/editor/EditorInterface.h>
-#include <Nero/core/utility/FileUtil.h>
+#include <Nero/core/cpp/utility/FileUtil.h>
 //STD
 #include <memory>
 ////////////////////////////////////////////////////////////
@@ -245,9 +245,9 @@ namespace  nero
 		createDirectory(getPath({"logging"}));
 		createDirectory(getPath({"plugin"}));
 		createDirectory(getPath({"template"}));
-			createDirectory(getPath({"template", "cpp project"}));
-			createDirectory(getPath({"template", "lua project"}));
-			createDirectory(getPath({"template", "cpp-lua project"}));
+			createDirectory(getPath({"template", "cpp-project"}));
+			createDirectory(getPath({"template", "lua-project"}));
+			createDirectory(getPath({"template", "cpp-lua-project"}));
 		createDirectory(getPath({"resource"}));
 			createDirectory(getPath({"resource", "startup"}));
 				createDirectory(getPath({"resource", "startup", "texture"}));

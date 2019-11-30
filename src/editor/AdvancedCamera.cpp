@@ -5,7 +5,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/editor/AdvancedCamera.h>
-#include <Nero/core/utility/Utility.h>
+#include <Nero/core/cpp/utility/Utility.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {

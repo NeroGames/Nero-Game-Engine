@@ -10,9 +10,10 @@
 #include <json/json.hpp>
 #include <Nero/editor/AdvancedScene.h>
 #include <boost/function.hpp>
-#include <Nero/core/scene/Scene.h>
-#include <Nero/core/luascene/LuaScene.h>
-#include <Nero/core/engine/BackgroundTask.h>
+#include <Nero/core/cpp/scene/Scene.h>
+#include <Nero/core/cpp/luascene/LuaScene.h>
+#include <Nero/core/cpp/engine/BackgroundTask.h>
+#include <Nero/editor/AdvancedCamera.h>
 
 /////////////////////////////////////////////////////////////
 
@@ -23,13 +24,15 @@ namespace nero
     {
         public:
             typedef std::shared_ptr<GameProject> Ptr;
+			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
+
             typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
 			//typedef LuaScene::Ptr (CreateLuaSceneFn)(Scene::Context);
 
         public:
             GameProject();
 
-            void init(const nlohmann::json& project, const nlohmann::json& project_workpsace);
+			void init(const Setting& parameter);
             void loadProject();
             void loadProjectLibrary();
             void openEditor();
@@ -39,38 +42,40 @@ namespace nero
 
             AdvancedScene::Ptr  m_AdvancedScene;
             Scene::Ptr  m_Scene;
-            int m_ProjectCompilationStatus;
-            int m_CleanProjectResult;
-            int m_ConfigureProjectResult;
-            int m_BuildProjectResult;
-            std::string m_CleanProjectCommand;
-            std::string m_ConfigureProjectCommand;
-            std::string m_BuildProjectCommand;
-            std::string m_CmakeListFile;
             std::string m_EditorProcessId;
             boost::function<CreateCppSceneFn> m_CreateCppSceneFn;
 			//boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;
             //Directory
-            std::string m_ProjectDirectory;
-            std::string m_ProjectBuildDirectory;
-            std::string m_ProjectSourceDirectory;
 
              AdvancedScene::Ptr getAdvancedScene();
-            //File
+			 void setRenderTexture(const RenderTexturePtr& renderTexture);
+			 void setResourceManager(const ResourceManager::Ptr& resourceManager);
+			 void setCamera(const Camera::Ptr& camera);
 
-			std::string m_NeroGameNome;
-			std::string m_QTCreatorExcecutable;
-			std::string m_VisualStutionExecutable;
 
-            //Library
-            std::string m_ProjectLibraryFile;
-            std::string m_ProjectLibraryCopyFile;
 
 			std::vector<BackgroundTask>& getBackgroundTaskTable();
 
+			void openQtCreator(const std::string& file = StringPool.BLANK);
+			void openVisualStudio(const std::string& file = StringPool.BLANK);
+
+			std::string getProjectName() const;
+			void setRenderContext(const RenderContextPtr& renderContext);
+			void setSetting(const Setting::Ptr& setting);
+
+
 		private:
 			BackgroundTask& createBackgroundTask(const std::string& name, const std::string& category);
-			std::vector<BackgroundTask>  m_BackgroundTaskTable;
+
+		private:
+			std::vector<BackgroundTask>		m_BackgroundTaskTable;
+			Setting							m_ProjectParameter;
+			RenderTexturePtr				m_RenderTexture;
+			Camera::Ptr						m_Camera;
+			ResourceManager::Ptr			m_ResourceManager;
+			Setting::Ptr					m_EngineSetting;
+			RenderContextPtr				m_RenderContext;
+
     };
 }
 

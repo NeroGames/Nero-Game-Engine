@@ -5,7 +5,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/editor/LoadingScreen.h>
-#include <Nero/core/utility/Utility.h>
+#include <Nero/core/cpp/utility/Utility.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {

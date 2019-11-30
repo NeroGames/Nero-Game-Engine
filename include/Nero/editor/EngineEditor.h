@@ -6,8 +6,8 @@
 #define ENGINEEDITOR_H
 ///////////////////////////HEADERS//////////////////////////
 //Nero
-#include <Nero/core/engine/CoreEngine.h>
-#include <Nero/core/engine/Setting.h>
+#include <Nero/core/cpp/engine/CoreEngine.h>
+#include <Nero/core/cpp/engine/Setting.h>
 #include <Nero/editor/AdvancedCamera.h>
 #include <Nero/editor/LoadingScreen.h>
 #include <Nero/editor/EditorInterface.h>
