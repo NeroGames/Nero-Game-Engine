@@ -254,16 +254,14 @@ namespace nero
 
 	SceneBuilder::Ptr AdvancedScene::getSelectedSceneBuilder(const EditorMode& editorMode)
 	{
-		if(editorMode == EditorMode::WORLD_BUILDER)
-		{
-			return m_SelectedWorldBuilder;
-		}
-		else if(editorMode == EditorMode::SCREEN_BUILDER)
+		if(editorMode == EditorMode::SCREEN_BUILDER)
 		{
 			return m_SelectedScreenBuilder;
 		}
-
-		return nullptr;
+		else
+		{
+			return m_SelectedWorldBuilder;
+		}
 	}
 
 }

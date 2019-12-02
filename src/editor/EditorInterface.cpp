@@ -1811,10 +1811,11 @@ namespace  nero
         {
             ImGui::Begin("Resource Browser", nullptr, ImGuiWindowFlags());
 
-				if(m_ResourceBrowserType == ResourceType::Texture	|| m_ResourceBrowserType == ResourceType::Animation ||
+				if(m_GameProject &&
+				   (m_ResourceBrowserType == ResourceType::Texture	|| m_ResourceBrowserType == ResourceType::Animation ||
 				   m_ResourceBrowserType == ResourceType::Sound		|| m_ResourceBrowserType == ResourceType::Music		||
 				   m_ResourceBrowserType == ResourceType::Font		|| m_ResourceBrowserType == ResourceType::Particle	||
-				   m_ResourceBrowserType == ResourceType::Light)
+				   m_ResourceBrowserType == ResourceType::Light))
 				{
 
 
