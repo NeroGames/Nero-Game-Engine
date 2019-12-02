@@ -621,6 +621,18 @@ namespace nero
         }
     }
 
+	void SceneBuilder::setSelectedLayer(LayerObject::Ptr layerObject)
+	{
+		//unselect
+		m_SelectedLayer->setIsSelected(false);
+		m_SelectedLayer = nullptr;
+
+		//select
+		m_SelectedLayer = layerObject;
+		m_SelectedLayer->setIsSelected(true);
+		m_SelectedObject = nullptr;
+	}
+
 
     void SceneBuilder::copyObject(const Position& position)
     {
@@ -2130,6 +2142,11 @@ namespace nero
 	void SceneBuilder::setResourceManager(const ResourceManager::Ptr& resourceManager)
 	{
 		m_ResourceManager = resourceManager;
+	}
+
+	LayerObject::Ptr SceneBuilder::getSelectedLayer()
+	{
+		return m_SelectedLayer;
 	}
 
 }

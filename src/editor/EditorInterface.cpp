@@ -2196,7 +2196,7 @@ namespace  nero
 
 			if(ImGui::Button("Remove##remove_world_chunk", button_size))
 			{
-				removeObject();
+				removeObjectLayer();
 			}
 
 			ImGui::Dummy(ImVec2(0.f, 5.f));
@@ -2205,31 +2205,31 @@ namespace  nero
 
 				if(m_AdvancedScene)
 				{
-					auto worldChunk = m_AdvancedScene->getSelectedWorldChunk();
+					auto sceneBuilder = m_AdvancedScene->getSelectedSceneBuilder(m_EditorMode);
 
-					int inputSelectedObjectLayerId = worldChunk->sceneBuilder->getSelectedLayer()->getObjectId();
+					int inputSelectedObjectLayerId = sceneBuilder->getSelectedLayer()->getObjectId();
 
-					for(const auto& objectLayer : worldChunk->sceneBuilder->getLayerTable())
+					for(const auto& objectLayer : sceneBuilder->getLayerTable())
 					{
 						std::string itemId = "##select_layer" + toString(objectLayer->getObjectId());
-						ImGui::RadioButton(itemId.c_str(), &inputSelectedObjectLayerId, worldChunk->objectLayer->getObjectId());
+						ImGui::RadioButton(itemId.c_str(), &inputSelectedObjectLayerId, objectLayer->getObjectId());
 
 						if(ImGui::IsItemClicked())
 						{
-							worldChunk->sceneBuilder->setSelectedObjectLayer(objectLayer);
+							sceneBuilder->setSelectedLayer(objectLayer);
 						}
 
 						ImGui::SameLine();
 
 						itemId = "##visible_layer" + toString(objectLayer->getObjectId());
-						ImGui::Checkbox(itemId.c_str(), &objectLayer->isVisible());
+						ImGui::Checkbox(itemId.c_str(), &objectLayer->getVisibility());
 
 						ImGui::SameLine();
 
 						char layer_name[100];
 						fillCharArray(layer_name, sizeof(layer_name), objectLayer->getName());
 						ImGui::SetNextItemWidth(118.f);
-						itemId = "##layer_name" + toString(worldChunk->chunkId);
+						itemId = "##layer_name" + toString(objectLayer->getObjectId());
 						ImGui::InputText(itemId.c_str(), layer_name, sizeof(layer_name));
 
 						if(ImGui::IsItemEdited())
@@ -2242,6 +2242,16 @@ namespace  nero
 			ImGui::EndChild();
 
 		ImGui::End();
+	}
+
+	void EditorInterface::addObjectLayer()
+	{
+		m_AdvancedScene->getSelectedSceneBuilder(m_EditorMode)->addLayer();
+	}
+
+	void EditorInterface::removeObjectLayer()
+	{
+
 	}
 
 	void EditorInterface::showSceneLevelWindow()

@@ -23,6 +23,8 @@ namespace nero
                                             LayerObject();
             virtual Object::Ptr             clone()         const;
             virtual nlohmann::json          toJson()        const;
+			bool&							getVisibility();
+
 
             virtual void                    setColor(const sf::Color& color);
             virtual const sf::Color&        getColor()      const;

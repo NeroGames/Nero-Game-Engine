@@ -209,4 +209,9 @@ namespace nero
 
         return  std::static_pointer_cast<LayerObject>(object);
     }
+
+	bool& LayerObject::getVisibility()
+	{
+		return m_IsVisible;
+	}
 }

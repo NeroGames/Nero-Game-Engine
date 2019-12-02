@@ -45,8 +45,9 @@ namespace nero
             void                            setIsSelected(bool flag);
 
 
-            const int&                      getId()             const;
-            const sf::String&               getName()           const;
+			const int&                      getId()             const;
+			const int&                      getObjectId()       const;
+			const sf::String&               getName()           const;
             const sf::String&               getCategory()       const;
             const Type&                     getFirstType()      const;
             const Type&                     getSecondType()     const;

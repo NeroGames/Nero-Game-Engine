@@ -32,10 +32,16 @@ namespace nero
         m_Id = id;
     }
 
+	//TODO : remove
     const int& Object::getId() const
     {
         return m_Id;
     }
+
+	const int& Object::getObjectId() const
+	{
+		return m_Id;
+	}
 
     void Object::setName(const sf::String& name)
     {
@@ -95,7 +101,7 @@ namespace nero
     bool Object::isVisible() const
     {
         return m_IsVisible;
-    }
+	}
 
     bool Object::isUpdateable() const
     {

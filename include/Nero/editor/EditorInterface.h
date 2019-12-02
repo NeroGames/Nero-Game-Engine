@@ -164,6 +164,9 @@ namespace nero
 			void						addWorldChunk();
 			void						removeWorldChunk();
 			int							InputSelectedWorldChunkId;
+			//Object Layer
+			void						addObjectLayer();
+			void						removeObjectLayer();
 
             //Tabs
 			TabBarSwitch				m_ProjectManagerTabBarSwitch;

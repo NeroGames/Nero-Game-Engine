@@ -56,6 +56,7 @@ namespace nero
             bool                            mergeLayerDown(int id);
 
             void                            selectLayer(int id);
+			void							setSelectedLayer(LayerObject::Ptr layerObject);
             void                            updateLayerVisibility(int id);
             void                            updateLayerName(int id, sf::String name);
 
@@ -71,6 +72,7 @@ namespace nero
             void                            moveObjectUp();
             void                            moveObjectDown();
             Object::Ptr                     getSelectedObject();
+			LayerObject::Ptr				getSelectedLayer();
             //Sprite
             void                            updateLayerColor(const sf::Color& color);
             void                            updateAllLayerAlpha(int alpha);

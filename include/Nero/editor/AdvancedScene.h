@@ -117,6 +117,8 @@ namespace nero
 			 GameLevelPtr						getSelectedGameLevel();
 			 WorldChunkPtr						getSelectedWorldChunk();
 			 void								setSelectedWorldChunk(WorldChunkPtr worldChunk);
+			 SceneBuilder::Ptr					getSelectedSceneBuilder(const EditorMode& editorMode);
+
 
         private:
             //Friend

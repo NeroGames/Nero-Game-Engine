@@ -250,5 +250,19 @@ namespace nero
 		m_SelectedWorldBuilder	= worldChunk->sceneBuilder;
 	}
 
+	SceneBuilder::Ptr AdvancedScene::getSelectedSceneBuilder(const EditorMode& editorMode)
+	{
+		if(editorMode == EditorMode::WORLD_BUILDER)
+		{
+			return m_SelectedWorldBuilder;
+		}
+		else if(editorMode == EditorMode::SCREEN_BUILDER)
+		{
+			return m_SelectedScreenBuilder;
+		}
+
+		return nullptr;
+	}
+
 }
 
