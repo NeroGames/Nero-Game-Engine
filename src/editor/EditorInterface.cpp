@@ -1811,40 +1811,49 @@ namespace  nero
         {
             ImGui::Begin("Resource Browser", nullptr, ImGuiWindowFlags());
 
-                if(ImGui::Button("Import File##import_sprite_resource", ImVec2(100.f, 0.f)))
-                {
-					nfdpathset_t pathSet;
-					nfdresult_t result = NFD_OpenDialogMultiple( nullptr, nullptr, &pathSet);
+				if(m_ResourceBrowserType == ResourceType::Texture	|| m_ResourceBrowserType == ResourceType::Animation ||
+				   m_ResourceBrowserType == ResourceType::Sound		|| m_ResourceBrowserType == ResourceType::Music		||
+				   m_ResourceBrowserType == ResourceType::Font		|| m_ResourceBrowserType == ResourceType::Particle	||
+				   m_ResourceBrowserType == ResourceType::Light)
+				{
 
-					if ( result == NFD_OKAY )
+
+					if(ImGui::Button("Import File##import_resource", ImVec2(100.f, 0.f)))
 					{
-						std::vector<std::string> fileTable;
+						nfdpathset_t pathSet;
+						nfdresult_t result = NFD_OpenDialogMultiple( nullptr, nullptr, &pathSet);
 
-						size_t i;
-						for ( i = 0; i < NFD_PathSet_GetCount(&pathSet); ++i )
+						if ( result == NFD_OKAY )
 						{
-							nfdchar_t *path = NFD_PathSet_GetPath(&pathSet, i);
+							std::vector<std::string> fileTable;
 
-							fileTable.push_back(toString(path));
+							size_t i;
+							for ( i = 0; i < NFD_PathSet_GetCount(&pathSet); ++i )
+							{
+								nfdchar_t *path = NFD_PathSet_GetPath(&pathSet, i);
+
+								fileTable.push_back(toString(path));
+							}
+
+							m_ResourceManager->loadFile(m_ResourceBrowserType, fileTable);
+							saveResourceFile(m_ResourceBrowserType, fileTable);
+
+							NFD_PathSet_Free(&pathSet);
+						}
+						else if ( result == NFD_CANCEL ) {
+							//puts("User pressed cancel.");
+						}
+						else {
+							//printf("Error: %s\n", NFD_GetError() );
 						}
 
-						m_ResourceManager->loadFile(m_ResourceBrowserType, fileTable);
+					}
+				}
 
-						NFD_PathSet_Free(&pathSet);
-                    }
-                    else if ( result == NFD_CANCEL ) {
-						//puts("User pressed cancel.");
-                    }
-                    else {
-                        //printf("Error: %s\n", NFD_GetError() );
-                    }
-
-                }
-
-                ImGui::SameLine();
+				ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 100.f);
 
 
-                if(ImGui::Button("Close##close_sprite_resource", ImVec2(60.f, 0.f)))
+				if(ImGui::Button("Close##close_sprite_resource", ImVec2(100.f, 0.f)))
                 {
 					m_ResourceBrowserType = ResourceType::None;
                 }
@@ -1877,6 +1886,46 @@ namespace  nero
 			ImGui::End();
         }
     }
+
+	void EditorInterface::saveResourceFile(ResourceType type, const std::vector<std::string> fileTable)
+	{
+		switch (m_ResourceBrowserType)
+		{
+			case ResourceType::Texture:
+			{
+				//copy texture file and json helper
+				for(std::string file : fileTable)
+				{
+					//copyFile(file, m_GameProject->getWorkspaceResourceFoler() + "Texture" + "filename")
+				}
+
+			}break;
+
+			case ResourceType::Animation:
+			{
+				//copy texture file and json helper
+
+			}break;
+
+			case ResourceType::Font:
+			{
+				//copy font file and json helper
+
+			}break;
+
+			case ResourceType::Sound:
+			{
+				//copy sound file and json helper
+
+			}break;
+
+			case ResourceType::Music:
+			{
+				//copy music file and json helper
+
+			}break;
+		}
+	}
 
 	void EditorInterface::showMeshResource()
 	{
@@ -2541,7 +2590,6 @@ namespace  nero
 									worldChunk->sceneBuilder->setSelectedLayer(objectLayer);
 									selectedWorldChunkId = worldChunk->chunkId;
 									selectedObjectLayerId = objectLayer->getObjectId();
-
 								}
 
 								if (layer_node_open)
@@ -2570,7 +2618,7 @@ namespace  nero
 
 										ImGui::TreeNodeEx((void*)(intptr_t)loop_object, node_flags, object_name.c_str(), loop_object);
 
-										if(gameObject->getObjectId() == selectedGameObjectId)
+										if(gameObject->getObjectId() == selectedGameObjectId && objectLayer->getObjectId() == selectedObjectLayerId && worldChunk->chunkId == selectedWorldChunkId)
 										{
 											object_node_clicked = loop_object;
 											layer_node_clicked	= loop_layer;
@@ -2581,9 +2629,14 @@ namespace  nero
 											object_node_clicked = loop_object;
 											layer_node_clicked	= loop_layer;
 											chunk_node_clicked	= loop_chunk;
-											//m_AdvancedScene->setSelectedWorldChunk(worldChunk);
-											//worldChunk->sceneBuilder->setSelectedLayer(objectLayer);
-											//worldChunk->sceneBuilder->setSelectedObject(gameObject);
+
+											m_AdvancedScene->setSelectedWorldChunk(worldChunk);
+											worldChunk->sceneBuilder->setSelectedLayer(objectLayer);
+											worldChunk->sceneBuilder->setSelectedObject(gameObject);
+
+											selectedWorldChunkId	= worldChunk->chunkId;
+											selectedObjectLayerId	= objectLayer->getObjectId();
+											selectedGameObjectId	= gameObject->getObjectId();
 										}
 
 										loop_object++;

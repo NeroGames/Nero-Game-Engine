@@ -254,6 +254,8 @@ namespace nero
 
 
 			std::string m_SelectedChunkNode;
+			void saveResourceFile(ResourceType type, const std::vector<std::string> fileTable);
+
 
 
 	};
