@@ -55,8 +55,12 @@ namespace nero
 					Context(std::string sceneName, RenderTexturePtr renderTexture, ResourceManager::Ptr resourceManager, Camera::Ptr camera,
 							Setting::Ptr setting, EngineType engineType, PlatformType platformType);
 
+					Context();
+
 				private:
 					friend class			Scene;
+					friend class			GameProject;
+					friend class			AdvancedScene;
 					RenderTexturePtr		renderTexture;
 					ResourceManager::Ptr    resourceManager;
 					Camera::Ptr             camera;
@@ -68,7 +72,7 @@ namespace nero
 
 		public:
 			//constructor
-											Scene(const Context& context);
+											Scene(Context context);
 			virtual                        ~Scene();
 			//main method
 			virtual void					handleEvent(const sf::Event& event);

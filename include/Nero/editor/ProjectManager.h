@@ -53,6 +53,7 @@ namespace  nero
            void editProject();
 
            void loadLibrary();
+		   void close();
 
             std::string exec(const char* cmd);
             std::string formatSceneClassName(std::vector<std::string> wordTable);

@@ -181,9 +181,9 @@ namespace nero
 
 	}
 
-    void AdvancedScene::setScene(Scene::Ptr scene)
-    {
-        m_Scene = scene;
+	void AdvancedScene::setScene(Scene::Ptr scene)
+	{
+		m_Scene = scene;
     }
 
 	void AdvancedScene::setRenderContext(const RenderContextPtr& renderContext)

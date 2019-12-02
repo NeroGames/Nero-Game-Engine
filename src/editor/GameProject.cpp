@@ -77,10 +77,10 @@ namespace nero
 
 
 		if(fileExist(m_ProjectParameter.getString("library_file_copy")))
-        {
+		{
 
-            m_Scene = nullptr;
-            m_CreateCppSceneFn.clear();
+			m_AdvancedScene->m_Scene = nullptr;
+			m_CreateCppSceneFn.clear();
 
 		   removeFile(m_ProjectParameter.getString("library_file_copy"));
         }
@@ -97,18 +97,26 @@ namespace nero
 
 			nero_log_if("project library loaded", lib.is_loaded());
 
+			m_CreateCppSceneFn.clear();
+
 			m_CreateCppSceneFn = boost::dll::import_alias<CreateCppSceneFn>(library_path, "createScene", boost::dll::load_mode::append_decorations);
 
-			m_AdvancedScene->setScene(m_CreateCppSceneFn(Scene::Context(
+			Scene::Ptr scene = m_CreateCppSceneFn(Scene::Context(
 										 m_ProjectParameter.getString("project_name"),
 										 m_RenderTexture,
 										 m_ResourceManager,
 										 m_Camera,
 										 m_EngineSetting,
 										 Scene::EngineType::EDITOR_ENGINE,
-										 Scene::PlatformType::WINDOWS)));
+										 Scene::PlatformType::WINDOWS));
 
-			nero_log("project scene loaded successfully");
+			if(scene)
+			{
+				m_AdvancedScene->setScene(scene);
+
+				//nero_log("project scene loaded successfully");
+			}
+
 
 		}
 		catch (std::exception e)
@@ -273,7 +281,11 @@ namespace nero
 		m_EngineSetting = setting;
 	}
 
-
+	void GameProject::close()
+	{
+		m_AdvancedScene->m_Scene = nullptr;
+		m_CreateCppSceneFn.clear();
+	}
 
 }
 

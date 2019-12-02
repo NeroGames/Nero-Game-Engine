@@ -62,6 +62,7 @@ namespace nero
 			std::string getProjectName() const;
 			void setRenderContext(const RenderContextPtr& renderContext);
 			void setSetting(const Setting::Ptr& setting);
+			void close();
 
 
 		private:

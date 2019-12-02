@@ -498,6 +498,8 @@ namespace  nero
 			saveFile(file, loaded.dump(3), true);
 		}
 
+		m_ProjectManager->close();
+
         m_RenderWindow.close();
     }
 
@@ -1673,7 +1675,7 @@ namespace  nero
         }
     }
 
-    void EditorInterface:: reloadProject()
+	void EditorInterface::reloadProject()
     {
 
         if(m_GameProject)

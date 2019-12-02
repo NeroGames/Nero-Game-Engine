@@ -18,7 +18,12 @@ namespace nero
 
     }
 
-	Scene::Scene(const Context& context):
+	Scene::Context::Context()
+	{
+
+	}
+
+	Scene::Scene(Context context):
 		 m_SceneContext(context)
 	{
 

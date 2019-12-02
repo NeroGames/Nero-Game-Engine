@@ -546,4 +546,9 @@ namespace nero
 		 m_RenderContext = renderContext;
 	 }
 
+	 void ProjectManager::close()
+	 {
+		m_GameProject->close();
+	 }
+
 }

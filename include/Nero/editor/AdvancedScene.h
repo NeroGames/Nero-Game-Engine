@@ -119,6 +119,7 @@ namespace nero
             friend class                BoundaryListener;
             friend class                ContactListener;
             friend class                SceneManager;
+			friend class				GameProject;
             //Destruction Listener
             DestructionListener         m_DestructionListener;
 
@@ -141,13 +142,13 @@ namespace nero
             b2Profile                   m_MaxProfile;
             b2Profile                   m_TotalProfile;
 
-            Scene::Ptr                  m_Scene;
+			Scene::Ptr                  m_Scene;
 			RenderContextPtr            m_RenderContext;
 			ltbl::LightSystem			m_LightEngine;
 			ResourceManager::Ptr		m_ResourceManager;
 			RenderTexturePtr			m_RenderTexture;
 			Camera::Ptr					m_Camera;
-			Setting::Ptr					m_EngineSetting;
+			Setting::Ptr				m_EngineSetting;
 
     };
 }
