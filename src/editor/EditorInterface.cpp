@@ -2512,6 +2512,8 @@ namespace  nero
 							//display chunk layer here
 							int			layer_node_clicked		= -1;
 							static int	layer_selection_mask	= (1 << worldChunk->sceneBuilder->getLayerTable().size());
+							auto		sceneBuilder			= m_AdvancedScene->getSelectedSceneBuilder(m_EditorMode);
+							int			selectedObjectLayerId	= sceneBuilder->getSelectedLayer()->getObjectId();
 
 							int loop_layer = 0;
 							for(const auto& objectLayer : worldChunk->sceneBuilder->getLayerTable())
@@ -2526,10 +2528,17 @@ namespace  nero
 
 								bool layer_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_layer, node_flags, std::string("[Layer] " + objectLayer->getName()).c_str(), loop_layer);
 
-								if (ImGui::IsItemClicked())
+								if(objectLayer->getObjectId() == selectedObjectLayerId)
 								{
 									layer_node_clicked = loop_layer;
 									chunk_node_clicked = loop_chunk;
+								}
+								else if(ImGui::IsItemClicked())
+								{
+									layer_node_clicked = loop_layer;
+									chunk_node_clicked = loop_chunk;
+									sceneBuilder->setSelectedLayer(objectLayer);
+									m_AdvancedScene->setSelectedWorldChunk(worldChunk);
 								}
 
 								if (layer_node_open)
@@ -2564,14 +2573,16 @@ namespace  nero
 
 									if (object_node_clicked != -1)
 									{
-										if (ImGui::GetIO().KeyCtrl)
+										object_selection_mask = (1 << object_node_clicked);
+
+										/*if (ImGui::GetIO().KeyCtrl)
 										{
 											object_selection_mask ^= (1 << object_node_clicked);
 										}
 										else
 										{
 											object_selection_mask = (1 << object_node_clicked);
-										}
+										}*/
 									}
 
 									ImGui::TreePop();
@@ -2582,14 +2593,16 @@ namespace  nero
 
 							if (layer_node_clicked != -1)
 							{
-								if (ImGui::GetIO().KeyCtrl)
+								layer_selection_mask = (1 << layer_node_clicked);
+
+								/*if (ImGui::GetIO().KeyCtrl)
 								{
 									layer_selection_mask ^= (1 << layer_node_clicked);
 								}
 								else
 								{
 									layer_selection_mask = (1 << layer_node_clicked);
-								}
+								}*/
 							}
 
 							ImGui::TreePop();
@@ -2600,14 +2613,16 @@ namespace  nero
 
 					if (chunk_node_clicked != -1)
 					{
-						if (ImGui::GetIO().KeyCtrl)
+						chunk_selection_mask = (1 << chunk_node_clicked);
+
+						/*if (ImGui::GetIO().KeyCtrl)
 						{
 							chunk_selection_mask ^= (1 << chunk_node_clicked);
 						}
 						else
 						{
 							chunk_selection_mask = (1 << chunk_node_clicked);
-						}
+						}*/
 					}
 
 					ImGui::TreePop();
