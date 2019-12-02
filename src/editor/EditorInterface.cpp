@@ -2505,6 +2505,7 @@ namespace  nero
 						{
 							chunk_node_clicked = loop_chunk;
 							m_AdvancedScene->setSelectedWorldChunk(worldChunk);
+							selectedWorldChunkId = worldChunk->chunkId;
 						}
 
 						if (chunk_node_open)
@@ -2512,8 +2513,7 @@ namespace  nero
 							//display chunk layer here
 							int			layer_node_clicked		= -1;
 							static int	layer_selection_mask	= (1 << worldChunk->sceneBuilder->getLayerTable().size());
-							auto		sceneBuilder			= m_AdvancedScene->getSelectedSceneBuilder(m_EditorMode);
-							int			selectedObjectLayerId	= sceneBuilder->getSelectedLayer()->getObjectId();
+							int			selectedObjectLayerId	= m_AdvancedScene->getSelectedSceneBuilder(m_EditorMode)->getSelectedLayer()->getObjectId();
 
 							int loop_layer = 0;
 							for(const auto& objectLayer : worldChunk->sceneBuilder->getLayerTable())
@@ -2528,7 +2528,7 @@ namespace  nero
 
 								bool layer_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_layer, node_flags, std::string("[Layer] " + objectLayer->getName()).c_str(), loop_layer);
 
-								if(objectLayer->getObjectId() == selectedObjectLayerId)
+								if(objectLayer->getObjectId() == selectedObjectLayerId && worldChunk->chunkId == selectedWorldChunkId)
 								{
 									layer_node_clicked = loop_layer;
 									chunk_node_clicked = loop_chunk;
@@ -2537,14 +2537,23 @@ namespace  nero
 								{
 									layer_node_clicked = loop_layer;
 									chunk_node_clicked = loop_chunk;
-									sceneBuilder->setSelectedLayer(objectLayer);
 									m_AdvancedScene->setSelectedWorldChunk(worldChunk);
+									worldChunk->sceneBuilder->setSelectedLayer(objectLayer);
+									selectedWorldChunkId = worldChunk->chunkId;
+									selectedObjectLayerId = objectLayer->getObjectId();
+
 								}
 
 								if (layer_node_open)
 								{
 									int			object_node_clicked		= -1;
 									static int	object_selection_mask	= (1 << objectLayer->getChildCount());
+									int			selectedGameObjectId	= -1;
+
+									if(worldChunk->sceneBuilder->getSelectedObject())
+									{
+										selectedGameObjectId = worldChunk->sceneBuilder->getSelectedObject()->getObjectId();
+									}
 
 									int loop_object = 0;
 									for(const auto& gameObject : *objectLayer->getAllChild())
@@ -2561,11 +2570,20 @@ namespace  nero
 
 										ImGui::TreeNodeEx((void*)(intptr_t)loop_object, node_flags, object_name.c_str(), loop_object);
 
-										if (ImGui::IsItemClicked())
+										if(gameObject->getObjectId() == selectedGameObjectId)
 										{
 											object_node_clicked = loop_object;
 											layer_node_clicked	= loop_layer;
 											chunk_node_clicked	= loop_chunk;
+										}
+										else if (ImGui::IsItemClicked())
+										{
+											object_node_clicked = loop_object;
+											layer_node_clicked	= loop_layer;
+											chunk_node_clicked	= loop_chunk;
+											//m_AdvancedScene->setSelectedWorldChunk(worldChunk);
+											//worldChunk->sceneBuilder->setSelectedLayer(objectLayer);
+											//worldChunk->sceneBuilder->setSelectedObject(gameObject);
 										}
 
 										loop_object++;

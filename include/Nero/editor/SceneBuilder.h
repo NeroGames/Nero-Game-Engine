@@ -57,6 +57,7 @@ namespace nero
 
             void                            selectLayer(int id);
 			void							setSelectedLayer(LayerObject::Ptr layerObject);
+			void							setSelectedObject(Object::Ptr object);
             void                            updateLayerVisibility(int id);
             void                            updateLayerName(int id, sf::String name);
 

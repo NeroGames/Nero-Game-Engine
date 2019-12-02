@@ -58,10 +58,10 @@ namespace nero
 					sceneBuilder = std::make_shared<SceneBuilder>();
 				}
 
-				int					chunkId		= -1;
-				std::string			name		= StringPool.BLANK;
-				bool				isVisible	= true;
-				SceneBuilder::Ptr	sceneBuilder;
+				int					chunkId			= -1;
+				std::string			name			= StringPool.BLANK;
+				bool				isVisible		= true;
+				SceneBuilder::Ptr	sceneBuilder	= nullptr;
 			};
 
 			struct GameLevel
@@ -85,8 +85,9 @@ namespace nero
 					sceneBuilder = std::make_shared<SceneBuilder>();
 				}
 
-                std::string             name;
-				SceneBuilder::Ptr       sceneBuilder;
+				int						screenId		= -1;
+				std::string             name			= StringPool.BLANK;
+				SceneBuilder::Ptr       sceneBuilder	= nullptr;
             };
 
         public:
@@ -156,6 +157,9 @@ namespace nero
 			RenderTexturePtr			m_RenderTexture;
 			Camera::Ptr					m_Camera;
 			Setting::Ptr				m_EngineSetting;
+
+			//
+			int							m_GameScreenCount;
 
     };
 }

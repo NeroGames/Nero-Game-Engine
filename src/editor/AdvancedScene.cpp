@@ -24,7 +24,8 @@ namespace nero
 
 	AdvancedScene::AdvancedScene():
 		m_LightEngine(true)
-	  ,m_RenderTexture(nullptr)
+	   ,m_RenderTexture(nullptr)
+	   ,m_GameScreenCount(0)
     {
 		// Create the LightSystem
 		m_LightEngine.create({ -1000.f, -1000.f, 2000.f, 2000.f }, sf::Vector2u(800.f, 800.f));
@@ -129,10 +130,11 @@ namespace nero
 	{
 		m_GameScreenTable.push_back(std::make_shared<GameScreen>(name));
 		m_SelectedGameScreen = m_GameScreenTable.back();
+		m_SelectedGameScreen->screenId = m_GameScreenCount;
 		m_SelectedScreenBuilder = m_SelectedGameScreen->sceneBuilder;
 		m_SelectedScreenBuilder->setResourceManager(m_ResourceManager);
-		m_SelectedWorldBuilder->setRenderTexture(m_RenderTexture);
-		m_SelectedWorldBuilder->setRenderContext(m_RenderContext);
+		m_SelectedScreenBuilder->setRenderTexture(m_RenderTexture);
+		m_SelectedScreenBuilder->setRenderContext(m_RenderContext);
 		m_SelectedScreenBuilder->addLayer();
 	}
 

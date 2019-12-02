@@ -633,6 +633,11 @@ namespace nero
 		m_SelectedObject = nullptr;
 	}
 
+	void SceneBuilder::setSelectedObject(Object::Ptr object)
+	{
+		m_SelectedObject = object;
+	}
+
 
     void SceneBuilder::copyObject(const Position& position)
     {
