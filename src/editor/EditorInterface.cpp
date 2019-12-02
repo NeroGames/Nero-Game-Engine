@@ -37,6 +37,7 @@ namespace  nero
 		,m_BuilderMode(BuilderMode::OBJECT)
 		,m_EditorCamera(nullptr)
 		,m_SelectedChunkNode(StringPool.BLANK)
+		,InputSelectedWorldChunkId(-1)
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -198,9 +199,9 @@ namespace  nero
 			showSceneScreenWindow();
 
 			//lower left
-		showSceneLayerWindow();
+		showObjectLayerWindow();
 		if(m_EditorMode == EditorMode::WORLD_BUILDER)
-			showSceneChunckWindow();
+			showWorldChunckWindow();
 
 		//right dockspace
 		showExplorerWindow();
@@ -2172,68 +2173,73 @@ namespace  nero
         ImGui::End();
     }
 
-	void EditorInterface::showSceneLayerWindow()
+	void EditorInterface::showObjectLayerWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_LAYER.c_str());
 
-		ImGui::Text("Manage Scene Level");
-		ImGui::Separator();
-		ImGui::Dummy(ImVec2(0.f, 2.f));
+			ImGui::Text("Manage Object Layers");
+			ImGui::Separator();
+			ImGui::Dummy(ImVec2(0.f, 2.f));
 
-		float width = 82.f;
-		static char input_level_name[100] = "";
-		ImGui::SetNextItemWidth(width*2.f + 8.f);
-		ImGui::InputText("##level_id", input_level_name, IM_ARRAYSIZE(input_level_name));
+			float width = 90.f;
 
-		ImGui::Dummy(ImVec2(0.f, 2.f));
+			ImGui::Dummy(ImVec2(0.f, 2.f));
 
-		ImVec2 button_size = ImVec2(width, 0.f);
-		//addcreen
-		if(ImGui::Button("Add##add_level", button_size))
-		{
-			//
-		}
+			ImVec2 button_size = ImVec2(width, 0.f);
 
-		ImGui::SameLine();
-
-		if(ImGui::Button("Rename##rename_level", button_size))
-		{
-			//
-		}
-
-
-		if(ImGui::Button("Duplicate##duplicate_level", button_size))
-		{
-			//
-		}
-
-		ImGui::SameLine();
-
-		if(ImGui::Button("Remove##remove_level", button_size))
-		{
-			//
-		}
-
-		//rename screen
-		//copy
-
-		ImGui::Dummy(ImVec2(0.f, 5.f));
-
-		ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
-		ImGui::BeginChild("scene_level_list", ImVec2(), true);
-
-			static bool check = false;
-			ImGui::Checkbox("", &check);
+			if(ImGui::Button("Add##add_object_layer", button_size))
+			{
+				addObjectLayer();
+			}
 
 			ImGui::SameLine();
 
-			ImGuiInputTextFlags flags2 = ImGuiInputTextFlags_ReadOnly;
-			static char screen_name[100] = "screen one";
-			ImGui::SetNextItemWidth(130.f);
-			ImGui::InputText("##level_id", screen_name, IM_ARRAYSIZE(screen_name), flags2);
+			if(ImGui::Button("Remove##remove_world_chunk", button_size))
+			{
+				removeObject();
+			}
 
-	   ImGui::EndChild();
+			ImGui::Dummy(ImVec2(0.f, 5.f));
 
+			ImGui::BeginChild("##manage_object_layer", ImVec2(), true);
+
+				if(m_AdvancedScene)
+				{
+					auto worldChunk = m_AdvancedScene->getSelectedWorldChunk();
+
+					int inputSelectedObjectLayerId = worldChunk->sceneBuilder->getSelectedLayer()->getObjectId();
+
+					for(const auto& objectLayer : worldChunk->sceneBuilder->getLayerTable())
+					{
+						std::string itemId = "##select_layer" + toString(objectLayer->getObjectId());
+						ImGui::RadioButton(itemId.c_str(), &inputSelectedObjectLayerId, worldChunk->objectLayer->getObjectId());
+
+						if(ImGui::IsItemClicked())
+						{
+							worldChunk->sceneBuilder->setSelectedObjectLayer(objectLayer);
+						}
+
+						ImGui::SameLine();
+
+						itemId = "##visible_layer" + toString(objectLayer->getObjectId());
+						ImGui::Checkbox(itemId.c_str(), &objectLayer->isVisible());
+
+						ImGui::SameLine();
+
+						char layer_name[100];
+						fillCharArray(layer_name, sizeof(layer_name), objectLayer->getName());
+						ImGui::SetNextItemWidth(118.f);
+						itemId = "##layer_name" + toString(worldChunk->chunkId);
+						ImGui::InputText(itemId.c_str(), layer_name, sizeof(layer_name));
+
+						if(ImGui::IsItemEdited())
+						{
+							objectLayer->setName(std::string(layer_name));
+						}
+					}
+				}
+
+			ImGui::EndChild();
 
 		ImGui::End();
 	}
@@ -2313,70 +2319,90 @@ namespace  nero
 		ImGui::End();
 	};
 
-    void EditorInterface::showSceneChunckWindow()
+	void EditorInterface::showWorldChunckWindow()
     {
 		ImGui::Begin(EditorConstant.WINDOW_CHUNCK.c_str());
 
-        ImGui::Text("Manage Scene Chuncks");
-        ImGui::Separator();
-		ImGui::Dummy(ImVec2(0.f, 2.f));
+			ImGui::Text("Manage World Chuncks");
+			ImGui::Separator();
+			ImGui::Dummy(ImVec2(0.f, 2.f));
 
-		float width = 82.f;
-		static char input_level_name[100] = "";
-		ImGui::SetNextItemWidth(width*2.f + 8.f);
-		ImGui::InputText("##level_id", input_level_name, IM_ARRAYSIZE(input_level_name));
+			float width = 90.f;
 
-		ImGui::Dummy(ImVec2(0.f, 2.f));
+			ImGui::Dummy(ImVec2(0.f, 2.f));
 
-		ImVec2 button_size = ImVec2(width, 0.f);
-		//addcreen
-		if(ImGui::Button("Add##add_level", button_size))
-		{
-			//
-		}
+			ImVec2 button_size = ImVec2(width, 0.f);
 
-		ImGui::SameLine();
-
-		if(ImGui::Button("Rename##rename_level", button_size))
-		{
-			//
-		}
-
-
-		if(ImGui::Button("Duplicate##duplicate_level", button_size))
-		{
-			//
-		}
-
-		ImGui::SameLine();
-
-		if(ImGui::Button("Remove##remove_level", button_size))
-		{
-			//
-		}
-
-		//rename screen
-		//copy
-
-		ImGui::Dummy(ImVec2(0.f, 5.f));
-
-		ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
-		ImGui::BeginChild("scene_level_list", ImVec2(), true);
-
-			static bool check = false;
-			ImGui::Checkbox("", &check);
+			if(ImGui::Button("Add##add_world_chunk", button_size))
+			{
+				addWorldChunk();
+			}
 
 			ImGui::SameLine();
 
-			ImGuiInputTextFlags flags2 = ImGuiInputTextFlags_ReadOnly;
-			static char screen_name[100] = "screen one";
-			ImGui::SetNextItemWidth(130.f);
-			ImGui::InputText("##level_id", screen_name, IM_ARRAYSIZE(screen_name), flags2);
+			if(ImGui::Button("Remove##remove_world_chunk", button_size))
+			{
+				removeWorldChunk();
+			}
 
-	   ImGui::EndChild();
+			ImGui::Dummy(ImVec2(0.f, 5.f));
+
+			ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
+			ImGui::BeginChild("##manage_world_chunk", ImVec2(), true);
+
+				if(m_AdvancedScene)
+				{
+					auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
+
+					InputSelectedWorldChunkId = m_AdvancedScene->getSelectedWorldChunk()->chunkId;
+
+					for(const auto& worldChunk : gameLevel->chunkTable)
+					{
+						std::string itemId = "##select_chunk" + toString(worldChunk->chunkId);
+						ImGui::RadioButton(itemId.c_str(), &InputSelectedWorldChunkId, worldChunk->chunkId);
+
+						if(ImGui::IsItemClicked())
+						{
+							m_AdvancedScene->setSelectedWorldChunk(worldChunk);
+						}
+
+						ImGui::SameLine();
+
+						itemId = "##visible_chunk" + toString(worldChunk->chunkId);
+						ImGui::Checkbox(itemId.c_str(), &worldChunk->isVisible);
+
+						ImGui::SameLine();
+
+						char chunk_name[100];
+						fillCharArray(chunk_name, sizeof(chunk_name), worldChunk->name);
+						ImGui::SetNextItemWidth(118.f);
+						itemId = "##chunk_name" + toString(worldChunk->chunkId);
+						ImGui::InputText(itemId.c_str(), chunk_name, sizeof(chunk_name));
+
+						if(ImGui::IsItemEdited())
+						{
+							worldChunk->name = std::string(chunk_name);
+						}
+					}
+				}
+
+			ImGui::EndChild();
 
         ImGui::End();
     }
+
+	void EditorInterface::addWorldChunk()
+	{
+		if(m_AdvancedScene && m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT)
+		{
+			m_AdvancedScene->addWorldChunk(StringPool.BLANK);
+		}
+	}
+
+	void EditorInterface::removeWorldChunk()
+	{
+		//m_AdvancedScene->removeWorldChunk();
+	}
 
     void EditorInterface::showToggleButton(bool toggle, const std::string& label, std::function<void()> callback)
     {
@@ -2447,6 +2473,7 @@ namespace  nero
 				{
 					int			chunk_node_clicked		= -1;
 					static int	chunk_selection_mask	= (1 << gameLevel->chunkTable.size());
+					int			selectedWorldChunkId	= m_AdvancedScene->getSelectedWorldChunk()->chunkId;
 
 					int loop_chunk = 0;
 					for(const auto& worldChunk : gameLevel->chunkTable)
@@ -2460,10 +2487,16 @@ namespace  nero
 
 						bool chunk_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_chunk, node_flags, std::string("[Chunk] " + worldChunk->name).c_str(), loop_chunk);
 
-						if (ImGui::IsItemClicked())
+						if(worldChunk->chunkId == selectedWorldChunkId)
 						{
 							chunk_node_clicked = loop_chunk;
 						}
+						if (ImGui::IsItemClicked())
+						{
+							chunk_node_clicked = loop_chunk;
+							m_AdvancedScene->setSelectedWorldChunk(worldChunk);
+						}
+
 						if (chunk_node_open)
 						{
 							//display chunk layer here

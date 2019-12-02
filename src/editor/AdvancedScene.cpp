@@ -105,8 +105,18 @@ namespace nero
 	{
 		if(m_SelectedGameLevel)
 		{
-			m_SelectedGameLevel->chunkTable.push_back(std::make_shared<WorldChunk>(name));
+			m_SelectedGameLevel->chunkCount++;
+
+			std::string chunkName = name;
+
+			if(chunkName == StringPool.BLANK)
+			{
+				chunkName = "world chunk " + toString(m_SelectedGameLevel->chunkCount);
+			}
+
+			m_SelectedGameLevel->chunkTable.push_back(std::make_shared<WorldChunk>(chunkName));
 			m_SelectedWorldChunk = m_SelectedGameLevel->chunkTable.back();
+			m_SelectedWorldChunk->chunkId = m_SelectedGameLevel->chunkCount;
 			m_SelectedWorldBuilder = m_SelectedWorldChunk->sceneBuilder;
 			m_SelectedWorldBuilder->setResourceManager(m_ResourceManager);
 			m_SelectedWorldBuilder->setRenderTexture(m_RenderTexture);
@@ -167,7 +177,14 @@ namespace nero
 	{
 		if(editorMode == EditorMode::WORLD_BUILDER)
 		{
-			m_SelectedWorldBuilder->render();
+			for(const auto& worldChunk : m_SelectedGameLevel->chunkTable)
+			{
+				if(worldChunk->isVisible)
+				{
+					worldChunk->sceneBuilder->render();
+				}
+			}
+
 		}
 		else if(editorMode == EditorMode::SCREEN_BUILDER)
 		{
@@ -221,5 +238,17 @@ namespace nero
 	{
 		m_EngineSetting = setting;
 	}
+
+	AdvancedScene::WorldChunkPtr AdvancedScene::getSelectedWorldChunk()
+	{
+		return m_SelectedWorldChunk;
+	}
+
+	void AdvancedScene::setSelectedWorldChunk(AdvancedScene::WorldChunkPtr worldChunk)
+	{
+		m_SelectedWorldChunk	= worldChunk;
+		m_SelectedWorldBuilder	= worldChunk->sceneBuilder;
+	}
+
 }
 

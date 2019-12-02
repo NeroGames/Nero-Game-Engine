@@ -65,9 +65,9 @@ namespace nero
 				//upper left
 			void                    showUtilityWindow();
 			void                    showSceneLevelWindow();
-			void                    showSceneChunckWindow();
+			void                    showWorldChunckWindow();
 				//bottom left
-			void					showSceneLayerWindow();
+			void					showObjectLayerWindow();
             void                    showSceneScreenWindow();
                 //right
 			void                    showExplorerWindow();
@@ -160,6 +160,11 @@ namespace nero
             int                         m_ProjectCreationStatus;
             std::string                 m_LastCreatedProject;
 
+			//World chunk
+			void						addWorldChunk();
+			void						removeWorldChunk();
+			int							InputSelectedWorldChunkId;
+
             //Tabs
 			TabBarSwitch				m_ProjectManagerTabBarSwitch;
 			TabBarSwitch				m_BottomDockspaceTabBarSwitch;
@@ -246,6 +251,7 @@ namespace nero
 
 
 			std::string m_SelectedChunkNode;
+
 
 	};
 

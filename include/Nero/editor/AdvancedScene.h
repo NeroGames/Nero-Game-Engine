@@ -58,7 +58,9 @@ namespace nero
 					sceneBuilder = std::make_shared<SceneBuilder>();
 				}
 
-				std::string			name;
+				int					chunkId		= -1;
+				std::string			name		= StringPool.BLANK;
+				bool				isVisible	= true;
 				SceneBuilder::Ptr	sceneBuilder;
 			};
 
@@ -69,8 +71,10 @@ namespace nero
 					//Empty
 				}
 
-				std::string				name;
-				std::vector<WorldChunkPtr> chunkTable;
+				int							levelId		= -1;
+				std::string					name		= StringPool.BLANK;
+				int							chunkCount	= 0;
+				std::vector<WorldChunkPtr>	chunkTable;
 			};
 
 
@@ -110,8 +114,9 @@ namespace nero
 			 void								setResourceManager(const ResourceManager::Ptr& resourceManager);
 			 void								addObject(Object::Type type, const sf::String& label, sf::Vector2f position, const EditorMode& editorMode);
 
-			 AdvancedScene::GameLevelPtr		getSelectedGameLevel();
-
+			 GameLevelPtr						getSelectedGameLevel();
+			 WorldChunkPtr						getSelectedWorldChunk();
+			 void								setSelectedWorldChunk(WorldChunkPtr worldChunk);
 
         private:
             //Friend
