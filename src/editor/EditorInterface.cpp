@@ -233,12 +233,20 @@ namespace  nero
 
 	void EditorInterface::switchBuilderMode()
 	{
-		if(m_BuilderMode == BuilderMode::OBJECT && !CTRL_SHIFT_ALT())
+		if(m_EditorMode == EditorMode::WORLD_BUILDER)
 		{
-			m_BuilderMode = BuilderMode::MESH;
+			if(m_BuilderMode == BuilderMode::OBJECT && !CTRL_SHIFT_ALT())
+			{
+				m_BuilderMode = BuilderMode::MESH;
+			}
+			else if(m_BuilderMode != BuilderMode::OBJECT && !CTRL_SHIFT_ALT())
+			{
+				m_BuilderMode = BuilderMode::OBJECT;
+			}
 		}
-		else if(m_BuilderMode != BuilderMode::OBJECT && !CTRL_SHIFT_ALT())
+		else if(m_EditorMode == EditorMode::PLAY_GAME && !CTRL_SHIFT_ALT())
 		{
+			m_EditorMode = EditorMode::WORLD_BUILDER;
 			m_BuilderMode = BuilderMode::OBJECT;
 		}
 	}

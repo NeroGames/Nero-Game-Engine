@@ -170,14 +170,23 @@ namespace nero
 	{
 		if(file == StringPool.BLANK)
 		{
-			std::string cmd = "START \"\" " + m_ProjectParameter.getString("visual_studio") + " \"" + m_ProjectParameter.getString("source_directory") +"\"" + " /Edit";
-			system(cmd.c_str());
+			if(m_EditorProcessId == StringPool.BLANK)
+			{
+				std::string cmd = "START \"\" " + m_ProjectParameter.getString("visual_studio") + " \"" + m_ProjectParameter.getString("source_directory") +"\"" + " /Edit";
+				system(cmd.c_str());
+				m_EditorProcessId = "-1";
+			}
+			else
+			{
+				std::string cmd = m_ProjectParameter.getString("visual_studio") + " /Edit";
+				system(cmd.c_str());
+			}
+
 		}
 		else
 		{
 			std::string cmd = "START \"\" " + m_ProjectParameter.getString("visual_studio") + " \"" + file + "\" " + " /Edit";
 			system(cmd.c_str());
-
 		}
 	}
 
