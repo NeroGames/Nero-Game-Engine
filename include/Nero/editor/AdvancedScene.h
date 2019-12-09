@@ -53,20 +53,21 @@ namespace nero
 
 			struct WorldChunk
 			{
-				WorldChunk(const std::string& name): name(name)
+				WorldChunk()
 				{
 					sceneBuilder = std::make_shared<SceneBuilder>();
 				}
 
 				int					chunkId			= -1;
 				std::string			name			= StringPool.BLANK;
-				bool				isVisible		= true;
+				bool				visible			= true;
+				bool				selected		= false;
 				SceneBuilder::Ptr	sceneBuilder	= nullptr;
 			};
 
 			struct GameLevel
 			{
-				GameLevel(const std::string& name): name(name), chunkTable()
+				GameLevel()
 				{
 					//Empty
 				}
@@ -74,19 +75,21 @@ namespace nero
 				int							levelId		= -1;
 				std::string					name		= StringPool.BLANK;
 				int							chunkCount	= 0;
+				bool						selected	= false;
 				std::vector<WorldChunkPtr>	chunkTable;
 			};
 
 
 			struct GameScreen
             {
-				GameScreen(const std::string& name): name(name)
+				GameScreen()
 				{
 					sceneBuilder = std::make_shared<SceneBuilder>();
 				}
 
 				int						screenId		= -1;
 				std::string             name			= StringPool.BLANK;
+				bool					selected		= false;
 				SceneBuilder::Ptr       sceneBuilder	= nullptr;
             };
 
@@ -98,68 +101,84 @@ namespace nero
 			void								render(const EditorMode& editorMode, const BuilderMode& builderMode);
 
 			void								initialize();
-			 void								setScene(Scene::Ptr scene);
-			 void								setRenderContext(const RenderContextPtr& renderContext);
-			 void								setRenderTexture(const RenderTexturePtr& renderTexture);
-			 void								setResourceMananger(const ResourceManager::Ptr& resourceManager);
-			 void								setCamera(const Camera::Ptr& camera);
-			 void								setSetting(const Setting::Ptr& setting);
+			void								setScene(Scene::Ptr scene);
+			void								setRenderContext(const RenderContextPtr& renderContext);
+			void								setRenderTexture(const RenderTexturePtr& renderTexture);
+			void								setResourceMananger(const ResourceManager::Ptr& resourceManager);
+			void								setCamera(const Camera::Ptr& camera);
+			void								setSetting(const Setting::Ptr& setting);
 
-			 void								renderScreenBuilder(sf::RenderTexture& texture);
-			 void								renderScene(sf::RenderTexture& texture);
+			void								renderScreenBuilder(sf::RenderTexture& texture);
+			void								renderScene(sf::RenderTexture& texture);
 
-			 void								addGameLevel(const std::string& name);
-			 void								addWorldChunk(const std::string& name);
-			 void								addGameScreen(const std::string& name);
+			void								addGameLevel(const std::string& name = StringPool.BLANK);
+			void								addWorldChunk(const std::string& name = StringPool.BLANK);
+			void								addGameScreen(const std::string& name = StringPool.BLANK);
 
-			 void								setResourceManager(const ResourceManager::Ptr& resourceManager);
-			 void								addObject(Object::Type type, const sf::String& label, sf::Vector2f position, const EditorMode& editorMode);
+			void								setResourceManager(const ResourceManager::Ptr& resourceManager);
+			void								addObject(Object::Type type, const sf::String& label, sf::Vector2f position, const EditorMode& editorMode);
 
-			 GameLevelPtr						getSelectedGameLevel();
-			 WorldChunkPtr						getSelectedWorldChunk();
-			 void								setSelectedWorldChunk(WorldChunkPtr worldChunk);
-			 SceneBuilder::Ptr					getSelectedSceneBuilder(const EditorMode& editorMode);
+			GameLevelPtr						getSelectedGameLevel();
+			WorldChunkPtr						getSelectedWorldChunk();
+			void								setSelectedWorldChunk(WorldChunkPtr worldChunk);
+			SceneBuilder::Ptr					getSelectedSceneBuilder(const EditorMode& editorMode);
+			void								playScene();
 
+			//Mouse
+			void								shiftMouseDown(const b2Vec2& p);
+			void								mouseDown(const b2Vec2& p);
+			void								mouseUp(const b2Vec2& p);
+			void								mouseMove(const b2Vec2& p);
+			//Bomb
+			void								launchBomb();
+			void								launchBomb(const b2Vec2& position, const b2Vec2& velocity);
+			void								spawnBomb(const b2Vec2& worldPt);
+			void								completeBombSpawn(const b2Vec2& p);
+			void								destroyBomb();
+			void								jointDestroyed(b2Joint* joint);
 
         private:
             //Friend
-            friend class                DestructionListener;
-            friend class                BoundaryListener;
-            friend class                ContactListener;
-            friend class                SceneManager;
-			friend class				GameProject;
-            //Destruction Listener
-            DestructionListener         m_DestructionListener;
+			friend class						DestructionListener;
+			friend class						BoundaryListener;
+			friend class						ContactListener;
+			friend class						GameProject;
 
-			std::vector<GameLevelPtr>	m_GameLevelTable;
-			GameLevelPtr				m_SelectedGameLevel;
-			WorldChunkPtr				m_SelectedWorldChunk;
-			std::vector<GameScreenPtr>  m_GameScreenTable;
-			SceneBuilder::Ptr			m_SelectedWorldBuilder;
-			SceneBuilder::Ptr			m_SelectedScreenBuilder;
-			GameScreenPtr				m_SelectedGameScreen;
-            //other
-            b2Body*                     m_Bomb;
-            b2Vec2                      m_BombSpawnPoint;
-            bool                        m_BombSpawning;
-            b2Body*                     m_GroundBody;
-            b2AABB                      m_WorldAABB;
-            b2MouseJoint*               m_MouseJoint;
-            b2Vec2                      m_MouseWorld;
-            int32                       m_StepCount;
-            b2Profile                   m_MaxProfile;
-            b2Profile                   m_TotalProfile;
-
-			Scene::Ptr                  m_Scene;
-			RenderContextPtr            m_RenderContext;
-			ltbl::LightSystem			m_LightEngine;
-			ResourceManager::Ptr		m_ResourceManager;
-			RenderTexturePtr			m_RenderTexture;
-			Camera::Ptr					m_Camera;
-			Setting::Ptr				m_EngineSetting;
+			std::vector<GameLevelPtr>			m_GameLevelTable;
+			GameLevelPtr						m_SelectedGameLevel;
+			WorldChunkPtr						m_SelectedWorldChunk;
+			std::vector<GameScreenPtr>			m_GameScreenTable;
+			SceneBuilder::Ptr					m_SelectedWorldBuilder;
+			SceneBuilder::Ptr					m_SelectedScreenBuilder;
+			GameScreenPtr						m_SelectedGameScreen;
+			//
+			Scene::Ptr							m_Scene;
+			RenderContextPtr					m_RenderContext;
+			ltbl::LightSystem					m_LightEngine;
+			ResourceManager::Ptr				m_ResourceManager;
+			RenderTexturePtr					m_RenderTexture;
+			Camera::Ptr							m_Camera;
+			Setting::Ptr						m_EngineSetting;
 
 			//
-			int							m_GameScreenCount;
+			int									m_GameScreenCount;
+			int									m_GameLevelCount;
+
+			//
+			DestructionListener					m_DestructionListener;
+			sf::String							m_Message;
+			sf::String							m_StatMessage;
+			sf::String							m_ProfileMessage;
+			b2Body*								m_Bomb;
+			b2Vec2								m_BombSpawnPoint;
+			bool								m_BombSpawning;
+			b2Body*								m_GroundBody;
+			b2AABB								m_WorldAABB;
+			b2MouseJoint*						m_MouseJoint;
+			b2Vec2								m_MouseWorld;
+			int32								m_StepCount;
+			b2Profile							m_MaxProfile;
+			b2Profile							m_TotalProfile;
 
     };
 }

@@ -23,9 +23,7 @@ namespace nero
 	const sf::Time  AUTO_SAVE_TIME              = sf::seconds(30.f);
 	const float SCALE                           = 50.f;
 	const float GRAVITY                         = 9.8f;
-	const int RAND_LIMIT	                    = 32767;
 	const int SPRITE_LAYER_MAX                  = 1000;
-	const float PI                              = 3.141592653589793238462643383f;
 	const int MAX_VALUE                         = 2147483647;
 	const sf::Color STATIC_MESH_COLOR           = b2_to_sf(b2Color(0.5f, 0.9f, 0.5f)); // sf::Color(0, 255, 0);
 	const sf::Color DYNAMIC_MESH_COLOR          = b2_to_sf(b2Color(0.9f, 0.7f, 0.7f)); //sf::Color(219, 112, 147);

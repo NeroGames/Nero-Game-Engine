@@ -13,9 +13,7 @@
 
 namespace nero
 {
-    GameProject::GameProject():
-		 m_Scene(nullptr)
-		,m_AdvancedScene(AdvancedScene::Ptr(new AdvancedScene()))
+	GameProject::GameProject(): m_Scene(nullptr)
     {
 
     }
@@ -50,20 +48,138 @@ namespace nero
 
 		//nero_log(m_ProjectParameter.toString());
 
+		m_AdvancedScene = std::make_shared<AdvancedScene>();
 		m_AdvancedScene->setSetting(m_EngineSetting);
 		m_AdvancedScene->setRenderTexture(m_RenderTexture);
 		m_AdvancedScene->setResourceManager(m_ResourceManager);
 		m_AdvancedScene->setRenderContext(m_RenderContext);
 		m_AdvancedScene->setCamera(m_Camera);
 		m_AdvancedScene->initialize();
-
-
     }
 
     void GameProject::loadProject()
     {
+		std::string levelDirectory = getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Level"});
+		std::experimental::filesystem::path directoryPath(levelDirectory);
+
+		if(std::experimental::filesystem::is_empty(directoryPath))
+		{
+			return;
+		}
+
+		m_AdvancedScene->m_SelectedGameLevel = nullptr;
+		m_AdvancedScene->m_SelectedWorldChunk = nullptr;
+		m_AdvancedScene->m_SelectedWorldBuilder = nullptr;
+		m_AdvancedScene->m_GameLevelTable.clear();
+
+		//load level
+		//itirate from level folder
+
+
+
+		//Iterate over files in the folder
+		std::experimental::filesystem::directory_iterator it{directoryPath};
+		while (it != std::experimental::filesystem::directory_iterator{})
+		{
+
+			//Setting parameter;
+			//parameter.loadSetting(it->path().string(), true);
+			auto gameLevel = loadGameLevel(loadJson(it->path().string(), true));
+
+			m_AdvancedScene->m_GameLevelTable.push_back(gameLevel);
+
+			if(gameLevel->selected)
+			{
+				m_AdvancedScene->m_SelectedGameLevel = gameLevel;
+
+				for(auto chunk : gameLevel->chunkTable)
+				{
+					if(chunk->selected)
+					{
+						m_AdvancedScene->m_SelectedWorldChunk	= chunk;
+						m_AdvancedScene->m_SelectedWorldBuilder = chunk->sceneBuilder;
+					}
+				}
+			}
+
+			it++;
+		}
+
 
     }
+
+	AdvancedScene::GameLevelPtr GameProject::loadGameLevel(const nlohmann::json& level)
+	{
+		auto gameLevel = std::make_shared<AdvancedScene::GameLevel>();
+		gameLevel->name			= level["level_name"].get<std::string>();
+		gameLevel->levelId		= level["level_id"];
+		gameLevel->chunkCount	= level["chunk_count"];
+		gameLevel->selected	= level["selected"];
+
+		for(auto& chunk : level["chunk_table"])
+		{
+			auto worldChunk = std::make_shared<AdvancedScene::WorldChunk>();
+			worldChunk->sceneBuilder->setResourceManager(m_ResourceManager);
+			worldChunk->sceneBuilder->setRenderTexture(m_RenderTexture);
+			worldChunk->sceneBuilder->setRenderContext(m_RenderContext);
+
+			worldChunk->name			= chunk["chunk_name"].get<std::string>();
+			worldChunk->chunkId			= chunk["chunk_id"];
+			worldChunk->visible			= chunk["chunk_visible"];
+			worldChunk->selected		= chunk["selected"];
+			worldChunk->sceneBuilder->loadScene(chunk["world_chunk"]);
+
+			gameLevel->chunkTable.push_back(worldChunk);
+		}
+
+		return gameLevel;
+	}
+
+	void GameProject::saveProject()
+	{
+		//save game level
+		for(auto& level : m_AdvancedScene->m_GameLevelTable)
+		{
+			nlohmann::json level_save;
+
+			level_save["level_id"]		= level->levelId;
+			level_save["level_name"]	= level->name;
+			level_save["selected"]		= level->levelId == m_AdvancedScene->m_SelectedGameLevel->levelId;
+			level_save["chunk_count"]	= level->chunkCount;
+			level_save["chunk_table"]	= nlohmann::json::array();
+
+			for(auto& chunk : level->chunkTable)
+			{
+				nlohmann::json chunk_save;
+
+				chunk_save["world_chunk"]	= chunk->sceneBuilder->saveScene();
+				chunk_save["chunk_id"]		= chunk->chunkId;
+				chunk_save["chunk_name"]	= chunk->name;
+				chunk_save["chunk_visible"] = chunk->visible;
+				chunk_save["selected"]		= chunk->chunkId == m_AdvancedScene->m_SelectedWorldChunk->chunkId;
+
+				level_save["chunk_table"].push_back(chunk_save);
+			}
+
+			std::string levelFile = getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Level", level->name}, StringPool.EXTENSION_JSON);
+			saveFile(levelFile, level_save.dump(3), true);
+		}
+
+		//save game screen
+		for(auto& screen : m_AdvancedScene->m_GameScreenTable)
+		{
+
+			nlohmann::json screen_save;
+
+			screen_save["game_screen"]	= screen->sceneBuilder->saveScene();
+			screen_save["screen_id"]	= screen->screenId;
+			screen_save["screen_name"]	= screen->name;
+			screen_save["selected"]		= screen->screenId == m_AdvancedScene->m_SelectedGameScreen->screenId;
+
+			std::string screenFile = getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Screen", screen->name}, StringPool.EXTENSION_JSON);
+			saveFile(screenFile, screen_save.dump(3), true);
+		}
+	}
 
     void GameProject::loadProjectLibrary()
     {
@@ -113,6 +229,7 @@ namespace nero
 			if(scene)
 			{
 				m_AdvancedScene->setScene(scene);
+				//m_AdvancedScene->setCppSceneCreator(m_CreateCppSceneFn);
 
 				//nero_log("project scene loaded successfully");
 			}
@@ -168,20 +285,29 @@ namespace nero
 
 	void GameProject::openVisualStudio(const std::string& file)
 	{
+		std::string listProcessCmd		= "tasklist /fo csv | findstr /i \"devenv\"";
+		std::string processCSV			= exec(listProcessCmd.c_str());
+
 		if(file == StringPool.BLANK)
 		{
-			if(m_EditorProcessId == StringPool.BLANK)
+			//if the Editor has been opened and are still available (has not been closed)
+			if(m_EditorProcessId != StringPool.BLANK && processCSV.find(m_EditorProcessId) != std::string::npos)
 			{
-				std::string cmd = "START \"\" " + m_ProjectParameter.getString("visual_studio") + " \"" + m_ProjectParameter.getString("source_directory") +"\"" + " /Edit";
-				system(cmd.c_str());
-				m_EditorProcessId = "-1";
-			}
-			else
-			{
+				//open it
 				std::string cmd = m_ProjectParameter.getString("visual_studio") + " /Edit";
 				system(cmd.c_str());
 			}
+			else
+			{
+				std::string cmd = "START \"\" " + m_ProjectParameter.getString("visual_studio") + " \"" + m_ProjectParameter.getString("source_directory") +"\"" + " /Edit";
+				system(cmd.c_str());
 
+				//save the process id
+					 processCSV  = exec(listProcessCmd.c_str());
+				auto processTab  = splitString(processCSV, '\r\n');
+
+				m_EditorProcessId = splitString(processTab.back(), ',').at(1);
+			}
 		}
 		else
 		{
@@ -292,6 +418,13 @@ namespace nero
 
 	void GameProject::close()
 	{
+		//close editor (window)
+		if(m_EditorProcessId != StringPool.BLANK)
+		{
+			std::string kill_command = "taskkill /F /PID " + m_EditorProcessId;
+			system(kill_command.c_str());
+		}
+
 		m_AdvancedScene->m_Scene = nullptr;
 		m_CreateCppSceneFn.clear();
 	}

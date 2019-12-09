@@ -446,12 +446,12 @@ namespace nero
 
 	 GameProject::Ptr ProjectManager::openProject(const std::string& projectDirectory)
      {
-		 nero_log("openning project " + projectDirectory);
+		nero_log("openning project " + projectDirectory);
 
-		 Setting parameter;
-		 parameter.loadJson(loadJson(getPath({projectDirectory, ".project"}), true));
-		 parameter.setString("project_directory", projectDirectory);
-		 parameter.setString("workspace_directory", getParentDirectory(projectDirectory, 2));
+		Setting parameter;
+		parameter.loadJson(loadJson(getPath({projectDirectory, ".project"}), true));
+		parameter.setString("project_directory", projectDirectory);
+		parameter.setString("workspace_directory", getParentDirectory(projectDirectory, 2));
 
 		m_GameProject = GameProject::Ptr(new GameProject());
 		m_GameProject->setSetting(m_Setting);

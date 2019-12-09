@@ -1,4 +1,5 @@
 #include <Nero/editor/AdvancedScene.h>
+#include <Nero/core/cpp/utility/MathUtil.h>
 #include <SFML/Graphics/Sprite.hpp>
 
 namespace nero
@@ -26,6 +27,7 @@ namespace nero
 		m_LightEngine(true)
 	   ,m_RenderTexture(nullptr)
 	   ,m_GameScreenCount(0)
+	   ,m_GameLevelCount(0)
     {
 		// Create the LightSystem
 		m_LightEngine.create({ -1000.f, -1000.f, 2000.f, 2000.f }, sf::Vector2u(800.f, 800.f));
@@ -84,8 +86,18 @@ namespace nero
 
 	void AdvancedScene::addGameLevel(const std::string& name)
 	{
-		m_GameLevelTable.push_back(std::make_shared<GameLevel>(name));
+		m_GameLevelCount++;
+
+		std::string levelName = name;
+		if(levelName == StringPool.BLANK)
+		{
+			levelName = "game level " + toString(m_GameLevelCount);
+		}
+
+		m_GameLevelTable.push_back(std::make_shared<GameLevel>());
 		m_SelectedGameLevel = m_GameLevelTable.back();
+		m_SelectedGameLevel->name = levelName;
+		m_SelectedGameLevel->levelId = m_GameLevelCount;
 
 		addWorldChunk("Game Start");
 	}
@@ -115,9 +127,10 @@ namespace nero
 				chunkName = "world chunk " + toString(m_SelectedGameLevel->chunkCount);
 			}
 
-			m_SelectedGameLevel->chunkTable.push_back(std::make_shared<WorldChunk>(chunkName));
+			m_SelectedGameLevel->chunkTable.push_back(std::make_shared<WorldChunk>());
 			m_SelectedWorldChunk = m_SelectedGameLevel->chunkTable.back();
 			m_SelectedWorldChunk->chunkId = m_SelectedGameLevel->chunkCount;
+			m_SelectedWorldChunk->name = chunkName;
 			m_SelectedWorldBuilder = m_SelectedWorldChunk->sceneBuilder;
 			m_SelectedWorldBuilder->setResourceManager(m_ResourceManager);
 			m_SelectedWorldBuilder->setRenderTexture(m_RenderTexture);
@@ -128,9 +141,19 @@ namespace nero
 
 	void AdvancedScene::addGameScreen(const std::string& name)
 	{
-		m_GameScreenTable.push_back(std::make_shared<GameScreen>(name));
+		m_GameScreenCount++;
+
+		std::string screenName = name;
+		if(screenName == StringPool.BLANK)
+		{
+			screenName = "game level " + toString(m_GameScreenCount);
+		}
+
+
+		m_GameScreenTable.push_back(std::make_shared<GameScreen>());
 		m_SelectedGameScreen = m_GameScreenTable.back();
 		m_SelectedGameScreen->screenId = m_GameScreenCount;
+		m_SelectedGameScreen->name = screenName;
 		m_SelectedScreenBuilder = m_SelectedGameScreen->sceneBuilder;
 		m_SelectedScreenBuilder->setResourceManager(m_ResourceManager);
 		m_SelectedScreenBuilder->setRenderTexture(m_RenderTexture);
@@ -181,7 +204,7 @@ namespace nero
 		{
 			for(const auto& worldChunk : m_SelectedGameLevel->chunkTable)
 			{
-				if(worldChunk->isVisible)
+				if(worldChunk->visible)
 				{
 					worldChunk->sceneBuilder->render();
 				}
@@ -264,5 +287,170 @@ namespace nero
 		}
 	}
 
+	void AdvancedScene::playScene()
+	{
+		if(m_Scene)
+		{
+			//destroy current scene
+		}
+
+		//creatte a new Scene
+		//m_Scene = m_creat
+
+		//advance scene things
+		m_Scene->m_PhysicWorld->SetDestructionListener(&m_DestructionListener);
+		b2BodyDef bodyDef;
+		m_GroundBody = m_Scene->m_PhysicWorld->CreateBody(&bodyDef);
+
+		//load the current level
+		m_Scene->loadGameLevel(m_SelectedGameLevel->name);
+
+	}
+
+	void AdvancedScene::shiftMouseDown(const b2Vec2& p)
+	{
+		m_MouseWorld = p;
+
+		if (m_MouseJoint != NULL)
+		{
+			return;
+		}
+
+		spawnBomb(p);
+	}
+
+
+	void AdvancedScene::mouseDown(const b2Vec2& p)
+	{
+		m_MouseWorld = p;
+
+		if (m_MouseJoint != NULL)
+		{
+			return;
+		}
+
+		// Make a small box.
+		b2AABB aabb;
+		b2Vec2 d;
+		d.Set(0.001f, 0.001f);
+		aabb.lowerBound = p - d;
+		aabb.upperBound = p + d;
+
+		// Query the world for overlapping shapes.
+		QueryCallback callback(p);
+		m_Scene->m_PhysicWorld->QueryAABB(&callback, aabb);
+
+		if (callback.m_Fixture)
+		{
+			b2Body* body = callback.m_Fixture->GetBody();
+			b2MouseJointDef md;
+			md.bodyA = m_GroundBody;
+			md.bodyB = body;
+			md.target = p;
+			md.maxForce = 1000.0f * body->GetMass();
+			m_MouseJoint = (b2MouseJoint*)m_Scene->m_PhysicWorld->CreateJoint(&md);
+			body->SetAwake(true);
+		}
+	}
+
+	void AdvancedScene::mouseUp(const b2Vec2& p)
+	{
+		if (m_MouseJoint)
+		{
+			m_Scene->m_PhysicWorld->DestroyJoint(m_MouseJoint);
+			m_MouseJoint = NULL;
+		}
+
+		if (m_BombSpawning)
+		{
+			completeBombSpawn(p);
+		}
+	}
+
+	void AdvancedScene::mouseMove(const b2Vec2& p)
+	{
+		m_MouseWorld = p;
+
+		if (m_MouseJoint)
+		{
+			m_MouseJoint->SetTarget(p);
+		}
+	}
+
+
+	void AdvancedScene::spawnBomb(const b2Vec2& worldPt)
+	{
+		m_BombSpawnPoint = worldPt;
+		m_BombSpawning = true;
+	}
+
+	void AdvancedScene::completeBombSpawn(const b2Vec2& p)
+	{
+		if (m_BombSpawning == false)
+		{
+			return;
+		}
+
+		const float multiplier = 30.0f;
+		b2Vec2 vel = m_BombSpawnPoint - p;
+		vel *= multiplier;
+		launchBomb(m_BombSpawnPoint,vel);
+		m_BombSpawning = false;
+	}
+
+	void AdvancedScene::launchBomb()
+	{
+		b2Vec2 p(randomFloat(-15.0f, 15.0f), -30.0f);
+		b2Vec2 v = -5.0f * p;
+		launchBomb(p, v);
+	}
+
+	void AdvancedScene::destroyBomb()
+	{
+		if (m_Bomb)
+		{
+			m_Scene->m_PhysicWorld->DestroyBody(m_Bomb);
+			m_Bomb = nullptr;
+		}
+	}
+
+
+	void AdvancedScene::launchBomb(const b2Vec2& position, const b2Vec2& velocity)
+	{
+		if (m_Bomb)
+		{
+			m_Scene->m_PhysicWorld->DestroyBody(m_Bomb);
+			m_Bomb = nullptr;
+		}
+
+		b2BodyDef bd;
+		bd.type = b2_dynamicBody;
+		bd.position = position;
+		bd.bullet = true;
+		m_Bomb = m_Scene->m_PhysicWorld->CreateBody(&bd);
+		m_Bomb->SetLinearVelocity(velocity);
+
+		b2CircleShape circle;
+		circle.m_radius = 0.2f;
+
+		b2FixtureDef fd;
+		fd.shape = &circle;
+		fd.density = 20.0f;
+		fd.restitution = 0.0f;
+
+		b2Vec2 minV = position - b2Vec2(0.3f,0.3f);
+		b2Vec2 maxV = position + b2Vec2(0.3f,0.3f);
+
+		b2AABB aabb;
+		aabb.lowerBound = minV;
+		aabb.upperBound = maxV;
+
+		m_Bomb->CreateFixture(&fd);
+	}
+
+	void AdvancedScene::jointDestroyed(b2Joint* joint)
+	{
+		B2_NOT_USED(joint);
+	}
 }
 

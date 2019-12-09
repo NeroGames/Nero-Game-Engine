@@ -256,7 +256,10 @@ namespace nero
 			std::string m_SelectedChunkNode;
 			void saveResourceFile(ResourceType type, const std::vector<std::string> fileTable);
 
-
+			void onSaveProject();
+			void onLoadProject();
+			void autoSaveProject();
+			sf::Clock	m_AutoSaveClock;
 
 	};
 

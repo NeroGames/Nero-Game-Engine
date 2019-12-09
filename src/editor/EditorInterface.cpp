@@ -1621,25 +1621,18 @@ namespace  nero
 
 	void EditorInterface::openProject(const std::string& projectDirectory)
     {
-		/*if(m_GameProject)
+		//close currently open project
+		if(m_GameProject)
 		{
-			m_GameProject->closeProject();
-			m_GameProject = nullptr;
+			//closeProject();
 		}
 
-		if(isWorspaceChange(project_name))
-		{
-			reloadResource();
-		}*/
+		//open new project
+		m_GameProject	= m_ProjectManager->openProject(projectDirectory);
+		m_AdvancedScene = m_GameProject->getAdvancedScene();
 
-		 m_GameProject =  m_ProjectManager->openProject(projectDirectory);
-         m_AdvancedScene = m_GameProject->getAdvancedScene();
-		 /*m_AdvancedScene->setRenderTexture(m_RenderTexture);
-		 m_AdvancedScene->setResourceManager(m_ResourceManager);
-		 m_AdvancedScene->setRenderContext(m_RenderContext);
-		 m_AdvancedScene->setCamera(m_EditorCamera);
-		 m_AdvancedScene->initialize();*/
-		 updateWindowTitle(m_GameProject->getProjectName());
+		//update editor window title
+		updateWindowTitle(m_GameProject->getProjectName());
     }
 
 	void EditorInterface::updateWindowTitle(const std::string& title)
@@ -1656,6 +1649,7 @@ namespace  nero
 	{
 		if(m_AdvancedScene)
 		{
+			m_AdvancedScene->playScene();
 			m_EditorMode = EditorMode::PLAY_GAME;
 		}
 	}
@@ -2105,14 +2099,14 @@ namespace  nero
 
                  if(ImGui::Button("Save", button_size))
                  {
-
+					onSaveProject();
                  }
 
                 ImGui::SameLine();
 
                  if(ImGui::Button("Load", button_size))
                  {
-
+					onLoadProject();
                  }
 
             ImGui::EndChild();
@@ -2154,6 +2148,31 @@ namespace  nero
 
         ImGui::End();
     }
+
+	void EditorInterface::onSaveProject()
+	{
+		if(m_GameProject)
+		{
+			m_GameProject->saveProject();
+		}
+	}
+
+	void EditorInterface::onLoadProject()
+	{
+		if(m_GameProject)
+		{
+			m_GameProject->loadProject();
+		}
+	}
+
+	void EditorInterface::autoSaveProject()
+	{
+		/*if(m_GameProject && m_AutoSaveClock.getElapsedTime() > sf::seconds(m_Setting->getSetting("editor").getUInt("auto_save_interval")))
+		{
+			m_GameProject->saveProject();
+			m_AutoSaveClock.restart();
+		}*/
+	}
 
     void EditorInterface::showSceneScreenWindow()
     {
@@ -2429,7 +2448,7 @@ namespace  nero
 						ImGui::SameLine();
 
 						itemId = "##visible_chunk" + toString(worldChunk->chunkId);
-						ImGui::Checkbox(itemId.c_str(), &worldChunk->isVisible);
+						ImGui::Checkbox(itemId.c_str(), &worldChunk->visible);
 
 						ImGui::SameLine();
 
