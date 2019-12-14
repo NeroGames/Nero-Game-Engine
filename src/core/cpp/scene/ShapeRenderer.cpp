@@ -16,8 +16,9 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	ShapeRenderer::ShapeRenderer(const float& thickness, const int& transparency):
-		 m_Thickness(thickness)
+	ShapeRenderer::ShapeRenderer(RenderTexturePtr renderTexture, const float& thickness, const int& transparency):
+		 m_RenderTexture(renderTexture)
+		,m_Thickness(thickness)
 		,m_Transparency(transparency)
     {
         //Empty

@@ -1371,6 +1371,8 @@ namespace nero
                         if(!mesh_object->getMesh()->isValid())
                             continue;
 
+						nero_log("creating physic object");
+
                         PhysicObject::Ptr physic_object = m_PhysicObjectManager.createObject(mesh_object->getMesh());
                         physic_object->setName(mesh_object->getName());
                         physic_object->setCategory(mesh_object->getCategory());

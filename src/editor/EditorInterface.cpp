@@ -1685,7 +1685,7 @@ namespace  nero
         {
             nero_log("reloading project ...");
 
-            m_GameProject->loadProjectLibrary();
+            m_GameProject->loadLibrary();
 
         }
     }
@@ -1724,20 +1724,33 @@ namespace  nero
 		ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::Begin("Resource", nullptr, flags);
 
+		int resource_count		= 13;
+		int count				= 0;
+		ImGuiStyle& style		= ImGui::GetStyle();
+		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+		auto printSameLine = [&count, &resource_count, &style, &window_visible_x2]()
+		{
+			float last_button_x2 = ImGui::GetItemRectMax().x;
+			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + 100.f;
+			if (count++ + 1 < resource_count && next_button_x2 < window_visible_x2)
+				ImGui::SameLine();
+		};
+
+
 		if(ImGui::Button("Sprite##open_sprite_resource", ImVec2(100.f, 100.f)))
         {
 			m_ResourceBrowserType = ResourceType::Texture;
         }
 
-		ImGui::SameLine();
-
+		printSameLine();
 
 		if(ImGui::Button("Animation##open_sprite_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Animation;
 		}
 
-		ImGui::SameLine();
+		printSameLine();
 
 
 		if(ImGui::Button("Mesh##open_sprite_resource", ImVec2(100.f, 100.f)))
@@ -1745,21 +1758,21 @@ namespace  nero
 			m_ResourceBrowserType = ResourceType::Mesh;
 		}
 
-		ImGui::SameLine();
+		printSameLine();
 
 		if(ImGui::Button("Shape##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Shape;
 		}
 
-		ImGui::SameLine();
+		printSameLine();
 
 		if(ImGui::Button("Particle##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Particle;
 		}
 
-		ImGui::SameLine();
+		printSameLine();
 
 		if(ImGui::Button("Light##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
@@ -1767,32 +1780,53 @@ namespace  nero
 		}
 
 
-		ImGui::SameLine();
+		printSameLine();
 
 		if(ImGui::Button("Font##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Font;
 		}
 
-		ImGui::SameLine();
+		printSameLine();
 
 		if(ImGui::Button("Composite##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Composite;
 		}
 
-		ImGui::SameLine();
+		printSameLine();
 
 		if(ImGui::Button("Sound##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Sound;
 		}
 
-		ImGui::SameLine();
+		printSameLine();
 
 		if(ImGui::Button("Music##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Music;
+		}
+
+		printSameLine();
+
+		if(ImGui::Button("Factory##open_factory_resource", ImVec2(100.f, 100.f)))
+		{
+
+		}
+
+		printSameLine();
+
+		if(ImGui::Button("Script##open_script_object_resource", ImVec2(100.f, 100.f)))
+		{
+
+		}
+
+		printSameLine();
+
+		if(ImGui::Button("Spawer##spawn_object", ImVec2(100.f, 100.f)))
+		{
+
 		}
 
 		ImGui::End();

@@ -1,5 +1,6 @@
 #include <Nero/editor/AdvancedScene.h>
 #include <Nero/core/cpp/utility/MathUtil.h>
+#include <Nero/core/cpp/object/GameLevelObject.h>
 #include <SFML/Graphics/Sprite.hpp>
 
 namespace nero
@@ -19,16 +20,28 @@ namespace nero
        }
        else
        {
-           //scene->jointDestroyed(joint);
+		   scene->jointDestroyed(joint);
        }
    }
 
 	AdvancedScene::AdvancedScene():
-		m_LightEngine(true)
-	   ,m_RenderTexture(nullptr)
-	   ,m_GameScreenCount(0)
-	   ,m_GameLevelCount(0)
+		 m_LightEngine(true)
+		,m_RenderTexture(nullptr)
+		,m_GameScreenCount(0)
+		,m_GameLevelCount(0)
+		,m_IsLeftShift(false)
+		,m_IsMouseRightButton(false)
+		,m_IsShiftOriginUp(false)
+		,m_IsShiftOriginDown(false)
+		,m_IsShiftOriginLeft(false)
+		,m_IsShiftOriginRight(false)
+		,m_ShitftOriginSpeed(0.5f)
+		,m_ViewCenter(0.0f, 20.0f)
+		,m_MouseJoint(nullptr)
     {
+
+		m_DestructionListener.scene = AdvancedScene::Ptr(this);
+
 		// Create the LightSystem
 		m_LightEngine.create({ -1000.f, -1000.f, 2000.f, 2000.f }, sf::Vector2u(800.f, 800.f));
 
@@ -178,6 +191,30 @@ namespace nero
 		else if(editorMode == EditorMode::PLAY_GAME && m_Scene)
 		{
 			m_Scene->handleEvent(event);
+
+			switch(event.type)
+			{
+				//Keyboard events
+				case sf::Event::KeyPressed:
+					handleKeyboardInput(event.key.code, true);
+					break;
+				case sf::Event::KeyReleased:
+					handleKeyboardInput(event.key.code, false);
+					break;
+
+				//Mouse buttons events
+				case sf::Event::MouseButtonPressed:
+					handleMouseButtonInput(event.mouseButton, true);
+					break;
+				case sf::Event::MouseButtonReleased:
+					handleMouseButtonInput(event.mouseButton, false);
+					break;
+
+				//Mouse mouvements event
+				case sf::Event::MouseMoved:
+					handleMouseMoveInput(event.mouseMove);
+					break;
+			}
 		}
     }
 
@@ -219,6 +256,7 @@ namespace nero
 		{
 			m_Scene->render();
 			m_Scene->renderShape();
+			renderDebug();
 		}
 
 	}
@@ -291,27 +329,59 @@ namespace nero
 	{
 		if(m_Scene)
 		{
+			nero_log("cleaning game scene");
 			//destroy current scene
+
+			m_Scene = nullptr;
 		}
 
-		//creatte a new Scene
-		//m_Scene = m_creat
 
-		//advance scene things
+		m_Scene = createCppScene();
+		//m_Scene->m_ShapeRenderer.setRenderTexture(m_RenderTexture);
+
+				//load the current level
+		//m_Scene->loadGameLevel(m_SelectedGameLevel->name);
+
+		//ceate level
+		auto gameLevel = std::make_shared<GameLevelObject>();
+		Setting parameter;
+		gameLevel->initialize(parameter);
+
+
+		//set up physic world
+		m_Scene->m_PhysicWorld = gameLevel->getPhysicWorld();
+		m_Scene->m_PhysicWorld->SetContactListener(m_Scene.get());
+		m_Scene->m_PhysicWorld->SetDebugDraw(&(m_Scene->m_ShapeRenderer));
+
+		for(auto worldChunk : m_SelectedGameLevel->chunkTable)
+		{
+			auto chunkObject = std::make_shared<Object>();
+
+			worldChunk->sceneBuilder->setPhysicWorld(m_Scene->m_PhysicWorld);
+			worldChunk->sceneBuilder->buildScene(chunkObject);
+
+			gameLevel->addChild(chunkObject);
+		}
+
 		m_Scene->m_PhysicWorld->SetDestructionListener(&m_DestructionListener);
 		b2BodyDef bodyDef;
 		m_GroundBody = m_Scene->m_PhysicWorld->CreateBody(&bodyDef);
 
-		//load the current level
-		m_Scene->loadGameLevel(m_SelectedGameLevel->name);
+		/*if(!m_Scene->m_GameWorld)
+		{
+			nero_log("game world not initialized");
 
+			//m_Scene->m_GameWorld = std::make_shared<Object>();
+		}*/
+
+		m_Scene->m_GameWorld->addChild(gameLevel);
 	}
 
 	void AdvancedScene::shiftMouseDown(const b2Vec2& p)
 	{
 		m_MouseWorld = p;
 
-		if (m_MouseJoint != NULL)
+		if (m_MouseJoint)
 		{
 			return;
 		}
@@ -324,7 +394,7 @@ namespace nero
 	{
 		m_MouseWorld = p;
 
-		if (m_MouseJoint != NULL)
+		if (m_MouseJoint)
 		{
 			return;
 		}
@@ -358,7 +428,7 @@ namespace nero
 		if (m_MouseJoint)
 		{
 			m_Scene->m_PhysicWorld->DestroyJoint(m_MouseJoint);
-			m_MouseJoint = NULL;
+			m_MouseJoint = nullptr;
 		}
 
 		if (m_BombSpawning)
@@ -371,7 +441,7 @@ namespace nero
 	{
 		m_MouseWorld = p;
 
-		if (m_MouseJoint)
+		if (m_MouseJoint != nullptr)
 		{
 			m_MouseJoint->SetTarget(p);
 		}
@@ -417,7 +487,7 @@ namespace nero
 
 	void AdvancedScene::launchBomb(const b2Vec2& position, const b2Vec2& velocity)
 	{
-		if (m_Bomb)
+		if (m_Bomb != nullptr)
 		{
 			m_Scene->m_PhysicWorld->DestroyBody(m_Bomb);
 			m_Bomb = nullptr;
@@ -452,5 +522,240 @@ namespace nero
 	{
 		B2_NOT_USED(joint);
 	}
+
+	void AdvancedScene::setCppSceneCreator(boost::function<CreateCppSceneFn>& createCppScene)
+	{
+		m_CreateCppScene = createCppScene;
+	}
+
+	Scene::Ptr AdvancedScene::createCppScene()
+	{
+		return  m_CreateCppScene(Scene::Context(
+					 m_ProjectParameter.getString("project_name"),
+					 m_RenderTexture,
+					 m_ResourceManager,
+					 m_Camera,
+					 m_EngineSetting,
+					 Scene::EngineType::EDITOR_ENGINE,
+					 Scene::PlatformType::WINDOWS));
+	}
+
+	void AdvancedScene::setProjectParameter(const Setting& parameter)
+	{
+		m_ProjectParameter = parameter;
+	}
+
+	void AdvancedScene::renderDebug()
+	{
+		//if (m_SceneSetting.drawStats)
+		if(true)
+		{
+			//bodies/contacts/joints
+			int32 bodyCount     = m_Scene->m_PhysicWorld->GetBodyCount();
+			int32 contactCount  = m_Scene->m_PhysicWorld->GetContactCount();
+			int32 jointCount    = m_Scene->m_PhysicWorld->GetJointCount();
+
+			//proxies/height/balance/quality
+			int32 proxyCount    = m_Scene->m_PhysicWorld->GetProxyCount();
+			int32 height        = m_Scene->m_PhysicWorld->GetTreeHeight();
+			int32 balance       = m_Scene->m_PhysicWorld->GetTreeBalance();
+			float32 quality     = m_Scene->m_PhysicWorld->GetTreeQuality();
+
+			m_StatMessage = "body/contact/joint = " + toString(bodyCount) + " / " +  toString(contactCount) + " / " + toString(jointCount) + "\n" \
+							"proxy/height/balance/quality = " + toString(proxyCount) + " / " + toString(height) + " / " +  toString(balance) + " / " + toString(quality) + "\n";
+		}
+		else
+		{
+			m_StatMessage = "";
+		}
+
+		// Track maximum profile times
+		{
+			const b2Profile& p = m_Scene->m_PhysicWorld->GetProfile();
+
+			m_MaxProfile.step               = b2Max(m_MaxProfile.step, p.step);
+			m_MaxProfile.collide            = b2Max(m_MaxProfile.collide, p.collide);
+			m_MaxProfile.solve              = b2Max(m_MaxProfile.solve, p.solve);
+			m_MaxProfile.solveInit          = b2Max(m_MaxProfile.solveInit, p.solveInit);
+			m_MaxProfile.solveVelocity      = b2Max(m_MaxProfile.solveVelocity, p.solveVelocity);
+			m_MaxProfile.solvePosition      = b2Max(m_MaxProfile.solvePosition, p.solvePosition);
+			m_MaxProfile.solveTOI           = b2Max(m_MaxProfile.solveTOI, p.solveTOI);
+			m_MaxProfile.broadphase         = b2Max(m_MaxProfile.broadphase, p.broadphase);
+
+			m_TotalProfile.step             += p.step;
+			m_TotalProfile.collide          += p.collide;
+			m_TotalProfile.solve            += p.solve;
+			m_TotalProfile.solveInit        += p.solveInit;
+			m_TotalProfile.solveVelocity    += p.solveVelocity;
+			m_TotalProfile.solvePosition    += p.solvePosition;
+			m_TotalProfile.solveTOI         += p.solveTOI;
+			m_TotalProfile.broadphase       += p.broadphase;
+		}
+
+		//if (m_SceneSetting.drawProfile)
+		if(true)
+		{
+			const b2Profile& p = m_Scene->m_PhysicWorld->GetProfile();
+
+			b2Profile aveProfile;
+			memset(&aveProfile, 0, sizeof(b2Profile));
+
+			if (m_StepCount > 0)
+			{
+				float32 scale = 1.0f / m_StepCount;
+
+				aveProfile.step             = scale * m_TotalProfile.step;
+				aveProfile.collide          = scale * m_TotalProfile.collide;
+				aveProfile.solve            = scale * m_TotalProfile.solve;
+				aveProfile.solveInit        = scale * m_TotalProfile.solveInit;
+				aveProfile.solveVelocity    = scale * m_TotalProfile.solveVelocity;
+				aveProfile.solvePosition    = scale * m_TotalProfile.solvePosition;
+				aveProfile.solveTOI         = scale * m_TotalProfile.solveTOI;
+				aveProfile.broadphase       = scale * m_TotalProfile.broadphase;
+			}
+
+			m_ProfileMessage =  "step [ave] (max) = "           + toString(p.step)          + " [" + toString(aveProfile.step)          + "]" +  "(" + toString(m_MaxProfile.step)          + ") " + "\n" \
+								"collide [ave] (max) = "        + toString(p.collide)       + " [" + toString(aveProfile.collide)       + "]" +  "(" + toString(m_MaxProfile.collide)       + ")" + "\n" \
+								"solve [ave] (max) = "          + toString(p.solve)         + " [" + toString(aveProfile.solve)         + "]" +  "(" + toString(m_MaxProfile.solve)         + ")" + "\n" \
+								"solve init [ave] (max) = "     + toString(p.solveInit)     + " [" + toString(aveProfile.solveInit)     + "]" +  "(" + toString(m_MaxProfile.solveInit)     + ")" + "\n" \
+								"solve velocity [ave] (max) = " + toString(p.solveVelocity) + " [" + toString(aveProfile.solveVelocity) + "]" +  "(" + toString(m_MaxProfile.solveVelocity) + ")" + "\n" \
+								"solve position [ave] (max) = " + toString(p.solvePosition) + " [" + toString(aveProfile.solvePosition) + "]" +  "(" + toString(m_MaxProfile.solvePosition) + ")" + "\n" \
+								"solveTOI [ave] (max) = "       + toString(p.solveTOI)      + " [" + toString(aveProfile.solveTOI)      + "]" +  "(" + toString(m_MaxProfile.solveTOI)      + ")" + "\n" \
+								"broad-phase [ave] (max) = "    + toString(p.broadphase)    + " [" + toString(aveProfile.broadphase)    + "]" +  "(" + toString(m_MaxProfile.broadphase)    + ")" + "\n";
+		}
+		else
+		{
+			m_ProfileMessage = "";
+		}
+
+
+		if (m_MouseJoint)
+		{
+			b2Vec2 p1 = m_MouseJoint->GetAnchorB();
+			b2Vec2 p2 = m_MouseJoint->GetTarget();
+
+			b2Color c;
+			c.Set(0.0f, 1.0f, 0.0f);
+			m_Scene->m_ShapeRenderer.DrawPoint(p1, 4.0f, c);
+			m_Scene->m_ShapeRenderer.DrawPoint(p2, 4.0f, c);
+
+			c.Set(0.8f, 0.8f, 0.8f);
+			m_Scene->m_ShapeRenderer.DrawSegment(p1, p2, c);
+		}
+
+		if (m_BombSpawning)
+		{
+			b2Color c;
+			c.Set(0.0f, 0.0f, 1.0f);
+			m_Scene->m_ShapeRenderer.DrawPoint(m_BombSpawnPoint, 4.0f, c);
+
+			c.Set(0.8f, 0.8f, 0.8f);
+			m_Scene->m_ShapeRenderer.DrawSegment(m_MouseWorld, m_BombSpawnPoint, c);
+		}
+
+		//if (m_SceneSetting.drawContactPoints)
+		if(true)
+		{
+			const float32 k_impulseScale = 0.1f;
+			const float32 k_axisScale = 0.3f;
+
+			for (int32 i = 0; i < m_Scene->m_ContactPointCount; ++i)
+			{
+				ContactPoint* point = m_Scene->m_ContactPointTable + i;
+
+				if (point->state == b2_addState)
+				{
+					// Add
+					m_Scene->m_ShapeRenderer.DrawPoint(point->position, 10.0f, b2Color(0.3f, 0.95f, 0.3f));
+				}
+				else if (point->state == b2_persistState)
+				{
+					// Persist
+					m_Scene->m_ShapeRenderer.DrawPoint(point->position, 5.0f, b2Color(0.3f, 0.3f, 0.95f));
+				}
+
+				//if (m_SceneSetting.drawContactNormals == 1)
+				if(true)
+				{
+					b2Vec2 p1 = point->position;
+					b2Vec2 p2 = p1 + k_axisScale * point->normal;
+					m_Scene->m_ShapeRenderer.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.9f));
+				}
+				//else if (m_SceneSetting.drawContactImpulse == 1)
+				if(true)
+				{
+					b2Vec2 p1 = point->position;
+					b2Vec2 p2 = p1 + k_impulseScale * point->normalImpulse * point->normal;
+					m_Scene->m_ShapeRenderer.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+				}
+
+				//if (m_SceneSetting.drawFrictionImpulse == 1)
+				if(true)
+				{
+					b2Vec2 tangent = b2Cross(point->normal, 1.0f);
+					b2Vec2 p1 = point->position;
+					b2Vec2 p2 = p1 + k_impulseScale * point->tangentImpulse * tangent;
+					m_Scene->m_ShapeRenderer.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+				}
+			}
+		}
+	}
+
+	void AdvancedScene::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
+	{
+		//Handle only key pressed inputs
+		if(isPressed)
+		{
+			if(key == sf::Keyboard::B)
+				launchBomb();
+		}
+
+		if(key == sf::Keyboard::LShift)
+			m_IsLeftShift = isPressed;
+	}
+
+	void AdvancedScene::handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
+	{
+		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
+		b2Vec2 p = sf_to_b2(world_pos, SCALE);
+
+		if(mouse.button == sf::Mouse::Left && isPressed == true)
+		{
+			if(m_IsLeftShift)
+				shiftMouseDown(p);
+			else
+				mouseDown(p);
+		}
+		else if (mouse.button == sf::Mouse::Left && isPressed == false)
+		{
+			mouseUp(p);
+		}
+		else if (mouse.button == sf::Mouse::Right)
+		{
+			if(isPressed)
+			{
+				m_LastMousePosition = p;
+
+			}
+
+			m_IsMouseRightButton = isPressed;
+		}
+
+	}
+
+	void AdvancedScene::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
+	{
+		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
+		b2Vec2 p = sf_to_b2(world_pos, SCALE);
+
+		mouseMove(p);
+	}
+
+	void AdvancedScene::handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse)
+	{
+
+	}
+
+
 }
 

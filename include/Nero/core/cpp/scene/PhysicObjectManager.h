@@ -20,15 +20,10 @@ namespace nero
     class PhysicObjectManager
     {
         public:
-            typedef std::vector<PhysicObject>   ObjectTab;
-            typedef std::vector<Mesh*>          MeshTab;
-
-        public:
                                 PhysicObjectManager();
             virtual            ~PhysicObjectManager();
 
             PhysicObject::Ptr   createObject(Mesh* mesh);
-            void                destroyAllObject();
             void                setWorld(b2World* world);
 
         private:
@@ -39,8 +34,6 @@ namespace nero
 
         private:
             b2World*            m_World;
-            ObjectTab           m_ObjectTab;
-            int                 m_ObjectCount;
 
             b2BodyDef           m_BodyDef;
             b2FixtureDef        m_FixtureDef;

@@ -35,7 +35,7 @@ namespace nero
 			void								init(const Setting& parameter);
 			void								loadProject();
 			void								saveProject();
-			void								loadProjectLibrary();
+			void								loadLibrary();
 			void								openEditor();
 			void								compileProject();
 			std::string							exec(const char* cmd);
@@ -64,7 +64,6 @@ namespace nero
 			Setting::Ptr						m_EngineSetting;
 			RenderContextPtr					m_RenderContext;
 			AdvancedScene::Ptr					m_AdvancedScene;
-			Scene::Ptr							m_Scene;
 			std::string							m_EditorProcessId;
 			boost::function<CreateCppSceneFn>	m_CreateCppSceneFn;
 			//boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;

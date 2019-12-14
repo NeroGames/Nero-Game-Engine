@@ -25,7 +25,7 @@ namespace nero
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 
         public :
-									ShapeRenderer(const float& thickness = -2.f, const int& transparency = 50);
+									ShapeRenderer(RenderTexturePtr renderTexture, const float& thickness = -2.f, const int& transparency = 50);
 			void					setRenderTexture(const RenderTexturePtr& renderTexture);
 
 

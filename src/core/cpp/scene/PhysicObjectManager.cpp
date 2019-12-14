@@ -16,7 +16,6 @@ namespace nero
 {
     PhysicObjectManager::PhysicObjectManager():
          m_World(nullptr)
-        ,m_ObjectCount(0)
     {
         //ctor
     }
@@ -24,15 +23,6 @@ namespace nero
     PhysicObjectManager::~PhysicObjectManager()
     {
         m_World = nullptr;
-        delete m_World;
-    }
-
-    void PhysicObjectManager::destroyAllObject()
-    {
-        for(auto it = m_ObjectTab.begin(); it != m_ObjectTab.end(); it++)
-            m_World->DestroyBody(it->getBody());
-
-        m_ObjectTab.clear();
     }
 
     void PhysicObjectManager::setupBodyDef(Mesh& mesh)

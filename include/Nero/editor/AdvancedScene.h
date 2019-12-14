@@ -42,6 +42,8 @@ namespace nero
 			typedef std::shared_ptr<AdvancedScene> Ptr;
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 			typedef std::shared_ptr<RenderContext> RenderContextPtr;
+			typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
+
 
 		public:
 			struct	WorldChunk;
@@ -137,6 +139,17 @@ namespace nero
 			void								destroyBomb();
 			void								jointDestroyed(b2Joint* joint);
 
+			void								setCppSceneCreator(boost::function<CreateCppSceneFn>& createCppScene);
+			void								setProjectParameter(const Setting& parameter);
+			Scene::Ptr							createCppScene();
+
+		private:
+			void								renderDebug();
+			void								handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
+			void								handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
+			void								handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
+			void								handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse);
+
         private:
             //Friend
 			friend class						DestructionListener;
@@ -179,6 +192,21 @@ namespace nero
 			int32								m_StepCount;
 			b2Profile							m_MaxProfile;
 			b2Profile							m_TotalProfile;
+
+			//
+			bool                                m_IsShiftOriginUp;
+			bool                                m_IsShiftOriginDown;
+			bool                                m_IsShiftOriginLeft;
+			bool                                m_IsShiftOriginRight;
+			bool                                m_IsLeftShift;
+			bool                                m_IsMouseRightButton;
+			b2Vec2                              m_LastMousePosition;
+			b2Vec2                              m_ViewCenter;
+			float                               m_ShitftOriginSpeed;
+
+			//
+			boost::function<CreateCppSceneFn>	m_CreateCppScene;
+			Setting								m_ProjectParameter;
 
     };
 }

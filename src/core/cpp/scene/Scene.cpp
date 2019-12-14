@@ -3,6 +3,7 @@
 // Copyright (c) 2016-2020 SANOU A. K. Landry
 /////////////////////////////////////////////////////////////
 #include <Nero/core/cpp/scene/Scene.h>
+#include <Nero/core/cpp/object/GameLevelObject.h>
 
 namespace nero
 {
@@ -25,6 +26,10 @@ namespace nero
 
 	Scene::Scene(Context context):
 		 m_SceneContext(context)
+		,m_GameWorld(std::make_shared<Object>())
+		,m_PhysicWorld(nullptr)
+		,m_ShapeRenderer(context.renderTexture)
+		,m_HideWorld(false)
 	{
 
 	}
@@ -38,7 +43,7 @@ namespace nero
 	{
 		//destroy physic world
 		m_PhysicWorld = nullptr;
-		delete m_PhysicWorld;
+		//delete m_PhysicWorld;
 	}
 
 	void Scene::handleEvent(const sf::Event& event)
@@ -75,17 +80,88 @@ namespace nero
 
 	void Scene::update(const sf::Time& timeStep)
 	{
+		//float32 b2TimeStep = m_SceneSetting.hz > 0.0f ? 1.0f / m_SceneSetting.hz : float32(0.0f);
+		float32 b2TimeStep = 40.f > 0.0f ? 1.0f / 40.f : float32(0.0f);
 
+		if(b2TimeStep > 0.f)
+		{
+			b2TimeStep = (b2TimeStep * timeStep.asSeconds())/TIME_PER_FRAME.asSeconds();
+		}
+
+		if(!m_HideWorld)
+		{
+			//if(!m_PhysicWorld->IsLocked())
+				//m_ObjectManager->removeDeadPhysicObject();
+
+
+			/*if(m_SceneSetting.pause && !m_SceneSetting.singleStep)
+			{
+				b2TimeStep = 0.0f;
+				m_Context.renderEngine ? m_PauseMessage = "" : m_PauseMessage = "#-- PAUSED --#";
+			}
+			else
+			{
+				m_PauseMessage = "";
+			}*/
+
+			/*uint32 flags = 0;
+			flags += m_SceneSetting.drawShapes * b2Draw::e_shapeBit;
+			flags += m_SceneSetting.drawJoints * b2Draw::e_jointBit;
+			flags += m_SceneSetting.drawAABBs * b2Draw::e_aabbBit;
+			flags += m_SceneSetting.drawCOMs * b2Draw::e_centerOfMassBit;*/
+
+			uint32 flags = 0;
+			flags += 1 * b2Draw::e_shapeBit;
+			flags += 1 * b2Draw::e_jointBit;
+			flags += 0 * b2Draw::e_aabbBit;
+			flags += 1 * b2Draw::e_centerOfMassBit;
+
+			m_ShapeRenderer.SetFlags(flags);
+
+			/*m_PhysicWorld->SetAllowSleeping(m_SceneSetting.enableSleep > 0);
+			m_PhysicWorld->SetWarmStarting(m_SceneSetting.enableWarmStarting > 0);
+			m_PhysicWorld->SetContinuousPhysics(m_SceneSetting.enableContinuous > 0);
+			m_PhysicWorld->SetSubStepping(m_SceneSetting.enableSubStepping > 0);*/
+
+			m_ContactPointCount = 0;
+
+			//m_PhysicWorld->Step(b2TimeStep, m_SceneSetting.velocityIterations, m_SceneSetting.positionIterations);
+			m_PhysicWorld->Step(b2TimeStep, 8, 3);
+
+
+			//if((!m_SceneSetting.pause || m_SceneSetting.singleStep))
+				//m_World->update(sf::seconds(b2TimeStep));
+
+
+
+			//m_InformationText.setString(m_InformationContent);
+		}
 	}
 
 	void Scene::render()
 	{
+		auto gameLevel = m_GameWorld->getAllChild()->front();
+
+		auto chunkTable = gameLevel->getAllChild();
+
+		for(auto it = chunkTable->begin(); it != chunkTable->end(); it++)
+		{
+			auto childTable = (*it)->getAllChild();
+
+			for(auto it = childTable->begin(); it != childTable->end(); it++)
+			{
+				LayerObject::Ptr layer_object = LayerObject::Cast(*it);
+
+				if(layer_object->isVisible())
+					m_SceneContext.renderTexture->draw(*layer_object);
+			}
+		}
 
 	}
 
 	void Scene::renderShape()
 	{
-
+		m_PhysicWorld->DrawDebugData();
 	}
 
 	void Scene::renderFrontScreen()
@@ -143,59 +219,63 @@ namespace nero
 
 	void Scene::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 	{
-	  const b2Manifold* manifold = contact->GetManifold();
+		return;
 
-	  if (manifold->pointCount == 0)
-	  {
+		const b2Manifold* manifold = contact->GetManifold();
+
+		if (manifold->pointCount == 0)
+		{
 		  return;
-	  }
+		}
 
-	  b2Fixture* fixtureA = contact->GetFixtureA();
-	  b2Fixture* fixtureB = contact->GetFixtureB();
+		  b2Fixture* fixtureA = contact->GetFixtureA();
+		  b2Fixture* fixtureB = contact->GetFixtureB();
 
-	  b2PointState state1[b2_maxManifoldPoints], state2[b2_maxManifoldPoints];
-	  b2GetPointStates(state1, state2, oldManifold, manifold);
+		  b2PointState state1[b2_maxManifoldPoints], state2[b2_maxManifoldPoints];
+		  b2GetPointStates(state1, state2, oldManifold, manifold);
 
-	  b2WorldManifold worldManifold;
-	  contact->GetWorldManifold(&worldManifold);
+		  b2WorldManifold worldManifold;
+		  contact->GetWorldManifold(&worldManifold);
 
-	  for (int32 i = 0; i < manifold->pointCount && m_ContactPointCount < MAX_CONTACT_POINT; ++i)
-	  {
-		  ContactPoint* cp = m_ContactPointTable + m_ContactPointCount;
-		  cp->fixtureA = fixtureA;
-		  cp->fixtureB = fixtureB;
-		  cp->position = worldManifold.points[i];
-		  cp->normal = worldManifold.normal;
-		  cp->state = state2[i];
-		  cp->normalImpulse = manifold->points[i].normalImpulse;
-		  cp->tangentImpulse = manifold->points[i].tangentImpulse;
-		  cp->separation = worldManifold.separations[i];
-		  ++m_ContactPointCount;
-	  }
+		  for (int32 i = 0; i < manifold->pointCount && m_ContactPointCount < MAX_CONTACT_POINT; ++i)
+		  {
+			  ContactPoint* cp = m_ContactPointTable + m_ContactPointCount;
+			  cp->fixtureA = fixtureA;
+			  cp->fixtureB = fixtureB;
+			  cp->position = worldManifold.points[i];
+			  cp->normal = worldManifold.normal;
+			  cp->state = state2[i];
+			  cp->normalImpulse = manifold->points[i].normalImpulse;
+			  cp->tangentImpulse = manifold->points[i].tangentImpulse;
+			  cp->separation = worldManifold.separations[i];
+			  ++m_ContactPointCount;
+		  }
 
-	  Collision collision(contact, oldManifold, nullptr);
+		  Collision collision(contact, oldManifold, nullptr);
 
-	  int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
-	  int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
+		  int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
+		  int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-	  auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
-	  auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+		  auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
+		  auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
 
-	  if(!objectA || !objectB)
-		  return;
+		  if(!objectA || !objectB)
+			  return;
 
-	  if(objectA->isDead() || objectB->isDead())
-		  return;
+		  if(objectA->isDead() || objectB->isDead())
+			  return;
 
-	  collision.setObjectA(objectA);
-	  collision.setObjectB(objectB);
+		  collision.setObjectA(objectA);
+		  collision.setObjectB(objectB);
 
-	  handleCollisionPreSolveContact(collision);
+		  handleCollisionPreSolveContact(collision);
 	}
 
 
 	  void Scene::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
 	  {
+		  return;
+
 		  Collision collision(contact, nullptr, impulse);
 
 		  int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
@@ -219,6 +299,8 @@ namespace nero
 
 	  void Scene::BeginContact(b2Contact* contact)
 	  {
+		  return;
+
 		  Collision collision(contact, nullptr, nullptr);
 
 		  int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
@@ -241,6 +323,8 @@ namespace nero
 
 	  void Scene::EndContact(b2Contact* contact)
 	  {
+		  return;
+
 		  Collision collision(contact, nullptr, nullptr);
 
 		  int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
@@ -293,7 +377,15 @@ namespace nero
 
 	  void Scene::loadGameLevel(const std::string& name)
 	  {
+		  auto gameLevel = std::make_shared<GameLevelObject>();
+		  Setting parameter;
+		  gameLevel->initialize(parameter);
 
+
+		  m_PhysicWorld = gameLevel->getPhysicWorld();
+
+		  m_PhysicWorld->SetContactListener(this);
+		  m_PhysicWorld->SetDebugDraw(&m_ShapeRenderer);
 	  }
 
 	  void Scene::loadWorldChunk(const std::string& name)
