@@ -43,7 +43,7 @@ namespace nero
 		m_DestructionListener.scene = AdvancedScene::Ptr(this);
 
 		// Create the LightSystem
-		m_LightEngine.create({ -1000.f, -1000.f, 2000.f, 2000.f }, sf::Vector2u(800.f, 800.f));
+		//m_LightEngine.create({ -1000.f, -1000.f, 2000.f, 2000.f }, sf::Vector2u(800.f, 800.f));
 
 		// Load light texture
 		/*sf::Texture pointLightTexture;
@@ -375,6 +375,7 @@ namespace nero
 		}*/
 
 		m_Scene->m_GameWorld->addChild(gameLevel);
+		m_Scene->m_LevelSetting = m_SelectedGameLevel->levelSetting;
 	}
 
 	void AdvancedScene::shiftMouseDown(const b2Vec2& p)

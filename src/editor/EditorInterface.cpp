@@ -723,28 +723,28 @@ namespace  nero
 
 			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("pause_button")))
 			{
-			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			   pauseScene();
 			}
 
 			ImGui::SameLine(start + buttonSpace*i++);
 
 			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("step_button")))
 			{
-			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			   stepScene();
 			}
 
 			ImGui::SameLine(start + buttonSpace*i++);
 
 			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("reset_button")))
 			{
-			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			   resetScene();
 			}
 
 			ImGui::SameLine(start + buttonSpace*i++);
 
 			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("render_button")))
 			{
-			   //ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			   renderScene();
 			}
 
 			ImGui::SameLine(width - 72.f);
@@ -1647,11 +1647,53 @@ namespace  nero
 
 	void EditorInterface::playScene()
 	{
-		if(m_AdvancedScene)
+		if(m_AdvancedScene && m_EditorMode != EditorMode::PLAY_GAME)
+		{
+			try
+			{
+				m_AdvancedScene->playScene();
+				m_EditorMode = EditorMode::PLAY_GAME;
+			}
+			catch(std::exception const& e)
+			{
+
+			}
+		}
+	}
+
+	void EditorInterface::pauseScene()
+	{
+		if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
+		{
+			auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
+
+			gameLevel->levelSetting->setBool("pause_level", !gameLevel->levelSetting->getBool("pause_level"));
+		}
+	}
+
+	void EditorInterface::stepScene()
+	{
+
+		if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
+		{
+			auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
+
+			gameLevel->levelSetting->setBool("pause_scene", true);
+			gameLevel->levelSetting->setBool("single_step", true);
+		}
+	}
+
+	void EditorInterface::resetScene()
+	{
+		if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
 		{
 			m_AdvancedScene->playScene();
-			m_EditorMode = EditorMode::PLAY_GAME;
 		}
+	}
+
+	void EditorInterface::renderScene()
+	{
+
 	}
 
     void EditorInterface::compileProject()
@@ -2324,10 +2366,16 @@ namespace  nero
 
 						ImGui::SameLine();
 
-						itemId = "##visible_layer" + toString(objectLayer->getObjectId());
+						itemId = "##layer_visible" + toString(objectLayer->getObjectId());
 						ImGui::Checkbox(itemId.c_str(), &objectLayer->getVisibility());
 
 						ImGui::SameLine();
+
+
+						auto color = getLayerColor(objectLayer->getSecondType());
+
+						ImGui::PushStyleColor(ImGuiCol_FrameBg,			std::get<0>(color));
+						ImGui::PushStyleColor(ImGuiCol_TextSelectedBg,	std::get<1>(color));
 
 						char layer_name[100];
 						fillCharArray(layer_name, sizeof(layer_name), objectLayer->getName());
@@ -2339,12 +2387,32 @@ namespace  nero
 						{
 							objectLayer->setName(std::string(layer_name));
 						}
+
+						ImGui::PopStyleColor(2);
 					}
 				}
 
 			ImGui::EndChild();
 
 		ImGui::End();
+	}
+
+	std::tuple<ImVec4, ImVec4> EditorInterface::getLayerColor(Object::Type type)
+	{
+		switch(type)
+		{
+			case Object::Sprite_Object:
+				return {
+							ImVec4(0.3f, 0.6f, 0.5f, 0.5f),
+							ImVec4(0.3f, 0.6f, 0.5f, 1.f),
+						} ;
+
+			default:
+				return {
+							ImGui::GetStyle().Colors[ImGuiCol_FrameBg],
+							ImGui::GetStyle().Colors[ImGuiCol_TextSelectedBg]
+						};
+		}
 	}
 
 	void EditorInterface::addObjectLayer()
@@ -2760,6 +2828,86 @@ namespace  nero
 
 		if (ImGui::CollapsingHeader("Game Level"))
 		{
+			if(m_AdvancedScene)
+			{
+				ImGuiViewport* viewport = ImGui::GetMainViewport();
+				float window_height = viewport->Size.y * 0.25f;
+				viewport = nullptr;
+
+				ImGui::BeginChild("game_level", ImVec2(0.f, window_height), true);
+
+					auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
+
+					ImGui::Text("Draw");
+					ImGui::Separator();
+					ImGui::Dummy(ImVec2(0.f, 5.f));
+
+					static bool draw_axis = gameLevel->levelSetting->getBool("draw_axis");
+					ImGui::Checkbox("Draw Axis##draw_axis", &draw_axis);
+					gameLevel->levelSetting->setBool("draw_axis", draw_axis);
+
+					static bool draw_grid = gameLevel->levelSetting->getBool("draw_grid");
+					ImGui::Checkbox("Draw Grid##draw_grid", &draw_grid);
+					gameLevel->levelSetting->setBool("draw_grid", draw_grid);
+
+					static bool draw_shape = gameLevel->levelSetting->getBool("draw_shape");
+					ImGui::Checkbox("Draw Shape##draw_shape", &draw_shape);
+					gameLevel->levelSetting->setBool("draw_shape", draw_shape);
+
+					static bool draw_joint = gameLevel->levelSetting->getBool("draw_joint");
+					ImGui::Checkbox("Draw Joint##draw_joint", &draw_joint);
+					gameLevel->levelSetting->setBool("draw_joint", draw_joint);
+
+					static bool draw_aabb = gameLevel->levelSetting->getBool("draw_aabb");
+					ImGui::Checkbox("Draw AABB##draw_aabb", &draw_aabb);
+					gameLevel->levelSetting->setBool("draw_aabb", draw_aabb);
+
+					static bool draw_contact_point = gameLevel->levelSetting->getBool("draw_contact_point");
+					ImGui::Checkbox("Draw Contact Point##draw_contact_point", &draw_contact_point);
+					gameLevel->levelSetting->setBool("draw_contact_point", draw_contact_point);
+
+					static bool draw_contact_normal = gameLevel->levelSetting->getBool("draw_contact_normal");
+					ImGui::Checkbox("Draw Contact Normal##draw_contact_normal", &draw_contact_normal);
+					gameLevel->levelSetting->setBool("draw_contact_normal", draw_contact_normal);
+
+					static bool draw_contact_impulse = gameLevel->levelSetting->getBool("draw_contact_impulse");
+					ImGui::Checkbox("Draw Contact Impulse##draw_contact_impulse", &draw_contact_impulse);
+					gameLevel->levelSetting->setBool("draw_contact_impulse", draw_contact_impulse);
+
+					static bool draw_friction_impulse = gameLevel->levelSetting->getBool("draw_friction_impulse");
+					ImGui::Checkbox("Draw Friction Impulse##draw_friction_impulse", &draw_friction_impulse);
+					gameLevel->levelSetting->setBool("draw_friction_impulse", draw_friction_impulse);
+
+					static bool draw_center_of_mass = gameLevel->levelSetting->getBool("draw_center_of_mass");
+					ImGui::Checkbox("Draw Centroid##draw_center_of_mass", &draw_center_of_mass);
+					gameLevel->levelSetting->setBool("draw_center_of_mass", draw_center_of_mass);
+
+					static bool draw_statistic = gameLevel->levelSetting->getBool("draw_statistic");
+					ImGui::Checkbox("Draw Statistic##draw_statistic", &draw_statistic);
+					gameLevel->levelSetting->setBool("draw_statistic", draw_statistic);
+
+					static bool draw_profile = gameLevel->levelSetting->getBool("draw_profile");
+					ImGui::Checkbox("Draw Profile##draw_profile", &draw_profile);
+					gameLevel->levelSetting->setBool("draw_profile", draw_profile);
+
+
+
+
+
+
+
+					//
+					/*levelSetting->setBool("enable_warm_starting", true);
+					levelSetting->setBool("enable_continous", true);
+					levelSetting->setBool("enable_sub_stepping", false);
+					levelSetting->setBool("enable_sleep", true);
+					//
+					levelSetting->setBool("pause_level", false);
+					levelSetting->setBool("single_step", false);*/
+
+				ImGui::EndChild();
+			}
+
 
 		}
 

@@ -30,6 +30,7 @@ namespace nero
 		,m_PhysicWorld(nullptr)
 		,m_ShapeRenderer(context.renderTexture)
 		,m_HideWorld(false)
+		,m_LevelSetting(nullptr)
 	{
 
 	}
@@ -80,8 +81,7 @@ namespace nero
 
 	void Scene::update(const sf::Time& timeStep)
 	{
-		//float32 b2TimeStep = m_SceneSetting.hz > 0.0f ? 1.0f / m_SceneSetting.hz : float32(0.0f);
-		float32 b2TimeStep = 40.f > 0.0f ? 1.0f / 40.f : float32(0.0f);
+		float32 b2TimeStep = m_LevelSetting->getFloat("time_step") > 0.0f ? 1.0f / m_LevelSetting->getFloat("time_step") : float32(0.0f);
 
 		if(b2TimeStep > 0.f)
 		{
@@ -90,51 +90,45 @@ namespace nero
 
 		if(!m_HideWorld)
 		{
-			//if(!m_PhysicWorld->IsLocked())
+			if(!m_PhysicWorld->IsLocked())
+			{
 				//m_ObjectManager->removeDeadPhysicObject();
+			}
 
-
-			/*if(m_SceneSetting.pause && !m_SceneSetting.singleStep)
+			if(m_LevelSetting->getBool("pause_level") && !m_LevelSetting->getBool("single_step"))
 			{
 				b2TimeStep = 0.0f;
-				m_Context.renderEngine ? m_PauseMessage = "" : m_PauseMessage = "#-- PAUSED --#";
+				m_SceneContext.engineType == EngineType::RENDER_ENGINE ? m_InformationContent = StringPool.BLANK : m_InformationContent = "#-- PAUSED --#";
 			}
 			else
 			{
-				m_PauseMessage = "";
-			}*/
-
-			/*uint32 flags = 0;
-			flags += m_SceneSetting.drawShapes * b2Draw::e_shapeBit;
-			flags += m_SceneSetting.drawJoints * b2Draw::e_jointBit;
-			flags += m_SceneSetting.drawAABBs * b2Draw::e_aabbBit;
-			flags += m_SceneSetting.drawCOMs * b2Draw::e_centerOfMassBit;*/
+				m_InformationContent = StringPool.BLANK;
+			}
 
 			uint32 flags = 0;
-			flags += 1 * b2Draw::e_shapeBit;
-			flags += 1 * b2Draw::e_jointBit;
-			flags += 0 * b2Draw::e_aabbBit;
-			flags += 1 * b2Draw::e_centerOfMassBit;
+			flags += m_LevelSetting->getUInt("draw_shape") * b2Draw::e_shapeBit;
+			flags += m_LevelSetting->getUInt("draw_joint") * b2Draw::e_jointBit;
+			flags += m_LevelSetting->getUInt("draw_aabb") * b2Draw::e_aabbBit;
+			flags += m_LevelSetting->getUInt("draw_center_of_mass") * b2Draw::e_centerOfMassBit;
 
 			m_ShapeRenderer.SetFlags(flags);
 
-			/*m_PhysicWorld->SetAllowSleeping(m_SceneSetting.enableSleep > 0);
-			m_PhysicWorld->SetWarmStarting(m_SceneSetting.enableWarmStarting > 0);
-			m_PhysicWorld->SetContinuousPhysics(m_SceneSetting.enableContinuous > 0);
-			m_PhysicWorld->SetSubStepping(m_SceneSetting.enableSubStepping > 0);*/
+			m_PhysicWorld->SetAllowSleeping(m_LevelSetting->getBool("enable_sleep"));
+			m_PhysicWorld->SetWarmStarting(m_LevelSetting->getBool("enable_warm_starting"));
+			m_PhysicWorld->SetContinuousPhysics(m_LevelSetting->getBool("enable_sub_stepping"));
+			m_PhysicWorld->SetSubStepping(m_LevelSetting->getBool("enable_sub_stepping"));
 
 			m_ContactPointCount = 0;
 
-			//m_PhysicWorld->Step(b2TimeStep, m_SceneSetting.velocityIterations, m_SceneSetting.positionIterations);
-			m_PhysicWorld->Step(b2TimeStep, 8, 3);
+			m_PhysicWorld->Step(b2TimeStep, m_LevelSetting->getInt("velocity_iteration"), m_LevelSetting->getInt("position_iteration"));
 
 
-			//if((!m_SceneSetting.pause || m_SceneSetting.singleStep))
-				//m_World->update(sf::seconds(b2TimeStep));
+			if(!m_LevelSetting->getBool("pause_level") || m_LevelSetting->getBool("single_step"))
+			{
+				m_GameWorld->update(sf::seconds(b2TimeStep));
+			}
 
-
-
-			//m_InformationText.setString(m_InformationContent);
+			m_InformationText.setString(m_InformationContent);
 		}
 	}
 

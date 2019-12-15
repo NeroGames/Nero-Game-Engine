@@ -71,13 +71,49 @@ namespace nero
 			{
 				GameLevel()
 				{
-					//Empty
+					Setting viewCenter;
+					viewCenter.setFloat("x", 0.f);
+					viewCenter.setFloat("y", 0.f);
+
+					Setting gravity;
+					gravity.setFloat("x", 0.f);
+					gravity.setFloat("y", 9.8f);
+
+					levelSetting = std::make_shared<Setting>();
+
+					levelSetting->setSetting("gravity", gravity);
+					levelSetting->setSetting("view_center", viewCenter);
+					levelSetting->setFloat("time_step", 40.f);
+					levelSetting->setUInt("velocity_iteration", 8);
+					levelSetting->setUInt("position_iteration", 3);
+					//
+					levelSetting->setBool("draw_axis", true);
+					levelSetting->setBool("draw_grid", true);
+					levelSetting->setBool("draw_shape", true);
+					levelSetting->setBool("draw_joint", true);
+					levelSetting->setBool("draw_aabb", false);
+					levelSetting->setBool("draw_contact_point", false);
+					levelSetting->setBool("draw_contact_normal", false);
+					levelSetting->setBool("draw_contact_impulse", false);
+					levelSetting->setBool("draw_friction_impulse", false);
+					levelSetting->setBool("draw_center_of_mass", false);
+					levelSetting->setBool("draw_statistic", false);
+					levelSetting->setBool("draw_profile", false);
+					//
+					levelSetting->setBool("enable_warm_starting", true);
+					levelSetting->setBool("enable_continous", true);
+					levelSetting->setBool("enable_sub_stepping", false);
+					levelSetting->setBool("enable_sleep", true);
+					//
+					levelSetting->setBool("pause_level", false);
+					levelSetting->setBool("single_step", false);
 				}
 
-				int							levelId		= -1;
-				std::string					name		= StringPool.BLANK;
-				int							chunkCount	= 0;
-				bool						selected	= false;
+				int							levelId			= -1;
+				std::string					name			= StringPool.BLANK;
+				int							chunkCount		= 0;
+				bool						selected		= false;
+				Setting::Ptr				levelSetting;
 				std::vector<WorldChunkPtr>	chunkTable;
 			};
 

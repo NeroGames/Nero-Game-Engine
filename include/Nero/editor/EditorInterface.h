@@ -187,6 +187,10 @@ namespace nero
             void                        editProject();
             void                        reloadProject();
 			void						playScene();
+			void						pauseScene();
+			void						stepScene();
+			void						resetScene();
+			void						renderScene();
 
 			void						setSetting(Setting::Ptr setting);
 
@@ -260,6 +264,7 @@ namespace nero
 			void onLoadProject();
 			void autoSaveProject();
 			sf::Clock	m_AutoSaveClock;
+			std::tuple<ImVec4, ImVec4> getLayerColor(Object::Type type);
 
 	};
 

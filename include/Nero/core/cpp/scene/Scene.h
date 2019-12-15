@@ -150,6 +150,8 @@ namespace nero
 			//text display
 			sf::Text						m_InformationText;
 			sf::String						m_InformationContent;
+			//
+			Setting::Ptr					m_LevelSetting;
     };
 }
 
