@@ -23,6 +23,8 @@
 //STD
 #include <memory>
 #include <vector>
+//
+#include <ltbl/LightSystem.hpp>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -120,6 +122,9 @@ namespace nero
 			void							EndContact(b2Contact* contact);
 			void							PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
 			void							PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
+			//
+			void							setupLightning();
+			void							renderLightning();
 
         protected:
 			//friend
@@ -152,6 +157,10 @@ namespace nero
 			sf::String						m_InformationContent;
 			//
 			Setting::Ptr					m_LevelSetting;
+			//
+			ltbl::LightSystem				m_LightEngine;
+			//
+			std::map<std::string, sf::Texture>		m_TextureMap; //TODO : remove
     };
 }
 

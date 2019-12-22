@@ -32,7 +32,7 @@ add_definitions(-DBOOST_DLL_USE_STD_FS)
 add_definitions(-DSOL_ALL_SAFETIES_ON=1)
 add_definitions(-DSOL_USING_CXX_LUA)
 add_definitions(-DNERO_GAME_DEBUG)
-
+add_definitions(-DBUILD_WITH_EASY_PROFILER)
 
 # Get the engine source files
 include_directories ("include")
@@ -45,11 +45,7 @@ file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/project/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/library/imgui/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/library/nativefiledialog/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/library/imgui/nodeeditor*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/library/imgui/easyloggingpp/*")
+    "${CMAKE_CURRENT_SOURCE_DIR}/project/*")
 
 
 # Engine Core Source
@@ -57,7 +53,7 @@ file(GLOB_RECURSE NERO_GAME_CORE_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/core/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/easyloggingpp/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/library/lighting/*")
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/ltbl/*")
 
 # setup Library
 include_directories("../../Library/include")
@@ -83,13 +79,15 @@ set(LIBGIT2_LIBS "-lgit2.dll")
 set(LUA_LIBS "-llua")
 #CPP_FILESYSTEM
 set(CPP_FILESYSTEM "stdc++fs")
+#EASY_PROFILER
+set(EASY_PROFILER "-leasy_profiler.dll")
 
 
 # Build Nero Game Core
 add_library(nerogame-core ${NERO_GAME_CORE_SOURCES} )
-target_link_libraries(nerogame-core ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2d_LIBS})
+target_link_libraries(nerogame-core ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2d_LIBS} ${EASY_PROFILER})
 
 # Build Nero Game Editor
 add_executable(Editor "main.cpp" ${NERO_GAME_EDITOR_SOURCES})
-target_link_libraries(Editor comctl32.lib ${CPP_FILESYSTEM} ${SFML_LIBS} ${Box2d_LIBS} ${OPENGL_gl_LIBRARY} ${ZLIB_LIBS} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${HTTP_PARSER} ${LIBGIT2_LIBS} ${LUA_LIBS})
+target_link_libraries(Editor comctl32.lib ${CPP_FILESYSTEM} ${SFML_LIBS} ${Box2d_LIBS} ${OPENGL_gl_LIBRARY} ${ZLIB_LIBS} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${HTTP_PARSER} ${LIBGIT2_LIBS} ${LUA_LIBS} ${EASY_PROFILER})
 

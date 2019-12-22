@@ -39,27 +39,36 @@ namespace  nero
 
 		while(m_RenderWindow.isOpen())
         {
-            //Accumulate the time elapsed at each loop
+			EASY_BLOCK("Game Loop");
+
+			//Accumulate the time elapsed at each loop
             sf::Time elapsedTime = clock.restart();
-            timeSinceLastUpdate += elapsedTime;
+			timeSinceLastUpdate += elapsedTime;
 
             //When the time comes over the value of "TIME_PER_FRAME" do --> 1 --> 2 then do --> 2 --> 3
-            //TIME_PER_FRAME is constant with a value of 1/60 second (the game is update 60 time per second)
+			//TIME_PER_FRAME is constant with a value of 1/60 second (the game is update 60 time per second)
             while(timeSinceLastUpdate > EngineConstant.TIME_PER_FRAME)
             {
+				EASY_BLOCK("Handle-Event | Update");
+
                 //retrieve 1/60 second in the accumulated time
                 timeSinceLastUpdate -= EngineConstant.TIME_PER_FRAME;
 
-                //1... handle user inputs
-                handleEvent();
+				//1... handle user inputs
+				handleEvent();
                 //2... update the game
                 update(EngineConstant.TIME_PER_FRAME);
+
+				EASY_END_BLOCK;
             }
 
-            //3... Compute Frame rate
-            computeFrameRate(elapsedTime);
             //4... render the game
             render();
+
+			//3... Compute Frame rate
+			computeFrameRate(elapsedTime);
+
+			EASY_END_BLOCK;
         }
     }
 

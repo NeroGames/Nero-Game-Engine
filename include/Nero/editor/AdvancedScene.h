@@ -16,7 +16,6 @@
 #include <memory>
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
-#include <ltbl/LightSystem.hpp>
 #include <Nero/editor/EditorUtility.h>
 #include <Nero/editor/SceneBuilder.h>
 
@@ -107,6 +106,8 @@ namespace nero
 					//
 					levelSetting->setBool("pause_level", false);
 					levelSetting->setBool("single_step", false);
+					//
+					levelSetting->setBool("enable_lighting", false);
 				}
 
 				int							levelId			= -1;
@@ -203,7 +204,6 @@ namespace nero
 			//
 			Scene::Ptr							m_Scene;
 			RenderContextPtr					m_RenderContext;
-			ltbl::LightSystem					m_LightEngine;
 			ResourceManager::Ptr				m_ResourceManager;
 			RenderTexturePtr					m_RenderTexture;
 			Camera::Ptr							m_Camera;
@@ -243,7 +243,6 @@ namespace nero
 			//
 			boost::function<CreateCppSceneFn>	m_CreateCppScene;
 			Setting								m_ProjectParameter;
-
     };
 }
 

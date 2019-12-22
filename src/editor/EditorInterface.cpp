@@ -11,7 +11,7 @@
 #include <functional>
 #include <vector>
 #include <IconFontCppHeaders/IconsFontAwesome5.h>
-
+#include <easy/profiler.h>
 namespace  nero
 {
     EditorInterface::EditorInterface(sf::RenderWindow& window):
@@ -172,6 +172,8 @@ namespace  nero
 
     void EditorInterface::render()
     {
+		EASY_FUNCTION(profiler::colors::Red);
+
         ImGui::SFML::Update(m_RenderWindow, EngineConstant.TIME_PER_FRAME);
 
 		//create editor dockspace & display menubar
@@ -425,7 +427,18 @@ namespace  nero
 			m_EditorCamera->updateView(sf::Vector2f(m_RenderContext->canvas_size.x, m_RenderContext->canvas_size.y));
 		}
 
-		m_RenderTexture->clear(sf::Color::Black);
+		sf::Color clearColor = sf::Color::Black;
+
+		if(m_EditorMode == EditorMode::PLAY_GAME)
+		{
+			if(m_AdvancedScene && m_AdvancedScene->getSelectedGameLevel()->levelSetting->getBool("enable_lighting"))
+			{
+				clearColor = sf::Color::White;
+			}
+		}
+
+
+		m_RenderTexture->clear(clearColor);
 		m_RenderTexture->setView(m_EditorCamera->getView());
 	}
 

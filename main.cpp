@@ -5,9 +5,15 @@
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/editor/EngineEditor.h>
+#include <easy/profiler.h>
 ////////////////////////////////////////////////////////////
 int main()
 {
+	//Start the profiler
+	EASY_PROFILER_ENABLE;
+	EASY_MAIN_THREAD;
+	profiler::startListen();
+
 	//Instantiate the editor
 	nero::EngineEditor editor;
 

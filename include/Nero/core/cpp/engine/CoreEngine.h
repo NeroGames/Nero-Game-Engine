@@ -12,6 +12,8 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 //JSON
 #include <json/json.hpp>
+//Profiler
+#include <easy/profiler.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
