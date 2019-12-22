@@ -200,7 +200,7 @@ namespace nero
 		{
 			m_Scene->render();
 			m_Scene->renderShape();
-			//m_Scene->renderLightning();
+			m_Scene->renderLighting();
 
 			renderDebug();
 		}

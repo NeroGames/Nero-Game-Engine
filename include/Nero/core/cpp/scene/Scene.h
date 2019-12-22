@@ -123,8 +123,8 @@ namespace nero
 			void							PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
 			void							PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
 			//
-			void							setupLightning();
-			void							renderLightning();
+			void							setupLighting();
+			void							renderLighting();
 
         protected:
 			//friend

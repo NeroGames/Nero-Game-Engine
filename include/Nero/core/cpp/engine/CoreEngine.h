@@ -14,6 +14,7 @@
 #include <json/json.hpp>
 //Profiler
 #include <easy/profiler.h>
+#include <easy/arbitrary_value.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -45,7 +46,7 @@ namespace nero
             void                setWindowTitle(const std::string& title);
 			void                setWindowIcon(const std::string& icon);
 
-        private:
+		protected:
 			void                createEngineWindow();
             void                computeFrameRate(sf::Time timeStep);
 

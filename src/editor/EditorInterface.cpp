@@ -559,7 +559,8 @@ namespace  nero
 			viewport = nullptr;
 
 			//build dockspace layout : this is done only once, when the editor is launched the first time
-			if(m_Setting->getSetting("dockspace").getBool("build_layout") && !fileExist(getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, StringPool.EXTENSION_INI)))
+			//if(m_Setting->getSetting("dockspace").getBool("build_layout") && !fileExist(getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, StringPool.EXTENSION_INI)))
+			if(m_Setting->getSetting("dockspace").getBool("build_layout") && !m_Setting->getSetting("dockspace").getBool("imgui_setting_exist"))
 			{
 				//split main dockspace in six
 				ImGuiID upperLeftDockspaceID	= ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Left,	0.20f, nullptr, &m_DockspaceID);

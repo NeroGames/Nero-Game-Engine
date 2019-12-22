@@ -107,7 +107,7 @@ namespace nero
 					levelSetting->setBool("pause_level", false);
 					levelSetting->setBool("single_step", false);
 					//
-					levelSetting->setBool("enable_lighting", false);
+					levelSetting->setBool("enable_lighting", true);
 				}
 
 				int							levelId			= -1;

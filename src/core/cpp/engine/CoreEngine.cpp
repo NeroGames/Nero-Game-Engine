@@ -42,38 +42,45 @@ namespace  nero
 			EASY_BLOCK("Game Loop");
 
 			//Accumulate the time elapsed at each loop
-            sf::Time elapsedTime = clock.restart();
+			sf::Time elapsedTime = clock.restart();
 			timeSinceLastUpdate += elapsedTime;
 
             //When the time comes over the value of "TIME_PER_FRAME" do --> 1 --> 2 then do --> 2 --> 3
 			//TIME_PER_FRAME is constant with a value of 1/60 second (the game is update 60 time per second)
-            while(timeSinceLastUpdate > EngineConstant.TIME_PER_FRAME)
-            {
-				EASY_BLOCK("Handle-Event | Update");
+			while(timeSinceLastUpdate > EngineConstant.TIME_PER_FRAME)
+			{
+				EASY_VALUE("time_since_last_update", timeSinceLastUpdate.asMilliseconds());
 
                 //retrieve 1/60 second in the accumulated time
                 timeSinceLastUpdate -= EngineConstant.TIME_PER_FRAME;
 
 				//1... handle user inputs
+				EASY_BLOCK("Handle Event");
 				handleEvent();
+				EASY_END_BLOCK
+
                 //2... update the game
-                update(EngineConstant.TIME_PER_FRAME);
-
+				EASY_BLOCK("Update Game");
+				update(EngineConstant.TIME_PER_FRAME);
 				EASY_END_BLOCK;
-            }
+			}
 
-            //4... render the game
-            render();
+			//3... render the game
+			EASY_BLOCK("Render Game");
+			render();
+			EASY_END_BLOCK; //render
 
-			//3... Compute Frame rate
+			//4... Compute Frame rate
 			computeFrameRate(elapsedTime);
 
-			EASY_END_BLOCK;
+			EASY_END_BLOCK; //game loop
         }
     }
 
     void CoreEngine::computeFrameRate(sf::Time timeStep)
     {
+		EASY_FUNCTION(profiler::colors::Mint);
+
         //Accumulate data for on 1 second
         m_ElapsedTime       += timeStep;
         m_FrameCount        += 1;

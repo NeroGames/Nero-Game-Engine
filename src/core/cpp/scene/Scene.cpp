@@ -34,7 +34,7 @@ namespace nero
 		,m_LevelSetting(nullptr)
 		,m_LightEngine(true)
 	{
-		//setupLightning();
+		setupLighting();
 	}
 
 	Scene::~Scene()
@@ -438,7 +438,7 @@ namespace nero
 			return m_SceneContext.renderTexture;
 	  }
 
-	  void Scene::setupLightning()
+	  void Scene::setupLighting()
 	  {
 
 		  //Create the LightSystem
@@ -473,14 +473,15 @@ namespace nero
 
 		  // Add a sun light
 		  ltbl::LightDirectionEmission* sun = m_LightEngine.createLightDirectionEmission();
-		  sun->setColor(sf::Color(255, 255, 255, 50));
+		  sun->setColor(sf::Color(255, 255, 255, 10));
 
 		  // Add a light point
 		  ltbl::LightPointEmission* mlight = m_LightEngine.createLightPointEmission();
 		  mlight->setOrigin(sf::Vector2f(m_TextureMap["point_light"].getSize().x * 0.5f, m_TextureMap["point_light"].getSize().y * 0.5f));
 		  mlight->setTexture(m_TextureMap["point_light"]);
-		  mlight->setScale(3.f, 3.f);
+		  mlight->setScale(10.f, 10.f);
 		  mlight->setColor(sf::Color::White);
+		  mlight->setPosition(0.f, 0.f);
 
 		  // Create a shape
 		  std::vector<sf::RectangleShape> shapes;
@@ -490,8 +491,17 @@ namespace nero
 		  blocker.setFillColor(sf::Color::Red);
 		  shapes.push_back(blocker);
 
+		  sf::ConvexShape polygon;
+		  polygon.setPointCount(3);
+		  polygon.setPoint(0, sf::Vector2f(0, 0));
+		  polygon.setPoint(1, sf::Vector2f(0, 10));
+		  polygon.setPoint(2, sf::Vector2f(25, 5));
+		  polygon.setOutlineColor(sf::Color::Red);
+		  polygon.setOutlineThickness(5);
+		  polygon.setPosition(10, 20);
+
 		  // Create a light shape with the same shape
-		  m_LightEngine.createLightShape(blocker);
+		  m_LightEngine.createLightShape(polygon);
 
 		  /*ltbl::Sprite background;
 		  background.setTexture(m_TextureMap["bacground"]);
@@ -503,10 +513,16 @@ namespace nero
 		  head.setNormalsTexture(m_TextureMap["head_normal"]);
 		  head.setPosition(300.f, 200.f);
 		  m_LightEngine.addSprite(head);*/
+
+		  nero_log("all ok");
 	  }
 
-	  void Scene::renderLightning()
+	  void Scene::renderLighting()
 	  {
+		  sf::Sprite boo;
+		  boo.setTexture(m_TextureMap["point_light"]);
+		  //m_SceneContext.renderTexture->draw(boo);
+
 		  m_LightEngine.render(*m_SceneContext.renderTexture);
 	  }
 }

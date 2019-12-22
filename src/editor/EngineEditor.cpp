@@ -6,6 +6,7 @@
 //Nero
 #include <Nero/editor/EngineEditor.h>
 #include <Nero/editor/EditorSetting.h>
+#include <Nero/editor/EditorConstant.h>
 #include <Nero/editor/EditorInterface.h>
 #include <Nero/core/cpp/utility/FileUtil.h>
 //STD
@@ -299,6 +300,7 @@ namespace  nero
 
 		//dockspace setting
 		m_Setting->loadSetting("dockspace");
+		m_Setting->getSetting("dockspace").setBool("imgui_setting_exist", fileExist(getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, StringPool.EXTENSION_INI)));
 	}
 
 	void EngineEditor::checkRecentProject()
