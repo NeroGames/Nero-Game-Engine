@@ -33,8 +33,12 @@ namespace nero
 		,m_HideWorld(false)
 		,m_LevelSetting(nullptr)
 		,m_LightEngine(true)
+		,m_InformationText()
 	{
-		setupLighting();
+		m_InformationText.setFont(context.resourceManager->getFontHolder()->getDefaultFont());
+		m_InformationText.setCharacterSize(15.f);
+		m_InformationText.setFillColor(sf::Color::White);
+		m_InformationText.setPosition(sf::Vector2f(50.f, 10.f));
 	}
 
 	Scene::~Scene()
@@ -161,7 +165,7 @@ namespace nero
 
 	void Scene::renderFrontScreen()
 	{
-
+		 m_SceneContext.renderTexture->draw(m_InformationText);
 	}
 
 	void Scene::init()
@@ -214,8 +218,6 @@ namespace nero
 
 	void Scene::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 	{
-		return;
-
 		const b2Manifold* manifold = contact->GetManifold();
 
 		if (manifold->pointCount == 0)
@@ -223,122 +225,116 @@ namespace nero
 		  return;
 		}
 
-		  b2Fixture* fixtureA = contact->GetFixtureA();
-		  b2Fixture* fixtureB = contact->GetFixtureB();
+		b2Fixture* fixtureA = contact->GetFixtureA();
+		b2Fixture* fixtureB = contact->GetFixtureB();
 
-		  b2PointState state1[b2_maxManifoldPoints], state2[b2_maxManifoldPoints];
-		  b2GetPointStates(state1, state2, oldManifold, manifold);
+		b2PointState state1[b2_maxManifoldPoints], state2[b2_maxManifoldPoints];
+		b2GetPointStates(state1, state2, oldManifold, manifold);
 
-		  b2WorldManifold worldManifold;
-		  contact->GetWorldManifold(&worldManifold);
+		b2WorldManifold worldManifold;
+		contact->GetWorldManifold(&worldManifold);
 
-		  for (int32 i = 0; i < manifold->pointCount && m_ContactPointCount < MAX_CONTACT_POINT; ++i)
-		  {
-			  ContactPoint* cp = m_ContactPointTable + m_ContactPointCount;
-			  cp->fixtureA = fixtureA;
-			  cp->fixtureB = fixtureB;
-			  cp->position = worldManifold.points[i];
-			  cp->normal = worldManifold.normal;
-			  cp->state = state2[i];
-			  cp->normalImpulse = manifold->points[i].normalImpulse;
-			  cp->tangentImpulse = manifold->points[i].tangentImpulse;
-			  cp->separation = worldManifold.separations[i];
-			  ++m_ContactPointCount;
-		  }
+		for (int32 i = 0; i < manifold->pointCount && m_ContactPointCount < MAX_CONTACT_POINT; ++i)
+		{
+			ContactPoint* cp = m_ContactPointTable + m_ContactPointCount;
+			cp->fixtureA = fixtureA;
+			cp->fixtureB = fixtureB;
+			cp->position = worldManifold.points[i];
+			cp->normal = worldManifold.normal;
+			cp->state = state2[i];
+			cp->normalImpulse = manifold->points[i].normalImpulse;
+			cp->tangentImpulse = manifold->points[i].tangentImpulse;
+			cp->separation = worldManifold.separations[i];
+			++m_ContactPointCount;
+		}
 
-		  Collision collision(contact, oldManifold, nullptr);
+		/*Collision collision(contact, oldManifold, nullptr);
 
-		  int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
-		  int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
+		int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
+		int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-		  auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
-		  auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+		auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
+		auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
 
-		  if(!objectA || !objectB)
-			  return;
+		if(!objectA || !objectB)
+		  return;
 
-		  if(objectA->isDead() || objectB->isDead())
-			  return;
+		if(objectA->isDead() || objectB->isDead())
+		  return;
 
-		  collision.setObjectA(objectA);
-		  collision.setObjectB(objectB);
+		collision.setObjectA(objectA);
+		collision.setObjectB(objectB);
 
-		  handleCollisionPreSolveContact(collision);
+		handleCollisionPreSolveContact(collision);*/
 	}
 
 
-	  void Scene::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
-	  {
+	void Scene::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
+	{
+		/*Collision collision(contact, nullptr, impulse);
+
+		int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
+		int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
+
+		auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
+		auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+
+		if(!objectA || !objectB)
 		  return;
 
-		  Collision collision(contact, nullptr, impulse);
-
-		  int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
-		  int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
-
-		  auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
-		  auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
-
-		  if(!objectA || !objectB)
-			  return;
-
-		  if(objectA->isDead() || objectB->isDead())
-			  return;
-
-		  collision.setObjectA(objectA);
-		  collision.setObjectB(objectB);
-
-		  handleCollisionPostSolveContact(collision);
-	  }
-
-
-	  void Scene::BeginContact(b2Contact* contact)
-	  {
+		if(objectA->isDead() || objectB->isDead())
 		  return;
 
-		  Collision collision(contact, nullptr, nullptr);
+		collision.setObjectA(objectA);
+		collision.setObjectB(objectB);
 
-		  int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
-		  int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
+		handleCollisionPostSolveContact(collision);*/
+	}
 
-		  auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
-		  auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
 
-		  if(!objectA || !objectB)
-			  return;
+	void Scene::BeginContact(b2Contact* contact)
+	{
+		/*Collision collision(contact, nullptr, nullptr);
 
-		  if(objectA->isDead() || objectB->isDead())
-			  return;
+		int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
+		int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-		  collision.setObjectA(objectA);
-		  collision.setObjectB(objectB);
+		auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
+		auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
 
-		  handleCollisionContactBegin(collision);
-	  }
-
-	  void Scene::EndContact(b2Contact* contact)
-	  {
+		if(!objectA || !objectB)
 		  return;
 
-		  Collision collision(contact, nullptr, nullptr);
+		if(objectA->isDead() || objectB->isDead())
+		  return;
 
-		  int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
-		  int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
+		collision.setObjectA(objectA);
+		collision.setObjectB(objectB);
 
-		  auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
-		  auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+		handleCollisionContactBegin(collision);*/
+	}
 
-		  if(!objectA || !objectB)
-			  return;
+	void Scene::EndContact(b2Contact* contact)
+	{
+		/*Collision collision(contact, nullptr, nullptr);
 
-		  if(objectA->isDead() || objectB->isDead())
-			  return;
+		int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
+		int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-		  collision.setObjectA(objectA);
-		  collision.setObjectB(objectB);
+		auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
+		auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
 
-		  handleCollisionContactEnd(collision);
-	  }
+		if(!objectA || !objectB)
+		  return;
+
+		if(objectA->isDead() || objectB->isDead())
+		  return;
+
+		collision.setObjectA(objectA);
+		collision.setObjectB(objectB);
+
+		handleCollisionContactEnd(collision);*/
+	}
 
 	  void Scene::pauseScene()
 	  {
@@ -442,7 +438,7 @@ namespace nero
 	  {
 
 		  //Create the LightSystem
-		  m_LightEngine.create({ -1000.f, -1000.f, 2000.f, 2000.f }, m_SceneContext.renderTexture->getSize());
+		  m_LightEngine.create({ -1000.f, -1000.f, (float)m_SceneContext.renderTexture->getSize().x, (float)m_SceneContext.renderTexture->getSize().y }, m_SceneContext.renderTexture->getSize());
 
 		  // Load light texture
 		  sf::Texture pointLightTexture;
@@ -494,8 +490,8 @@ namespace nero
 		  sf::ConvexShape polygon;
 		  polygon.setPointCount(3);
 		  polygon.setPoint(0, sf::Vector2f(0, 0));
-		  polygon.setPoint(1, sf::Vector2f(0, 10));
-		  polygon.setPoint(2, sf::Vector2f(25, 5));
+		  polygon.setPoint(1, sf::Vector2f(0, 200));
+		  polygon.setPoint(2, sf::Vector2f(250, 50));
 		  polygon.setOutlineColor(sf::Color::Red);
 		  polygon.setOutlineThickness(5);
 		  polygon.setPosition(10, 20);
@@ -519,10 +515,6 @@ namespace nero
 
 	  void Scene::renderLighting()
 	  {
-		  sf::Sprite boo;
-		  boo.setTexture(m_TextureMap["point_light"]);
-		  //m_SceneContext.renderTexture->draw(boo);
-
 		  m_LightEngine.render(*m_SceneContext.renderTexture);
 	  }
 }

@@ -269,6 +269,10 @@ namespace  nero
 
 			//Render on Front Screen
 			m_RenderTexture->setView(m_RenderTexture->getDefaultView());
+				if(m_AdvancedScene)
+				{
+					m_AdvancedScene->renderFrontScreen(m_EditorMode, m_BuilderMode);
+				}
 				renderCamera();
 				renderGameModeInfo();
 			m_RenderTexture->setView(m_EditorCamera->getView());
@@ -2851,6 +2855,13 @@ namespace  nero
 				ImGui::BeginChild("game_level", ImVec2(0.f, window_height), true);
 
 					auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
+
+					ImGui::Text("Lighting");
+					ImGui::Separator();
+					ImGui::Dummy(ImVec2(0.f, 5.f));
+					static bool enable_lighting = gameLevel->levelSetting->getBool("enable_lighting");
+					ImGui::Checkbox("Enable Lighting##enable_lighting", &enable_lighting);
+					gameLevel->levelSetting->setBool("enable_lighting", enable_lighting);
 
 					ImGui::Text("Draw");
 					ImGui::Separator();

@@ -37,8 +37,17 @@ namespace nero
 		,m_ShitftOriginSpeed(0.5f)
 		,m_ViewCenter(0.0f, 20.0f)
 		,m_MouseJoint(nullptr)
+		,m_GroundBody(nullptr)
+		,m_BombSpawning(false)
+		,m_Bomb(nullptr)
+		,m_BombSpawnPoint(0.f, 0.f)
+		,m_WorldAABB()
+		,m_MouseWorld(0.f, 0.f)
     {
 		m_DestructionListener.scene = AdvancedScene::Ptr(this);
+
+		memset(&m_MaxProfile, 0, sizeof(b2Profile));
+		memset(&m_TotalProfile, 0, sizeof(b2Profile));
     }
 
 	void AdvancedScene::addGameLevel(const std::string& name)
@@ -175,6 +184,9 @@ namespace nero
 		else if(editorMode == EditorMode::PLAY_GAME && m_Scene)
 		{
 			m_Scene->update(timeStep);
+
+			m_Message = m_StatMessage + m_ProfileMessage + m_Scene->m_InformationContent;
+			m_Scene->m_InformationText.setString(m_Message);
 		}
 
 	}
@@ -200,12 +212,25 @@ namespace nero
 		{
 			m_Scene->render();
 			m_Scene->renderShape();
-			m_Scene->renderLighting();
+
+			if(m_Scene->m_LevelSetting->getBool("enable_lighting"))
+			{
+				m_Scene->renderLighting();
+			}
 
 			renderDebug();
 		}
 
 	}
+
+	void AdvancedScene::renderFrontScreen(const EditorMode& editorMode, const BuilderMode& builderMode)
+	{
+		if(editorMode == EditorMode::PLAY_GAME && m_Scene)
+		{
+			m_Scene->renderFrontScreen();
+		}
+	}
+
 
 	void AdvancedScene::setScene(Scene::Ptr scene)
 	{
@@ -322,6 +347,11 @@ namespace nero
 
 		m_Scene->m_GameWorld->addChild(gameLevel);
 		m_Scene->m_LevelSetting = m_SelectedGameLevel->levelSetting;
+
+		if(m_Scene->m_LevelSetting->getBool("enable_lighting"))
+		{
+			m_Scene->setupLighting();
+		}
 	}
 
 	void AdvancedScene::shiftMouseDown(const b2Vec2& p)
@@ -494,8 +524,7 @@ namespace nero
 
 	void AdvancedScene::renderDebug()
 	{
-		//if (m_SceneSetting.drawStats)
-		if(true)
+		if(m_Scene->m_LevelSetting->getBool("draw_statistic"))
 		{
 			//bodies/contacts/joints
 			int32 bodyCount     = m_Scene->m_PhysicWorld->GetBodyCount();
@@ -513,7 +542,7 @@ namespace nero
 		}
 		else
 		{
-			m_StatMessage = "";
+			m_StatMessage = StringPool.BLANK;
 		}
 
 		// Track maximum profile times
@@ -539,8 +568,7 @@ namespace nero
 			m_TotalProfile.broadphase       += p.broadphase;
 		}
 
-		//if (m_SceneSetting.drawProfile)
-		if(true)
+		if(m_Scene->m_LevelSetting->getBool("draw_profile"))
 		{
 			const b2Profile& p = m_Scene->m_PhysicWorld->GetProfile();
 
@@ -572,7 +600,7 @@ namespace nero
 		}
 		else
 		{
-			m_ProfileMessage = "";
+			m_ProfileMessage = StringPool.BLANK;
 		}
 
 
@@ -600,8 +628,7 @@ namespace nero
 			m_Scene->m_ShapeRenderer.DrawSegment(m_MouseWorld, m_BombSpawnPoint, c);
 		}
 
-		//if (m_SceneSetting.drawContactPoints)
-		if(true)
+		if(m_Scene->m_LevelSetting->getBool("draw_contact_point"))
 		{
 			const float32 k_impulseScale = 0.1f;
 			const float32 k_axisScale = 0.3f;
@@ -621,23 +648,21 @@ namespace nero
 					m_Scene->m_ShapeRenderer.DrawPoint(point->position, 5.0f, b2Color(0.3f, 0.3f, 0.95f));
 				}
 
-				//if (m_SceneSetting.drawContactNormals == 1)
-				if(true)
+				if(m_Scene->m_LevelSetting->getBool("draw_contact_normal"))
 				{
 					b2Vec2 p1 = point->position;
 					b2Vec2 p2 = p1 + k_axisScale * point->normal;
 					m_Scene->m_ShapeRenderer.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.9f));
 				}
-				//else if (m_SceneSetting.drawContactImpulse == 1)
-				if(true)
+
+				if(m_Scene->m_LevelSetting->getBool("draw_contact_impulse"))
 				{
 					b2Vec2 p1 = point->position;
 					b2Vec2 p2 = p1 + k_impulseScale * point->normalImpulse * point->normal;
 					m_Scene->m_ShapeRenderer.DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
 				}
 
-				//if (m_SceneSetting.drawFrictionImpulse == 1)
-				if(true)
+				if(m_Scene->m_LevelSetting->getBool("draw_friction_impulse"))
 				{
 					b2Vec2 tangent = b2Cross(point->normal, 1.0f);
 					b2Vec2 p1 = point->position;

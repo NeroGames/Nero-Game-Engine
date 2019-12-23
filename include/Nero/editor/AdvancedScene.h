@@ -138,6 +138,7 @@ namespace nero
 			void								handleEvent(const sf::Event& event, const EditorMode& editorMode, const BuilderMode& builderMode);
 			void								update(const sf::Time& timeStep, const EditorMode& editorMode, const BuilderMode& builderMode);
 			void								render(const EditorMode& editorMode, const BuilderMode& builderMode);
+			void								renderFrontScreen(const EditorMode& editorMode, const BuilderMode& builderMode);
 
 			void								initialize();
 			void								setScene(Scene::Ptr scene);
