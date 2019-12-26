@@ -48,6 +48,7 @@ namespace nero
 			ScriptHolder::Ptr			getLuaScriptHolder();
 			TextureHolder::Ptr			getTextureHolder();
 			AnimationHolder::Ptr		getAnimationHolder();
+			TextureHolder::Ptr			getLightmapHolder();
 
 		private:
 			FontHolder::Ptr				m_FontHolder;
@@ -57,6 +58,7 @@ namespace nero
 			ScriptHolder::Ptr			m_LuaScriptHolder;
 			TextureHolder::Ptr			m_TextureHolder;
 			AnimationHolder::Ptr		m_AnimationHolder;
+			TextureHolder::Ptr			m_LightmapHolder;
 
 			Setting						m_Setting;
     };

@@ -213,7 +213,7 @@ namespace nero
 			m_Scene->render();
 			m_Scene->renderShape();
 
-			if(m_Scene->m_LevelSetting->getBool("enable_lighting"))
+			if(sf::Shader::isAvailable() && m_Scene->m_LevelSetting->getBool("enable_lighting") && m_Scene->m_LevelSetting->getBool("lighting_on"))
 			{
 				m_Scene->renderLighting();
 			}
@@ -308,16 +308,20 @@ namespace nero
 
 
 		m_Scene = createCppScene();
-		//m_Scene->m_ShapeRenderer.setRenderTexture(m_RenderTexture);
 
-				//load the current level
-		//m_Scene->loadGameLevel(m_SelectedGameLevel->name);
+		//set level setting
+		m_Scene->m_LevelSetting = m_SelectedGameLevel->levelSetting;
 
-		//ceate level
+		//enable lighting
+		if(sf::Shader::isAvailable() && m_Scene->m_LevelSetting->getBool("enable_lighting"))
+		{
+			m_Scene->setupLighting();
+		}
+
+		//ceate level ojbect
 		auto gameLevel = std::make_shared<GameLevelObject>();
 		Setting parameter;
 		gameLevel->initialize(parameter);
-
 
 		//set up physic world
 		m_Scene->m_PhysicWorld = gameLevel->getPhysicWorld();
@@ -327,6 +331,11 @@ namespace nero
 		for(auto worldChunk : m_SelectedGameLevel->chunkTable)
 		{
 			auto chunkObject = std::make_shared<Object>();
+
+			if(m_Scene->m_LightManager)
+			{
+				worldChunk->sceneBuilder->setLightManager(m_Scene->m_LightManager);
+			}
 
 			worldChunk->sceneBuilder->setPhysicWorld(m_Scene->m_PhysicWorld);
 			worldChunk->sceneBuilder->buildScene(chunkObject);
@@ -346,12 +355,7 @@ namespace nero
 		}*/
 
 		m_Scene->m_GameWorld->addChild(gameLevel);
-		m_Scene->m_LevelSetting = m_SelectedGameLevel->levelSetting;
 
-		if(m_Scene->m_LevelSetting->getBool("enable_lighting"))
-		{
-			m_Scene->setupLighting();
-		}
 	}
 
 	void AdvancedScene::shiftMouseDown(const b2Vec2& p)

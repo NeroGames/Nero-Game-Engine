@@ -27,6 +27,7 @@ namespace nero
         ,m_LayerCount(0)
         ,m_ObjectCount(0)
 		,m_RenderContext(nullptr)
+		,m_LightManager(nullptr)
     {
 		m_MeshEditor = MeshEditor::Ptr(new MeshEditor());
 
@@ -1102,6 +1103,26 @@ namespace nero
                 object = sprite_object;
 
             }break;
+
+			case Object::Light_Object:
+			{
+				LightObject::Ptr light_object = LightObject::Ptr(new LightObject());
+				light_object->setLightmap(label);
+				light_object->setColor(sf::Color::White);
+				light_object->setScale(3.f, 3.f);
+				light_object->setPosition(position);
+
+				sf::Sprite sprite;
+				sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound("point_light_64");
+				sprite.setTextureRect(rect);
+				sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture("point_light_64"));
+				sprite.setOrigin(rect.width/2.f, rect.height/2.f);
+				light_object->setSprite(sprite);
+
+				object = light_object;
+
+			}break;
+
         }
 
         if(m_SelectedLayer->getSecondType() == type)
@@ -1489,6 +1510,48 @@ namespace nero
                     rootObject->addChild(layer_object);
 
                 }break;
+
+				case Object::Light_Object:
+				{
+					if(m_LightManager)
+					{
+						Object::Ptr layer_object = (*layer)->clone();
+
+						auto children = (*layer)->getAllChild();
+
+						for(auto it = children->begin(); it != children->end(); it++)
+						{
+							Object::Ptr object = (*it)->clone();
+
+							LightObject::Ptr light_object = LightObject::Cast(object);
+							//create the light object
+							ltbl::LightPointEmission* point_light = m_LightManager->createLightPointEmission();
+							sf::Texture& light_map = m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
+							point_light->setOrigin(sf::Vector2f(light_map.getSize().x * 0.5f, light_map.getSize().y * 0.5f));
+							point_light->setTexture(light_map);
+							point_light->setScale(light_object->getScale());
+							point_light->setColor(light_object->getColor());
+							point_light->setPosition(light_object->getPosition());
+
+							light_object->setLight(point_light);
+
+							light_object->setCloneCallback([=]() -> ltbl::LightPointEmission*
+							{
+								ltbl::LightPointEmission* point_light = m_LightManager->createLightPointEmission();
+								sf::Texture& light_map = m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
+								point_light->setOrigin(sf::Vector2f(light_map.getSize().x * 0.5f, light_map.getSize().y * 0.5f));
+								point_light->setTexture(light_map);
+
+								return point_light;
+							});
+
+							layer_object->addChild(light_object);
+						}
+
+						rootObject->addChild(layer_object);
+					}
+
+				}break;
             }
         }
     }
@@ -2152,6 +2215,11 @@ namespace nero
 	LayerObject::Ptr SceneBuilder::getSelectedLayer()
 	{
 		return m_SelectedLayer;
+	}
+
+	void SceneBuilder::setLightManager(const LightManagerPtr& lightManager)
+	{
+		m_LightManager = lightManager;
 	}
 
 }

@@ -19,6 +19,8 @@ namespace nero
 		m_FontHolder		= std::make_shared<FontHolder>();
 		m_SoundHolder		= std::make_shared<SoundHolder>();
 		m_MusicHolder		= std::make_shared<MusicHolder>();
+		m_LightmapHolder	= std::make_shared<TextureHolder>();
+
 		//m_LuaScriptHolder	= std::make_shared<ScriptHolder>();
 		//m_ShaderHolder		= std::make_shared<ShaderHolder>();
 	}
@@ -31,6 +33,8 @@ namespace nero
 		m_FontHolder		= std::make_shared<FontHolder>(setting.getSetting("font"));
 		m_SoundHolder		= std::make_shared<SoundHolder>(setting.getSetting("sound"));
 		m_MusicHolder		= std::make_shared<MusicHolder>(setting.getSetting("music"));
+		m_LightmapHolder	= std::make_shared<TextureHolder>(setting.getSetting("texture"));
+
 		//m_LuaScriptHolder	= std::make_shared<ScriptHolder>(setting.getSetting("script"));
 		//m_ShaderHolder		= std::make_shared<ShaderHolder>(setting.getSetting("shader"));
 	}
@@ -54,6 +58,8 @@ namespace nero
 		m_FontHolder->setSetting(setting.getSetting("font"));
 		m_SoundHolder->setSetting(setting.getSetting("sound"));
 		m_MusicHolder->setSetting(setting.getSetting("music"));
+		m_LightmapHolder->setSetting(setting.getSetting("texture"));
+
 		//m_LuaScriptHolder->setSetting(setting.getSetting("script"));
 		//m_ShaderHolder->setSetting(setting.getSetting("shader"));
 	}
@@ -66,6 +72,7 @@ namespace nero
 		m_FontHolder->loadDirectory(getPath({directory, "font"}));
 		m_SoundHolder->loadDirectory(getPath({directory, "sound"}));
 		m_MusicHolder->loadDirectory(getPath({directory, "music"}));
+		m_LightmapHolder->loadDirectory(getPath({directory, "lightmap"}));
 		//m_LuaScriptHolder->loadDirectory(getPath({directory, "luascript"}));
 		//m_ShaderHolder->loadDirectory(getPath({directory, "shader"}));
 	}
@@ -97,6 +104,12 @@ namespace nero
 			case ResourceType::Music:
 			{
 				m_MusicHolder->loadFile(file);
+			}break;
+
+			case ResourceType::Lightmap:
+			{
+				m_LightmapHolder->loadFile(file);
+				m_LightmapHolder->smoothAllTexture();
 			}break;
 		}
 	}
@@ -168,4 +181,8 @@ namespace nero
 		return m_AnimationHolder;
 	}
 
+	TextureHolder::Ptr ResourceManager::getLightmapHolder()
+	{
+		return m_LightmapHolder;
+	}
 }

@@ -30,6 +30,7 @@ namespace nero
 		const std::string EXTENSION_CPP_SOURCE		= ".cpp";
 		const std::string EXTENSION_NERO			= ".nero";
 		const std::string EXTENSION_INI				= ".ini";
+		const std::string EXTENSION_PNG				= ".png";
 
         //
 		const std::string UNDERSCORE				= "_";

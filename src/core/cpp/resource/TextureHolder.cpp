@@ -223,4 +223,13 @@ namespace nero
         for(std::string sprite : m_SpriteTable)
             nero_log(sprite);
     }
+
+	void TextureHolder::smoothAllTexture()
+	{
+		for (auto it = m_TextureMap.begin(); it != m_TextureMap.end(); it++)
+		{
+			it->second->setSmooth(true);
+		}
+	}
+
 }

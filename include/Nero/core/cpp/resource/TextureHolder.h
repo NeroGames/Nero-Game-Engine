@@ -43,6 +43,7 @@ namespace nero
             void                                printSpriteTable()                          const;
 
 			void								setResourceDirectory(const std::string& resourceDictory);
+			void								smoothAllTexture();
 
         private:
             void                                addTexture(std::string textureId, std::unique_ptr<sf::Texture> texture);

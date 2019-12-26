@@ -32,8 +32,8 @@ namespace nero
 		,m_ShapeRenderer(context.renderTexture)
 		,m_HideWorld(false)
 		,m_LevelSetting(nullptr)
-		,m_LightEngine(true)
 		,m_InformationText()
+		,m_LightManager(nullptr)
 	{
 		m_InformationText.setFont(context.resourceManager->getFontHolder()->getDefaultFont());
 		m_InformationText.setCharacterSize(15.f);
@@ -437,10 +437,14 @@ namespace nero
 	  void Scene::setupLighting()
 	  {
 
-		  //Create the LightSystem
-		  m_LightEngine.create({ -1000.f, -1000.f, (float)m_SceneContext.renderTexture->getSize().x, (float)m_SceneContext.renderTexture->getSize().y }, m_SceneContext.renderTexture->getSize());
+		  //create light manager
+		  m_LightManager = std::make_shared<ltbl::LightSystem>(true);
+		  m_LightManager->create({ -1000.f, -1000.f, (float)m_SceneContext.renderTexture->getSize().x, (float)m_SceneContext.renderTexture->getSize().y }, m_SceneContext.renderTexture->getSize());
 
-		  // Load light texture
+		  ltbl::LightDirectionEmission* sun = m_LightManager->createLightDirectionEmission();
+		  sun->setColor(sf::Color(255, 255, 255, 0));
+
+		  /*// Load light texture
 		  sf::Texture pointLightTexture;
 		  pointLightTexture.loadFromFile("resource/starterpack/lightmap/pointLightTexture.png");
 		  pointLightTexture.setSmooth(true);
@@ -469,7 +473,7 @@ namespace nero
 
 		  // Add a sun light
 		  ltbl::LightDirectionEmission* sun = m_LightEngine.createLightDirectionEmission();
-		  sun->setColor(sf::Color(255, 255, 255, 10));
+		  sun->setColor(sf::Color(255, 255, 255, 0));
 
 		  // Add a light point
 		  ltbl::LightPointEmission* mlight = m_LightEngine.createLightPointEmission();
@@ -508,13 +512,13 @@ namespace nero
 		  head.setTexture(m_TextureMap["head"]);
 		  head.setNormalsTexture(m_TextureMap["head_normal"]);
 		  head.setPosition(300.f, 200.f);
-		  m_LightEngine.addSprite(head);*/
+		  m_LightEngine.addSprite(head);//
 
-		  nero_log("all ok");
+		  nero_log("all ok");*/
 	  }
 
 	  void Scene::renderLighting()
 	  {
-		  m_LightEngine.render(*m_SceneContext.renderTexture);
+		  m_LightManager->render(*m_SceneContext.renderTexture);
 	  }
 }

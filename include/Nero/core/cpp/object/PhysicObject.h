@@ -27,6 +27,7 @@ namespace nero
 
         public:
                                 PhysicObject(b2Body* body);
+			virtual            ~PhysicObject();
 
             b2Body*             getBody();
             void                setUserData(void* userData);

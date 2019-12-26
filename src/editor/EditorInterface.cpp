@@ -1784,7 +1784,7 @@ namespace  nero
 		ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::Begin("Resource", nullptr, flags);
 
-		int resource_count		= 13;
+		int resource_count		= 9;
 		int count				= 0;
 		ImGuiStyle& style		= ImGui::GetStyle();
 		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
@@ -1820,7 +1820,7 @@ namespace  nero
 
 		printSameLine();
 
-		if(ImGui::Button("Shape##open_shape_resource", ImVec2(100.f, 100.f)))
+		/*if(ImGui::Button("Shape##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Shape;
 		}
@@ -1832,15 +1832,7 @@ namespace  nero
 			m_ResourceBrowserType = ResourceType::Particle;
 		}
 
-		printSameLine();
-
-		if(ImGui::Button("Light##open_shape_resource", ImVec2(100.f, 100.f)))
-		{
-			m_ResourceBrowserType = ResourceType::Light;
-		}
-
-
-		printSameLine();
+		printSameLine();*/
 
 		if(ImGui::Button("Font##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
@@ -1849,12 +1841,12 @@ namespace  nero
 
 		printSameLine();
 
-		if(ImGui::Button("Composite##open_shape_resource", ImVec2(100.f, 100.f)))
+		/*if(ImGui::Button("Composite##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Composite;
 		}
 
-		printSameLine();
+		printSameLine();*/
 
 		if(ImGui::Button("Sound##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
@@ -1870,21 +1862,28 @@ namespace  nero
 
 		printSameLine();
 
-		if(ImGui::Button("Factory##open_factory_resource", ImVec2(100.f, 100.f)))
+		/*if(ImGui::Button("Script##open_script_object_resource", ImVec2(100.f, 100.f)))
 		{
 
 		}
 
-		printSameLine();
+		printSameLine();*/
 
-		if(ImGui::Button("Script##open_script_object_resource", ImVec2(100.f, 100.f)))
+		if(ImGui::Button("Light##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
-
+			m_ResourceBrowserType = ResourceType::Lightmap;
 		}
 
 		printSameLine();
 
 		if(ImGui::Button("Spawer##spawn_object", ImVec2(100.f, 100.f)))
+		{
+
+		}
+
+		printSameLine();
+
+		if(ImGui::Button("Factory##open_factory_resource", ImVec2(100.f, 100.f)))
 		{
 
 		}
@@ -1903,7 +1902,7 @@ namespace  nero
 				   (m_ResourceBrowserType == ResourceType::Texture	|| m_ResourceBrowserType == ResourceType::Animation ||
 				   m_ResourceBrowserType == ResourceType::Sound		|| m_ResourceBrowserType == ResourceType::Music		||
 				   m_ResourceBrowserType == ResourceType::Font		|| m_ResourceBrowserType == ResourceType::Particle	||
-				   m_ResourceBrowserType == ResourceType::Light))
+				   m_ResourceBrowserType == ResourceType::Lightmap))
 				{
 
 
@@ -1968,6 +1967,16 @@ namespace  nero
 							showMeshResource();
 						}break;
 
+						case ResourceType::Font:
+						{
+							showFontResource();
+						}break;
+
+						case ResourceType::Lightmap:
+						{
+							showLightmapResource();
+						}break;
+
 					}
 
 				ImGui::EndChild();
@@ -2018,17 +2027,34 @@ namespace  nero
 
 	void EditorInterface::showMeshResource()
 	{
+		int resource_count		= 3;
+		int count				= 0;
+		ImGuiStyle& style		= ImGui::GetStyle();
+		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+		auto printSameLine = [&count, &resource_count, &style, &window_visible_x2]()
+		{
+			float last_button_x2 = ImGui::GetItemRectMax().x;
+			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + 100.f;
+			if (count++ + 1 < resource_count && next_button_x2 < window_visible_x2)
+				ImGui::SameLine();
+		};
+
 		if(ImGui::Button("Polygon", ImVec2(100.f, 100.f)))
 		{
 			if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
 				m_AdvancedScene->addObject(Object::Mesh_Object, "Polygon", getAddObjectPosition(), m_EditorMode);
 		}
 
+		printSameLine();
+
 		if(ImGui::Button("Circle", ImVec2(100.f, 100.f)))
 		{
 			if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
 				m_AdvancedScene->addObject(Object::Mesh_Object, "Circle", getAddObjectPosition(), m_EditorMode);
 		}
+
+		printSameLine();
 
 		if(ImGui::Button("Line", ImVec2(100.f, 100.f)))
 		{
@@ -2080,6 +2106,66 @@ namespace  nero
 			{
 				if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
 					m_AdvancedScene->addObject(Object::Sprite_Object, spriteTable[n], getAddObjectPosition(), m_EditorMode);
+			}
+
+			if (ImGui::BeginPopupContextItem())
+			{
+				if (ImGui::Button("Delete"))
+				{
+					ImGui::CloseCurrentPopup();
+				}
+
+				/*if (ImGui::Button("Close"))
+					ImGui::CloseCurrentPopup();*/
+				ImGui::EndPopup();
+			}
+
+			if(ImGui::IsItemHovered())
+			{
+				//nero_log("hover animation button");
+			}
+
+			float last_button_x2 = ImGui::GetItemRectMax().x;
+			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + next_sprite_size.x;
+			if (n + 1 < sprite_count && next_button_x2 < window_visible_x2)
+				ImGui::SameLine();
+		}
+	}
+
+	void EditorInterface::showLightmapResource()
+	{
+		auto& spriteTable = m_ResourceManager->getLightmapHolder()->getSpriteTable();
+		int sprite_count = spriteTable.size();
+		ImGuiStyle& style = ImGui::GetStyle();
+		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+		for (int n = 0; n < sprite_count; n++)
+		{
+			sf::Vector2u boo = m_ResourceManager->getLightmapHolder()->getSpriteTexture(spriteTable[n]).getSize();
+			sf::Vector2u zoo = boo;
+			if(n < sprite_count-1)
+			{
+				zoo = m_ResourceManager->getLightmapHolder()->getSpriteTexture(spriteTable[n+1]).getSize();
+			}
+
+
+
+			sf::Vector2f sprite_size(boo.x, boo.y);
+			sprite_size = formatSize(sprite_size, 250);
+
+			sf::Vector2f next_sprite_size(zoo.x, zoo.y);
+			next_sprite_size = formatSize(next_sprite_size, 250);
+
+
+			ImVec2 button_size(sprite_size.x, sprite_size.y);
+
+
+			if(ImGui::ImageButton(m_ResourceManager->getLightmapHolder()->getSpriteTexture(spriteTable[n]), button_size))
+			{
+				if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
+				{
+					m_AdvancedScene->addObject(Object::Light_Object, spriteTable[n], getAddObjectPosition(), m_EditorMode);
+				}
 			}
 
 			if (ImGui::BeginPopupContextItem())
@@ -2159,7 +2245,49 @@ namespace  nero
 		}
 	}
 
+	void EditorInterface::showFontResource()
+	{
+		auto& fontTable = m_ResourceManager->getFontHolder()->getFontTable();
+		int count = fontTable.size();
 
+		for (int i = 0; i < count; i++)
+		{
+			if(ImGui::ImageButton(getFontTexture(fontTable.at(i))))
+			{
+				if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
+				{
+					//m_AdvancedScene->addObject(Object::Animation_Object, animationTable[n], getAddObjectPosition(), m_EditorMode);
+				}
+			}
+		}
+
+	}
+
+	sf::Texture& EditorInterface::getFontTexture(const std::string& fontName)
+	{
+		std::string file_name = getPath({"resource/editor/texture", fontName}, StringPool.EXTENSION_PNG);
+
+		if(!fileExist(file_name))
+		{
+			sf::RenderTexture renderTexture;
+			renderTexture.create(300.f, 100.f);
+			renderTexture.clear(sf::Color::White);
+			sf::Text text;
+			text.setFont(m_ResourceManager->getFontHolder()->getFont(fontName));
+			text.setString(fontName);
+			text.setOrigin(text.getGlobalBounds().width/2.f, text.getGlobalBounds().height/2.f);
+			text.setFillColor(sf::Color::Black);
+			text.setPosition(150.f, 50.f);
+			text.setScale(1.f, -1.f);
+			renderTexture.draw(text);
+
+			renderTexture.getTexture().copyToImage().saveToFile(file_name);
+
+			m_EditorTextureHolder->loadFile(file_name);
+		}
+
+		return m_EditorTextureHolder->getTexture(fontName);
+	}
 
     void EditorInterface::showUtilityWindow()
     {

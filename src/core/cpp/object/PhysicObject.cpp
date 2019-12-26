@@ -20,6 +20,11 @@ namespace nero
         setSecondType(Object::Physic_Object);
     }
 
+	PhysicObject::~PhysicObject()
+	{
+		m_Body = nullptr;
+	}
+
     b2Body* PhysicObject::getBody()
     {
         return m_Body;

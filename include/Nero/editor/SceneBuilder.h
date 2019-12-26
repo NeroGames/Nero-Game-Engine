@@ -17,6 +17,7 @@
 #include <Nero/editor/MeshEditor.h>
 #include <Nero/core/cpp/scene/PhysicObjectManager.h>
 #include <Nero/core/cpp/scene/SceneUtility.h>
+#include <Nero/core/cpp/object/LightObject.h>
 //SFML
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -26,6 +27,7 @@
 #include <unordered_map>
 #include <memory>
 #include <Nero/editor/UndoManager.h>
+#include <ltbl/LightSystem.hpp>
 
 ////////////////////////////////////////////////////////////
 namespace nero
@@ -35,6 +37,7 @@ namespace nero
         public:
             typedef std::shared_ptr<SceneBuilder> Ptr;
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
+			typedef std::shared_ptr<ltbl::LightSystem>	LightManagerPtr;
 
         public:
 											SceneBuilder();
@@ -124,6 +127,7 @@ namespace nero
 			void							setRenderContext(const RenderContextPtr& renderContext);
 			void							setRenderTexture(const RenderTexturePtr& renderTexture);
 			void							setResourceManager(const ResourceManager::Ptr& resourceManager);
+			void							setLightManager(const LightManagerPtr& lightManager);
 
         private:
             Object::Ptr                     findObject(Object::Ptr object, sf::Vector2f pos);
@@ -167,8 +171,11 @@ namespace nero
 			SceneSetting                    m_SceneSetting;
             sf::Color                       m_CanvasColor;
 
-			RenderTexturePtr                                    m_RenderTexture;
-			RenderContextPtr									m_RenderContext;
+			RenderTexturePtr				m_RenderTexture;
+			RenderContextPtr				m_RenderContext;
+			LightManagerPtr					m_LightManager;
+
+
 
             std::function<void()>                               m_UpdateUI;
             std::function<void()>                               m_UpdateUndo;

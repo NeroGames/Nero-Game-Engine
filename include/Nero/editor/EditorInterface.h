@@ -28,6 +28,7 @@
 #include <nativefiledialog/include/nfd.h>
 
 #include <future>
+#include <map>
 # include <nodeeditor/imgui_node_editor.h>
 
 ////////////////////////////////////////////////////////////
@@ -219,6 +220,12 @@ namespace nero
 
 			void		showSpriteResource();
 			void		showAnimationResource();
+			void		showFontResource();
+			void		showLightmapResource();
+
+			sf::Texture& getFontTexture(const std::string& fontName);
+			std::map<std::string, sf::Texture> m_FontTextureMap;
+
 
 			RenderTexturePtr			m_RenderTexture;
 			EditorMode					m_EditorMode;

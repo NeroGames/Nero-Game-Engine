@@ -33,6 +33,7 @@ namespace nero
 		public: //type definiton
 			typedef std::shared_ptr	<Scene>				Ptr;
 			typedef std::shared_ptr<sf::RenderTexture>	RenderTexturePtr;
+			typedef std::shared_ptr<ltbl::LightSystem>	LightManagerPtr;
 
 		public: //utility
 			enum class EngineType
@@ -158,7 +159,7 @@ namespace nero
 			//
 			Setting::Ptr					m_LevelSetting;
 			//
-			ltbl::LightSystem				m_LightEngine;
+			LightManagerPtr					m_LightManager;
 			//
 			std::map<std::string, sf::Texture>		m_TextureMap; //TODO : remove
     };

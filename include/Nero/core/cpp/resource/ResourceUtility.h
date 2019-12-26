@@ -18,7 +18,7 @@ namespace nero
 		Music,
 		Font,
 		Mesh,
-		Light,
+		Lightmap,
 		Shape,
 		Particle,
 		Composite
