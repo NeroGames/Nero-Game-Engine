@@ -1398,6 +1398,39 @@ namespace nero
                         physic_object->setId(mesh_object->getId());
                         physic_object->setUserData((void*)physic_object->getId());
 
+						if(m_LightManager && mesh_object->getMesh()->getType() == Mesh::Static_Mesh)
+						{
+							switch(mesh_object->getMesh()->getShape())
+							{
+								case Mesh::Circle_Mesh:
+								{
+									m_LightManager->createLightShape(mesh_object->getMesh()->getCircleShape());
+								}break;
+
+								case Mesh::Line_Mesh:
+								case Mesh::Chain_Mesh:
+								{
+
+									for(sf::RectangleShape shape : mesh_object->getMesh()->getLineTable())
+									{
+										m_LightManager->createLightShape(shape);
+									}
+
+								}break;
+
+								case Mesh::Polygon_Mesh:
+								{
+
+									for(sf::ConvexShape shape : mesh_object->getMesh()->getPolygonTable())
+									{
+										m_LightManager->createLightShape(shape);
+									}
+
+								}break;
+							}
+
+						}
+
                         layer_object->addChild(physic_object);
                     }
 

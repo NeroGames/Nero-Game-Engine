@@ -436,85 +436,12 @@ namespace nero
 
 	  void Scene::setupLighting()
 	  {
-
 		  //create light manager
-		  m_LightManager = std::make_shared<ltbl::LightSystem>(true);
-		  m_LightManager->create({ -1000.f, -1000.f, (float)m_SceneContext.renderTexture->getSize().x, (float)m_SceneContext.renderTexture->getSize().y }, m_SceneContext.renderTexture->getSize());
+		  m_LightManager = std::make_shared<ltbl::LightSystem>(false);
+		  m_LightManager->create({-1000.f, -1000.f, (float)m_SceneContext.renderTexture->getSize().x, (float)m_SceneContext.renderTexture->getSize().y }, m_SceneContext.renderTexture->getSize());
 
-		  ltbl::LightDirectionEmission* sun = m_LightManager->createLightDirectionEmission();
-		  sun->setColor(sf::Color(255, 255, 255, 0));
-
-		  /*// Load light texture
-		  sf::Texture pointLightTexture;
-		  pointLightTexture.loadFromFile("resource/starterpack/lightmap/pointLightTexture.png");
-		  pointLightTexture.setSmooth(true);
-		  m_TextureMap["point_light"] = pointLightTexture;
-
-		  sf::Texture spookyLightTexture;
-		  spookyLightTexture.loadFromFile("resource/starterpack/lightmap/spookyLightTexture.png");
-		  spookyLightTexture.setSmooth(true);
-		  m_TextureMap["spooky_light"] = spookyLightTexture;
-
-		  sf::Texture backgroundTexture;
-		  backgroundTexture.loadFromFile("resource/starterpack/normalmap/background.png");
-		  m_TextureMap["bacground"] = backgroundTexture;
-
-		  sf::Texture backgroundTextureNormals;
-		  backgroundTextureNormals.loadFromFile("resource/starterpack/normalmap/background_NORMALS.png");
-		  m_TextureMap["bacground_normal"] = backgroundTexture;
-
-		  sf::Texture headTexture;
-		  headTexture.loadFromFile("resource/starterpack/normalmap/head.png");
-		  m_TextureMap["head"] = headTexture;
-
-		  sf::Texture headTextureNormals;
-		  headTextureNormals.loadFromFile("resource/starterpack/normalmap/head_NORMALS.png");
-		  m_TextureMap["head_normal"] = headTexture;
-
-		  // Add a sun light
-		  ltbl::LightDirectionEmission* sun = m_LightEngine.createLightDirectionEmission();
-		  sun->setColor(sf::Color(255, 255, 255, 0));
-
-		  // Add a light point
-		  ltbl::LightPointEmission* mlight = m_LightEngine.createLightPointEmission();
-		  mlight->setOrigin(sf::Vector2f(m_TextureMap["point_light"].getSize().x * 0.5f, m_TextureMap["point_light"].getSize().y * 0.5f));
-		  mlight->setTexture(m_TextureMap["point_light"]);
-		  mlight->setScale(10.f, 10.f);
-		  mlight->setColor(sf::Color::White);
-		  mlight->setPosition(0.f, 0.f);
-
-		  // Create a shape
-		  std::vector<sf::RectangleShape> shapes;
-		  sf::RectangleShape blocker;
-		  blocker.setSize({ 200.f, 50.f });
-		  blocker.setPosition({ 500.f, 300.f });
-		  blocker.setFillColor(sf::Color::Red);
-		  shapes.push_back(blocker);
-
-		  sf::ConvexShape polygon;
-		  polygon.setPointCount(3);
-		  polygon.setPoint(0, sf::Vector2f(0, 0));
-		  polygon.setPoint(1, sf::Vector2f(0, 200));
-		  polygon.setPoint(2, sf::Vector2f(250, 50));
-		  polygon.setOutlineColor(sf::Color::Red);
-		  polygon.setOutlineThickness(5);
-		  polygon.setPosition(10, 20);
-
-		  // Create a light shape with the same shape
-		  m_LightEngine.createLightShape(polygon);
-
-		  /*ltbl::Sprite background;
-		  background.setTexture(m_TextureMap["bacground"]);
-		  background.setNormalsTexture(m_TextureMap["bacground_normal"]);
-		  m_LightEngine.addSprite(background);
-
-		  ltbl::Sprite head;
-		  head.setTexture(m_TextureMap["head"]);
-		  head.setNormalsTexture(m_TextureMap["head_normal"]);
-		  head.setPosition(300.f, 200.f);
-		  m_LightEngine.addSprite(head);//
-
-		  nero_log("all ok");*/
+		  //ltbl::LightDirectionEmission* sun = m_LightManager->createLightDirectionEmission();
+		  //sun->setColor(sf::Color(255, 255, 255, 0));
 	  }
 
 	  void Scene::renderLighting()

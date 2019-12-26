@@ -720,4 +720,19 @@ namespace nero
 
         return center;
     }
+
+	std::vector<sf::RectangleShape> Mesh::getLineTable()
+	{
+		return m_LineTab;
+	}
+
+	std::vector<sf::ConvexShape> Mesh::getPolygonTable()
+	{
+		return m_PolygonTab;
+	}
+
+	sf::CircleShape Mesh::getCircleShape()
+	{
+		return m_CircleShape;
+	}
 }

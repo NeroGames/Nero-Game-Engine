@@ -101,6 +101,10 @@ namespace nero
 
             sf::Vector2f                getSize();
 
+			std::vector<sf::RectangleShape>		getLineTable();
+			std::vector<sf::ConvexShape>		getPolygonTable();
+			sf::CircleShape						getCircleShape();
+
         private: //Method
             void                        updateLine(bool loop);
             void                        setColor(sf::Color color);

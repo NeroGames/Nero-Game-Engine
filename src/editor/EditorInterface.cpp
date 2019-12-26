@@ -280,7 +280,6 @@ namespace  nero
 
 			ImGui::Image(flipTexture(m_RenderTexture->getTexture()));
 
-
 			showCanvasMenu();
 
         ImGui::End();
