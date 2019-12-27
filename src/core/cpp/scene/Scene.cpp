@@ -440,8 +440,8 @@ namespace nero
 		  m_LightManager = std::make_shared<ltbl::LightSystem>(false);
 		  m_LightManager->create({-1000.f, -1000.f, (float)m_SceneContext.renderTexture->getSize().x, (float)m_SceneContext.renderTexture->getSize().y }, m_SceneContext.renderTexture->getSize());
 
-		  //ltbl::LightDirectionEmission* sun = m_LightManager->createLightDirectionEmission();
-		  //sun->setColor(sf::Color(255, 255, 255, 0));
+		  m_LightManager->setAmbientColor(sf::Color(0, 51, 102));
+
 	  }
 
 	  void Scene::renderLighting()

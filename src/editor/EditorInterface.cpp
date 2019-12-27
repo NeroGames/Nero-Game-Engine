@@ -2990,6 +2990,10 @@ namespace  nero
 					ImGui::Checkbox("Enable Lighting##enable_lighting", &enable_lighting);
 					gameLevel->levelSetting->setBool("enable_lighting", enable_lighting);
 
+					ImGui::ColorEdit4("Ambient Light", &ambient_light.x, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_NoDragDrop);
+
+					ImGui::Dummy(ImVec2(0.f, 5.f));
+
 					ImGui::Text("Draw");
 					ImGui::Separator();
 					ImGui::Dummy(ImVec2(0.f, 5.f));

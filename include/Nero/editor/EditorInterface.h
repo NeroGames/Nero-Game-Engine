@@ -273,6 +273,8 @@ namespace nero
 			sf::Clock	m_AutoSaveClock;
 			std::tuple<ImVec4, ImVec4> getLayerColor(Object::Type type);
 
+			ImVec4 ambient_light;
+
 	};
 
 }
