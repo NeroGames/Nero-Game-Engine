@@ -463,11 +463,11 @@ namespace nero
 		nero_log("initializing project");
 		m_GameProject->init(parameter);
 		nero_log("loading project");
-		m_GameProject->loadProject();
+		//m_GameProject->loadProject();
 		nero_log("loading project library");
 		m_GameProject->loadLibrary();
 		nero_log("openning editor");
-		//m_GameProject->openEditor();
+		m_GameProject->openEditor();
 
 		updateRecentProject(projectDirectory);
 

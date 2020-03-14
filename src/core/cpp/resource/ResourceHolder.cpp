@@ -72,4 +72,11 @@ namespace nero
 
 		loadDirectory();
 	}
+
+	void ResourceHolder::clear()
+	{
+		//setting does not nee to be cleared
+		m_DirectoryTable.clear();
+		m_SelectedDirectory = StringPool.BLANK;
+	}
 }

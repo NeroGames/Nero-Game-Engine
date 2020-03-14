@@ -37,7 +37,7 @@ namespace nero
 			//void						addDirectory(const Setting& setting, bool autoSelect = false);
 			//void						loadResource();
 			//void						reloadResource();
-			//void						clearResource();
+			void						clearResource();
 
 			void						destroy();
 

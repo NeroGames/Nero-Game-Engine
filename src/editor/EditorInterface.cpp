@@ -696,7 +696,7 @@ namespace  nero
 			float buttonSpace = 60.f + 14.f;
 			int i = 0;
 
-			if(m_EditorMode != EditorMode::WORLD_BUILDER)
+			if(m_EditorMode != EditorMode::WORLD_BUILDER && m_GameProject)
 			{
 				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("world_button")))
 				{
@@ -707,7 +707,7 @@ namespace  nero
 				ImGui::SameLine(buttonSpace + 6.f);
 			}
 
-			if(m_EditorMode != EditorMode::SCREEN_BUILDER)
+			if(m_EditorMode != EditorMode::SCREEN_BUILDER && m_GameProject)
 			{
 				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("screen_button")))
 				{
@@ -719,7 +719,7 @@ namespace  nero
 			}
 
 
-			if(m_EditorMode != EditorMode::OBJECT_BUILDER)
+			if(m_EditorMode != EditorMode::OBJECT_BUILDER && m_GameProject)
 			{
 				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("factory_button")))
 				{
@@ -728,40 +728,42 @@ namespace  nero
 				}
 			}
 
-
-			ImGui::SameLine(start + buttonSpace*i++);
-
-			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("play_button")))
+			if(m_GameProject)
 			{
-			   playScene();
-			}
+				ImGui::SameLine(start + buttonSpace*i++);
 
-			ImGui::SameLine(start + buttonSpace*i++);
+				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("play_button")))
+				{
+				   playScene();
+				}
 
-			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("pause_button")))
-			{
-			   pauseScene();
-			}
+				ImGui::SameLine(start + buttonSpace*i++);
 
-			ImGui::SameLine(start + buttonSpace*i++);
+				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("pause_button")))
+				{
+				   pauseScene();
+				}
 
-			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("step_button")))
-			{
-			   stepScene();
-			}
+				ImGui::SameLine(start + buttonSpace*i++);
 
-			ImGui::SameLine(start + buttonSpace*i++);
+				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("step_button")))
+				{
+				   stepScene();
+				}
 
-			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("reset_button")))
-			{
-			   resetScene();
-			}
+				ImGui::SameLine(start + buttonSpace*i++);
 
-			ImGui::SameLine(start + buttonSpace*i++);
+				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("reset_button")))
+				{
+				   resetScene();
+				}
 
-			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("render_button")))
-			{
-			   renderScene();
+				ImGui::SameLine(start + buttonSpace*i++);
+
+				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("render_button")))
+				{
+				   renderScene();
+				}
 			}
 
 			ImGui::SameLine(width - 72.f);

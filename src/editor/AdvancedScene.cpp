@@ -320,6 +320,7 @@ namespace nero
 
 		//ceate level ojbect
 		auto gameLevel = std::make_shared<GameLevelObject>();
+		gameLevel->setName(m_SelectedGameLevel->name);
 		Setting parameter;
 		gameLevel->initialize(parameter);
 
@@ -331,6 +332,7 @@ namespace nero
 		for(auto worldChunk : m_SelectedGameLevel->chunkTable)
 		{
 			auto chunkObject = std::make_shared<Object>();
+			chunkObject->setName(worldChunk->name);
 
 			if(m_Scene->m_LightManager)
 			{
@@ -347,15 +349,7 @@ namespace nero
 		b2BodyDef bodyDef;
 		m_GroundBody = m_Scene->m_PhysicWorld->CreateBody(&bodyDef);
 
-		/*if(!m_Scene->m_GameWorld)
-		{
-			nero_log("game world not initialized");
-
-			//m_Scene->m_GameWorld = std::make_shared<Object>();
-		}*/
-
 		m_Scene->m_GameWorld->addChild(gameLevel);
-
 	}
 
 	void AdvancedScene::shiftMouseDown(const b2Vec2& p)
@@ -731,7 +725,5 @@ namespace nero
 	{
 
 	}
-
-
 }
 

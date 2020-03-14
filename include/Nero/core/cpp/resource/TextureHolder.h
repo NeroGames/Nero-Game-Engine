@@ -33,6 +33,7 @@ namespace nero
 			virtual void						loadDirectory() override;
 			virtual void						loadFile(const std::string& file) override;
 			virtual void						destroy() override;
+			virtual void						clear() override;
 
             sf::Texture&				        getTexture(std::string textureName);
             const sf::Texture&			        getTexture(std::string textureName)         const;
@@ -44,6 +45,7 @@ namespace nero
 
 			void								setResourceDirectory(const std::string& resourceDictory);
 			void								smoothAllTexture();
+
 
         private:
             void                                addTexture(std::string textureId, std::unique_ptr<sf::Texture> texture);

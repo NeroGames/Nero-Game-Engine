@@ -1,7 +1,7 @@
 # Cmake version
 cmake_minimum_required(VERSION 3.15)
 
-# Configuration
+# Utility
 #----------------------------------------------------------------------------------#
 # Define a macro that helps defining an option
 macro(nero_set_option var default type docstring)
@@ -13,13 +13,15 @@ endmacro()
 
 # The Project
 #----------------------------------------------------------------------------------#
+# Project Name
 project("Nero Game Engine 2")
-
 # Project version
 set(VERSION_MAJOR 2)
 set(VERSION_MINOR 0)
 set(VERSION_PATCH 0)
 
+# Compiler Configuration
+#----------------------------------------------------------------------------------#
 # Activate C++17
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CXX_STANDARD 17)
@@ -34,59 +36,92 @@ add_definitions(-DSOL_USING_CXX_LUA)
 add_definitions(-DNERO_GAME_DEBUG)
 add_definitions(-DBUILD_WITH_EASY_PROFILER)
 
-# Get the engine source files
+# Include Files & Libraries
+#----------------------------------------------------------------------------------#
+# Make include file visible
 include_directories ("include")
 include_directories("library")
-#include_directories("project")
-#include_directories("example")
+include_directories("../../Library/include")
+# Make libraries visible
+link_directories("../../Library/lib" "../../Library/bin")
+# Find OpenGL
+find_package(OpenGL)
+# SFML
+set(SFML_LIBS "-lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-network")
+# Box2d
+set(Box2d_LIBS "-lBox2D.dll")
+# Zilb
+set(ZLIB_LIBS "-lzlib.dll")
+# OpenSSL
+set(OPENSSL_LIBS "-lcrypto.dll -lssl.dll")
+# Libssh2
+set(LIBSSH2_LIBS "-llibssh2.dll")
+# Libgit2
+set(HTTP_PARSER "-lhttp_parser")
+# Libgit2
+set(LIBGIT2_LIBS "-lgit2.dll")
+# Lua
+set(LUA_LIBS "-llua")
+# CPP_FILESYSTEM
+set(CPP_FILESYSTEM "stdc++fs")
+# EASY_PROFILER
+set(EASY_PROFILER "-leasy_profiler.dll")
+# POCO
+set(POCO "-lPocoRedis -lPocoPDF -lPocoCppParser -lPocoZip -lPocoData -lPocoNetSSL -lPocoCrypto -lPocoXML -lexpat -lPocoNet -lPocoUtil -lPocoJSON -lPocoEncodings -lPocoFoundation -liphlpapi C:/Qt/Tools/mingw730_32/opt/lib/libcrypto.a C:/Qt/Tools/mingw730_32/opt/lib/libssl.a -lws2_32")
 
-# Engine Editor Source
-file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/library/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/project/*")
+# Nero Game Project (Dummy Library)
+#----------------------------------------------------------------------------------#
+file(GLOB_RECURSE NERO_GAME_PROJECT_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/project/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/template/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/example/*")
+set(NERO_GAME_PROJECT_SOURCES ${NERO_GAME_PROJECT_SOURCES}
+    "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
+    "${CMAKE_CURRENT_SOURCE_DIR}/resources.rc")
 
+add_library(NeroGameProject ${NERO_GAME_PROJECT_SOURCES})
 
-# Engine Core Source
-file(GLOB_RECURSE NERO_GAME_CORE_SOURCES
+# Nero Game Core Library
+#----------------------------------------------------------------------------------#
+# Engine Core Library Source Files
+file(GLOB_RECURSE NERO_GAME_CORE_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/core/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/library/*")
-
-# setup Library
-include_directories("../../Library/include")
-link_directories("../../Library/lib" "../../Library/bin")
-
-find_package(OpenGL)
-
-#SFML
-set(SFML_LIBS "-lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-network")
-#Box2d
-set(Box2d_LIBS "-lBox2D.dll")
-#Zilb
-set(ZLIB_LIBS "-lzlib.dll")
-#OpenSSL
-set(OPENSSL_LIBS "-lcrypto.dll -lssl.dll")
-#Libssh2
-set(LIBSSH2_LIBS "-llibssh2.dll")
-#Libgit2
-set(HTTP_PARSER "-lhttp_parser")
-#Libgit2
-set(LIBGIT2_LIBS "-lgit2.dll")
-#Lua
-set(LUA_LIBS "-llua")
-#CPP_FILESYSTEM
-set(CPP_FILESYSTEM "stdc++fs")
-#EASY_PROFILER
-set(EASY_PROFILER "-leasy_profiler.dll")
-
-
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/easyloggingpp/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/ltbl/*")
+# Dependencies
+set(NERO_GAME_CORE_DEP ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2d_LIBS} ${EASY_PROFILER})
 # Build Nero Game Core
-add_library(nerogame-core ${NERO_GAME_CORE_SOURCES} )
-target_link_libraries(nerogame-core ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2d_LIBS} ${EASY_PROFILER})
+add_library(nerogame-core ${NERO_GAME_CORE_SRC} )
+target_link_libraries(nerogame-core ${NERO_GAME_CORE_DEP})
 
+# Nero Game Renderer (Desktop)
+#----------------------------------------------------------------------------------#
+# Engine Renderer Source Files
+file(GLOB_RECURSE NERO_GAME_RENDERER_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/renderer/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/renderer/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/resources.rc")
+# Dependencies
+set(NERO_GAME_RENDERER_DEP nerogame-core ${NERO_GAME_CORE_DEP})
+# Build Nero Game Renderer
+add_executable(EngineRenderer "${CMAKE_CURRENT_SOURCE_DIR}/src/renderer/main.cpp" ${NERO_GAME_RENDERER_SRC})
+target_link_libraries(EngineRenderer ${NERO_GAME_RENDERER_DEP})
+
+# Nero Game Editor (Desktop)
+#----------------------------------------------------------------------------------#
+# Engine Editor Source Files
+file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/editor/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/editor/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/IconFontCppHeaders/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/imgui/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/nativefiledialog/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/nodeeditor/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/resources.rc")
+# Dependencies
+set(NERO_GAME_EDITOR_DEP nerogame-core ${NERO_GAME_CORE_DEP} comctl32.lib ${ZLIB_LIBS} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${HTTP_PARSER} ${LIBGIT2_LIBS} ${LUA_LIBS})
 # Build Nero Game Editor
-add_executable(Editor "main.cpp" ${NERO_GAME_EDITOR_SOURCES})
-target_link_libraries(Editor comctl32.lib ${CPP_FILESYSTEM} ${SFML_LIBS} ${Box2d_LIBS} ${OPENGL_gl_LIBRARY} ${ZLIB_LIBS} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${HTTP_PARSER} ${LIBGIT2_LIBS} ${LUA_LIBS} ${EASY_PROFILER})
+add_executable(EngineEditor "main.cpp" ${NERO_GAME_EDITOR_SOURCES})
+target_link_libraries(EngineEditor ${NERO_GAME_EDITOR_DEP})
 

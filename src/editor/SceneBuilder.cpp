@@ -986,7 +986,6 @@ namespace nero
 				sprite.setTexture(m_ResourceManager->getAnimationHolder()->getTexture(label));
                 sprite.setOrigin(rect.width/2.f, rect.height/2.f);
 
-
                 animation.setSprite(sprite);
                 animation.setTexture(label);
 				animation.setSequence(m_ResourceManager->getAnimationHolder()->getDefaultSequence(label));

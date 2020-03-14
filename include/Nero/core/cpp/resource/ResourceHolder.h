@@ -24,6 +24,7 @@ namespace nero
 			virtual void			loadDirectory()										= 0;
 			virtual void			loadFile(const std::string& file)					= 0;
 			virtual void			destroy()											= 0;
+			virtual void			clear() ;
 
 		public:
 			void					setSetting(const Setting& setting);

@@ -37,6 +37,8 @@ namespace nero
 
 			void									setSprite(const sf::Sprite& sprite);
 			virtual sf::FloatRect					getGlobalBounds()               const;
+			virtual	void							updateObject(sf::Time time_step) override;
+			ltbl::LightPointEmission*				getLight();
 
 		private:
 			virtual void							drawObject(sf::RenderTarget& target, sf::RenderStates states) const;

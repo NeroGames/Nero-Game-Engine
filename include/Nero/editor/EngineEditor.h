@@ -22,7 +22,7 @@ namespace nero
 									EngineEditor();
 			virtual                ~EngineEditor() override;
 
-    private:
+		private:
 			//game loop
 			void                    handleEvent()                    override;
 			void                    update(const sf::Time& timeStep) override;

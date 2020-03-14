@@ -185,4 +185,9 @@ namespace nero
 	{
 		return m_LightmapHolder;
 	}
+
+	void ResourceManager::clearResource()
+	{
+		m_TextureHolder->clear();
+	}
 }

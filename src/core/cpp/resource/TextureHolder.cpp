@@ -232,4 +232,15 @@ namespace nero
 		}
 	}
 
+	void TextureHolder::clear()
+	{
+		//clear parent
+		ResourceHolder::clear();
+
+		//clear current
+		m_TextureMap.clear();
+		m_SpriteMap.clear();
+		m_SpriteTable.clear();
+	}
+
 }

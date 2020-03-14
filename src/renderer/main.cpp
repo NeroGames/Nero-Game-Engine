@@ -1,0 +1,25 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2020 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
+///////////////////////////HEADERS//////////////////////////
+//Nero
+#include <Nero/renderer/EngineRenderer.h>
+//Profiler
+#include <easy/profiler.h>
+////////////////////////////////////////////////////////////
+int main()
+{
+	//Start the profiler
+	EASY_PROFILER_ENABLE;
+	EASY_MAIN_THREAD;
+	profiler::startListen();
+
+	//Instantiate the editor
+	nero::EngineRenderer renderer;
+
+	//Launch the editor
+	renderer.run();
+
+	return 0;
+}
