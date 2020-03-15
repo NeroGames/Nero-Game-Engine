@@ -37,7 +37,9 @@ namespace  nero
 		,m_BuilderMode(BuilderMode::OBJECT)
 		,m_EditorCamera(nullptr)
 		,m_SelectedChunkNode(StringPool.BLANK)
-		,InputSelectedWorldChunkId(-1)
+		,m_InputSelectedWorldChunkId(-1)
+		,m_InputSelectedObjectLayerId(-1)
+		,m_InputSelectedGameLevelId(-1)
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -582,8 +584,8 @@ namespace  nero
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LEVEL.c_str(),				upperLeftDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_SCREEN.c_str(),				upperLeftDockspaceID);
 					//lower left
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LAYER.c_str(),				lowerLeftDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_CHUNCK.c_str(),				lowerLeftDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LAYER.c_str(),				lowerLeftDockspaceID);
 					//right
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_EXPLORER.c_str(),			rightDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_HELP.c_str(),				rightDockspaceID);
@@ -2376,7 +2378,10 @@ namespace  nero
 	{
 		if(m_GameProject)
 		{
-			m_GameProject->saveProject();
+			std::async([this]()
+			{
+				m_GameProject->saveProject();
+			});
 		}
 	}
 
@@ -2486,7 +2491,7 @@ namespace  nero
 
 			ImGui::SameLine();
 
-			if(ImGui::Button("Remove##remove_world_chunk", button_size))
+			if(ImGui::Button("Remove##remove_object_layer", button_size))
 			{
 				removeObjectLayer();
 			}
@@ -2499,12 +2504,12 @@ namespace  nero
 				{
 					auto sceneBuilder = m_AdvancedScene->getSelectedSceneBuilder(m_EditorMode);
 
-					int inputSelectedObjectLayerId = sceneBuilder->getSelectedLayer()->getObjectId();
+					m_InputSelectedObjectLayerId = sceneBuilder->getSelectedLayer()->getObjectId();
 
 					for(const auto& objectLayer : sceneBuilder->getLayerTable())
 					{
 						std::string itemId = "##select_layer" + toString(objectLayer->getObjectId());
-						ImGui::RadioButton(itemId.c_str(), &inputSelectedObjectLayerId, objectLayer->getObjectId());
+						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedObjectLayerId, objectLayer->getObjectId());
 
 						if(ImGui::IsItemClicked())
 						{
@@ -2564,88 +2569,99 @@ namespace  nero
 
 	void EditorInterface::addObjectLayer()
 	{
-		m_AdvancedScene->getSelectedSceneBuilder(m_EditorMode)->addLayer();
+		if(m_AdvancedScene)
+		{
+			m_AdvancedScene->getSelectedSceneBuilder(m_EditorMode)->addLayer();
+		}
 	}
 
 	void EditorInterface::removeObjectLayer()
 	{
+		if(m_AdvancedScene)
+		{
 
+		}
 	}
 
 	void EditorInterface::showSceneLevelWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_LEVEL.c_str());
 
-		ImGui::Text("Manage Scene Level");
-		ImGui::Separator();
-		ImGui::Dummy(ImVec2(0.f, 2.f));
+			ImGui::Text("Manage Scene Level");
+			ImGui::Separator();
+			ImGui::Dummy(ImVec2(0.f, 2.f));
 
-		float width = 82.f;
-		static char input_level_name[100] = "";
-		ImGui::SetNextItemWidth(width*2.f + 8.f);
-		ImGui::InputText("##level_id", input_level_name, IM_ARRAYSIZE(input_level_name));
+			float width = 90.f;
 
-		ImGui::Dummy(ImVec2(0.f, 2.f));
+			ImGui::Dummy(ImVec2(0.f, 2.f));
 
-		ImVec2 button_size = ImVec2(width, 0.f);
-		//addcreen
-		if(ImGui::Button("Add##add_level", button_size))
-		{
-			//
-		}
+			ImVec2 button_size = ImVec2(width, 0.f);
 
-		ImGui::SameLine();
-
-		if(ImGui::Button("Rename##rename_level", button_size))
-		{
-			//
-		}
-
-
-		if(ImGui::Button("Duplicate##duplicate_level", button_size))
-		{
-			//
-		}
-
-		ImGui::SameLine();
-
-		if(ImGui::Button("Remove##remove_level", button_size))
-		{
-			//
-		}
-
-		//rename screen
-		//copy
-
-		ImGui::Dummy(ImVec2(0.f, 5.f));
-
-		ImGui::Separator();
-
-		ImGui::Dummy(ImVec2(0.f, 5.f));
-
-		//ImGui::BeginChild("scene_level_list", ImVec2());
-
-			static int e = 0;
-
-			ImGui::RadioButton("##bsdf", &e, 0);
+			if(ImGui::Button("Add##add_scene_layer", button_size))
+			{
+				addGameLevel();
+			}
 
 			ImGui::SameLine();
 
-			static bool sdfsfs = false;
-			ImGui::Checkbox("##bsdf2", &sdfsfs);
+			if(ImGui::Button("Remove##remove_scene_layer", button_size))
+			{
+				removeGameLevel();
+			}
 
-			ImGui::SameLine();
+			ImGui::Dummy(ImVec2(0.f, 5.f));
 
-			ImGuiInputTextFlags flags2 = ImGuiInputTextFlags_ReadOnly;
-			static char screen_name[100] = "screen one";
-			ImGui::SetNextItemWidth(118.f);
-			ImGui::InputText("##level_id", screen_name, IM_ARRAYSIZE(screen_name), flags2);
+			ImGui::BeginChild("##manage_scene_layer", ImVec2(), true);
 
-	   //ImGui::EndChild();
+				if(m_AdvancedScene)
+				{
+					m_InputSelectedGameLevelId = m_AdvancedScene->getSelectedGameLevel()->levelId;
 
+					for(const auto& gameLevel : m_AdvancedScene->getGameLevelTable())
+					{
+						std::string itemId = "##select_level" + toString(gameLevel->levelId);
+						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedGameLevelId, gameLevel->levelId);
+
+						if(ImGui::IsItemClicked())
+						{
+							m_AdvancedScene->setSelectedGameLevel(gameLevel);
+						}
+
+						ImGui::SameLine();
+
+						char level_name[100];
+						fillCharArray(level_name, sizeof(level_name), gameLevel->name);
+						ImGui::SetNextItemWidth(118.f);
+						itemId = "##chunk_name" + toString(gameLevel->levelId);
+						ImGui::InputText(itemId.c_str(), level_name, sizeof(level_name));
+
+						if(ImGui::IsItemEdited())
+						{
+							gameLevel->name = std::string(level_name);
+						}
+					}
+				}
+
+			ImGui::EndChild();
 
 		ImGui::End();
 	};
+
+	void EditorInterface::addGameLevel()
+	{
+		if(m_AdvancedScene)
+		{
+			m_AdvancedScene->addGameLevel();
+		}
+	}
+
+	void EditorInterface::removeGameLevel()
+	{
+		if(m_AdvancedScene)
+		{
+
+		}
+	}
 
 	void EditorInterface::showWorldChunckWindow()
     {
@@ -2682,12 +2698,12 @@ namespace  nero
 				{
 					auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
 
-					InputSelectedWorldChunkId = m_AdvancedScene->getSelectedWorldChunk()->chunkId;
+					m_InputSelectedWorldChunkId = m_AdvancedScene->getSelectedWorldChunk()->chunkId;
 
 					for(const auto& worldChunk : gameLevel->chunkTable)
 					{
 						std::string itemId = "##select_chunk" + toString(worldChunk->chunkId);
-						ImGui::RadioButton(itemId.c_str(), &InputSelectedWorldChunkId, worldChunk->chunkId);
+						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedWorldChunkId, worldChunk->chunkId);
 
 						if(ImGui::IsItemClicked())
 						{
@@ -2723,13 +2739,16 @@ namespace  nero
 	{
 		if(m_AdvancedScene && m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT)
 		{
-			m_AdvancedScene->addWorldChunk(StringPool.BLANK);
+			m_AdvancedScene->addWorldChunk();
 		}
 	}
 
 	void EditorInterface::removeWorldChunk()
 	{
-		//m_AdvancedScene->removeWorldChunk();
+		if(m_AdvancedScene)
+		{
+			//m_AdvancedScene->removeWorldChunk();
+		}
 	}
 
     void EditorInterface::showToggleButton(bool toggle, const std::string& label, std::function<void()> callback)

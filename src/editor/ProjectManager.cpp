@@ -54,16 +54,20 @@ namespace nero
 	{
 		//Step 1-1 : Create directory struture
 		status = 1;
+		std::string project_name = parameter.getString("project_name");
 
 		std::string workspaceDirectory	= findWorkspace(parameter.getString("workspace_name"))["workspace_directory"].get<std::string>();
 		std::string projectDirectory	= getPath({workspaceDirectory, "Project", parameter.getString("project_name")});
 
 		createDirectory(getPath({projectDirectory}));
 		createDirectory(getPath({projectDirectory, "Source"}));
-			createDirectory(getPath({projectDirectory, "Source", "cpp"}));
-				createDirectory(getPath({projectDirectory, "Source", "cpp", "objectscript"}));
+			createDirectory(getPath({projectDirectory, "Source", project_name}));
+				createDirectory(getPath({projectDirectory, "Source", project_name, "cpp"}));
+					createDirectory(getPath({projectDirectory, "Source", project_name, "cpp", "script"}));
 		createDirectory(getPath({projectDirectory, "Build"}));
 		createDirectory(getPath({projectDirectory, "Scene"}));
+			createDirectory(getPath({projectDirectory, "Scene", "Level"}));
+			createDirectory(getPath({projectDirectory, "Scene", "Screen"}));
 		createDirectory(getPath({projectDirectory, "Setting"}));
 
 		//Step 1-2 : Create project document
@@ -123,10 +127,10 @@ namespace nero
 		boost::algorithm::replace_all(cmake_setting_template, "::Project_Build_Directory::", escapeAntiSlash(getPath({projectDirectory, "Build"})));
 
 
-		saveFile(getPath({projectDirectory, "Source", "CMakeLists"}, StringPool.EXTENSION_TEXT), cmake_template);
-		saveFile(getPath({projectDirectory, "Source", "CMakeSettings"}, StringPool.EXTENSION_JSON), cmake_setting_template);
-		saveFile(getPath({projectDirectory, "Source", "cpp", scene_class}, StringPool.EXTENSION_CPP_HEADER), scene_header_template);
-		saveFile(getPath({projectDirectory, "Source", "cpp", scene_class}, StringPool.EXTENSION_CPP_SOURCE), scene_source_template);
+		saveFile(getPath({projectDirectory, "Source", project_name, "CMakeLists"}, StringPool.EXTENSION_TEXT), cmake_template);
+		saveFile(getPath({projectDirectory, "Source", project_name, "CMakeSettings"}, StringPool.EXTENSION_JSON), cmake_setting_template);
+		saveFile(getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXTENSION_CPP_HEADER), scene_header_template);
+		saveFile(getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXTENSION_CPP_SOURCE), scene_source_template);
 
 		//Step 3 : compile the project
 		status = 3;
@@ -341,8 +345,11 @@ namespace nero
 
     void ProjectManager::compileProject(const std::string& projectDirectory)
     {
+		//
+		Setting parameter;
+		parameter.loadJson(loadJson(getPath({projectDirectory, ".project"}), true));
         //remote
-        std::string sourcePath  = getPath({projectDirectory, "Source"});
+		std::string sourcePath  = getPath({projectDirectory, "Source", parameter.getString("project_name")});
         std::string buildPath   = getPath({projectDirectory, "Build"});
 
         std::string clean       = "mingw32-make -C \"" + buildPath + "\" -k clean";
@@ -463,7 +470,7 @@ namespace nero
 		nero_log("initializing project");
 		m_GameProject->init(parameter);
 		nero_log("loading project");
-		//m_GameProject->loadProject();
+		m_GameProject->loadProject();
 		nero_log("loading project library");
 		m_GameProject->loadLibrary();
 		nero_log("openning editor");

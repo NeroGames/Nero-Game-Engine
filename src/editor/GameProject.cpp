@@ -21,7 +21,7 @@ namespace nero
 	void GameProject::init(const Setting& parameter)
     {
 		m_ProjectParameter = parameter;
-		m_ProjectParameter.setString("source_directory", getPath({m_ProjectParameter.getString("project_directory"), "Source"}));
+		m_ProjectParameter.setString("source_directory", getPath({m_ProjectParameter.getString("project_directory"), "Source", parameter.getString("project_name")}));
 		m_ProjectParameter.setString("build_directory", getPath({m_ProjectParameter.getString("project_directory"), "Build"}));
 		m_ProjectParameter.setString("cmake_file", getPath({m_ProjectParameter.getString("source_directory"), "CMakeLists"}, StringPool.EXTENSION_TEXT));
 
@@ -145,11 +145,11 @@ namespace nero
 
 			level_save["level_id"]		= level->levelId;
 			level_save["level_name"]	= level->name;
-			level_save["selected"]		= level->levelId == m_AdvancedScene->m_SelectedGameLevel->levelId;
+			//level_save["selected"]		= level->levelId == m_AdvancedScene->m_SelectedGameLevel->levelId;
 			level_save["chunk_count"]	= level->chunkCount;
 			level_save["chunk_table"]	= nlohmann::json::array();
 
-			for(auto& chunk : level->chunkTable)
+			/*for(auto& chunk : level->chunkTable)
 			{
 				nlohmann::json chunk_save;
 
@@ -160,14 +160,14 @@ namespace nero
 				chunk_save["selected"]		= chunk->chunkId == m_AdvancedScene->m_SelectedWorldChunk->chunkId;
 
 				level_save["chunk_table"].push_back(chunk_save);
-			}
+			}*/
 
 			std::string levelFile = getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Level", level->name}, StringPool.EXTENSION_JSON);
 			saveFile(levelFile, level_save.dump(3), true);
 		}
 
 		//save game screen
-		for(auto& screen : m_AdvancedScene->m_GameScreenTable)
+		/*for(auto& screen : m_AdvancedScene->m_GameScreenTable)
 		{
 
 			nlohmann::json screen_save;
@@ -179,7 +179,7 @@ namespace nero
 
 			std::string screenFile = getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Screen", screen->name}, StringPool.EXTENSION_JSON);
 			saveFile(screenFile, screen_save.dump(3), true);
-		}
+		}*/
 	}
 
 	void GameProject::loadLibrary()

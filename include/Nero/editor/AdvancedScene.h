@@ -111,6 +111,32 @@ namespace nero
 					levelSetting->setBool("lighting_on", true);
 				}
 
+				WorldChunkPtr getSelectedWorldChunk()
+				{
+					for(auto chunk : chunkTable)
+					{
+						if(chunk->selected)
+						{
+							return chunk;
+						}
+					}
+
+					return nullptr;
+				}
+
+				void setSelectedWorldChunk(const int& chunkId)
+				{
+					for(auto chunk : chunkTable)
+					{
+						chunk->selected = false;
+
+						if(chunk->chunkId == chunkId)
+						{
+							chunk->selected = true;
+						}
+					}
+				}
+
 				int							levelId			= -1;
 				std::string					name			= StringPool.BLANK;
 				int							chunkCount		= 0;
@@ -159,8 +185,10 @@ namespace nero
 			void								setResourceManager(const ResourceManager::Ptr& resourceManager);
 			void								addObject(Object::Type type, const sf::String& label, sf::Vector2f position, const EditorMode& editorMode);
 
+			const std::vector<GameLevelPtr>&	getGameLevelTable();
 			GameLevelPtr						getSelectedGameLevel();
 			WorldChunkPtr						getSelectedWorldChunk();
+			void								setSelectedGameLevel(GameLevelPtr gameLevel);
 			void								setSelectedWorldChunk(WorldChunkPtr worldChunk);
 			SceneBuilder::Ptr					getSelectedSceneBuilder(const EditorMode& editorMode);
 			void								playScene();

@@ -24,9 +24,13 @@ namespace  nero
 			virtual                ~EngineRenderer() override;
 		private:
 			bool					checkDirectory();
+			//
 			void					noGameFound();
+			//
 			void					loadGame();
-			void					loadScene();
+			void					loadStartupScreen();
+			void					startBackgroundTask();
+			int						startEngine(bool& engineStarted, const int duration);
 			//game loop
 			void                    handleEvent()                    override;
 			void                    update(const sf::Time& timeStep) override;

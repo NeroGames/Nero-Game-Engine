@@ -26,11 +26,6 @@ namespace  nero
 		{
 			noGameFound();
 		}
-
-		if(m_GameScene)
-		{
-			m_GameScene->m_QuitEngine = [this](){ m_RenderWindow.close();};
-		}
 	}
 
 	EngineRenderer::~EngineRenderer()
@@ -61,13 +56,44 @@ namespace  nero
 							m_Setting,
 							Scene::EngineType::RENDER_ENGINE,
 							Scene::PlatformType::WINDOWS)));
-		//
+
+		//set quit engine callback
+		m_GameScene->m_QuitEngine = [this](){ m_RenderWindow.close();};
+
+		//skip startup screen display
 		m_EngineStarted = true;
 	}
 
 	void EngineRenderer::loadGame()
 	{
+		//load parameter
 
+		//load statup screen
+		loadStartupScreen();
+
+		//start bacground initialization
+		startBackgroundTask();
+	}
+
+	void EngineRenderer::startBackgroundTask()
+	{
+		m_StartEngineFuture = std::async(std::launch::async, &EngineRenderer::startEngine, this, std::ref(m_EngineStarted), m_StartupScreen->getDuration());
+	}
+
+	void EngineRenderer::loadStartupScreen()
+	{
+		/*boost::dll::shared_library lib(m_ProjectParameter.getString("library_file"));
+		m_CreateStartupScreen = boost::dll::import_alias<CreateCppSceneFn>(library_path, "createStartupScreen", boost::dll::load_mode::append_decorations);
+
+		if(!m_CreateStartupScreen.empty())
+		{
+			m_StartupScreen = m_CreateStartupScreen();
+		}*/
+	}
+
+	int EngineRenderer::startEngine(bool& engineStarted, const int duration)
+	{
+		return 0;
 	}
 
 	void EngineRenderer::handleEvent()
@@ -77,7 +103,7 @@ namespace  nero
 		{
 			if(m_StartupScreen && !m_EngineStarted)
 			{
-				//TODO Startup Screen
+				m_GameScene->handleEvent(event);
 			}
 			else
 			{
@@ -90,7 +116,7 @@ namespace  nero
 	{
 		if(m_StartupScreen && !m_EngineStarted)
 		{
-			//TODO Startup Screen
+			m_StartupScreen->update(timeStep);
 		}
 		else
 		{
@@ -102,7 +128,7 @@ namespace  nero
 	{
 		if(m_StartupScreen && !m_EngineStarted)
 		{
-			//TODO Startup Screen
+			m_StartupScreen->render();
 		}
 		else
 		{

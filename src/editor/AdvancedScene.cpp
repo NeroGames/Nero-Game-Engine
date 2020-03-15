@@ -57,7 +57,7 @@ namespace nero
 		std::string levelName = name;
 		if(levelName == StringPool.BLANK)
 		{
-			levelName = "game level " + toString(m_GameLevelCount);
+			levelName = "Game Level " + toString(m_GameLevelCount);
 		}
 
 		m_GameLevelTable.push_back(std::make_shared<GameLevel>());
@@ -90,7 +90,7 @@ namespace nero
 
 			if(chunkName == StringPool.BLANK)
 			{
-				chunkName = "world chunk " + toString(m_SelectedGameLevel->chunkCount);
+				chunkName = "World Chunk " + toString(m_SelectedGameLevel->chunkCount);
 			}
 
 			m_SelectedGameLevel->chunkTable.push_back(std::make_shared<WorldChunk>());
@@ -102,6 +102,7 @@ namespace nero
 			m_SelectedWorldBuilder->setRenderTexture(m_RenderTexture);
 			m_SelectedWorldBuilder->setRenderContext(m_RenderContext);
 			m_SelectedWorldBuilder->addLayer();
+			setSelectedWorldChunk(m_SelectedWorldChunk);
 		}
 	}
 
@@ -112,7 +113,7 @@ namespace nero
 		std::string screenName = name;
 		if(screenName == StringPool.BLANK)
 		{
-			screenName = "game level " + toString(m_GameScreenCount);
+			screenName = "Game Screen " + toString(m_GameScreenCount);
 		}
 
 
@@ -263,6 +264,12 @@ namespace nero
 		addGameScreen("Start Screen");
 	}
 
+	const std::vector<AdvancedScene::GameLevelPtr>& AdvancedScene::getGameLevelTable()
+	{
+		return m_GameLevelTable;
+	}
+
+
 	AdvancedScene::GameLevelPtr AdvancedScene::getSelectedGameLevel()
 	{
 		return m_SelectedGameLevel;
@@ -278,10 +285,18 @@ namespace nero
 		return m_SelectedWorldChunk;
 	}
 
+	void AdvancedScene::setSelectedGameLevel(AdvancedScene::GameLevelPtr gameLevel)
+	{
+		m_SelectedGameLevel		= gameLevel;
+		m_SelectedWorldChunk	= gameLevel->getSelectedWorldChunk();
+		m_SelectedWorldBuilder	= m_SelectedWorldChunk->sceneBuilder;
+	}
+
 	void AdvancedScene::setSelectedWorldChunk(AdvancedScene::WorldChunkPtr worldChunk)
 	{
 		m_SelectedWorldChunk	= worldChunk;
 		m_SelectedWorldBuilder	= worldChunk->sceneBuilder;
+		m_SelectedGameLevel->setSelectedWorldChunk(worldChunk->chunkId);
 	}
 
 	SceneBuilder::Ptr AdvancedScene::getSelectedSceneBuilder(const EditorMode& editorMode)

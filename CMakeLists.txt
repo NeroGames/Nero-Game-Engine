@@ -106,6 +106,7 @@ file(GLOB_RECURSE NERO_GAME_RENDERER_SRC
 set(NERO_GAME_RENDERER_DEP nerogame-core ${NERO_GAME_CORE_DEP})
 # Build Nero Game Renderer
 add_executable(EngineRenderer ${NERO_GAME_RENDERER_SRC})
+target_compile_options(EngineRenderer PRIVATE "-mwindows")
 target_link_libraries(EngineRenderer ${NERO_GAME_RENDERER_DEP})
 
 # Nero Game Editor (Desktop)

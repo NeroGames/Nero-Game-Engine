@@ -164,10 +164,16 @@ namespace nero
 			//World chunk
 			void						addWorldChunk();
 			void						removeWorldChunk();
-			int							InputSelectedWorldChunkId;
+			int							m_InputSelectedWorldChunkId;
 			//Object Layer
 			void						addObjectLayer();
 			void						removeObjectLayer();
+			int							m_InputSelectedObjectLayerId;
+			//
+			void						addGameLevel();
+			void						removeGameLevel();
+			int							m_InputSelectedGameLevelId;
+
 
             //Tabs
 			TabBarSwitch				m_ProjectManagerTabBarSwitch;
