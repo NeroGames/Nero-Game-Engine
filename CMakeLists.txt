@@ -79,7 +79,7 @@ set(NERO_GAME_PROJECT_SOURCES ${NERO_GAME_PROJECT_SOURCES}
     "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/resources.rc")
 
-add_library(NeroGameProject ${NERO_GAME_PROJECT_SOURCES})
+#add_library(NeroGameProject ${NERO_GAME_PROJECT_SOURCES})
 
 # Nero Game Core Library
 #----------------------------------------------------------------------------------#
@@ -105,7 +105,7 @@ file(GLOB_RECURSE NERO_GAME_RENDERER_SRC
 # Dependencies
 set(NERO_GAME_RENDERER_DEP nerogame-core ${NERO_GAME_CORE_DEP})
 # Build Nero Game Renderer
-add_executable(EngineRenderer "${CMAKE_CURRENT_SOURCE_DIR}/src/renderer/main.cpp" ${NERO_GAME_RENDERER_SRC})
+add_executable(EngineRenderer ${NERO_GAME_RENDERER_SRC})
 target_link_libraries(EngineRenderer ${NERO_GAME_RENDERER_DEP})
 
 # Nero Game Editor (Desktop)

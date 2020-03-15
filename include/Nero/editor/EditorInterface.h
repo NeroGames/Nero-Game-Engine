@@ -226,7 +226,6 @@ namespace nero
 			sf::Texture& getFontTexture(const std::string& fontName);
 			std::map<std::string, sf::Texture> m_FontTextureMap;
 
-
 			RenderTexturePtr			m_RenderTexture;
 			EditorMode					m_EditorMode;
 			BuilderMode					m_BuilderMode;

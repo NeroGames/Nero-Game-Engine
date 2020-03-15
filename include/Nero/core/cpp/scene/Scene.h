@@ -134,7 +134,7 @@ namespace nero
 			friend class					ContactListener;
 			friend class					AdvancedScene;
 			friend class					GameProject;
-			friend class					RenderEngine;
+			friend class					EngineRenderer;
 			friend class					SceneRenderer;
 			//scene context
 			Context                         m_SceneContext;
@@ -162,7 +162,9 @@ namespace nero
 			LightManagerPtr					m_LightManager;
 			//
 			std::map<std::string, sf::Texture>		m_TextureMap; //TODO : remove
-    };
+			//
+			std::function<void()>                           m_QuitEngine;
+	};
 }
 
 #endif // SCENE_H

@@ -32,6 +32,8 @@ namespace nero
 		//document type
 		const std::string		DOCUMENT_TYPE_WORKSPACE	= "nero_game_workspace";
 		const std::string		DOCUMENT_TYPE_PROJECT	= "nero_game_project";
+		//
+		const std::string		NO_GAME_FOUND			= "No Game Found";
 
     };
 

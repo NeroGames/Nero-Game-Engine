@@ -35,10 +35,15 @@ namespace nero
 		,m_InformationText()
 		,m_LightManager(nullptr)
 	{
-		m_InformationText.setFont(context.resourceManager->getFontHolder()->getDefaultFont());
-		m_InformationText.setCharacterSize(15.f);
-		m_InformationText.setFillColor(sf::Color::White);
-		m_InformationText.setPosition(sf::Vector2f(50.f, 10.f));
+		if(context.resourceManager)
+		{
+			m_InformationText.setFont(context.resourceManager->getFontHolder()->getDefaultFont());
+			m_InformationText.setCharacterSize(15.f);
+			m_InformationText.setFillColor(sf::Color::White);
+			m_InformationText.setPosition(sf::Vector2f(50.f, 10.f));
+		}
+
+		m_QuitEngine = [](){};
 	}
 
 	Scene::~Scene()
@@ -336,116 +341,116 @@ namespace nero
 		handleCollisionContactEnd(collision);*/
 	}
 
-	  void Scene::pauseScene()
-	  {
+	void Scene::pauseScene()
+	{
 
-	  }
+	}
 
-	  void Scene::resumeScene()
-	  {
+	void Scene::resumeScene()
+	{
 
-	  }
+	}
 
-	  void Scene::resetScene()
-	  {
+	void Scene::resetScene()
+	{
 
-	  }
+	}
 
-	  void Scene::quitScene()
-	  {
+	void Scene::quitScene()
+	{
+		m_QuitEngine();
+	}
 
-	  }
+	void Scene::hideGameWorld()
+	{
 
-	  void Scene::hideGameWorld()
-	  {
+	}
 
-	  }
+	void Scene::showGameWorld()
+	{
 
-	  void Scene::showGameWorld()
-	  {
+	}
 
-	  }
-
-	  void Scene::loadGameLevel(const std::string& name)
-	  {
-		  auto gameLevel = std::make_shared<GameLevelObject>();
-		  Setting parameter;
-		  gameLevel->initialize(parameter);
+	void Scene::loadGameLevel(const std::string& name)
+	{
+	  auto gameLevel = std::make_shared<GameLevelObject>();
+	  Setting parameter;
+	  gameLevel->initialize(parameter);
 
 
-		  m_PhysicWorld = gameLevel->getPhysicWorld();
+	  m_PhysicWorld = gameLevel->getPhysicWorld();
 
-		  m_PhysicWorld->SetContactListener(this);
-		  m_PhysicWorld->SetDebugDraw(&m_ShapeRenderer);
-	  }
+	  m_PhysicWorld->SetContactListener(this);
+	  m_PhysicWorld->SetDebugDraw(&m_ShapeRenderer);
+	}
 
-	  void Scene::loadWorldChunk(const std::string& name)
-	  {
+	void Scene::loadWorldChunk(const std::string& name)
+	{
 
-	  }
+	}
 
-	  void Scene::unLoadGameLevel(const std::string& name)
-	  {
+	void Scene::unLoadGameLevel(const std::string& name)
+	{
 
-	  }
+	}
 
-	  void Scene::unLoadWorldChunk(const std::string& name)
-	  {
+	void Scene::unLoadWorldChunk(const std::string& name)
+	{
 
-	  }
+	}
 
-	  void Scene::hideGameScreen(const std::string& name)
-	  {
+	void Scene::hideGameScreen(const std::string& name)
+	{
 
-	  }
+	}
 
-	  void Scene::showGameScreen(const std::string& name)
-	  {
+	void Scene::showGameScreen(const std::string& name)
+	{
 
-	  }
+	}
 
-	  void Scene::enableObjectLayer(const std::string& name)
-	  {
+	void Scene::enableObjectLayer(const std::string& name)
+	{
 
-	  }
+	}
 
-	  void Scene::disableObjectLayer(const std::string& name)
-	  {
+	void Scene::disableObjectLayer(const std::string& name)
+	{
 
-	  }
+	}
 
-	  void Scene::enableGameChunk(const std::string& name)
-	  {
+	void Scene::enableGameChunk(const std::string& name)
+	{
 
-	  }
+	}
 
-	  void Scene::disableGameChunk(const std::string& name)
-	  {
+	void Scene::disableGameChunk(const std::string& name)
+	{
 
-	  }
+	}
 
-	  Scene::Context& Scene::getSceneContext()
-	  {
-		  return m_SceneContext;
-	  }
+	Scene::Context& Scene::getSceneContext()
+	{
+	  return m_SceneContext;
+	}
 
-	  Scene::RenderTexturePtr Scene::getRenderTexture()
-	  {
-			return m_SceneContext.renderTexture;
-	  }
+	Scene::RenderTexturePtr Scene::getRenderTexture()
+	{
+		return m_SceneContext.renderTexture;
+	}
 
-	  void Scene::setupLighting()
-	  {
-		  //create light manager
-		  m_LightManager = std::make_shared<ltbl::LightSystem>(false);
-		  m_LightManager->create({-1000.f, -1000.f, (float)m_SceneContext.renderTexture->getSize().x, (float)m_SceneContext.renderTexture->getSize().y }, m_SceneContext.renderTexture->getSize());
+	void Scene::setupLighting()
+	{
+		//create light manager
+		m_LightManager = std::make_shared<ltbl::LightSystem>(false);
+		m_LightManager->create({-1000.f, -1000.f, (float)m_SceneContext.renderTexture->getSize().x, (float)m_SceneContext.renderTexture->getSize().y }, m_SceneContext.renderTexture->getSize());
 
-		  m_LightManager->setAmbientColor(sf::Color(0, 12, 24));
+		m_LightManager->setAmbientColor(sf::Color(0, 12, 24));
 
-	  }
+	}
 
-	  void Scene::renderLighting()
-	  {
-		  m_LightManager->render(*m_SceneContext.renderTexture);
-	  }
+	void Scene::renderLighting()
+	{
+		m_LightManager->render(*m_SceneContext.renderTexture);
+	}
 }
