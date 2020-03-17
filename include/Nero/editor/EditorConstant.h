@@ -48,7 +48,9 @@ namespace nero
 			//project manager
 		const std::string WINDOW_PROJECT_MANAGER		= "Project Manager";
 		sf::Vector2f	  WINDOW_PROJECT_MANAGER_SIZE	= sf::Vector2f(800.f, 500.f);
-
+			//script wizard
+		const std::string WINDOW_SCRIPT_WIZARD			= "Script Wizard";
+		sf::Vector2f	  WINDOW_SCRIPT_WIZARD_SIZE		= sf::Vector2f(600.f, 400.f);
 		//Window and View
 
 		const std::string TAB_CREATE_PROJECT				= "Create Project";
@@ -63,6 +65,7 @@ namespace nero
 		const std::string TEXTURE_EDIT_BUTTON			= "edit_button";
 		const std::string TEXTURE_COMPILE_BUTTON		= "compile_button";
 		const std::string TEXTURE_RELOAD_BUTTON			= "reload_button";
+		const std::string TEXTURE_SCRIPT_BUTTON			= "script_button";
 
 		//Evenrionnment variable
 		const std::string NERO_GAME_HOME				= "NERO_GAME_HOME";

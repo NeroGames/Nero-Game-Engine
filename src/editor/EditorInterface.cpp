@@ -21,10 +21,13 @@ namespace  nero
 		////////////////////////Project and Workspace////////////////////////
 		,m_WorksapceStatus(0)
 		,m_SelectedWorkpsapce(nullptr)
-		,m_SelectedWorkpsapceIdex(0)
-		,m_SelectedProjectTypeIdex(0)
-		,m_SelectedCodeEditorIdex(0)
+		,m_SelectedWorkpsapceIndex(0)
+		,m_SelectedProjectTypeIndex(0)
+		,m_SelectedCodeEditorIndex(0)
+		,m_SelectedScriptTypeIndex(0)
+		,m_SelectedGameLevelIndex(0)
 		,m_ProjectCreationStatus(0)
+		,m_SelectedGameScreenIndex(0)
 		,m_AdvancedScene(nullptr)
 		,g_Context(nullptr)
 		,m_BuildDockspaceLayout(true)
@@ -104,6 +107,7 @@ namespace  nero
 		clearWorkspaceInput();
 		clearProjectInput();
 		updateProjectInput();
+		clearScriptWizardInput();
 
 		//
 		m_ProjectManager->setSetting(m_Setting);
@@ -770,36 +774,50 @@ namespace  nero
 
 			ImGui::SameLine(width - 72.f);
 
-			 if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
-             {
+			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
+			{
 				ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-             }
+			}
 
-             ImGui::SameLine(width - 72.f - 24.f - 3.f - 10.f);
+			if(m_GameProject)
+			{
+				ImGui::SameLine(width - 72.f - 24.f - 3.f - 10.f);
 
-			 if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_RELOAD_BUTTON)))
-             {
-                reloadProject();
-             }
+				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_RELOAD_BUTTON)))
+				{
+					reloadProject();
+				}
 
-             ImGui::SameLine(width - 72.f - 48.f - 6.f - 20.f);
+				ImGui::SameLine(width - 72.f - 48.f - 6.f - 20.f);
 
-			 if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_EDIT_BUTTON)))
-             {
-                editProject();
-             }
+				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_EDIT_BUTTON)))
+				{
+					editProject();
+				}
 
-             ImGui::SameLine(width - 72.f - 72.f - 9.f - 30.f);
+				ImGui::SameLine(width - 72.f - 72.f - 9.f - 30.f);
 
-			 if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_COMPILE_BUTTON)))
-             {
-                compileProject();
-             }
+				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_COMPILE_BUTTON)))
+				{
+					compileProject();
+				}
 
-             ImGui::PopStyleVar();
+				ImGui::SameLine(width - 72.f - 96.f - 12.f - 30.f - 100.f);
 
-			 //show project manager window
-			 showProjectManagerWindow();
+				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_SCRIPT_BUTTON)))
+				{
+					ImGui::OpenPopup(EditorConstant.WINDOW_SCRIPT_WIZARD.c_str());
+				}
+			}
+
+
+			ImGui::PopStyleVar();
+
+			//show project manager window
+			showProjectManagerWindow();
+
+			//show script creaton window
+			showScriptCreationWindow();
 
         ImGui::End();
 		ImGui::PopStyleVar();
@@ -883,6 +901,198 @@ namespace  nero
             ImGui::EndPopup();
         }
     }
+
+	void EditorInterface::showScriptCreationWindow()
+	{
+		//Window flags
+		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
+										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+		//Winsow size
+		ImVec2 winsow_size              = EditorConstant.WINDOW_SCRIPT_WIZARD_SIZE;
+
+		//Project manager window
+		ImGui::SetNextWindowSize(winsow_size);
+		//Begin window
+		if(ImGui::BeginPopupModal(EditorConstant.WINDOW_SCRIPT_WIZARD.c_str(), nullptr, window_flags))
+		{
+
+			if (ImGui::BeginTabBar("##scrip_wizard_tabbar"))
+			{
+				ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+				float wording_width = 130.f;
+				float input_width = ImGui::GetWindowContentRegionWidth() - 150.f;
+
+				if (ImGui::BeginTabItem("CPP Script"))
+				{
+					ImGui::Text("Class Name");
+					ImGui::SameLine(wording_width);
+					ImGui::SetNextItemWidth(input_width);
+					ImGui::InputText("##class_name", m_InputClassName, sizeof(m_InputClassName));
+					ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+					ImGui::Text("Script Type");
+					ImGui::SameLine(wording_width);
+					ImGui::SetNextItemWidth(input_width);
+					const char* scriptTypeComboTable[] = {"Game Level Script", "Game Screen Script"};
+					m_SelectedScriptType = scriptTypeComboTable[m_SelectedScriptTypeIndex];
+					if (ImGui::BeginCombo("##code-editor-combo", m_SelectedScriptType, ImGuiComboFlags()))
+					{
+						for (int n = 0; n < IM_ARRAYSIZE(scriptTypeComboTable); n++)
+						{
+							bool is_selected = (m_SelectedScriptType == scriptTypeComboTable[n]);
+
+							if (ImGui::Selectable(scriptTypeComboTable[n], is_selected))
+							{
+								m_SelectedScriptType = scriptTypeComboTable[n];
+								m_SelectedScriptTypeIndex = n;
+							}
+
+							if (is_selected)
+							{
+								ImGui::SetItemDefaultFocus();
+							}
+						}
+						ImGui::EndCombo();
+					}
+
+					ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+					ImGui::Separator();
+
+					ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+					if(std::string(m_SelectedScriptType) == "Game Level Script")
+					{
+						ImGui::Text("Game Level");
+						ImGui::SameLine(wording_width);
+						ImGui::SetNextItemWidth(input_width);
+
+						//load workpsace
+						std::vector<std::string> gameLevelNameTable = m_AdvancedScene->getGameLevelNameTable();
+
+						if(gameLevelNameTable.empty())
+						{
+							gameLevelNameTable.push_back("There is no Level availabled");
+						}
+
+						std::size_t levelCount = gameLevelNameTable.size();
+						const char** levelComboTable = new const char* [levelCount];
+
+						fillCharTable(levelComboTable, gameLevelNameTable);
+
+						m_SelectedGameLevel = levelComboTable[m_SelectedGameLevelIndex];
+						if (ImGui::BeginCombo("##game_level_combo", m_SelectedGameLevel, ImGuiComboFlags())) // The second parameter is the label previewed before opening the combo.
+						{
+							for (int n = 0; n < levelCount; n++)
+							{
+								bool is_selected = (m_SelectedGameLevel == levelComboTable[n]);
+
+
+								if (ImGui::Selectable(levelComboTable[n], is_selected))
+								{
+									m_SelectedGameLevel = levelComboTable[n];
+									m_SelectedGameLevelIndex = n;
+
+								}
+
+								if (is_selected)
+								{
+									 ImGui::SetItemDefaultFocus();
+								}
+							}
+							ImGui::EndCombo();
+						}
+
+						//delete array
+						for (std::size_t i = 0 ; i < levelCount; i++)
+						{
+							delete[] levelComboTable[i] ;
+						}
+						delete[] levelComboTable ;
+						levelComboTable = nullptr;
+
+					}
+					else if(std::string(m_SelectedScriptType) == "Game Screen Script")
+					{
+						ImGui::Text("Screen Level");
+						ImGui::SameLine(wording_width);
+						ImGui::SetNextItemWidth(input_width);
+
+						//load workpsace
+						std::vector<std::string> gameScreenNameTable = m_AdvancedScene->getGameScreenNameTable();
+
+						if(gameScreenNameTable.empty())
+						{
+							gameScreenNameTable.push_back("There is no Level availabled");
+						}
+
+						std::size_t screenCount = gameScreenNameTable.size();
+						const char** screenComboTable = new const char* [screenCount];
+
+						fillCharTable(screenComboTable, gameScreenNameTable);
+
+						m_SelectedGameScreen = screenComboTable[m_SelectedGameScreenIndex];
+						if (ImGui::BeginCombo("##game_level_combo", m_SelectedGameScreen, ImGuiComboFlags())) // The second parameter is the label previewed before opening the combo.
+						{
+							for (int n = 0; n < screenCount; n++)
+							{
+								bool is_selected = (m_SelectedGameScreen == screenComboTable[n]);
+
+
+								if (ImGui::Selectable(screenComboTable[n], is_selected))
+								{
+									m_SelectedGameScreen = screenComboTable[n];
+									m_SelectedGameScreenIndex = n;
+
+								}
+
+								if (is_selected)
+								{
+									 ImGui::SetItemDefaultFocus();
+								}
+							}
+							ImGui::EndCombo();
+						}
+
+						//delete array
+						for (std::size_t i = 0 ; i < screenCount; i++)
+						{
+							delete[] screenComboTable[i] ;
+						}
+						delete[] screenComboTable ;
+						screenComboTable = nullptr;
+
+					}
+
+					ImGui::EndTabItem();
+				}
+
+				if (ImGui::BeginTabItem("Lua Script"))
+				{
+
+					ImGui::EndTabItem();
+				}
+
+				ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 102.f);
+				ImGui::SetCursorPosY(winsow_size.y * 0.85f - 100.f);
+				bool onCreate = ImGui::Button("Create##create_script_object", ImVec2(100, 0));
+
+				ImGui::EndTabBar();
+			}
+
+			ImGui::SetCursorPosY(winsow_size.y - 38.f);
+			ImGui::Separator();
+			ImGui::Dummy(ImVec2(0.0f, 4.0f));
+			ImGui::SetCursorPosX(winsow_size.x/2.f - 50.f);
+			if (ImGui::Button("Close##close_script_wizard_window", ImVec2(100, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
 
 
 	void EditorInterface::showRecentProjectWindow()
@@ -1008,7 +1218,7 @@ namespace  nero
 
 			fillCharTable(workspaceComboTable, workspaceNameTable);
 
-			m_SelectedWorkpsapce = workspaceComboTable[m_SelectedWorkpsapceIdex];
+			m_SelectedWorkpsapce = workspaceComboTable[m_SelectedWorkpsapceIndex];
 			if (ImGui::BeginCombo("##combo", m_SelectedWorkpsapce, ImGuiComboFlags())) // The second parameter is the label previewed before opening the combo.
 			{
 				for (int n = 0; n < worskpaceCount; n++)
@@ -1019,7 +1229,7 @@ namespace  nero
 					if (ImGui::Selectable(workspaceComboTable[n], is_selected))
 					{
 						m_SelectedWorkpsapce = workspaceComboTable[n];
-						m_SelectedWorkpsapceIdex = n;
+						m_SelectedWorkpsapceIndex = n;
 
 						auto workspace = m_ProjectManager->findWorkspace(workspaceNameTable[n]);
 
@@ -1050,7 +1260,7 @@ namespace  nero
 			ImGui::SameLine(wording_width);
 			ImGui::SetNextItemWidth(input_width);
 			const char* projectTypeComboTable[] = {"CPP Project", "Lua Project", "CPP and Lua Project"};
-			m_SelectedProjectType = projectTypeComboTable[m_SelectedProjectTypeIdex];            // Here our selection is a single pointer stored outside the object.
+			m_SelectedProjectType = projectTypeComboTable[m_SelectedProjectTypeIndex];            // Here our selection is a single pointer stored outside the object.
 			if (ImGui::BeginCombo("##project_type_combo", m_SelectedProjectType, ImGuiComboFlags())) // The second parameter is the label previewed before opening the combo.
 			{
 				for (int n = 0; n < IM_ARRAYSIZE(projectTypeComboTable); n++)
@@ -1060,7 +1270,7 @@ namespace  nero
 					if (ImGui::Selectable(projectTypeComboTable[n], is_selected))
 					{
 						m_SelectedProjectType = projectTypeComboTable[n];
-						m_SelectedProjectTypeIdex = n;
+						m_SelectedProjectTypeIndex = n;
 					}
 
 					if (is_selected)
@@ -1076,7 +1286,7 @@ namespace  nero
 			ImGui::SameLine(wording_width);
 			ImGui::SetNextItemWidth(input_width);
 			const char* codeEditorComboTable[] = {"Qt Creator", "Visual Studio"};
-			m_SelectedCodeEditor = codeEditorComboTable[m_SelectedCodeEditorIdex];
+			m_SelectedCodeEditor = codeEditorComboTable[m_SelectedCodeEditorIndex];
 			if (ImGui::BeginCombo("##code-editor-combo", m_SelectedCodeEditor, ImGuiComboFlags()))
 			{
 				for (int n = 0; n < IM_ARRAYSIZE(codeEditorComboTable); n++)
@@ -1086,7 +1296,7 @@ namespace  nero
 					if (ImGui::Selectable(codeEditorComboTable[n], is_selected))
 					{
 						m_SelectedCodeEditor = codeEditorComboTable[n];
-						m_SelectedCodeEditorIdex = n;
+						m_SelectedCodeEditorIndex = n;
 					}
 
 					if (is_selected)
@@ -2378,10 +2588,18 @@ namespace  nero
 	{
 		if(m_GameProject)
 		{
-			std::async([this]()
+			switch (m_EditorMode)
 			{
-				m_GameProject->saveProject();
-			});
+				case EditorMode::WORLD_BUILDER:
+				{
+					m_GameProject->saveGameLevel();
+				}break;
+
+				case EditorMode::SCREEN_BUILDER:
+				{
+					m_GameProject->saveGameScreen();
+				}break;
+			}
 		}
 	}
 
@@ -2389,7 +2607,18 @@ namespace  nero
 	{
 		if(m_GameProject)
 		{
-			m_GameProject->loadProject();
+			switch (m_EditorMode)
+			{
+				case EditorMode::WORLD_BUILDER:
+				{
+					m_GameProject->loadGameLevel();
+				}break;
+
+				case EditorMode::SCREEN_BUILDER:
+				{
+					m_GameProject->loadGameScreen();
+				}break;
+			}
 		}
 	}
 
@@ -3182,6 +3411,12 @@ namespace  nero
 		fillCharArray(m_InputWorksapceLocationImport,	sizeof(m_InputWorksapceLocationImport), StringPool.BLANK);
 	}
 
+	void EditorInterface::clearScriptWizardInput()
+	{
+		fillCharArray(m_InputClassName,			sizeof(m_InputClassName),		StringPool.BLANK);
+	}
+
+
 	void EditorInterface::clearProjectInput()
 	{
 		fillCharArray(m_InputProjectName,			sizeof(m_InputProjectName),			StringPool.BLANK);
@@ -3203,7 +3438,7 @@ namespace  nero
 			fillCharArray(m_InputProjectLead,			sizeof(m_InputProjectLead),			workspace["project_lead"].get<std::string>());
 			fillCharArray(m_InputProjectNamespace,		sizeof(m_InputProjectNamespace),	workspace["project_namespace"].get<std::string>());
 
-			m_SelectedWorkpsapceIdex = 0;
+			m_SelectedWorkpsapceIndex = 0;
 		}
 		else
 		{

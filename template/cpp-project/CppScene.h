@@ -19,7 +19,7 @@ namespace ::Namespace::
             typedef std::shared_ptr<::Scene_Class::> Ptr;
 
         public: //Scene Factory
-            static ::Scene_Class::::Ptr createScene(nero::Scene::Context context) noexcept;
+            static nero::Scene::Ptr createScene(nero::Scene::Context context) noexcept;
 
         public: //Scene core
                                         ::Scene_Class::(nero::Scene::Context context);

@@ -143,9 +143,9 @@ namespace nero
 			char                        m_InputWorkspaceLead[100];
             char                        m_InputWorkspaceNamespace[10];
             const char*                 m_SelectedWorkpsapce;
-			int                         m_SelectedWorkpsapceIdex;
-			int                         m_SelectedProjectTypeIdex;
-			int                         m_SelectedCodeEditorIdex;
+			int                         m_SelectedWorkpsapceIndex;
+			int                         m_SelectedProjectTypeIndex;
+			int                         m_SelectedCodeEditorIndex;
 
             //Game Project
             char                        m_InputProjectName[100];        //read project name
@@ -160,6 +160,15 @@ namespace nero
 
             int                         m_ProjectCreationStatus;
             std::string                 m_LastCreatedProject;
+
+			//Script Wizard
+			char                        m_InputClassName[100];
+			const char*                 m_SelectedScriptType;
+			int                         m_SelectedScriptTypeIndex;
+			const char*                 m_SelectedGameLevel;
+			int                         m_SelectedGameLevelIndex;
+			const char*                 m_SelectedGameScreen;
+			int                         m_SelectedGameScreenIndex;
 
 			//World chunk
 			void						addWorldChunk();
@@ -185,6 +194,8 @@ namespace nero
 			void                        showOpenProjectWindow();
             void                        showRecentProjectWindow();
             void                        showWorkspaceWindow();
+			//
+			void						showScriptCreationWindow();
             //function
 			int                         createProject(const Setting& parameter, int& status);
 			void                        createWorkspace(const Setting& parameter);
@@ -258,6 +269,7 @@ namespace nero
 			void selectDirectory(std::function<void(nfdchar_t *outPath)> callback);
 			void clearWorkspaceInput();
 			void clearProjectInput();
+			void clearScriptWizardInput();
 			void updateProjectInput();
 			void showMeshResource();
 			sf::Vector2f getAddObjectPosition();

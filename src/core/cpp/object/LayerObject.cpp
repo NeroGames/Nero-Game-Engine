@@ -5,6 +5,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/core/cpp/object/LayerObject.h>
+#include <Nero/core/cpp/utility/LogUtil.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -44,8 +45,6 @@ namespace nero
     nlohmann::json LayerObject::toJson() const
     {
         nlohmann::json layerJson = Object::toJson();
-
-        layerJson["order"] = getOrder();
 
         switch(getSecondType())
         {

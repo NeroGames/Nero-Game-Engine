@@ -245,8 +245,8 @@ namespace nero
         objectJson["object_id"]         = getId();
         objectJson["name"]              = getName();
         objectJson["category"]          = getCategory();
-        objectJson["first_type"]        = Type_String[getFirstType()];
-        objectJson["second_type"]       = Type_String[getSecondType()];
+		objectJson["first_type"]        = getTypeString(getFirstType());
+		objectJson["second_type"]       = getTypeString(getSecondType());
         objectJson["is_visible"]        = isVisible();
         objectJson["is_updateable"]     = isUpdateable();
         objectJson["is_selectable"]     = isSelectable();
@@ -312,5 +312,54 @@ namespace nero
     {
         return sf::Vector2f();
     }
+
+	std::string Object::getTypeString(const Object::Type& type) const
+	{
+		switch (type)
+		{
+			case Sprite_Object:
+				return "sprite_object";
+
+			case Mesh_Object:
+				return "mesh_object";
+
+			case Physic_Object:
+				return "physic_object";
+
+			case Meshed_Object:
+				return "meshed_object";
+
+			case Solid_Object:
+				return "solid_object";
+
+			case Layer_Object:
+				return "layer_object";
+
+			case Animation_Object:
+				return "animation_object";
+
+			case Animation_Meshed_Object:
+				return "animation_meshed_object";
+
+			case Animation_Solid_Object:
+				return "animation_solid_object";
+
+			case Text_Object:
+				return "text_object";
+
+			case UI_Object:
+				return "ui_object";
+
+			case Button_Object:
+				return "button_object";
+
+			case Light_Object:
+				return "light_object";
+
+			default:
+				return "no_type";
+		}
+	}
+
 }
 

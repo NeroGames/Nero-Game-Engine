@@ -54,16 +54,11 @@ namespace nero
 
 			struct WorldChunk
 			{
-				WorldChunk()
-				{
-					sceneBuilder = std::make_shared<SceneBuilder>();
-				}
-
 				int					chunkId			= -1;
 				std::string			name			= StringPool.BLANK;
 				bool				visible			= true;
 				bool				selected		= false;
-				SceneBuilder::Ptr	sceneBuilder	= nullptr;
+				SceneBuilder::Ptr	sceneBuilder	= std::make_shared<SceneBuilder>();
 			};
 
 			struct GameLevel
@@ -148,19 +143,14 @@ namespace nero
 
 			struct GameScreen
             {
-				GameScreen()
-				{
-					sceneBuilder = std::make_shared<SceneBuilder>();
-				}
-
 				int						screenId		= -1;
 				std::string             name			= StringPool.BLANK;
 				bool					selected		= false;
-				SceneBuilder::Ptr       sceneBuilder	= nullptr;
+				SceneBuilder::Ptr       sceneBuilder	= std::make_shared<SceneBuilder>();
             };
 
         public:
-			AdvancedScene();
+												AdvancedScene();
 
 			void								handleEvent(const sf::Event& event, const EditorMode& editorMode, const BuilderMode& builderMode);
 			void								update(const sf::Time& timeStep, const EditorMode& editorMode, const BuilderMode& builderMode);
@@ -209,6 +199,11 @@ namespace nero
 			void								setCppSceneCreator(boost::function<CreateCppSceneFn>& createCppScene);
 			void								setProjectParameter(const Setting& parameter);
 			Scene::Ptr							createCppScene();
+
+			//
+			std::vector<std::string>			getGameLevelNameTable();
+			std::vector<std::string>			getGameScreenNameTable();
+
 
 		private:
 			void								renderDebug();

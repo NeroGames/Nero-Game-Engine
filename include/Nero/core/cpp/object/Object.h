@@ -28,7 +28,6 @@ namespace nero
             static  Ptr                         Cast(Object::Ptr object);
 
         public:
-            const   std::vector<sf::String>     Type_String{"sprite_object", "mesh_object", "physic_object", "meshed_object", "solid_object", "layer_object", "animation_object", "animation_meshed_object", "animation_solid_object", "text_object", "ui_object", "button_object","none"};
 			enum    Type {Sprite_Object, Mesh_Object, Physic_Object, Meshed_Object, Solid_Object, Layer_Object, Animation_Object, Animation_Meshed_Object, Animation_Solid_Object, Text_Object, UI_Object, Button_Object, Light_Object, None};
 
         public:
@@ -51,6 +50,7 @@ namespace nero
             const sf::String&               getCategory()       const;
             const Type&                     getFirstType()      const;
             const Type&                     getSecondType()     const;
+			std::string						getTypeString(const Type& type) const;
 
             bool                            isVisible()         const;
             bool                            isUpdateable()      const;

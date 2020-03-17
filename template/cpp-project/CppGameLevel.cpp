@@ -3,45 +3,50 @@
 // Copyright (c) ::Coypright_Date:: ::Project_Lead::
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
-#include "::Scene_Class::.h"
+#include "::Class_Name::.h"
 /////////////////////////////////////////////////////////////
 
 namespace ::Namespace::
 {
     /////////////////////////////////////////////////////////////
-    ::Scene_Class::::::Scene_Class::(nero::Scene::Context context) : nero::Scene(context)
+	::Class_Name::::::Class_Name::(nero::ScriptObject::Context context) : nero::GameLevelScriptObject(context)
     {
 
     }
 
     /////////////////////////////////////////////////////////////
-    ::Scene_Class::::~::Scene_Class::()
+	::Class_Name::::~::Class_Name::()
     {
 
+    }
+
+	/////////////////////////////////////////////////////////////
+	::Class_Name::::~::init::()
+	{
+
+	}
+
+    /////////////////////////////////////////////////////////////
+	nero::GameLevelScriptObject::Ptr ::Class_Name::::create::Class_Name::(nero::ScriptObject::Context context) noexcept
+    {
+		  return ::Class_Name::::Ptr(new ::Class_Name::(context));
     }
 
     /////////////////////////////////////////////////////////////
-   	nero::Scene::Ptr ::Scene_Class::::createScene(nero::Scene::Context context) noexcept
+	void ::Class_Name::::handleEvent(const sf::Event& event)
     {
-          return ::Scene_Class::::Ptr(new ::Scene_Class::(context));
+		nero::GameLevelScriptObject::handleEvent(event);
     }
 
     /////////////////////////////////////////////////////////////
-    void ::Scene_Class::::handleEvent(const sf::Event& event)
+	void ::Class_Name::::update(const sf::Time& timeStep)
     {
-        nero::Scene::handleEvent(event);
+		nero::GameLevelScriptObject::update(timeStep);
     }
 
     /////////////////////////////////////////////////////////////
-    void ::Scene_Class::::update(const sf::Time& timeStep)
+	void  ::Class_Name::::render()
     {
-        nero::Scene::update(timeStep);
+		nero::GameLevelScriptObject::render();
     }
-
-    /////////////////////////////////////////////////////////////
-    void  ::Scene_Class::::render()
-    {
-        nero::Scene::render();
-    }
-
 }

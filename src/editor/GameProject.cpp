@@ -73,18 +73,10 @@ namespace nero
 		m_AdvancedScene->m_SelectedWorldBuilder = nullptr;
 		m_AdvancedScene->m_GameLevelTable.clear();
 
-		//load level
-		//itirate from level folder
-
-
-
 		//Iterate over files in the folder
 		std::experimental::filesystem::directory_iterator it{directoryPath};
 		while (it != std::experimental::filesystem::directory_iterator{})
 		{
-
-			//Setting parameter;
-			//parameter.loadSetting(it->path().string(), true);
 			auto gameLevel = loadGameLevel(loadJson(it->path().string(), true));
 
 			m_AdvancedScene->m_GameLevelTable.push_back(gameLevel);
@@ -99,6 +91,7 @@ namespace nero
 					{
 						m_AdvancedScene->m_SelectedWorldChunk	= chunk;
 						m_AdvancedScene->m_SelectedWorldBuilder = chunk->sceneBuilder;
+						break;
 					}
 				}
 			}
@@ -115,7 +108,7 @@ namespace nero
 		gameLevel->name			= level["level_name"].get<std::string>();
 		gameLevel->levelId		= level["level_id"];
 		gameLevel->chunkCount	= level["chunk_count"];
-		gameLevel->selected	= level["selected"];
+		gameLevel->selected		= level["selected"];
 
 		for(auto& chunk : level["chunk_table"])
 		{
@@ -145,11 +138,11 @@ namespace nero
 
 			level_save["level_id"]		= level->levelId;
 			level_save["level_name"]	= level->name;
-			//level_save["selected"]		= level->levelId == m_AdvancedScene->m_SelectedGameLevel->levelId;
+			level_save["selected"]		= level->levelId == m_AdvancedScene->m_SelectedGameLevel->levelId;
 			level_save["chunk_count"]	= level->chunkCount;
 			level_save["chunk_table"]	= nlohmann::json::array();
 
-			/*for(auto& chunk : level->chunkTable)
+			for(auto& chunk : level->chunkTable)
 			{
 				nlohmann::json chunk_save;
 
@@ -157,10 +150,10 @@ namespace nero
 				chunk_save["chunk_id"]		= chunk->chunkId;
 				chunk_save["chunk_name"]	= chunk->name;
 				chunk_save["chunk_visible"] = chunk->visible;
-				chunk_save["selected"]		= chunk->chunkId == m_AdvancedScene->m_SelectedWorldChunk->chunkId;
+				//chunk_save["selected"]		= chunk->chunkId == level->getSelectedWorldChunk()->chunkId;
 
 				level_save["chunk_table"].push_back(chunk_save);
-			}*/
+			}
 
 			std::string levelFile = getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Level", level->name}, StringPool.EXTENSION_JSON);
 			saveFile(levelFile, level_save.dump(3), true);
@@ -180,6 +173,54 @@ namespace nero
 			std::string screenFile = getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Screen", screen->name}, StringPool.EXTENSION_JSON);
 			saveFile(screenFile, screen_save.dump(3), true);
 		}*/
+	}
+
+	void GameProject::saveGameLevel()
+	{
+		if(m_AdvancedScene->m_SelectedGameLevel)
+		{
+			auto level = m_AdvancedScene->m_SelectedGameLevel;
+
+			nlohmann::json level_save;
+
+			level_save["level_id"]		= level->levelId;
+			level_save["level_name"]	= level->name;
+			level_save["selected"]		= level->selected;
+			level_save["chunk_count"]	= level->chunkCount;
+			level_save["chunk_table"]	= nlohmann::json::array();
+
+			for(auto& chunk : level->chunkTable)
+			{
+				nlohmann::json chunk_save;
+
+				chunk_save["world_chunk"]	= chunk->sceneBuilder->saveScene();
+				chunk_save["chunk_id"]		= chunk->chunkId;
+				chunk_save["chunk_name"]	= chunk->name;
+				chunk_save["chunk_visible"] = chunk->visible;
+				chunk_save["selected"]		= chunk->selected;
+
+				level_save["chunk_table"].push_back(chunk_save);
+			}
+
+
+			std::string levelFile = getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Level", level->name}, StringPool.EXTENSION_JSON);
+			saveFile(levelFile, level_save.dump(3), true);
+		}
+	}
+
+	void GameProject::loadGameLevel()
+	{
+
+	}
+
+	void GameProject::saveGameScreen()
+	{
+
+	}
+
+	void GameProject::loadGameScreen()
+	{
+
 	}
 
 	void GameProject::loadLibrary()

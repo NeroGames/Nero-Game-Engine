@@ -1,0 +1,20 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2019 SANOU A. K. Landry
+/////////////////////////////////////////////////////////////
+#ifndef GAMESCREENSCRIPTOBJECT_H
+#define GAMESCREENSCRIPTOBJECT_H
+///////////////////////////HEADERS///////////////////////////
+//Nero
+#include <Nero/core/cpp/object/ScriptObject.h>
+/////////////////////////////////////////////////////////////
+namespace nero
+{
+	class GameScreenScriptObject : public ScriptObject
+	{
+		public:
+			GameScreenScriptObject();
+	};
+}
+
+#endif // GAMESCREENSCRIPTOBJECT_H

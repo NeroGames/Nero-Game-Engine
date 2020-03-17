@@ -1820,14 +1820,16 @@ namespace nero
         std::vector<nlohmann::json> layer_table;
 
         for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
-            layer_table.push_back((*layer)->toJson());
+		{
+			layer_table.push_back((*layer)->toJson());
+		}
 
         nlohmann::json scene;
 
         scene["layer_table"]    = layer_table;
         scene["layer_count"]    = m_LayerCount;
         scene["object_count"]   = m_ObjectCount;
-        scene["canvas_color"]   = nero::toJson(m_CanvasColor);
+		scene["canvas_color"]   = nero::toJson(m_CanvasColor);
 
         return scene;
     }

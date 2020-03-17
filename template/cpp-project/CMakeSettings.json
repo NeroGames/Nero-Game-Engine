@@ -1,0 +1,10 @@
+﻿{
+  "configurations": [
+    {
+      "name": "Nero Game",
+      "cacheRoot": "::Project_Build_Directory::",
+      "inheritEnvironments": [],
+      "variables": []
+    }
+  ]
+}

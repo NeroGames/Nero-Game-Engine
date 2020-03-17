@@ -102,7 +102,7 @@ namespace nero
 			m_SelectedWorldBuilder->setRenderTexture(m_RenderTexture);
 			m_SelectedWorldBuilder->setRenderContext(m_RenderContext);
 			m_SelectedWorldBuilder->addLayer();
-			setSelectedWorldChunk(m_SelectedWorldChunk);
+			m_SelectedGameLevel->setSelectedWorldChunk(m_SelectedWorldChunk->chunkId);
 		}
 	}
 
@@ -740,5 +740,30 @@ namespace nero
 	{
 
 	}
+
+	std::vector<std::string> AdvancedScene::getGameLevelNameTable()
+	{
+		std::vector<std::string> result;
+
+		for(auto level : m_GameLevelTable)
+		{
+			result.push_back(level->name);
+		}
+
+		return result;
+	}
+
+	std::vector<std::string> AdvancedScene::getGameScreenNameTable()
+	{
+		std::vector<std::string> result;
+
+		for(auto screen : m_GameScreenTable)
+		{
+			result.push_back(screen->name);
+		}
+
+		return result;
+	}
+
 }
 

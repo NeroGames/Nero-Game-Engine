@@ -35,6 +35,10 @@ namespace nero
 			void								init(const Setting& parameter);
 			void								loadProject();
 			void								saveProject();
+			void								saveGameLevel();
+			void								loadGameLevel();
+			void								saveGameScreen();
+			void								loadGameScreen();
 			void								loadLibrary();
 			void								openEditor();
 			void								compileProject();
