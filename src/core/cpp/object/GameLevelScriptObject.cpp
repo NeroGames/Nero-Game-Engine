@@ -8,7 +8,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	GameLevelScriptObject::GameLevelScriptObject()
+	GameLevelScriptObject::GameLevelScriptObject(ScriptObject::Context context):
+		ScriptObject (context)
 	{
 
 	}

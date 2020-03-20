@@ -13,7 +13,7 @@ namespace nero
 	class GameScreenScriptObject : public ScriptObject
 	{
 		public:
-			GameScreenScriptObject();
+			GameScreenScriptObject(ScriptObject::Context context);
 	};
 }
 

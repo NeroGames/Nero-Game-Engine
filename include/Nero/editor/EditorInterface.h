@@ -65,11 +65,11 @@ namespace nero
 			//editor view
 				//upper left
 			void                    showUtilityWindow();
-			void                    showSceneLevelWindow();
+			void                    showGameLevelWindow();
 			void                    showWorldChunckWindow();
 				//bottom left
 			void					showObjectLayerWindow();
-            void                    showSceneScreenWindow();
+			void                    showGameScreenWindow();
                 //right
 			void                    showExplorerWindow();
 			void                    showResourceBrowserWindow();
@@ -182,7 +182,10 @@ namespace nero
 			void						addGameLevel();
 			void						removeGameLevel();
 			int							m_InputSelectedGameLevelId;
-
+			//
+			void						addGameScreen();
+			void						removeGameScreen();
+			int							m_InputSelectedGameScreenId;
 
             //Tabs
 			TabBarSwitch				m_ProjectManagerTabBarSwitch;
@@ -266,6 +269,7 @@ namespace nero
 			void init();
 			std::string getString(const EditorMode& editorMode);
 
+
 			void selectDirectory(std::function<void(nfdchar_t *outPath)> callback);
 			void clearWorkspaceInput();
 			void clearProjectInput();
@@ -291,6 +295,8 @@ namespace nero
 			std::tuple<ImVec4, ImVec4> getLayerColor(Object::Type type);
 
 			ImVec4 ambient_light;
+
+			void createScriptObject(const Setting& parameter);
 
 	};
 

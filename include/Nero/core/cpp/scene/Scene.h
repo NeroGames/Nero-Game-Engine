@@ -161,9 +161,7 @@ namespace nero
 			//
 			LightManagerPtr					m_LightManager;
 			//
-			std::map<std::string, sf::Texture>		m_TextureMap; //TODO : remove
-			//
-			std::function<void()>                           m_QuitEngine;
+			std::function<void()>           m_QuitEngine;
 	};
 }
 

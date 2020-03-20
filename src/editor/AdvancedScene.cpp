@@ -269,10 +269,20 @@ namespace nero
 		return m_GameLevelTable;
 	}
 
+	const std::vector<AdvancedScene::GameScreenPtr>& AdvancedScene::getGameScreenTable()
+	{
+		return m_GameScreenTable;
+	}
+
 
 	AdvancedScene::GameLevelPtr AdvancedScene::getSelectedGameLevel()
 	{
 		return m_SelectedGameLevel;
+	}
+
+	AdvancedScene::GameScreenPtr AdvancedScene::getSelectedGameScreen()
+	{
+		return m_SelectedGameScreen;
 	}
 
 	void AdvancedScene::setSetting(const Setting::Ptr& setting)
@@ -290,6 +300,12 @@ namespace nero
 		m_SelectedGameLevel		= gameLevel;
 		m_SelectedWorldChunk	= gameLevel->getSelectedWorldChunk();
 		m_SelectedWorldBuilder	= m_SelectedWorldChunk->sceneBuilder;
+	}
+
+	void AdvancedScene::setSelectedGameScreen(AdvancedScene::GameScreenPtr gameScreen)
+	{
+		m_SelectedGameScreen	= gameScreen;
+		m_SelectedWorldBuilder	= m_SelectedGameScreen->sceneBuilder;
 	}
 
 	void AdvancedScene::setSelectedWorldChunk(AdvancedScene::WorldChunkPtr worldChunk)

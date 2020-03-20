@@ -25,7 +25,7 @@ namespace ::Namespace::
 										::Class_Name::(nero::ScriptObject::Context context);
 			virtual                    ~::Class_Name::() override;
 
-			virtual						init();
+			virtual	void				init();
 			virtual void                handleEvent(const sf::Event& event) override;
 			virtual void                update(const sf::Time& timeStep) override;
 			virtual void                render() override;

@@ -63,11 +63,17 @@ namespace nero
 		createDirectory(getPath({projectDirectory, "Source"}));
 			createDirectory(getPath({projectDirectory, "Source", project_name}));
 				createDirectory(getPath({projectDirectory, "Source", project_name, "cpp"}));
-					createDirectory(getPath({projectDirectory, "Source", project_name, "cpp", "script"}));
+				createDirectory(getPath({projectDirectory, "Source", project_name, "cpp", "script"}));
+					createDirectory(getPath({projectDirectory, "Source", project_name, "cpp", "gameobject"}));
+					createDirectory(getPath({projectDirectory, "Source", project_name, "cpp", "level"}));
+					createDirectory(getPath({projectDirectory, "Source", project_name, "cpp", "screen"}));
+					createDirectory(getPath({projectDirectory, "Source", project_name, "cpp", "startupscreen"}));
 		createDirectory(getPath({projectDirectory, "Build"}));
 		createDirectory(getPath({projectDirectory, "Scene"}));
 			createDirectory(getPath({projectDirectory, "Scene", "Level"}));
 			createDirectory(getPath({projectDirectory, "Scene", "Screen"}));
+			createDirectory(getPath({projectDirectory, "Scene", "Factory"}));
+			createDirectory(getPath({projectDirectory, "Scene", "Class"}));
 		createDirectory(getPath({projectDirectory, "Setting"}));
 
 		//Step 1-2 : Create project document

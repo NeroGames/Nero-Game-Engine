@@ -146,6 +146,7 @@ namespace nero
 				int						screenId		= -1;
 				std::string             name			= StringPool.BLANK;
 				bool					selected		= false;
+				bool					visible			= true;
 				SceneBuilder::Ptr       sceneBuilder	= std::make_shared<SceneBuilder>();
             };
 
@@ -176,9 +177,12 @@ namespace nero
 			void								addObject(Object::Type type, const sf::String& label, sf::Vector2f position, const EditorMode& editorMode);
 
 			const std::vector<GameLevelPtr>&	getGameLevelTable();
+			const std::vector<GameScreenPtr>&	getGameScreenTable();
 			GameLevelPtr						getSelectedGameLevel();
+			GameScreenPtr						getSelectedGameScreen();
 			WorldChunkPtr						getSelectedWorldChunk();
 			void								setSelectedGameLevel(GameLevelPtr gameLevel);
+			void								setSelectedGameScreen(GameScreenPtr gameScreen);
 			void								setSelectedWorldChunk(WorldChunkPtr worldChunk);
 			SceneBuilder::Ptr					getSelectedSceneBuilder(const EditorMode& editorMode);
 			void								playScene();

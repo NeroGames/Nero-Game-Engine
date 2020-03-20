@@ -55,6 +55,7 @@ namespace nero
 			AdvancedScene::GameLevelPtr			loadGameLevel(const nlohmann::json& level);
 			std::string							getProjectName() const;
 			std::vector<BackgroundTask>&		getBackgroundTaskTable();
+			void								createScriptObject(const Setting& parameter);
 
 		private:
 			BackgroundTask&						createBackgroundTask(const std::string& name, const std::string& category);

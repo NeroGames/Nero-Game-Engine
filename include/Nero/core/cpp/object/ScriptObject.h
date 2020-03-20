@@ -13,8 +13,21 @@ namespace nero
 {
 	class ScriptObject : public Object
 	{
+		public: //utility
+			struct Context
+			{
+
+			};
+
 		public:
-			ScriptObject();
+								ScriptObject(Context context);
+
+			void				setTargetObject(Object::Ptr	target);
+			Object::Ptr			getTargetObject();
+
+		private:
+			Context				m_ScriptContext;
+			Object::Ptr			m_TargetObject;
 	};
 
 }

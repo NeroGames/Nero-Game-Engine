@@ -6,6 +6,7 @@
 //NERO
 #include <Nero/editor/GameProject.h>
 #include <Nero/core/cpp/utility/FileUtil.h>
+#include <Nero/core/cpp/utility/DateUtil.h>
 #include <boost/dll.hpp>
 #include <boost/algorithm/string.hpp>
 #include <thread>
@@ -131,48 +132,7 @@ namespace nero
 
 	void GameProject::saveProject()
 	{
-		//save game level
-		for(auto& level : m_AdvancedScene->m_GameLevelTable)
-		{
-			nlohmann::json level_save;
 
-			level_save["level_id"]		= level->levelId;
-			level_save["level_name"]	= level->name;
-			level_save["selected"]		= level->levelId == m_AdvancedScene->m_SelectedGameLevel->levelId;
-			level_save["chunk_count"]	= level->chunkCount;
-			level_save["chunk_table"]	= nlohmann::json::array();
-
-			for(auto& chunk : level->chunkTable)
-			{
-				nlohmann::json chunk_save;
-
-				chunk_save["world_chunk"]	= chunk->sceneBuilder->saveScene();
-				chunk_save["chunk_id"]		= chunk->chunkId;
-				chunk_save["chunk_name"]	= chunk->name;
-				chunk_save["chunk_visible"] = chunk->visible;
-				//chunk_save["selected"]		= chunk->chunkId == level->getSelectedWorldChunk()->chunkId;
-
-				level_save["chunk_table"].push_back(chunk_save);
-			}
-
-			std::string levelFile = getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Level", level->name}, StringPool.EXTENSION_JSON);
-			saveFile(levelFile, level_save.dump(3), true);
-		}
-
-		//save game screen
-		/*for(auto& screen : m_AdvancedScene->m_GameScreenTable)
-		{
-
-			nlohmann::json screen_save;
-
-			screen_save["game_screen"]	= screen->sceneBuilder->saveScene();
-			screen_save["screen_id"]	= screen->screenId;
-			screen_save["screen_name"]	= screen->name;
-			screen_save["selected"]		= screen->screenId == m_AdvancedScene->m_SelectedGameScreen->screenId;
-
-			std::string screenFile = getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Screen", screen->name}, StringPool.EXTENSION_JSON);
-			saveFile(screenFile, screen_save.dump(3), true);
-		}*/
 	}
 
 	void GameProject::saveGameLevel()
@@ -215,7 +175,20 @@ namespace nero
 
 	void GameProject::saveGameScreen()
 	{
+		if(m_AdvancedScene->m_SelectedGameScreen)
+		{
+			auto screen = m_AdvancedScene->m_SelectedGameScreen;
 
+			nlohmann::json screen_save;
+
+			screen_save["game_screen"]	= screen->sceneBuilder->saveScene();
+			screen_save["screen_id"]	= screen->screenId;
+			screen_save["screen_name"]	= screen->name;
+			screen_save["selected"]		= screen->selected;
+
+			std::string screenFile = getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Screen", screen->name}, StringPool.EXTENSION_JSON);
+			saveFile(screenFile, screen_save.dump(3), true);
+		}
 	}
 
 	void GameProject::loadGameScreen()
@@ -458,6 +431,52 @@ namespace nero
 
 		m_AdvancedScene->m_Scene = nullptr;
 		m_CreateCppSceneFn.clear();
+	}
+
+	void GameProject::createScriptObject(const Setting& parameter)
+	{
+		nero_log("creating script object");
+		std::string header_template	= StringPool.BLANK;
+		std::string source_template	= StringPool.BLANK;
+
+		nero_log(parameter.getString("script_type"));
+
+		if(parameter.getString("script_type") == "Game Level Script")
+		{
+			header_template	= loadText("template/cpp-project/CppGameLevel.h");
+			source_template	= loadText("template/cpp-project/CppGameLevel.cpp");
+		}
+		else if(parameter.getString("script_type") == "Game Screen Script")
+		{
+			header_template	= loadText("template/cpp-project/CppGameScreen.h");
+			source_template	= loadText("template/cpp-project/CppGameScreen.cpp");
+		}
+
+		std::string class_name		= parameter.getString("class_name") + "ScriptObject";
+		std::string class_header	= boost::algorithm::to_upper_copy(class_name) + "_H";
+
+		//file 1 : header
+		boost::algorithm::replace_all(header_template, "::Class_Name::",		class_name);
+		boost::algorithm::replace_all(header_template, "::Header_Gard::",		class_header);
+		boost::algorithm::replace_all(header_template, "::Namespace::",			m_ProjectParameter.getString("project_namespace"));
+		boost::algorithm::replace_all(header_template, "::Project_Name::",		m_ProjectParameter.getString("project_name"));
+		boost::algorithm::replace_all(header_template, "::Project_Lead::",		m_ProjectParameter.getString("project_lead"));
+		boost::algorithm::replace_all(header_template, "::Coypright_Date::",	toString(getCurrentDateTime().date().year()));
+
+		//file 2 : source
+		boost::algorithm::replace_all(source_template, "::Class_Name::",		class_name);
+		boost::algorithm::replace_all(source_template, "::Namespace::",			m_ProjectParameter.getString("project_namespace"));
+		boost::algorithm::replace_all(source_template, "::Project_Name::",		m_ProjectParameter.getString("project_name"));
+		boost::algorithm::replace_all(source_template, "::Project_Lead::",		m_ProjectParameter.getString("project_lead"));
+		boost::algorithm::replace_all(source_template, "::Coypright_Date::",	toString(getCurrentDateTime().date().year()));
+
+		nero_log(m_ProjectParameter.getString("source_directory"));
+
+		std::string header_file = getPath({m_ProjectParameter.getString("source_directory"),"cpp", "script", class_name}, StringPool.EXTENSION_CPP_HEADER);
+		nero_log(header_file);
+
+		saveFile(header_file, header_template);
+		saveFile(getPath({m_ProjectParameter.getString("source_directory"), "cpp", "script", class_name}, StringPool.EXTENSION_CPP_SOURCE), source_template);
 	}
 
 }

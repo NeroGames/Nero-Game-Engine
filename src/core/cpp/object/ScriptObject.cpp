@@ -8,9 +8,21 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	ScriptObject::ScriptObject()
+	ScriptObject::ScriptObject(Context context):
+		 Object ()
+		,m_ScriptContext(context)
 	{
 
+	}
+
+	void ScriptObject::setTargetObject(Object::Ptr	target)
+	{
+		m_TargetObject = target;
+	}
+
+	Object::Ptr ScriptObject::getTargetObject()
+	{
+		return m_TargetObject;
 	}
 }
 

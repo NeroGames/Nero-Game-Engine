@@ -9,7 +9,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	GameScreenScriptObject::GameScreenScriptObject()
+	GameScreenScriptObject::GameScreenScriptObject(ScriptObject::Context context):
+		ScriptObject (context)
 	{
 
 	}

@@ -3,7 +3,7 @@
 
 namespace nero
 {
-    boost::posix_time::ptime getCurrentDateTime()
+	boost::posix_time::ptime getCurrentDateTime()
     {
         using namespace boost::posix_time;
 

@@ -43,6 +43,7 @@ namespace  nero
 		,m_InputSelectedWorldChunkId(-1)
 		,m_InputSelectedObjectLayerId(-1)
 		,m_InputSelectedGameLevelId(-1)
+		,m_InputSelectedGameScreenId(-1)
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -202,9 +203,9 @@ namespace  nero
 			//upper left
 		showUtilityWindow();
 		if(m_EditorMode == EditorMode::WORLD_BUILDER)
-			showSceneLevelWindow();
+			showGameLevelWindow();
 		if(m_EditorMode == EditorMode::SCREEN_BUILDER)
-			showSceneScreenWindow();
+			showGameScreenWindow();
 
 			//lower left
 		showObjectLayerWindow();
@@ -921,7 +922,7 @@ namespace  nero
 				ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
 				float wording_width = 130.f;
-				float input_width = ImGui::GetWindowContentRegionWidth() - 150.f;
+				float input_width = ImGui::GetWindowContentRegionWidth() - 130.f;
 
 				if (ImGui::BeginTabItem("CPP Script"))
 				{
@@ -934,7 +935,8 @@ namespace  nero
 					ImGui::Text("Script Type");
 					ImGui::SameLine(wording_width);
 					ImGui::SetNextItemWidth(input_width);
-					const char* scriptTypeComboTable[] = {"Game Level Script", "Game Screen Script"};
+					const char* scriptTypeComboTable[] = {"Game Level Script", "Game Screen Script", "Startup Screen Script",
+														  "Physic Script Object", "Simple Script Object"};
 					m_SelectedScriptType = scriptTypeComboTable[m_SelectedScriptTypeIndex];
 					if (ImGui::BeginCombo("##code-editor-combo", m_SelectedScriptType, ImGuiComboFlags()))
 					{
@@ -1078,6 +1080,39 @@ namespace  nero
 				ImGui::SetCursorPosY(winsow_size.y * 0.85f - 100.f);
 				bool onCreate = ImGui::Button("Create##create_script_object", ImVec2(100, 0));
 
+				bool error = false;
+
+				if(onCreate)
+				{
+
+					if (error)
+					{
+						//ImGui::OpenPopup("Error Creating Project");
+					}
+					else
+					{
+						Setting parameter;
+						parameter.setString("class_name", std::string(m_InputClassName));
+						parameter.setString("script_type", std::string(m_SelectedScriptType));
+
+						if(std::string(m_SelectedScriptType) == "Game Level Script")
+						{
+							parameter.setString("level_name", std::string(m_SelectedGameLevel));
+						}
+						else if(std::string(m_SelectedScriptType) == "Game Screen Script")
+						{
+							parameter.setString("screen_name", std::string(m_SelectedGameScreen));
+						}
+
+						clearScriptWizardInput();
+
+						createScriptObject(parameter);
+
+
+						//ImGui::OpenPopup("Script Created");
+					}
+				}
+
 				ImGui::EndTabBar();
 			}
 
@@ -1091,6 +1126,14 @@ namespace  nero
 			}
 
 			ImGui::EndPopup();
+		}
+	}
+
+	void EditorInterface::createScriptObject(const Setting& parameter)
+	{
+		if(m_GameProject)
+		{
+			m_GameProject->createScriptObject(parameter);
 		}
 	}
 
@@ -2089,7 +2132,7 @@ namespace  nero
 
 		printSameLine();
 
-		if(ImGui::Button("Spawer##spawn_object", ImVec2(100.f, 100.f)))
+		if(ImGui::Button("Spawner##spawn_object", ImVec2(100.f, 100.f)))
 		{
 
 		}
@@ -2097,6 +2140,13 @@ namespace  nero
 		printSameLine();
 
 		if(ImGui::Button("Factory##open_factory_resource", ImVec2(100.f, 100.f)))
+		{
+
+		}
+
+		printSameLine();
+
+		if(ImGui::Button("CPP Script##open_script_resource", ImVec2(100.f, 100.f)))
 		{
 
 		}
@@ -2631,73 +2681,89 @@ namespace  nero
 		}*/
 	}
 
-    void EditorInterface::showSceneScreenWindow()
+	void EditorInterface::showGameScreenWindow()
     {
 		ImGui::Begin(EditorConstant.WINDOW_SCREEN.c_str());
 
-            ImGui::Text("Manage Scene Screens");
-            ImGui::Separator();
+			ImGui::Text("Manage Game Screen");
+			ImGui::Separator();
 			ImGui::Dummy(ImVec2(0.f, 2.f));
 
-			float width = 82.f;
-			static char new_screen_name[100] = "";
-			ImGui::SetNextItemWidth(width*2.f + 8.f);
-			ImGui::InputText("##screen_did", new_screen_name, IM_ARRAYSIZE(new_screen_name));
+			float width = 90.f;
 
 			ImGui::Dummy(ImVec2(0.f, 2.f));
 
 			ImVec2 button_size = ImVec2(width, 0.f);
-            //addcreen
-			if(ImGui::Button("Add##add_screen", button_size))
-            {
-                //
-            }
 
-			ImGui::SameLine();
-
-			if(ImGui::Button("Rename##add_screen", button_size))
+			if(ImGui::Button("Add##add_game_screen", button_size))
 			{
-				//
-			}
-
-
-			if(ImGui::Button("Duplicate##add_screen", button_size))
-			{
-				//
+				addGameScreen();
 			}
 
 			ImGui::SameLine();
 
-			if(ImGui::Button("Remove##add_screen", button_size))
+			if(ImGui::Button("Remove##remove_game_screen", button_size))
 			{
-				//
+				removeGameScreen();
 			}
 
+			ImGui::Dummy(ImVec2(0.f, 5.f));
 
+			ImGui::BeginChild("##manage_game_screen", ImVec2(), true);
 
+				if(m_AdvancedScene)
+				{
+					m_InputSelectedGameScreenId = m_AdvancedScene->getSelectedGameScreen()->screenId;
 
-            //rename screen
-            //copy
+					for(const auto& gameScreen : m_AdvancedScene->getGameScreenTable())
+					{
+						std::string itemId = "##select_screen" + toString(gameScreen->screenId);
+						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedGameScreenId, gameScreen->screenId);
 
-            ImGui::Dummy(ImVec2(0.f, 5.f));
+						if(ImGui::IsItemClicked())
+						{
+							m_AdvancedScene->setSelectedGameScreen(gameScreen);
+						}
 
-            ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
-			ImGui::BeginChild("scene_screen_list", ImVec2(), true);
+						ImGui::SameLine();
 
-                static bool check = false;
-				ImGui::Checkbox("", &check);
+						itemId = "##screen_visible" + toString(gameScreen->screenId);
+						ImGui::Checkbox(itemId.c_str(), &gameScreen->visible);
 
-                ImGui::SameLine();
+						ImGui::SameLine();
 
-                ImGuiInputTextFlags flags2 = ImGuiInputTextFlags_ReadOnly;
-                static char screen_name[100] = "screen one";
-				ImGui::SetNextItemWidth(130.f);
-                ImGui::InputText("##screen_id", screen_name, IM_ARRAYSIZE(screen_name), flags2);               
+						char screen_name[100];
+						fillCharArray(screen_name, sizeof(screen_name), gameScreen->name);
+						ImGui::SetNextItemWidth(118.f);
+						itemId = "##screen_name" + toString(gameScreen->screenId);
+						ImGui::InputText(itemId.c_str(), screen_name, sizeof(screen_name));
 
-           ImGui::EndChild();
+						if(ImGui::IsItemEdited())
+						{
+							gameScreen->name = std::string(screen_name);
+						}
+					}
+				}
+
+			ImGui::EndChild();
 
         ImGui::End();
     }
+
+	void EditorInterface::addGameScreen()
+	{
+		if(m_AdvancedScene)
+		{
+			m_AdvancedScene->addGameScreen();
+		}
+	}
+
+	void EditorInterface::removeGameScreen()
+	{
+
+	}
+
+
 
 	void EditorInterface::showObjectLayerWindow()
 	{
@@ -2812,7 +2878,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showSceneLevelWindow()
+	void EditorInterface::showGameLevelWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_LEVEL.c_str());
 
@@ -2826,21 +2892,21 @@ namespace  nero
 
 			ImVec2 button_size = ImVec2(width, 0.f);
 
-			if(ImGui::Button("Add##add_scene_layer", button_size))
+			if(ImGui::Button("Add##add_game_level", button_size))
 			{
 				addGameLevel();
 			}
 
 			ImGui::SameLine();
 
-			if(ImGui::Button("Remove##remove_scene_layer", button_size))
+			if(ImGui::Button("Remove##remove_game_level", button_size))
 			{
 				removeGameLevel();
 			}
 
 			ImGui::Dummy(ImVec2(0.f, 5.f));
 
-			ImGui::BeginChild("##manage_scene_layer", ImVec2(), true);
+			ImGui::BeginChild("##manage_game_level", ImVec2(), true);
 
 				if(m_AdvancedScene)
 				{
@@ -2861,7 +2927,7 @@ namespace  nero
 						char level_name[100];
 						fillCharArray(level_name, sizeof(level_name), gameLevel->name);
 						ImGui::SetNextItemWidth(118.f);
-						itemId = "##chunk_name" + toString(gameLevel->levelId);
+						itemId = "##level_name" + toString(gameLevel->levelId);
 						ImGui::InputText(itemId.c_str(), level_name, sizeof(level_name));
 
 						if(ImGui::IsItemEdited())

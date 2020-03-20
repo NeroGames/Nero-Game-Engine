@@ -67,7 +67,7 @@ set(CPP_FILESYSTEM "stdc++fs")
 # EASY_PROFILER
 set(EASY_PROFILER "-leasy_profiler.dll")
 # POCO
-set(POCO "-lPocoRedis -lPocoPDF -lPocoCppParser -lPocoZip -lPocoData -lPocoNetSSL -lPocoCrypto -lPocoXML -lexpat -lPocoNet -lPocoUtil -lPocoJSON -lPocoEncodings -lPocoFoundation -liphlpapi C:/Qt/Tools/mingw730_32/opt/lib/libcrypto.a C:/Qt/Tools/mingw730_32/opt/lib/libssl.a -lws2_32")
+set(POCO "-lPocoRedis -lPocoPDF -lPocoCppParser -lPocoZip -lPocoData -lPocoNetSSL -lPocoCrypto  -lPocoNet -lPocoUtil -lPocoXML -lPocoJSON -lPocoEncodings -lPocoFoundation -lexpat -liphlpapi -lssl -lcrypto -lzlibstatic -lws2_32")
 
 # Nero Game Project (Dummy Library)
 #----------------------------------------------------------------------------------#
@@ -90,7 +90,7 @@ file(GLOB_RECURSE NERO_GAME_CORE_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/library/easyloggingpp/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/ltbl/*")
 # Dependencies
-set(NERO_GAME_CORE_DEP ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2d_LIBS} ${EASY_PROFILER})
+set(NERO_GAME_CORE_DEP ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2d_LIBS} ${EASY_PROFILER} ${POCO})
 # Build Nero Game Core
 add_library(nerogame-core ${NERO_GAME_CORE_SRC} )
 target_link_libraries(nerogame-core ${NERO_GAME_CORE_DEP})
@@ -126,3 +126,15 @@ set(NERO_GAME_EDITOR_DEP nerogame-core ${NERO_GAME_CORE_DEP} comctl32.lib ${ZLIB
 add_executable(EngineEditor "main.cpp" ${NERO_GAME_EDITOR_SOURCES})
 target_link_libraries(EngineEditor ${NERO_GAME_EDITOR_DEP})
 
+
+
+# Test Laboratory
+#----------------------------------------------------------------------------------#
+# Engine Renderer Source Files
+file(GLOB_RECURSE TEST_LABORATORY_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/testlab/*")
+# Dependencies
+set(TEST_LABORATORY_DEP nerogame-core ${NERO_GAME_CORE_DEP})
+# Build Test Laboratory
+add_executable(TestLab ${TEST_LABORATORY_SRC})
+target_link_libraries(TestLab ${TEST_LABORATORY_DEP})
