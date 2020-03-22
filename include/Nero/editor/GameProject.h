@@ -11,7 +11,7 @@
 #include <Nero/editor/AdvancedScene.h>
 #include <boost/function.hpp>
 #include <Nero/core/cpp/scene/Scene.h>
-#include <Nero/core/cpp/luascene/LuaScene.h>
+#include <Nero/core/lua/scene/LuaScene.h>
 #include <Nero/core/cpp/engine/BackgroundTask.h>
 #include <Nero/editor/AdvancedCamera.h>
 

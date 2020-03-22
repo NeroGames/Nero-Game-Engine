@@ -775,7 +775,9 @@ namespace  nero
 
 			ImGui::SameLine(width - 72.f);
 
-			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
+			sf::Vector2u size = m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON).getSize();
+
+			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON), ImVec2(float(size.x)/5.f, float(size.y)/5.f)))
 			{
 				ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
 			}
@@ -803,7 +805,7 @@ namespace  nero
 					compileProject();
 				}
 
-				ImGui::SameLine(width - 72.f - 96.f - 12.f - 30.f - 100.f);
+				ImGui::SameLine(width - 72.f - 96.f - 12.f - 40.f - 30.f);
 
 				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_SCRIPT_BUTTON)))
 				{
@@ -932,31 +934,16 @@ namespace  nero
 					ImGui::InputText("##class_name", m_InputClassName, sizeof(m_InputClassName));
 					ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
-					ImGui::Text("Script Type");
+					ImGui::Text("Parent Class");
 					ImGui::SameLine(wording_width);
-					ImGui::SetNextItemWidth(input_width);
-					const char* scriptTypeComboTable[] = {"Game Level Script", "Game Screen Script", "Startup Screen Script",
-														  "Physic Script Object", "Simple Script Object"};
-					m_SelectedScriptType = scriptTypeComboTable[m_SelectedScriptTypeIndex];
-					if (ImGui::BeginCombo("##code-editor-combo", m_SelectedScriptType, ImGuiComboFlags()))
+					ImGui::SetNextItemWidth(input_width - 110.f);
+					ImGui::InputText("##parent_class", m_InputParentClass, sizeof(m_InputParentClass), ImGuiInputTextFlags_ReadOnly);
+					ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 100.f);
+					if(ImGui::Button("Select##select_script_parent_class", ImVec2(100.f, 0)))
 					{
-						for (int n = 0; n < IM_ARRAYSIZE(scriptTypeComboTable); n++)
-						{
-							bool is_selected = (m_SelectedScriptType == scriptTypeComboTable[n]);
-
-							if (ImGui::Selectable(scriptTypeComboTable[n], is_selected))
-							{
-								m_SelectedScriptType = scriptTypeComboTable[n];
-								m_SelectedScriptTypeIndex = n;
-							}
-
-							if (is_selected)
-							{
-								ImGui::SetItemDefaultFocus();
-							}
-						}
-						ImGui::EndCombo();
+						ImGui::OpenPopup("Select Script Class");
 					}
+
 
 					ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
@@ -964,7 +951,7 @@ namespace  nero
 
 					ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-					if(std::string(m_SelectedScriptType) == "Game Level Script")
+					if(std::string(m_InputParentClass) == "Game Level Script")
 					{
 						ImGui::Text("Game Level");
 						ImGui::SameLine(wording_width);
@@ -972,6 +959,8 @@ namespace  nero
 
 						//load workpsace
 						std::vector<std::string> gameLevelNameTable = m_AdvancedScene->getGameLevelNameTable();
+
+						gameLevelNameTable.insert(gameLevelNameTable.begin(), StringPool.BLANK);
 
 						if(gameLevelNameTable.empty())
 						{
@@ -1015,7 +1004,7 @@ namespace  nero
 						levelComboTable = nullptr;
 
 					}
-					else if(std::string(m_SelectedScriptType) == "Game Screen Script")
+					else if(std::string(m_InputParentClass) == "Game Screen Script")
 					{
 						ImGui::Text("Screen Level");
 						ImGui::SameLine(wording_width);
@@ -1067,6 +1056,36 @@ namespace  nero
 
 					}
 
+
+					ImGui::SetNextWindowSize(ImVec2(500.f, 400.f));
+					if(ImGui::BeginPopupModal("Select Script Class", nullptr, window_flags))
+					{
+						std::vector<std::string> script_type = {"Game Level Script", "Game Screen Script", "Startup Screen Script",
+															   "Physic Script Object", "Simple Script Object", "Action Object",
+															   "Action"};
+
+
+						for(auto type : script_type)
+						{
+							ImGui::Text(type.c_str());
+							ImGui::Separator();
+							ImGui::Text("Use a Game Level Script to manage the behavior of a Game Level \n"
+										"two line description");
+							ImGui::Dummy(ImVec2(0.f, 2.f));
+							if(ImGui::Button(type.c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), 50.f)))
+							{
+								fillCharArray(m_InputParentClass, sizeof(m_InputParentClass), type);
+								ImGui::CloseCurrentPopup();
+							}
+
+
+							ImGui::Dummy(ImVec2(0.f, 5.f));
+
+						}
+
+						ImGui::EndPopup();
+					}
+
 					ImGui::EndTabItem();
 				}
 
@@ -1077,7 +1096,7 @@ namespace  nero
 				}
 
 				ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 102.f);
-				ImGui::SetCursorPosY(winsow_size.y * 0.85f - 100.f);
+				ImGui::SetCursorPosY(winsow_size.y * 0.75f);
 				bool onCreate = ImGui::Button("Create##create_script_object", ImVec2(100, 0));
 
 				bool error = false;
@@ -1127,6 +1146,8 @@ namespace  nero
 
 			ImGui::EndPopup();
 		}
+
+
 	}
 
 	void EditorInterface::createScriptObject(const Setting& parameter)
@@ -2147,6 +2168,13 @@ namespace  nero
 		printSameLine();
 
 		if(ImGui::Button("CPP Script##open_script_resource", ImVec2(100.f, 100.f)))
+		{
+
+		}
+
+		printSameLine();
+
+		if(ImGui::Button("Empty Object##add_empty_object", ImVec2(100.f, 100.f)))
 		{
 
 		}

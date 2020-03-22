@@ -50,7 +50,7 @@ namespace nero
 		sf::Vector2f	  WINDOW_PROJECT_MANAGER_SIZE	= sf::Vector2f(800.f, 500.f);
 			//script wizard
 		const std::string WINDOW_SCRIPT_WIZARD			= "Script Wizard";
-		sf::Vector2f	  WINDOW_SCRIPT_WIZARD_SIZE		= sf::Vector2f(600.f, 400.f);
+		sf::Vector2f	  WINDOW_SCRIPT_WIZARD_SIZE		= sf::Vector2f(600.f, 300.f);
 		//Window and View
 
 		const std::string TAB_CREATE_PROJECT				= "Create Project";
@@ -61,7 +61,7 @@ namespace nero
 		const std::string ERROR_CREATING_PROJECT		= "Error Creating Project";
 
 		//Texture
-		const std::string TEXTURE_PROJECT_BUTTON		= "project_button";
+		const std::string TEXTURE_PROJECT_BUTTON		= "project_button_2";
 		const std::string TEXTURE_EDIT_BUTTON			= "edit_button";
 		const std::string TEXTURE_COMPILE_BUTTON		= "compile_button";
 		const std::string TEXTURE_RELOAD_BUTTON			= "reload_button";

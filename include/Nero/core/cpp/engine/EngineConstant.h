@@ -35,6 +35,12 @@ namespace nero
 		//
 		const std::string		NO_GAME_FOUND			= "No Game Found";
 
+
+		const unsigned int		NUMBER_ZERO				= 0;
+		const std::string		DLL_CREATE_STARTUP_SCREEN	 = "create_startup_screen";
+		const std::string		DLL_CREATE_SCENE			 = "create_scene";
+
+
     };
 
     const _EngineConstant EngineConstant;

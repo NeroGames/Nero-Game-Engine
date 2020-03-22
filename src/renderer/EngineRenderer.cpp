@@ -7,6 +7,9 @@
 #include <Nero/renderer/EngineRenderer.h>
 #include <Nero/renderer/NoGameFound.h>
 #include <Nero/core/cpp/utility/LogUtil.h>
+#include <Nero/core/cpp/scene/SceneBuilder.h>
+//Boost
+#include <boost/dll.hpp>
 /////////////////////////////////////////////////////////////
 
 namespace  nero
@@ -15,6 +18,10 @@ namespace  nero
 		,m_GameScene(nullptr)
 		,m_StartupScreen(nullptr)
 		,m_EngineStarted(false)
+		,m_GameSetting(nullptr)
+		,m_GameWorldResourceManager(nullptr)
+		,m_GameScreenResourceManager(nullptr)
+		,m_StartupScreenResourceManager(nullptr)
 	{
 		bool everythingGood = checkDirectory();
 
@@ -51,9 +58,9 @@ namespace  nero
 		m_GameScene = NoGameFound::Ptr(new NoGameFound(Scene::Context(
 							EngineConstant.NO_GAME_FOUND,
 							m_RenderTexture,
-							m_ResourceManager,
+							m_GameWorldResourceManager,
 							m_Camera,
-							m_Setting,
+							m_GameSetting,
 							Scene::EngineType::RENDER_ENGINE,
 							Scene::PlatformType::WINDOWS)));
 
@@ -66,34 +73,129 @@ namespace  nero
 
 	void EngineRenderer::loadGame()
 	{
-		//load parameter
+		//load game setting
+		m_GameSetting->loadJson(getPath({"Game", "Setting", "game_setting"}));
+
+		//create Render_Window
+		createRenderWindow();
 
 		//load statup screen
-		loadStartupScreen();
+		if(m_GameSetting->getBool("enable_startup_screen"))
+		{
+			loadStartupScreen();
+
+			startEngineInBackground();
+		}
+		else
+		{
+			startEngine(m_EngineStarted, EngineConstant.NUMBER_ZERO);
+		}
 
 		//start bacground initialization
-		startBackgroundTask();
 	}
 
-	void EngineRenderer::startBackgroundTask()
+	void EngineRenderer::createRenderWindow()
+	{
+		m_RenderWindow.create(sf::VideoMode(
+							m_GameSetting->getUInt("window_width"),
+							m_GameSetting->getUInt("window_height")),
+							m_GameSetting->getString("game_name"),
+							getWindowStyle(m_GameSetting->getString("window_style")));
+	}
+
+	void EngineRenderer::startEngineInBackground()
 	{
 		m_StartEngineFuture = std::async(std::launch::async, &EngineRenderer::startEngine, this, std::ref(m_EngineStarted), m_StartupScreen->getDuration());
 	}
 
 	void EngineRenderer::loadStartupScreen()
 	{
-		/*boost::dll::shared_library lib(m_ProjectParameter.getString("library_file"));
-		m_CreateStartupScreen = boost::dll::import_alias<CreateCppSceneFn>(library_path, "createStartupScreen", boost::dll::load_mode::append_decorations);
+		boost::dll::fs::path game_library_path(removeFileExtension(m_GameSetting->getString("game_library_file")));
 
-		if(!m_CreateStartupScreen.empty())
+		m_CreateCppStartupScreen = boost::dll::import_alias<CreateCppStartupScreen>(
+									   game_library_path,
+									   EngineConstant.DLL_CREATE_STARTUP_SCREEN,
+									   boost::dll::load_mode::append_decorations);
+
+		if(!m_CreateCppStartupScreen.empty())
 		{
-			m_StartupScreen = m_CreateStartupScreen();
-		}*/
+			//create startup screen object
+			m_StartupScreen = m_CreateCppStartupScreen();
+			//provide render window
+			m_StartupScreen->setRenderWindow(&m_RenderWindow);
+			//load resource
+			m_StartupScreenResourceManager->loadDirectory(m_GameSetting->getString("startup_screen_resource_directory"));
+			//provide resource
+			m_StartupScreen->setResourceManager(m_StartupScreenResourceManager);
+		}
+		else
+		{
+			//TODO
+			//handle error
+		}
 	}
 
-	int EngineRenderer::startEngine(bool& engineStarted, const int duration)
+	int EngineRenderer::startEngine(bool& engineStarted, const unsigned int duration)
 	{
-		return 0;
+		//load scene class
+		boost::dll::fs::path game_library_path(removeFileExtension(m_GameSetting->getString("game_library_file")));
+
+		m_CreateCppScene = boost::dll::import_alias<CreateCppScene>(
+									   game_library_path,
+									   EngineConstant.DLL_CREATE_SCENE,
+									   boost::dll::load_mode::append_decorations);
+		//create scene object
+		if(!m_CreateCppScene.empty())
+		{
+			m_GameScene = m_CreateCppScene(Scene::Context(
+								   m_GameSetting->getString("game_name"),
+								   m_RenderTexture,
+								   m_GameWorldResourceManager,
+								   m_Camera,
+								   m_GameSetting,
+								   Scene::EngineType::RENDER_ENGINE,
+								   Scene::PlatformType::WINDOWS));
+		}
+
+		//load all game screen script class
+		for (const std::string& script_class : m_GameSetting->getStringTable("game_screen_script_table"))
+		{
+			/*m_GameScene->m_CreateGameScreenMap[script_class] = boost::dll::import_alias<CreateCppScene>(
+													 game_library_path,
+													 std::string("create" + script_class),
+													 boost::dll::load_mode::append_decorations);*/
+		}
+
+		//load all game object simple script class
+		for (const std::string& screen_class : m_GameSetting->getStringTable("game_object_simple_script_table"))
+		{
+			/*m_CreateSimpleScriptMap[script_class] = boost::dll::import_alias<CreateCppScene>(
+													 game_library_path,
+													 std::string("create" + script_class),
+													 boost::dll::load_mode::append_decorations);*/
+		}
+
+		//load all game object physic script class
+		for (const std::string& screen_class : m_GameSetting->getStringTable("game_object_physic_script_table"))
+		{
+			/*m_CreatePhysicScriptMap[script_class] = boost::dll::import_alias<CreateCppScene>(
+													 game_library_path,
+													 std::string("create" + script_class),
+													 boost::dll::load_mode::append_decorations);*/
+		}
+
+		//
+		m_GameScene->m_SceneBuilder = std::make_shared<SceneBuilder>();
+
+		//provide callback
+		m_GameScene->m_QuitEngine = [this](){m_RenderWindow.close();};
+
+		//initialize game scene
+		m_GameScene->init();
+
+
+
+		return EngineConstant.NUMBER_ZERO;
 	}
 
 	void EngineRenderer::handleEvent()
@@ -135,4 +237,55 @@ namespace  nero
 			m_GameScene->render();
 		}
 	}
+
+	sf::Uint32 EngineRenderer::getWindowStyle(const std::string& style)
+	{
+		if(style == "window_style_default")
+		{
+			return sf::Style::Default;
+		}
+		else if(style == "window_style_fullscreen")
+		{
+			return sf::Style::Fullscreen;
+		}
+		else if(style == "window_style_none")
+		{
+			return sf::Style::None;
+		}
+		else if(style == "window_style_titlebar")
+		{
+			return sf::Style::Titlebar;
+		}
+		else if(style == "window_style_resize")
+		{
+			return sf::Style::Resize;
+		}
+		else if(style == "window_style_close")
+		{
+			return sf::Style::Close;
+		}
+		else
+		{
+			if(style.find("window_style_titlebar") != std::string::npos &&
+			   style.find("window_style_resize") != std::string::npos)
+			{
+				return sf::Style::Titlebar | sf::Style::Resize;
+			}
+
+			if(style.find("window_style_titlebar") != std::string::npos &&
+			   style.find("window_style_close") != std::string::npos)
+			{
+				return sf::Style::Titlebar | sf::Style::Close;
+			}
+
+			if(style.find("window_style_resize") != std::string::npos &&
+			   style.find("window_style_close") != std::string::npos)
+			{
+				return sf::Style::Resize | sf::Style::Close;
+			}
+		}
+
+		return sf::Style::Close;
+	}
+
 }

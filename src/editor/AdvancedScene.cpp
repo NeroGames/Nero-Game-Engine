@@ -353,7 +353,7 @@ namespace nero
 		auto gameLevel = std::make_shared<GameLevelObject>();
 		gameLevel->setName(m_SelectedGameLevel->name);
 		Setting parameter;
-		gameLevel->initialize(parameter);
+		gameLevel->init(parameter);
 
 		//set up physic world
 		m_Scene->m_PhysicWorld = gameLevel->getPhysicWorld();

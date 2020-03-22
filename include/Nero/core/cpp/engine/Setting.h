@@ -60,6 +60,9 @@ namespace nero
 			std::vector<std::string>		m_CurrentSetting;
 			std::string						m_Directory;
 	};
+
+	//Alias
+	using Parameter = Setting;
 }
 
 #endif // SETTING_H

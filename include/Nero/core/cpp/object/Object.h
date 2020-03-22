@@ -28,7 +28,10 @@ namespace nero
             static  Ptr                         Cast(Object::Ptr object);
 
         public:
-			enum    Type {Sprite_Object, Mesh_Object, Physic_Object, Meshed_Object, Solid_Object, Layer_Object, Animation_Object, Animation_Meshed_Object, Animation_Solid_Object, Text_Object, UI_Object, Button_Object, Light_Object, None};
+			enum    Type {Sprite_Object, Mesh_Object, Physic_Object, Meshed_Object, Solid_Object, Layer_Object,
+						  Animation_Object, Animation_Meshed_Object, Animation_Solid_Object, Text_Object,
+						  UI_Object, Button_Object, Light_Object,
+						  Game_Level_Script_Object, None};
 
         public:
                                             Object();

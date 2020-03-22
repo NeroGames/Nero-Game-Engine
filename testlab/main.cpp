@@ -1,4 +1,4 @@
-#include "Poco/URIStreamOpener.h"
+/*#include "Poco/URIStreamOpener.h"
 #include "Poco/StreamCopier.h"
 #include "Poco/Path.h"
 #include "Poco/URI.h"
@@ -12,9 +12,9 @@
 #include "Poco/Net/ConsoleCertificateHandler.h"
 #include <memory>
 #include <iostream>
-#include <fstream>
+#include <time.h>
 #include "Poco/FileStreamFactory.h"
-
+#include <time.h>
 
 using Poco::URIStreamOpener;
 using Poco::StreamCopier;
@@ -50,6 +50,7 @@ public:
 
 int main(int argc, char** argv)
 {
+	//*
 	Poco::Net::initializeNetwork();
 
 	SSLInitializer sslInitializer;
@@ -57,14 +58,6 @@ int main(int argc, char** argv)
 	HTTPSStreamFactory::registerFactory();
 	FTPStreamFactory::registerFactory();
 
-	/*if (argc != 2)
-	{
-		Path p(argv[0]);
-		std::cerr << "usage: " << p.getBaseName() << " <uri>" << std::endl;
-		std::cerr << "       Download <uri> to standard output." << std::endl;
-		std::cerr << "       Works with http, https, ftp and file URIs." << std::endl;
-		return 1;
-	}*/
 
 	// Note: we must create the passphrase handler prior Context
 	SharedPtr<InvalidCertificateHandler> ptrCert = new ConsoleCertificateHandler(false); // ask the user via console
@@ -92,6 +85,82 @@ int main(int argc, char** argv)
 		std::cerr << exc.displayText() << std::endl;
 		return 1;
 	}
+
+
+	int test = 1 << 0;
+
+	std::cout <<test << std::endl;
+
+
+	return 0;
+}*/
+
+
+
+#include "Poco/Logger.h"
+#include "Poco/PatternFormatter.h"
+#include "Poco/FormattingChannel.h"
+#include "Poco/ConsoleChannel.h"
+#include "Poco/FileChannel.h"
+#include "Poco/Message.h"
+#include "Poco/StreamChannel.h"
+
+#include "sstream"
+#include "iostream"
+
+#include "Nero/core/cpp/utility/LogUtil.h"
+
+
+using Poco::Logger;
+using Poco::PatternFormatter;
+using Poco::FormattingChannel;
+using Poco::ConsoleChannel;
+using Poco::ColorConsoleChannel;
+using Poco::StreamChannel;
+using Poco::FileChannel;
+using Poco::Message;
+
+
+int main(int argc, char** argv)
+{
+	// set up two channel chains - one to the
+	// console and the other one to a log file.
+	std::stringstream loggerStream;
+
+	FormattingChannel* pFCConsole = new FormattingChannel(new PatternFormatter("%s: %p: %P:  %N: %u:  %t"));
+	pFCConsole->setChannel(new StreamChannel(loggerStream));
+	pFCConsole->open();
+
+	FormattingChannel* pFCFile = new FormattingChannel(new PatternFormatter("%Y-%m-%d %H:%M:%S.%c %N[%P]:%s:%q:%t"));
+	pFCFile->setChannel(new FileChannel("sample.log"));
+	pFCFile->open();
+
+	// create two Logger objects - one for
+	// each channel chain.
+	Logger& consoleLogger = Logger::create("ConsoleLogger", pFCConsole, Message::PRIO_INFORMATION);
+	Logger& fileLogger    = Logger::create("FileLogger", pFCFile, Message::PRIO_WARNING);
+
+	// log some messages
+	consoleLogger.error("An error message");
+	fileLogger.error("An error message");
+
+	consoleLogger.warning("A warning message");
+	fileLogger.error("A warning message");
+
+	consoleLogger.information("An information message");
+	fileLogger.information("An information message");
+
+	poco_information(consoleLogger, "Another informational message");
+	poco_warning_f2(consoleLogger, "A warning message with arguments: %d, %d", 1, 2);
+
+	Logger::get("ConsoleLogger").error("Another error message");
+
+	std::string result = loggerStream.str();
+
+	std::cout << result << std::endl;
+
+	nero_log("bonjour", nero::LOG_LEVEL::DEBUG);
+
 
 	return 0;
 }

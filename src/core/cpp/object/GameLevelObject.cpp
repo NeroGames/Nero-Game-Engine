@@ -10,13 +10,15 @@
 namespace nero
 {
 	GameLevelObject::GameLevelObject():
-		m_PhysicWorld(nullptr)
+		 Object()
+		,m_PhysicWorld(nullptr)
 	{
 
 	}
 
-	void GameLevelObject::initialize(const Setting& parameter)
+	void GameLevelObject::init(const Parameter& parameter)
 	{
+		m_Parameter = parameter;
 		m_PhysicWorld = new b2World(b2Vec2(0.f, 9.8f));
 	}
 

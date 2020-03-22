@@ -5,7 +5,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 ///////////////////////////HEADERS///////////////////////////
-//NERO
+//Nero
 #include <Nero/core/cpp/object/Object.h>
 #include <Nero/core/cpp/camera/Camera.h>
 #include <Nero/core/cpp/resource/ResourceManager.h>
@@ -14,11 +14,14 @@
 #include <Nero/core/cpp/scene/ShapeRenderer.h>
 #include <Nero/core/cpp/scene/ObjectManager.h>
 #include <Nero/core/cpp/scene/SoundManager.h>
+#include <Nero/core/cpp/scene/SceneBuilder.h>
+#include <Nero/core/cpp/object/GameLevelScriptObject.h>
+#include <Nero/core/cpp/object/GameScreenScriptObject.h>
 //SFML
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
-//BOX2D
+//Box2D
 #include <Box2D/Dynamics/b2World.h>
 //STD
 #include <memory>
@@ -34,6 +37,9 @@ namespace nero
 			typedef std::shared_ptr	<Scene>				Ptr;
 			typedef std::shared_ptr<sf::RenderTexture>	RenderTexturePtr;
 			typedef std::shared_ptr<ltbl::LightSystem>	LightManagerPtr;
+			typedef GameScreenScriptObject::Ptr	(CreateCppGameScreenScript)(ScriptObject::Context);
+			typedef GameLevelScriptObject::Ptr	(CreateCppGameLevelScript)(ScriptObject::Context);
+
 
 		public: //utility
 			enum class EngineType
@@ -104,7 +110,8 @@ namespace nero
 			void							quitScene();
 			void							hideGameWorld();
 			void							showGameWorld();
-			void							loadGameLevel(const std::string& name);
+			void							loadGameLevel(const std::string& levelName);
+			void							enableGameLevel(const std::string& levelName);
 			void							loadWorldChunk(const std::string& name);
 			void							unLoadGameLevel(const std::string& name);
 			void							unLoadWorldChunk(const std::string& name);
@@ -126,6 +133,10 @@ namespace nero
 			//
 			void							setupLighting();
 			void							renderLighting();
+			//
+			void							disableCurrentGameLevel();
+			void							destroyLevel(Object::Ptr levelObject);
+
 
         protected:
 			//friend
@@ -162,6 +173,17 @@ namespace nero
 			LightManagerPtr					m_LightManager;
 			//
 			std::function<void()>           m_QuitEngine;
+			//
+			std::map<std::string, boost::function<CreateCppGameLevelScript>>	m_CreateGameLevelMap;
+			std::map<std::string, boost::function<CreateCppGameScreenScript>>	m_CreateGameScreenMap;
+			//std::map<std::string, boost::function<CreateCppSimpleScript>>	m_CreateGameScreenMap;
+			//std::map<std::string, boost::function<CreateCppPhysicScript>> m_CreateGameScreenMap;
+			//
+			Setting::Ptr					m_GameSetting;
+			SceneBuilder::Ptr				m_SceneBuilder;
+			//
+			std::map<std::string, ResourceManager::Ptr> m_GameLevelResourceMap;
+
 	};
 }
 

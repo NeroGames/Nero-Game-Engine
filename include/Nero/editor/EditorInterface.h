@@ -14,7 +14,7 @@
 #include <Nero/editor/ProjectManager.h>
 #include <functional>
 #include <Nero/core/cpp/scene/Scene.h>
-#include <Nero/core/cpp/luascene/LuaScene.h>
+#include <Nero/core/lua/scene/LuaScene.h>
 #include <Nero/editor/GameProject.h>
 #include <json/json.hpp>
 #include <Nero/editor/LoggerApplication.h>
@@ -163,6 +163,7 @@ namespace nero
 
 			//Script Wizard
 			char                        m_InputClassName[100];
+			char                        m_InputParentClass[100];
 			const char*                 m_SelectedScriptType;
 			int                         m_SelectedScriptTypeIndex;
 			const char*                 m_SelectedGameLevel;

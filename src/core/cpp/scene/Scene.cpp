@@ -2,9 +2,12 @@
 // Nero Game Engine
 // Copyright (c) 2016-2020 SANOU A. K. Landry
 /////////////////////////////////////////////////////////////
+///////////////////////////HEADERS///////////////////////////
+//Nero
 #include <Nero/core/cpp/scene/Scene.h>
-#include <Nero/core/cpp/object/GameLevelObject.h>
-
+//Boost
+#include <boost/dll.hpp>
+/////////////////////////////////////////////////////////////
 namespace nero
 {
 	Scene::Context::Context(std::string sceneName, RenderTexturePtr renderTexture, ResourceManager::Ptr resourceManager, Camera::Ptr camera, Setting::Ptr setting, EngineType engineType, PlatformType platformType):
@@ -34,6 +37,7 @@ namespace nero
 		,m_LevelSetting(nullptr)
 		,m_InformationText()
 		,m_LightManager(nullptr)
+		,m_GameSetting(context.setting)
 	{
 		if(context.resourceManager)
 		{
@@ -371,17 +375,132 @@ namespace nero
 
 	}
 
-	void Scene::loadGameLevel(const std::string& name)
+	void Scene::loadGameLevel(const std::string& levelName)
 	{
-	  auto gameLevel = std::make_shared<GameLevelObject>();
-	  Setting parameter;
-	  gameLevel->initialize(parameter);
+		//load game level json
+		auto gameLevelJson = loadJson(getPath({m_GameSetting->getString("game_level_directory"), levelName}));
 
+		//if game level has script object
+		GameLevelScriptObject::Ptr scriptObject = nullptr;
+		std::string script_class = gameLevelJson["script_class"].get<std::string>();
+		if(script_class != StringPool.BLANK)
+		{
+			boost::dll::fs::path game_library_path(removeFileExtension(m_GameSetting->getString("game_library_file")));
 
-	  m_PhysicWorld = gameLevel->getPhysicWorld();
+			m_CreateGameLevelMap[script_class] = boost::dll::import_alias<CreateCppGameLevelScript>(
+													 game_library_path,
+													 std::string("create" + script_class),
+													 boost::dll::load_mode::append_decorations);
 
-	  m_PhysicWorld->SetContactListener(this);
-	  m_PhysicWorld->SetDebugDraw(&m_ShapeRenderer);
+			scriptObject = m_CreateGameLevelMap[script_class](ScriptObject::Context(
+														  ));
+		}
+
+		//load level resource
+		ResourceManager::Ptr resourceManager = std::make_shared<ResourceManager>();
+		resourceManager->loadRequired(gameLevelJson["level_resource"]);
+		m_GameLevelResourceMap[levelName] = resourceManager;
+
+		//build level object
+		GameLevelObject::Ptr levelOject = std::make_shared<GameLevelObject>();
+		Parameter levelParameter;
+		levelParameter.loadJson(gameLevelJson["level_parameter"]);
+		levelOject->init(levelParameter);
+
+		//setup scene builder
+		m_SceneBuilder->setResourceManager(m_GameLevelResourceMap[levelName]);
+		m_SceneBuilder->setPhysicWorld(levelOject->getPhysicWorld());
+
+		//build world chunk
+		for(auto worldChunkJson : gameLevelJson["world_chunk_table"])
+		{
+			if(worldChunkJson["load_with_level"])
+			{
+				Object::Ptr chunkOject = std::make_shared<Object>();
+
+				m_SceneBuilder->loadScene(worldChunkJson["world_chunk"]);
+				m_SceneBuilder->buildScene(chunkOject);
+
+				levelOject->addChild(chunkOject);
+			}
+		}
+
+		if(scriptObject)
+		{
+			//scriptObject->setTarget(levelOject);
+			//scriptObject->setEnable(false);
+
+			m_GameWorld->addChild(scriptObject);
+		}
+		else
+		{
+			//levelOject->setEnable(false);
+			m_GameWorld->addChild(scriptObject);
+		}
+	}
+
+	void Scene::disableCurrentGameLevel()
+	{
+		auto& levelTable = *m_GameWorld->getAllChild();
+
+		for(auto level : levelTable)
+		{
+			//if(level->isEnable())
+			{
+				//detach the level from the game world
+				auto gameLevel = m_GameWorld->removeChild(level);
+
+				//destroy the level
+				destroyLevel(gameLevel);
+
+				//break
+				break;
+			}
+		}
+	}
+
+	void Scene::destroyLevel(Object::Ptr levelObject)
+	{
+		//do that in background
+	}
+
+	void Scene::enableGameLevel(const std::string& levelName)
+	{
+		//first disable current level
+		disableCurrentGameLevel();
+
+		//proceed to  enable the desired level
+		Object::Ptr result = nullptr;
+		Object::Ptr gameLevelObject = nullptr;
+		Object::Ptr gameLevelScript = nullptr;
+
+		//TODO replace with findGameLevel(levelName)
+		for(auto level : *m_GameWorld->getAllChild())
+		{
+			if(level->getName() == levelName)
+			{
+				result = level;
+				break;
+			}
+		}
+
+		if (result->getFirstType() == Object::Game_Level_Script_Object)
+		{
+			gameLevelScript = GameLevelScriptObject::Cast(result);
+			//gameLevelObject = gameLevelScript->getTarget();
+			//gameLevelScript->setEnable(true);
+		}
+		else
+		{
+			gameLevelObject = result;
+			//gameLevelObject->setEnable(true);
+		}
+
+		//GameLevelObject::Ptr gameLevel = GameLevelObject::Cast(gameLevelObject);
+
+		//m_PhysicWorld = gameLevel->getPhysicWorld();
+		m_PhysicWorld->SetContactListener(this);
+		m_PhysicWorld->SetDebugDraw(&m_ShapeRenderer);
 	}
 
 	void Scene::loadWorldChunk(const std::string& name)

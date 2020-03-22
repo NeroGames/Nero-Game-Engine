@@ -9,15 +9,15 @@
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <Box2D/Dynamics/b2TimeStep.h>
-//#include <Nero/editor/SceneBuilder.h>
-//#include <Nero/editor/UndoManager.h>
+//#include <Nero/core/cpp/scene/SceneBuilder.h>
+//#include <Nero/core/cpp/scene/UndoManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <memory>
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <Nero/editor/EditorUtility.h>
-#include <Nero/editor/SceneBuilder.h>
+#include <Nero/core/cpp/scene/SceneBuilder.h>
 
 namespace nero
 {
@@ -59,6 +59,7 @@ namespace nero
 				bool				visible			= true;
 				bool				selected		= false;
 				SceneBuilder::Ptr	sceneBuilder	= std::make_shared<SceneBuilder>();
+				bool				loadWithLevel	= true;
 			};
 
 			struct GameLevel

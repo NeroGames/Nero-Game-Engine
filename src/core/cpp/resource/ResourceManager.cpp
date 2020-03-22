@@ -190,4 +190,10 @@ namespace nero
 	{
 		m_TextureHolder->clear();
 	}
+
+	void ResourceManager::loadRequired(const nlohmann::json& requiredResource)
+	{
+
+	}
+
 }

@@ -5,7 +5,7 @@
 #include <json/json.hpp>
 #include <Nero/editor/GameProject.h>
 #include <Nero/core/cpp/scene/Scene.h>
-#include <Nero/core/cpp/luascene/LuaScene.h>
+#include <Nero/core/lua/scene/LuaScene.h>
 #include <boost/function.hpp>
 #include <Nero/core/cpp/utility/StringUtil.h>
 #include <Nero/core/cpp/utility/LogUtil.h>

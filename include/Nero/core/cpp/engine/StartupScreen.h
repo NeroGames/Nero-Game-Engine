@@ -6,11 +6,7 @@
 #define STARTUPSCREEN_H
 ///////////////////////////HEADERS//////////////////////////
 //Nero
-#include <Nero/core/cpp/resource/FontHolder.h>
-#include <Nero/core/cpp/resource/TextureHolder.h>
-#include <Nero/core/cpp/resource/AnimationHolder.h>
-#include <Nero/core/cpp/resource/SoundHolder.h>
-#include <Nero/core/cpp/resource/MusicHolder.h>
+#include <Nero/core/cpp/resource/ResourceManager.h>
 //SFML
 #include <SFML/Graphics/RenderWindow.hpp>
 //STD
@@ -36,6 +32,9 @@ namespace nero
 
 		public:
             void                            setRenderWindow(sf::RenderWindow* renderWindow);
+			void							setResourceManager(ResourceManager::Ptr resourceManager);
+
+			//TODO remove
 			void							setFontHolder(FontHolder::Ptr fontHolder);
 			void							setTextureHolder(TextureHolder::Ptr textureHolder);
 			void							setAnimationHolder(AnimationHolder::Ptr animationHolder);
@@ -47,6 +46,8 @@ namespace nero
 
         protected:
              sf::RenderWindow*              m_RenderWindow;
+			 ResourceManager::Ptr			m_ResourceManager;
+			 //TODO remove
 			 FontHolder::Ptr				m_FontHolder;
 			 TextureHolder::Ptr				m_TextureHolder;
 			 AnimationHolder::Ptr			m_AnimationHodler;

@@ -153,13 +153,14 @@ namespace nero
 			{
 				nlohmann::json chunk_save;
 
-				chunk_save["world_chunk"]	= chunk->sceneBuilder->saveScene();
-				chunk_save["chunk_id"]		= chunk->chunkId;
-				chunk_save["chunk_name"]	= chunk->name;
-				chunk_save["chunk_visible"] = chunk->visible;
-				chunk_save["selected"]		= chunk->selected;
+				chunk_save["world_chunk"]		= chunk->sceneBuilder->saveScene();
+				chunk_save["chunk_id"]			= chunk->chunkId;
+				chunk_save["chunk_name"]		= chunk->name;
+				chunk_save["chunk_visible"]		= chunk->visible;
+				chunk_save["selected"]			= chunk->selected;
+				chunk_save["load_with_level"]	= chunk->loadWithLevel;
 
-				level_save["chunk_table"].push_back(chunk_save);
+				level_save["world_chunk_table"].push_back(chunk_save);
 			}
 
 

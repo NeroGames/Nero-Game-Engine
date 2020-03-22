@@ -14,7 +14,7 @@
 #include <Nero/core/cpp/object/LayerObject.h>
 #include <Nero/core/cpp/object/TextObject.h>
 #include <Nero/core/cpp/object/UIObject.h>
-#include <Nero/editor/MeshEditor.h>
+#include <Nero/core/cpp/scene/MeshEditor.h>
 #include <Nero/core/cpp/scene/PhysicObjectManager.h>
 #include <Nero/core/cpp/scene/SceneUtility.h>
 #include <Nero/core/cpp/object/LightObject.h>
@@ -26,7 +26,7 @@
 //STD
 #include <unordered_map>
 #include <memory>
-#include <Nero/editor/UndoManager.h>
+#include <Nero/core/cpp/scene/UndoManager.h>
 #include <ltbl/LightSystem.hpp>
 
 ////////////////////////////////////////////////////////////
