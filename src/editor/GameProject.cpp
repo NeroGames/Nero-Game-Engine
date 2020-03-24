@@ -19,6 +19,19 @@ namespace nero
 
     }
 
+	void GameProject::loadResource(const Setting& parameter)
+	{
+		/*m_ResourceManager = ResourceManager::Ptr(new ResourceManager(m_ProjectSetting->getSetting("resource")));
+
+		if(parameter.getBool("load_startup_package"))
+		{
+			m_ResourceManager->loadDirectory("resource/starterpack");
+		}
+
+		m_ResourceManager->loadDirectory("project/path/resource");*/
+
+	}
+
 	void GameProject::init(const Setting& parameter)
     {
 		m_ProjectParameter = parameter;
@@ -58,6 +71,12 @@ namespace nero
 		m_AdvancedScene->setProjectParameter(m_ProjectParameter);
 		m_AdvancedScene->initialize();
     }
+
+	ResourceManager::Ptr GameProject::getResourceManager()
+	{
+		return m_ResourceManager;
+	}
+
 
     void GameProject::loadProject()
     {
@@ -394,11 +413,6 @@ namespace nero
 	void GameProject::setRenderTexture(const RenderTexturePtr& renderTexture)
 	{
 	   m_RenderTexture = renderTexture;
-	}
-
-	void GameProject::setResourceManager(const ResourceManager::Ptr& resourceManager)
-	{
-	   m_ResourceManager = resourceManager;
 	}
 
 	void GameProject::setCamera(const Camera::Ptr& camera)

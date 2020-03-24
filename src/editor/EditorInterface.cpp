@@ -113,7 +113,6 @@ namespace  nero
 		//
 		m_ProjectManager->setSetting(m_Setting);
 		m_ProjectManager->setRenderTexture(m_RenderTexture);
-		m_ProjectManager->setResourceManager(m_ResourceManager);
 		m_ProjectManager->setRenderContext(m_RenderContext);
 		m_ProjectManager->setCamera(m_EditorCamera);
 	}
@@ -265,13 +264,20 @@ namespace  nero
 	{
 		ImGui::Begin(EditorConstant.WINDOW_GAME_SCENE.c_str());
 
-			//TODO
-			std::string mouse_state = "mouse positoin";
+			buildRenderContext();
+
+			sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
+
+			std::string canvas_pos_string = "Canvas x = " + toString(m_RenderContext->mouse_position.x) + " y = " + toString(m_RenderContext->mouse_position.y);
+			std::string wrold_pos_string = "World x = " + toString(world_pos.x) + " y = "  + toString(world_pos.y);
+			std::string camera_pos_string = "Camera x = " + toString(m_EditorCamera->getPosition().x) + " y = "  + toString(m_EditorCamera->getPosition().y);
+
+
+			std::string mouse_state = canvas_pos_string + " | " + wrold_pos_string + " | " + camera_pos_string;
 			float start = (ImGui::GetWindowContentRegionWidth() - ImGui::CalcTextSize(mouse_state.c_str()).x)/2.f;
 			ImGui::SetCursorPosX(start);
 			ImGui::Text(mouse_state.c_str());
 
-			buildRenderContext();
 
 			prepareRenderTexture();
 
@@ -586,7 +592,7 @@ namespace  nero
 				ImGuiID lowerLeftDockspaceID	= ImGui::DockBuilderSplitNode(upperLeftDockspaceID,	ImGuiDir_Down,	0.20f, nullptr, &upperLeftDockspaceID);
 				ImGuiID rightDockspaceID        = ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Right, 0.20f, nullptr, &m_DockspaceID);
 				ImGuiID toolbarDockspaceID		= ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Up,	0.20f, nullptr, &m_DockspaceID);
-				//ImGui::DockBuilderGetNode(toolbarDockspaceID)->AuthorityForSize = ImGuiDataAuthority_Window;
+				ImGui::DockBuilderGetNode(toolbarDockspaceID)->AuthorityForSize = ImGuiDataAuthority_Window;
 				ImGuiID bottomDockspaceID       = ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Down,	0.20f, nullptr, &m_DockspaceID);
 				ImGuiID centralDockspaceID		= ImGui::DockBuilderGetCentralNode(m_DockspaceID)->ID;
 
@@ -647,6 +653,7 @@ namespace  nero
 				toolbarDockNode->SizeRef.y			= m_Setting->getSetting("dockspace").getSetting("toolbar_dock").getFloat("height");
 				toolbarDockNode->LocalFlags			= ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_SingleDock;
 
+				toolbarDockNode->AuthorityForSize = ImGuiDataAuthority_DockNode;
 				//clean pointer
 				toolbarDockNode		= nullptr;
 
@@ -753,14 +760,6 @@ namespace  nero
 				ImGui::BeginChild("tool_bar_button", ImVec2(), false);
 		}
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.5f, 2.5f));
-
-					/*float offset = scrollToolbar ? 32.f : 4.f;
-					float width = scrollToolbar ? toolbar_min_width : ImGui::GetWindowContentRegionWidth();
-					width -=  offset*2.f;
-					float start = (width - (60.f * 5.f + 10.f * 4.f))/2.f + offset;
-					float buttonSpace = 60.f + 14.f;
-					int i = 0;*/
-
 
 					float width = ImGui::GetWindowContentRegionWidth();
 					float start = (width - (60.f * 5.f + 10.f * 4.f))/2.f;
@@ -2253,8 +2252,9 @@ namespace  nero
 		}
 
 		//open new project
-		m_GameProject	= m_ProjectManager->openProject(projectDirectory);
-		m_AdvancedScene = m_GameProject->getAdvancedScene();
+		m_GameProject		= m_ProjectManager->openProject(projectDirectory);
+		m_AdvancedScene		= m_GameProject->getAdvancedScene();
+		m_ResourceManager	= m_GameProject->getResourceManager();
 
 		//update editor window title
 		updateWindowTitle(m_GameProject->getProjectName());

@@ -41,8 +41,6 @@ namespace nero
 			void					loadSetting();
 			void					checkEnvironmentVariable();
 			void					loadEditorResource();
-			void					loadStarterResourcePack();
-			void					loadWorkspaceResource();
 			void					createEditorInterface();
 			void					openLastProject();
 			void					createCamera();
@@ -59,8 +57,6 @@ namespace nero
             LoadingScreen::Ptr      m_LoadingScreen;
             //Editor Interface
             EditorInterface::Ptr    m_Interface;
-            //Resource Manager
-			ResourceManager::Ptr    m_ResourceManager;
 			//Editor resource
 			TextureHolder::Ptr		m_EditorTextureHolder;
 			FontHolder::Ptr			m_EditorFontHolder;
@@ -68,7 +64,7 @@ namespace nero
 			//Editor camera
 			AdvancedCamera::Ptr     m_AdvancedCamera;
 			//
-			Setting::Ptr			m_Setting;
+			Setting::Ptr			m_EditorSetting;
 	};
 }
 

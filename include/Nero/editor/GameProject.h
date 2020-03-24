@@ -45,7 +45,6 @@ namespace nero
 			std::string							exec(const char* cmd);
 			AdvancedScene::Ptr					getAdvancedScene();
 			void								setRenderTexture(const RenderTexturePtr& renderTexture);
-			void								setResourceManager(const ResourceManager::Ptr& resourceManager);
 			void								setCamera(const Camera::Ptr& camera);
 			void								openQtCreator(const std::string& file = StringPool.BLANK);
 			void								openVisualStudio(const std::string& file = StringPool.BLANK);
@@ -56,6 +55,9 @@ namespace nero
 			std::string							getProjectName() const;
 			std::vector<BackgroundTask>&		getBackgroundTaskTable();
 			void								createScriptObject(const Setting& parameter);
+			ResourceManager::Ptr				getResourceManager();
+			void								loadResource(const Setting& parameter);
+
 
 		private:
 			BackgroundTask&						createBackgroundTask(const std::string& name, const std::string& category);

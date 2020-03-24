@@ -78,7 +78,6 @@ namespace  nero
 			std::string getProjectDirectory(const Setting& parameter);
 
 			void setRenderTexture(const RenderTexturePtr& renderTexture);
-			void setResourceManager(const ResourceManager::Ptr& resourceManager);
 			void setCamera(const Camera::Ptr& camera);
 
 			void setRenderContext(const RenderContextPtr& renderContext);

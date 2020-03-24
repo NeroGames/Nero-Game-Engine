@@ -469,10 +469,10 @@ namespace nero
 		m_GameProject = GameProject::Ptr(new GameProject());
 		m_GameProject->setSetting(m_Setting);
 		m_GameProject->setRenderTexture(m_RenderTexture);
-		m_GameProject->setResourceManager(m_ResourceManager);
 		m_GameProject->setRenderContext(m_RenderContext);
 		m_GameProject->setCamera(m_Camera);
 
+		m_GameProject->loadResource(parameter);
 		nero_log("initializing project");
 		m_GameProject->init(parameter);
 		nero_log("loading project");
@@ -542,11 +542,6 @@ namespace nero
 	 void ProjectManager::setRenderTexture(const RenderTexturePtr& renderTexture)
 	 {
 		m_RenderTexture = renderTexture;
-	 }
-
-	 void ProjectManager::setResourceManager(const ResourceManager::Ptr& resourceManager)
-	 {
-		m_ResourceManager = resourceManager;
 	 }
 
 	 void ProjectManager::setCamera(const Camera::Ptr& camera)
