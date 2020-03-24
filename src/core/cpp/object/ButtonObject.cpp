@@ -6,7 +6,7 @@
 //NERO
 #include <Nero/core/cpp/object/ButtonObject.h>
 #include <Nero/core/cpp/utility/Utility.h>
-#include <Nero/core/cpp/utility/LogUtil.h>
+
 ////////////////////////////////////////////////////////////
 namespace nero
 {

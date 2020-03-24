@@ -7,7 +7,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/core/cpp/utility/StringUtil.h>
-#include <Nero/core/cpp/utility/LogUtil.h>
+
 #include <Nero/core/cpp/utility/PlatformUtil.h>
 #include <experimental/filesystem>
 

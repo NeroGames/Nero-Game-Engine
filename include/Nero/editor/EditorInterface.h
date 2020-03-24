@@ -5,6 +5,8 @@
 #ifndef EDITORINTERFACE_H
 #define EDITORINTERFACE_H
 ///////////////////////////HEADERS//////////////////////////
+//Poco
+#include <Poco/Logger.h>
 //IMGUI
 #include <imgui/imgui.h>
 #include <imgui/imgui-SFML.h>
@@ -19,14 +21,15 @@
 #include <json/json.hpp>
 #include <Nero/editor/LoggerApplication.h>
 #include <Nero/core/cpp/utility/StringUtil.h>
-#include <Nero/core/cpp/utility/LogUtil.h>
+
 #include <Nero/editor/AdvancedScene.h>
 #include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/editor/AdvancedCamera.h>
 #include <Nero/editor/EditorUtility.h>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <nativefiledialog/include/nfd.h>
-
+#include <imgui/imgui.h>
+#include <imgui/imgui_internal.h>
 #include <future>
 #include <map>
 # include <nodeeditor/imgui_node_editor.h>
@@ -298,6 +301,10 @@ namespace nero
 			ImVec4 ambient_light;
 
 			void createScriptObject(const Setting& parameter);
+
+			//
+			ImGuiWindow* m_toolbar_window;
+			ImVec4 getLoggingColor(LOGLEVEL level);
 
 	};
 

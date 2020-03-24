@@ -28,7 +28,6 @@ set(CXX_STANDARD 17)
 set(CMAKE_REQUIRED_FLAGS -std=c++1z)
 # Compile Option
 add_definitions(-lstdc++fs)
-add_definitions(-DAUTO_INITIALIZE_EASYLOGGINGPP)
 add_definitions(-DBOOST_ALL_NO_LIB)
 add_definitions(-DBOOST_DLL_USE_STD_FS)
 add_definitions(-DSOL_ALL_SAFETIES_ON=1)
@@ -75,7 +74,6 @@ set(POCO "-lPocoRedis -lPocoPDF -lPocoCppParser -lPocoZip -lPocoData -lPocoNetSS
 file(GLOB_RECURSE NERO_GAME_CORE_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/core/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/library/easyloggingpp/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/ltbl/*")
 # Dependencies
 set(NERO_GAME_CORE_DEP ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2d_LIBS} ${EASY_PROFILER} ${POCO})

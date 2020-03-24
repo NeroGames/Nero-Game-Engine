@@ -1,6 +1,6 @@
 /*#include <Nero/core/lua/scene/LuaScene.h>
 #include <Nero/core/cpp/utility/StringUtil.h>
-#include <Nero/core/cpp/utility/LogUtil.h>
+
 
 
 namespace  nero

@@ -5,9 +5,9 @@
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/core/cpp/model/AnimationSequence.h>
-#include <Nero/core/cpp/utility/LogUtil.h>
+
 //EASYLOG
-#include <easyloggingpp/easylogging++.h>
+//#include <easyloggingpp/easylogging++.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {

@@ -1,5 +1,5 @@
 #include <Nero/core/cpp/utility/FileUtil.h>
-#include <Nero/core/cpp/utility/LogUtil.h>
+
 #include <Nero/core/cpp/engine/EngineConstant.h>
 #include <fstream>
 #include <vector>

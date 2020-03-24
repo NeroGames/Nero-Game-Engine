@@ -6,7 +6,7 @@
 //NERO
 #include <Nero/core/cpp/object/MeshObject.h>
 //EASYLOG
-#include <easyloggingpp/easylogging++.h>
+//#include <easyloggingpp/easylogging++.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {

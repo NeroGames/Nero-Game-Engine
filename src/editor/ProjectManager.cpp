@@ -1,7 +1,7 @@
 #include <Nero/editor/ProjectManager.h>
 #include <Nero/core/cpp/utility/FileUtil.h>
 #include <Nero/core/cpp/utility/DateUtil.h>
-#include <Nero/core/cpp/utility/LogUtil.h>
+
 #include <Nero/core/cpp/engine/EngineConstant.h>
 //STD
 #include <windows.h>

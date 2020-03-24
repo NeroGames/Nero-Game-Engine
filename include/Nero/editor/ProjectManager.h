@@ -8,7 +8,7 @@
 #include <Nero/core/lua/scene/LuaScene.h>
 #include <boost/function.hpp>
 #include <Nero/core/cpp/utility/StringUtil.h>
-#include <Nero/core/cpp/utility/LogUtil.h>
+
 #include <Nero/core/cpp/engine/Setting.h>
 #include <Nero/editor/AdvancedCamera.h>
 

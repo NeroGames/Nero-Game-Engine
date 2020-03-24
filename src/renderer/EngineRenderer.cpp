@@ -6,7 +6,7 @@
 //Nero
 #include <Nero/renderer/EngineRenderer.h>
 #include <Nero/renderer/NoGameFound.h>
-#include <Nero/core/cpp/utility/LogUtil.h>
+
 #include <Nero/core/cpp/scene/SceneBuilder.h>
 //Boost
 #include <boost/dll.hpp>

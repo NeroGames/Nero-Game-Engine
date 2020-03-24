@@ -75,7 +75,7 @@ namespace nero
 		}
 		else if (fileExist(txtHelper))// .txt helper file exist, the texture get several sprites
 		{
-			std::ifstream inStream(txtHelper);
+			/*std::ifstream inStream(txtHelper);
 			//Split each line to retrieve the necessary information
 			const std::string separatorString = m_Setting.getString("separator");
 			char separator = separatorString[0];
@@ -97,7 +97,7 @@ namespace nero
 				m_SpriteTable.push_back(spriteName);
 
 				nero_log("loaded : " + spriteName);
-			}
+			}*/
 		}
 		else //helper file not exist, texture is the sprite
 		{

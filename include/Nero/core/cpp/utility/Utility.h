@@ -1,7 +1,7 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
-#include <Nero/core/cpp/utility/LogUtil.h>
+#include <Nero/core/cpp/utility/Logging.h>
 #include <Nero/core/cpp/utility/FileUtil.h>
 
 #include <SFML/Graphics/Sprite.hpp>

@@ -11,7 +11,7 @@
 #include <Nero/editor/AdvancedCamera.h>
 #include <Nero/editor/LoadingScreen.h>
 #include <Nero/editor/EditorInterface.h>
-//STD
+//Cpp
 #include <future>
 ////////////////////////////////////////////////////////////
 namespace nero
@@ -33,7 +33,7 @@ namespace nero
 			void					createLoadingScreen();
 			void					startBackgroundTask();
 			void					loadEarlySetting();
-			void					initializeLogging();
+			void					initLogging();
 			//destroy
 			void					destroyEditor();
 			//background task
@@ -69,7 +69,7 @@ namespace nero
 			AdvancedCamera::Ptr     m_AdvancedCamera;
 			//
 			Setting::Ptr			m_Setting;
-    };
+	};
 }
 
 #endif // ENGINEEDITOR_H

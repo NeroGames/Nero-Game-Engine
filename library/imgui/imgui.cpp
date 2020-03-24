@@ -3564,17 +3564,28 @@ void ImGui::UpdateMouseWheel()
     {
         ImVec2 max_step = window->InnerRect.GetSize() * 0.67f;
 
-        // Vertical Mouse Wheel Scrolling (hold Shift to scroll horizontally)
-        if (g.IO.MouseWheel != 0.0f && !g.IO.KeyShift)
-        {
-            float scroll_step = ImFloor(ImMin(5 * window->CalcFontSize(), max_step.y));
-            SetWindowScrollY(window, window->Scroll.y - g.IO.MouseWheel * scroll_step);
-        }
-        else if (g.IO.MouseWheel != 0.0f && g.IO.KeyShift)
-        {
-            float scroll_step = ImFloor(ImMin(2 * window->CalcFontSize(), max_step.x));
-            SetWindowScrollX(window, window->Scroll.x - g.IO.MouseWheel * scroll_step);
-        }
+		//Nero Game Egnine (Scroll Tool bar)
+		if(window->Flags & ImGuiWindowFlags_ScrollToolbar)
+		{
+			//only scrool verticaly
+			float scroll_step = ImFloor(ImMin(2 * window->CalcFontSize(), max_step.x));
+			SetWindowScrollX(window, window->Scroll.x - g.IO.MouseWheel * scroll_step);
+		}
+		else
+		{
+			// Vertical Mouse Wheel Scrolling (hold Shift to scroll horizontally)
+			if (g.IO.MouseWheel != 0.0f && !g.IO.KeyShift)
+			{
+				float scroll_step = ImFloor(ImMin(5 * window->CalcFontSize(), max_step.y));
+				SetWindowScrollY(window, window->Scroll.y - g.IO.MouseWheel * scroll_step);
+			}
+			else if (g.IO.MouseWheel != 0.0f && g.IO.KeyShift)
+			{
+				float scroll_step = ImFloor(ImMin(2 * window->CalcFontSize(), max_step.x));
+				SetWindowScrollX(window, window->Scroll.x - g.IO.MouseWheel * scroll_step);
+			}
+		}
+
 
         // Horizontal Mouse Wheel Scrolling (for hardware that supports it)
         if (g.IO.MouseWheelH != 0.0f && !g.IO.KeyShift)

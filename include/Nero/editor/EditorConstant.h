@@ -61,7 +61,7 @@ namespace nero
 		const std::string ERROR_CREATING_PROJECT		= "Error Creating Project";
 
 		//Texture
-		const std::string TEXTURE_PROJECT_BUTTON		= "project_button_2";
+		const std::string TEXTURE_PROJECT_BUTTON		= "project_button";
 		const std::string TEXTURE_EDIT_BUTTON			= "edit_button";
 		const std::string TEXTURE_COMPILE_BUTTON		= "compile_button";
 		const std::string TEXTURE_RELOAD_BUTTON			= "reload_button";

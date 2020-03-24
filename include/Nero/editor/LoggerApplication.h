@@ -2,6 +2,7 @@
 #define LOGGERAPPLICATION_H
 
 #include <imgui/imgui.h>
+#include <string>
 
 struct LoggerApplication
 {
@@ -9,7 +10,7 @@ struct LoggerApplication
     ImGuiTextFilter     Filter;
     ImVector<int>       LineOffsets;        // Index to lines offset. We maintain this with AddLog() calls, allowing us to have a random access on lines
     bool                AutoScroll;
-    bool                ScrollToBottom;
+	bool                ScrollToBottom;
 
     LoggerApplication()
     {
@@ -24,6 +25,11 @@ struct LoggerApplication
         LineOffsets.clear();
         LineOffsets.push_back(0);
     }
+
+	void AddLog(const std::string& message)
+	{
+		AddLog(message.c_str());
+	}
 
     void    AddLog(const char* fmt, ...) IM_FMTARGS(2)
     {
@@ -69,7 +75,7 @@ struct LoggerApplication
             ImGui::LogToClipboard();
 
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-        const char* buf = Buf.begin();
+		const char* buf = Buf.begin();
         const char* buf_end = Buf.end();
         if (Filter.IsActive())
         {
@@ -103,8 +109,8 @@ struct LoggerApplication
                 for (int line_no = clipper.DisplayStart; line_no < clipper.DisplayEnd; line_no++)
                 {
                     const char* line_start = buf + LineOffsets[line_no];
-                    const char* line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
-                    ImGui::TextUnformatted(line_start, line_end);
+					const char* line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
+					ImGui::TextUnformatted(line_start, line_end);
                 }
             }
             clipper.End();
@@ -115,7 +121,7 @@ struct LoggerApplication
             ImGui::SetScrollHereY(1.0f);
         ScrollToBottom = false;
         ImGui::EndChild();
-        ImGui::End();
+		ImGui::End();
     }
 };
 

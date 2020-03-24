@@ -4,6 +4,7 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Nero
+#include <Nero/core/cpp/utility/Logging.h>
 #include <Nero/editor/EngineEditor.h>
 #include <Nero/editor/EditorSetting.h>
 #include <Nero/editor/EditorConstant.h>
@@ -21,9 +22,10 @@ namespace  nero
 		,m_Setting(nullptr)
 	{
 		//initialize log
-		initializeLogging();
+		initLogging();
 
 		//load window setting
+		Poco::Logger::get("Editor").information("bonjour");
 		loadEarlySetting();
 
 		//create the rendering window
@@ -97,7 +99,7 @@ namespace  nero
         }
     }
 
-	void EngineEditor::initializeLogging()
+	void EngineEditor::initLogging()
 	{
 		std::string file = getPath({"setting", "logging"}, StringPool.EXTENSION_TEXT);
 
@@ -109,12 +111,18 @@ namespace  nero
 			//crteate setting file
 		}
 
-		el::Configurations setting(file);
-		el::Loggers::reconfigureAllLoggers(setting);
+		/*el::Configurations setting(file);
+		el::Loggers::reconfigureAllLoggers(setting);*/
 
 		//first log
-		nero_log("Starting Nero Game Engine Editor ...");
-		nero_log("Lean more at https://nero-game.com/");
+		//nero_log("Starting Nero Game Engine Editor ...");
+		//nero_log("Lean more at https://nero-game.com/");
+
+
+		Logger::init();
+
+		//startup log
+		Poco::Logger::root().notice("This is a test");
 	}
 
 	void EngineEditor::loadEarlySetting()
