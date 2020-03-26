@@ -890,9 +890,6 @@ namespace  nero
 
 					if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
 					{
-						Poco::Logger::get("Editor").information("one project manager");
-						Poco::Logger::get("Editor.Interface").information("one project manager");
-
 						ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
 					}
 
@@ -1644,14 +1641,22 @@ namespace  nero
 			}
 
 			std::size_t worskpaceCount = workspaceNameTable.size();
-			const char** workspaceComboTable = new const char* [worskpaceCount];
+			//char** workspaceComboTable = new char* [worskpaceCount];
 
-			fillCharTable(workspaceComboTable, workspaceNameTable);
+			//fillCharTable(workspaceComboTable, workspaceNameTable);
+
+			//const char* projectTypeComboTable[] = {"CPP Project", "Lua Project", "CPP and Lua Project"};
+
+			const char* workspaceComboTable[worskpaceCount];
+			nero_fill_char_array(workspaceComboTable, workspaceNameTable);
+			/*int i = 0;
+			for(const auto& string : workspaceNameTable)
+				workspaceComboTable[i++] = string.c_str();*/
 
 			m_SelectedWorkpsapce = workspaceComboTable[m_SelectedWorkpsapceIndex];
-			if (ImGui::BeginCombo("##combo", m_SelectedWorkpsapce, ImGuiComboFlags())) // The second parameter is the label previewed before opening the combo.
+			if (ImGui::BeginCombo("##workspace_combo", m_SelectedWorkpsapce, ImGuiComboFlags())) // The second parameter is the label previewed before opening the combo.
 			{
-				for (int n = 0; n < worskpaceCount; n++)
+				for (std::size_t n = 0; n < worskpaceCount; n++)
 				{
 					bool is_selected = (m_SelectedWorkpsapce == workspaceComboTable[n]);
 
@@ -1675,14 +1680,6 @@ namespace  nero
 				}
 				ImGui::EndCombo();
 			}
-
-			//delete array
-			for (std::size_t i = 0 ; i < worskpaceCount; i++)
-			{
-				delete[] workspaceComboTable[i] ;
-			}
-			delete[] workspaceComboTable ;
-			workspaceComboTable = nullptr;
 
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
@@ -1801,7 +1798,15 @@ namespace  nero
 				}
 				else
 				{
-					Setting parameter;
+					Parameter parameter;
+					/*nero_log("project_name : " + std::string(m_InputProjectName));
+					nero_log("workspace_name : " + std::string(m_SelectedWorkpsapce));
+					nero_log("project_type : " + std::string(m_SelectedProjectType));
+					nero_log("project_namespace : " + std::string(m_InputProjectNamespace));
+					nero_log("project_lead : " + std::string(m_InputProjectLead));
+					nero_log("company_name : " + std::string(m_InputProjectCompany));
+					nero_log("description : " + std::string(m_InputProjectDescription));
+					nero_log("code_editor : " + std::string(m_SelectedCodeEditor));*/
 					parameter.setString("project_name", std::string(m_InputProjectName));
 					parameter.setString("workspace_name", std::string(m_SelectedWorkpsapce));
 					parameter.setString("project_type", std::string(m_SelectedProjectType));
@@ -1843,7 +1848,9 @@ namespace  nero
 			ImGui::SetNextWindowSize(ImVec2(300.f, 120.f));
 			if(ImGui::BeginPopupModal("Wait Project Creation", nullptr, window_flags))
 			{
+				//nero_log("block thread for a second");
 				std::shared_future<int>& future = BTManager::getLastFuture();
+				//nero_log("retrieve background task");
 				BackgroundTask::Ptr createProjectTask = BTManager::getLastTask();
 
 				if(createProjectTask)
@@ -2260,15 +2267,9 @@ namespace  nero
 		updateProjectInput();
 	}
 
-	int EditorInterface::createProject(const Setting& parameter, int& status)
-    {
-		//m_ProjectManager->createProject(parameter, status);
-
-        return status;
-    }
-
 	void EditorInterface::createProject(const Parameter& parameter)
 	{
+		nero_log("on create project in background");
 		BTManager::startTask(&ProjectManager::createProject, m_ProjectManager.get(), parameter);
 	}
 

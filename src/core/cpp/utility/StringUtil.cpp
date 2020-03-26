@@ -66,6 +66,14 @@ namespace nero
         }
     };
 
+	void fillCharTable(char** charTab, const std::vector<std::string>& stringTab)
+	{
+		for(std::size_t i = 0; i < stringTab.size(); i++)
+		{
+			charTab[i] = const_cast<char*>(stringTab[i].c_str());
+		}
+	};
+
     void fillCharArray(char* charArray, int arraySize, const std::string& string)
     {
         strncpy(charArray, string.c_str(), arraySize - 1);

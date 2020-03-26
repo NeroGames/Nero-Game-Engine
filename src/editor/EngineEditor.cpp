@@ -301,7 +301,7 @@ namespace  nero
 
 		auto recentProjectTable = loadJson(getPath({"setting", "recent_project"}));
 
-		nlohmann::json recentProjectSetting;
+		nlohmann::json recentProjectSetting = nlohmann::json::array();
 
 		for(auto project : recentProjectTable)
 		{

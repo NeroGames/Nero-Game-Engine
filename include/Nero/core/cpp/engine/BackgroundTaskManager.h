@@ -28,7 +28,7 @@ namespace nero
 								  const std::string& taskName = StringPool.BLANK,
 								  const std::string& taskCategory = EngineConstant.DEFAULT_TASK_CATEGORY);
 
-			static void startTask(void (*callback)(BackgroundTask::Ptr backgroundTask, const Parameter& parameter),
+			static void startTask(void (*callback)(const Parameter& parameter, BackgroundTask::Ptr backgroundTask),
 								  const Parameter& parameter,
 								  const std::string& taskName = StringPool.BLANK,
 								  const std::string& taskCategory = EngineConstant.DEFAULT_TASK_CATEGORY);
@@ -37,7 +37,7 @@ namespace nero
 								  const std::string& taskName = StringPool.BLANK,
 								  const std::string& taskCategory = EngineConstant.DEFAULT_TASK_CATEGORY);
 
-			static void startTask(std::function<void (BackgroundTask::Ptr backgroundTask, const Parameter& parameter)> callback,
+			static void startTask(std::function<void (const Parameter& parameter, BackgroundTask::Ptr backgroundTask)> callback,
 								  const Parameter& parameter,
 								  const std::string& taskName = StringPool.BLANK,
 								  const std::string& taskCategory = EngineConstant.DEFAULT_TASK_CATEGORY);
@@ -48,7 +48,7 @@ namespace nero
 								  const std::string& taskCategory = EngineConstant.DEFAULT_TASK_CATEGORY);
 
 			template<typename T>
-			static void startTask(void(T::*callBack)(BackgroundTask::Ptr backgroundTask, const Parameter& parameter), T* parent,
+			static void startTask(void(T::*callBack)(const Parameter& parameter, BackgroundTask::Ptr backgroundTask), T* parent,
 								  const Parameter& parameter,
 								  const std::string& taskName = StringPool.BLANK,
 								  const std::string& taskCategory = EngineConstant.DEFAULT_TASK_CATEGORY);
@@ -87,7 +87,7 @@ namespace nero
 	}
 
 	template<typename T>
-	void BackgroundTaskManager::startTask(void(T::*callBack)(BackgroundTask::Ptr backgroundTask, const Parameter& parameter),
+	void BackgroundTaskManager::startTask(void(T::*callBack)(const Parameter& parameter, BackgroundTask::Ptr backgroundTask),
 										  T* parent,
 										  const Parameter& parameter,
 										  const std::string& taskName,
@@ -96,7 +96,7 @@ namespace nero
 		BackgroundTaskManager::m_BackgroundFutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, parent, callBack, parameter]()
 		{
 			BackgroundTask::Ptr backgroundTask = createTask(taskName, taskCategory);
-			(parent->*callBack)(backgroundTask, parameter);
+			(parent->*callBack)(parameter, backgroundTask);
 
 			return 0;
 		}).share();

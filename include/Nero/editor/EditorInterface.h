@@ -145,10 +145,9 @@ namespace nero
             char                        m_InputWorkspaceCompany[100];
 			char                        m_InputWorkspaceLead[100];
             char                        m_InputWorkspaceNamespace[10];
-            const char*                 m_SelectedWorkpsapce;
+			const char*					m_SelectedWorkpsapce;
 			int                         m_SelectedWorkpsapceIndex;
-			int                         m_SelectedProjectTypeIndex;
-			int                         m_SelectedCodeEditorIndex;
+
 
             //Game Project
             char                        m_InputProjectName[100];        //read project name
@@ -160,6 +159,8 @@ namespace nero
 			const char*                 m_SelectedCodeEditor;
             std::future<int>            m_CreateProjectFuture;
 			std::future<int>            m_CompileProjectFuture;
+			int                         m_SelectedProjectTypeIndex;
+			int                         m_SelectedCodeEditorIndex;
 
             int                         m_ProjectCreationStatus;
             std::string                 m_LastCreatedProject;
@@ -204,7 +205,6 @@ namespace nero
 			//
 			void						showScriptCreationWindow();
             //function
-			int                         createProject(const Setting& parameter, int& status);
 			void						createProject(const Parameter& parameter);
 			void                        createWorkspace(const Setting& parameter);
 			void						importWorkspace(const std::string& directory);

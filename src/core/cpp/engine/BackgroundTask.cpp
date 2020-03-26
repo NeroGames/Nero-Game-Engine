@@ -4,6 +4,7 @@
 /////////////////////////////////////////////////////////////
 #include <Nero/core/cpp/engine/BackgroundTask.h>
 #include <Nero/core/cpp/utility/StringUtil.h>
+#include <Nero/core/cpp/utility/Logging.h>
 
 namespace nero
 {
@@ -42,6 +43,7 @@ namespace nero
 
 	void BackgroundTask::addMessage(const std::string& message)
 	{
+		nero_log(message);
 		m_Message += message + StringPool.NEW_LINE;
 		//m_MessageTable.push_back(message);
 	}

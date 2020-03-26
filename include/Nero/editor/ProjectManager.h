@@ -30,7 +30,7 @@ namespace  nero
             ProjectManager();
 
 		   //void createProject(const Setting& parameter, int& status);
-		   void createProject(BackgroundTask::Ptr backgroundTask, const Parameter &parameter);
+		   void createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
 
 		   void createWorkspace(const Setting& parameter);
 		   void importWorkspace(const std::string& directory);
@@ -72,9 +72,9 @@ namespace  nero
 
             void openEditor(std::string cmake_project);
 
-			void createCppProject(const Setting& parameter, BackgroundTask::Ptr backgroundTask);
-			void createLuaProject(const Setting& parameter, BackgroundTask::Ptr backgroundTask);
-			void createCppLuaProject(const Setting& parameter, BackgroundTask::Ptr backgroundTask);
+			void createCppProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+			void createLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+			void createCppLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
 
 			void updateRecentProject(const std::string& projectDirectory);
 

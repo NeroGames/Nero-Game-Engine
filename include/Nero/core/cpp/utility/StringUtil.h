@@ -68,12 +68,18 @@ namespace nero
         return stream.str();
     }
 
-   void fillCharTable(const char** charTab, const std::vector<std::string>& stringTab);
+	void fillCharTable(const char** charTab, const std::vector<std::string>& stringTab);
+	void fillCharTable(char** charTab, const std::vector<std::string>& stringTab);
    void fillCharArray(char* charArray, int arraySize, const std::string& string);
+
+   char* arrayFromVector(const std::vector<std::string>& stringTab);
+
 
    std::vector<std::string> getWordTable(std::string string);
 
    std::string wrapString(const std::string& message, int maxLetter);
 }
+
+#define nero_fill_char_array(arrayTable, vectorTable) for(unsigned int i = 0; i < vectorTable.size(); i++ ) arrayTable[i] = vectorTable[i].c_str();
 
 #endif // STRINGUTIL_H

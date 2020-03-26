@@ -23,8 +23,10 @@ namespace nero
 
     }
 
-	void ProjectManager::createProject(BackgroundTask::Ptr backgroundTask, const Parameter &parameter)
+	void ProjectManager::createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
 	{
+		nero_log("creating project : " + parameter.getString("project_name"));
+
 		std::string projectType = parameter.getString("project_type");
 
 		if(projectType == "CPP Project")
@@ -43,35 +45,16 @@ namespace nero
 		updateRecentProject(getProjectDirectory(parameter));
 	}
 
-
-	/*void ProjectManager::createProject(const Setting& parameter, int& status)
-    {
-		std::string projectType = parameter.getString("project_type");
-
-		if(projectType == "CPP Project")
-		{
-			createCppProject(parameter, status);
-		}
-		else if(projectType == "Lua Project")
-		{
-			createLuaProject(parameter, status);
-		}
-		else if(projectType == "CPP and Lua Project")
-		{
-			createCppLuaProject(parameter, status);
-		}
-
-		updateRecentProject(getProjectDirectory(parameter));
-	}*/
-
 	std::string ProjectManager::getProjectDirectory(const Setting& parameter)
 	{
 		std::string workspaceDirectory	= findWorkspace(parameter.getString("workspace_name"))["workspace_directory"].get<std::string>();
 		return getPath({workspaceDirectory, "Project", parameter.getString("project_name")});
 	}
 
-	void ProjectManager::createCppProject(const Setting& parameter, BackgroundTask::Ptr backgroundTask)
+	void ProjectManager::createCppProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
 	{
+		nero_log("creating cpp_project");
+
 		//Step 1-1 : Create directory struture
 		backgroundTask->setStatus(1);
 		backgroundTask->addMessage("generating project directory ...");
@@ -172,12 +155,12 @@ namespace nero
 		backgroundTask->setCompleted(true);
 	}
 
-	void ProjectManager::createLuaProject(const Setting& parameter, BackgroundTask::Ptr backgroundTask)
+	void ProjectManager::createLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
 	{
 		nero_log("not_implemented");
 	}
 
-	void ProjectManager::createCppLuaProject(const Setting& parameter, BackgroundTask::Ptr backgroundTask)
+	void ProjectManager::createCppLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
 	{
 		nero_log("not_implemented");
 	}
