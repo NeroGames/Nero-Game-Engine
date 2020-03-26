@@ -42,6 +42,8 @@ namespace nero
 			void								loadLibrary();
 			void								openEditor();
 			void								compileProject();
+			void								compileProject(const BackgroundTask& backgroundTask);
+
 			std::string							exec(const char* cmd);
 			AdvancedScene::Ptr					getAdvancedScene();
 			void								setRenderTexture(const RenderTexturePtr& renderTexture);

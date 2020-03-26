@@ -5,9 +5,9 @@
 #ifndef SETTING_H
 #define SETTING_H
 ///////////////////////////HEADERS///////////////////////////
-//JSON
+//Json
 #include <json/json.hpp>
-//STD
+//Cpp
 #include <string>
 #include <vector>
 #include <memory>

@@ -40,7 +40,7 @@ namespace nero
 		const std::string		DLL_CREATE_STARTUP_SCREEN	 = "create_startup_screen";
 		const std::string		DLL_CREATE_SCENE			 = "create_scene";
 
-
+		const std::string		DEFAULT_TASK_CATEGORY	= "Nero";
     };
 
     const _EngineConstant EngineConstant;

@@ -364,6 +364,11 @@ namespace nero
         return result;
     }
 
+	void GameProject::compileProject(const BackgroundTask& backgroundTask)
+	{
+
+	}
+
     void GameProject::compileProject()
     {
 		BackgroundTask& backgroundTask =  createBackgroundTask("Compile Project", "Game Project");

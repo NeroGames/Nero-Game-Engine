@@ -205,6 +205,7 @@ namespace nero
 			void						showScriptCreationWindow();
             //function
 			int                         createProject(const Setting& parameter, int& status);
+			void						createProject(const Parameter& parameter);
 			void                        createWorkspace(const Setting& parameter);
 			void						importWorkspace(const std::string& directory);
 			void                        openProject(const std::string& projectDirectory);

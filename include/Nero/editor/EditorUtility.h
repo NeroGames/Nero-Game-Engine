@@ -26,16 +26,6 @@ namespace nero
 
 	sf::Vector2f formatSize(sf::Vector2f original, float size);
 
-	struct RenderContext
-	{
-	   sf::Vector2f canvas_position;
-	   sf::Vector2f canvas_size;
-	   sf::Vector2f mouse_position;
-	   bool         focus;
-	};
-
-	typedef std::shared_ptr<RenderContext> RenderContextPtr;
-
 	enum class EditorMode
 	{
 		WORLD_BUILDER,

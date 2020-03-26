@@ -8,6 +8,7 @@
 #include <Nero/core/lua/scene/LuaScene.h>
 #include <boost/function.hpp>
 #include <Nero/core/cpp/utility/StringUtil.h>
+#include <Nero/core/cpp/engine/BackgroundTask.h>
 
 #include <Nero/core/cpp/engine/Setting.h>
 #include <Nero/editor/AdvancedCamera.h>
@@ -17,7 +18,7 @@ namespace  nero
     class ProjectManager
     {
         public:
-			typedef std::unique_ptr<ProjectManager> Ptr;
+			typedef std::shared_ptr<ProjectManager> Ptr;
 			typedef std::shared_ptr<RenderContext> RenderContextPtr;
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 			typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
@@ -28,7 +29,9 @@ namespace  nero
         public:
             ProjectManager();
 
-		   void createProject(const Setting& parameter, int& status);
+		   //void createProject(const Setting& parameter, int& status);
+		   void createProject(BackgroundTask::Ptr backgroundTask, const Parameter &parameter);
+
 		   void createWorkspace(const Setting& parameter);
 		   void importWorkspace(const std::string& directory);
 
@@ -69,9 +72,9 @@ namespace  nero
 
             void openEditor(std::string cmake_project);
 
-			void createCppProject(const Setting& parameter, int& status);
-			void createLuaProject(const Setting& parameter, int& status);
-			void createCppLuaProject(const Setting& parameter, int& status);
+			void createCppProject(const Setting& parameter, BackgroundTask::Ptr backgroundTask);
+			void createLuaProject(const Setting& parameter, BackgroundTask::Ptr backgroundTask);
+			void createCppLuaProject(const Setting& parameter, BackgroundTask::Ptr backgroundTask);
 
 			void updateRecentProject(const std::string& projectDirectory);
 

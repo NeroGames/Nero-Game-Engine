@@ -123,5 +123,16 @@ namespace nero
         float           offsetDown;
         bool            followTarget;
     };
+
+	struct RenderContext
+	{
+	   sf::Vector2f canvas_position;
+	   sf::Vector2f canvas_size;
+	   sf::Vector2f mouse_position;
+	   bool         focus;
+	};
+
+	typedef std::shared_ptr<RenderContext> RenderContextPtr;
+
 }
 #endif // SCENE_UTIL_H

@@ -23,8 +23,28 @@ namespace nero
 
     }
 
+	void ProjectManager::createProject(BackgroundTask::Ptr backgroundTask, const Parameter &parameter)
+	{
+		std::string projectType = parameter.getString("project_type");
 
-	void ProjectManager::createProject(const Setting& parameter, int& status)
+		if(projectType == "CPP Project")
+		{
+			createCppProject(parameter, backgroundTask);
+		}
+		else if(projectType == "Lua Project")
+		{
+			createLuaProject(parameter, backgroundTask);
+		}
+		else if(projectType == "CPP and Lua Project")
+		{
+			createCppLuaProject(parameter, backgroundTask);
+		}
+
+		updateRecentProject(getProjectDirectory(parameter));
+	}
+
+
+	/*void ProjectManager::createProject(const Setting& parameter, int& status)
     {
 		std::string projectType = parameter.getString("project_type");
 
@@ -42,7 +62,7 @@ namespace nero
 		}
 
 		updateRecentProject(getProjectDirectory(parameter));
-    }
+	}*/
 
 	std::string ProjectManager::getProjectDirectory(const Setting& parameter)
 	{
@@ -50,10 +70,12 @@ namespace nero
 		return getPath({workspaceDirectory, "Project", parameter.getString("project_name")});
 	}
 
-	void ProjectManager::createCppProject(const Setting& parameter, int& status)
+	void ProjectManager::createCppProject(const Setting& parameter, BackgroundTask::Ptr backgroundTask)
 	{
 		//Step 1-1 : Create directory struture
-		status = 1;
+		backgroundTask->setStatus(1);
+		backgroundTask->addMessage("generating project directory ...");
+
 		std::string project_name = parameter.getString("project_name");
 
 		std::string workspaceDirectory	= findWorkspace(parameter.getString("workspace_name"))["workspace_directory"].get<std::string>();
@@ -94,7 +116,8 @@ namespace nero
 		saveFile(getPath({projectDirectory, ".project"}), document.toString());
 
 		//Step 2 : generate project source
-		status = 2;
+		backgroundTask->setStatus(2);
+		backgroundTask->addMessage("generating project file ...");
 
 		//Step 2 : Generate file
 		std::string cmake_template			= loadText("template/cpp-project/CMakeLists.txt");
@@ -132,29 +155,31 @@ namespace nero
 		nero_log(getPath({projectDirectory, "Build"}));
 		boost::algorithm::replace_all(cmake_setting_template, "::Project_Build_Directory::", escapeAntiSlash(getPath({projectDirectory, "Build"})));
 
-
 		saveFile(getPath({projectDirectory, "Source", project_name, "CMakeLists"}, StringPool.EXTENSION_TEXT), cmake_template);
 		saveFile(getPath({projectDirectory, "Source", project_name, "CMakeSettings"}, StringPool.EXTENSION_JSON), cmake_setting_template);
 		saveFile(getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXTENSION_CPP_HEADER), scene_header_template);
 		saveFile(getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXTENSION_CPP_SOURCE), scene_source_template);
 
 		//Step 3 : compile the project
-		status = 3;
+		backgroundTask->setStatus(3);
+		backgroundTask->addMessage("compiling project ...");
 
 		compileProject(projectDirectory);
 
 		//compplet
-		status = 4;
+		backgroundTask->setStatus(4);
+		backgroundTask->addMessage("project creation completed ...");
+		backgroundTask->setCompleted(true);
 	}
 
-	void ProjectManager::createLuaProject(const Setting& parameter, int& status)
+	void ProjectManager::createLuaProject(const Setting& parameter, BackgroundTask::Ptr backgroundTask)
 	{
-		status = 4;
+		nero_log("not_implemented");
 	}
 
-	void ProjectManager::createCppLuaProject(const Setting& parameter, int& status)
+	void ProjectManager::createCppLuaProject(const Setting& parameter, BackgroundTask::Ptr backgroundTask)
 	{
-		status = 4;
+		nero_log("not_implemented");
 	}
 
     bool ProjectManager::isProjectExist(const std::string& projectName)
@@ -246,21 +271,12 @@ namespace nero
 		std::string directory = getPath({parameter.getString("workspace_location"), parameter.getString("workspace_name")});
 		createDirectory(directory);
 		createDirectory(getPath({directory, "Project"}));
-		createDirectory(getPath({directory, "Factory"}));
-		createDirectory(getPath({directory, "Setting"}));
-		createDirectory(getPath({directory, "Resource"}));
-			createDirectory(getPath({directory, "Resource", "texture"}));
-			createDirectory(getPath({directory, "Resource", "animation"}));
-			createDirectory(getPath({directory, "Resource", "font"}));
-			createDirectory(getPath({directory, "Resource", "sound"}));
-			createDirectory(getPath({directory, "Resource", "music"}));
-			createDirectory(getPath({directory, "Resource", "luascript"}));
-			createDirectory(getPath({directory, "Resource", "shader"}));
-			createDirectory(getPath({directory, "Resource", "language"}));
-			createDirectory(getPath({directory, "Resource", "lightmap"}));
+		//createDirectory(getPath({directory, "Factory"}));
+		//createDirectory(getPath({directory, "Setting"}));
+		//ResourceManager::buildDirectory("resource");
 
 		//create workspace document
-		Setting document;
+		Parameter document;
 		document.setString("engine_version", EngineConstant.ENGINE_VERSION);
 		document.setString("document_type", EngineConstant.DOCUMENT_TYPE_WORKSPACE);
 		document.setString("workspace_name", parameter.getString("workspace_name"));
@@ -359,7 +375,7 @@ namespace nero
         std::string buildPath   = getPath({projectDirectory, "Build"});
 
         std::string clean       = "mingw32-make -C \"" + buildPath + "\" -k clean";
-        std::string run_cmake    = "cmake -G \"MinGW Makefiles\" -S \"" + sourcePath + "\" -B \"" + buildPath + "\"";
+		std::string run_cmake   = "cmake -G \"MinGW Makefiles\" -S \"" + sourcePath + "\" -B \"" + buildPath + "\"";
         std::string build       = "mingw32-make -C \"" + buildPath + "\"";
 
         system(clean.c_str());

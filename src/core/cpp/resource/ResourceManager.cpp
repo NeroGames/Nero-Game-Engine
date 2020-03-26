@@ -196,4 +196,35 @@ namespace nero
 
 	}
 
+	void ResourceManager::buildDirectory(const std::string& parentDirectory)
+	{
+		if(parentDirectory != StringPool.BLANK)
+		{
+			createDirectory(getPath({parentDirectory, "Resource"}));
+				createDirectory(getPath({parentDirectory, "Resource", "texture"}));
+				createDirectory(getPath({parentDirectory, "Resource", "animation"}));
+				createDirectory(getPath({parentDirectory, "Resource", "font"}));
+				createDirectory(getPath({parentDirectory, "Resource", "sound"}));
+				createDirectory(getPath({parentDirectory, "Resource", "music"}));
+				createDirectory(getPath({parentDirectory, "Resource", "luascript"}));
+				createDirectory(getPath({parentDirectory, "Resource", "shader"}));
+				createDirectory(getPath({parentDirectory, "Resource", "language"}));
+				createDirectory(getPath({parentDirectory, "Resource", "lightmap"}));
+		}
+		else
+		{
+			createDirectory(getPath({"Resource"}));
+				createDirectory(getPath({"Resource", "texture"}));
+				createDirectory(getPath({"Resource", "animation"}));
+				createDirectory(getPath({"Resource", "font"}));
+				createDirectory(getPath({"Resource", "sound"}));
+				createDirectory(getPath({"Resource", "music"}));
+				createDirectory(getPath({"Resource", "luascript"}));
+				createDirectory(getPath({"Resource", "shader"}));
+				createDirectory(getPath({"Resource", "language"}));
+				createDirectory(getPath({"Resource", "lightmap"}));
+		}
+	}
+
+
 }

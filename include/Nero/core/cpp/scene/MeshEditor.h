@@ -7,7 +7,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/core/cpp/model/Mesh.h>
-#include <Nero/editor/EditorUtility.h>
+#include <Nero/core/cpp/scene/SceneUtility.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 //STD
 #include <vector>

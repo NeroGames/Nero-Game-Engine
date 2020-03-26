@@ -7,11 +7,15 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace nero
 {
 	class BackgroundTask
 	{
+		public:
+			typedef std::shared_ptr<BackgroundTask>    Ptr;
+
 		public:
 										BackgroundTask(const std::string& name, const std::string& category);
 
@@ -34,6 +38,7 @@ namespace nero
 			bool						m_Completed;
 			bool						m_Failed;
 			std::vector<std::string>	m_MessageTable;
+			std::string					m_Message;
 	};
 }
 

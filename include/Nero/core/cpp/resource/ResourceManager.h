@@ -6,6 +6,7 @@
 #define RESOURCEMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
 //NERO
+#include <Nero/core/cpp/utility/StringUtil.h>
 #include <Nero/core/cpp/resource/FontHolder.h>
 #include <Nero/core/cpp/resource/SoundHolder.h>
 #include <Nero/core/cpp/resource/MusicHolder.h>
@@ -50,6 +51,9 @@ namespace nero
 			TextureHolder::Ptr			getTextureHolder();
 			AnimationHolder::Ptr		getAnimationHolder();
 			TextureHolder::Ptr			getLightmapHolder();
+
+		public:
+			static void					buildDirectory(const std::string& parentDirectory = StringPool.BLANK);
 
 		private:
 			FontHolder::Ptr				m_FontHolder;
