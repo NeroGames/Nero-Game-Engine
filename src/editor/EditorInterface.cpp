@@ -46,6 +46,7 @@ namespace  nero
 		,m_InputSelectedObjectLayerId(-1)
 		,m_InputSelectedGameLevelId(-1)
 		,m_InputSelectedGameScreenId(-1)
+		,m_InputIncludeSartupPack(true)
     {
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -1619,10 +1620,9 @@ namespace  nero
 			ImGui::InputText("##project_name", m_InputProjectName, sizeof(m_InputProjectName));
 			ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
-			ImGui::Text("Starter Pack");
+			ImGui::Text("Startup Pack");
 			ImGui::SameLine(wording_width);
-			static bool include_stater_pack = true;
-			ImGui::Checkbox("##starter_pack", &include_stater_pack);
+			ImGui::Checkbox("##starter_pack", &m_InputIncludeSartupPack);
 			ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
 			ImGui::Separator();
@@ -1799,14 +1799,6 @@ namespace  nero
 				else
 				{
 					Parameter parameter;
-					/*nero_log("project_name : " + std::string(m_InputProjectName));
-					nero_log("workspace_name : " + std::string(m_SelectedWorkpsapce));
-					nero_log("project_type : " + std::string(m_SelectedProjectType));
-					nero_log("project_namespace : " + std::string(m_InputProjectNamespace));
-					nero_log("project_lead : " + std::string(m_InputProjectLead));
-					nero_log("company_name : " + std::string(m_InputProjectCompany));
-					nero_log("description : " + std::string(m_InputProjectDescription));
-					nero_log("code_editor : " + std::string(m_SelectedCodeEditor));*/
 					parameter.setString("project_name", std::string(m_InputProjectName));
 					parameter.setString("workspace_name", std::string(m_SelectedWorkpsapce));
 					parameter.setString("project_type", std::string(m_SelectedProjectType));
@@ -1815,6 +1807,7 @@ namespace  nero
 					parameter.setString("company_name", std::string(m_InputProjectCompany));
 					parameter.setString("description", std::string(m_InputProjectDescription));
 					parameter.setString("code_editor", std::string(m_SelectedCodeEditor));
+					parameter.setBool("startup_pack", m_InputIncludeSartupPack);
 
 					m_LastCreatedProject = m_ProjectManager->getProjectDirectory(parameter);
 
@@ -3537,6 +3530,8 @@ namespace  nero
 	{
 		ImGui::Begin(EditorConstant.WINDOW_EXPLORER.c_str());
 
+		ImGui::Text( ICON_FA_PASTE "  Paint" );
+
 		if (ImGui::CollapsingHeader("Game World", m_AdvancedScene ? ImGuiTreeNodeFlags_DefaultOpen :ImGuiTreeNodeFlags_None))
 		{
 			if(m_AdvancedScene)
@@ -3547,7 +3542,6 @@ namespace  nero
 				ImGuiViewport* viewport = ImGui::GetMainViewport();
 				float game_world_window_height = viewport->Size.y * 0.25f;
 				viewport = nullptr;
-				//ImGui::Text( ICON_FA_PASTE "  Paint" );
 
 				ImGui::BeginChild("game_world", ImVec2(0.f, game_world_window_height), true);
 
@@ -3932,6 +3926,8 @@ namespace  nero
 		fillCharArray(m_InputProjectCompany,		sizeof(m_InputProjectCompany),		StringPool.BLANK);
 		fillCharArray(m_InputProjectNamespace,		sizeof(m_InputProjectNamespace),	StringPool.BLANK);
 		fillCharArray(m_InputProjectDescription,	sizeof(m_InputProjectDescription),	StringPool.BLANK);
+
+		m_InputIncludeSartupPack = true;
 	}
 
 	void EditorInterface::updateProjectInput()

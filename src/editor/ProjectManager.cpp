@@ -95,6 +95,7 @@ namespace nero
 		document.setString("project_namespace", parameter.getString("project_namespace"));
 		document.setString("description",		parameter.getString("description"));
 		document.setString("workspace_name",	parameter.getString("workspace_name"));
+		document.setBool("startup_pack",		parameter.getBool("startup_pack"));
 
 		saveFile(getPath({projectDirectory, ".project"}), document.toString());
 

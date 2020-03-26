@@ -161,6 +161,7 @@ namespace nero
 			std::future<int>            m_CompileProjectFuture;
 			int                         m_SelectedProjectTypeIndex;
 			int                         m_SelectedCodeEditorIndex;
+			bool						m_InputIncludeSartupPack;
 
             int                         m_ProjectCreationStatus;
             std::string                 m_LastCreatedProject;
