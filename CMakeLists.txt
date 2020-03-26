@@ -101,6 +101,7 @@ target_link_libraries(EngineRenderer ${NERO_GAME_RENDERER_DEP})
 file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/editor/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor/*"
+    #"${CMAKE_CURRENT_SOURCE_DIR}/library/fontawsome/*.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/IconFontCppHeaders/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/imgui/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/nativefiledialog/*"

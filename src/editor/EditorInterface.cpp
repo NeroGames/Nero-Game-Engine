@@ -52,15 +52,28 @@ namespace  nero
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
 
+		io.Fonts->Clear();
 		io.Fonts->AddFontDefault();
+		//io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation-Vector.otf", 15.f);
+		ImGui::SFML::UpdateFontTexture();
 
 		ImFontConfig config;
 		config.MergeMode = true;
+		config.PixelSnapH  = true;
 		config.GlyphMinAdvanceX = 13.0f; // Use if you want to make the icon monospaced
 		static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
-		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 13.0f, &config, icon_ranges);
-		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 13.0f, &config, icon_ranges);
-		io.Fonts->AddFontFromFileTTF("resource/editor/font/forkawesome-webfont.ttf", 13.0f, &config, icon_ranges);
+		//io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation.ttf", 20.0f, &config, icon_ranges);
+		//io.Fonts->AddFontFromFileTTF("resource/editor/font/AboutLove.ttf", 20.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 20.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 20.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 20.0f, &config, icon_ranges);
+		ImGui::SFML::UpdateFontTexture();
+
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation.ttf", 15.f);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 20.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 20.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 20.0f, &config, icon_ranges);
+		ImGui::SFML::UpdateFontTexture();
 
 		m_RenderTexture = std::make_shared<sf::RenderTexture>();
 		m_ProjectManager = std::make_unique<ProjectManager>();
@@ -188,6 +201,7 @@ namespace  nero
 		//create editor dockspace & display menubar
 		createDockSpace();
 
+		//ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
 		//central dockspcace
 			//display toolbar
 		showToolbarWindow();
@@ -228,6 +242,7 @@ namespace  nero
 
 		//background task
 		showBackgroundTaskWindow();
+		//ImGui::PopFont();
 
 
 		//commit
@@ -779,7 +794,7 @@ namespace  nero
 		}
 
 
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8.f, 0.f));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8.f, 5.f));
 		if(scrollToolbar)
 		{
 				ImGui::SetNextWindowContentWidth(toolbar_min_width);
@@ -804,8 +819,8 @@ namespace  nero
 						start = (width - (60.f * 5.f + 10.f * 4.f))/2.f + 32.f - 50.f;
 					}
 
-
 					ImGui::SameLine(10.f);
+
 
 					if(m_EditorMode != EditorMode::WORLD_BUILDER && m_GameProject)
 					{
@@ -887,12 +902,28 @@ namespace  nero
 						width = toolbar_min_width + 13.f;
 					}
 
-					ImGui::SameLine(width - 72.f - padding);
+					ImGui::SameLine(width - 72.f - padding - 10.f);
 
-					if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
+					/*if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
+					{
+						ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+					}*/
+
+					ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.f);
+					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
+					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.000f, 1.000f, 1.000f, 1.000f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.000f, 1.000f, 1.000f, .950f));
+					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.000f, 1.000f, 1.000f, .900f));
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.000f, 0.474f, 0.083f, 1.000f/*0.609f*/));
+					ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1.000f, 0.474f, 0.083f, 1.000f));
+					ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
+					if(ImGui::Button(ICON_FA_ANCHOR " Project", ImVec2(90.f, 28.f)))
 					{
 						ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
 					}
+					ImGui::PopStyleVar(2);
+					ImGui::PopStyleColor(5);
+					ImGui::PopFont();
 
 					if(m_GameProject)
 					{
@@ -3530,7 +3561,10 @@ namespace  nero
 	{
 		ImGui::Begin(EditorConstant.WINDOW_EXPLORER.c_str());
 
-		ImGui::Text( ICON_FA_PASTE "  Paint" );
+		ImGui::Text( ICON_FA_FOLDER " Paint" );
+		ImGui::Text( ICON_FA_FOLDER_MINUS " Paint" );
+		ImGui::Text( ICON_FA_FOLDER_OPEN " Paint" );
+		ImGui::Text( ICON_FA_FOLDER_PLUS " Paint" );
 
 		if (ImGui::CollapsingHeader("Game World", m_AdvancedScene ? ImGuiTreeNodeFlags_DefaultOpen :ImGuiTreeNodeFlags_None))
 		{

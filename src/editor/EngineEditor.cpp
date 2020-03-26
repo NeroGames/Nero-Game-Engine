@@ -10,6 +10,7 @@
 #include <Nero/editor/EditorConstant.h>
 #include <Nero/editor/EditorInterface.h>
 #include <Nero/core/cpp/utility/FileUtil.h>
+#include <IconFontCppHeaders/IconsForkAwesome.h>
 //STD
 #include <memory>
 ////////////////////////////////////////////////////////////
@@ -138,7 +139,6 @@ namespace  nero
 
 	void EngineEditor::createRenderWindow()
     {
-		//create render window
 		m_RenderWindow.create(sf::VideoMode(m_EditorSetting->getSetting("window").getUInt("width"), m_EditorSetting->getSetting("window").getUInt("height")), EngineConstant.ENGINE_WINDOW_TITLE, sf::Style::Default);
 		m_RenderWindow.setVerticalSyncEnabled(true);
 		m_RenderWindow.resetGLStates();
@@ -146,7 +146,7 @@ namespace  nero
 		setWindowIcon(m_EditorSetting->getSetting("window").getString("icon_file"));
 
 		//setup imgui
-		ImGui::SFML::Init(m_RenderWindow);
+		ImGui::SFML::Init(m_RenderWindow, false);
 	}
 
 	void EngineEditor::createLoadingScreen()
