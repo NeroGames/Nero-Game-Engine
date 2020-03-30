@@ -10,7 +10,7 @@
 #include <Nero/core/cpp/utility/StringUtil.h>
 #include <Nero/core/cpp/engine/BackgroundTask.h>
 
-#include <Nero/core/cpp/engine/Setting.h>
+#include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/editor/AdvancedCamera.h>
 
 namespace  nero
@@ -32,15 +32,15 @@ namespace  nero
 		   //void createProject(const Setting& parameter, int& status);
 		   void createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
 
-		   void createWorkspace(const Setting& parameter);
+		   void createWorkspace(const Parameter& parameter);
 		   void importWorkspace(const std::string& directory);
 
-		   bool isProjectExist(const std::string& projectName);
+		   //bool isProjectExist(const std::string& projectName);
 		   bool isWorksapceExist(const std::string& projectName);
 
 		   void setSetting(const Setting::Ptr& setting);
 
-           void loadAllProject();
+		   //void loadAllProject();
 
            const std::vector<nlohmann::json>& getProjectTable() const;
 
@@ -52,11 +52,12 @@ namespace  nero
 
            const nlohmann::json findWorkspace(const std::string& name) const;
 
-           void compileProject(const std::string& projectDirectory = StringPool.BLANK);
-           void editProject();
+		   void compileProject(const std::string& projectDirectory = StringPool.BLANK);
+		   void compileProject(const std::string& projectDirectory, BackgroundTask::Ptr backgroundTask);
+		   void editProject();
 
            void loadLibrary();
-		   void close();
+		   void closeProject();
 
             std::string exec(const char* cmd);
             std::string formatSceneClassName(std::vector<std::string> wordTable);
@@ -78,7 +79,7 @@ namespace  nero
 
 			void updateRecentProject(const std::string& projectDirectory);
 
-			std::string getProjectDirectory(const Setting& parameter);
+			std::string getProjectDirectory(const Parameter& parameter);
 
 			void setRenderTexture(const RenderTexturePtr& renderTexture);
 			void setCamera(const Camera::Ptr& camera);
@@ -89,7 +90,7 @@ namespace  nero
 
 
         private:
-           nlohmann::json      m_EditorSetting;
+		   Setting::Ptr      m_EditorSetting;
            std::vector<nlohmann::json>  m_ProjectTable;
 
            std::string m_EditorPid;
@@ -99,7 +100,6 @@ namespace  nero
            boost::function<CreateCppSceneFn> m_CreateCppSceneFn;
 		   //boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;
 		   Scene::Ptr					m_GameScene;
-		   Setting::Ptr					m_Setting;
 
 		   RenderTexturePtr				m_RenderTexture;
 		   Camera::Ptr					m_Camera;

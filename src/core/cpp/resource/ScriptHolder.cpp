@@ -18,5 +18,15 @@ namespace nero
     {
 
     }
+
+	void ScriptHolder::clear()
+	{
+		//clear parent
+		ResourceHolder::clear();
+
+		//clear current
+		m_ScriptMap.clear();
+		m_ScriptTable.clear();
+	}
 }
 

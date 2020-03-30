@@ -21,6 +21,8 @@
 #include <string>
 #include <sstream>
 #include <vector>
+/////////////////////////////TODO////////////////////////////
+//TODO [Logging] manage logging settings
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -45,31 +47,26 @@ namespace nero
 	class Logger
 	{
 		public:
-			static void			init();
-			static void			init(const Setting& logSetting);
-			static void			log(const std::string& message, LOGLEVEL level = LOG_INFO);
-			static void			logIf(const std::string& message, bool condition, LOGLEVEL level = LOG_INFO);
-
-			//string stream logging
-			//static void								clearMessageTable();
-			//static const std::vector<LogMessage>&	getMessageTable();
-			static std::string		getString();
-			static void				clearStringStream();
+			static void								init();
+			static void								init(const Setting& loggingSetting);
+			static void								log(const std::string& message, LOGLEVEL level = LOG_INFO);
+			static void								logIf(const std::string& message, bool condition, LOGLEVEL level = LOG_INFO);
+			static std::string						getString();
+			static void								clearStringStream();
 
 		private:
-			static void			format(LOGLEVEL level);
-			//static void			saveLog(LOGLEVEL level);
+			static void								format(LOGLEVEL level);
 
 		private:
-			static Poco::FormattingChannel*	m_LoggingConsoleFormating;
-			static Poco::FormattingChannel*	m_LoggingStringStreamFormating;
-			static Poco::FormattingChannel*	m_LoggingFileFormating;
-			static std::stringstream		m_LoggingStringStream;
-			static Setting					m_LoggingSetting;
-			//static std::vector<LogMessage>	m_LoggingMessageTable;
+													Logger();
 
 		private:
-			Logger();
+			static Poco::PatternFormatter*			m_PatternFormatter;
+			static Poco::FormattingChannel*			m_LoggingConsoleFormating;
+			static Poco::FormattingChannel*			m_LoggingStringStreamFormating;
+			static Poco::FormattingChannel*			m_LoggingFileFormating;
+			static std::stringstream				m_LoggingStringStream;
+			static Setting							m_LoggingSetting;
 	};
 }
 ////////////////////////////MACRO///////////////////////////
@@ -89,5 +86,4 @@ namespace nero
 #define nero_ssv(value) nero::toString(#value) + nero::toString(" = ") + nero::toString(value)
 #define nero_ssn(object)  nero::toString(object->toString())
 ////////////////////////////////////////////////////////////
-
 #endif // LOGGING_H

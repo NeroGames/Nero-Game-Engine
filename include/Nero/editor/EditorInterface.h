@@ -16,12 +16,12 @@
 #include <Nero/editor/ProjectManager.h>
 #include <functional>
 #include <Nero/core/cpp/scene/Scene.h>
+#include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/core/lua/scene/LuaScene.h>
 #include <Nero/editor/GameProject.h>
 #include <json/json.hpp>
 #include <Nero/editor/LoggerApplication.h>
 #include <Nero/core/cpp/utility/StringUtil.h>
-
 #include <Nero/editor/AdvancedScene.h>
 #include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/editor/AdvancedCamera.h>
@@ -33,9 +33,7 @@
 #include <future>
 #include <map>
 # include <nodeeditor/imgui_node_editor.h>
-
 ////////////////////////////////////////////////////////////
-
 namespace nero
 {
     class EditorInterface
@@ -46,22 +44,77 @@ namespace nero
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 
 		public:
-                        EditorInterface(sf::RenderWindow& window);
-                       ~EditorInterface();
+											EditorInterface(sf::RenderWindow& window);
+										   ~EditorInterface();
+			void							destroy();
 
         private:
-            void        handleEvent(const sf::Event& event);
-            void        update(const sf::Time& timeStep);
-            void        render();
+			//initialization
+			void							init();
+			//game loop
+			void							handleEvent(const sf::Event& event);
+			void							update(const sf::Time& timeStep);
+			void							render();
+			//input
+			void							handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
+			//retrieve frame rate from core engine
+			void							updateFrameRate(const float& frameRate, const float& frameTime);
+			//let editor provide some objects
+			void							setEditorSetting(Setting::Ptr setting);
+			void							setEditorCamera(const AdvancedCamera::Ptr& camera);
+			void							setEditorTextureHolder(TextureHolder::Ptr textureHolder);
+			void							setEditorSoundHolder(SoundHolder::Ptr soundHolder);
+			void							setEditorFontHolder(FontHolder::Ptr soundHolder);
+			void							setCallbackWindowTitle(std::function<void (const std::string&)> callback);
+			void							updateWindowTitle(const std::string& title);
+			//close the editor
+			void							closeEditor();
 
-            void        updateFrameRate(const float& frameRate, const float& frameTime);
+		private:
+			//////////////Main Attributes
+			friend class									EngineEditor;
+			sf::RenderWindow&								m_RenderWindow;
+			float											m_FrameRate;
+			float											m_FrameTime;
+			Setting::Ptr									m_EditorSetting;
+			TextureHolder::Ptr								m_EditorTextureHolder;
+			SoundHolder::Ptr								m_EditorSoundHolder;
+			FontHolder::Ptr									m_EditorFontHolder;
+			std::function<void (const std::string&)>		m_UpdateWindowTile;
+			//game project
+			ProjectManager::Ptr								m_ProjectManager;
+			GameProject::Ptr								m_GameProject;
+			ResourceManager::Ptr							m_ResourceManager;
+			AdvancedScene::Ptr								m_AdvancedScene;
 
-            void        quitEditor();
-
-            void                    loadAllProject();
+		private:
+			//////////////docksapce
+			ImGuiID											m_DockspaceID;
+			bool											m_BuildDockspaceLayout;
+			bool											m_SetupDockspaceLayout;
+			void											createDockSpace();
+			void											interfaceFirstDraw();
+			//////////////main menu bar
+			void											showEditorMenuBar();
+			//////////////Tool Bar
+			void											showToolbarWindow();
+			//////////////Workspace
+			void											createWorkspace(const Parameter& parameter);
+			void											importWorkspace(const std::string& directory);
+			void											showWorkspaceWindow();
+			//////////////Project
+			void											createProject(const Parameter& parameter);
+			void											openProject(const std::string& projectDirectory);
+			void											compileProject();
+			void											editProject();
+			void											reloadProject();
+			void											closeProject();
+			void											showProjectManagerWindow();
+			void											showCreateProjectWindow();
+			void											showOpenProjectWindow();
+			void											showRecentProjectWindow();
 
             //
-            void                    setEditorSetting(const nlohmann::json& setting);
 
             sf::Sprite             flipTexture(const sf::Texture& texture);
 
@@ -81,20 +134,12 @@ namespace nero
             void                    showResourceWindow();
 			void                    showLoggingWindow();
                 //terminate
-            void                    interfaceFirstDraw();
 
             //utility
             void                    showToggleButton(bool toggle, const std::string& label, std::function<void()> callback);
 
-        private:
-			friend class						EngineEditor;
-			sf::RenderWindow&					m_RenderWindow;
 			//Docksapce
-			ImGuiID								m_DockspaceID;
-			bool								m_BuildDockspaceLayout;
-			bool								m_SetupDockspaceLayout;
-			void								createDockSpace();
-			void								createEditorMenuBar();
+
 
             bool        setup_dock = false;
 			ImGuiID actionBarId;
@@ -103,9 +148,6 @@ namespace nero
 			ImGuiID dock_id_left_bottom;
 
             bool            show_project_window = false;
-
-            //
-            nlohmann::json m_EditorSetting;
 
             //project creation
 
@@ -117,9 +159,7 @@ namespace nero
             std::stringstream buffer;
             std::streambuf * old;
 
-			void setCallbackWindowTitle(std::function<void (const std::string&)> fn);
 
-            std::function<void (const std::string&)> m_UpdateWindowTile;
 
             //
             void                        showGameProjectWindow();
@@ -129,13 +169,10 @@ namespace nero
 
 
 
-            ////////////////////////Tool Bar////////////////////////
-            void                        showToolbarWindow();
+
 
             ////////////////////////Project and Workspace////////////////////////
             //General
-            ProjectManager::Ptr         m_ProjectManager;
-            GameProject::Ptr            m_CurrentProject;
             //Project Workspace
             nlohmann::json              m_WorkspaceTable;               //list of available workspaces
             int                         m_WorksapceStatus;              //0 : no_worksapce, 1 : redirect_user, 2 worksapce_available
@@ -198,49 +235,31 @@ namespace nero
 			TabBarSwitch				m_BottomDockspaceTabBarSwitch;
             //Banner
             //show view
-            void                        showProjectManagerWindow();
-            void                        showCreateProjectWindow();
-			void                        showOpenProjectWindow();
-            void                        showRecentProjectWindow();
-            void                        showWorkspaceWindow();
+
+
 			//
 			void						showScriptCreationWindow();
             //function
-			void						createProject(const Parameter& parameter);
-			void                        createWorkspace(const Setting& parameter);
-			void						importWorkspace(const std::string& directory);
-			void                        openProject(const std::string& projectDirectory);
-            void                        compileProject();
-            void                        editProject();
-            void                        reloadProject();
+
+
+
 			void						playScene();
 			void						pauseScene();
 			void						stepScene();
 			void						resetScene();
 			void						renderScene();
 
-			void						setSetting(Setting::Ptr setting);
-
             //
-            GameProject::Ptr            m_GameProject;
-            AdvancedScene::Ptr          m_AdvancedScene;
+
 			void				buildRenderContext();
 			void						prepareRenderTexture();
 			bool				isMouseOnCanvas();
 
 			ax::NodeEditor::EditorContext*	g_Context;
 
-			TextureHolder::Ptr			m_EditorTextureHolder;
-			SoundHolder::Ptr			m_EditorSoundHolder;
-			FontHolder::Ptr				m_EditorFontHolder;
-			ResourceManager::Ptr		m_ResourceManager;
 
-			Setting::Ptr				m_Setting;
 
-			void		setEditorTextureHolder(TextureHolder::Ptr textureHolder);
-			void		setEditorSoundHolder(SoundHolder::Ptr soundHolder);
-			void		setEditorFontHolder(FontHolder::Ptr soundHolder);
-			void		setResourceManager(ResourceManager::Ptr resourceManager);
+
 
 			ResourceType				m_ResourceBrowserType;
 
@@ -261,18 +280,16 @@ namespace nero
 
 			AdvancedCamera::Ptr		m_EditorCamera;
 
-			void setCamera(const AdvancedCamera::Ptr& camera);
 			void renderCamera();
 			sf::View				m_CanvasFrontView;
 			sf::Text				m_GameModeInfo;
 
 			void			renderGameModeInfo();
-			float	m_FrameRate;
-			float	m_FrameTime;
+
 
 			RenderContextPtr m_RenderContext;
 
-			void init();
+
 			std::string getString(const EditorMode& editorMode);
 
 
@@ -284,12 +301,8 @@ namespace nero
 			void showMeshResource();
 			sf::Vector2f getAddObjectPosition();
 
-			void handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
 			void switchBuilderMode();
 			void showCanvasMenu();
-
-			void updateWindowTitle(const std::string& title);
-
 
 			std::string m_SelectedChunkNode;
 			void saveResourceFile(ResourceType type, const std::vector<std::string> fileTable);
@@ -302,11 +315,13 @@ namespace nero
 
 			ImVec4 ambient_light;
 
-			void createScriptObject(const Setting& parameter);
+			void createScriptObject(const Parameter& parameter);
 
 			//
 			ImGuiWindow* m_toolbar_window;
 			ImVec4 getLoggingColor(LOGLEVEL level);
+
+			std::string m_MouseInformation;
 
 	};
 

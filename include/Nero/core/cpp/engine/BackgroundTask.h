@@ -29,6 +29,8 @@ namespace nero
 			bool						isFailed();
 			void						setCompleted(bool completed);
 			std::string					printMessage();
+			int							getErrorCode();
+
 
 		private:
 			std::string					m_Name;

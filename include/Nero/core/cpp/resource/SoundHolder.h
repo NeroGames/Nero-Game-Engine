@@ -29,6 +29,7 @@ namespace nero
 			virtual void						loadDirectory()						override;
 			virtual void						loadFile(const std::string& file)	override;
 			virtual void						destroy()							override;
+			virtual void						clear() override;
 
 				  sf::SoundBuffer&				getSoundBuffer(std::string name);
 			const sf::SoundBuffer&				getSoundBuffer(std::string name)	const;

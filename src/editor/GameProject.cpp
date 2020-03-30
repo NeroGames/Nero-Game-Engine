@@ -19,20 +19,24 @@ namespace nero
 
     }
 
-	void GameProject::loadResource(const Setting& parameter)
+	void GameProject::loadResource(const Parameter& parameter)
 	{
-		/*m_ResourceManager = ResourceManager::Ptr(new ResourceManager(m_ProjectSetting->getSetting("resource")));
 
-		if(parameter.getBool("load_startup_package"))
+		nero_log("loading resource");
+		m_ResourceManager = ResourceManager::Ptr(new ResourceManager(m_EngineSetting->getSetting("resource")));
+
+		std::string resource_path = getPath({parameter.getString("project_directory"), "Resource"});
+
+		if(parameter.getBool("startup_pack"))
 		{
 			m_ResourceManager->loadDirectory("resource/starterpack");
 		}
 
-		m_ResourceManager->loadDirectory("project/path/resource");*/
-
+		m_ResourceManager->loadDirectory(resource_path);
+		nero_log("load resource completed");
 	}
 
-	void GameProject::init(const Setting& parameter)
+	void GameProject::init(const Parameter& parameter)
     {
 		m_ProjectParameter = parameter;
 		m_ProjectParameter.setString("source_directory", getPath({m_ProjectParameter.getString("project_directory"), "Source", parameter.getString("project_name")}));
@@ -442,18 +446,33 @@ namespace nero
 
 	void GameProject::close()
 	{
-		//close editor (window)
-		if(m_EditorProcessId != StringPool.BLANK)
+		//get the list of qtcreator process
+		std::string listProcessCmd		= "tasklist /fo csv | findstr /i \"qtcreator\"";
+		std::string processCSV			= exec(listProcessCmd.c_str());
+
+		//if the Editor has been opened and are still available (has not been closed)
+		if(m_EditorProcessId != StringPool.BLANK && processCSV.find(m_EditorProcessId) != std::string::npos)
 		{
 			std::string kill_command = "taskkill /F /PID " + m_EditorProcessId;
 			system(kill_command.c_str());
 		}
 
+		nero_log("clearing resources");
+		m_ResourceManager->clearResource();
+
+		//delete scene
 		m_AdvancedScene->m_Scene = nullptr;
+		m_AdvancedScene->m_CreateCppScene.clear();
+		m_CreateCppSceneFn.clear();
+
+		//delete level and screen
+		m_AdvancedScene->m_GameLevelTable.clear();
+		m_AdvancedScene->m_GameScreenTable.clear();
+
 		m_CreateCppSceneFn.clear();
 	}
 
-	void GameProject::createScriptObject(const Setting& parameter)
+	void GameProject::createScriptObject(const Parameter& parameter)
 	{
 		nero_log("creating script object");
 		std::string header_template	= StringPool.BLANK;

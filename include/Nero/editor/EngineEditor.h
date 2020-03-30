@@ -21,6 +21,7 @@ namespace nero
         public:
 									EngineEditor();
 			virtual                ~EngineEditor() override;
+			void					destroy();
 
 		private:
 			//game loop
@@ -28,15 +29,13 @@ namespace nero
 			void                    update(const sf::Time& timeStep) override;
 			void                    render()                         override;
 			//startup
-			int                     startEngine(bool& engineStarted, const int duration);
+			void					initLogging();
+			void					initSetting();
 			void                    createRenderWindow();
 			void					createLoadingScreen();
-			void					startBackgroundTask();
-			void					loadEarlySetting();
-			void					initLogging();
-			//destroy
-			void					destroyEditor();
-			//background task
+			void					backgroundStartup();
+			int                     startEngine(bool& engineStarted, const int duration);
+			//background startup
 			void					buildDirectory();
 			void					loadSetting();
 			void					checkEnvironmentVariable();
@@ -47,24 +46,22 @@ namespace nero
 			void					checkWorkspace();
 			void					checkRecentProject();
 
-
-
          private:
-            //Startup Thread
-			std::future<int>        m_StartEditorFuture;
+			//background startup
+			std::future<int>        m_StartupFuture;
 			bool                    m_EditorStarted;
-            //Startup Screen
+			//loading screen
             LoadingScreen::Ptr      m_LoadingScreen;
-            //Editor Interface
+			//editor interface
             EditorInterface::Ptr    m_Interface;
-			//Editor resource
+			//advanced camera
+			AdvancedCamera::Ptr     m_EditorCamera;
+			//editor settings
+			Setting::Ptr			m_EditorSetting;
+			//editor resource
 			TextureHolder::Ptr		m_EditorTextureHolder;
 			FontHolder::Ptr			m_EditorFontHolder;
 			SoundHolder::Ptr		m_EditorSoundHolder;
-			//Editor camera
-			AdvancedCamera::Ptr     m_AdvancedCamera;
-			//
-			Setting::Ptr			m_EditorSetting;
 	};
 }
 

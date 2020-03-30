@@ -74,7 +74,7 @@ namespace  nero
 	void EngineRenderer::loadGame()
 	{
 		//load game setting
-		m_GameSetting->loadJson(getPath({"Game", "Setting", "game_setting"}));
+		m_GameSetting->loadSetting(getPath({"Game", "Setting", "game_setting"}));
 
 		//create Render_Window
 		createRenderWindow();

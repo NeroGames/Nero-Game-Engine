@@ -184,4 +184,15 @@ namespace nero
             return foundAnimation->second.begin()->first;
         }
     }
+
+	void AnimationHolder::clear()
+	{
+		//clear parent
+		ResourceHolder::clear();
+
+		//clear current
+		m_TextureMap.clear();
+		m_SequenceMap.clear();
+		m_AnimationTable.clear();
+	}
 }

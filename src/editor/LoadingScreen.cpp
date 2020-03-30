@@ -9,19 +9,16 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    ////////////////////////////////////////////////////////////
     LoadingScreen::LoadingScreen(): StartupScreen()
     {
 
     }
 
-    ////////////////////////////////////////////////////////////
     void LoadingScreen::handleEvent(sf::Event& event)
     {
-        //Empty
+		//empty
     }
 
-    ////////////////////////////////////////////////////////////
     void LoadingScreen::update(const sf::Time& timeStep)
     {
         //move right left
@@ -46,7 +43,6 @@ namespace nero
         }
     }
 
-    ////////////////////////////////////////////////////////////
     void LoadingScreen::render()
     {
         m_RenderWindow->draw(m_LogoSprite);
@@ -56,28 +52,25 @@ namespace nero
         m_RenderWindow->draw(m_CopyrightsSprite);
     }
 
-    ////////////////////////////////////////////////////////////
 	const sf::Color LoadingScreen::getCanvasColor() const
     {
         return sf::Color::White;
     }
 
-    ////////////////////////////////////////////////////////////
-	const float LoadingScreen::getDuration() const
+	float LoadingScreen::getDuration() const
     {
         return 3.f;
     }
 
-    ////////////////////////////////////////////////////////////
     void LoadingScreen::init()
     {
         //Build the logo sprite
-		m_LogoSprite.setTexture(m_TextureHolder->getTexture("nero_logo"));
+		m_LogoSprite.setTexture(m_ResourceManager->getTextureHolder()->getTexture("nero_logo"));
         centerOrigin(m_LogoSprite);
         m_LogoSprite.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f, m_RenderWindow->getSize().y / 3.f));
         m_LogoSprite.setScale(sf::Vector2f(1.001f, 1.001f));
         //Build the copyrights sprite
-		m_CopyrightsSprite.setTexture(m_TextureHolder->getTexture("copyrights"));
+		m_CopyrightsSprite.setTexture(m_ResourceManager->getTextureHolder()->getTexture("copyrights"));
         centerOrigin(m_CopyrightsSprite);
         m_CopyrightsSprite.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f, m_RenderWindow->getSize().y - 50.f));
         m_CopyrightsSprite.setScale(sf::Vector2f(1.001f, 1.001f));

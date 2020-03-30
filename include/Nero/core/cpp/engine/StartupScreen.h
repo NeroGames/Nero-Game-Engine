@@ -28,18 +28,11 @@ namespace nero
             virtual void                    update(const sf::Time& timeStep)            = 0;
             virtual void                    render()                                    = 0;
 			virtual const sf::Color         getCanvasColor()	const					= 0;
-			virtual const float             getDuration()		const					= 0;
+			virtual float					getDuration()		const					= 0;
 
 		public:
             void                            setRenderWindow(sf::RenderWindow* renderWindow);
 			void							setResourceManager(ResourceManager::Ptr resourceManager);
-
-			//TODO remove
-			void							setFontHolder(FontHolder::Ptr fontHolder);
-			void							setTextureHolder(TextureHolder::Ptr textureHolder);
-			void							setAnimationHolder(AnimationHolder::Ptr animationHolder);
-			void							setSoundHolder(SoundHolder::Ptr soundHolder);
-			void							setMusicHolder(MusicHolder::Ptr musicHolder);
 
 		private:
 			virtual void					destroy();
@@ -47,12 +40,6 @@ namespace nero
         protected:
              sf::RenderWindow*              m_RenderWindow;
 			 ResourceManager::Ptr			m_ResourceManager;
-			 //TODO remove
-			 FontHolder::Ptr				m_FontHolder;
-			 TextureHolder::Ptr				m_TextureHolder;
-			 AnimationHolder::Ptr			m_AnimationHodler;
-			 SoundHolder::Ptr				m_SoundHolder;
-			 MusicHolder::Ptr				m_MusicHolder;
     };
 }
 #endif // STARTUPSCREEN_H

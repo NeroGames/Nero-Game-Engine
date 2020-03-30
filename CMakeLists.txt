@@ -66,7 +66,8 @@ set(CPP_FILESYSTEM "stdc++fs")
 # EASY_PROFILER
 set(EASY_PROFILER "-leasy_profiler.dll")
 # POCO
-set(POCO "-lPocoRedis -lPocoPDF -lPocoCppParser -lPocoZip -lPocoData -lPocoNetSSL -lPocoCrypto  -lPocoNet -lPocoUtil -lPocoXML -lPocoJSON -lPocoEncodings -lPocoFoundation -lexpat -liphlpapi -lssl -lcrypto -lzlibstatic -lws2_32")
+#set(POCO "-lPocoRedis -lPocoPDF -lPocoCppParser -lPocoZip -lPocoDataSQLite -lPocoDataPostgreSQL -lPocoData -lpq -lPocoNetSSL -lPocoCrypto  -lPocoNet -lPocoUtil -lPocoXML -lPocoJSON -lPocoEncodings -lPocoFoundation -lexpat -liphlpapi -lssl -lcrypto -lzlibstatic -lws2_32")
+set(POCO "-lPocoRedis -lPocoPDF -lPocoCppParser -lPocoZip -lPocoDataSQLite -lPocoData -lPocoNetSSL -lPocoCrypto  -lPocoNet -lPocoUtil -lPocoXML -lPocoJSON -lPocoEncodings -lPocoFoundation -lexpat -liphlpapi -lssl -lcrypto -lzlibstatic -lws2_32")
 
 # Nero Game Core Library
 #----------------------------------------------------------------------------------#

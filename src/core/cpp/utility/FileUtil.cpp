@@ -1,6 +1,7 @@
 #include <Nero/core/cpp/utility/FileUtil.h>
 
 #include <Nero/core/cpp/engine/EngineConstant.h>
+#include <Nero/core/cpp/utility/Logging.h>
 #include <fstream>
 #include <vector>
 
@@ -52,6 +53,13 @@ namespace nero
 		//replace all slash by a double back_slash
 		return boost::algorithm::replace_all_copy(path, "/", "\\\\");
 	}
+
+	std::string getLinuxPath(const std::string& path)
+	{
+		//replace all slash by a double back_slash
+		return boost::algorithm::replace_all_copy(path, "\\", "/");
+	}
+
 
 
 	std::string getLinuxPath(const std::vector<std::string>& list, const std::string& extansion)
@@ -179,8 +187,18 @@ namespace nero
 
     bool removeDirectory(const std::string& name, bool recursive)
     {
-        using namespace  std::experimental::filesystem;
-        remove(path(name));
+		using namespace  std::experimental::filesystem;
+
+		if(recursive)
+		{
+			std::error_code error;
+			remove_all(path(name), error);
+			nero_log(error.message());
+		}
+		else
+		{
+			return remove(path(name));
+		}
 
         return true;
     }
@@ -233,6 +251,13 @@ namespace nero
 		}
 
 		return getPath({path.string()});
+	}
+
+	std::string getFileName(const std::string& filename)
+	{
+		std::experimental::filesystem::path path(filename);
+
+		return path.filename().stem().string();
 	}
 }
 

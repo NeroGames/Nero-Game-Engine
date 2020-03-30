@@ -202,7 +202,7 @@ namespace nero
 			void								jointDestroyed(b2Joint* joint);
 
 			void								setCppSceneCreator(boost::function<CreateCppSceneFn>& createCppScene);
-			void								setProjectParameter(const Setting& parameter);
+			void								setProjectParameter(const Parameter& parameter);
 			Scene::Ptr							createCppScene();
 
 			//
@@ -272,7 +272,7 @@ namespace nero
 
 			//
 			boost::function<CreateCppSceneFn>	m_CreateCppScene;
-			Setting								m_ProjectParameter;
+			Parameter								m_ProjectParameter;
     };
 }
 

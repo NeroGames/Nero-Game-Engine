@@ -32,11 +32,11 @@ namespace nero
             void                    render();
 
 			const sf::Color         getCanvasColor()		const;
-			const float             getDuration()            const;
+			float					getDuration()			const;
 
         private:
-            sf::Sprite              m_LogoSprite;
-            sf::Sprite              m_CopyrightsSprite;
+			sf::Sprite              m_LogoSprite;
+			sf::Sprite              m_CopyrightsSprite;
 
             sf::RectangleShape      m_LoadingRectRight;
             sf::RectangleShape      m_LoadingRectLeft;

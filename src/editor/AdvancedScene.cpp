@@ -352,7 +352,7 @@ namespace nero
 		//ceate level ojbect
 		auto gameLevel = std::make_shared<GameLevelObject>();
 		gameLevel->setName(m_SelectedGameLevel->name);
-		Setting parameter;
+		Parameter parameter;
 		gameLevel->init(parameter);
 
 		//set up physic world
@@ -546,7 +546,7 @@ namespace nero
 					 Scene::PlatformType::WINDOWS));
 	}
 
-	void AdvancedScene::setProjectParameter(const Setting& parameter)
+	void AdvancedScene::setProjectParameter(const Parameter& parameter)
 	{
 		m_ProjectParameter = parameter;
 	}

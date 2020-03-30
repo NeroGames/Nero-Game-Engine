@@ -108,4 +108,14 @@ namespace nero
         return m_MusicTable;
     }
 
+	void MusicHolder::clear()
+	{
+		//clear parent
+		ResourceHolder::clear();
+
+		//clear current
+		m_MusicMap.clear();
+		m_MusicTable.clear();
+	}
+
 }

@@ -117,4 +117,14 @@ namespace nero
             it++;
         }
     }
+
+	void FontHolder::clear()
+	{
+		//clear parent
+		ResourceHolder::clear();
+
+		//clear current
+		m_FontMap.clear();
+		m_FontTable.clear();
+	}
 }

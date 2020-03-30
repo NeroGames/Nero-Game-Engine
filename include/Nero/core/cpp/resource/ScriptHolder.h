@@ -23,8 +23,9 @@ namespace nero
 			using	ResourceHolder::loadFile;
 
         public:
-                        ScriptHolder();
-            void        load();
+										ScriptHolder();
+			void						load();
+			virtual void				clear() override;
 
         private:
             std::map<std::string, std::string>          m_ScriptMap;

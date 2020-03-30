@@ -21,6 +21,7 @@ namespace nero
 	std::string getWindowsPath(const std::vector<std::string>& list, const std::string& extension = StringPool.BLANK);
 	std::string getLinuxPath(const std::vector<std::string>& list, const std::string& extension = StringPool.BLANK);
 	std::string getWindowsPath(const std::string& path);
+	std::string getLinuxPath(const std::string& path);
 	std::string escapeAntiSlash(const std::string& word);
 
     //get file content
@@ -37,6 +38,9 @@ namespace nero
 
     //Check if a file exist
     bool fileExist(const std::string& name);
+
+	//get directory or file name
+	std::string getFileName(const std::string& name);
 
     //check if a directory exist
     bool directoryExist(const std::string& name);

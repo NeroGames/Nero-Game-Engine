@@ -33,6 +33,7 @@ namespace nero
 			virtual void						loadDirectory()						override;
 			virtual void						loadFile(const std::string& file)	override;
 			virtual void						destroy()							override;
+			virtual void						clear() override;
 
 
             sf::Texture&				        getTexture(std::string animationName);

@@ -32,7 +32,7 @@ namespace nero
         public:
 												GameProject();
 
-			void								init(const Setting& parameter);
+			void								init(const Parameter& parameter);
 			void								loadProject();
 			void								saveProject();
 			void								saveGameLevel();
@@ -56,9 +56,9 @@ namespace nero
 			AdvancedScene::GameLevelPtr			loadGameLevel(const nlohmann::json& level);
 			std::string							getProjectName() const;
 			std::vector<BackgroundTask>&		getBackgroundTaskTable();
-			void								createScriptObject(const Setting& parameter);
+			void								createScriptObject(const Parameter& parameter);
 			ResourceManager::Ptr				getResourceManager();
-			void								loadResource(const Setting& parameter);
+			void								loadResource(const Parameter& parameter);
 
 
 		private:
@@ -66,7 +66,7 @@ namespace nero
 
 		private:
 			std::vector<BackgroundTask>			m_BackgroundTaskTable;
-			Setting								m_ProjectParameter;
+			Parameter							m_ProjectParameter;
 			RenderTexturePtr					m_RenderTexture;
 			Camera::Ptr							m_Camera;
 			ResourceManager::Ptr				m_ResourceManager;

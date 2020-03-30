@@ -40,7 +40,7 @@ namespace nero
 			typedef std::shared_ptr<ltbl::LightSystem>	LightManagerPtr;
 
         public:
-											SceneBuilder();
+			SceneBuilder();
 
             //Main
             void                            handleEvent(const sf::Event& event);

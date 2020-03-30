@@ -7,7 +7,7 @@
 ///////////////////////////HEADERS///////////////////////////
 //Nero
 #include <Nero/core/cpp/object/Object.h>
-#include <Nero/core/cpp/engine/Setting.h>
+#include <Nero/core/cpp/engine/Parameter.h>
 #include <Box2D/Dynamics/b2World.h>
 /////////////////////////////////////////////////////////////
 namespace nero

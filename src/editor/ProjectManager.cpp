@@ -3,6 +3,7 @@
 #include <Nero/core/cpp/utility/DateUtil.h>
 
 #include <Nero/core/cpp/engine/EngineConstant.h>
+#include <Nero/core/cpp/engine/BackgroundTaskManager.h>
 //STD
 #include <windows.h>
 #include <stdio.h>
@@ -18,7 +19,7 @@ namespace nero
          m_ProjectTable()
         ,m_EditorPid(StringPool.BLANK)
         ,m_GameProject()
-		,m_Setting(nullptr)
+		,m_EditorSetting(nullptr)
     {
 
     }
@@ -42,10 +43,21 @@ namespace nero
 			createCppLuaProject(parameter, backgroundTask);
 		}
 
+		/*if(backgroundTask->getErrorCode() != 0)
+		{
+			std::string workspaceDirectory	= findWorkspace(parameter.getString("workspace_name"))["workspace_directory"].get<std::string>();
+			std::string projectDirectory	= getPath({workspaceDirectory, "Project", parameter.getString("project_name")});
+
+			//std::this_thread::sleep_for(std::chrono::seconds(1));
+			removeDirectory(projectDirectory, true);
+
+			return;
+		}*/
+
 		updateRecentProject(getProjectDirectory(parameter));
 	}
 
-	std::string ProjectManager::getProjectDirectory(const Setting& parameter)
+	std::string ProjectManager::getProjectDirectory(const Parameter& parameter)
 	{
 		std::string workspaceDirectory	= findWorkspace(parameter.getString("workspace_name"))["workspace_directory"].get<std::string>();
 		return getPath({workspaceDirectory, "Project", parameter.getString("project_name")});
@@ -66,6 +78,7 @@ namespace nero
 
 		createDirectory(getPath({projectDirectory}));
 		createDirectory(getPath({projectDirectory, "Source"}));
+		createDirectory(getPath({projectDirectory, "Resource"}));
 			createDirectory(getPath({projectDirectory, "Source", project_name}));
 				createDirectory(getPath({projectDirectory, "Source", project_name, "cpp"}));
 				createDirectory(getPath({projectDirectory, "Source", project_name, "cpp", "script"}));
@@ -80,6 +93,8 @@ namespace nero
 			createDirectory(getPath({projectDirectory, "Scene", "Factory"}));
 			createDirectory(getPath({projectDirectory, "Scene", "Class"}));
 		createDirectory(getPath({projectDirectory, "Setting"}));
+
+		ResourceManager::buildDirectory(getPath({projectDirectory, "Resource"}));
 
 		//Step 1-2 : Create project document
 		Setting document;
@@ -148,7 +163,14 @@ namespace nero
 		backgroundTask->setStatus(3);
 		backgroundTask->addMessage("compiling project ...");
 
-		compileProject(projectDirectory);
+		compileProject(projectDirectory, backgroundTask);
+
+		/*if(backgroundTask->getErrorCode() != 0)
+		{
+			backgroundTask->setStatus(-1);
+			backgroundTask->addMessage("Failed to create project");
+			return;
+		}*/
 
 		//compplet
 		backgroundTask->setStatus(4);
@@ -166,7 +188,7 @@ namespace nero
 		nero_log("not_implemented");
 	}
 
-    bool ProjectManager::isProjectExist(const std::string& projectName)
+	/*bool ProjectManager::isProjectExist(const std::string& projectName)
     {
         //check if project director exist
         if(!directoryExist(getPath({m_EditorSetting["workspace_folder"].get<std::string>(), formatString(projectName)})))
@@ -190,14 +212,14 @@ namespace nero
         }
 
         return true;
-    }
+	}*/
 
 	void ProjectManager::setSetting(const Setting::Ptr& setting)
     {
-		m_Setting = setting;
+		m_EditorSetting = setting;
     }
 
-    void ProjectManager::loadAllProject()
+	/*void ProjectManager::loadAllProject()
     {
         using namespace  std::experimental::filesystem;
         path folder_path(m_EditorSetting["workspace_folder"].get<std::string>());
@@ -215,7 +237,7 @@ namespace nero
 
             it++;
         }
-    }
+	}*/
 
     const std::vector<nlohmann::json>& ProjectManager::getProjectTable() const
     {
@@ -247,7 +269,7 @@ namespace nero
         return result;
     }
 
-	void ProjectManager::createWorkspace(const Setting& parameter)
+	void ProjectManager::createWorkspace(const Parameter& parameter)
     {
 		nero_log("creating new project worksapce");
 		nero_log(parameter.toString());
@@ -290,7 +312,7 @@ namespace nero
 	{
 		auto worksapceSetting =  loadJson(getPath({"setting", "workspace"}));
 
-		Setting parameter;
+		Parameter parameter;
 		parameter.loadJson(loadJson(getPath({directory, ".workspace"}), true));
 
 		nero_log(parameter.toString());
@@ -347,12 +369,55 @@ namespace nero
         return result;
     }
 
+	void ProjectManager::compileProject(const std::string& projectDirectory, BackgroundTask::Ptr backgroundTask)
+	{
+		Parameter parameter;
+		parameter.loadJson(loadJson(getPath({projectDirectory, ".project"}), true));
+		//remote
+		std::string sourcePath  = getPath({projectDirectory, "Source", parameter.getString("project_name")});
+		std::string buildPath   = getPath({projectDirectory, "Build"});
+
+		std::string clean       = "mingw32-make -C \"" + buildPath + "\" -k clean";
+		std::string run_cmake   = "cmake -G \"MinGW Makefiles\" -S \"" + sourcePath + "\" -B \"" + buildPath + "\"";
+		std::string build       = "mingw32-make -C \"" + buildPath + "\"";
+
+		int error_code;
+
+		error_code =  system(clean.c_str());
+		nero_log("cleaning project error code : " + nero_ss(error_code));
+		if(error_code != 0 && false)
+		{
+			backgroundTask->addMessage("Failed to clean project");
+			backgroundTask->setErrorCode(error_code);
+		}
+
+		error_code = system(run_cmake.c_str());
+		nero_log("configuring project error code : " + nero_ss(error_code));
+		if(error_code != 0 && false)
+		{
+			backgroundTask->addMessage("Failed to configure project");
+			backgroundTask->setErrorCode(error_code);
+
+			return;
+		}
+
+		error_code = system(build.c_str());
+		nero_log("building project error code : " + nero_ss(error_code));
+		if(error_code != 0 && false)
+		{
+			backgroundTask->addMessage("Failed to build project");
+			backgroundTask->setErrorCode(error_code);
+
+			return;
+		}
+	}
 
 
-    void ProjectManager::compileProject(const std::string& projectDirectory)
+
+	void ProjectManager::compileProject(const std::string& projectDirectory)
     {
 		//
-		Setting parameter;
+		Parameter parameter;
 		parameter.loadJson(loadJson(getPath({projectDirectory, ".project"}), true));
         //remote
 		std::string sourcePath  = getPath({projectDirectory, "Source", parameter.getString("project_name")});
@@ -461,13 +526,13 @@ namespace nero
      {
 		nero_log("openning project " + projectDirectory);
 
-		Setting parameter;
+		Parameter parameter;
 		parameter.loadJson(loadJson(getPath({projectDirectory, ".project"}), true));
 		parameter.setString("project_directory", projectDirectory);
 		parameter.setString("workspace_directory", getParentDirectory(projectDirectory, 2));
 
 		m_GameProject = GameProject::Ptr(new GameProject());
-		m_GameProject->setSetting(m_Setting);
+		m_GameProject->setSetting(m_EditorSetting);
 		m_GameProject->setRenderTexture(m_RenderTexture);
 		m_GameProject->setRenderContext(m_RenderContext);
 		m_GameProject->setCamera(m_Camera);
@@ -488,11 +553,17 @@ namespace nero
         return m_GameProject;
      }
 
+	 void ProjectManager::closeProject()
+	 {
+		m_GameProject->close();
+		m_GameProject = nullptr;
+	 }
+
 	 void ProjectManager::updateRecentProject(const std::string& projectDirectory)
 	 {
 		 auto recentProject =  loadJson(getPath({"setting", "recent_project"}));
 
-		 Setting projectDocument;
+		 Parameter projectDocument;
 		 projectDocument.loadJson(loadJson(getPath({projectDirectory, ".project"}), true));
 
 		for(int i = 0; i < recentProject.size(); i++)
@@ -553,10 +624,4 @@ namespace nero
 	 {
 		 m_RenderContext = renderContext;
 	 }
-
-	 void ProjectManager::close()
-	 {
-		m_GameProject->close();
-	 }
-
 }

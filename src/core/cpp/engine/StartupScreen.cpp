@@ -12,7 +12,7 @@ namespace nero
         m_RenderWindow(nullptr)
 	   ,m_ResourceManager(nullptr)
     {
-        //Empty
+		//empty
     }
 
     StartupScreen::~StartupScreen()
@@ -22,8 +22,8 @@ namespace nero
 
 	void StartupScreen::destroy()
 	{
-		m_RenderWindow = nullptr;
-		m_ResourceManager = nullptr;
+		m_RenderWindow		= nullptr;
+		m_ResourceManager	= nullptr;
 	}
 
     void StartupScreen::setRenderWindow(sf::RenderWindow* renderWindow)
@@ -34,30 +34,5 @@ namespace nero
 	void StartupScreen::setResourceManager(ResourceManager::Ptr resourceManager)
 	{
 		m_ResourceManager = resourceManager;
-	}
-
-	void StartupScreen::setFontHolder(FontHolder::Ptr fontHolder)
-	{
-		m_FontHolder = fontHolder;
-	}
-
-	void StartupScreen::setTextureHolder(TextureHolder::Ptr textureHolder)
-	{
-		m_TextureHolder = textureHolder;
-	}
-
-	void StartupScreen::setAnimationHolder(AnimationHolder::Ptr animationHolder)
-	{
-		m_AnimationHodler = animationHolder;
-	}
-
-	void StartupScreen::setSoundHolder(SoundHolder::Ptr soundHolder)
-	{
-		m_SoundHolder = soundHolder;
-	}
-
-	void StartupScreen::setMusicHolder(MusicHolder::Ptr musicHolder)
-	{
-		m_MusicHolder = musicHolder;
 	}
 }

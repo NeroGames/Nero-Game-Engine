@@ -400,7 +400,7 @@ int main(int argc, char** argv)
 }*/
 
 
-#include <typeinfo>
+/*#include <typeinfo>
 #include "iostream"
 
 class Object
@@ -436,4 +436,112 @@ int main()
 	std::cout << bb.getCallName() << std::endl;
 
 	return 0;
+}*/
+
+
+/*#include "Poco/Logger.h"
+#include "Poco/Data/Session.h"
+#include "Poco/Data/SQLite/Connector.h"
+#include "Poco/Data/PostgreSQL/Connector.h"
+#include "Poco/Data/PostgreSQL/SessionHandle.h"
+#include "Poco/Data/PostgreSQL/PostgreSQLException.h"
+#include "Poco/Data/PostgreSQL/Utility.h"
+#include <vector>
+#include <iostream>
+
+using namespace Poco::Data::Keywords;
+using Poco::Data::Session;
+using Poco::Data::Statement;
+
+struct Person
+{
+	std::string name;
+	std::string address;
+	int         age;
+};
+
+void dbInfo(Session& session)
+{
+	std::cout << "Server Info: "  << Poco::Data::PostgreSQL::Utility::serverInfo(session)  << std::endl;
+	std::cout << "Server Version: "   << Poco::Data::PostgreSQL::Utility::serverVersion(session)   << std::endl;
+	std::cout << "Host Info: "<< Poco::Data::PostgreSQL::Utility::hostInfo(session)<< std::endl;
+	std::cout << "Session Encoding: " <<Poco::Data::PostgreSQL::Utility::sessionEncoding(session) << std::endl;
 }
+
+
+int main(int argc, char** argv)
+{
+	// register SQLite connector
+	Poco::Data::PostgreSQL::Connector::registerConnector();
+	//Poco::Data::SQLite::Connector::registerConnector();
+
+
+	// create a session
+	std::string dbConnString;
+	dbConnString = "host=ns1.us191.siteground.us user=nerogame_poco_user password=L!HBvgnTiUTk dbname=nerogame_poco port=5432";
+
+	//Session session(Poco::Data::PostgreSQL::Connector::KEY, connect);
+
+	try
+		{
+			std::cout << "Attempting to Connect to [" << dbConnString << "] without database: " << std::endl;
+			Session session(Poco::Data::PostgreSQL::Connector::KEY, dbConnString);
+			std::cout << "Connected to [" << dbConnString << "] without database." << std::endl;
+			dbInfo(session);
+			std::cout << "Disconnecting ..." << std::endl;
+			session.close();
+			std::cout << "Disconnected." << std::endl;
+		}
+		catch (Poco::Data::ConnectionFailedException& ex)
+		{
+			std::cout << ex.displayText() << std::endl;
+		}
+		catch (Poco::Data::PostgreSQL::ConnectionException& ex)
+		{
+			std::cout << ex.displayText() << std::endl;
+		}
+
+	// drop sample table, if it exists
+	/*session << "DROP TABLE IF EXISTS Person", now;
+
+	// (re)create table
+	session << "CREATE TABLE Person (Name VARCHAR(30), Address VARCHAR, Age INTEGER(3))", now;
+
+	// insert some rows
+	Person person =
+	{
+		"Bart Simpson",
+		"Springfield",
+		12
+	};
+
+	Statement insert(session);
+	insert << "INSERT INTO Person VALUES(?, ?, ?)",
+		use(person.name),
+		use(person.address),
+		use(person.age);
+
+	insert.execute();
+
+	person.name    = "Lisa Simpson";
+	person.address = "Springfield";
+	person.age     = 10;
+
+	insert.execute();
+
+	// a simple query
+	Statement select(session);
+	select << "SELECT Name, Address, Age FROM Person",
+		into(person.name),
+		into(person.address),
+		into(person.age),
+		range(0, 1); //  iterate over result set one row at a time
+
+	while (!select.done())
+	{
+		select.execute();
+		std::cout << person.name << " " << person.address << " " << person.age << std::endl;
+	}
+
+	return 0;
+}*/

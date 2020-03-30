@@ -26,8 +26,9 @@ namespace nero
 			using	ResourceHolder::loadFile;
 
         public:
-                        ShaderHolder();
-            void        load();
+												ShaderHolder();
+			void								load();
+			virtual void						clear() override;
 
         private:
             void        addShader(std::string name, std::unique_ptr<sf::Shader> shader);

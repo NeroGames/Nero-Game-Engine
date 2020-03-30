@@ -111,4 +111,14 @@ namespace nero
             it++;
         }
     }
+
+	void SoundHolder::clear()
+	{
+		//clear parent
+		ResourceHolder::clear();
+
+		//clear current
+		m_SoundBufferMap.clear();
+		m_SoundBufferTable.clear();
+	}
 }

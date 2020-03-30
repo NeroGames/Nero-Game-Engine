@@ -7,7 +7,7 @@
 ///////////////////////////HEADERS///////////////////////////
 //Nero
 #include <Nero/core/cpp/engine/BackgroundTask.h>
-#include <Nero/core/cpp/engine/Setting.h>
+#include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 #include <Nero/core/cpp/utility/Logging.h>
 //Cpp

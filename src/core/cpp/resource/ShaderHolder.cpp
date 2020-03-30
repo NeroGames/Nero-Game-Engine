@@ -142,5 +142,15 @@ namespace nero
         }
     }
 
+	void ShaderHolder::clear()
+	{
+		//clear parent
+		ResourceHolder::clear();
+
+		//clear current
+		m_ShaderMap.clear();
+		m_ShaderTable.clear();
+	}
+
 }
 

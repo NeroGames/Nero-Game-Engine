@@ -75,6 +75,12 @@ namespace nero
 		m_ErrorCode = error;
 	}
 
+	int BackgroundTask::getErrorCode()
+	{
+		return m_ErrorCode;
+	}
+
+
 	void BackgroundTask::setCompleted(bool completed)
 	{
 		m_Completed = completed;

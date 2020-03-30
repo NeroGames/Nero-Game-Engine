@@ -1,9 +1,12 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2020 SANOU A. K. Landry
+////////////////////////////////////////////////////////////
+///////////////////////////HEADERS//////////////////////////
 #include <Nero/core/cpp/utility/Logging.h>
 #include <Nero/editor/EditorInterface.h>
 #include <SFML/Window/Event.hpp>
 #include <Nero/core/cpp/engine/EngineConstant.h>
-
-
 #include <Nero/core/cpp/utility/FileUtil.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -14,6 +17,7 @@
 #include <IconFontCppHeaders/IconsFontAwesome5.h>
 #include <easy/profiler.h>
 #include <exception>
+////////////////////////////////////////////////////////////
 namespace  nero
 {
     EditorInterface::EditorInterface(sf::RenderWindow& window):
@@ -36,7 +40,7 @@ namespace  nero
 		,m_SetupDockspaceLayout(true)
 		,m_ProjectManagerTabBarSwitch()
 		,m_BottomDockspaceTabBarSwitch()
-		,m_Setting(nullptr)
+		,m_EditorSetting(nullptr)
 		,m_ResourceBrowserType(ResourceType::None)
 		,m_EditorMode(EditorMode::WORLD_BUILDER)
 		,m_BuilderMode(BuilderMode::OBJECT)
@@ -47,9 +51,26 @@ namespace  nero
 		,m_InputSelectedGameLevelId(-1)
 		,m_InputSelectedGameScreenId(-1)
 		,m_InputIncludeSartupPack(true)
+		,m_MouseInformation("Mouse Position")
     {
-        ImGuiIO& io = ImGui::GetIO();
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		//empty
+	}
+
+    EditorInterface::~EditorInterface()
+    {
+	   destroy();
+    }
+
+	void EditorInterface::destroy()
+	{
+		nero_log("destroying engine interface ...");
+		ax::NodeEditor::DestroyEditor(g_Context);
+	}
+
+	void EditorInterface::init()
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 		io.Fonts->Clear();
@@ -62,24 +83,20 @@ namespace  nero
 		config.PixelSnapH  = true;
 		config.GlyphMinAdvanceX = 13.0f; // Use if you want to make the icon monospaced
 		static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
-		//io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation.ttf", 20.0f, &config, icon_ranges);
-		//io.Fonts->AddFontFromFileTTF("resource/editor/font/AboutLove.ttf", 20.0f, &config, icon_ranges);
-		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 20.0f, &config, icon_ranges);
-		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 20.0f, &config, icon_ranges);
-		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 20.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 18.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 18.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 18.0f, &config, icon_ranges);
 		ImGui::SFML::UpdateFontTexture();
 
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation.ttf", 15.f);
-		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 20.0f, &config, icon_ranges);
-		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 20.0f, &config, icon_ranges);
-		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 20.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 18.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 18.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 18.0f, &config, icon_ranges);
 		ImGui::SFML::UpdateFontTexture();
 
 		m_RenderTexture = std::make_shared<sf::RenderTexture>();
 		m_ProjectManager = std::make_unique<ProjectManager>();
 		m_RenderContext = std::make_shared<RenderContext>();
-
-        //old = std::cout.rdbuf(buffer.rdbuf());
 
 		g_Context = ax::NodeEditor::CreateEditor();
 
@@ -105,16 +122,8 @@ namespace  nero
 		m_CameraYAxis.setFillColor(sf::Color::Green);
 		m_CameraYAxis.setPosition(sf::Vector2f(20.f, 20.f));
 		m_CameraYAxis.setRotation(90.f);
-	}
 
-    EditorInterface::~EditorInterface()
-    {
-       //Empty
-		ax::NodeEditor::DestroyEditor(g_Context);
-    }
 
-	void EditorInterface::init()
-	{
 		//setup game mode information text
 		m_GameModeInfo.setFont(m_EditorFontHolder->getDefaultFont());
 		m_GameModeInfo.setCharacterSize(18.f);
@@ -127,10 +136,51 @@ namespace  nero
 		clearScriptWizardInput();
 
 		//
-		m_ProjectManager->setSetting(m_Setting);
+		m_ProjectManager->setSetting(m_EditorSetting);
 		m_ProjectManager->setRenderTexture(m_RenderTexture);
 		m_ProjectManager->setRenderContext(m_RenderContext);
 		m_ProjectManager->setCamera(m_EditorCamera);
+	}
+
+	void EditorInterface::closeEditor()
+	{
+		nero_log("closing the editor ...");
+
+		nero_log("saving window settings");
+		std::string file = getPath({"setting", "window"}, StringPool.EXTENSION_JSON);
+
+		Setting window_setting = m_EditorSetting->getSetting("window");
+
+		sf::Vector2u windowSize		= m_RenderWindow.getSize();
+		sf::Vector2i windowPosition = m_RenderWindow.getPosition();
+
+		if(windowPosition.x < -8)
+		{
+			windowPosition.x = -8;
+		}
+
+		if(windowPosition.y < 0)
+		{
+			windowPosition.y = 0;
+		}
+
+		window_setting.setUInt("width",  windowSize.x);
+		window_setting.setUInt("height",  windowSize.y);
+		window_setting.setInt("position_x",  windowPosition.x);
+		window_setting.setInt("position_y",  windowPosition.y);
+
+		saveFile(file, window_setting.toJson().dump(3), true);
+
+		if(m_GameProject)
+		{
+			nero_log("closing project")
+			closeProject();
+		}
+
+		nero_log("---------------------------------------------------------------------");
+		nero_log("Engine Editor closed");
+
+		m_RenderWindow.close();
 	}
 
     void EditorInterface::handleEvent(const sf::Event& event)
@@ -148,7 +198,7 @@ namespace  nero
 		switch(event.type)
 		{
 			case sf::Event::Closed:
-				quitEditor();
+				closeEditor();
 				break;
 
 			//Keyboard
@@ -201,7 +251,6 @@ namespace  nero
 		//create editor dockspace & display menubar
 		createDockSpace();
 
-		//ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
 		//central dockspcace
 			//display toolbar
 		showToolbarWindow();
@@ -242,8 +291,6 @@ namespace  nero
 
 		//background task
 		showBackgroundTaskWindow();
-		//ImGui::PopFont();
-
 
 		//commit
 		ImGui::SFML::Render(m_RenderWindow);
@@ -257,6 +304,53 @@ namespace  nero
 				switchBuilderMode();
 		}
 	}
+
+	void EditorInterface::updateFrameRate(const float& frameRate, const float& frameTime)
+	{
+		m_FrameRate = frameRate;
+		m_FrameTime = frameTime;
+	}
+
+	void EditorInterface::setEditorSetting(Setting::Ptr setting)
+	{
+		m_EditorSetting = setting;
+	}
+
+	void EditorInterface::setEditorCamera(const AdvancedCamera::Ptr& camera)
+	{
+		m_EditorCamera = camera;
+	}
+
+	void EditorInterface::setEditorTextureHolder(TextureHolder::Ptr textureHolder)
+	{
+		m_EditorTextureHolder = textureHolder;
+	}
+
+	void EditorInterface::setEditorSoundHolder(SoundHolder::Ptr soundHolder)
+	{
+		m_EditorSoundHolder = soundHolder;
+	}
+
+	void EditorInterface::setEditorFontHolder(FontHolder::Ptr fontHolder)
+	{
+		m_EditorFontHolder = fontHolder;
+	}
+
+	void EditorInterface::setCallbackWindowTitle(std::function<void (const std::string&)> callback)
+	{
+		m_UpdateWindowTile = callback;
+	}
+
+	void EditorInterface::updateWindowTitle(const std::string& title)
+	{
+		 m_UpdateWindowTile(title);
+	}
+
+
+
+
+
+
 
 	void EditorInterface::switchBuilderMode()
 	{
@@ -304,10 +398,13 @@ namespace  nero
 
 			ImGui::SameLine();
 
-			std::string mouse_state = canvas_pos_string + " | " + wrold_pos_string + " | " + camera_pos_string;
-			float start = (ImGui::GetWindowContentRegionWidth() - ImGui::CalcTextSize(mouse_state.c_str()).x)/2.f;
+			if(isMouseOnCanvas())
+			{
+				m_MouseInformation = canvas_pos_string + " | " + wrold_pos_string + " | " + camera_pos_string;
+			}
+			float start = (ImGui::GetWindowContentRegionWidth() - ImGui::CalcTextSize(m_MouseInformation.c_str()).x)/2.f;
 			ImGui::SetCursorPosX(start);
-			ImGui::Text(mouse_state.c_str());
+			ImGui::Text(m_MouseInformation.c_str());
 
 			 ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 45.f);
 
@@ -452,10 +549,7 @@ namespace  nero
 		m_RenderTexture->draw(m_CameraYAxis);
 	}
 
-	void EditorInterface::setCamera(const AdvancedCamera::Ptr& camera)
-	{
-		m_EditorCamera = camera;
-	}
+
 
 	void EditorInterface::buildRenderContext()
 	{
@@ -554,45 +648,7 @@ namespace  nero
         ImGui::End();
     }
 
-    void EditorInterface::updateFrameRate(const float& frameRate, const float& frameTime)
-    {
-		m_FrameRate = frameRate;
-		m_FrameTime = frameTime;
-    }
 
-    void EditorInterface::quitEditor()
-    {
-		//save size and position
-		std::string file = getPath({"setting", "window"}, StringPool.EXTENSION_JSON);
-
-		if(fileExist(file))
-		{
-			sf::Vector2u windowSize		= m_RenderWindow.getSize();
-			sf::Vector2i windowPosition = m_RenderWindow.getPosition();
-
-			if(windowPosition.y < 0)
-			{
-				windowPosition.y = 0;
-			}
-
-			if(windowPosition.x < -8)
-			{
-				windowPosition.x = -8;
-			}
-
-			auto loaded = loadJson(file, true);
-			loaded["width"]		= windowSize.x;
-			loaded["height"]		= windowSize.y;
-			loaded["position_x"] = windowPosition.x;
-			loaded["position_y"] = windowPosition.y;
-
-			saveFile(file, loaded.dump(3), true);
-		}
-
-		m_ProjectManager->close();
-
-        m_RenderWindow.close();
-    }
 
 	//1- create workspace
     void EditorInterface::createDockSpace()
@@ -628,12 +684,12 @@ namespace  nero
 			viewport = nullptr;
 
 			//build dockspace layout : this is done only once, when the editor is launched the first time
-			//if(m_Setting->getSetting("dockspace").getBool("build_layout") && !fileExist(getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, StringPool.EXTENSION_INI)))
-			if(m_Setting->getSetting("dockspace").getBool("build_layout") && !m_Setting->getSetting("dockspace").getBool("imgui_setting_exist"))
+			//if(m_EditorSetting->getSetting("dockspace").getBool("build_layout") && !fileExist(getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, StringPool.EXTENSION_INI)))
+			if(m_EditorSetting->getSetting("dockspace").getBool("build_layout") && !m_EditorSetting->getSetting("dockspace").getBool("imgui_setting_exist"))
 			{
 				//split main dockspace in six
 				ImGuiID upperLeftDockspaceID	= ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Left,	0.20f, nullptr, &m_DockspaceID);
-				ImGui::DockBuilderGetNode(upperLeftDockspaceID)->SizeRef.x = m_Setting->getSetting("dockspace").getSetting("upper_left_dock").getFloat("width");
+				ImGui::DockBuilderGetNode(upperLeftDockspaceID)->SizeRef.x = m_EditorSetting->getSetting("dockspace").getSetting("upper_left_dock").getFloat("width");
 				ImGuiID lowerLeftDockspaceID	= ImGui::DockBuilderSplitNode(upperLeftDockspaceID,	ImGuiDir_Down,	0.20f, nullptr, &upperLeftDockspaceID);
 				ImGuiID rightDockspaceID        = ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Right, 0.20f, nullptr, &m_DockspaceID);
 				ImGuiID toolbarDockspaceID		= ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Up,	0.20f, nullptr, &m_DockspaceID);
@@ -670,13 +726,13 @@ namespace  nero
 
 				//lower left dockspace
 				ImGuiDockNode* lowerLeftDockNode	= ImGui::DockBuilderGetNode(lowerLeftDockspaceID);
-				lowerLeftDockNode->SizeRef.y = m_Setting->getSetting("dockspace").getSetting("lower_left_dock").getFloat("height");
+				lowerLeftDockNode->SizeRef.y = m_EditorSetting->getSetting("dockspace").getSetting("lower_left_dock").getFloat("height");
 				//right dockspace
 				ImGuiDockNode* rightDockNode		= ImGui::DockBuilderGetNode(rightDockspaceID);
-				rightDockNode->SizeRef.x = m_Setting->getSetting("dockspace").getSetting("right_dock").getFloat("width");
+				rightDockNode->SizeRef.x = m_EditorSetting->getSetting("dockspace").getSetting("right_dock").getFloat("width");
 				//bottom dockspace
 				ImGuiDockNode* bottomDockNode		= ImGui::DockBuilderGetNode(bottomDockspaceID);
-				bottomDockNode->SizeRef.y = m_Setting->getSetting("dockspace").getSetting("bottom_dock").getFloat("height");
+				bottomDockNode->SizeRef.y = m_EditorSetting->getSetting("dockspace").getSetting("bottom_dock").getFloat("height");
 
 				//clean pointer
 				lowerLeftDockNode	= nullptr;
@@ -684,20 +740,20 @@ namespace  nero
 				bottomDockNode		= nullptr;
 
 				//update and save dockspace setting
-				m_Setting->getSetting("dockspace").getSetting("toolbar_dock").setUInt("id", toolbarDockspaceID);
-				m_Setting->getSetting("dockspace").setBool("build_layout", false);
+				m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").setUInt("id", toolbarDockspaceID);
+				m_EditorSetting->getSetting("dockspace").setBool("build_layout", false);
 
-				saveFile(getPath({"setting", "dockspace"}, StringPool.EXTENSION_JSON), m_Setting->getSetting("dockspace").toString(), true);
+				saveFile(getPath({"setting", "dockspace"}, StringPool.EXTENSION_JSON), m_EditorSetting->getSetting("dockspace").toString(), true);
 			}
 
 			if(m_SetupDockspaceLayout)
 			{
 				//toolbar
-				ImGuiID toolbarDockspaceID			= m_Setting->getSetting("dockspace").getSetting("toolbar_dock").getUInt("id");
+				ImGuiID toolbarDockspaceID			= m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").getUInt("id");
 				ImGuiDockNode* toolbarDockNode		= ImGui::DockBuilderGetNode(toolbarDockspaceID);
 				toolbarDockNode->AuthorityForSize	= ImGuiDataAuthority_Window;
-				toolbarDockNode->Size.y				= m_Setting->getSetting("dockspace").getSetting("toolbar_dock").getFloat("height");
-				toolbarDockNode->SizeRef.y			= m_Setting->getSetting("dockspace").getSetting("toolbar_dock").getFloat("height");
+				toolbarDockNode->Size.y				= m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").getFloat("height");
+				toolbarDockNode->SizeRef.y			= m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").getFloat("height");
 				toolbarDockNode->LocalFlags			= ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_SingleDock;
 
 				//clean pointer
@@ -708,7 +764,7 @@ namespace  nero
 
 			if (ImGui::BeginMenuBar())
 			{
-				createEditorMenuBar();
+				showEditorMenuBar();
 
 				ImGui::EndMenuBar();
 			}
@@ -717,37 +773,162 @@ namespace  nero
     }
 
 	//2- create menu bar
-	void EditorInterface::createEditorMenuBar()
+	void EditorInterface::showEditorMenuBar()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			ImGui::MenuItem("action_1", nullptr, nullptr);
-			ImGui::MenuItem("action_2", nullptr, nullptr);
+			if(ImGui::MenuItem("New Project", nullptr, false))
+			{
+
+			}
+
+			if(ImGui::MenuItem("Open Project", nullptr, false))
+			{
+
+			}
+
+			if(ImGui::MenuItem("Save Project", nullptr, false))
+			{
+
+			}
+
+			if(ImGui::MenuItem("Close Project", nullptr, false, m_GameProject != nullptr))
+			{
+				closeProject();
+			}
+
+			ImGui::Separator();
+
+			if(ImGui::MenuItem("New Workspace", nullptr, false))
+			{
+
+			}
+
+			if(ImGui::MenuItem("Import Workspace", nullptr, false))
+			{
+
+			}
+
+			ImGui::Separator();
+
+			if (ImGui::BeginMenu("Recent Projects"))
+			{
+				if(ImGui::MenuItem("project 1", nullptr, false))
+				{
+
+				}
+
+				if(ImGui::MenuItem("project 2", nullptr, false))
+				{
+
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::Separator();
+
+			if(ImGui::MenuItem("Exit", nullptr, false))
+			{
+
+			}
 
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Views"))
+		if (ImGui::BeginMenu("Edit"))
 		{
-			ImGui::MenuItem("action_3", nullptr, nullptr);
-			ImGui::MenuItem("action_4", nullptr, nullptr);
+			if(ImGui::MenuItem("Undo", nullptr, nullptr))
+			{
+
+			}
+
+			if(ImGui::MenuItem("Redo", nullptr, nullptr))
+			{
+
+			}
 
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Download"))
+		if (ImGui::BeginMenu("Build"))
 		{
-			ImGui::MenuItem("action_3", nullptr, nullptr);
-			ImGui::MenuItem("action_4", nullptr, nullptr);
+			if(ImGui::MenuItem("Clean", nullptr, nullptr))
+			{
+
+			}
+
+			if(ImGui::MenuItem("Run Cmake", nullptr, nullptr))
+			{
+
+			}
+
+			if(ImGui::MenuItem("Compile", nullptr, nullptr))
+			{
+
+			}
+
+			if(ImGui::MenuItem("Reload", nullptr, nullptr))
+			{
+
+			}
 
 			ImGui::EndMenu();
 		}
+
+		if (ImGui::BeginMenu("Window"))
+		{
+			const char* names[] = { "Logging", "Quick Helps", "Mackerel", "Pollock", "Tilefish" };
+			static bool toggles[] = { true, false, false, false, false };
+			for (int i = 0; i < IM_ARRAYSIZE(names); i++)
+				ImGui::MenuItem(names[i], "", &toggles[i]);
+
+			ImGui::EndMenu();
+		}
+
+
 		if (ImGui::BeginMenu("Helps"))
 		{
-			ImGui::MenuItem("action_3", nullptr, nullptr);
-			ImGui::MenuItem("action_4", nullptr, nullptr);
+			if(ImGui::MenuItem("Learn", nullptr, nullptr))
+			{
+
+			}
+
+			if(ImGui::MenuItem("Snippet", nullptr, nullptr))
+			{
+
+			}
+
+			if(ImGui::MenuItem("Forum", nullptr, nullptr))
+			{
+
+			}
+
+			if(ImGui::MenuItem("Engine API", nullptr, nullptr))
+			{
+
+			}
+
+			if(ImGui::MenuItem("Website", nullptr, nullptr))
+			{
+
+			}
+
+			ImGui::Separator();
+
+			if(ImGui::MenuItem("About Nero Game Engine", nullptr, nullptr))
+			{
+
+			}
+
+			if(ImGui::MenuItem("System Information", nullptr, nullptr))
+			{
+
+			}
+
 
 			ImGui::EndMenu();
 		}
 	}
+
 
 	//3-  show toolbar
 	void EditorInterface::showToolbarWindow()
@@ -755,7 +936,7 @@ namespace  nero
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_None | ImGuiWindowFlags_NoResize;
 		window_flags |= ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 2.0f));
 
 		ImGui::SetNextWindowSize(ImVec2(0.f, 32.f), ImGuiCond_Always);
 		ImGui::Begin(EditorConstant.WINDOW_TOOLBAR.c_str(), nullptr, window_flags);
@@ -904,17 +1085,18 @@ namespace  nero
 
 					ImGui::SameLine(width - 72.f - padding - 10.f);
 
-					/*if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
+					if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
 					{
 						ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-					}*/
+					}
 
-					ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.f);
+					/*ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.f);
+					//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.f, 5.f));
 					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
 					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.000f, 1.000f, 1.000f, 1.000f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.000f, 1.000f, 1.000f, .950f));
 					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.000f, 1.000f, 1.000f, .900f));
-					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.000f, 0.474f, 0.083f, 1.000f/*0.609f*/));
+					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.000f, 0.474f, 0.083f, 1.000f));
 					ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1.000f, 0.474f, 0.083f, 1.000f));
 					ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
 					if(ImGui::Button(ICON_FA_ANCHOR " Project", ImVec2(90.f, 28.f)))
@@ -923,7 +1105,8 @@ namespace  nero
 					}
 					ImGui::PopStyleVar(2);
 					ImGui::PopStyleColor(5);
-					ImGui::PopFont();
+					ImGui::PopFont();*/
+					/*0.609f*/
 
 					if(m_GameProject)
 					{
@@ -1499,7 +1682,7 @@ namespace  nero
 					}
 					else
 					{
-						Setting parameter;
+						Parameter parameter;
 						parameter.setString("class_name", std::string(m_InputClassName));
 						parameter.setString("script_type", std::string(m_SelectedScriptType));
 
@@ -1539,7 +1722,7 @@ namespace  nero
 
 	}
 
-	void EditorInterface::createScriptObject(const Setting& parameter)
+	void EditorInterface::createScriptObject(const Parameter& parameter)
 	{
 		if(m_GameProject)
 		{
@@ -1904,6 +2087,15 @@ namespace  nero
 							ImGui::CloseCurrentPopup();
 						}
 					}
+					/*else
+					{
+						ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 95.f);
+
+						if (ImGui::Button("Close", ImVec2(100, 0)))
+						{
+							ImGui::CloseCurrentPopup();
+						}
+					}*/
 
 				}
 
@@ -2135,7 +2327,7 @@ namespace  nero
 		}
         else if(onCreate)
         {
-			Setting parameter;
+			Parameter parameter;
 
 			parameter.setString("workspace_location", std::string(m_InputWorksapceLocation));
 			parameter.setString("workspace_name", std::string(m_InputWorkspaceName));
@@ -2279,7 +2471,7 @@ namespace  nero
 		 }
 	}
 
-	void EditorInterface::createWorkspace(const Setting& parameter)
+	void EditorInterface::createWorkspace(const Parameter& parameter)
     {
 		m_ProjectManager->createWorkspace(parameter);
 		updateProjectInput();
@@ -2302,7 +2494,7 @@ namespace  nero
 		//close currently open project
 		if(m_GameProject)
 		{
-			//closeProject();
+			closeProject();
 		}
 
 		//open new project
@@ -2314,15 +2506,17 @@ namespace  nero
 		updateWindowTitle(m_GameProject->getProjectName());
     }
 
-	void EditorInterface::updateWindowTitle(const std::string& title)
+	void EditorInterface::closeProject()
 	{
-		 m_UpdateWindowTile(title);
-	}
+		m_ResourceManager	= nullptr;
+		m_AdvancedScene		= nullptr;
+		m_GameProject		= nullptr;
+		m_ProjectManager->closeProject();
 
-	void EditorInterface::setCallbackWindowTitle(std::function<void (const std::string&)> fn)
-    {
-        m_UpdateWindowTile = fn;
-    }
+
+		//update editor window title
+		updateWindowTitle(EngineConstant.ENGINE_WINDOW_TITLE);
+	}
 
 	void EditorInterface::playScene()
 	{
@@ -2375,8 +2569,8 @@ namespace  nero
 
 	}
 
-    void EditorInterface::compileProject()
-    {
+	void EditorInterface::compileProject()
+	{
 		m_CompileProjectFuture = std::async(std::launch::async, [this]()
 		{
 			if(m_GameProject)
@@ -2390,52 +2584,42 @@ namespace  nero
 
 	}
 
-    void EditorInterface::editProject()
-    {
-        if(m_GameProject)
-        {
-            m_GameProject->openEditor();
+	void EditorInterface::editProject()
+	{
+		if(m_GameProject)
+		{
+			m_GameProject->openEditor();
 
-        }
-    }
+		}
+	}
 
 	void EditorInterface::reloadProject()
-    {
+	{
 
-        if(m_GameProject)
-        {
-            nero_log("reloading project ...");
+		if(m_GameProject)
+		{
+			nero_log("reloading project ...");
 
-            m_GameProject->loadLibrary();
+			m_GameProject->loadLibrary();
 
-        }
-    }
-
-    void EditorInterface::setEditorSetting(const nlohmann::json& setting)
-    {
-        m_EditorSetting = setting;
+		}
+	}
 
 
-    }
 
-    void EditorInterface::loadAllProject()
-    {
-        m_ProjectManager->loadAllProject();
-    }
+	sf::Sprite EditorInterface::flipTexture(const sf::Texture& texture)
+	{
+		sf::Vector2u size = texture.getSize();
+		sf::Sprite sprite(texture, sf::IntRect(0, size.y, size.x, -size.y));
 
-    sf::Sprite EditorInterface::flipTexture(const sf::Texture& texture)
-    {
-        sf::Vector2u size = texture.getSize();
-        sf::Sprite sprite(texture, sf::IntRect(0, size.y, size.x, -size.y));
-
-        return sprite;
-    }
+		return sprite;
+	}
 
 	void EditorInterface::showLoggingWindow()
-    {
+	{
 		ImGui::Begin("Logging");
 
-        // Actually call in the regular Log helper (which will Begin() into the same window as we just did)
+		// Actually call in the regular Log helper (which will Begin() into the same window as we just did)
 		std::string log = nero::Logger::getString();
 		if(log != StringPool.BLANK)
 		{
@@ -2443,7 +2627,7 @@ namespace  nero
 			nero::Logger::clearStringStream();
 		}
 		m_LoggerApplication.Draw("Logging");
-    }
+	}
 
 	ImVec4 EditorInterface::getLoggingColor(LOGLEVEL level)
 	{
@@ -2495,7 +2679,7 @@ namespace  nero
 	}
 
 	void EditorInterface::showResourceWindow()
-    {
+	{
 		ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::Begin("Resource", nullptr, flags);
 
@@ -2514,9 +2698,9 @@ namespace  nero
 
 
 		if(ImGui::Button("Sprite##open_sprite_resource", ImVec2(100.f, 100.f)))
-        {
+		{
 			m_ResourceBrowserType = ResourceType::Texture;
-        }
+		}
 
 		printSameLine();
 
@@ -2618,14 +2802,18 @@ namespace  nero
 		}
 
 		ImGui::End();
-    }
+	}
 
 	void EditorInterface::showResourceBrowserWindow()
-    {
-        //project manager window
+	{
+		if(!m_ResourceManager)
+		{
+			return;
+		}
+		//project manager window
 		if(m_ResourceBrowserType != ResourceType::None)
-        {
-            ImGui::Begin("Resource Browser", nullptr, ImGuiWindowFlags());
+		{
+			ImGui::Begin("Resource Browser", nullptr, ImGuiWindowFlags());
 
 				if(m_GameProject &&
 				   (m_ResourceBrowserType == ResourceType::Texture	|| m_ResourceBrowserType == ResourceType::Animation ||
@@ -2671,11 +2859,11 @@ namespace  nero
 
 
 				if(ImGui::Button("Close##close_sprite_resource", ImVec2(100.f, 0.f)))
-                {
+				{
 					m_ResourceBrowserType = ResourceType::None;
-                }
+				}
 
-                ImGui::Separator();
+				ImGui::Separator();
 
 				ImGui::BeginChild("browser");
 
@@ -2711,8 +2899,8 @@ namespace  nero
 				ImGui::EndChild();
 
 			ImGui::End();
-        }
-    }
+		}
+	}
 
 	void EditorInterface::saveResourceFile(ResourceType type, const std::vector<std::string> fileTable)
 	{
@@ -3018,87 +3206,87 @@ namespace  nero
 		return m_EditorTextureHolder->getTexture(fontName);
 	}
 
-    void EditorInterface::showUtilityWindow()
-    {
+	void EditorInterface::showUtilityWindow()
+	{
 		ImGui::Begin(EditorConstant.WINDOW_UTILITY.c_str());
 
-            ImVec2 size = ImGui::GetWindowSize();
+			ImVec2 size = ImGui::GetWindowSize();
 
-            ImGui::BeginChild("scene_mode", ImVec2(0.f, 105.f), true);
-                ImGui::Text("Choose Scene Mode");
-                ImGui::Separator();
+			ImGui::BeginChild("scene_mode", ImVec2(0.f, 105.f), true);
+				ImGui::Text("Choose Scene Mode");
+				ImGui::Separator();
 
-                static int e = 0;
-                ImGui::RadioButton("Object", &e, 0);
-                ImGui::RadioButton("Mesh", &e, 1);
-                ImGui::RadioButton("Play", &e, 2);
-
-
-            ImGui::EndChild();
+				static int e = 0;
+				ImGui::RadioButton("Object", &e, 0);
+				ImGui::RadioButton("Mesh", &e, 1);
+				ImGui::RadioButton("Play", &e, 2);
 
 
-            ImGui::BeginChild("save_load", ImVec2(0.f, 85.f), true);
-                ImGui::Text("Save & Load");
-                ImGui::Separator();
+			ImGui::EndChild();
 
-                ImGui::Dummy(ImVec2(0.f, 2.f));
 
-                static bool auto_save = false;
-                ImGui::Checkbox("Auto save", &auto_save);
+			ImGui::BeginChild("save_load", ImVec2(0.f, 85.f), true);
+				ImGui::Text("Save & Load");
+				ImGui::Separator();
+
+				ImGui::Dummy(ImVec2(0.f, 2.f));
+
+				static bool auto_save = false;
+				ImGui::Checkbox("Auto save", &auto_save);
 
 				ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth()-8.f)/2.f, 0.f);
 
-                 if(ImGui::Button("Save", button_size))
-                 {
+				 if(ImGui::Button("Save", button_size))
+				 {
 					onSaveProject();
-                 }
+				 }
 
-                ImGui::SameLine();
+				ImGui::SameLine();
 
-                 if(ImGui::Button("Load", button_size))
-                 {
+				 if(ImGui::Button("Load", button_size))
+				 {
 					onLoadProject();
-                 }
+				 }
 
-            ImGui::EndChild();
-
-
-
-            ImGui::BeginChild("access_button", ImVec2(0.f, 90.f), true);
-                ImGui::Text("Access Website");
-                ImGui::Separator();
-
-                ImGui::Dummy(ImVec2(0.f, 2.f));
-
-                 if(ImGui::Button("Learn", button_size))
-                 {
-
-                 }
-
-                ImGui::SameLine();
-
-                 if(ImGui::Button("Forum", button_size))
-                 {
-
-                 }
+			ImGui::EndChild();
 
 
-                 if(ImGui::Button("Snippet", button_size))
-                 {
 
-                 }
+			ImGui::BeginChild("access_button", ImVec2(0.f, 90.f), true);
+				ImGui::Text("Access Website");
+				ImGui::Separator();
 
-                 ImGui::SameLine();
+				ImGui::Dummy(ImVec2(0.f, 2.f));
 
-                 if(ImGui::Button("API", button_size))
-                 {
+				 if(ImGui::Button("Learn", button_size))
+				 {
 
-                 }
+				 }
 
-            ImGui::EndChild();
+				ImGui::SameLine();
 
-        ImGui::End();
-    }
+				 if(ImGui::Button("Forum", button_size))
+				 {
+
+				 }
+
+
+				 if(ImGui::Button("Snippet", button_size))
+				 {
+
+				 }
+
+				 ImGui::SameLine();
+
+				 if(ImGui::Button("API", button_size))
+				 {
+
+				 }
+
+			ImGui::EndChild();
+
+		ImGui::End();
+	}
 
 	void EditorInterface::onSaveProject()
 	{
@@ -3140,7 +3328,7 @@ namespace  nero
 
 	void EditorInterface::autoSaveProject()
 	{
-		/*if(m_GameProject && m_AutoSaveClock.getElapsedTime() > sf::seconds(m_Setting->getSetting("editor").getUInt("auto_save_interval")))
+		/*if(m_GameProject && m_AutoSaveClock.getElapsedTime() > sf::seconds(m_EditorSetting->getSetting("editor").getUInt("auto_save_interval")))
 		{
 			m_GameProject->saveProject();
 			m_AutoSaveClock.restart();
@@ -3148,7 +3336,7 @@ namespace  nero
 	}
 
 	void EditorInterface::showGameScreenWindow()
-    {
+	{
 		ImGui::Begin(EditorConstant.WINDOW_SCREEN.c_str());
 
 			ImGui::Text("Manage Game Screen");
@@ -3213,8 +3401,8 @@ namespace  nero
 
 			ImGui::EndChild();
 
-        ImGui::End();
-    }
+		ImGui::End();
+	}
 
 	void EditorInterface::addGameScreen()
 	{
@@ -3425,7 +3613,7 @@ namespace  nero
 	}
 
 	void EditorInterface::showWorldChunckWindow()
-    {
+	{
 		ImGui::Begin(EditorConstant.WINDOW_CHUNCK.c_str());
 
 			ImGui::Text("Manage World Chuncks");
@@ -3493,8 +3681,8 @@ namespace  nero
 
 			ImGui::EndChild();
 
-        ImGui::End();
-    }
+		ImGui::End();
+	}
 
 	void EditorInterface::addWorldChunk()
 	{
@@ -3512,32 +3700,32 @@ namespace  nero
 		}
 	}
 
-    void EditorInterface::showToggleButton(bool toggle, const std::string& label, std::function<void()> callback)
-    {
-        if(toggle)
-        {
-            ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
-            ImGui::PushStyleColor(ImGuiCol_Border, ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
-            if(ImGui::Button(label.c_str()))
-            {
-                callback();
-            }
-            ImGui::PopStyleColor();
-            ImGui::PopStyleVar();
-        }
-        else
-        {
-            if(ImGui::Button(label.c_str()))
-            {
-                callback();
-            }
-        }
-    }
+	void EditorInterface::showToggleButton(bool toggle, const std::string& label, std::function<void()> callback)
+	{
+		if(toggle)
+		{
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
+			ImGui::PushStyleColor(ImGuiCol_Border, ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
+			if(ImGui::Button(label.c_str()))
+			{
+				callback();
+			}
+			ImGui::PopStyleColor();
+			ImGui::PopStyleVar();
+		}
+		else
+		{
+			if(ImGui::Button(label.c_str()))
+			{
+				callback();
+			}
+		}
+	}
 
-    void EditorInterface::interfaceFirstDraw()
-    {
+	void EditorInterface::interfaceFirstDraw()
+	{
 		if(m_InterfaceFirstDraw)
-        {
+		{
 			ImGui::SetWindowFocus(EditorConstant.WINDOW_UTILITY.c_str());
 			ImGui::SetWindowFocus(EditorConstant.WINDOW_LAYER.c_str());
 			ImGui::SetWindowFocus(EditorConstant.WINDOW_RESOURCE.c_str());
@@ -3547,7 +3735,7 @@ namespace  nero
 			//commit
 			m_InterfaceFirstDraw = false;
 		}
-    }
+	}
 
 	void EditorInterface::showHelpWindow()
 	{
@@ -3560,11 +3748,6 @@ namespace  nero
 	void EditorInterface::showExplorerWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_EXPLORER.c_str());
-
-		ImGui::Text( ICON_FA_FOLDER " Paint" );
-		ImGui::Text( ICON_FA_FOLDER_MINUS " Paint" );
-		ImGui::Text( ICON_FA_FOLDER_OPEN " Paint" );
-		ImGui::Text( ICON_FA_FOLDER_PLUS " Paint" );
 
 		if (ImGui::CollapsingHeader("Game World", m_AdvancedScene ? ImGuiTreeNodeFlags_DefaultOpen :ImGuiTreeNodeFlags_None))
 		{
@@ -3869,7 +4052,7 @@ namespace  nero
 		}
 
 		ImGui::End();
-    }
+	}
 
 	void EditorInterface::showBackgroundTaskWindow()
 	{
@@ -3910,31 +4093,6 @@ namespace  nero
 		ImGui::End();
 		ImGui::PopStyleColor(3);
 		ImGui::PopStyleVar();
-	}
-
-	void EditorInterface::setSetting(Setting::Ptr setting)
-	{
-		m_Setting = setting;
-	}
-
-	void EditorInterface::setEditorTextureHolder(TextureHolder::Ptr textureHolder)
-	{
-		m_EditorTextureHolder = textureHolder;
-	}
-
-	void EditorInterface::setEditorSoundHolder(SoundHolder::Ptr soundHolder)
-	{
-		m_EditorSoundHolder = soundHolder;
-	}
-
-	void EditorInterface::setEditorFontHolder(FontHolder::Ptr fontHolder)
-	{
-		m_EditorFontHolder = fontHolder;
-	}
-
-	void EditorInterface::setResourceManager(ResourceManager::Ptr resourceManager)
-	{
-		m_ResourceManager = resourceManager;
 	}
 
 	void EditorInterface::clearWorkspaceInput()
