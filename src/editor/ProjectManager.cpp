@@ -272,14 +272,13 @@ namespace nero
 	void ProjectManager::createWorkspace(const Parameter& parameter)
     {
 		nero_log("creating new project worksapce");
-		nero_log(parameter.toString());
+
+		nero_log(parameter.getString("workspace_location"));
+		nero_log(parameter.getString("workspace_name"));
 
 		std::string directory = getPath({parameter.getString("workspace_location"), parameter.getString("workspace_name")});
 		createDirectory(directory);
 		createDirectory(getPath({directory, "Project"}));
-		//createDirectory(getPath({directory, "Factory"}));
-		//createDirectory(getPath({directory, "Setting"}));
-		//ResourceManager::buildDirectory("resource");
 
 		//create workspace document
 		Parameter document;
@@ -314,8 +313,6 @@ namespace nero
 
 		Parameter parameter;
 		parameter.loadJson(loadJson(getPath({directory, ".workspace"}), true));
-
-		nero_log(parameter.toString());
 
 		nlohmann::json workspace;
 		workspace["order"]					= worksapceSetting.size() + 1;
@@ -541,9 +538,9 @@ namespace nero
 		nero_log("initializing project");
 		m_GameProject->init(parameter);
 		nero_log("loading project");
-		m_GameProject->loadProject();
+		//m_GameProject->loadProject();
 		nero_log("loading project library");
-		m_GameProject->loadLibrary();
+		//m_GameProject->loadLibrary();
 		nero_log("openning editor");
 		m_GameProject->openEditor();
 

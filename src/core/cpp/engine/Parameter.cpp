@@ -47,22 +47,22 @@ namespace nero
 
 	unsigned int Parameter::getUInt(const std::string& setting) const
 	{
-		return m_ParameterHolder.get<unsigned int>();
+		return m_ParameterHolder[setting].get<unsigned int>();
 	}
 
 	int Parameter::getInt(const std::string& setting) const
 	{
-		return m_ParameterHolder.get<int>();
+		return m_ParameterHolder[setting].get<int>();
 	}
 
 	float Parameter::getFloat(const std::string& setting) const
 	{
-		return m_ParameterHolder.get<float>();
+		return m_ParameterHolder[setting].get<float>();
 	}
 
 	std::string Parameter::getString(const std::string& setting) const
 	{
-		return m_ParameterHolder.get<std::string>();
+		return m_ParameterHolder[setting].get<std::string>();
 	}
 
 	std::vector<std::string> Parameter::getStringTable(const std::string& setting)  const
@@ -72,7 +72,7 @@ namespace nero
 
 	bool Parameter::getBool(const std::string& setting) const
 	{
-		return m_ParameterHolder.get<bool>();
+		return m_ParameterHolder[setting].get<bool>();
 	}
 
 	void Parameter::setString(const std::string& setting, const std::string& value)

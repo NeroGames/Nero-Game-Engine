@@ -99,10 +99,12 @@ namespace nero
 			//////////////Tool Bar
 			void											showToolbarWindow();
 			//////////////Workspace
+			WorkspaceInput									m_WorkspaceInput;
 			void											createWorkspace(const Parameter& parameter);
 			void											importWorkspace(const std::string& directory);
 			void											showWorkspaceWindow();
 			//////////////Project
+			ProjectInput									m_ProjectInput;
 			void											createProject(const Parameter& parameter);
 			void											openProject(const std::string& projectDirectory);
 			void											compileProject();
@@ -174,34 +176,10 @@ namespace nero
             ////////////////////////Project and Workspace////////////////////////
             //General
             //Project Workspace
-            nlohmann::json              m_WorkspaceTable;               //list of available workspaces
-            int                         m_WorksapceStatus;              //0 : no_worksapce, 1 : redirect_user, 2 worksapce_available
-			char                        m_InputWorksapceLocation[256];    //read workspace path
-			char                        m_InputWorksapceLocationImport[256];    //read workspace path
-            char                        m_InputWorkspaceName[100];
-            char                        m_InputWorkspaceCompany[100];
-			char                        m_InputWorkspaceLead[100];
-            char                        m_InputWorkspaceNamespace[10];
-			const char*					m_SelectedWorkpsapce;
-			int                         m_SelectedWorkpsapceIndex;
+
 
 
             //Game Project
-            char                        m_InputProjectName[100];        //read project name
-            char                        m_InputProjectLead[100];        //read project lead
-            char                        m_InputProjectCompany[100];     //read project company
-            char                        m_InputProjectNamespace[10];
-            char                        m_InputProjectDescription[512]; //read project description
-			const char*                 m_SelectedProjectType;
-			const char*                 m_SelectedCodeEditor;
-            std::future<int>            m_CreateProjectFuture;
-			std::future<int>            m_CompileProjectFuture;
-			int                         m_SelectedProjectTypeIndex;
-			int                         m_SelectedCodeEditorIndex;
-			bool						m_InputIncludeSartupPack;
-
-            int                         m_ProjectCreationStatus;
-            std::string                 m_LastCreatedProject;
 
 			//Script Wizard
 			char                        m_InputClassName[100];
@@ -294,10 +272,7 @@ namespace nero
 
 
 			void selectDirectory(std::function<void(nfdchar_t *outPath)> callback);
-			void clearWorkspaceInput();
-			void clearProjectInput();
 			void clearScriptWizardInput();
-			void updateProjectInput();
 			void showMeshResource();
 			sf::Vector2f getAddObjectPosition();
 

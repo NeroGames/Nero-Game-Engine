@@ -66,14 +66,14 @@ namespace nero
 
 		//nero_log(m_ProjectParameter.toString());
 
-		m_AdvancedScene = std::make_shared<AdvancedScene>();
+		/*m_AdvancedScene = std::make_shared<AdvancedScene>();
 		m_AdvancedScene->setSetting(m_EngineSetting);
 		m_AdvancedScene->setRenderTexture(m_RenderTexture);
 		m_AdvancedScene->setResourceManager(m_ResourceManager);
 		m_AdvancedScene->setRenderContext(m_RenderContext);
 		m_AdvancedScene->setCamera(m_Camera);
 		m_AdvancedScene->setProjectParameter(m_ProjectParameter);
-		m_AdvancedScene->initialize();
+		m_AdvancedScene->initialize();*/
     }
 
 	ResourceManager::Ptr GameProject::getResourceManager()
@@ -461,15 +461,15 @@ namespace nero
 		m_ResourceManager->clearResource();
 
 		//delete scene
-		m_AdvancedScene->m_Scene = nullptr;
-		m_AdvancedScene->m_CreateCppScene.clear();
-		m_CreateCppSceneFn.clear();
+		//m_AdvancedScene->m_Scene = nullptr;
+		//m_AdvancedScene->m_CreateCppScene.clear();
+		//m_CreateCppSceneFn.clear();
 
 		//delete level and screen
-		m_AdvancedScene->m_GameLevelTable.clear();
-		m_AdvancedScene->m_GameScreenTable.clear();
+		//m_AdvancedScene->m_GameLevelTable.clear();
+		//m_AdvancedScene->m_GameScreenTable.clear();
 
-		m_CreateCppSceneFn.clear();
+		//m_CreateCppSceneFn.clear();
 	}
 
 	void GameProject::createScriptObject(const Parameter& parameter)
