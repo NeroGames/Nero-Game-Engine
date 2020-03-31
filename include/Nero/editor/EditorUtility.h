@@ -115,6 +115,13 @@ namespace nero
 			}
 		}
 	};
+
+	struct MenuBarInput
+	{
+		bool newProject			= false;
+		bool openProject		= false;
+		bool newWorkspace		= false;
+	};
 }
 
 

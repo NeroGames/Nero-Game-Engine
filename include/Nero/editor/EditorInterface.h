@@ -94,7 +94,10 @@ namespace nero
 			bool											m_SetupDockspaceLayout;
 			void											createDockSpace();
 			void											interfaceFirstDraw();
+			//////////////starter window
+			void											showStarterWindow();
 			//////////////main menu bar
+			MenuBarInput									m_MenuBarInput;
 			void											showEditorMenuBar();
 			//////////////Tool Bar
 			void											showToolbarWindow();

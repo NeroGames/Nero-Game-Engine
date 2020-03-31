@@ -48,6 +48,9 @@ namespace nero
 			//project manager
 		const std::string WINDOW_PROJECT_MANAGER		= "Project Manager";
 		sf::Vector2f	  WINDOW_PROJECT_MANAGER_SIZE	= sf::Vector2f(800.f, 500.f);
+			//starter wizard
+		const std::string WINDOW_STARTER_WIZARD			= "Starter Wizard";
+		sf::Vector2f	  WINDOW_STARTER_WIZARD_SIZE	= sf::Vector2f(500.f, 800.f);
 			//script wizard
 		const std::string WINDOW_SCRIPT_WIZARD			= "Script Wizard";
 		sf::Vector2f	  WINDOW_SCRIPT_WIZARD_SIZE		= sf::Vector2f(600.f, 300.f);

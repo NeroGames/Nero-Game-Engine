@@ -284,6 +284,9 @@ namespace  nero
 		//background task
 		showBackgroundTaskWindow();
 
+		//show
+		showStarterWindow();
+
 		//commit
 		ImGui::SFML::Render(m_RenderWindow);
 	}
@@ -337,12 +340,6 @@ namespace  nero
 	{
 		 m_UpdateWindowTile(title);
 	}
-
-
-
-
-
-
 
 	void EditorInterface::switchBuilderMode()
 	{
@@ -771,17 +768,17 @@ namespace  nero
 		{
 			if(ImGui::MenuItem("New Project", nullptr, false))
 			{
-
+				m_MenuBarInput.newProject = true;
 			}
 
 			if(ImGui::MenuItem("Open Project", nullptr, false))
 			{
-
+				m_MenuBarInput.openProject = true;
 			}
 
 			if(ImGui::MenuItem("Save Project", nullptr, false))
 			{
-
+				//saveProject();
 			}
 
 			if(ImGui::MenuItem("Close Project", nullptr, false, m_GameProject != nullptr))
@@ -793,26 +790,31 @@ namespace  nero
 
 			if(ImGui::MenuItem("New Workspace", nullptr, false))
 			{
-
+				m_MenuBarInput.newWorkspace = true;
 			}
 
 			if(ImGui::MenuItem("Import Workspace", nullptr, false))
 			{
-
+				m_MenuBarInput.newWorkspace = true;
 			}
 
 			ImGui::Separator();
 
-			if (ImGui::BeginMenu("Recent Projects"))
+			auto recentProjectTable =  loadJson(getPath({"setting", "recent_project"}));
+
+			if (ImGui::BeginMenu("Recent Projects",!recentProjectTable.empty()))
 			{
-				if(ImGui::MenuItem("project 1", nullptr, false))
+
+				int count_project = recentProjectTable.size() > 10 ? 10 : recentProjectTable.size();
+
+				for (int i = count_project - 1; i >=0 ; i--)
 				{
+					auto project = recentProjectTable[i];
 
-				}
-
-				if(ImGui::MenuItem("project 2", nullptr, false))
-				{
-
+					if(ImGui::MenuItem(project["project_name"].get<std::string>().c_str(), nullptr, false))
+					{
+						openProject(project["project_directory"].get<std::string>());
+					}
 				}
 
 				ImGui::EndMenu();
@@ -822,12 +824,12 @@ namespace  nero
 
 			if(ImGui::MenuItem("Exit", nullptr, false))
 			{
-
+				closeEditor();
 			}
 
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Edit"))
+		if (ImGui::BeginMenu("Edit", m_GameProject != nullptr))
 		{
 			if(ImGui::MenuItem("Undo", nullptr, nullptr))
 			{
@@ -841,7 +843,7 @@ namespace  nero
 
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Build"))
+		if (ImGui::BeginMenu("Build", m_GameProject != nullptr))
 		{
 			if(ImGui::MenuItem("Clean", nullptr, nullptr))
 			{
@@ -879,27 +881,27 @@ namespace  nero
 
 		if (ImGui::BeginMenu("Helps"))
 		{
-			if(ImGui::MenuItem("Learn", "Ctrl+Alt+L", nullptr))
+			if(ImGui::MenuItem("Learn", "Alt+L", nullptr))
 			{
 
 			}
 
-			if(ImGui::MenuItem("Snippet", "Ctrl+Alt+S", nullptr))
+			if(ImGui::MenuItem("Snippet", "Alt+S", nullptr))
 			{
 
 			}
 
-			if(ImGui::MenuItem("Forum", "Ctrl+Alt+F", nullptr))
+			if(ImGui::MenuItem("Forum", "Alt+F", nullptr))
 			{
 
 			}
 
-			if(ImGui::MenuItem("Engine API", "Ctrl+Alt+A", nullptr))
+			if(ImGui::MenuItem("Engine API", "Alt+A", nullptr))
 			{
 
 			}
 
-			if(ImGui::MenuItem("Website", "Ctrl+Alt+W", nullptr))
+			if(ImGui::MenuItem("Website", "Alt+W", nullptr))
 			{
 
 			}
@@ -919,6 +921,38 @@ namespace  nero
 
 			ImGui::EndMenu();
 		}
+	}
+
+	void EditorInterface::showStarterWindow()
+	{
+		return;
+		//condition
+			//no workspace detected
+			//user first interaction
+			//create workspace
+			//set code editor path
+		ImGui::OpenPopup(EditorConstant.WINDOW_STARTER_WIZARD.c_str());
+
+		//Window flags
+		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
+										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar |ImGuiWindowFlags_NoMove;
+		//Winsow size
+		ImVec2 winsow_size              = EditorConstant.WINDOW_STARTER_WIZARD_SIZE;
+
+		//Project manager window
+		ImGui::SetNextWindowSize(winsow_size);
+		//Begin window
+		if(ImGui::BeginPopupModal(EditorConstant.WINDOW_STARTER_WIZARD.c_str(), nullptr, window_flags))
+		{
+
+			if(ImGui::Button("sdfsdfs"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+
 	}
 
 
@@ -1080,6 +1114,28 @@ namespace  nero
 					if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
 					{
 						ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+						m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_RECENT_PROJECT);
+					}
+					else
+					{
+						if(m_MenuBarInput.newProject)
+						{
+							m_MenuBarInput.newProject = false;
+							ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+							m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_CREATE_PROJECT);
+						}
+						else if(m_MenuBarInput.openProject)
+						{
+							m_MenuBarInput.openProject = false;
+							ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+							m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_OPEN_PROJECT);
+						}
+						else if(m_MenuBarInput.newWorkspace)
+						{
+							m_MenuBarInput.newWorkspace		= false;
+							ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+							m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_WORKSPACE);
+						}
 					}
 
 					/*ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.f);
@@ -1429,30 +1485,32 @@ namespace  nero
 					}
 
 					if (ImGui::BeginTabItem(EditorConstant.TAB_CREATE_PROJECT.c_str(), nullptr, m_ProjectManagerTabBarSwitch.getTabStatus(EditorConstant.TAB_CREATE_PROJECT)))
-                    {
+					{
 						showCreateProjectWindow();
 
                         ImGui::EndTabItem();
                     }
 
 					if (ImGui::BeginTabItem(EditorConstant.TAB_OPEN_PROJECT.c_str(), nullptr, m_ProjectManagerTabBarSwitch.getTabStatus(EditorConstant.TAB_OPEN_PROJECT)))
-                    {
+					{
 						showOpenProjectWindow();
 
                         ImGui::EndTabItem();
                     }
 
 					if (ImGui::BeginTabItem(EditorConstant.TAB_WORKSPACE.c_str(), nullptr, m_ProjectManagerTabBarSwitch.getTabStatus(EditorConstant.TAB_WORKSPACE)))
-                    {
+					{
                         showWorkspaceWindow();
 
                         ImGui::EndTabItem();
 					}
 
+					m_ProjectManagerTabBarSwitch.resetSwith();
+
                     ImGui::EndTabBar();
                 }
 
-				m_ProjectManagerTabBarSwitch.resetSwith();
+				//
 
             ImGui::EndChild();
 

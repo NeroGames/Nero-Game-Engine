@@ -545,3 +545,21 @@ int main(int argc, char** argv)
 
 	return 0;
 }*/
+
+
+#include "Poco/Environment.h"
+#include <iostream>
+#include <Nero/core/cpp/utility/Logging.h>
+
+int main()
+{
+	nero::Logger::init();
+	nero_log(Poco::Environment::osName());
+	nero_log(Poco::Environment::osArchitecture());
+	nero_log(Poco::Environment::osDisplayName());
+	nero_log(Poco::Environment::osVersion());
+	nero_log(Poco::Environment::processorCount());
+	nero_log(nero_ss(Poco::Environment::arch()));
+
+	return 0;
+}
