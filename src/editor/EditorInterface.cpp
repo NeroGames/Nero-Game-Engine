@@ -972,8 +972,8 @@ namespace  nero
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5.f, 6.f));
 		ImGui::BeginChild("tool_bar_button", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_AlwaysUseWindowPadding);
-		pushToolbarStyle();
 
+			pushToolbarStyle();
 
 			showToolbarLeft(scrollToolbar);
 
@@ -981,7 +981,15 @@ namespace  nero
 
 			showToolbarRight(scrollToolbar);
 
-		popToolbarStyle();
+			popToolbarStyle();
+
+			//show project manager window
+			showProjectManagerWindow();
+
+			//show script creaton window
+			showScriptCreationWindow();
+
+
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
 
@@ -999,55 +1007,79 @@ namespace  nero
 	{
 		ImGui::SameLine();
 
-		if(ImGui::Button(ICON_FA_GAMEPAD " World", ImVec2(95.f, 28.f)))
+		if(m_EditorMode != EditorMode::WORLD_BUILDER && m_GameProject)
 		{
+			if(ImGui::Button(ICON_FA_GAMEPAD " World", ImVec2(95.f, 28.f)))
+			{
+				m_EditorMode = EditorMode::WORLD_BUILDER;
+				ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
+			}
 
+			ImGui::SameLine();
 		}
 
-		ImGui::SameLine();
 
-		if(ImGui::Button(ICON_FA_SQUARE " Screen", ImVec2(95.f, 28.f)))
+		if(m_EditorMode != EditorMode::SCREEN_BUILDER && m_GameProject)
 		{
+			if(ImGui::Button(ICON_FA_SQUARE " Screen", ImVec2(95.f, 28.f)))
+			{
+				m_EditorMode = EditorMode::SCREEN_BUILDER;
+				ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
+			}
 
+			ImGui::SameLine();
 		}
 
-		ImGui::SameLine();
 
-		if(ImGui::Button(ICON_FA_WAREHOUSE " Factory", ImVec2(105.f, 28.f)))
+		if(m_EditorMode != EditorMode::OBJECT_BUILDER && m_GameProject)
 		{
-
+			if(ImGui::Button(ICON_FA_WAREHOUSE " Factory", ImVec2(105.f, 28.f)))
+			{
+				m_EditorMode = EditorMode::OBJECT_BUILDER;
+				ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
+			}
 		}
 	}
 
 	void EditorInterface::showToolbarRight(bool scrollToolbar)
 	{
-		float rightOffset = 95.f + 45.f * 3.f + 8.f * 3.f;
+		float rightOffset = 95.f;
+		if(m_GameProject)
+			rightOffset += 45.f * 3.f + 8.f * 3.f;
 		ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - rightOffset);
 
-		if(ImGui::Button(ICON_FA_EDIT, ImVec2(45.f, 28.f)))
+		if(m_GameProject)
 		{
+			if(ImGui::Button(ICON_FA_EDIT, ImVec2(45.f, 28.f)))
+			{
 
+			}
+
+			ImGui::SameLine();
+
+			if(ImGui::Button(ICON_FA_COGS, ImVec2(45.f, 28.f)))
+			{
+
+			}
+
+			ImGui::SameLine();
+
+			if(ImGui::Button(ICON_FA_SYNC, ImVec2(45.f, 28.f)))
+			{
+
+			}
+
+			ImGui::SameLine();
 		}
-
-		ImGui::SameLine();
-
-		if(ImGui::Button(ICON_FA_COGS, ImVec2(45.f, 28.f)))
-		{
-
-		}
-
-		ImGui::SameLine();
-
-		if(ImGui::Button(ICON_FA_SYNC, ImVec2(45.f, 28.f)))
-		{
-
-		}
-
-		ImGui::SameLine();
 
 		if(ImGui::Button(ICON_FA_ANCHOR " Project", ImVec2(95.f, 28.f)))
 		{
 			ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_RECENT_PROJECT);
+		}
+		else
+		{
+			handleMenuBarFileAction();
 		}
 	}
 
@@ -1103,6 +1135,28 @@ namespace  nero
 			ImGui::PopStyleColor();
 			ImGui::PopStyleVar();
 		ImGui::EndChild();
+	}
+
+	void EditorInterface::handleMenuBarFileAction()
+	{
+		if(m_MenuBarInput.newProject)
+		{
+			m_MenuBarInput.newProject = false;
+			ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_CREATE_PROJECT);
+		}
+		else if(m_MenuBarInput.openProject)
+		{
+			m_MenuBarInput.openProject = false;
+			ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_OPEN_PROJECT);
+		}
+		else if(m_MenuBarInput.newWorkspace)
+		{
+			m_MenuBarInput.newWorkspace		= false;
+			ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_WORKSPACE);
+		}
 	}
 
 	//3-  show toolbar
