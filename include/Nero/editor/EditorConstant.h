@@ -21,10 +21,11 @@ namespace nero
 		//Window
 			//toolbar
 		const std::string WINDOW_TOOLBAR				= "Toolbar";
+		const float		  WINDOW_TOOLBAR_MIN_WIDTH		= 1000.f;
 			//upper left
 		const std::string WINDOW_UTILITY				= "Utility";
 		const std::string WINDOW_MUSIC					= "Music";
-		const std::string WINDOW_Grid					= "Gid";
+		const std::string WINDOW_GRID					= "Gid";
 			//lower left
 		const std::string WINDOW_LEVEL					= "Level";
 		const std::string WINDOW_CHUNCK					= "Chunck";
@@ -60,20 +61,20 @@ namespace nero
 		const std::string TAB_OPEN_PROJECT					= "Open Project";
 		const std::string TAB_RECENT_PROJECT				= "Recent Project";
 		const std::string TAB_WORKSPACE						= "Workspace";
-		const std::string ERROR_CREATING_WORKSPACE		= "Error Creating Workspace";
-		const std::string ERROR_CREATING_PROJECT		= "Error Creating Project";
+		const std::string ERROR_CREATING_WORKSPACE			= "Error Creating Workspace";
+		const std::string ERROR_CREATING_PROJECT			= "Error Creating Project";
 
 		//Texture
-		const std::string TEXTURE_PROJECT_BUTTON		= "project_button";
-		const std::string TEXTURE_EDIT_BUTTON			= "edit_button";
-		const std::string TEXTURE_COMPILE_BUTTON		= "compile_button";
-		const std::string TEXTURE_RELOAD_BUTTON			= "reload_button";
-		const std::string TEXTURE_SCRIPT_BUTTON			= "script_button";
+		const std::string TEXTURE_PROJECT_BUTTON			= "project_button";
+		const std::string TEXTURE_EDIT_BUTTON				= "edit_button";
+		const std::string TEXTURE_COMPILE_BUTTON			= "compile_button";
+		const std::string TEXTURE_RELOAD_BUTTON				= "reload_button";
+		const std::string TEXTURE_SCRIPT_BUTTON				= "script_button";
 
 		//Evenrionnment variable
-		const std::string NERO_GAME_HOME				= "NERO_GAME_HOME";
-		const std::string NERO_GAME_QT_CREATOR			= "NERO_GAME_QT_CREATOR";
-		const std::string NERO_GAME_VISUAL_STUDIO		= "NERO_GAME_VISUAL_STUDIO";
+		const std::string NERO_GAME_HOME					= "NERO_GAME_HOME";
+		const std::string NERO_GAME_QT_CREATOR				= "NERO_GAME_QT_CREATOR";
+		const std::string NERO_GAME_VISUAL_STUDIO			= "NERO_GAME_VISUAL_STUDIO";
 	};
 
 	const _EditorConstant EditorConstant;

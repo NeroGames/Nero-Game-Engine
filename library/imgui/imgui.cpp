@@ -13245,6 +13245,8 @@ void ImGui::DockNodeTreeMerge(ImGuiContext* ctx, ImGuiDockNode* parent_node, ImG
     }
 }
 
+#include "Nero/core/cpp/utility/Logging.h"
+
 // Update Pos/Size for a node hierarchy (don't affect child Windows yet)
 void ImGui::DockNodeTreeUpdatePosSize(ImGuiDockNode* node, ImVec2 pos, ImVec2 size)
 {
@@ -13257,7 +13259,7 @@ void ImGui::DockNodeTreeUpdatePosSize(ImGuiDockNode* node, ImVec2 pos, ImVec2 si
     ImGuiDockNode* child_1 = node->ChildNodes[1];
     ImVec2 child_0_pos = pos, child_1_pos = pos;
     ImVec2 child_0_size = size, child_1_size = size;
-    if (child_0->IsVisible && child_1->IsVisible)
+	if (child_0->IsVisible && child_1->IsVisible)
     {
         const float spacing = IMGUI_DOCK_SPLITTER_SIZE;
         const ImGuiAxis axis = (ImGuiAxis)node->SplitAxis;
@@ -13270,7 +13272,21 @@ void ImGui::DockNodeTreeUpdatePosSize(ImGuiDockNode* node, ImVec2 pos, ImVec2 si
 
         // 2) Process locked absolute size (during a splitter resize we preserve the child of nodes not touching the splitter edge)
         IM_ASSERT(!(child_0->WantLockSizeOnce && child_1->WantLockSizeOnce));
-        if (child_0->WantLockSizeOnce)
+		//Nero Game Engine Dockbar
+		if((child_0->LocalFlags & ImGuiDockNodeFlags_SingleDock) || (child_1->LocalFlags & ImGuiDockNodeFlags_SingleDock))
+		{
+			if((child_0->LocalFlags & ImGuiDockNodeFlags_SingleDock))
+			{
+				child_0_size[axis] = 40.f;
+				child_1_size[axis] = child_1->SizeRef[axis] = (size_avail - child_0_size[axis]);
+			}
+			else
+			{
+				child_1_size[axis] = 40.f;
+				child_0_size[axis] = child_0->SizeRef[axis] = (size_avail - child_1_size[axis]);
+			}
+		}
+		else if (child_0->WantLockSizeOnce)
         {
             child_0->WantLockSizeOnce = false;
             child_0_size[axis] = child_0->SizeRef[axis] = child_0->Size[axis];
@@ -13298,12 +13314,13 @@ void ImGui::DockNodeTreeUpdatePosSize(ImGuiDockNode* node, ImVec2 pos, ImVec2 si
         else
         {
             // 4) Otherwise distribute according to the relative ratio of each SizeRef value
-            float split_ratio = child_0->SizeRef[axis] / (child_0->SizeRef[axis] + child_1->SizeRef[axis]);
-            child_0_size[axis] = ImMax(size_min_each, ImFloor(size_avail * split_ratio + 0.5F));
-            child_1_size[axis] = (size_avail - child_0_size[axis]);
+			float split_ratio = child_0->SizeRef[axis] / (child_0->SizeRef[axis] + child_1->SizeRef[axis]);
+			child_0_size[axis] = ImMax(size_min_each, ImFloor(size_avail * split_ratio + 0.5F));
+			child_1_size[axis] = (size_avail - child_0_size[axis]);
         }
         child_1_pos[axis] += spacing + child_0_size[axis];
     }
+
     if (child_0->IsVisible)
         DockNodeTreeUpdatePosSize(child_0, child_0_pos, child_0_size);
     if (child_1->IsVisible)

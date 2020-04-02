@@ -100,7 +100,10 @@ namespace nero
 			MenuBarInput									m_MenuBarInput;
 			void											showEditorMenuBar();
 			//////////////Tool Bar
+			ImGuiWindow*									mToolbarWindow;
 			void											showToolbarWindow();
+			void											showToolbarScrollLeft();
+			void											showToolbarScrollRight();
 			//////////////Workspace
 			WorkspaceInput									m_WorkspaceInput;
 			void											createWorkspace(const Parameter& parameter);
@@ -296,7 +299,6 @@ namespace nero
 			void createScriptObject(const Parameter& parameter);
 
 			//
-			ImGuiWindow* m_toolbar_window;
 			ImVec4 getLoggingColor(LOGLEVEL level);
 
 			std::string m_MouseInformation;

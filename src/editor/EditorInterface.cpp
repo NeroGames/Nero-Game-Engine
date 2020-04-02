@@ -682,7 +682,6 @@ namespace  nero
 				ImGuiID lowerLeftDockspaceID	= ImGui::DockBuilderSplitNode(upperLeftDockspaceID,	ImGuiDir_Down,	0.20f, nullptr, &upperLeftDockspaceID);
 				ImGuiID rightDockspaceID        = ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Right, 0.20f, nullptr, &m_DockspaceID);
 				ImGuiID toolbarDockspaceID		= ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Up,	0.20f, nullptr, &m_DockspaceID);
-				ImGui::DockBuilderGetNode(toolbarDockspaceID)->AuthorityForSize = ImGuiDataAuthority_Window;
 				ImGuiID bottomDockspaceID       = ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Down,	0.20f, nullptr, &m_DockspaceID);
 				ImGuiID centralDockspaceID		= ImGui::DockBuilderGetCentralNode(m_DockspaceID)->ID;
 
@@ -740,10 +739,9 @@ namespace  nero
 				//toolbar
 				ImGuiID toolbarDockspaceID			= m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").getUInt("id");
 				ImGuiDockNode* toolbarDockNode		= ImGui::DockBuilderGetNode(toolbarDockspaceID);
-				toolbarDockNode->AuthorityForSize	= ImGuiDataAuthority_Window;
-				toolbarDockNode->Size.y				= m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").getFloat("height");
 				toolbarDockNode->SizeRef.y			= m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").getFloat("height");
-				toolbarDockNode->LocalFlags			= ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_SingleDock;
+				toolbarDockNode->LocalFlags			= ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoSplit |
+													  ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_SingleDock;
 
 				//clean pointer
 				toolbarDockNode		= nullptr;
@@ -955,11 +953,84 @@ namespace  nero
 
 	}
 
-
 	//3-  show toolbar
 	void EditorInterface::showToolbarWindow()
 	{
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_None | ImGuiWindowFlags_NoResize;
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
+		//ImGui::SetNextWindowSize(ImVec2(), ImGuiCond_Always);
+		ImGui::Begin(EditorConstant.WINDOW_TOOLBAR.c_str(), nullptr, window_flags);
+
+		float content_region_width	= ImGui::GetWindowContentRegionWidth();
+		bool  scrollToolbar			= content_region_width < EditorConstant.WINDOW_TOOLBAR_MIN_WIDTH;
+
+		if(scrollToolbar)
+		{
+			showToolbarScrollLeft();
+		}
+
+
+		if(scrollToolbar)
+		{
+			showToolbarScrollRight();
+		}
+
+		ImGui::End();
+		ImGui::PopStyleVar();
+	}
+
+	void EditorInterface::showToolbarScrollLeft()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
+		ImGui::BeginChild("##toolbarscrollleft", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.260f, 0.590f, 0.980f, 1.000f));
+			if(ImGui::Button("<<##scroll_back_button", ImVec2(32.f, 36.f)))
+			{
+				if(mToolbarWindow)
+				{
+					ImVec2 max_step;
+					max_step.x = mToolbarWindow->InnerRect.GetSize().x * 0.67f;
+					max_step.y = mToolbarWindow->InnerRect.GetSize().y * 0.67f;
+
+					float scroll_step = ImFloor(ImMin(2 * mToolbarWindow->CalcFontSize(), max_step.x));
+					ImGui::SetWindowScrollX(mToolbarWindow, mToolbarWindow->Scroll.x - 1 * scroll_step);
+				}
+			}
+			ImGui::PopStyleColor();
+		ImGui::EndChild();
+		ImGui::PopStyleVar();
+		ImGui::SameLine(32.f);
+
+	}
+
+	void EditorInterface::showToolbarScrollRight()
+	{
+		ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 32.f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
+		ImGui::BeginChild("##toolbarscrollright", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.260f, 0.590f, 0.980f, 1.000f));
+			if(ImGui::Button(">>##scroll_forward_button", ImVec2(32.f, 36.f)))
+			{
+				if(mToolbarWindow)
+				{
+					ImVec2 max_step;
+					max_step.x = mToolbarWindow->InnerRect.GetSize().x * 0.67f;
+					max_step.y = mToolbarWindow->InnerRect.GetSize().y * 0.67f;
+
+					float scroll_step = ImFloor(ImMin(2 * mToolbarWindow->CalcFontSize(), max_step.x));
+					ImGui::SetWindowScrollX(mToolbarWindow, mToolbarWindow->Scroll.x + 1 * scroll_step);
+				}
+			}
+			ImGui::PopStyleColor();
+			ImGui::PopStyleVar();
+		ImGui::EndChild();
+	}
+
+	//3-  show toolbar
+	void showToolbarWindow()
+	{
+		/*ImGuiWindowFlags window_flags = ImGuiWindowFlags_None | ImGuiWindowFlags_NoResize;
 		window_flags |= ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 2.0f));
@@ -1156,7 +1227,7 @@ namespace  nero
 					ImGui::PopFont();*/
 					/*0.609f*/
 
-					if(m_GameProject)
+					/*if(m_GameProject)
 					{
 						ImGui::SameLine(width - 72.f - 24.f - 3.f - 10.f - padding);
 
@@ -1225,226 +1296,8 @@ namespace  nero
 
 
 		ImGui::End();
-		ImGui::PopStyleVar();
+		ImGui::PopStyleVar();*/
 	}
-
-	//3-  show toolbar
-	void showToolbarWindow()
-    {
-		/*
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
-		window_flags |= ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
-
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8.f, 2.f));
-		ImGui::SetNextWindowSize(ImVec2(0.f, 10.f), ImGuiCond_Always);
-		ImGui::Begin(EditorConstant.WINDOW_TOOLBAR.c_str(), nullptr, window_flags);
-
-		float toolbar_min_width = 1000.f;
-		bool scrollToolbar = false;
-		if(ImGui::GetWindowContentRegionWidth() < toolbar_min_width)
-		{
-			scrollToolbar = true;
-			ImGui::SetNextWindowSize(ImVec2(toolbar_min_width + 64.f, 0.f));
-			ImGui::BeginChild("dsfsf", ImVec2(), false, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoScrollbar |ImGuiWindowFlags_ScrollToolbar);
-
-			//ImGui::BeginChild("dsfsf", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_ScrollToolbar);
-
-		}
-		else
-		{
-			ImGui::BeginChild("dsfsf", ImVec2(), false);
-		}
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.5f, 2.5f));
-
-			float width = ImGui::GetWindowContentRegionWidth();
-			float start = (width - (60.f * 5.f + 10.f * 4.f))/2.f;
-			float buttonSpace = 60.f + 14.f;
-			int i = 0;
-
-			float old_cursor_pos = ImGui::GetCursorPosX();
-
-
-			if(scrollToolbar)
-			{
-				//ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 32.f + 8.f);
-				ImGui::SameLine(32.f + 8.f);
-				//buttonSpace +=  32.f;
-				start =(toolbar_min_width - (60.f * 5.f + 10.f * 4.f))/2.f +  32.f + 8.f;
-			}
-
-			if(m_EditorMode != EditorMode::WORLD_BUILDER && m_GameProject)
-			{
-				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("world_button")))
-				{
-					if(!ImGui::IsAnyItemHovered())
-					{
-						m_EditorMode = EditorMode::WORLD_BUILDER;
-						ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
-					}
-				}
-
-				ImGui::SameLine(buttonSpace + 6.f);
-			}
-
-			if(m_EditorMode != EditorMode::SCREEN_BUILDER && m_GameProject)
-			{
-				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("screen_button")))
-				{
-				   m_EditorMode = EditorMode::SCREEN_BUILDER;
-				   ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
-				}
-
-				if(scrollToolbar)
-				{
-					ImGui::SameLine(buttonSpace + 6.f + 32.f + 3.f);
-				}
-				else
-				{
-					ImGui::SameLine(buttonSpace + 6.f);
-				}
-
-
-			}
-
-
-			if(m_EditorMode != EditorMode::OBJECT_BUILDER && m_GameProject)
-			{
-				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("factory_button")))
-				{
-				   m_EditorMode = EditorMode::OBJECT_BUILDER;
-				   ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
-				}
-			}
-
-			if(m_GameProject)
-			{
-				ImGui::SameLine(start + buttonSpace*i++);
-
-				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("play_button")))
-				{
-				   playScene();
-				}
-
-				ImGui::SameLine(start + buttonSpace*i++);
-
-				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("pause_button")))
-				{
-				   pauseScene();
-				}
-
-				ImGui::SameLine(start + buttonSpace*i++);
-
-				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("step_button")))
-				{
-				   stepScene();
-				}
-
-				ImGui::SameLine(start + buttonSpace*i++);
-
-				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("reset_button")))
-				{
-				   resetScene();
-				}
-
-				ImGui::SameLine(start + buttonSpace*i++);
-
-				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("render_button")))
-				{
-				   renderScene();
-				}
-			}
-
-
-			float scroll_bar_pos = width - 32.f;
-			if(scrollToolbar)
-			{
-				width = toolbar_min_width + 64.f;
-			}
-
-			ImGui::SameLine(width - 72.f - 4.f);
-
-			if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
-			{
-				ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-			}
-
-			if(m_GameProject)
-			{
-				ImGui::SameLine(width - 72.f - 24.f - 3.f - 10.f);
-
-				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_RELOAD_BUTTON)))
-				{
-					reloadProject();
-				}
-
-				ImGui::SameLine(width - 72.f - 48.f - 6.f - 20.f);
-
-				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_EDIT_BUTTON)))
-				{
-					editProject();
-				}
-
-				ImGui::SameLine(width - 72.f - 72.f - 9.f - 30.f);
-
-				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_COMPILE_BUTTON)))
-				{
-					compileProject();
-				}
-
-				ImGui::SameLine(width - 72.f - 96.f - 12.f - 40.f - 30.f);
-
-				if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_SCRIPT_BUTTON)))
-				{
-					ImGui::OpenPopup(EditorConstant.WINDOW_SCRIPT_WIZARD.c_str());
-				}
-			}
-
-			if(scrollToolbar)
-			{
-
-				ImGui::SetCursorPosX(old_cursor_pos);
-				ImGui::SameLine(ImGui::GetScrollX() + 3.f);
-				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.260f, 0.590f, 0.980f, 1.000f));
-				if(ImGui::Button("<<##scroll_back", ImVec2(32.f, 32.f)))
-				{
-
-				}
-				ImGui::PopStyleColor();
-
-				//ImGui::SameLine(32.f + 3.f);
-
-
-			}
-
-			if(scrollToolbar)
-			{
-				ImGui::SameLine(scroll_bar_pos + ImGui::GetScrollX());
-				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.260f, 0.590f, 0.980f, 1.000f));
-				if(ImGui::Button(">>##scroll_back", ImVec2(32.f, 32.f)))
-				{
-					ImGui::GetCurrentWindow();
-
-					ImGui::SetItemAllowOverlap();
-				}
-				ImGui::PopStyleColor();
-
-			}
-
-
-			ImGui::PopStyleVar();
-
-			//show project manager window
-			showProjectManagerWindow();
-
-			//show script creaton window
-			showScriptCreationWindow();
-
-			ImGui::EndChild();
-		ImGui::End();
-		ImGui::PopStyleVar();
-
-		*/
-    }
 
 	//4- project manager
     void EditorInterface::showProjectManagerWindow()
