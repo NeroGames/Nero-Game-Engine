@@ -122,6 +122,9 @@ namespace nero
 		bool openProject		= false;
 		bool newWorkspace		= false;
 	};
+
+	void			popToolbarStyle();
+	void			pushToolbarStyle();
 }
 
 

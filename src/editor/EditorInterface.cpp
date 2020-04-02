@@ -79,7 +79,7 @@ namespace  nero
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 18.0f, &config, icon_ranges);
 		ImGui::SFML::UpdateFontTexture();
 
-		io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation.ttf", 15.f);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation.ttf", 17.f);
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 18.0f, &config, icon_ranges);
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 18.0f, &config, icon_ranges);
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 18.0f, &config, icon_ranges);
@@ -970,6 +970,45 @@ namespace  nero
 			showToolbarScrollLeft();
 		}
 
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5.f, 6.f));
+		ImGui::BeginChild("tool_bar_button", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_AlwaysUseWindowPadding);
+		pushToolbarStyle();
+
+
+
+			float rightOffset = 95.f + 45.f * 3.f + 8.f * 3.f;
+			ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - rightOffset);
+
+			if(ImGui::Button(ICON_FA_EDIT, ImVec2(45.f, 28.f)))
+			{
+
+			}
+
+			ImGui::SameLine();
+
+			if(ImGui::Button(ICON_FA_COGS, ImVec2(45.f, 28.f)))
+			{
+
+			}
+
+			ImGui::SameLine();
+
+			if(ImGui::Button(ICON_FA_SYNC, ImVec2(45.f, 28.f)))
+			{
+
+			}
+
+			ImGui::SameLine();
+
+			if(ImGui::Button(ICON_FA_ANCHOR " Project", ImVec2(95.f, 28.f)))
+			{
+				ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+			}
+
+		popToolbarStyle();
+		ImGui::EndChild();
+		ImGui::PopStyleVar();
+
 
 		if(scrollToolbar)
 		{
@@ -985,7 +1024,7 @@ namespace  nero
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
 		ImGui::BeginChild("##toolbarscrollleft", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.260f, 0.590f, 0.980f, 1.000f));
-			if(ImGui::Button("<<##scroll_back_button", ImVec2(32.f, 36.f)))
+			if(ImGui::Button("<<##scroll_back_button", ImVec2(32.f, 38.f)))
 			{
 				if(mToolbarWindow)
 				{
@@ -1010,7 +1049,7 @@ namespace  nero
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
 		ImGui::BeginChild("##toolbarscrollright", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.260f, 0.590f, 0.980f, 1.000f));
-			if(ImGui::Button(">>##scroll_forward_button", ImVec2(32.f, 36.f)))
+			if(ImGui::Button(">>##scroll_forward_button", ImVec2(32.f, 38.f)))
 			{
 				if(mToolbarWindow)
 				{
