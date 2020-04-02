@@ -32,12 +32,19 @@ namespace nero
 
 	}
 
-    void SoundHolder::addSoundBuffer(std::string name, std::unique_ptr<sf::SoundBuffer> soundBuffer)
+	bool SoundHolder::addSoundBuffer(std::string name, std::unique_ptr<sf::SoundBuffer> soundBuffer)
     {
-        auto newSoundBuffer = m_SoundBufferMap.insert(std::make_pair(name, std::move(soundBuffer)));
-        assert(newSoundBuffer.second);
+		auto inserted = m_SoundBufferMap.insert(std::make_pair(name, std::move(soundBuffer)));
 
-        m_SoundBufferTable.push_back(name);
+		if(!inserted.second)
+		{
+			nero_log("failed to store sound " + name);
+			return false;
+		}
+
+		m_SoundBufferTable.push_back(name);
+
+		return true;
     }
 
     sf::SoundBuffer& SoundHolder::getSoundBuffer(std::string name)
@@ -61,7 +68,7 @@ namespace nero
         return m_SoundBufferTable;
     }
 
-	void SoundHolder::loadFile(const std::string& file)
+	bool SoundHolder::loadFile(const std::string& file)
 	{
 		std::experimental::filesystem::path filePath(file);
 
@@ -72,12 +79,14 @@ namespace nero
 		if (!soundBuffer->loadFromFile(filePath.string()))
 		{
 			nero_log("unable to load sound : " + name);
-			return;
+			return false;
 		}
 
 		addSoundBuffer(name, std::move(soundBuffer));
 
 		nero_log("loaded : " + name);
+
+		return true;
 	}
 
 

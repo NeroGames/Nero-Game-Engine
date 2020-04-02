@@ -34,12 +34,19 @@ namespace nero
 	}
 
 
-    void FontHolder::addFont(std::string name, std::unique_ptr<sf::Font> font)
+	bool FontHolder::addFont(std::string name, std::unique_ptr<sf::Font> font)
     {
-        auto newFont = m_FontMap.insert(std::make_pair(name, std::move(font)));
-        assert(newFont.second);
+		auto inserted = m_FontMap.insert(std::make_pair(name, std::move(font)));
 
-        m_FontTable.push_back(name);
+		if(!inserted.second)
+		{
+			nero_log("failed to store font " + name);
+			return false;
+		}
+
+		m_FontTable.push_back(name);
+
+		return true;
     }
 
     sf::Font& FontHolder::getFont(std::string name)
@@ -68,7 +75,7 @@ namespace nero
         return m_FontTable;
     }
 
-	void FontHolder::loadFile(const std::string &file)
+	bool FontHolder::loadFile(const std::string &file)
 	{
 		std::experimental::filesystem::path filePath(file);
 
@@ -79,12 +86,14 @@ namespace nero
 		if (!font->loadFromFile(filePath.string()))
 		{
 			nero_log("failed to load font : " + name);
-			assert(false);
+			return false;
 		}
 
 		addFont(name, std::move(font));
 
 		nero_log("loaded : " + name);
+
+		return true;
 	}
 
 	void FontHolder::loadDirectory()

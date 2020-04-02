@@ -32,7 +32,7 @@ namespace nero
 
 	}
 
-	void MusicHolder::loadFile(const std::string &file)
+	bool MusicHolder::loadFile(const std::string &file)
 	{
 		std::experimental::filesystem::path filePath(file);
 
@@ -43,15 +43,21 @@ namespace nero
 		if (!music->openFromFile(filePath.string()))
 		{
 			nero_log("failed to load music : " + musicName);
-			return;
+			return false;
 		}
 
 		music->setLoop(true);
 
-		addMusic(musicName, std::move(music));
+		bool added = addMusic(musicName, std::move(music));
+
+		if(!added)
+			return false;
+
 		m_MusicTable.push_back(musicName);
 
 		nero_log("loaded : " + musicName);
+
+		return true;
 	}
 
 	void MusicHolder::loadDirectory()
@@ -85,14 +91,17 @@ namespace nero
         }
     }
 
-    void MusicHolder::addMusic(const std::string& musicName, std::unique_ptr<sf::Music> music)
+	bool MusicHolder::addMusic(const std::string& musicName, std::unique_ptr<sf::Music> music)
     {
         auto inserted = m_MusicMap.insert(std::make_pair(musicName, std::move(music)));
 
         if(!inserted.second)
         {
             nero_log("failed to store music " + musicName);
+			return false;
         }
+
+		return true;
     }
 
     sf::Music& MusicHolder::getMusic(std::string name)

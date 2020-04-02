@@ -30,7 +30,7 @@ namespace nero
 
 	}
 
-	void AnimationHolder::loadFile(const std::string& file)
+	bool AnimationHolder::loadFile(const std::string& file)
 	{
 		std::experimental::filesystem::path filePath(file);
 
@@ -43,7 +43,7 @@ namespace nero
 		{
 			nero_log("failed to load texture : " + textureName);
 
-			return;
+			return false;
 		}
 
 		//Get the JSON helper file
@@ -52,7 +52,7 @@ namespace nero
 		{
 			nero_log("failed to load animation resource");
 			nero_log("file not found : " + jsonHelper);
-			return;
+			return false;
 		}
 
 		nlohmann::json helper = loadJson(jsonHelper, true);
@@ -85,9 +85,15 @@ namespace nero
 				m_SequenceMap[textureName][sequenceName].push_back(frameBound);
 			}
 		}
+		else
+		{
+			return false;
+		}
 
 		m_AnimationTable.push_back(textureName);
-		addTexture(textureName, std::move(texture));
+
+		return addTexture(textureName, std::move(texture));
+
 	}
 
 
@@ -124,15 +130,17 @@ namespace nero
         }
     }
 
-    void AnimationHolder::addTexture(std::string textureName, std::unique_ptr<sf::Texture> texture)
+	bool AnimationHolder::addTexture(std::string textureName, std::unique_ptr<sf::Texture> texture)
     {
         auto inserted = m_TextureMap.insert(std::make_pair(textureName, std::move(texture)));
 
         if(!inserted.second)
         {
             nero_log("failed to store texture " + textureName);
-            return;
+			return false;
         }
+
+		return true;
     }
 
     const std::vector<std::string>& AnimationHolder::getAnimationTable() const

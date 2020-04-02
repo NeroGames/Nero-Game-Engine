@@ -16,24 +16,23 @@ namespace nero
 	class ResourceHolder
 	{
 		public:
-									ResourceHolder();
-									ResourceHolder(const Setting& setting);
-			virtual				   ~ResourceHolder();
+												ResourceHolder();
+												ResourceHolder(const Setting& setting);
+			virtual							   ~ResourceHolder();
 
 		public:
-			virtual void			loadDirectory()										= 0;
-			virtual void			loadFile(const std::string& file)					= 0;
-			virtual void			destroy()											= 0;
-			virtual void			clear() ;
+			virtual void						loadDirectory()										= 0;
+			virtual bool						loadFile(const std::string& file)					= 0;
+			virtual void						destroy()											= 0;
+			virtual void						clear() ;
 
 		public:
-			void					setSetting(const Setting& setting);
-			void					loadDirectory(const std::string& directory);
-			void					loadFile(const std::vector<std::string> fileTable);
-			void					addDirectory(const std::string& directory, bool autoSelect = false);
-			void					selectDirectory(const std::string& directory);
-			void					reloadDirectory(const std::string& directory);
-
+			void								setSetting(const Setting& setting);
+			void								loadDirectory(const std::string& directory);
+			const std::vector<std::string>		loadFile(const std::vector<std::string> fileTable);
+			void								addDirectory(const std::string& directory, bool autoSelect = false);
+			void								selectDirectory(const std::string& directory);
+			void								reloadDirectory(const std::string& directory);
 
 		protected:
 			Setting								m_Setting;

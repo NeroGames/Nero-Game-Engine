@@ -32,7 +32,7 @@ namespace nero
 
 	}
 
-	void TextureHolder::loadFile(const std::string& file)
+	bool TextureHolder::loadFile(const std::string& file)
 	{
 		std::experimental::filesystem::path filePath(file);
 
@@ -44,12 +44,15 @@ namespace nero
 		{
 			nero_log("failed to load texture : " + textureName);
 
-			return;
+			return false;
 		}
 
 		//Read the .txt file to retrieve sprite bound
 		std::string txtHelper   = replaceFileExtension(filePath.string(), "txt");
 		std::string jsonHelper  = replaceFileExtension(filePath.string(), "json");
+
+		std::map<std::string, std::map<std::string, sf::IntRect>> spriteMap;
+		std::vector<std::string>                                  spriteTable;
 
 		if(fileExist(jsonHelper))
 		{
@@ -67,8 +70,10 @@ namespace nero
 
 				sf::IntRect spriteBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
 
-				addSpriteBound(textureName, spriteName, spriteBound);
-				m_SpriteTable.push_back(spriteName);
+				spriteMap[textureName][spriteName] = spriteBound;
+				spriteTable.push_back(spriteName);
+				//addSpriteBound(textureName, spriteName, spriteBound);
+				//m_SpriteTable.push_back(spriteName);
 
 				nero_log("loaded : " + spriteName);
 			}
@@ -103,14 +108,45 @@ namespace nero
 		{
 			sf::IntRect spriteBound = sf::IntRect(0, 0, texture->getSize().x, texture->getSize().y);
 
-			addSpriteBound(textureName, textureName, spriteBound);
-			m_SpriteTable.push_back(textureName);
+			spriteMap[textureName][textureName] = spriteBound;
+			spriteTable.push_back(textureName);
+
+			//addSpriteBound(textureName, textureName, spriteBound);
+			//m_SpriteTable.push_back(textureName);
 
 			nero_log("loaded : " + textureName);
 		}
 
 		//Insert the texture in m_TextureMap
-		addTexture(textureName, std::move(texture));
+		bool added =  addTexture(textureName, std::move(texture));
+
+		if(!added)
+			return false;
+
+		addSpriteBound(spriteMap);
+		addSprite(spriteTable);
+
+		return true;
+	}
+
+	void TextureHolder::addSpriteBound(std::map<std::string, std::map<std::string, sf::IntRect>> spriteMap)
+	{
+		for (auto const& entry : spriteMap)
+		{
+			m_SpriteMap[entry.first] = entry.second;
+			/*for (auto const& bound : entry.second)
+			{
+				m_SpriteMap[entry.first][bound.first] = bound.second;
+			}*/
+		}
+	}
+
+	void TextureHolder::addSprite(std::vector<std::string> spriteTable)
+	{
+		for(const std::string sprite : spriteTable)
+		{
+			m_SpriteTable.push_back(sprite);
+		}
 	}
 
 	void TextureHolder::loadDirectory()
@@ -147,14 +183,17 @@ namespace nero
         }
     }
 
-    void TextureHolder::addTexture(std::string textureName, std::unique_ptr<sf::Texture> texture)
+	bool TextureHolder::addTexture(std::string textureName, std::unique_ptr<sf::Texture> texture)
     {
         auto inserted = m_TextureMap.insert(std::make_pair(textureName, std::move(texture)));
 
         if(!inserted.second)
         {
             nero_log("failed to store texture " + textureName);
+			return false;
         }
+
+		return true;
     }
 
     void TextureHolder::addSpriteBound(std::string textureName, std::string spriteName, sf::IntRect spriteBound)

@@ -31,7 +31,7 @@ namespace nero
 			virtual							   ~TextureHolder() override;
 
 			virtual void						loadDirectory() override;
-			virtual void						loadFile(const std::string& file) override;
+			virtual bool						loadFile(const std::string& file) override;
 			virtual void						destroy() override;
 			virtual void						clear() override;
 
@@ -48,8 +48,10 @@ namespace nero
 
 
         private:
-            void                                addTexture(std::string textureId, std::unique_ptr<sf::Texture> texture);
-            void                                addSpriteBound(std::string textureId, std::string spriteId, sf::IntRect spriteRect);
+			bool                                addTexture(std::string textureId, std::unique_ptr<sf::Texture> texture);
+			void                                addSpriteBound(std::string textureId, std::string spriteId, sf::IntRect spriteRect);
+			void                                addSpriteBound(std::map<std::string, std::map<std::string, sf::IntRect>> spriteMap);
+			void								addSprite(std::vector<std::string> spriteTable);
 
         private:
             std::map<std::string, std::unique_ptr<sf::Texture>>	            m_TextureMap;

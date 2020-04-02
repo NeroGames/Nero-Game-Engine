@@ -31,7 +31,7 @@ namespace nero
 			virtual							   ~AnimationHolder()					override;
 
 			virtual void						loadDirectory()						override;
-			virtual void						loadFile(const std::string& file)	override;
+			virtual bool						loadFile(const std::string& file)	override;
 			virtual void						destroy()							override;
 			virtual void						clear() override;
 
@@ -47,7 +47,7 @@ namespace nero
 
 
         private:
-            void        addTexture(std::string name, std::unique_ptr<sf::Texture> texture);
+			bool        addTexture(std::string name, std::unique_ptr<sf::Texture> texture);
 
 
         private:

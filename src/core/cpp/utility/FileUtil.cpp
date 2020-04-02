@@ -253,11 +253,24 @@ namespace nero
 		return getPath({path.string()});
 	}
 
-	std::string getFileName(const std::string& filename)
+	std::string getFileName(const std::string& filename, bool withExtension)
 	{
 		std::experimental::filesystem::path path(filename);
 
+		if(withExtension)
+		{
+			return path.filename().string();
+		}
+
 		return path.filename().stem().string();
+	}
+
+	bool copyFile(const std::string& source, const std::string& destination)
+	{
+		std::ifstream  sourceStream(source, std::ios::binary);
+		std::ofstream  destinationStream(destination,   std::ios::binary);
+
+		destinationStream << sourceStream.rdbuf();
 	}
 }
 

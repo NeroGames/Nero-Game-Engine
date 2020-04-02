@@ -2952,8 +2952,12 @@ namespace  nero
 								fileTable.push_back(toString(path));
 							}
 
-							m_ResourceManager->loadFile(m_ResourceBrowserType, fileTable);
-							saveResourceFile(m_ResourceBrowserType, fileTable);
+							const std::vector<std::string> loadedFileTable = m_ResourceManager->loadFile(m_ResourceBrowserType, fileTable);
+
+							if(!loadedFileTable.empty())
+							{
+								saveResourceFile(m_ResourceBrowserType, loadedFileTable);
+							}
 
 							NFD_PathSet_Free(&pathSet);
 						}
@@ -3014,16 +3018,22 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::saveResourceFile(ResourceType type, const std::vector<std::string> fileTable)
+	void EditorInterface::saveResourceFile(ResourceType type, const std::vector<std::string> loadedFileTable)
 	{
 		switch (m_ResourceBrowserType)
 		{
 			case ResourceType::Texture:
 			{
 				//copy texture file and json helper
-				for(std::string file : fileTable)
+				for(std::string file : loadedFileTable)
 				{
-					//copyFile(file, m_GameProject->getWorkspaceResourceFoler() + "Texture" + "filename")
+					copyFile(file, getPath({m_GameProject->getResourceFoler(), "texture", getFileName(file, true)}));
+
+					std::string jsonHelper  = replaceFileExtension(file, "json");
+					if(fileExist(jsonHelper))
+					{
+						copyFile(file, getPath({m_GameProject->getResourceFoler(), "texture", getFileName(jsonHelper, true)}));
+					}
 				}
 
 			}break;
@@ -3031,24 +3041,52 @@ namespace  nero
 			case ResourceType::Animation:
 			{
 				//copy texture file and json helper
+				for(std::string file : loadedFileTable)
+				{
+					copyFile(file, getPath({m_GameProject->getResourceFoler(), "animation", getFileName(file, true)}));
+
+					std::string jsonHelper  = replaceFileExtension(file, "json");
+					if(fileExist(jsonHelper))
+					{
+						copyFile(file, getPath({m_GameProject->getResourceFoler(), "animation", getFileName(jsonHelper, true)}));
+					}
+				}
 
 			}break;
 
 			case ResourceType::Font:
 			{
-				//copy font file and json helper
+				for(std::string file : loadedFileTable)
+				{
+					copyFile(file, getPath({m_GameProject->getResourceFoler(), "font", getFileName(file, true)}));
+				}
 
 			}break;
 
 			case ResourceType::Sound:
 			{
-				//copy sound file and json helper
+				for(std::string file : loadedFileTable)
+				{
+					copyFile(file, getPath({m_GameProject->getResourceFoler(), "sound", getFileName(file, true)}));
+				}
 
 			}break;
 
 			case ResourceType::Music:
 			{
-				//copy music file and json helper
+				for(std::string file : loadedFileTable)
+				{
+					copyFile(file, getPath({m_GameProject->getResourceFoler(), "music", getFileName(file, true)}));
+				}
+
+			}break;
+
+			case ResourceType::Lightmap:
+			{
+				for(std::string file : loadedFileTable)
+				{
+					copyFile(file, getPath({m_GameProject->getResourceFoler(), "lightmap", getFileName(file, true)}));
+				}
 
 			}break;
 		}

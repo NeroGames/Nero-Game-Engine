@@ -293,7 +293,7 @@ namespace nero
 			void showCanvasMenu();
 
 			std::string m_SelectedChunkNode;
-			void saveResourceFile(ResourceType type, const std::vector<std::string> fileTable);
+			void saveResourceFile(ResourceType type, const std::vector<std::string> loadedFileTable);
 
 			void onSaveProject();
 			void onLoadProject();

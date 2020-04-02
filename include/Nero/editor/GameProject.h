@@ -60,6 +60,8 @@ namespace nero
 			ResourceManager::Ptr				getResourceManager();
 			void								loadResource(const Parameter& parameter);
 
+			const std::string					getResourceFoler() const;
+
 
 		private:
 			BackgroundTask&						createBackgroundTask(const std::string& name, const std::string& category);

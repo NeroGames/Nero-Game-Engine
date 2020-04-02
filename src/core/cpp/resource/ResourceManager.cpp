@@ -78,72 +78,86 @@ namespace nero
 		//m_ShaderHolder->loadDirectory(getPath({directory, "shader"}));
 	}
 
-	void ResourceManager::loadFile(ResourceType type, const std::string& file)
+	bool ResourceManager::loadFile(ResourceType type, const std::string& file)
 	{
 		switch (type)
 		{
 			case ResourceType::Texture:
 			{
-				m_TextureHolder->loadFile(file);
-			}break;
+				return m_TextureHolder->loadFile(file);
+			}
 
 			case ResourceType::Animation:
 			{
-				m_AnimationHolder->loadFile(file);
-			}break;
+				return m_AnimationHolder->loadFile(file);
+			}
 
 			case ResourceType::Font:
 			{
-				m_FontHolder->loadFile(file);
-			}break;
+				return m_FontHolder->loadFile(file);
+			}
 
 			case ResourceType::Sound:
 			{
-				m_SoundHolder->loadFile(file);
-			}break;
+				return m_SoundHolder->loadFile(file);
+			}
 
 			case ResourceType::Music:
 			{
-				m_MusicHolder->loadFile(file);
-			}break;
+				return m_MusicHolder->loadFile(file);
+			}
 
 			case ResourceType::Lightmap:
 			{
-				m_LightmapHolder->loadFile(file);
-				m_LightmapHolder->smoothAllTexture();
-			}break;
+				bool added = m_LightmapHolder->loadFile(file);
+				if(added)
+				{
+					m_LightmapHolder->smoothAllTexture();
+				}
+
+				return added;
+			}
 		}
+
+		return false;
 	}
 
-	void ResourceManager::loadFile(ResourceType type, const std::vector<std::string> fileTable)
+	const std::vector<std::string> ResourceManager::loadFile(ResourceType type, const std::vector<std::string> fileTable)
 	{
 		switch (type)
 		{
 			case ResourceType::Texture:
 			{
-				m_TextureHolder->loadFile(fileTable);
-			}break;
+				return m_TextureHolder->loadFile(fileTable);
+			}
 
 			case ResourceType::Animation:
 			{
-				m_AnimationHolder->loadFile(fileTable);
-			}break;
+				return m_AnimationHolder->loadFile(fileTable);
+			}
 
 			case ResourceType::Font:
 			{
-				m_FontHolder->loadFile(fileTable);
-			}break;
+				return m_FontHolder->loadFile(fileTable);
+			}
 
 			case ResourceType::Sound:
 			{
-				m_SoundHolder->loadFile(fileTable);
-			}break;
+				return m_SoundHolder->loadFile(fileTable);
+			}
 
 			case ResourceType::Music:
 			{
-				m_MusicHolder->loadFile(fileTable);
-			}break;
+				return m_MusicHolder->loadFile(fileTable);
+			}
+
+			case ResourceType::Lightmap:
+			{
+				return m_LightmapHolder->loadFile(fileTable);
+			}
 		}
+
+		return std::vector<std::string>();
 	}
 
 

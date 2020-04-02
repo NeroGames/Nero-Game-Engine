@@ -30,10 +30,10 @@ namespace nero
 
 			void						setSetting(const Setting& setting);
 
-			void						loadDirectory(const std::string& directory);
-			void						loadFile(ResourceType type, const std::string& file);
-			void						loadFile(ResourceType type, const std::vector<std::string> fileTable);
-			void						loadRequired(const nlohmann::json& requiredResource);
+			void										loadDirectory(const std::string& directory);
+			bool										loadFile(ResourceType type, const std::string& file);
+			const std::vector<std::string>				loadFile(ResourceType type, const std::vector<std::string> fileTable);
+			void										loadRequired(const nlohmann::json& requiredResource);
 
 			//void						loadDirectory();
 			//void						addDirectory(const Setting& setting, bool autoSelect = false);

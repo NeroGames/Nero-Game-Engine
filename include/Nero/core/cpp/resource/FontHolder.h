@@ -29,7 +29,7 @@ namespace nero
 			virtual							   ~FontHolder()						override;
 
 			virtual void						loadDirectory()						override;
-			virtual void						loadFile(const std::string& file)	override;
+			virtual bool						loadFile(const std::string& file)	override;
 			virtual void						destroy()							override;
 			virtual void						clear() override;
 
@@ -40,7 +40,7 @@ namespace nero
 			const std::vector<std::string>&		getFontTable()						const;
 
         private:
-			void								addFont(std::string name, std::unique_ptr<sf::Font> font);
+			bool								addFont(std::string name, std::unique_ptr<sf::Font> font);
 
         private:
             std::map<std::string, std::unique_ptr<sf::Font>>     m_FontMap;

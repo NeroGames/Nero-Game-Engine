@@ -518,5 +518,9 @@ namespace nero
 		saveFile(getPath({m_ProjectParameter.getString("source_directory"), "cpp", "script", class_name}, StringPool.EXTENSION_CPP_SOURCE), source_template);
 	}
 
+	const std::string GameProject::getResourceFoler() const
+	{
+		return getPath({m_ProjectParameter.getString("project_directory"), "Resource"});
+	}
 }
 

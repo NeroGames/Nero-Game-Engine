@@ -51,12 +51,18 @@ namespace nero
 		m_SelectedDirectory = directory;
 	}
 
-	void ResourceHolder::loadFile(const std::vector<std::string> fileTable)
+	const std::vector<std::string> ResourceHolder::loadFile(const std::vector<std::string> fileTable)
 	{
+		std::vector<std::string> loadedFileTable;
 		for(const std::string& file : fileTable)
 		{
-			loadFile(file);
+			if(loadFile(file))
+			{
+				loadedFileTable.push_back(file);
+			}
 		}
+
+		return loadedFileTable;
 	}
 
 	void ResourceHolder::loadDirectory(const std::string& directory)

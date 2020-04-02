@@ -22,7 +22,7 @@ namespace nero
     {
 		public: //utility
 			typedef std::shared_ptr<MusicHolder>    Ptr;
-			using ResourceHolder::loadDirectory;
+			using	ResourceHolder::loadDirectory;
 			using	ResourceHolder::loadFile;
 
         public:
@@ -31,14 +31,14 @@ namespace nero
 			virtual							   ~MusicHolder()						override;
 
 			virtual void						loadDirectory()						override;
-			virtual void						loadFile(const std::string& file)	override;
+			virtual bool						loadFile(const std::string& file)	override;
 			virtual void						destroy()							override;
 			virtual void						clear() override;
 
 
             void                                load();
             sf::Music&                          getMusic(std::string name);
-            void                                addMusic(const std::string& name, std::unique_ptr<sf::Music> music);
+			bool                                addMusic(const std::string& name, std::unique_ptr<sf::Music> music);
             const std::vector<std::string>&     getMusicTable() const;
 
         private:

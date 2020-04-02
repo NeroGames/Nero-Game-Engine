@@ -40,7 +40,7 @@ namespace nero
     bool fileExist(const std::string& name);
 
 	//get directory or file name
-	std::string getFileName(const std::string& name);
+	std::string getFileName(const std::string& name, bool withExtension = false);
 
     //check if a directory exist
     bool directoryExist(const std::string& name);
@@ -69,7 +69,8 @@ namespace nero
 
 	std::string getParentDirectory(const std::string& directory, const int& level = 1);
 
-
+	//remove file
+	bool copyFile(const std::string& source, const std::string& destination);
 }
 
 
