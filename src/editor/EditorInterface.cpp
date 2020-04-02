@@ -971,8 +971,14 @@ namespace  nero
 		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5.f, 6.f));
-		ImGui::BeginChild("tool_bar_button", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_AlwaysUseWindowPadding);
-
+		if(!scrollToolbar)
+			ImGui::BeginChild("tool_bar_button", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_AlwaysUseWindowPadding);
+		else
+		{
+			ImGui::SetNextWindowContentWidth(EditorConstant.WINDOW_TOOLBAR_MIN_WIDTH);
+			ImGui::BeginChild("tool_bar_button", ImVec2(content_region_width-67.f, 0.f), false, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoScrollbar |ImGuiWindowFlags_ScrollToolbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysUseWindowPadding);
+			mToolbarWindow = ImGui::GetCurrentWindow();
+		}
 			pushToolbarStyle();
 
 			showToolbarLeft(scrollToolbar);
@@ -1007,37 +1013,51 @@ namespace  nero
 	{
 		ImGui::SameLine();
 
-		if(m_EditorMode != EditorMode::WORLD_BUILDER && m_GameProject)
+		if(m_EditorMode == EditorMode::WORLD_BUILDER && m_GameProject)
 		{
-			if(ImGui::Button(ICON_FA_GAMEPAD " World", ImVec2(95.f, 28.f)))
-			{
-				m_EditorMode = EditorMode::WORLD_BUILDER;
-				ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
-			}
+			showToolbarScreenButton();
+			showToolbarFactoryButton();
+		}
+		else if(m_EditorMode == EditorMode::SCREEN_BUILDER && m_GameProject)
+		{
+			showToolbarWorldButton();
+			showToolbarFactoryButton();
+		}
+		else if(m_EditorMode == EditorMode::OBJECT_BUILDER && m_GameProject)
+		{
+			showToolbarScreenButton();
+			showToolbarWorldButton();
+		}
+	}
 
-			ImGui::SameLine();
+	void EditorInterface::showToolbarWorldButton()
+	{
+		if(ImGui::Button(ICON_FA_GLOBE_AFRICA " World", ImVec2(105.f, 28.f)))
+		{
+			m_EditorMode = EditorMode::WORLD_BUILDER;
+			ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
 		}
 
+		ImGui::SameLine();
+	}
 
-		if(m_EditorMode != EditorMode::SCREEN_BUILDER && m_GameProject)
+	void EditorInterface::showToolbarScreenButton()
+	{
+		if(ImGui::Button(ICON_FA_SQUARE " Screen", ImVec2(105.f, 28.f)))
 		{
-			if(ImGui::Button(ICON_FA_SQUARE " Screen", ImVec2(95.f, 28.f)))
-			{
-				m_EditorMode = EditorMode::SCREEN_BUILDER;
-				ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
-			}
-
-			ImGui::SameLine();
+			m_EditorMode = EditorMode::SCREEN_BUILDER;
+			ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
 		}
 
+		ImGui::SameLine();
+	}
 
-		if(m_EditorMode != EditorMode::OBJECT_BUILDER && m_GameProject)
+	void EditorInterface::showToolbarFactoryButton()
+	{
+		if(ImGui::Button(ICON_FA_WAREHOUSE " Factory", ImVec2(105.f, 28.f)))
 		{
-			if(ImGui::Button(ICON_FA_WAREHOUSE " Factory", ImVec2(105.f, 28.f)))
-			{
-				m_EditorMode = EditorMode::OBJECT_BUILDER;
-				ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
-			}
+			m_EditorMode = EditorMode::OBJECT_BUILDER;
+			ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
 		}
 	}
 
@@ -1085,7 +1105,67 @@ namespace  nero
 
 	void EditorInterface::showToolbarMiddle(bool scrollToolbar)
 	{
+		if(m_GameProject)
+		{
+			float offSet = ImGui::GetWindowContentRegionWidth();
+			offSet = (offSet - (45 * 7.f + 8.f * 6.f))/2.f;
 
+			ImGui::SameLine(offSet);
+
+			//undo
+			if(ImGui::Button(ICON_FA_UNDO_ALT, ImVec2(45.f, 28.f)))
+			{
+
+			}
+
+			ImGui::SameLine();
+
+			//play
+			if(ImGui::Button(ICON_FA_PLAY, ImVec2(45.f, 28.f)))
+			{
+
+			}
+
+			ImGui::SameLine();
+
+			//pause
+			if(ImGui::Button(ICON_FA_PAUSE, ImVec2(45.f, 28.f)))
+			{
+
+			}
+
+			ImGui::SameLine();
+
+			//step
+			if(ImGui::Button(ICON_FA_STEP_FORWARD, ImVec2(45.f, 28.f)))
+			{
+
+			}
+
+			ImGui::SameLine();
+
+			//reset
+			if(ImGui::Button(ICON_FA_CIRCLE, ImVec2(45.f, 28.f)))
+			{
+
+			}
+
+			ImGui::SameLine();
+
+			//render
+			if(ImGui::Button(ICON_FA_GAMEPAD, ImVec2(45.f, 28.f)))
+			{
+
+			}
+
+			ImGui::SameLine();
+
+			//redo
+			if(ImGui::Button(ICON_FA_REDO_ALT, ImVec2(45.f, 28.f)))
+			{
+
+			}
+		}
 	}
 
 

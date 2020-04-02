@@ -108,6 +108,9 @@ namespace nero
 			void											showToolbarMiddle(bool scrollToolbar);
 			void											showToolbarRight(bool scrollToolbar);
 			void											handleMenuBarFileAction();
+			void											showToolbarWorldButton();
+			void											showToolbarScreenButton();
+			void											showToolbarFactoryButton();
 			//////////////Workspace
 			WorkspaceInput									m_WorkspaceInput;
 			void											createWorkspace(const Parameter& parameter);
