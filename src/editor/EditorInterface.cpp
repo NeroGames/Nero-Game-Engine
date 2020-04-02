@@ -975,35 +975,11 @@ namespace  nero
 		pushToolbarStyle();
 
 
+			showToolbarLeft(scrollToolbar);
 
-			float rightOffset = 95.f + 45.f * 3.f + 8.f * 3.f;
-			ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - rightOffset);
+			showToolbarMiddle(scrollToolbar);
 
-			if(ImGui::Button(ICON_FA_EDIT, ImVec2(45.f, 28.f)))
-			{
-
-			}
-
-			ImGui::SameLine();
-
-			if(ImGui::Button(ICON_FA_COGS, ImVec2(45.f, 28.f)))
-			{
-
-			}
-
-			ImGui::SameLine();
-
-			if(ImGui::Button(ICON_FA_SYNC, ImVec2(45.f, 28.f)))
-			{
-
-			}
-
-			ImGui::SameLine();
-
-			if(ImGui::Button(ICON_FA_ANCHOR " Project", ImVec2(95.f, 28.f)))
-			{
-				ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-			}
+			showToolbarRight(scrollToolbar);
 
 		popToolbarStyle();
 		ImGui::EndChild();
@@ -1018,6 +994,69 @@ namespace  nero
 		ImGui::End();
 		ImGui::PopStyleVar();
 	}
+
+	void EditorInterface::showToolbarLeft(bool scrollToolbar)
+	{
+		ImGui::SameLine();
+
+		if(ImGui::Button(ICON_FA_GAMEPAD " World", ImVec2(95.f, 28.f)))
+		{
+
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button(ICON_FA_SQUARE " Screen", ImVec2(95.f, 28.f)))
+		{
+
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button(ICON_FA_WAREHOUSE " Factory", ImVec2(105.f, 28.f)))
+		{
+
+		}
+	}
+
+	void EditorInterface::showToolbarRight(bool scrollToolbar)
+	{
+		float rightOffset = 95.f + 45.f * 3.f + 8.f * 3.f;
+		ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - rightOffset);
+
+		if(ImGui::Button(ICON_FA_EDIT, ImVec2(45.f, 28.f)))
+		{
+
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button(ICON_FA_COGS, ImVec2(45.f, 28.f)))
+		{
+
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button(ICON_FA_SYNC, ImVec2(45.f, 28.f)))
+		{
+
+		}
+
+		ImGui::SameLine();
+
+		if(ImGui::Button(ICON_FA_ANCHOR " Project", ImVec2(95.f, 28.f)))
+		{
+			ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+		}
+	}
+
+	void EditorInterface::showToolbarMiddle(bool scrollToolbar)
+	{
+
+	}
+
+
 
 	void EditorInterface::showToolbarScrollLeft()
 	{
