@@ -48,6 +48,50 @@ namespace nero
 		}
 
 		m_QuitEngine = [](){};
+
+		//TODO remve
+		//demo
+		Setting viewCenter;
+		viewCenter.setFloat("x", 0.f);
+		viewCenter.setFloat("y", 0.f);
+		Setting gravity;
+		gravity.setFloat("x", 0.f);
+		gravity.setFloat("y", 9.8f);
+		m_LevelSetting = std::make_shared<Setting>();
+		m_LevelSetting->setSetting("gravity", gravity);
+		m_LevelSetting->setSetting("view_center", viewCenter);
+		m_LevelSetting->setFloat("time_step", 40.f);
+		m_LevelSetting->setUInt("velocity_iteration", 8);
+		m_LevelSetting->setUInt("position_iteration", 3);
+		//
+		m_LevelSetting->setBool("draw_axis", true);
+		m_LevelSetting->setBool("draw_grid", true);
+		m_LevelSetting->setBool("draw_shape", true);
+		m_LevelSetting->setBool("draw_joint", true);
+		m_LevelSetting->setBool("draw_aabb", false);
+		m_LevelSetting->setBool("draw_contact_point", false);
+		m_LevelSetting->setBool("draw_contact_normal", false);
+		m_LevelSetting->setBool("draw_contact_impulse", false);
+		m_LevelSetting->setBool("draw_friction_impulse", false);
+		m_LevelSetting->setBool("draw_center_of_mass", false);
+		m_LevelSetting->setBool("draw_statistic", false);
+		m_LevelSetting->setBool("draw_profile", false);
+		//
+		m_LevelSetting->setBool("enable_warm_starting", true);
+		m_LevelSetting->setBool("enable_continous", true);
+		m_LevelSetting->setBool("enable_sub_stepping", false);
+		m_LevelSetting->setBool("enable_sleep", true);
+		//
+		m_LevelSetting->setBool("pause_level", false);
+		m_LevelSetting->setBool("single_step", false);
+		//
+		m_LevelSetting->setBool("enable_lighting", true);
+		m_LevelSetting->setBool("lighting_on", true);
+
+		m_PhysicWorld = new b2World(b2Vec2(m_LevelSetting->getSetting("gravity").getFloat("x"),
+										   m_LevelSetting->getSetting("gravity").getFloat("y")));
+		m_PhysicWorld->SetContactListener(this);
+		m_PhysicWorld->SetDebugDraw(&m_ShapeRenderer);
 	}
 
 	Scene::~Scene()
@@ -149,6 +193,8 @@ namespace nero
 
 	void Scene::render()
 	{
+		return;
+
 		auto gameLevel = m_GameWorld->getAllChild()->front();
 
 		auto chunkTable = gameLevel->getAllChild();
@@ -227,6 +273,8 @@ namespace nero
 
 	void Scene::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 	{
+		return;
+
 		const b2Manifold* manifold = contact->GetManifold();
 
 		if (manifold->pointCount == 0)
@@ -280,6 +328,7 @@ namespace nero
 
 	void Scene::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
 	{
+		return;
 		/*Collision collision(contact, nullptr, impulse);
 
 		int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
@@ -303,6 +352,7 @@ namespace nero
 
 	void Scene::BeginContact(b2Contact* contact)
 	{
+		return;
 		/*Collision collision(contact, nullptr, nullptr);
 
 		int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
@@ -325,6 +375,7 @@ namespace nero
 
 	void Scene::EndContact(b2Contact* contact)
 	{
+		return;
 		/*Collision collision(contact, nullptr, nullptr);
 
 		int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
@@ -572,4 +623,10 @@ namespace nero
 	{
 		m_LightManager->render(*m_SceneContext.renderTexture);
 	}
+
+	ResourceManager::Ptr Scene::getResourceHolder()
+	{
+		return m_SceneContext.resourceManager;
+	}
+
 }

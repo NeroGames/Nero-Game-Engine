@@ -187,6 +187,20 @@ namespace  nero
 			m_AdvancedScene->handleEvent(event, m_EditorMode, m_BuilderMode);
 		}
 
+		//Demo
+		if(m_GameProject)
+		{
+			try
+			{
+				m_GameProject->handleEventDemo(event);
+			}
+			catch (std::exception e)
+			{
+				m_GameProject->destroyScene();
+			}
+		}
+
+
 		switch(event.type)
 		{
 			case sf::Event::Closed:
@@ -231,6 +245,20 @@ namespace  nero
 		if(m_AdvancedScene)
 		{
 			m_AdvancedScene->update(timeStep, m_EditorMode, m_BuilderMode);
+		}
+
+		//Demo
+		if(m_GameProject)
+		{
+			try
+			{
+				m_GameProject->updateDemo(timeStep);
+			}
+			catch (std::exception e)
+			{
+				m_GameProject->destroyScene();
+			}
+
 		}
     }
 
@@ -415,6 +443,21 @@ namespace  nero
 			if(m_AdvancedScene)
 			{
 				m_AdvancedScene->render(m_EditorMode, m_BuilderMode);
+			}
+
+			//Demo
+			if(m_GameProject)
+			{
+				try
+				{
+					m_GameProject->renderDemo();
+				}
+				catch(std::exception e)
+				{
+					m_GameProject->destroyScene();
+					nero_log("failed to render scene");
+					nero_log("please rebuild the scene")
+				}
 			}
 
 			//Render on Front Screen
@@ -1072,21 +1115,21 @@ namespace  nero
 		{
 			if(ImGui::Button(ICON_FA_EDIT, ImVec2(45.f, 28.f)))
 			{
-
+				editProject();
 			}
 
 			ImGui::SameLine();
 
 			if(ImGui::Button(ICON_FA_COGS, ImVec2(45.f, 28.f)))
 			{
-
+				compileProject();
 			}
 
 			ImGui::SameLine();
 
 			if(ImGui::Button(ICON_FA_SYNC, ImVec2(45.f, 28.f)))
 			{
-
+				reloadProject();
 			}
 
 			ImGui::SameLine();
@@ -2683,17 +2726,10 @@ namespace  nero
 
 	void EditorInterface::compileProject()
 	{
-		/*m_CompileProjectFuture = std::async(std::launch::async, [this]()
+		if(m_GameProject)
 		{
-			if(m_GameProject)
-			{
-				m_GameProject->compileProject();
-
-			}
-
-			return 0;
-		});*/
-
+			BTManager::startTask(&GameProject::compileProject, m_GameProject.get());
+		}
 	}
 
 	void EditorInterface::editProject()
@@ -2712,7 +2748,7 @@ namespace  nero
 		{
 			nero_log("reloading project ...");
 
-			m_GameProject->loadLibrary();
+			m_GameProject->loadLibraryDemo();
 
 		}
 	}
@@ -4234,8 +4270,9 @@ namespace  nero
 
 			for(BackgroundTask::Ptr task : taskTable)
 			{
+				//BTManager::pauseTask(task->getName(), std::chrono::milliseconds(1));
 				if(!task->isCompleted())
-				{
+				{					
 					ImGui::Text(task->printMessage().c_str());
 				}
 			}

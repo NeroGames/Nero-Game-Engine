@@ -124,6 +124,7 @@ namespace nero
 
 			Context&						getSceneContext();
 			RenderTexturePtr				getRenderTexture();
+			ResourceManager::Ptr			getResourceHolder();
 
 		private:
 			void							BeginContact(b2Contact* contact);
@@ -183,7 +184,7 @@ namespace nero
 			SceneBuilder::Ptr				m_SceneBuilder;
 			//
 			std::map<std::string, ResourceManager::Ptr> m_GameLevelResourceMap;
-
+			//
 	};
 }
 

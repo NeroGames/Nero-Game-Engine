@@ -23,6 +23,7 @@ namespace nero
 	{
 
 		nero_log("loading resource");
+		nero_log(m_EngineSetting->getSetting("resource").toString());
 		m_ResourceManager = ResourceManager::Ptr(new ResourceManager(m_EngineSetting->getSetting("resource")));
 
 		std::string resource_path = getPath({parameter.getString("project_directory"), "Resource"});
@@ -122,8 +123,6 @@ namespace nero
 
 			it++;
 		}
-
-
     }
 
 	AdvancedScene::GameLevelPtr GameProject::loadGameLevel(const nlohmann::json& level)
@@ -222,6 +221,9 @@ namespace nero
 
 	void GameProject::loadLibrary()
     {
+		loadLibraryDemo();
+		return;
+
 		nero_log(m_ProjectParameter.getString("library_file"));
 
 		if(!fileExist(m_ProjectParameter.getString("library_file")))
@@ -269,6 +271,64 @@ namespace nero
 			nero_log("loading failed");
 		}
     }
+
+	void GameProject::loadLibraryDemo()
+	{
+		nero_log(m_ProjectParameter.getString("library_file"));
+
+		if(!fileExist(m_ProjectParameter.getString("library_file")))
+		{
+			nero_log("no library to load");
+			return;
+		}
+
+
+		if(fileExist(m_ProjectParameter.getString("library_file_copy")))
+		{
+			m_DemoScene = nullptr;
+			m_CreateCppSceneFn.clear();
+
+		   removeFile(m_ProjectParameter.getString("library_file_copy"));
+		}
+
+
+		system(m_ProjectParameter.getString("copy_library_command").c_str());
+
+
+		boost::dll::fs::path library_path(removeFileExtension(m_ProjectParameter.getString("library_file_copy")));
+
+		try
+		{
+			boost::dll::shared_library lib(m_ProjectParameter.getString("library_file_copy"));
+
+			nero_log_if("project library loaded", lib.is_loaded());
+
+			m_CreateCppSceneFn.clear();
+
+			m_CreateCppSceneFn = boost::dll::import_alias<CreateCppSceneFn>(library_path, "createScene", boost::dll::load_mode::append_decorations);
+
+
+			if(!m_CreateCppSceneFn.empty())
+			{
+				m_DemoScene = m_CreateCppSceneFn(Scene::Context(
+					 m_ProjectParameter.getString("project_name"),
+					 m_RenderTexture,
+					 m_ResourceManager,
+					 m_Camera,
+					 m_EngineSetting,
+					 Scene::EngineType::EDITOR_ENGINE,
+					 Scene::PlatformType::WINDOWS));
+
+				m_DemoScene->init();
+			}
+
+
+		}
+		catch (std::exception e)
+		{
+			nero_log("loading failed");
+		}
+	}
 
     void GameProject::openEditor()
     {
@@ -368,37 +428,29 @@ namespace nero
         return result;
     }
 
-	void GameProject::compileProject(const BackgroundTask& backgroundTask)
-	{
-
-	}
-
-    void GameProject::compileProject()
+	void GameProject::compileProject(const BackgroundTask::Ptr backgroundTask)
     {
-		BackgroundTask& backgroundTask =  createBackgroundTask("Compile Project", "Game Project");
-
-		backgroundTask.setStatus(1);
-		backgroundTask.addMessage("Cleaning Project ...");
-		backgroundTask.setErrorCode(
+		backgroundTask->setStatus(1);
+		backgroundTask->addMessage("Cleaning Project ...");
+		backgroundTask->setErrorCode(
 					system(m_ProjectParameter.getString("clean_project_command").c_str()));
 
-		backgroundTask.setStatus(2);
-		backgroundTask.addMessage("Configuring Project ...");
-		backgroundTask.setErrorCode(
+		backgroundTask->setStatus(2);
+		backgroundTask->addMessage("Configuring Project ...");
+		backgroundTask->setErrorCode(
 					system(m_ProjectParameter.getString("configure_project_command").c_str()));
 
-		backgroundTask.setStatus(3);
-		backgroundTask.addMessage("Building Project ...");
-		backgroundTask.setErrorCode(
+		backgroundTask->setStatus(3);
+		backgroundTask->addMessage("Building Project ...");
+		backgroundTask->setErrorCode(
 					system(m_ProjectParameter.getString("build_project_command").c_str()));
 
-		backgroundTask.setStatus(4);
-		backgroundTask.addMessage("Compilation Completed !!");
+		backgroundTask->setStatus(4);
+		backgroundTask->addMessage("Compilation Completed !!");
 
 		std::this_thread::sleep_for(std::chrono::seconds(2));
 
-		backgroundTask.setCompleted(true);
-
+		backgroundTask->setCompleted(true);
     }
 
 	BackgroundTask& GameProject::createBackgroundTask(const std::string& name, const std::string& category)
@@ -459,6 +511,9 @@ namespace nero
 
 		nero_log("clearing resources");
 		m_ResourceManager->clearResource();
+
+		m_DemoScene = nullptr;
+		m_CreateCppSceneFn.clear();
 
 		//delete scene
 		//m_AdvancedScene->m_Scene = nullptr;
@@ -521,6 +576,37 @@ namespace nero
 	const std::string GameProject::getResourceFoler() const
 	{
 		return getPath({m_ProjectParameter.getString("project_directory"), "Resource"});
+	}
+
+	void GameProject::renderDemo()
+	{
+		if(m_DemoScene)
+		{
+			m_DemoScene->render();
+			m_DemoScene->renderShape();
+		}
+	}
+
+	void GameProject::handleEventDemo(const sf::Event& event)
+	{
+		if(m_DemoScene)
+		{
+			m_DemoScene->handleEvent(event);
+		}
+	}
+
+	void GameProject::updateDemo(const sf::Time& timestep)
+	{
+		if(m_DemoScene)
+		{
+			m_DemoScene->update(timestep);
+		}
+	}
+
+	void GameProject::destroyScene()
+	{
+		m_DemoScene = nullptr;
+		m_CreateCppSceneFn.clear();
 	}
 }
 

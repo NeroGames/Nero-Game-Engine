@@ -67,6 +67,7 @@ namespace nero
 
 	const sf::Font& FontHolder::getDefaultFont()  const
     {
+		nero_log(m_Setting.getString("default"));
 		return getFont(m_Setting.getString("default"));
     }
 

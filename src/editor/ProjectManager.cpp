@@ -540,7 +540,7 @@ namespace nero
 		nero_log("loading project");
 		//m_GameProject->loadProject();
 		nero_log("loading project library");
-		//m_GameProject->loadLibrary();
+		m_GameProject->loadLibraryDemo();
 		nero_log("openning editor");
 		m_GameProject->openEditor();
 

@@ -41,8 +41,8 @@ namespace nero
 			void								loadGameScreen();
 			void								loadLibrary();
 			void								openEditor();
-			void								compileProject();
-			void								compileProject(const BackgroundTask& backgroundTask);
+			//void								compileProject();
+			void								compileProject(const BackgroundTask::Ptr backgroundTask);
 
 			std::string							exec(const char* cmd);
 			AdvancedScene::Ptr					getAdvancedScene();
@@ -79,6 +79,15 @@ namespace nero
 			boost::function<CreateCppSceneFn>	m_CreateCppSceneFn;
 			//boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;
 
+			//TODO Remove
+		private:
+			Scene::Ptr							m_DemoScene;
+		public:
+			void								renderDemo();
+			void								loadLibraryDemo();
+			void								destroyScene();
+			void								handleEventDemo(const sf::Event& event);
+			void								updateDemo(const sf::Time& timestep);
     };
 }
 
