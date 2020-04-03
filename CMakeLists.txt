@@ -20,12 +20,21 @@ set(VERSION_MAJOR 2)
 set(VERSION_MINOR 0)
 set(VERSION_PATCH 0)
 
+
+# Output Directory
+#----------------------------------------------------------------------------------#
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # Compiler Configuration
 #----------------------------------------------------------------------------------#
 # Activate C++17
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CXX_STANDARD 17)
 set(CMAKE_REQUIRED_FLAGS -std=c++1z)
+# Remove console
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
 # Compile Option
 add_definitions(-lstdc++fs)
 add_definitions(-DBOOST_ALL_NO_LIB)
@@ -85,15 +94,14 @@ target_link_libraries(nerogame-core ${NERO_GAME_CORE_DEP})
 # Nero Game Renderer (Desktop)
 #----------------------------------------------------------------------------------#
 # Engine Renderer Source Files
-file(GLOB_RECURSE NERO_GAME_RENDERER_SRC
+file(GLOB_RECURSE NERO_GAME_RENDERER_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/renderer/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/renderer/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/resources.rc")
 # Dependencies
 set(NERO_GAME_RENDERER_DEP nerogame-core ${NERO_GAME_CORE_DEP})
 # Build Nero Game Renderer
-add_executable(EngineRenderer ${NERO_GAME_RENDERER_SRC})
-target_compile_options(EngineRenderer PRIVATE "-mwindows")
+add_executable(EngineRenderer ${NERO_GAME_RENDERER_SOURCES})
 target_link_libraries(EngineRenderer ${NERO_GAME_RENDERER_DEP})
 
 # Nero Game Editor (Desktop)
@@ -102,7 +110,6 @@ target_link_libraries(EngineRenderer ${NERO_GAME_RENDERER_DEP})
 file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/editor/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor/*"
-    #"${CMAKE_CURRENT_SOURCE_DIR}/library/fontawsome/*.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/IconFontCppHeaders/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/imgui/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/nativefiledialog/*"
@@ -110,10 +117,11 @@ file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/resources.rc")
 # Dependencies
 set(NERO_GAME_EDITOR_DEP nerogame-core ${NERO_GAME_CORE_DEP} comctl32.lib ${ZLIB_LIBS} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${HTTP_PARSER} ${LIBGIT2_LIBS} ${LUA_LIBS})
+#set(NO_CONSOLE -mwindows)
+#set(NO_CONSOLE WIN32)
 # Build Nero Game Editor
 add_executable(EngineEditor ${NERO_GAME_EDITOR_SOURCES})
 target_link_libraries(EngineEditor ${NERO_GAME_EDITOR_DEP})
-
 
 # Test Laboratory
 #----------------------------------------------------------------------------------#
