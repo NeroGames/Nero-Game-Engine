@@ -919,8 +919,28 @@ namespace  nero
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Tools"))
+		{
+			if(ImGui::MenuItem("Profiler", "Ctrl+Alt+P", nullptr))
+			{
 
-		if (ImGui::BeginMenu("Helps"))
+			}
+
+			if(ImGui::MenuItem("Texture Packer", "Ctrl+Alt+T", nullptr))
+			{
+
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Settings"))
+		{
+			ImGui::EndMenu();
+		}
+
+
+		if (ImGui::BeginMenu("Help"))
 		{
 			if(ImGui::MenuItem("Learn", "Alt+L", nullptr))
 			{
@@ -954,11 +974,10 @@ namespace  nero
 
 			}
 
-			if(ImGui::MenuItem("System Information", nullptr, nullptr))
+			if(ImGui::MenuItem("Check for Updates", nullptr, nullptr))
 			{
 
 			}
-
 
 			ImGui::EndMenu();
 		}

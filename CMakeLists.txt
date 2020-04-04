@@ -34,7 +34,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CXX_STANDARD 17)
 set(CMAKE_REQUIRED_FLAGS -std=c++1z)
 # Remove console
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
+#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
 # Compile Option
 add_definitions(-lstdc++fs)
 add_definitions(-DBOOST_ALL_NO_LIB)
@@ -75,20 +75,20 @@ set(CPP_FILESYSTEM "stdc++fs")
 # EASY_PROFILER
 set(EASY_PROFILER "-leasy_profiler.dll")
 # POCO
-#set(POCO "-lPocoRedis -lPocoPDF -lPocoCppParser -lPocoZip -lPocoDataSQLite -lPocoDataPostgreSQL -lPocoData -lpq -lPocoNetSSL -lPocoCrypto  -lPocoNet -lPocoUtil -lPocoXML -lPocoJSON -lPocoEncodings -lPocoFoundation -lexpat -liphlpapi -lssl -lcrypto -lzlibstatic -lws2_32")
-set(POCO "-lPocoRedis -lPocoPDF -lPocoCppParser -lPocoZip -lPocoDataSQLite -lPocoData -lPocoNetSSL -lPocoCrypto  -lPocoNet -lPocoUtil -lPocoXML -lPocoJSON -lPocoEncodings -lPocoFoundation -lexpat -liphlpapi -lssl -lcrypto -lzlibstatic -lws2_32")
+set(POCO_DEP "-liphlpapi -lcrypto -lssl -lexpat -lzlibstatic -lws2_32")
+set(POCO "-lPocoRedis -lPocoPDF -lPocoCppParser -lPocoZip -lPocoDataSQLite -lPocoData -lPocoNetSSL -lPocoCrypto -lPocoNet -lPocoUtil -lPocoJSON -lPocoXML -lPocoEncodings -lPocoFoundation ${POCO_DEP}")
 
 # Nero Game Core Library
 #----------------------------------------------------------------------------------#
 # Engine Core Library Source Files
-file(GLOB_RECURSE NERO_GAME_CORE_SRC
+file(GLOB_RECURSE NERO_GAME_CORE_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/core/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/ltbl/*")
 # Dependencies
 set(NERO_GAME_CORE_DEP ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2d_LIBS} ${EASY_PROFILER} ${POCO})
 # Build Nero Game Core
-add_library(nerogame-core ${NERO_GAME_CORE_SRC} )
+add_library(nerogame-core ${NERO_GAME_CORE_SOURCES} )
 target_link_libraries(nerogame-core ${NERO_GAME_CORE_DEP})
 
 # Nero Game Renderer (Desktop)
@@ -116,9 +116,7 @@ file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/library/nodeeditor/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/resources.rc")
 # Dependencies
-set(NERO_GAME_EDITOR_DEP nerogame-core ${NERO_GAME_CORE_DEP} comctl32.lib ${ZLIB_LIBS} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${HTTP_PARSER} ${LIBGIT2_LIBS} ${LUA_LIBS})
-#set(NO_CONSOLE -mwindows)
-#set(NO_CONSOLE WIN32)
+set(NERO_GAME_EDITOR_DEP nerogame-core ${NERO_GAME_CORE_DEP} comctl32.lib ${LIBGIT2_LIBS})
 # Build Nero Game Editor
 add_executable(EngineEditor ${NERO_GAME_EDITOR_SOURCES})
 target_link_libraries(EngineEditor ${NERO_GAME_EDITOR_DEP})
@@ -126,12 +124,12 @@ target_link_libraries(EngineEditor ${NERO_GAME_EDITOR_DEP})
 # Test Laboratory
 #----------------------------------------------------------------------------------#
 # Engine Renderer Source Files
-file(GLOB_RECURSE TEST_LABORATORY_SRC
+file(GLOB_RECURSE TEST_LABORATORY_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/testlab/*")
 # Dependencies
 set(TEST_LABORATORY_DEP nerogame-core ${NERO_GAME_CORE_DEP})
 # Build Test Laboratory
-add_executable(TestLab ${TEST_LABORATORY_SRC})
+add_executable(TestLab ${TEST_LABORATORY_SOURCES})
 target_link_libraries(TestLab ${TEST_LABORATORY_DEP})
 
 # Doxygen Documentation
