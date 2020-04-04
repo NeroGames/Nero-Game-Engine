@@ -9,10 +9,12 @@
 #include <Nero/core/cpp/engine/DownloadManager.h>
 //Cpp
 #include <fstream>
+#include <future>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	DownloadManager::DownloadManager()
+	DownloadManager::DownloadManager():
+		m_FutureMap()
 	{
 		Poco::Net::initializeNetwork();
 		Poco::Net::initializeSSL();
@@ -33,29 +35,56 @@ namespace nero
 
 	}
 
-	void DownloadManager::downloadFile(const std::string& fileUrl, const std::string& destinationFile)
+	DownloadProgress::Ptr DownloadManager::downloadFile(const std::string& fileUrl, const std::string& destinationFile)
 	{
-		/*try
+		nero_log("creating download progress object");
+		DownloadProgress::Ptr downloadProgress =  std::make_shared<DownloadProgress>();
+
+		try
 		{
-			Poco::URI uri(fileUrl);
 
-			std::auto_ptr<std::istream> pStr(Poco::URIStreamOpener::defaultOpener().open(uri));
-
-			pStr->seekg(0, std::ios::end);
-			unsigned int uiLength = pStr->tellg();
-
-			nero_log(nero_ss(uiLength));
-
-			//std::ofstream file(destinationFile, std::ofstream::binary);
-
-			//std::streamsize size =  Poco::StreamCopier::copyStream(*pStr.get(), file);
-
-			//file.close();
 		}
 		catch (Poco::Exception& exc)
 		{
+			downloadProgress->m_Downloading = false;
 			nero_log(exc.displayText(), nero::LOG_ERROR);
-		}//*/
+		}
+
+		nero_log("retrieving download size");
+		float downloadSize = getFileSize(fileUrl);
+
+		nero_log("download size = " + getPrettyString(downloadSize));
+
+		if(downloadSize > 0.f)
+		{
+
+		}
+
+		//download on another thread
+		nero_log("download ...");
+		downloadProgress->m_Downloading = true;
+		downloadProgress->m_DownloadSize = downloadSize;
+		my_Future = std::async(std::launch::async, [&](DownloadProgress::Ptr& downloadProgress)
+		{
+			nero_log("preparing download stream");
+
+			Poco::URI uri(fileUrl);
+			std::unique_ptr<std::istream> pStr(Poco::URIStreamOpener::defaultOpener().open(uri));
+
+			nero_log("initializing download progess object");
+
+			downloadProgress->m_DownloadStream = std::make_shared<std::ofstream>(destinationFile, std::ofstream::binary);
+
+			downloadProgress->m_Ready = true;
+			std::streamsize size =  Poco::StreamCopier::copyStream(*pStr.get(), *downloadProgress->m_DownloadStream);
+			downloadProgress->m_DownloadStream->close();
+			downloadProgress->m_Downloading = false;
+			return 0;
+
+		}, std::ref(downloadProgress));
+
+
+		return downloadProgress;
 	}
 
 	void DownloadManager::downloadFile(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
@@ -80,14 +109,7 @@ namespace nero
 			session.receiveResponse(response);
 			if (response.getStatus() != Poco::Net::HTTPResponse::HTTP_UNAUTHORIZED)
 			{
-				if(response.getStatus() ==  Poco::Net::HTTPResponse::HTTP_FOUND)
-				{
-					std::string redirectUrl = response.get("Location");
-					return getFileSize(redirectUrl);
-				}
-
-				std::streamsize result = response.getContentLength();
-				return static_cast<float>(result);
+				return static_cast<float>(response.getContentLength());
 			}
 			else
 			{
