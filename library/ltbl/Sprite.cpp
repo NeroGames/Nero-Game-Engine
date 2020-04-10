@@ -1,4 +1,4 @@
-#include "Sprite.hpp"
+#include <ltbl/Sprite.hpp>
 
 namespace ltbl
 {

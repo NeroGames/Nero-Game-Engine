@@ -1,4 +1,4 @@
-#include "LightShape.hpp"
+#include <ltbl/LightShape.hpp>
 
 namespace ltbl
 {

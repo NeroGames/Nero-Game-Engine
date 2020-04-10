@@ -1,4 +1,4 @@
-#include "LightSystem.hpp"
+#include <ltbl/LightSystem.hpp>
 
 namespace ltbl
 {

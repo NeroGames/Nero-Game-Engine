@@ -1,4 +1,4 @@
-#include "LightPointEmission.hpp"
+#include <ltbl/LightPointEmission.hpp>
 
 namespace ltbl
 {

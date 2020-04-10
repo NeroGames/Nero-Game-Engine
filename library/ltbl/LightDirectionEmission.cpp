@@ -1,4 +1,4 @@
-#include "LightDirectionEmission.hpp"
+#include <ltbl/LightDirectionEmission.hpp>
 
 namespace ltbl
 {

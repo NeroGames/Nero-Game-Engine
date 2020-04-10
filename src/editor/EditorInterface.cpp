@@ -14,7 +14,7 @@
 #include <Nero/core/cpp/engine/BackgroundTaskManager.h>
 #include <functional>
 #include <vector>
-#include <IconFontCppHeaders/IconsFontAwesome5.h>
+#include <iconfont/IconsFontAwesome5.h>
 #include <easy/profiler.h>
 #include <exception>
 #include <csignal>
