@@ -24,7 +24,15 @@ set(VERSION_PATCH 0)
 # Environment Variable
 #----------------------------------------------------------------------------------#
 set(NERO_GAME_HOME $ENV{NERO_GAME_HOME})
-message("${NERO_GAME_HOME}")
+#[[
+    Nero Game Home Directory Structure
+
+    Nero Game Engien r2.0.0 <--- [Home]
+        Editor
+        Library
+        NGCore
+        Tools
+#]]
 
 # Cmake Module
 #----------------------------------------------------------------------------------#
@@ -57,9 +65,10 @@ add_definitions(-DNERO_GAME_DEBUG)
 # Make Include Files Visible
 include_directories ("include")
 include_directories("library")
-include_directories("../../Library/include")
+include_directories("${NERO_GAME_HOME}/Library/include")
 # Make Libraries Visible
-link_directories("../../Library/lib" "../../Library/bin")
+link_directories("${NERO_GAME_HOME}/Library/lib")
+link_directories("${NERO_GAME_HOME}/Library/bin")
 # Find OpenGL
 find_package(OpenGL)
 # SFML
@@ -134,6 +143,13 @@ set(NERO_GAME_EDITOR_DEP nerogame-core ${NERO_GAME_CORE_DEP} comctl32.lib ${LIBG
 # Build Nero Game Editor
 add_executable(GameEditor ${NERO_GAME_EDITOR_SOURCES})
 target_link_libraries(GameEditor ${NERO_GAME_EDITOR_DEP})
+
+# Install Nero Game Editor
+#----------------------------------------------------------------------------------#
+add_custom_command(TARGET nerogame-core
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E remove_directory    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/template"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory      "${CMAKE_SOURCE_DIR}/template" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/template")
 
 # Test Laboratory
 #----------------------------------------------------------------------------------#
