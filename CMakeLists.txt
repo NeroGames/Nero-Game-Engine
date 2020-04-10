@@ -95,6 +95,16 @@ set(NERO_GAME_CORE_DEP ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILES
 add_library(nerogame-core ${NERO_GAME_CORE_SOURCES} )
 target_link_libraries(nerogame-core ${NERO_GAME_CORE_DEP})
 
+# Install Nero Game Core Library
+#----------------------------------------------------------------------------------#
+add_custom_command(TARGET nerogame-core
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E remove_directory    "${NERO_GAME_HOME}/NGCore/include/Nero/core"
+        COMMAND ${CMAKE_COMMAND} -E make_directory      "${NERO_GAME_HOME}/NGCore/include/Nero/core"
+        COMMAND ${CMAKE_COMMAND} -E make_directory      "${NERO_GAME_HOME}/NGCore/lib/"
+        COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:nerogame-core>" "${NERO_GAME_HOME}/NGCore/lib/"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/include/Nero/core" "${NERO_GAME_HOME}/NGCore/include/Nero/core")
+
 # Nero Game Render Engine (Desktop)
 #----------------------------------------------------------------------------------#
 # Render Engine Source Files
@@ -114,7 +124,7 @@ target_link_libraries(RenderEngine ${NERO_GAME_RENDERER_DEP})
 file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/editor/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor/*"
-    "${CMAKE_CURRENT_SOURCE_DIR}/library/IconFontCppHeaders/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/iconfont/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/imgui/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/nativefiledialog/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/nodeeditor/*"
@@ -158,5 +168,3 @@ if (DOXYGEN_FOUND)
 else (DOXYGEN_FOUND)
   message("Doxygen need to be installed to generate the doxygen documentation")
 endif (DOXYGEN_FOUND)
-
-

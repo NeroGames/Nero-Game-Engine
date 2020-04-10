@@ -49,3 +49,6 @@ MyScene -> nero::LuaScene
     Game Level
     World Junck
 
+- http://www.mcternan.me.uk/mscgen/
+- https://graphviz.org/
+- http://www.doxygen.nl/manual/diagrams.html
