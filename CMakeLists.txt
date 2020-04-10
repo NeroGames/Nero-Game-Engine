@@ -1,4 +1,5 @@
-# Cmake version
+# Cmake Version
+#----------------------------------------------------------------------------------#
 cmake_minimum_required(VERSION 3.15)
 
 # Utility
@@ -15,11 +16,19 @@ endmacro()
 #----------------------------------------------------------------------------------#
 # Project Name
 project("Nero Game Engine 2")
-# Project version
+# Project Version
 set(VERSION_MAJOR 2)
 set(VERSION_MINOR 0)
 set(VERSION_PATCH 0)
 
+# Environment Variable
+#----------------------------------------------------------------------------------#
+set(NERO_GAME_HOME $ENV{NERO_GAME_HOME})
+message("${NERO_GAME_HOME}")
+
+# Cmake Module
+#----------------------------------------------------------------------------------#
+set(CMAKE_MODULE_PATH "${NERO_GAME_HOME}/Tools/Cmake/share/cmake-3.17/Modules")
 
 # Output Directory
 #----------------------------------------------------------------------------------#
@@ -33,8 +42,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CXX_STANDARD 17)
 set(CMAKE_REQUIRED_FLAGS -std=c++1z)
-# Remove console
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
+# Remove Console
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
 # Compile Option
 add_definitions(-lstdc++fs)
 add_definitions(-DBOOST_ALL_NO_LIB)
@@ -42,30 +51,25 @@ add_definitions(-DBOOST_DLL_USE_STD_FS)
 add_definitions(-DSOL_ALL_SAFETIES_ON=1)
 add_definitions(-DSOL_USING_CXX_LUA)
 add_definitions(-DNERO_GAME_DEBUG)
-add_definitions(-DBUILD_WITH_EASY_PROFILER)
 
 # Include Files & Libraries
 #----------------------------------------------------------------------------------#
-# Make include file visible
+# Make Include Files Visible
 include_directories ("include")
 include_directories("library")
 include_directories("../../Library/include")
-# Make libraries visible
+# Make Libraries Visible
 link_directories("../../Library/lib" "../../Library/bin")
 # Find OpenGL
 find_package(OpenGL)
 # SFML
 set(SFML_LIBS "-lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-network")
-# Box2d
-set(Box2d_LIBS "-lBox2D.dll")
-# Zilb
-set(ZLIB_LIBS "-lzlib.dll")
+# Box2D
+set(Box2D_LIBS "-lBox2D.dll")
 # OpenSSL
 set(OPENSSL_LIBS "-lcrypto.dll -lssl.dll")
 # Libssh2
 set(LIBSSH2_LIBS "-llibssh2.dll")
-# Libgit2
-set(HTTP_PARSER "-lhttp_parser")
 # Libgit2
 set(LIBGIT2_LIBS "-lgit2.dll")
 # Lua
@@ -86,23 +90,23 @@ file(GLOB_RECURSE NERO_GAME_CORE_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/core/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/library/ltbl/*")
 # Dependencies
-set(NERO_GAME_CORE_DEP ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2d_LIBS} ${EASY_PROFILER} ${POCO})
+set(NERO_GAME_CORE_DEP ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2D_LIBS} ${EASY_PROFILER} ${POCO})
 # Build Nero Game Core
 add_library(nerogame-core ${NERO_GAME_CORE_SOURCES} )
 target_link_libraries(nerogame-core ${NERO_GAME_CORE_DEP})
 
-# Nero Game Renderer (Desktop)
+# Nero Game Render Engine (Desktop)
 #----------------------------------------------------------------------------------#
-# Engine Renderer Source Files
+# Render Engine Source Files
 file(GLOB_RECURSE NERO_GAME_RENDERER_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/renderer/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/renderer/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/resources.rc")
 # Dependencies
 set(NERO_GAME_RENDERER_DEP nerogame-core ${NERO_GAME_CORE_DEP})
-# Build Nero Game Renderer
-add_executable(EngineRenderer ${NERO_GAME_RENDERER_SOURCES})
-target_link_libraries(EngineRenderer ${NERO_GAME_RENDERER_DEP})
+# Build Nero Render Egnine
+add_executable(RenderEngine ${NERO_GAME_RENDERER_SOURCES})
+target_link_libraries(RenderEngine ${NERO_GAME_RENDERER_DEP})
 
 # Nero Game Editor (Desktop)
 #----------------------------------------------------------------------------------#
@@ -118,12 +122,12 @@ file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
 # Dependencies
 set(NERO_GAME_EDITOR_DEP nerogame-core ${NERO_GAME_CORE_DEP} comctl32.lib ${LIBGIT2_LIBS})
 # Build Nero Game Editor
-add_executable(EngineEditor ${NERO_GAME_EDITOR_SOURCES})
-target_link_libraries(EngineEditor ${NERO_GAME_EDITOR_DEP})
+add_executable(GameEditor ${NERO_GAME_EDITOR_SOURCES})
+target_link_libraries(GameEditor ${NERO_GAME_EDITOR_DEP})
 
 # Test Laboratory
 #----------------------------------------------------------------------------------#
-# Engine Renderer Source Files
+# Test Lab Source Files
 file(GLOB_RECURSE TEST_LABORATORY_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/testlab/*")
 # Dependencies
@@ -134,3 +138,25 @@ target_link_libraries(TestLab ${TEST_LABORATORY_DEP})
 
 # Doxygen Documentation
 #----------------------------------------------------------------------------------#
+# check if Doxygen is installed
+find_package(Doxygen REQUIRED dot OPTIONAL_COMPONENTS mscgen dia)
+if (DOXYGEN_FOUND)
+    # set input and output files
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/doxygen/Doxyfile.in)
+    set(DOXYGEN_OUT ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Doxyfile)
+
+    # request to configure the file
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    message("Doxygen build started")
+
+    # build the docs
+    add_custom_target(Doxygen ALL
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM )
+else (DOXYGEN_FOUND)
+  message("Doxygen need to be installed to generate the doxygen documentation")
+endif (DOXYGEN_FOUND)
+
+

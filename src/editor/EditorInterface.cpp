@@ -17,6 +17,7 @@
 #include <IconFontCppHeaders/IconsFontAwesome5.h>
 #include <easy/profiler.h>
 #include <exception>
+#include <csignal>
 ////////////////////////////////////////////////////////////
 namespace  nero
 {
@@ -132,6 +133,9 @@ namespace  nero
 		m_ProjectManager->setRenderTexture(m_RenderTexture);
 		m_ProjectManager->setRenderContext(m_RenderContext);
 		m_ProjectManager->setCamera(m_EditorCamera);
+
+		//register signal handler
+		registerSignalHandler();
 	}
 
 	void EditorInterface::closeEditor()
@@ -4305,5 +4309,45 @@ namespace  nero
 	void EditorInterface::clearScriptWizardInput()
 	{
 		fillCharArray(m_InputClassName,			sizeof(m_InputClassName),		StringPool.BLANK);
+	}
+
+	void EditorInterface::registerSignalHandler()
+	{
+		signal(SIGABRT, handleSignalAbnormalTermination);
+		signal(SIGFPE, handleSignalArithmeticError);
+		signal(SIGILL, handleSignalIllegalInstruction);
+		signal(SIGINT, handleSignalInteractiveAttention);
+		signal(SIGSEGV, handleSignalInvalidStorageAccess);
+		signal(SIGTERM, handleSignalTerminsationRequest);
+	}
+
+	void EditorInterface::handleSignalAbnormalTermination(int signal)
+	{
+
+	}
+
+	void EditorInterface::handleSignalArithmeticError(int signal)
+	{
+
+	}
+
+	void EditorInterface::handleSignalIllegalInstruction(int signal)
+	{
+
+	}
+
+	void EditorInterface::handleSignalInteractiveAttention(int signal)
+	{
+
+	}
+
+	void EditorInterface::handleSignalInvalidStorageAccess(int signal)
+	{
+
+	}
+
+	void EditorInterface::handleSignalTerminsationRequest(int signal)
+	{
+
 	}
 }

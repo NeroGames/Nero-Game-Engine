@@ -69,6 +69,14 @@ namespace nero
 			void							updateWindowTitle(const std::string& title);
 			//close the editor
 			void							closeEditor();
+			//signal handling
+			void							registerSignalHandler();
+			static void						handleSignalAbnormalTermination(int signal);
+			static void						handleSignalArithmeticError(int signal);
+			static void						handleSignalIllegalInstruction(int signal);
+			static void						handleSignalInteractiveAttention(int signal);
+			static void						handleSignalInvalidStorageAccess(int signal);
+			static void						handleSignalTerminsationRequest(int signal);
 
 		private:
 			//////////////Main Attributes

@@ -20,7 +20,7 @@ void get_file_size()
 	while (progress->m_Downloading)
 	{
 		//std::this_thread::sleep_for(std::chrono::seconds(1));
-		nero_log(nero_ss(progress->getPercentage()));
+		//nero_log(nero_ss(progress->getPercentage()));
 
 		std::cout << nero_ss(progress->getPercentage()) << "\r" << std::flush;
 	}
