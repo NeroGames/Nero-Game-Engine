@@ -10,9 +10,9 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	struct _EditorSetting
+	const struct EditorSetting
 	{
-		_EditorSetting()
+		EditorSetting()
 		{
 			//window setting
 			windowSetting["width"]			= 1245;
@@ -23,9 +23,9 @@ namespace nero
 		}
 
 		nlohmann::json windowSetting;
-	};
 
-	const _EditorSetting EditorSetting;
+	} EditorSetting ;
+
 }
 
 #endif // EDITORSETTING_H

@@ -14,7 +14,7 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    struct _EngineConstant
+	const struct
     {
         //engine version
 		const int				ENGINE_VERSION_MAJOR	= 2;
@@ -51,8 +51,6 @@ namespace nero
 		const sf::Color COLOR_KINEMATIC_MESH	= sf::Color(0.5f * 255.f, 0.5f * 255.f, 0.9f * 255.f);
 		const sf::Color COLOR_SELECTED_MESH		= sf::Color(255, 140, 0);
 		const sf::Color COLOR_INVALIDE_MESH		= sf::Color(255, 0, 0);
-    };
-
-    const _EngineConstant EngineConstant;
+	} EngineConstant;
 }
 #endif // ENGINECONSTANT_H

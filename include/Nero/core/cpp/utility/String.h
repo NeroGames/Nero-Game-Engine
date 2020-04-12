@@ -15,6 +15,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
+	///\addtogroup string
+	/// @{
 	namespace string
 	{
 		const struct
@@ -41,6 +43,7 @@ namespace nero
 
 		} StringPool;
 
+		///\brief List of Formats
 		enum class Format //Input = Nero Game Engine
 		{
 			SNAKE_CASE,			//Nero_Game_Engine
@@ -57,8 +60,10 @@ namespace nero
 			SENTENCE_CASE,		//Nero game engine
 		};
 
+		///\brief Convert string
 		template <typename T>
 		std::string						toString(T const& value);
+		///\brief Format a string input
 		std::string						formatString(const std::string& input, Format format = Format::SNAKE_CASE);
 		std::string						wrapString(const std::string& message, size_t maxLetter);
 		void							fillCharTable(const char** charTab, const std::vector<std::string>& stringTab);
@@ -77,7 +82,8 @@ namespace nero
 			stream << value;
 			return stream.str();
 		}
-	}
+
+	}///@}
 }
 ////////////////////////////MACRO///////////////////////////
 #define nero_fill_char_array(arrayTable, vectorTable) for(unsigned int i = 0; i < vectorTable.size(); i++ ) arrayTable[i] = vectorTable[i].c_str();

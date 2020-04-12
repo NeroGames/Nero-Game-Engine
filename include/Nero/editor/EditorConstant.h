@@ -7,10 +7,11 @@
 ///////////////////////////HEADERS///////////////////////////
 #include <string>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/System/Time.hpp>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	struct _EditorConstant
+	const struct
 	{
 		//ImGUI ID
 		const std::string ID_DOCKSPACE					= "editor-dockspace";
@@ -78,9 +79,7 @@ namespace nero
 
 		const sf::Time  AUTO_SAVE_TIME              = sf::seconds(30.f);
 
-	};
-
-	const _EditorConstant EditorConstant;
+	} EditorConstant;
 }
 
 
