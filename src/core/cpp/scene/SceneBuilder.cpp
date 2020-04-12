@@ -1,10 +1,11 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/core/cpp/scene/SceneBuilder.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
 //STD
 #include <fstream>
 #include <string>
@@ -74,7 +75,7 @@ namespace nero
 
         if(b2TimeStep > 0.f)
         {
-            b2TimeStep = (b2TimeStep * timeStep.asSeconds())/TIME_PER_FRAME.asSeconds();
+			b2TimeStep = (b2TimeStep * timeStep.asSeconds())/EngineConstant.TIME_PER_FRAME.asSeconds();
         }
 
         if(m_SelectedObject)
@@ -108,43 +109,43 @@ namespace nero
         if(isPressed && m_SelectedLayer && m_SelectedObject)
         {
             //Move
-            if(key == sf::Keyboard::Numpad8 && CTRL())
+            if(key == sf::Keyboard::Numpad8 && keyboard::CTRL())
                 m_SelectedObject->move(sf::Vector2f(0.f, -m_PanningSpeed));
 
-            if(key == sf::Keyboard::Numpad2 && CTRL())
+            if(key == sf::Keyboard::Numpad2 && keyboard::CTRL())
                 m_SelectedObject->move(sf::Vector2f(0.f, m_PanningSpeed));
 
-            if(key == sf::Keyboard::Numpad4 && CTRL())
+            if(key == sf::Keyboard::Numpad4 && keyboard::CTRL())
                 m_SelectedObject->move(sf::Vector2f(-m_PanningSpeed, 0.f));
 
-            if(key == sf::Keyboard::Numpad6 && CTRL())
+            if(key == sf::Keyboard::Numpad6 && keyboard::CTRL())
                 m_SelectedObject->move(sf::Vector2f(m_PanningSpeed, 0.f));
 
             //Rotate
-            if(key == sf::Keyboard::Numpad7 && CTRL())
+            if(key == sf::Keyboard::Numpad7 && keyboard::CTRL())
                 m_SelectedObject->rotate(-m_RotationSpeed);
 
-            else if(key == sf::Keyboard::Numpad9 && CTRL())
+            else if(key == sf::Keyboard::Numpad9 && keyboard::CTRL())
                 m_SelectedObject->rotate(m_RotationSpeed);
 
-            else if(key == sf::Keyboard::Divide && CTRL())
+            else if(key == sf::Keyboard::Divide && keyboard::CTRL())
                 m_SelectedObject->rotate(-0.1f);
 
-            else if(key == sf::Keyboard::Multiply && CTRL())
+            else if(key == sf::Keyboard::Multiply && keyboard::CTRL())
                 m_SelectedObject->rotate(0.1f);
 
             //Zoom
-            if(key == sf::Keyboard::Add && CTRL())
+            if(key == sf::Keyboard::Add && keyboard::CTRL())
                 m_SelectedObject->scale(sf::Vector2f(1.f+m_ZoomingRatio, 1.f+m_ZoomingRatio));
 
-            else if(key == sf::Keyboard::Subtract && CTRL())
+            else if(key == sf::Keyboard::Subtract && keyboard::CTRL())
                 m_SelectedObject->scale(sf::Vector2f(1.f-m_ZoomingRatio, 1.f-m_ZoomingRatio));
 
             //Flip
-            if(key == sf::Keyboard::Numpad1 && CTRL())
+            if(key == sf::Keyboard::Numpad1 && keyboard::CTRL())
                 m_SelectedObject->scale(sf::Vector2f(-1.f, 1.f));
 
-            else if(key == sf::Keyboard::Numpad3 && CTRL())
+            else if(key == sf::Keyboard::Numpad3 && keyboard::CTRL())
                 m_SelectedObject->scale(sf::Vector2f(1.f, -1.f));
 
             //Unselected
@@ -156,28 +157,28 @@ namespace nero
                 deleteObject(m_SelectedObject);
 
             //copy sprite
-            if(key == sf::Keyboard::Numpad8 && ALT())
+			if(key == sf::Keyboard::Numpad8 && keyboard::ALT())
                 copyObject(Up);
 
-            else if(key == sf::Keyboard::Numpad2 && ALT())
+			else if(key == sf::Keyboard::Numpad2 && keyboard::ALT())
                 copyObject(Down);
 
-            else if(key == sf::Keyboard::Numpad4 && ALT())
+			else if(key == sf::Keyboard::Numpad4 && keyboard::ALT())
                 copyObject(Left);
 
-            else if(key == sf::Keyboard::Numpad6 && ALT())
+			else if(key == sf::Keyboard::Numpad6 && keyboard::ALT())
                 copyObject(Right);
 
-            else if(key == sf::Keyboard::Numpad7 && ALT())
+			else if(key == sf::Keyboard::Numpad7 && keyboard::ALT())
                 copyObject(Up_Left);
 
-            else if(key == sf::Keyboard::Numpad9 && ALT())
+			else if(key == sf::Keyboard::Numpad9 && keyboard::ALT())
                 copyObject(Up_Right);
 
-            else if(key == sf::Keyboard::Numpad1 && ALT())
+			else if(key == sf::Keyboard::Numpad1 && keyboard::ALT())
                 copyObject(Down_Left);
 
-            else if(key == sf::Keyboard::Numpad3 && ALT())
+			else if(key == sf::Keyboard::Numpad3 && keyboard::ALT())
                 copyObject(Down_Right);
         }
 
@@ -186,16 +187,16 @@ namespace nero
         {
             sf::Vector2f pos = sf::Vector2f(0.f, 0.f);
 
-            if(key == sf::Keyboard::Numpad8 && CTRL_ALT())
+			if(key == sf::Keyboard::Numpad8 && keyboard::CTRL_ALT())
                 pos = sf::Vector2f(0.f, -5.f);
 
-            else if(key == sf::Keyboard::Numpad2 && CTRL_ALT())
+			else if(key == sf::Keyboard::Numpad2 && keyboard::CTRL_ALT())
                 pos = sf::Vector2f(0.f, 5.f);
 
-            else if(key == sf::Keyboard::Numpad4 && CTRL_ALT())
+			else if(key == sf::Keyboard::Numpad4 && keyboard::CTRL_ALT())
                 pos = sf::Vector2f(-5.f, 0.f);
 
-            else if(key == sf::Keyboard::Numpad6 && CTRL_ALT())
+			else if(key == sf::Keyboard::Numpad6 && keyboard::CTRL_ALT())
                 pos = sf::Vector2f(5.f, 0.f);
 
             if(pos != sf::Vector2f(0.f, 0.f))
@@ -210,80 +211,80 @@ namespace nero
 
         if(!isPressed)
         {
-            if(key == sf::Keyboard::Numpad8 && CTRL())
+            if(key == sf::Keyboard::Numpad8 && keyboard::CTRL())
                 m_UpdateUndo();
 
-            if(key == sf::Keyboard::Numpad2 && CTRL())
+            if(key == sf::Keyboard::Numpad2 && keyboard::CTRL())
                 m_UpdateUndo();
 
-            if(key == sf::Keyboard::Numpad4 && CTRL())
+            if(key == sf::Keyboard::Numpad4 && keyboard::CTRL())
                 m_UpdateUndo();
 
-            if(key == sf::Keyboard::Numpad6 && CTRL())
+            if(key == sf::Keyboard::Numpad6 && keyboard::CTRL())
                 m_UpdateUndo();
 
             //Rotate
-            if(key == sf::Keyboard::Numpad7 && CTRL())
+            if(key == sf::Keyboard::Numpad7 && keyboard::CTRL())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad9 && CTRL())
+            else if(key == sf::Keyboard::Numpad9 && keyboard::CTRL())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Divide && CTRL())
+            else if(key == sf::Keyboard::Divide && keyboard::CTRL())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Multiply && CTRL())
+            else if(key == sf::Keyboard::Multiply && keyboard::CTRL())
                 m_UpdateUndo();
 
             //Zoom
-            if(key == sf::Keyboard::Add && CTRL())
+            if(key == sf::Keyboard::Add && keyboard::CTRL())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Subtract && CTRL())
+            else if(key == sf::Keyboard::Subtract && keyboard::CTRL())
                 m_UpdateUndo();
 
             //Flip
-            if(key == sf::Keyboard::Numpad1 && CTRL())
+            if(key == sf::Keyboard::Numpad1 && keyboard::CTRL())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad3 && CTRL())
+            else if(key == sf::Keyboard::Numpad3 && keyboard::CTRL())
                 m_UpdateUndo();
 
             //copy sprite
-            if(key == sf::Keyboard::Numpad8 && ALT())
+			if(key == sf::Keyboard::Numpad8 && keyboard::ALT())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad2 && ALT())
+			else if(key == sf::Keyboard::Numpad2 && keyboard::ALT())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad4 && ALT())
+			else if(key == sf::Keyboard::Numpad4 && keyboard::ALT())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad6 && ALT())
+			else if(key == sf::Keyboard::Numpad6 && keyboard::ALT())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad7 && ALT())
+			else if(key == sf::Keyboard::Numpad7 && keyboard::ALT())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad9 && ALT())
+			else if(key == sf::Keyboard::Numpad9 && keyboard::ALT())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad1 && ALT())
+			else if(key == sf::Keyboard::Numpad1 && keyboard::ALT())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad3 && ALT())
+			else if(key == sf::Keyboard::Numpad3 && keyboard::ALT())
                 m_UpdateUndo();
 
-            else  if(key == sf::Keyboard::Numpad8 && CTRL_ALT())
+			else  if(key == sf::Keyboard::Numpad8 && keyboard::CTRL_ALT())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad2 && CTRL_ALT())
+			else if(key == sf::Keyboard::Numpad2 && keyboard::CTRL_ALT())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad4 && CTRL_ALT())
+			else if(key == sf::Keyboard::Numpad4 && keyboard::CTRL_ALT())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad6 && CTRL_ALT())
+			else if(key == sf::Keyboard::Numpad6 && keyboard::CTRL_ALT())
                 m_UpdateUndo();
         }
     }
@@ -296,7 +297,7 @@ namespace nero
         {
             m_SelectedObject = findObject(m_SelectedLayer, world_pos);
 
-            if(m_SelectedObject && ALT())
+			if(m_SelectedObject && keyboard::ALT())
             {
                 deleteObject(m_SelectedObject);
             }
@@ -330,19 +331,19 @@ namespace nero
         {
             sf::Vector2f diff = world_pos - m_LastMousePosition;
 
-            if(!CTRL_SHIFT_ALT())
+			if(!keyboard::CTRL_SHIFT_ALT())
                 m_SelectedObject->move(diff);
 
-            else if(SHIFT() && diff.y >  0.f)
+            else if(keyboard::SHIFT() && diff.y >  0.f)
                 m_SelectedObject->rotate(m_RotationSpeed*2.f);
 
-            else if(SHIFT() && diff.y <  0.f)
+            else if(keyboard::SHIFT() && diff.y <  0.f)
                 m_SelectedObject->rotate(-m_RotationSpeed*2.f);
 
-            else if(CTRL() && diff.y < 0.f)
+            else if(keyboard::CTRL() && diff.y < 0.f)
                 m_SelectedObject->scale(sf::Vector2f(1.f+m_ZoomingRatio, 1.f+m_ZoomingRatio));
 
-            else if(CTRL() && diff.y > 0.f)
+            else if(keyboard::CTRL() && diff.y > 0.f)
                 m_SelectedObject->scale(sf::Vector2f(1.f-m_ZoomingRatio, 1.f-m_ZoomingRatio));
 
             m_LastMousePosition = world_pos;
@@ -423,7 +424,7 @@ namespace nero
     {
         int index =  ++m_LayerCount;
 
-		//m_UpdateLog("adding new Layer [Layer " + toString(index) + "]", nero::Info);
+		//m_UpdateLog("adding new Layer [Layer " + string::toString(index) + "]", nero::Info);
 
         if(m_SelectedLayer)
             m_SelectedLayer->setIsSelected(false);
@@ -432,7 +433,7 @@ namespace nero
         Layer_object->setId(getNewId());
         Layer_object->setIsVisible(true);
         Layer_object->setIsSelected(true);
-        Layer_object->setName("Layer " + toString(index));
+		Layer_object->setName("Layer " + string::toString(index));
         Layer_object->setOrder(0);
 
         m_LayerTable.push_back(Layer_object);
@@ -689,40 +690,40 @@ namespace nero
         Object::Ptr object = m_SelectedObject->clone(pos);
         object->setId(getNewId());
 
-		std::string object_name = StringPool.BLANK;
+		std::string object_name = string::StringPool.BLANK;
 
 		switch(object->getSecondType())
 		{
 			case Object::Sprite_Object:
-				object_name = "sprite " + toString(object->getId());
+				object_name = "sprite " + string::toString(object->getId());
 				break;
 
 			case Object::Mesh_Object:
-				object_name = "mesh " + toString(object->getId());
+				object_name = "mesh " + string::toString(object->getId());
 				break;
 
 			case Object::Meshed_Object:
-				object_name = "meshed sprite " + toString(object->getId());
+				object_name = "meshed sprite " + string::toString(object->getId());
 				break;
 
 			case Object::Animation_Object:
-				object_name = "animation " + toString(object->getId());
+				object_name = "animation " + string::toString(object->getId());
 				break;
 
 			case Object::Animation_Meshed_Object:
-				object_name = "meshed animation " + toString(object->getId());
+				object_name = "meshed animation " + string::toString(object->getId());
 				break;
 
 			case Object::Text_Object:
-				object_name = "sprite " + toString(object->getId());
+				object_name = "sprite " + string::toString(object->getId());
 				break;
 
 			case Object::Button_Object:
-				object_name = "button " + toString(object->getId());
+				object_name = "button " + string::toString(object->getId());
 				break;
 
 			default:
-				object_name = "object " + toString(object->getId());
+				object_name = "object " + string::toString(object->getId());
 				break;
 		}
 
@@ -844,7 +845,7 @@ namespace nero
                 sprite_object->setSecondType(Object::Sprite_Object);
                 sprite_object->setPosition(position);
                 sprite_object->setId(getNewId());
-				std::string object_name = "sprite " + toString(sprite_object->getId());
+				std::string object_name = "sprite " + string::toString(sprite_object->getId());
 				sprite_object->setName(object_name);
 
                 object = sprite_object;
@@ -870,7 +871,7 @@ namespace nero
 
                     MeshObject::Ptr mesh_object(new MeshObject());
                     mesh_object->setId(mesh.getId());
-					std::string object_name = "mesh " + toString(mesh.getId());
+					std::string object_name = "mesh " + string::toString(mesh.getId());
 					mesh_object->setName(object_name);
                     mesh_object->setMesh(mesh);
                     mesh_object->setPosition(position);
@@ -909,7 +910,7 @@ namespace nero
 
                     m_SelectedObject->addChild(mesh_object);
 
-                    m_SelectedObject->update(TIME_PER_FRAME);
+					m_SelectedObject->update(EngineConstant.TIME_PER_FRAME);
 
                     nero_log("change animation mesh");
                     m_UpdateUndo();
@@ -940,7 +941,7 @@ namespace nero
                 sprite_object->setSecondType(Object::Meshed_Object);
                 sprite_object->setPosition(position);
                 sprite_object->setId(getNewId());
-				std::string object_name = "sprite " + toString(sprite_object->getId());
+				std::string object_name = "sprite " + string::toString(sprite_object->getId());
 				sprite_object->setName(object_name);
 				sprite_object->setIsUpdateable(true);
 
@@ -949,7 +950,7 @@ namespace nero
                 mesh.setId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getId());
-				object_name = "mesh " + toString(mesh.getId());
+				object_name = "mesh " + string::toString(mesh.getId());
 				mesh_object->setName(object_name);
                 mesh_object->setMesh(mesh);
                 mesh_object->setSecondType(Object::Mesh_Object);
@@ -959,7 +960,7 @@ namespace nero
                 sprite_object->addChild(mesh_object);
 
                 //update one time
-                sprite_object->update(TIME_PER_FRAME);
+				sprite_object->update(EngineConstant.TIME_PER_FRAME);
 
                 object = sprite_object;
 
@@ -995,7 +996,7 @@ namespace nero
                 animation_object->setSecondType(Object::Animation_Object);
                 animation_object->setPosition(position);
                 animation_object->setId(getNewId());
-				std::string object_name = "animation " + toString(animation_object->getId());
+				std::string object_name = "animation " + string::toString(animation_object->getId());
 				animation_object->setName(object_name);
 
                 object = animation_object;
@@ -1033,7 +1034,7 @@ namespace nero
                 animation_object->setSecondType(Object::Animation_Meshed_Object);
                 animation_object->setPosition(position);
                 animation_object->setId(getNewId());
-				std::string object_name = "animation " + toString(animation_object->getId());
+				std::string object_name = "animation " + string::toString(animation_object->getId());
 				animation_object->setName(object_name);
 
                   //Mesh Object
@@ -1041,7 +1042,7 @@ namespace nero
                 mesh.setId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getId());
-				object_name = "mesh " + toString(mesh.getId());
+				object_name = "mesh " + string::toString(mesh.getId());
 				mesh_object->setName(object_name);
                 mesh_object->setMesh(mesh);
                 mesh_object->setSecondType(Object::Mesh_Object);
@@ -1051,7 +1052,7 @@ namespace nero
                 animation_object->addChild(mesh_object);
 
                 //update one time
-                animation_object->update(TIME_PER_FRAME);
+				animation_object->update(EngineConstant.TIME_PER_FRAME);
 
                 object = animation_object;
 
@@ -1071,7 +1072,7 @@ namespace nero
                 text_object->setText(text);
                 text_object->setPosition(position);
                 text_object->setId(getNewId());
-				std::string object_name = "text " + toString(text_object->getId());
+				std::string object_name = "text " + string::toString(text_object->getId());
 				text_object->setName(object_name);
 
                 object = text_object;
@@ -1094,7 +1095,7 @@ namespace nero
                 sprite_object->setSecondType(Object::Button_Object);
                 sprite_object->setPosition(position);
                 sprite_object->setId(getNewId());
-				std::string object_name = "button " + toString(sprite_object->getId());
+				std::string object_name = "button " + string::toString(sprite_object->getId());
 				sprite_object->setName(object_name);
 
                 sprite_object->setColor(sf::Color(255, 255, 255, 150));
@@ -1127,7 +1128,7 @@ namespace nero
         if(m_SelectedLayer->getSecondType() == type)
         {
             m_SelectedLayer->addChild(object);
-            if(type == Object::Mesh_Object) object->update(TIME_PER_FRAME);
+			if(type == Object::Mesh_Object) object->update(EngineConstant.TIME_PER_FRAME);
             m_UpdateUndo();
             return false;
         }
@@ -1135,7 +1136,7 @@ namespace nero
         {
             m_SelectedLayer->setSecondType(type);
             m_SelectedLayer->addChild(object);
-            if(type == Object::Mesh_Object) object->update(TIME_PER_FRAME);
+			if(type == Object::Mesh_Object) object->update(EngineConstant.TIME_PER_FRAME);
             m_UpdateUndo();
             return true;
         }
@@ -1144,7 +1145,7 @@ namespace nero
             addLayer();
             m_SelectedLayer->setSecondType(type);
             m_SelectedLayer->addChild(object);
-            if(type == Object::Mesh_Object) object->update(TIME_PER_FRAME);
+			if(type == Object::Mesh_Object) object->update(EngineConstant.TIME_PER_FRAME);
             m_UpdateUndo();
             return true;
         }
@@ -1179,7 +1180,7 @@ namespace nero
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object && m_SelectedObject->getSecondType() != Object::Meshed_Object && m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-		//m_UpdateLog("changing Mesh Type to : " + toString(label) + " Mesh", nero::Info);
+		//m_UpdateLog("changing Mesh Type to : " + string::toString(label) + " Mesh", nero::Info);
 
         Mesh::Type type;
 
@@ -1672,7 +1673,7 @@ namespace nero
 
         SpriteObject::Ptr sprite_object(new SpriteObject());
         sprite_object->setSprite(sprite);
-        sprite_object->setTextureName(toString(json["sprite"].get<std::string>()));
+		sprite_object->setTextureName(string::toString(json["sprite"].get<std::string>()));
         sprite_object->setPosition(json["position"]["x"], json["position"]["y"]);
         sprite_object->setRotation(json["rotation"]);
         sprite_object->setScale(json["scale"]["x"], json["scale"]["y"]);
@@ -1829,7 +1830,7 @@ namespace nero
         scene["layer_table"]    = layer_table;
         scene["layer_count"]    = m_LayerCount;
         scene["object_count"]   = m_ObjectCount;
-		scene["canvas_color"]   = nero::toJson(m_CanvasColor);
+		scene["canvas_color"]   = graphics::colorToJson(m_CanvasColor);
 
         return scene;
     }
@@ -1844,7 +1845,7 @@ namespace nero
 
         m_LayerCount    = scene["layer_count"];
         m_ObjectCount   = scene["object_count"];
-        m_CanvasColor   = colorFromJson(scene["canvas_color"]);
+		m_CanvasColor   = graphics::colorFromJson(scene["canvas_color"]);
 
         nlohmann::json layer_table = scene["layer_table"];
 
@@ -2170,7 +2171,7 @@ namespace nero
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
-			//m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font size to "+ toString(value), nero::Info);
+			//m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font size to "+ string::toString(value), nero::Info);
 
             TextObject::Cast(m_SelectedObject)->setFontSize(value);
         }
@@ -2196,7 +2197,7 @@ namespace nero
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
-			//m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] outline thickness to "+ toString(value), nero::Info);
+			//m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] outline thickness to "+ string::toString(value), nero::Info);
 
             TextObject::Cast(m_SelectedObject)->setOutlineThickness(value);
         }

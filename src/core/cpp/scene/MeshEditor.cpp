@@ -1,10 +1,11 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/core/cpp/scene/MeshEditor.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -120,33 +121,33 @@ namespace nero
     {
         if(isPressed && m_SelectedMesh)
         {
-            if(key == sf::Keyboard::Numpad8 && CTRL())
+			if(key == sf::Keyboard::Numpad8 && keyboard::CTRL())
                 m_SelectedMesh->move(sf::Vector2f(0.f, -5.f));
 
-            if(key == sf::Keyboard::Numpad2 && CTRL())
+			if(key == sf::Keyboard::Numpad2 && keyboard::CTRL())
                 m_SelectedMesh->move(sf::Vector2f(0.f, 5.f));
 
-            if(key == sf::Keyboard::Numpad4 && CTRL())
+			if(key == sf::Keyboard::Numpad4 && keyboard::CTRL())
                 m_SelectedMesh->move(sf::Vector2f(-5.f, 0.f));
 
-            if(key == sf::Keyboard::Numpad6 && CTRL())
+			if(key == sf::Keyboard::Numpad6 && keyboard::CTRL())
                 m_SelectedMesh->move(sf::Vector2f(5.f, 0.f));
 
             //Rotation
-            if(key == sf::Keyboard::Numpad9 && CTRL())
+			if(key == sf::Keyboard::Numpad9 && keyboard::CTRL())
                 m_SelectedMesh->rotate(5.f);
 
-            else if(key == sf::Keyboard::Numpad7 && CTRL())
+			else if(key == sf::Keyboard::Numpad7 && keyboard::CTRL())
                 m_SelectedMesh->rotate(-5.f);
 
             //Zoom
-            else if(key == sf::Keyboard::Add && CTRL())
+			else if(key == sf::Keyboard::Add && keyboard::CTRL())
                 m_SelectedMesh->scale(sf::Vector2f(1.1f, 1.1f));
 
-            else if(key == sf::Keyboard::Subtract && CTRL())
+			else if(key == sf::Keyboard::Subtract && keyboard::CTRL())
                 m_SelectedMesh->scale(sf::Vector2f(0.9f, 0.9f));
 
-            if(key == sf::Keyboard::Escape && CTRL())
+			if(key == sf::Keyboard::Escape && keyboard::CTRL())
                 deselectMesh(m_SelectedMesh);
 
             m_SelectedMesh->updateShape();
@@ -154,30 +155,30 @@ namespace nero
 
         if(!isPressed)
         {
-            if(key == sf::Keyboard::Numpad8 && CTRL())
+			if(key == sf::Keyboard::Numpad8 && keyboard::CTRL())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad2 && CTRL())
+			else if(key == sf::Keyboard::Numpad2 && keyboard::CTRL())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad4 && CTRL())
+			else if(key == sf::Keyboard::Numpad4 && keyboard::CTRL())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad6 && CTRL())
+			else if(key == sf::Keyboard::Numpad6 && keyboard::CTRL())
                 m_UpdateUndo();
 
             //Rotation
-            else if(key == sf::Keyboard::Numpad9 && CTRL())
+			else if(key == sf::Keyboard::Numpad9 && keyboard::CTRL())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Numpad7 && CTRL())
+			else if(key == sf::Keyboard::Numpad7 && keyboard::CTRL())
                 m_UpdateUndo();
 
             //Zoom
-            else if(key == sf::Keyboard::Add && CTRL())
+			else if(key == sf::Keyboard::Add && keyboard::CTRL())
                 m_UpdateUndo();
 
-            else if(key == sf::Keyboard::Subtract && CTRL())
+			else if(key == sf::Keyboard::Subtract && keyboard::CTRL())
                 m_UpdateUndo();
         }
     }
@@ -210,7 +211,7 @@ namespace nero
                         //when we found a match
                         if(vertex_it->getGlobalBounds().contains(world_pos))
                         {
-                            if(!CTRL_SHIFT_ALT() && (*mesh_it)->m_Shape != Mesh::Circle_Mesh)
+							if(!keyboard::CTRL_SHIFT_ALT() && (*mesh_it)->m_Shape != Mesh::Circle_Mesh)
                             {
                                 m_SelectedVertexTab.push_back((*mesh_it)->m_VertexTab.data() + (vertex_it - (*mesh_it)->m_VertexTab.begin()));
                                 m_SelectedMesh = (*mesh_it);
@@ -219,7 +220,7 @@ namespace nero
                                 break;
                             }
 
-                            else if(SHIFT())
+							else if(keyboard::SHIFT())
                             {
                                 if((*mesh_it)->m_Shape == Mesh::Line_Mesh || (*mesh_it)->m_Shape == Mesh::Chain_Mesh)
                                 {
@@ -267,10 +268,10 @@ namespace nero
                             Vertex* v2 = &(*mesh_it)->m_VertexTab[is_polygon_last_line ? 0 : (line_it - (*mesh_it)->m_LineTab.begin()+1)];
 
                             //select the line of a polygon
-                            if(distance(v1->getPosition(), v2->getPosition(),  world_pos) < 4.f)
+							if(math::distance(v1->getPosition(), v2->getPosition(),  world_pos) < 4.f)
                             {
                                 //Normal selection
-                                if(!CTRL_SHIFT_ALT())
+								if(!keyboard::CTRL_SHIFT_ALT())
                                 {
                                     m_SelectedVertexTab.push_back(v1);
                                     m_SelectedVertexTab.push_back(v2);
@@ -278,7 +279,7 @@ namespace nero
                                 }
 
                                 //Select entire mesh with line : Line, Chain
-                                if(CTRL())
+								if(keyboard::CTRL())
                                 {
                                     deselectMesh(m_SelectedMesh);
 
@@ -288,14 +289,14 @@ namespace nero
                                         m_SelectedVertexTab.push_back(&(*mesh_it)->m_VertexTab[vertex_it - (*mesh_it)->m_VertexTab.begin()]);
 
                                         m_SelectedMesh = (*mesh_it);
-                                        m_SelectedMesh->setColor(SELECTED_MESH_COLOR);
+										m_SelectedMesh->setColor(EngineConstant.COLOR_SELECTED_MESH);
 
                                         isDone = true;
                                         break;
                                     }
                                 }
 
-                                else if(SHIFT())
+								else if(keyboard::SHIFT())
                                 {
                                     if(!is_polygon_last_line)
                                     {
@@ -344,7 +345,7 @@ namespace nero
                             //when we found a match
                             if(polygon_it->getGlobalBounds().contains(world_pos))
                             {
-                                if(!CTRL_SHIFT_ALT())
+								if(!keyboard::CTRL_SHIFT_ALT())
                                 {
                                     for (auto vertex_it = (*mesh_it)->m_VertexTab.begin(); vertex_it != (*mesh_it)->m_VertexTab.end(); vertex_it++)
                                         m_SelectedVertexTab.push_back(&(*mesh_it)->m_VertexTab[vertex_it - (*mesh_it)->m_VertexTab.begin()]);
@@ -354,7 +355,7 @@ namespace nero
                                     isDone = true;
                                     break;
                                 }
-                                else if(CTRL())
+								else if(keyboard::CTRL())
                                 {
                                     deselectMesh(m_SelectedMesh);
 
@@ -362,7 +363,7 @@ namespace nero
                                         m_SelectedVertexTab.push_back(&(*mesh_it)->m_VertexTab[vertex_it - (*mesh_it)->m_VertexTab.begin()]);
 
                                     m_SelectedMesh = (*mesh_it);
-                                    m_SelectedMesh->setColor(SELECTED_MESH_COLOR);
+									m_SelectedMesh->setColor(EngineConstant.COLOR_SELECTED_MESH);
 
                                     isDone = true;
                                     break;
@@ -379,7 +380,7 @@ namespace nero
                     {
                         if((*mesh_it)->m_CircleShape.getGlobalBounds().contains(world_pos))
                         {
-                            if(!CTRL_SHIFT_ALT())
+							if(!keyboard::CTRL_SHIFT_ALT())
                             {
                                 m_SelectedVertexTab.push_back((*mesh_it)->m_VertexTab.data() + ((*mesh_it)->m_VertexTab.begin() - (*mesh_it)->m_VertexTab.begin()));
                                 m_SelectedVertexTab.push_back((*mesh_it)->m_VertexTab.data() + ((*mesh_it)->m_VertexTab.begin() + 1 - (*mesh_it)->m_VertexTab.begin()));
@@ -389,7 +390,7 @@ namespace nero
                                 isDone = true;
                                 break;
                             }
-                            else if (CTRL())
+							else if(keyboard::CTRL())
                             {
                                 deselectMesh(m_SelectedMesh);
 
@@ -397,7 +398,7 @@ namespace nero
                                 m_SelectedVertexTab.push_back((*mesh_it)->m_VertexTab.data() + ((*mesh_it)->m_VertexTab.begin() + 1 - (*mesh_it)->m_VertexTab.begin()));
 
                                 m_SelectedMesh = (*mesh_it);
-                                m_SelectedMesh->setColor(SELECTED_MESH_COLOR);
+								m_SelectedMesh->setColor(EngineConstant.COLOR_SELECTED_MESH);
 
                                 isDone = true;
                                 break;
@@ -417,7 +418,7 @@ namespace nero
 
         if(mouse.button == sf::Mouse::Left && !isPressed && m_SelectedMesh)
         {
-            if(!CTRL())
+			if(!keyboard::CTRL())
             {
                 deselectMesh(m_SelectedMesh);
                 m_SelectedMesh = nullptr;
@@ -444,7 +445,7 @@ namespace nero
                         if(vertex_it->getGlobalBounds().contains(world_pos))
                         {
                             //Chain
-                            if(!CTRL_SHIFT_ALT() && (*mesh_it)->m_Shape == Mesh::Chain_Mesh)
+							if(!keyboard::CTRL_SHIFT_ALT() && (*mesh_it)->m_Shape == Mesh::Chain_Mesh)
                             {
                                 (*mesh_it)->deleteVertex(vertex_it - (*mesh_it)->m_VertexTab.begin());
 
@@ -462,7 +463,7 @@ namespace nero
                             }
 
                             //Polygon
-                            if(!CTRL_SHIFT_ALT() && (*mesh_it)->m_Shape == Mesh::Polygon_Mesh)
+							if(!keyboard::CTRL_SHIFT_ALT() && (*mesh_it)->m_Shape == Mesh::Polygon_Mesh)
                             {
                                 if((*mesh_it)->m_VertexTab.size() > 3)
                                 {
@@ -493,10 +494,10 @@ namespace nero
                         Vertex* v2 = &(*mesh_it)->m_VertexTab[is_polygon_last_line ? 0 : (line_it - (*mesh_it)->m_LineTab.begin()+1)];
 
                         //select the line of a polygon
-                        if(distance(v1->getPosition(), v2->getPosition(),  world_pos) < 4.f)
+						if(math::distance(v1->getPosition(), v2->getPosition(),  world_pos) < 4.f)
                         {
                             //act only on line
-                            if(!CTRL_SHIFT_ALT() && (*mesh_it)->m_Shape == Mesh::Line_Mesh)
+							if(!keyboard::CTRL_SHIFT_ALT() && (*mesh_it)->m_Shape == Mesh::Line_Mesh)
                             {
                                 (*mesh_it)->addVertex(world_pos, line_it - (*mesh_it)->m_LineTab.begin() + 1);
                                 (*mesh_it)->m_Shape = Mesh::Chain_Mesh;
@@ -512,7 +513,7 @@ namespace nero
                             }
 
                             //act on chain
-                            if(!CTRL_SHIFT_ALT() && (*mesh_it)->m_Shape == Mesh::Chain_Mesh)
+							if(!keyboard::CTRL_SHIFT_ALT() && (*mesh_it)->m_Shape == Mesh::Chain_Mesh)
                             {
                                 (*mesh_it)->addVertex(world_pos, line_it - (*mesh_it)->m_LineTab.begin() + 1);
                                 (*mesh_it)->updateLineShape();
@@ -529,7 +530,7 @@ namespace nero
                             }
 
                             //act on polygon
-                            if(!CTRL_SHIFT_ALT() && (*mesh_it)->m_Shape == Mesh::Polygon_Mesh)
+							if(!keyboard::CTRL_SHIFT_ALT() && (*mesh_it)->m_Shape == Mesh::Polygon_Mesh)
                             {
                                 (*mesh_it)->addVertex(world_pos, line_it - (*mesh_it)->m_LineTab.begin() + 1);
                                 (*mesh_it)->updateLineShapeLoop();

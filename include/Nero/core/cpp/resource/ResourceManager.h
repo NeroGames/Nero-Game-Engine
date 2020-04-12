@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <Nero/core/cpp/utility/StringUtil.h>
+#include <Nero/core/cpp/utility/String.h>
 #include <Nero/core/cpp/resource/FontHolder.h>
 #include <Nero/core/cpp/resource/SoundHolder.h>
 #include <Nero/core/cpp/resource/MusicHolder.h>
@@ -53,7 +53,7 @@ namespace nero
 			TextureHolder::Ptr			getLightmapHolder();
 
 		public:
-			static void					buildDirectory(const std::string& parentDirectory = StringPool.BLANK);
+			static void					buildDirectory(const std::string& parentDirectory = string::StringPool.BLANK);
 
 		private:
 			FontHolder::Ptr				m_FontHolder;

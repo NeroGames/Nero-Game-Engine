@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef EDITORINTERFACE_H
 #define EDITORINTERFACE_H
@@ -21,7 +21,7 @@
 #include <Nero/editor/GameProject.h>
 #include <json/json.hpp>
 #include <Nero/editor/LoggerApplication.h>
-#include <Nero/core/cpp/utility/StringUtil.h>
+#include <Nero/core/cpp/utility/String.h>
 #include <Nero/editor/AdvancedScene.h>
 #include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/editor/AdvancedCamera.h>
@@ -314,7 +314,7 @@ namespace nero
 			void createScriptObject(const Parameter& parameter);
 
 			//
-			ImVec4 getLoggingColor(LOGLEVEL level);
+			ImVec4 getLoggingColor(logging::LEVEL level);
 
 			std::string m_MouseInformation;
 

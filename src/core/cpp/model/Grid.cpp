@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -127,19 +127,19 @@ namespace nero
     {
          nlohmann::json json;
 
-        json["tile_size"]   = nero::toJson<sf::Vector2i>(m_TileSize);
-        json["tile_count"]  = nero::toJson<sf::Vector2i>(m_TileCount);
-        json["position"]    = nero::toJson<sf::Vector2i>(m_Position);
-        json["color"]       = nero::toJson(m_Color);
+		json["tile_size"]   = graphics::vectorToJson<sf::Vector2i>(m_TileSize);
+		json["tile_count"]  = graphics::vectorToJson<sf::Vector2i>(m_TileCount);
+		json["position"]    = graphics::vectorToJson<sf::Vector2i>(m_Position);
+		json["color"]       = graphics::colorToJson(m_Color);
 
         return json;
     }
 
     void Grid::fromJson(nlohmann::json json)
     {
-        m_TileSize  = vectorFromJson<sf::Vector2i>(json["tile_size"]);
-        m_TileCount = vectorFromJson<sf::Vector2i>(json["tile_count"]);
-        m_Position  = vectorFromJson<sf::Vector2i>(json["position"]);
-        m_Color     = colorFromJson(json["color"]);
+		m_TileSize  = graphics::vectorFromJson<sf::Vector2i>(json["tile_size"]);
+		m_TileCount = graphics::vectorFromJson<sf::Vector2i>(json["tile_count"]);
+		m_Position  = graphics::vectorFromJson<sf::Vector2i>(json["position"]);
+		m_Color     = graphics::colorFromJson(json["color"]);
     }
 }

@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 #include <Nero/core/cpp/engine/BackgroundTask.h>
-#include <Nero/core/cpp/utility/StringUtil.h>
+#include <Nero/core/cpp/utility/String.h>
 #include <Nero/core/cpp/utility/Logging.h>
 
 namespace nero
@@ -16,7 +16,7 @@ namespace nero
 	   ,m_Completed(false)
 	   ,m_Failed(false)
 	   ,m_MessageTable()
-	   ,m_Message(StringPool.BLANK)
+	   ,m_Message(string::StringPool.BLANK)
 	{
 
 	}
@@ -44,7 +44,7 @@ namespace nero
 	void BackgroundTask::addMessage(const std::string& message)
 	{
 		nero_log(message);
-		m_Message += message + StringPool.NEW_LINE;
+		m_Message += message + string::StringPool.NEW_LINE;
 		//m_MessageTable.push_back(message);
 	}
 
@@ -60,11 +60,11 @@ namespace nero
 
 	std::string BackgroundTask::printMessage()
 	{
-		/*std::string result = StringPool.BLANK;
+		/*std::string result = string::StringPool.BLANK;
 
 		for (const std::string& message : m_MessageTable)
 		{
-			result += message + StringPool.NEW_LINE;
+			result += message + string::StringPool.NEW_LINE;
 		}*/
 
 		return  m_Message;

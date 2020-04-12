@@ -1,10 +1,11 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
 //Nero
 #include <Nero/core/cpp/scene/Scene.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
 //Boost
 #include <boost/dll.hpp>
 /////////////////////////////////////////////////////////////
@@ -144,7 +145,7 @@ namespace nero
 
 		if(b2TimeStep > 0.f)
 		{
-			b2TimeStep = (b2TimeStep * timeStep.asSeconds())/TIME_PER_FRAME.asSeconds();
+			b2TimeStep = (b2TimeStep * timeStep.asSeconds())/EngineConstant.TIME_PER_FRAME.asSeconds();
 		}
 
 		if(!m_HideWorld)
@@ -157,11 +158,11 @@ namespace nero
 			if(m_LevelSetting->getBool("pause_level") && !m_LevelSetting->getBool("single_step"))
 			{
 				b2TimeStep = 0.0f;
-				m_SceneContext.engineType == EngineType::RENDER_ENGINE ? m_InformationContent = StringPool.BLANK : m_InformationContent = "#-- PAUSED --#";
+				m_SceneContext.engineType == EngineType::RENDER_ENGINE ? m_InformationContent = string::StringPool.BLANK : m_InformationContent = "#-- PAUSED --#";
 			}
 			else
 			{
-				m_InformationContent = StringPool.BLANK;
+				m_InformationContent = string::StringPool.BLANK;
 			}
 
 			uint32 flags = 0;
@@ -293,7 +294,7 @@ namespace nero
 
 		for (int32 i = 0; i < manifold->pointCount && m_ContactPointCount < MAX_CONTACT_POINT; ++i)
 		{
-			ContactPoint* cp = m_ContactPointTable + m_ContactPointCount;
+			ContactPoint* cp = m_ContactVectorTablele + m_ContactPointCount;
 			cp->fixtureA = fixtureA;
 			cp->fixtureB = fixtureB;
 			cp->position = worldManifold.points[i];
@@ -429,14 +430,14 @@ namespace nero
 	void Scene::loadGameLevel(const std::string& levelName)
 	{
 		//load game level json
-		auto gameLevelJson = loadJson(getPath({m_GameSetting->getString("game_level_directory"), levelName}));
+		auto gameLevelJson = file::loadJson(file::getPath({m_GameSetting->getString("game_level_directory"), levelName}));
 
 		//if game level has script object
 		GameLevelScriptObject::Ptr scriptObject = nullptr;
 		std::string script_class = gameLevelJson["script_class"].get<std::string>();
-		if(script_class != StringPool.BLANK)
+		if(script_class != string::StringPool.BLANK)
 		{
-			boost::dll::fs::path game_library_path(removeFileExtension(m_GameSetting->getString("game_library_file")));
+			boost::dll::fs::path game_library_path(file::removeFileExtension(m_GameSetting->getString("game_library_file")));
 
 			m_CreateGameLevelMap[script_class] = boost::dll::import_alias<CreateCppGameLevelScript>(
 													 game_library_path,

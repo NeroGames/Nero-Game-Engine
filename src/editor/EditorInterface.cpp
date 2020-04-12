@@ -1,13 +1,13 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 #include <Nero/core/cpp/utility/Logging.h>
 #include <Nero/editor/EditorInterface.h>
 #include <SFML/Window/Event.hpp>
 #include <Nero/core/cpp/engine/EngineConstant.h>
-#include <Nero/core/cpp/utility/FileUtil.h>
+#include <Nero/core/cpp/utility/File.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <Nero/editor/EditorConstant.h>
@@ -38,7 +38,7 @@ namespace  nero
 		,m_EditorMode(EditorMode::WORLD_BUILDER)
 		,m_BuilderMode(BuilderMode::OBJECT)
 		,m_EditorCamera(nullptr)
-		,m_SelectedChunkNode(StringPool.BLANK)
+		,m_SelectedChunkNode(string::StringPool.BLANK)
 		,m_InputSelectedWorldChunkId(-1)
 		,m_InputSelectedObjectLayerId(-1)
 		,m_InputSelectedGameLevelId(-1)
@@ -143,7 +143,7 @@ namespace  nero
 		nero_log("closing the editor ...");
 
 		nero_log("saving window settings");
-		std::string file = getPath({"setting", "window"}, StringPool.EXTENSION_JSON);
+		std::string file = file::getPath({"setting", "window"}, string::StringPool.EXT_JSON);
 
 		Setting window_setting = m_EditorSetting->getSetting("window");
 
@@ -165,7 +165,7 @@ namespace  nero
 		window_setting.setInt("position_x",  windowPosition.x);
 		window_setting.setInt("position_y",  windowPosition.y);
 
-		saveFile(file, window_setting.toJson().dump(3), true);
+		file::saveFile(file, window_setting.toJson().dump(3), true);
 
 		if(m_GameProject)
 		{
@@ -327,7 +327,7 @@ namespace  nero
 	{
 		if(isPressed)
 		{
-			if(key == sf::Keyboard::Space && !CTRL_SHIFT_ALT() && isMouseOnCanvas())
+			if(key == sf::Keyboard::Space && !keyboard::CTRL_SHIFT_ALT() && isMouseOnCanvas())
 				switchBuilderMode();
 		}
 	}
@@ -377,16 +377,16 @@ namespace  nero
 	{
 		if(m_EditorMode == EditorMode::WORLD_BUILDER)
 		{
-			if(m_BuilderMode == BuilderMode::OBJECT && !CTRL_SHIFT_ALT())
+			if(m_BuilderMode == BuilderMode::OBJECT && !keyboard::CTRL_SHIFT_ALT())
 			{
 				m_BuilderMode = BuilderMode::MESH;
 			}
-			else if(m_BuilderMode != BuilderMode::OBJECT && !CTRL_SHIFT_ALT())
+			else if(m_BuilderMode != BuilderMode::OBJECT && !keyboard::CTRL_SHIFT_ALT())
 			{
 				m_BuilderMode = BuilderMode::OBJECT;
 			}
 		}
-		else if(m_EditorMode == EditorMode::PLAY_GAME && !CTRL_SHIFT_ALT())
+		else if(m_EditorMode == EditorMode::PLAY_GAME && !keyboard::CTRL_SHIFT_ALT())
 		{
 			m_EditorMode = EditorMode::WORLD_BUILDER;
 			m_BuilderMode = BuilderMode::OBJECT;
@@ -401,9 +401,9 @@ namespace  nero
 
 			sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
 
-			std::string canvas_pos_string = "Canvas x = " + toString(m_RenderContext->mouse_position.x) + " y = " + toString(m_RenderContext->mouse_position.y);
-			std::string wrold_pos_string = "World x = " + toString(world_pos.x) + " y = "  + toString(world_pos.y);
-			std::string camera_pos_string = "Camera x = " + toString(m_EditorCamera->getPosition().x) + " y = "  + toString(m_EditorCamera->getPosition().y);
+			std::string canvas_pos_string = "Canvas x = " + string::toString(m_RenderContext->mouse_position.x) + " y = " + string::toString(m_RenderContext->mouse_position.y);
+			std::string wrold_pos_string = "World x = " + string::toString(world_pos.x) + " y = "  + string::toString(world_pos.y);
+			std::string camera_pos_string = "Camera x = " + string::toString(m_EditorCamera->getPosition().x) + " y = "  + string::toString(m_EditorCamera->getPosition().y);
 
 			if(ImGui::Button("Black", ImVec2(50.f, 0.f)))
 			{
@@ -553,15 +553,15 @@ namespace  nero
 			case EditorMode::PLAY_GAME:			return "Play Game";			break;
 			case EditorMode::RENDER_GAME:		return "Render Game";		break;
 
-			default: return StringPool.BLANK; break;
+			default: return string::StringPool.BLANK; break;
 		}
 	}
 
 	void EditorInterface::renderGameModeInfo()
 	{
 		std::string gameMode = getString(m_EditorMode);
-		std::string frameRate = toString(m_FrameRate) + " fps";
-		std::string frameTime = toString(m_FrameTime * 1000.f) + " ms";
+		std::string frameRate = string::toString(m_FrameRate) + " fps";
+		std::string frameTime = string::toString(m_FrameTime * 1000.f) + " ms";
 
 		std::string info = gameMode + "  |  " + frameRate + "  |  " + frameTime;
 
@@ -720,7 +720,7 @@ namespace  nero
 			viewport = nullptr;
 
 			//build dockspace layout : this is done only once, when the editor is launched the first time
-			//if(m_EditorSetting->getSetting("dockspace").getBool("build_layout") && !fileExist(getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, StringPool.EXTENSION_INI)))
+			//if(m_EditorSetting->getSetting("dockspace").getBool("build_layout") && !file::fileExist(file::getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, string::StringPool.EXT_INI)))
 			if(m_EditorSetting->getSetting("dockspace").getBool("build_layout") && !m_EditorSetting->getSetting("dockspace").getBool("imgui_setting_exist"))
 			{
 				//split main dockspace in six
@@ -778,7 +778,7 @@ namespace  nero
 				m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").setUInt("id", toolbarDockspaceID);
 				m_EditorSetting->getSetting("dockspace").setBool("build_layout", false);
 
-				saveFile(getPath({"setting", "dockspace"}, StringPool.EXTENSION_JSON), m_EditorSetting->getSetting("dockspace").toString(), true);
+				file::saveFile(file::getPath({"setting", "dockspace"}, string::StringPool.EXT_JSON), m_EditorSetting->getSetting("dockspace").toString(), true);
 			}
 
 			if(m_SetupDockspaceLayout)
@@ -845,7 +845,7 @@ namespace  nero
 
 			ImGui::Separator();
 
-			auto recentProjectTable =  loadJson(getPath({"setting", "recent_project"}));
+			auto recentProjectTable =  file::loadJson(file::getPath({"setting", "recent_project"}));
 
 			if (ImGui::BeginMenu("Recent Projects",!recentProjectTable.empty()))
 			{
@@ -1713,7 +1713,7 @@ namespace  nero
 						//load workpsace
 						std::vector<std::string> gameLevelNameTable = m_AdvancedScene->getGameLevelNameTable();
 
-						gameLevelNameTable.insert(gameLevelNameTable.begin(), StringPool.BLANK);
+						gameLevelNameTable.insert(gameLevelNameTable.begin(), string::StringPool.BLANK);
 
 						if(gameLevelNameTable.empty())
 						{
@@ -1723,7 +1723,7 @@ namespace  nero
 						std::size_t levelCount = gameLevelNameTable.size();
 						const char** levelComboTable = new const char* [levelCount];
 
-						fillCharTable(levelComboTable, gameLevelNameTable);
+						string::fillCharTable(levelComboTable, gameLevelNameTable);
 
 						m_SelectedGameLevel = levelComboTable[m_SelectedGameLevelIndex];
 						if (ImGui::BeginCombo("##game_level_combo", m_SelectedGameLevel, ImGuiComboFlags())) // The second parameter is the label previewed before opening the combo.
@@ -1774,7 +1774,7 @@ namespace  nero
 						std::size_t screenCount = gameScreenNameTable.size();
 						const char** screenComboTable = new const char* [screenCount];
 
-						fillCharTable(screenComboTable, gameScreenNameTable);
+						string::fillCharTable(screenComboTable, gameScreenNameTable);
 
 						m_SelectedGameScreen = screenComboTable[m_SelectedGameScreenIndex];
 						if (ImGui::BeginCombo("##game_level_combo", m_SelectedGameScreen, ImGuiComboFlags())) // The second parameter is the label previewed before opening the combo.
@@ -1827,7 +1827,7 @@ namespace  nero
 							ImGui::Dummy(ImVec2(0.f, 2.f));
 							if(ImGui::Button(type.c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), 50.f)))
 							{
-								fillCharArray(m_InputParentClass, sizeof(m_InputParentClass), type);
+								string::fillCharArray(m_InputParentClass, sizeof(m_InputParentClass), type);
 								ImGui::CloseCurrentPopup();
 							}
 
@@ -1928,7 +1928,7 @@ namespace  nero
 		int buttons_count = 6;
 		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-		auto recentProjectTable =  loadJson(getPath({"setting", "recent_project"}));
+		auto recentProjectTable =  file::loadJson(file::getPath({"setting", "recent_project"}));
 
 		for (int i = 0; i < buttons_count; i++)
 		{
@@ -1936,9 +1936,9 @@ namespace  nero
 			{
 				auto project = recentProjectTable[recentProjectTable.size()-i-1];
 
-				ImGui::Image(m_EditorTextureHolder->getTexture("recent_project_" + toString(i+1)));
+				ImGui::Image(m_EditorTextureHolder->getTexture("recent_project_" + string::toString(i+1)));
 				ImGui::SameLine(0.f, 5.f);
-				std::string project_name =  wrapString(project["project_name"].get<std::string>(), 17);
+				std::string project_name =  string::wrapString(project["project_name"].get<std::string>(), 17);
 				ImGui::PushID(i);
 
 				if(ImGui::Button(project_name.c_str(), button_sz))
@@ -2060,9 +2060,9 @@ namespace  nero
 
 						auto workspace = m_ProjectManager->findWorkspace(workspaceNameTable[n]);
 
-						fillCharArray(m_ProjectInput.company,			sizeof(m_ProjectInput.company),				workspace["company_name"].get<std::string>());
-						fillCharArray(m_ProjectInput.projectLead,		sizeof(m_ProjectInput.projectLead),			workspace["project_lead"].get<std::string>());
-						fillCharArray(m_ProjectInput.projectNamespace,	sizeof(m_ProjectInput.projectNamespace),	workspace["project_namespace"].get<std::string>());
+						string::fillCharArray(m_ProjectInput.company,			sizeof(m_ProjectInput.company),				workspace["company_name"].get<std::string>());
+						string::fillCharArray(m_ProjectInput.projectLead,		sizeof(m_ProjectInput.projectLead),			workspace["project_lead"].get<std::string>());
+						string::fillCharArray(m_ProjectInput.projectNamespace,	sizeof(m_ProjectInput.projectNamespace),	workspace["project_namespace"].get<std::string>());
 					}
 
 					if (is_selected)
@@ -2156,10 +2156,10 @@ namespace  nero
 			ImGui::SetCursorPosY(winsow_size.y * 0.85f - 95.f);
 			bool onCreate = ImGui::Button("Create", ImVec2(100, 0));
 
-			std::string error_message = StringPool.BLANK;
+			std::string error_message = string::StringPool.BLANK;
 			bool error = true;
 
-			if(std::string(m_ProjectInput.name) == StringPool.BLANK)
+			if(std::string(m_ProjectInput.name) == string::StringPool.BLANK)
 			{
 				error_message = "Please enter a Project Name";
 			}
@@ -2168,11 +2168,11 @@ namespace  nero
 				//error_message = "A project with the same signature already exist,\n"
 				//				"please choose another Project Name";
 			//}
-			else if(std::string(m_ProjectInput.projectLead) == StringPool.BLANK)
+			else if(std::string(m_ProjectInput.projectLead) == string::StringPool.BLANK)
 			{
 				error_message = "Please enter a Project Lead";
 			}
-			else if (std::string(m_ProjectInput.company) == StringPool.BLANK)
+			else if (std::string(m_ProjectInput.company) == string::StringPool.BLANK)
 			{
 				error_message = "Please enter a Company Name";
 			}
@@ -2366,7 +2366,7 @@ namespace  nero
                             ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 100.f);
                             if (ImGui::Button("Open Project", ImVec2(100, 0)))
                             {
-								openProject(getPath({m_ProjectManager->findWorkspace(workspace)["workspace_directory"].get<std::string>(), "Project", project_name}));
+								openProject(file::getPath({m_ProjectManager->findWorkspace(workspace)["workspace_directory"].get<std::string>(), "Project", project_name}));
 
                                 ImGui::CloseCurrentPopup();
                             }
@@ -2439,7 +2439,7 @@ namespace  nero
         {
 			selectDirectory([this](nfdchar_t *outPath)
 			{
-				fillCharArray(m_WorkspaceInput.location, sizeof(m_WorkspaceInput.location), std::string(outPath));
+				string::fillCharArray(m_WorkspaceInput.location, sizeof(m_WorkspaceInput.location), std::string(outPath));
 			});
         }
         ImGui::Dummy(ImVec2(0.0f, 2.0f));
@@ -2472,36 +2472,36 @@ namespace  nero
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10.f);
 
         bool onCreate               = ImGui::Button("Create Workspace", ImVec2(130.f, 0));
-        std::string error_message   = StringPool.BLANK;
+        std::string error_message   = string::StringPool.BLANK;
 		bool error = true;
 
 		//workpspace location blank
-		if(std::string(m_WorkspaceInput.location) == StringPool.BLANK)
+		if(std::string(m_WorkspaceInput.location) == string::StringPool.BLANK)
         {
 			error_message = "Please select a location directory";
         }
 		//workpspace location not valid
-		else if(!directoryExist(std::string(m_WorkspaceInput.location)))
+		else if(!file::directoryExist(std::string(m_WorkspaceInput.location)))
         {
 			error_message = "The selected location is not a valid directory";
         }
 		//workpspace name blank
-		else if(std::string(m_WorkspaceInput.name) == StringPool.BLANK)
+		else if(std::string(m_WorkspaceInput.name) == string::StringPool.BLANK)
 		{
 			error_message = "Please enter a workspace name";
 		}
 		//workpspace company name blank
-		else if(std::string(m_WorkspaceInput.company) == StringPool.BLANK)
+		else if(std::string(m_WorkspaceInput.company) == string::StringPool.BLANK)
 		{
 			error_message = "Please enter a company name";
 		}
 		//workpspace project lead name blank
-		else if(std::string(m_WorkspaceInput.projectLead) == StringPool.BLANK)
+		else if(std::string(m_WorkspaceInput.projectLead) == string::StringPool.BLANK)
 		{
 			error_message = "Please enter a project lead name";
 		}
 		//workpspace namespace blank
-		else if(std::string(m_WorkspaceInput.projectLead) == StringPool.BLANK)
+		else if(std::string(m_WorkspaceInput.projectLead) == string::StringPool.BLANK)
 		{
 			error_message = "Please enter a project namesapce";
 		}
@@ -2544,27 +2544,27 @@ namespace  nero
 			selectDirectory([this](nfdchar_t *outPath)
 			{
 				//get selected directory
-				fillCharArray(m_WorkspaceInput.locationImport, sizeof(m_WorkspaceInput.locationImport), std::string(outPath));
+				string::fillCharArray(m_WorkspaceInput.locationImport, sizeof(m_WorkspaceInput.locationImport), std::string(outPath));
 			});
         }
 
 		ImGui::SameLine(wording_width + input_width - 60.f);
 		bool onImport						= ImGui::Button("Import##import_workspace", ImVec2(60.f, 0));
-		std::string import_error_message	= StringPool.BLANK;
+		std::string import_error_message	= string::StringPool.BLANK;
 		bool import_error					= true;
 
 		//workpspace location blank
-		if(std::string(m_WorkspaceInput.locationImport) == StringPool.BLANK)
+		if(std::string(m_WorkspaceInput.locationImport) == string::StringPool.BLANK)
 		{
 			import_error_message = "Please select a workspace";
 		}
 		//workpspace location not valid
-		else if(!directoryExist(std::string(m_WorkspaceInput.locationImport)))
+		else if(!file::directoryExist(std::string(m_WorkspaceInput.locationImport)))
 		{
 			import_error_message = "The selected location is not a valid directory";
 		}
 		//workpspace location not valid
-		else if(!fileExist(getPath({std::string(m_WorkspaceInput.locationImport), ".workspace"})))
+		else if(!file::fileExist(file::getPath({std::string(m_WorkspaceInput.locationImport), ".workspace"})))
 		{
 			import_error_message = "The selected directory is not a valid workspace";
 		}
@@ -2583,7 +2583,7 @@ namespace  nero
 			//import workspace
 			importWorkspace(std::string(m_WorkspaceInput.locationImport));
 			//clear input
-			fillCharArray(m_WorkspaceInput.locationImport, sizeof(m_WorkspaceInput.locationImport), StringPool.BLANK);
+			string::fillCharArray(m_WorkspaceInput.locationImport, sizeof(m_WorkspaceInput.locationImport), string::StringPool.BLANK);
 		}
 		ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
@@ -2791,55 +2791,55 @@ namespace  nero
 		ImGui::Begin("Logging");
 
 		// Actually call in the regular Log helper (which will Begin() into the same window as we just did)
-		std::string log = nero::Logger::getString();
-		if(log != StringPool.BLANK)
+		std::string log = nero::logging::Logger::getString();
+		if(log != string::StringPool.BLANK)
 		{
 			m_LoggerApplication.AddLog(log);
-			nero::Logger::clearStringStream();
+			nero::logging::Logger::clearStringStream();
 		}
 		m_LoggerApplication.Draw("Logging");
 	}
 
-	ImVec4 EditorInterface::getLoggingColor(LOGLEVEL level)
+	ImVec4 EditorInterface::getLoggingColor(logging::LEVEL level)
 	{
 		switch (level)
 		{
-			case LOG_INFO:
+			case logging::LOG_INFO:
 			{
 				return ImVec4();
 			}break;
 
-			case LOG_DEBUG:
+			case logging::LOG_DEBUG:
 			{
 				return ImVec4();
 			}break;
 
-			case LOG_TRACE:
+			case logging::LOG_TRACE:
 			{
 				return ImVec4();
 			}break;
 
-			case LOG_WARNING:
+			case logging::LOG_WARNING:
 			{
 				return ImVec4();
 			}break;
 
-			case LOG_ERROR:
+			case logging::LOG_ERROR:
 			{
 				return ImVec4();
 			}break;
 
-			case LOG_NOTICE:
+			case logging::LOG_NOTICE:
 			{
 				return ImVec4();
 			}break;
 
-			case LOG_CRITICAL:
+			case logging::LOG_CRITICAL:
 			{
 				return ImVec4();
 			}break;
 
-			case LOG_FATAL:
+			case logging::LOG_FATAL:
 			{
 				return ImVec4();
 			}break;
@@ -3008,7 +3008,7 @@ namespace  nero
 							{
 								nfdchar_t *path = NFD_PathSet_GetPath(&pathSet, i);
 
-								fileTable.push_back(toString(path));
+								fileTable.push_back(string::toString(path));
 							}
 
 							const std::vector<std::string> loadedFileTable = m_ResourceManager->loadFile(m_ResourceBrowserType, fileTable);
@@ -3086,12 +3086,12 @@ namespace  nero
 				//copy texture file and json helper
 				for(std::string file : loadedFileTable)
 				{
-					copyFile(file, getPath({m_GameProject->getResourceFoler(), "texture", getFileName(file, true)}));
+					file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "texture", file::getFileName(file, true)}));
 
-					std::string jsonHelper  = replaceFileExtension(file, "json");
-					if(fileExist(jsonHelper))
+					std::string jsonHelper  = file::replaceExtension(file, "json");
+					if(file::fileExist(jsonHelper))
 					{
-						copyFile(file, getPath({m_GameProject->getResourceFoler(), "texture", getFileName(jsonHelper, true)}));
+						file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "texture", file::getFileName(jsonHelper, true)}));
 					}
 				}
 
@@ -3102,12 +3102,12 @@ namespace  nero
 				//copy texture file and json helper
 				for(std::string file : loadedFileTable)
 				{
-					copyFile(file, getPath({m_GameProject->getResourceFoler(), "animation", getFileName(file, true)}));
+					file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "animation", file::getFileName(file, true)}));
 
-					std::string jsonHelper  = replaceFileExtension(file, "json");
-					if(fileExist(jsonHelper))
+					std::string jsonHelper  = file::replaceExtension(file, "json");
+					if(file::fileExist(jsonHelper))
 					{
-						copyFile(file, getPath({m_GameProject->getResourceFoler(), "animation", getFileName(jsonHelper, true)}));
+						file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "animation", file::getFileName(jsonHelper, true)}));
 					}
 				}
 
@@ -3117,7 +3117,7 @@ namespace  nero
 			{
 				for(std::string file : loadedFileTable)
 				{
-					copyFile(file, getPath({m_GameProject->getResourceFoler(), "font", getFileName(file, true)}));
+					file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "font", file::getFileName(file, true)}));
 				}
 
 			}break;
@@ -3126,7 +3126,7 @@ namespace  nero
 			{
 				for(std::string file : loadedFileTable)
 				{
-					copyFile(file, getPath({m_GameProject->getResourceFoler(), "sound", getFileName(file, true)}));
+					file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "sound", file::getFileName(file, true)}));
 				}
 
 			}break;
@@ -3135,7 +3135,7 @@ namespace  nero
 			{
 				for(std::string file : loadedFileTable)
 				{
-					copyFile(file, getPath({m_GameProject->getResourceFoler(), "music", getFileName(file, true)}));
+					file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "music", file::getFileName(file, true)}));
 				}
 
 			}break;
@@ -3144,7 +3144,7 @@ namespace  nero
 			{
 				for(std::string file : loadedFileTable)
 				{
-					copyFile(file, getPath({m_GameProject->getResourceFoler(), "lightmap", getFileName(file, true)}));
+					file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "lightmap", file::getFileName(file, true)}));
 				}
 
 			}break;
@@ -3391,9 +3391,9 @@ namespace  nero
 
 	sf::Texture& EditorInterface::getFontTexture(const std::string& fontName)
 	{
-		std::string file_name = getPath({"resource/editor/texture", fontName}, StringPool.EXTENSION_PNG);
+		std::string file_name = file::getPath({"resource/editor/texture", fontName}, string::StringPool.EXT_PNG);
 
-		if(!fileExist(file_name))
+		if(!file::fileExist(file_name))
 		{
 			sf::RenderTexture renderTexture;
 			renderTexture.create(300.f, 100.f);
@@ -3580,7 +3580,7 @@ namespace  nero
 
 					for(const auto& gameScreen : m_AdvancedScene->getGameScreenTable())
 					{
-						std::string itemId = "##select_screen" + toString(gameScreen->screenId);
+						std::string itemId = "##select_screen" + string::toString(gameScreen->screenId);
 						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedGameScreenId, gameScreen->screenId);
 
 						if(ImGui::IsItemClicked())
@@ -3590,15 +3590,15 @@ namespace  nero
 
 						ImGui::SameLine();
 
-						itemId = "##screen_visible" + toString(gameScreen->screenId);
+						itemId = "##screen_visible" + string::toString(gameScreen->screenId);
 						ImGui::Checkbox(itemId.c_str(), &gameScreen->visible);
 
 						ImGui::SameLine();
 
 						char screen_name[100];
-						fillCharArray(screen_name, sizeof(screen_name), gameScreen->name);
+						string::fillCharArray(screen_name, sizeof(screen_name), gameScreen->name);
 						ImGui::SetNextItemWidth(118.f);
-						itemId = "##screen_name" + toString(gameScreen->screenId);
+						itemId = "##screen_name" + string::toString(gameScreen->screenId);
 						ImGui::InputText(itemId.c_str(), screen_name, sizeof(screen_name));
 
 						if(ImGui::IsItemEdited())
@@ -3666,7 +3666,7 @@ namespace  nero
 
 					for(const auto& objectLayer : sceneBuilder->getLayerTable())
 					{
-						std::string itemId = "##select_layer" + toString(objectLayer->getObjectId());
+						std::string itemId = "##select_layer" + string::toString(objectLayer->getObjectId());
 						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedObjectLayerId, objectLayer->getObjectId());
 
 						if(ImGui::IsItemClicked())
@@ -3676,7 +3676,7 @@ namespace  nero
 
 						ImGui::SameLine();
 
-						itemId = "##layer_visible" + toString(objectLayer->getObjectId());
+						itemId = "##layer_visible" + string::toString(objectLayer->getObjectId());
 						ImGui::Checkbox(itemId.c_str(), &objectLayer->getVisibility());
 
 						ImGui::SameLine();
@@ -3688,9 +3688,9 @@ namespace  nero
 						ImGui::PushStyleColor(ImGuiCol_TextSelectedBg,	std::get<1>(color));
 
 						char layer_name[100];
-						fillCharArray(layer_name, sizeof(layer_name), objectLayer->getName());
+						string::fillCharArray(layer_name, sizeof(layer_name), objectLayer->getName());
 						ImGui::SetNextItemWidth(118.f);
-						itemId = "##layer_name" + toString(objectLayer->getObjectId());
+						itemId = "##layer_name" + string::toString(objectLayer->getObjectId());
 						ImGui::InputText(itemId.c_str(), layer_name, sizeof(layer_name));
 
 						if(ImGui::IsItemEdited())
@@ -3777,7 +3777,7 @@ namespace  nero
 
 					for(const auto& gameLevel : m_AdvancedScene->getGameLevelTable())
 					{
-						std::string itemId = "##select_level" + toString(gameLevel->levelId);
+						std::string itemId = "##select_level" + string::toString(gameLevel->levelId);
 						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedGameLevelId, gameLevel->levelId);
 
 						if(ImGui::IsItemClicked())
@@ -3788,9 +3788,9 @@ namespace  nero
 						ImGui::SameLine();
 
 						char level_name[100];
-						fillCharArray(level_name, sizeof(level_name), gameLevel->name);
+						string::fillCharArray(level_name, sizeof(level_name), gameLevel->name);
 						ImGui::SetNextItemWidth(118.f);
-						itemId = "##level_name" + toString(gameLevel->levelId);
+						itemId = "##level_name" + string::toString(gameLevel->levelId);
 						ImGui::InputText(itemId.c_str(), level_name, sizeof(level_name));
 
 						if(ImGui::IsItemEdited())
@@ -3860,7 +3860,7 @@ namespace  nero
 
 					for(const auto& worldChunk : gameLevel->chunkTable)
 					{
-						std::string itemId = "##select_chunk" + toString(worldChunk->chunkId);
+						std::string itemId = "##select_chunk" + string::toString(worldChunk->chunkId);
 						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedWorldChunkId, worldChunk->chunkId);
 
 						if(ImGui::IsItemClicked())
@@ -3870,15 +3870,15 @@ namespace  nero
 
 						ImGui::SameLine();
 
-						itemId = "##visible_chunk" + toString(worldChunk->chunkId);
+						itemId = "##visible_chunk" + string::toString(worldChunk->chunkId);
 						ImGui::Checkbox(itemId.c_str(), &worldChunk->visible);
 
 						ImGui::SameLine();
 
 						char chunk_name[100];
-						fillCharArray(chunk_name, sizeof(chunk_name), worldChunk->name);
+						string::fillCharArray(chunk_name, sizeof(chunk_name), worldChunk->name);
 						ImGui::SetNextItemWidth(118.f);
-						itemId = "##chunk_name" + toString(worldChunk->chunkId);
+						itemId = "##chunk_name" + string::toString(worldChunk->chunkId);
 						ImGui::InputText(itemId.c_str(), chunk_name, sizeof(chunk_name));
 
 						if(ImGui::IsItemEdited())
@@ -4308,7 +4308,7 @@ namespace  nero
 
 	void EditorInterface::clearScriptWizardInput()
 	{
-		fillCharArray(m_InputClassName,			sizeof(m_InputClassName),		StringPool.BLANK);
+		string::fillCharArray(m_InputClassName,			sizeof(m_InputClassName),		string::StringPool.BLANK);
 	}
 
 	void EditorInterface::registerSignalHandler()

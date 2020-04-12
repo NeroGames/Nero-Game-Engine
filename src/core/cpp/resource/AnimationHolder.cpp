@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -47,15 +47,15 @@ namespace nero
 		}
 
 		//Get the JSON helper file
-		std::string jsonHelper  = replaceFileExtension(filePath.string(), "json");
-		if (!fileExist(jsonHelper))
+		std::string jsonHelper  = file::replaceExtension(filePath.string(), "json");
+		if (!file::fileExist(jsonHelper))
 		{
 			nero_log("failed to load animation resource");
 			nero_log("file not found : " + jsonHelper);
 			return false;
 		}
 
-		nlohmann::json helper = loadJson(jsonHelper, true);
+		nlohmann::json helper = file::loadJson(jsonHelper, true);
 
 		if (helper.find("type") == helper.end()) //Texture packer animation
 		{
@@ -63,8 +63,8 @@ namespace nero
 
 			for (auto& frame : frame_table)
 			{
-				std::string frameName                   = removeFileExtension(frame["filename"].get<std::string>());
-				std::vector<std::string> splitResult    = splitString(frameName, '/');
+				std::string frameName                   = file::removeFileExtension(frame["filename"].get<std::string>());
+				std::vector<std::string> splitResult    = string::splitString(frameName, '/');
 
 				std::string sequenceName    = splitResult[0];
 				frameName                   = splitResult[1];
@@ -99,7 +99,7 @@ namespace nero
 
 	void AnimationHolder::loadDirectory()
     {
-		if(m_SelectedDirectory == StringPool.BLANK)
+		if(m_SelectedDirectory == string::StringPool.BLANK)
 		{
 			nero_log("failed to load directory");
 			return;
@@ -109,7 +109,7 @@ namespace nero
 
 		std::experimental::filesystem::path folderPath(m_SelectedDirectory);
 
-		if(!directoryExist(m_SelectedDirectory))
+		if(!file::directoryExist(m_SelectedDirectory))
         {
             nero_log("failed to load animation resource");
 			nero_log("folder not found : " + m_SelectedDirectory);
@@ -121,7 +121,7 @@ namespace nero
 		{
 			nero_log(it->path().string());
 
-			if(checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
+			if(file::checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
             {
 				loadFile(it->path().string());
 			}

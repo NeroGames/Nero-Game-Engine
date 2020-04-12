@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -48,21 +48,21 @@ namespace nero
 		}
 
 		//Read the .txt file to retrieve sprite bound
-		std::string txtHelper   = replaceFileExtension(filePath.string(), "txt");
-		std::string jsonHelper  = replaceFileExtension(filePath.string(), "json");
+		std::string txtHelper   = file::replaceExtension(filePath.string(), "txt");
+		std::string jsonHelper  = file::replaceExtension(filePath.string(), "json");
 
 		std::map<std::string, std::map<std::string, sf::IntRect>> spriteMap;
 		std::vector<std::string>                                  spriteTable;
 
-		if(fileExist(jsonHelper))
+		if(file::fileExist(jsonHelper))
 		{
-			nlohmann::json helper = loadJson(jsonHelper, true);
+			nlohmann::json helper = file::loadJson(jsonHelper, true);
 
 			nlohmann::json frame_table = helper["frames"];
 
 			for (auto& frame : frame_table)
 			{
-				std::string spriteName      = removeFileExtension(frame["filename"].get<std::string>());
+				std::string spriteName      = file::removeFileExtension(frame["filename"].get<std::string>());
 				int rectLeft                = frame["frame"]["x"];
 				int rectTop                 = frame["frame"]["y"];
 				int rectWidth               = frame["frame"]["w"];
@@ -78,7 +78,7 @@ namespace nero
 				nero_log("loaded : " + spriteName);
 			}
 		}
-		else if (fileExist(txtHelper))// .txt helper file exist, the texture get several sprites
+		else if (file::fileExist(txtHelper))// .txt helper file exist, the texture get several sprites
 		{
 			/*std::ifstream inStream(txtHelper);
 			//Split each line to retrieve the necessary information
@@ -151,7 +151,7 @@ namespace nero
 
 	void TextureHolder::loadDirectory()
     {
-		if(m_SelectedDirectory == StringPool.BLANK)
+		if(m_SelectedDirectory == string::StringPool.BLANK)
 		{
 			nero_log("failed to load directory");
 			return;
@@ -161,7 +161,7 @@ namespace nero
 
 		std::experimental::filesystem::path directoryPath(m_SelectedDirectory);
 
-		if(!directoryExist(m_SelectedDirectory))
+		if(!file::directoryExist(m_SelectedDirectory))
         {
 			nero_log("failed to load texture resource");
 			nero_log("directory not found : " + m_SelectedDirectory);
@@ -173,7 +173,7 @@ namespace nero
 		while (it != std::experimental::filesystem::directory_iterator{})
         {
             //When we found a Texture
-			if(checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
+			if(file::checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
             {
                 //Load the Texture
 				loadFile(it->path().string());

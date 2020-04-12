@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -86,8 +86,8 @@ namespace nero
         nlohmann::json scene_setting;
 
         scene_setting["frequency"]              = hz;
-        scene_setting["view_center"]            = nero::toJson<b2Vec2>(viewCenter);
-        scene_setting["gravity"]                = nero::toJson<b2Vec2>(gravity);
+		scene_setting["view_center"]            = graphics::vectorToJson<b2Vec2>(viewCenter);
+		scene_setting["gravity"]                = graphics::vectorToJson<b2Vec2>(gravity);
 
         scene_setting["velocity_iterations"]    = velocityIterations;
         scene_setting["position_iterations"]    = positionIterations;
@@ -117,8 +117,8 @@ namespace nero
         SceneSetting scene_setting;
 
         scene_setting.hz                    = setting["frequency"];
-        scene_setting.gravity               = vectorFromJson<b2Vec2>(setting["gravity"]);
-        scene_setting.viewCenter            = vectorFromJson<b2Vec2>(setting["view_center"]);
+		scene_setting.gravity               = graphics::vectorFromJson<b2Vec2>(setting["gravity"]);
+		scene_setting.viewCenter            = graphics::vectorFromJson<b2Vec2>(setting["view_center"]);
 
 
         scene_setting.velocityIterations    = setting["velocity_iterations"];

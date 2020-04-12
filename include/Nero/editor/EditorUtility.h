@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 #ifndef EDITORINTERFACEUTILITY_H
 #define EDITORINTERFACEUTILITY_H
 ///////////////////////////HEADERS///////////////////////////
 //Nero
-#include <Nero/core/cpp/utility/StringUtil.h>
+#include <Nero/core/cpp/utility/String.h>
 //Json
 #include <json/json.hpp>
 //Cpp
@@ -60,12 +60,12 @@ namespace nero
 
 		void clear()
 		{
-			fillCharArray(location,			sizeof(location),			StringPool.BLANK);
-			fillCharArray(name,				sizeof(name),				StringPool.BLANK);
-			fillCharArray(projectLead,		sizeof(projectLead),		StringPool.BLANK);
-			fillCharArray(company,			sizeof(company),			StringPool.BLANK);
-			fillCharArray(projectNamespace,	sizeof(projectNamespace),	StringPool.BLANK);
-			fillCharArray(locationImport,	sizeof(locationImport),		StringPool.BLANK);
+			string::fillCharArray(location,			sizeof(location),			string::StringPool.BLANK);
+			string::fillCharArray(name,				sizeof(name),				string::StringPool.BLANK);
+			string::fillCharArray(projectLead,		sizeof(projectLead),		string::StringPool.BLANK);
+			string::fillCharArray(company,			sizeof(company),			string::StringPool.BLANK);
+			string::fillCharArray(projectNamespace,	sizeof(projectNamespace),	string::StringPool.BLANK);
+			string::fillCharArray(locationImport,	sizeof(locationImport),		string::StringPool.BLANK);
 		}
 	};
 
@@ -88,11 +88,11 @@ namespace nero
 
 		void clear()
 		{
-			fillCharArray(name,					sizeof(name),				StringPool.BLANK);
-			fillCharArray(projectLead,			sizeof(projectLead),		StringPool.BLANK);
-			fillCharArray(company,				sizeof(company),			StringPool.BLANK);
-			fillCharArray(projectNamespace,		sizeof(projectNamespace),	StringPool.BLANK);
-			fillCharArray(description,			sizeof(description),		StringPool.BLANK);
+			string::fillCharArray(name,					sizeof(name),				string::StringPool.BLANK);
+			string::fillCharArray(projectLead,			sizeof(projectLead),		string::StringPool.BLANK);
+			string::fillCharArray(company,				sizeof(company),			string::StringPool.BLANK);
+			string::fillCharArray(projectNamespace,		sizeof(projectNamespace),	string::StringPool.BLANK);
+			string::fillCharArray(description,			sizeof(description),		string::StringPool.BLANK);
 
 			startupPack = true;
 		}
@@ -103,9 +103,9 @@ namespace nero
 			{
 				auto workspace = workspaceTable.front();
 
-				fillCharArray(company,				sizeof(company),			workspace["company_name"].get<std::string>());
-				fillCharArray(projectLead,			sizeof(projectLead),		workspace["project_lead"].get<std::string>());
-				fillCharArray(projectNamespace,		sizeof(projectNamespace),	workspace["project_namespace"].get<std::string>());
+				string::fillCharArray(company,				sizeof(company),			workspace["company_name"].get<std::string>());
+				string::fillCharArray(projectLead,			sizeof(projectLead),		workspace["project_lead"].get<std::string>());
+				string::fillCharArray(projectNamespace,		sizeof(projectNamespace),	workspace["project_namespace"].get<std::string>());
 
 				workspaceIndex = 0;
 			}

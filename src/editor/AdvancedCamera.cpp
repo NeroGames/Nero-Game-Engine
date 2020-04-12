@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -92,30 +92,30 @@ namespace nero
         if(isPressed)
         {
             //panning
-            if(key == sf::Keyboard::Numpad8 && !CTRL_SHIFT_ALT())
+			if(key == sf::Keyboard::Numpad8 && !keyboard::CTRL_SHIFT_ALT())
                 m_IsPanningUp = isPressed;
 
-            if(key == sf::Keyboard::Numpad2 && !CTRL_SHIFT_ALT())
+			if(key == sf::Keyboard::Numpad2 && !keyboard::CTRL_SHIFT_ALT())
                 m_IsPanningDown = isPressed;
 
-            if(key == sf::Keyboard::Numpad4 && !CTRL_SHIFT_ALT())
+			if(key == sf::Keyboard::Numpad4 && !keyboard::CTRL_SHIFT_ALT())
                 m_IsPanningLeft = isPressed;
 
-            if(key == sf::Keyboard::Numpad6 && !CTRL_SHIFT_ALT())
+			if(key == sf::Keyboard::Numpad6 && !keyboard::CTRL_SHIFT_ALT())
                 m_IsPanningRight = isPressed;
 
             //Roation
-            if(key == sf::Keyboard::Numpad7 && !CTRL_SHIFT_ALT())
+			if(key == sf::Keyboard::Numpad7 && !keyboard::CTRL_SHIFT_ALT())
                 m_IsRotatingLeft = isPressed;
 
-            else if(key == sf::Keyboard::Numpad9 && !CTRL_SHIFT_ALT())
+			else if(key == sf::Keyboard::Numpad9 && !keyboard::CTRL_SHIFT_ALT())
                 m_IsRotatingRight = isPressed;
 
             //Zooming
-            if(key == sf::Keyboard::Add && !CTRL_SHIFT_ALT())
+			if(key == sf::Keyboard::Add && !keyboard::CTRL_SHIFT_ALT())
                 m_IsZoomingIn = isPressed;
 
-            else if(key == sf::Keyboard::Subtract && !CTRL_SHIFT_ALT())
+			else if(key == sf::Keyboard::Subtract && !keyboard::CTRL_SHIFT_ALT())
                 m_IsZoomingOut = isPressed;
         }
 
@@ -155,7 +155,7 @@ namespace nero
     {
         if (mouse.wheel == sf::Mouse::VerticalWheel)
         {
-            if(!CTRL_SHIFT_ALT())
+            if(!keyboard::CTRL_SHIFT_ALT())
             {
                 if(mouse.delta > 0.f)
                 {
@@ -170,7 +170,7 @@ namespace nero
                     zoomOut();
                 }
             }
-            else if (ALT())
+			else if (keyboard::ALT())
             {
                 if(mouse.delta > 0.f)
                 {
@@ -185,7 +185,7 @@ namespace nero
                     panDown();
                 }
             }
-            else if (CTRL())
+			else if (keyboard::CTRL())
             {
                 if(mouse.delta > 0.f)
                 {
@@ -201,7 +201,7 @@ namespace nero
                 }
             }
 
-             else if (SHIFT())
+			 else if (keyboard::SHIFT())
             {
                 if(mouse.delta > 0.f)
                 {
@@ -219,7 +219,7 @@ namespace nero
         }
         else if(mouse.wheel == sf::Mouse::HorizontalWheel)
         {
-            if(!CTRL_SHIFT_ALT())
+            if(!keyboard::CTRL_SHIFT_ALT())
             {
                 if(mouse.delta > 0.f)
                 {

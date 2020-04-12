@@ -1,5 +1,6 @@
 #include <Nero/editor/AdvancedScene.h>
-#include <Nero/core/cpp/utility/MathUtil.h>
+#include <Nero/core/cpp/utility/Math.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
 #include <Nero/core/cpp/object/GameLevelObject.h>
 #include <SFML/Graphics/Sprite.hpp>
 
@@ -55,9 +56,9 @@ namespace nero
 		m_GameLevelCount++;
 
 		std::string levelName = name;
-		if(levelName == StringPool.BLANK)
+		if(levelName == string::StringPool.BLANK)
 		{
-			levelName = "Game Level " + toString(m_GameLevelCount);
+			levelName = "Game Level " + string::toString(m_GameLevelCount);
 		}
 
 		m_GameLevelTable.push_back(std::make_shared<GameLevel>());
@@ -88,9 +89,9 @@ namespace nero
 
 			std::string chunkName = name;
 
-			if(chunkName == StringPool.BLANK)
+			if(chunkName == string::StringPool.BLANK)
 			{
-				chunkName = "World Chunk " + toString(m_SelectedGameLevel->chunkCount);
+				chunkName = "World Chunk " + string::toString(m_SelectedGameLevel->chunkCount);
 			}
 
 			m_SelectedGameLevel->chunkTable.push_back(std::make_shared<WorldChunk>());
@@ -111,9 +112,9 @@ namespace nero
 		m_GameScreenCount++;
 
 		std::string screenName = name;
-		if(screenName == StringPool.BLANK)
+		if(screenName == string::StringPool.BLANK)
 		{
-			screenName = "Game Screen " + toString(m_GameScreenCount);
+			screenName = "Game Screen " + string::toString(m_GameScreenCount);
 		}
 
 
@@ -476,7 +477,7 @@ namespace nero
 
 	void AdvancedScene::launchBomb()
 	{
-		b2Vec2 p(randomFloat(-15.0f, 15.0f), -30.0f);
+		b2Vec2 p(math::randomFloat(-15.0f, 15.0f), -30.0f);
 		b2Vec2 v = -5.0f * p;
 		launchBomb(p, v);
 	}
@@ -566,12 +567,12 @@ namespace nero
 			int32 balance       = m_Scene->m_PhysicWorld->GetTreeBalance();
 			float32 quality     = m_Scene->m_PhysicWorld->GetTreeQuality();
 
-			m_StatMessage = "body/contact/joint = " + toString(bodyCount) + " / " +  toString(contactCount) + " / " + toString(jointCount) + "\n" \
-							"proxy/height/balance/quality = " + toString(proxyCount) + " / " + toString(height) + " / " +  toString(balance) + " / " + toString(quality) + "\n";
+			m_StatMessage = "body/contact/joint = " + string::toString(bodyCount) + " / " +  string::toString(contactCount) + " / " + string::toString(jointCount) + "\n" \
+							"proxy/height/balance/quality = " + string::toString(proxyCount) + " / " + string::toString(height) + " / " +  string::toString(balance) + " / " + string::toString(quality) + "\n";
 		}
 		else
 		{
-			m_StatMessage = StringPool.BLANK;
+			m_StatMessage = string::StringPool.BLANK;
 		}
 
 		// Track maximum profile times
@@ -618,18 +619,18 @@ namespace nero
 				aveProfile.broadphase       = scale * m_TotalProfile.broadphase;
 			}
 
-			m_ProfileMessage =  "step [ave] (max) = "           + toString(p.step)          + " [" + toString(aveProfile.step)          + "]" +  "(" + toString(m_MaxProfile.step)          + ") " + "\n" \
-								"collide [ave] (max) = "        + toString(p.collide)       + " [" + toString(aveProfile.collide)       + "]" +  "(" + toString(m_MaxProfile.collide)       + ")" + "\n" \
-								"solve [ave] (max) = "          + toString(p.solve)         + " [" + toString(aveProfile.solve)         + "]" +  "(" + toString(m_MaxProfile.solve)         + ")" + "\n" \
-								"solve init [ave] (max) = "     + toString(p.solveInit)     + " [" + toString(aveProfile.solveInit)     + "]" +  "(" + toString(m_MaxProfile.solveInit)     + ")" + "\n" \
-								"solve velocity [ave] (max) = " + toString(p.solveVelocity) + " [" + toString(aveProfile.solveVelocity) + "]" +  "(" + toString(m_MaxProfile.solveVelocity) + ")" + "\n" \
-								"solve position [ave] (max) = " + toString(p.solvePosition) + " [" + toString(aveProfile.solvePosition) + "]" +  "(" + toString(m_MaxProfile.solvePosition) + ")" + "\n" \
-								"solveTOI [ave] (max) = "       + toString(p.solveTOI)      + " [" + toString(aveProfile.solveTOI)      + "]" +  "(" + toString(m_MaxProfile.solveTOI)      + ")" + "\n" \
-								"broad-phase [ave] (max) = "    + toString(p.broadphase)    + " [" + toString(aveProfile.broadphase)    + "]" +  "(" + toString(m_MaxProfile.broadphase)    + ")" + "\n";
+			m_ProfileMessage =  "step [ave] (max) = "           + string::toString(p.step)          + " [" + string::toString(aveProfile.step)          + "]" +  "(" + string::toString(m_MaxProfile.step)          + ") " + "\n" \
+								"collide [ave] (max) = "        + string::toString(p.collide)       + " [" + string::toString(aveProfile.collide)       + "]" +  "(" + string::toString(m_MaxProfile.collide)       + ")" + "\n" \
+								"solve [ave] (max) = "          + string::toString(p.solve)         + " [" + string::toString(aveProfile.solve)         + "]" +  "(" + string::toString(m_MaxProfile.solve)         + ")" + "\n" \
+								"solve init [ave] (max) = "     + string::toString(p.solveInit)     + " [" + string::toString(aveProfile.solveInit)     + "]" +  "(" + string::toString(m_MaxProfile.solveInit)     + ")" + "\n" \
+								"solve velocity [ave] (max) = " + string::toString(p.solveVelocity) + " [" + string::toString(aveProfile.solveVelocity) + "]" +  "(" + string::toString(m_MaxProfile.solveVelocity) + ")" + "\n" \
+								"solve position [ave] (max) = " + string::toString(p.solvePosition) + " [" + string::toString(aveProfile.solvePosition) + "]" +  "(" + string::toString(m_MaxProfile.solvePosition) + ")" + "\n" \
+								"solveTOI [ave] (max) = "       + string::toString(p.solveTOI)      + " [" + string::toString(aveProfile.solveTOI)      + "]" +  "(" + string::toString(m_MaxProfile.solveTOI)      + ")" + "\n" \
+								"broad-phase [ave] (max) = "    + string::toString(p.broadphase)    + " [" + string::toString(aveProfile.broadphase)    + "]" +  "(" + string::toString(m_MaxProfile.broadphase)    + ")" + "\n";
 		}
 		else
 		{
-			m_ProfileMessage = StringPool.BLANK;
+			m_ProfileMessage = string::StringPool.BLANK;
 		}
 
 
@@ -664,7 +665,7 @@ namespace nero
 
 			for (int32 i = 0; i < m_Scene->m_ContactPointCount; ++i)
 			{
-				ContactPoint* point = m_Scene->m_ContactPointTable + i;
+				ContactPoint* point = m_Scene->m_ContactVectorTablele + i;
 
 				if (point->state == b2_addState)
 				{
@@ -718,7 +719,7 @@ namespace nero
 	void AdvancedScene::handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
 	{
 		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
-		b2Vec2 p = sf_to_b2(world_pos, SCALE);
+		b2Vec2 p = graphics::sf_to_b2(world_pos, EngineConstant.SCALE);
 
 		if(mouse.button == sf::Mouse::Left && isPressed == true)
 		{
@@ -747,7 +748,7 @@ namespace nero
 	void AdvancedScene::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
 	{
 		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
-		b2Vec2 p = sf_to_b2(world_pos, SCALE);
+		b2Vec2 p = graphics::sf_to_b2(world_pos, EngineConstant.SCALE);
 
 		mouseMove(p);
 	}

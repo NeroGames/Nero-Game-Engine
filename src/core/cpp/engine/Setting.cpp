@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
 //Nero
 #include <Nero/core/cpp/engine/Setting.h>
-#include <Nero/core/cpp/utility/StringUtil.h>
-#include <Nero/core/cpp/utility/FileUtil.h>
+#include <Nero/core/cpp/utility/String.h>
+#include <Nero/core/cpp/utility/File.h>
 #include <boost/range/adaptor/reversed.hpp>
 #include <boost/algorithm/string.hpp>
 /////////////////////////////////////////////////////////////
@@ -23,9 +23,9 @@ namespace nero
 	void Setting::loadSetting(const std::string& file, const bool& hasExtention)
 	{
 		//can load a json object or a json array
-		std::string filePath			= getPath({file});
-		std::string setting				= getFileName(filePath);
-		nlohmann::json loaded			= nero::loadJson(filePath, hasExtention);
+		std::string filePath			= file::getPath({file});
+		std::string setting				= file::getFileName(filePath);
+		nlohmann::json loaded			= file::loadJson(filePath, hasExtention);
 
 		if(!loaded.is_null())
 		{

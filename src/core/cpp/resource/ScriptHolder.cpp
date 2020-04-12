@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -11,7 +11,7 @@ namespace nero
 {
     ScriptHolder::ScriptHolder()
 	{
-		m_Configuration = loadJson("setting/resource")["script"];
+		m_Configuration = file::loadJson("setting/resource")["script"];
     }
 
     void ScriptHolder::load()

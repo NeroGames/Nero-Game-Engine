@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -13,7 +13,7 @@ namespace nero
 {
     ShaderHolder::ShaderHolder()
     {
-		m_Configuration = loadJson("setting/resource")["shader"];
+		m_Configuration = file::loadJson("setting/resource")["shader"];
 
         m_ShaderAvailable = sf::Shader::isAvailable();
     }
@@ -33,17 +33,15 @@ namespace nero
 
         nero_log("Shader resource path : " + folder_name);
 
-		using namespace  std::experimental::filesystem;;
-
-        if(!exists(folder_name))
+		if(!file::directoryExist(folder_name))
         {
-            nero_log("failed to load texture resource");
+			nero_log("failed to load shader resource");
             nero_log("folder not found : " + folder_name);
             return;
         }
 
         //load the shader json
-        nlohmann::json shader_table = loadJson(m_Configuration["descriptor"].get<std::string>());
+		nlohmann::json shader_table = file::loadJson(m_Configuration["descriptor"].get<std::string>());
 
         shader_table = shader_table["shader_list"];
 
@@ -59,14 +57,14 @@ namespace nero
                 std::string file_1 = folder_name + "/" +  shader_json["vertex"].get<std::string>();
                 std::string file_2 = folder_name + "/" +  shader_json["fragment"].get<std::string>();
 
-                if(!exists(file_1))
+				if(!file::fileExist(file_1))
                 {
                     nero_log("failed to load shader resource");
                     nero_log("file not found : " + file_1);
                     continue;
                 }
 
-                if(!exists(file_2))
+				if(!file::fileExist(file_2))
                 {
                     nero_log("failed to load shader resource");
                     nero_log("file not found : " + file_2);
@@ -81,14 +79,14 @@ namespace nero
                 if(shader_json.find("name") != shader_json.end())
                    shaderName = shader_json["name"].get<std::string>();
                 else
-                    shaderName = removeFileExtension(file_1) + "_" + removeFileExtension(file_2);
+					shaderName = file::removeFileExtension(file_1) + "_" + file::removeFileExtension(file_2);
 
             }
             else if (shader_json.find("fragment") != shader_json.end() && shader_json.find("vertex") == shader_json.end())
             {
                 std::string file = folder_name + "/" +  shader_json["fragment"].get<std::string>();
 
-                if(!exists(file))
+				if(!file::fileExist(file))
                 {
                     nero_log("failed to load shader resource");
                     nero_log("file not found : " + file);
@@ -103,13 +101,13 @@ namespace nero
                 if(shader_json.find("name") != shader_json.end())
                    shaderName = shader_json["name"].get<std::string>();
                 else
-                    shaderName = removeFileExtension(file);
+					shaderName = file::removeFileExtension(file);
             }
             else if (shader_json.find("fragment") == shader_json.end() && shader_json.find("vertex") != shader_json.end())
             {
                 std::string file = folder_name + "/" +  shader_json["vertex"].get<std::string>();
 
-                if(!exists(file))
+				if(!file::fileExist(file))
                 {
                     nero_log("failed to load shader resource");
                     nero_log("file not found : " + file);
@@ -124,7 +122,7 @@ namespace nero
                 if(shader_json.find("name") != shader_json.end())
                    shaderName = shader_json["name"].get<std::string>();
                 else
-                    shaderName = removeFileExtension(file);
+					shaderName = file::removeFileExtension(file);
             }
 
             addShader(shaderName, std::move(std::unique_ptr<sf::Shader>(shader)));

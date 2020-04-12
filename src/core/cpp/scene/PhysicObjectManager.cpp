@@ -1,11 +1,12 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/core/cpp/scene/PhysicObjectManager.h>
 #include <Nero/core/cpp/utility/Utility.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
 //BOX2D
 #include <Box2D/Collision/Shapes/b2EdgeShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
@@ -52,7 +53,7 @@ namespace nero
     void PhysicObjectManager::setupVertexTab(b2Vec2* tab, Mesh& mesh)
     {
         for(int i = 0; i < mesh.getAllVertex()->size(); i++)
-            tab[i] = sf_to_b2(mesh.getAllVertex()->at(i).getPosition() - mesh.getCenter(), SCALE);
+			tab[i] = graphics::sf_to_b2(mesh.getAllVertex()->at(i).getPosition() - mesh.getCenter(), EngineConstant.SCALE);
     }
 
     void PhysicObjectManager::setupFixtureDef(Mesh& mesh)
@@ -78,15 +79,15 @@ namespace nero
         //calcShapes(vec, figsVec);
         std::vector<sf::Vector2f> convex;
         for(auto v : vec)
-            convex.push_back(b2_to_sf(v));
+			convex.push_back(graphics::b2_to_sf(v));
 
-        auto concav = concave_to_convex(convex);
+		auto concav = math::concaveToConvex(convex);
 
         for(auto tab : concav)
         {
             std::vector<b2Vec2> tab_tab;
             for(auto v: tab)
-                tab_tab.push_back(sf_to_b2(v));
+				tab_tab.push_back(graphics::sf_to_b2(v));
 
             figsVec.push_back(tab_tab);
         }
@@ -126,7 +127,7 @@ namespace nero
                 m_FixtureDef.shape = &shape;
                 object.getBody()->CreateFixture(&m_FixtureDef);
 
-                object.getBody()->SetTransform(sf_to_b2(mesh->getCenter(), SCALE), 0.f);
+				object.getBody()->SetTransform(graphics::sf_to_b2(mesh->getCenter(), EngineConstant.SCALE), 0.f);
                 object.setSize(mesh->getSize());
 
                 return std::make_shared<PhysicObject>(object);
@@ -139,13 +140,13 @@ namespace nero
                 PhysicObject object(m_World->CreateBody(&m_BodyDef));
 
                 b2CircleShape shape;
-                shape.m_radius = mesh->getRadius()/SCALE;
+				shape.m_radius = mesh->getRadius()/EngineConstant.SCALE;
 
                 setupFixtureDef(*mesh);
                 m_FixtureDef.shape = &shape;
                 object.getBody()->CreateFixture(&m_FixtureDef);
 
-                object.getBody()->SetTransform(sf_to_b2(mesh->getCenter(), SCALE), 0.f);
+				object.getBody()->SetTransform(graphics::sf_to_b2(mesh->getCenter(), EngineConstant.SCALE), 0.f);
                 object.setSize(mesh->getSize());
 
                 return std::make_shared<PhysicObject>(object);
@@ -166,9 +167,9 @@ namespace nero
 
                 setupFixtureDef(*mesh);
 
-                computePolygonBody(object.getBody(), &m_FixtureDef, &vectTab, SCALE);
+				computePolygonBody(object.getBody(), &m_FixtureDef, &vectTab, EngineConstant.SCALE);
 
-                object.getBody()->SetTransform(sf_to_b2(mesh->getCenter(), SCALE), 0.f);
+				object.getBody()->SetTransform(graphics::sf_to_b2(mesh->getCenter(), EngineConstant.SCALE), 0.f);
                 object.setSize(mesh->getSize());
 
                 return std::make_shared<PhysicObject>(object);
@@ -190,7 +191,7 @@ namespace nero
                 m_FixtureDef.shape = &shape;
                 object.getBody()->CreateFixture(&m_FixtureDef);
 
-                object.getBody()->SetTransform(sf_to_b2(mesh->getCenter(), SCALE), 0.f);
+				object.getBody()->SetTransform(graphics::sf_to_b2(mesh->getCenter(), EngineConstant.SCALE), 0.f);
                 object.setSize(mesh->getSize());
 
                 return std::make_shared<PhysicObject>(object);

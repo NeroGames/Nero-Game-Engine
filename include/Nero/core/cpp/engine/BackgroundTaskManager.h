@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 #ifndef BACKGROUNDTASKMANAGER_H
 #define BACKGROUNDTASKMANAGER_H
@@ -25,32 +25,32 @@ namespace nero
 		public:
 			//create and schedule a task
 			static void startTask(void (*callback)(BackgroundTask::Ptr backgroundTask),
-								  const std::string& taskName = StringPool.BLANK,
+								  const std::string& taskName = string::StringPool.BLANK,
 								  const std::string& taskCategory = EngineConstant.DEFAULT_TASK_CATEGORY);
 
 			static void startTask(void (*callback)(const Parameter& parameter, BackgroundTask::Ptr backgroundTask),
 								  const Parameter& parameter,
-								  const std::string& taskName = StringPool.BLANK,
+								  const std::string& taskName = string::StringPool.BLANK,
 								  const std::string& taskCategory = EngineConstant.DEFAULT_TASK_CATEGORY);
 
 			static void startTask(std::function<void (BackgroundTask::Ptr backgroundTask)> callback,
-								  const std::string& taskName = StringPool.BLANK,
+								  const std::string& taskName = string::StringPool.BLANK,
 								  const std::string& taskCategory = EngineConstant.DEFAULT_TASK_CATEGORY);
 
 			static void startTask(std::function<void (const Parameter& parameter, BackgroundTask::Ptr backgroundTask)> callback,
 								  const Parameter& parameter,
-								  const std::string& taskName = StringPool.BLANK,
+								  const std::string& taskName = string::StringPool.BLANK,
 								  const std::string& taskCategory = EngineConstant.DEFAULT_TASK_CATEGORY);
 			//test template
 			template<typename T>
 			static void startTask(void(T::*callBack)(BackgroundTask::Ptr backgroundTask), T* parent,
-								  const std::string& taskName = StringPool.BLANK,
+								  const std::string& taskName = string::StringPool.BLANK,
 								  const std::string& taskCategory = EngineConstant.DEFAULT_TASK_CATEGORY);
 
 			template<typename T>
 			static void startTask(void(T::*callBack)(const Parameter& parameter, BackgroundTask::Ptr backgroundTask), T* parent,
 								  const Parameter& parameter,
-								  const std::string& taskName = StringPool.BLANK,
+								  const std::string& taskName = string::StringPool.BLANK,
 								  const std::string& taskCategory = EngineConstant.DEFAULT_TASK_CATEGORY);
 
 			//get task

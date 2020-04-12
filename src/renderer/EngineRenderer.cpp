@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
 //Nero
@@ -74,7 +74,7 @@ namespace  nero
 	void EngineRenderer::loadGame()
 	{
 		//load game setting
-		m_GameSetting->loadSetting(getPath({"Game", "Setting", "game_setting"}));
+		m_GameSetting->loadSetting(file::getPath({"Game", "Setting", "game_setting"}));
 
 		//create Render_Window
 		createRenderWindow();
@@ -110,7 +110,7 @@ namespace  nero
 
 	void EngineRenderer::loadStartupScreen()
 	{
-		boost::dll::fs::path game_library_path(removeFileExtension(m_GameSetting->getString("game_library_file")));
+		boost::dll::fs::path game_library_path(file::removeFileExtension(m_GameSetting->getString("game_library_file")));
 
 		m_CreateCppStartupScreen = boost::dll::import_alias<CreateCppStartupScreen>(
 									   game_library_path,
@@ -138,7 +138,7 @@ namespace  nero
 	int EngineRenderer::startEngine(bool& engineStarted, const unsigned int duration)
 	{
 		//load scene class
-		boost::dll::fs::path game_library_path(removeFileExtension(m_GameSetting->getString("game_library_file")));
+		boost::dll::fs::path game_library_path(file::removeFileExtension(m_GameSetting->getString("game_library_file")));
 
 		m_CreateCppScene = boost::dll::import_alias<CreateCppScene>(
 									   game_library_path,

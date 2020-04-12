@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -99,7 +99,7 @@ namespace nero
 
 	void FontHolder::loadDirectory()
     {
-		if(m_SelectedDirectory == StringPool.BLANK)
+		if(m_SelectedDirectory == string::StringPool.BLANK)
 		{
 			nero_log("failed to load directory");
 			return;
@@ -109,7 +109,7 @@ namespace nero
 
 		std::experimental::filesystem::path folderPath(m_SelectedDirectory);
 
-		if(!directoryExist(m_SelectedDirectory))
+		if(!file::directoryExist(m_SelectedDirectory))
         {
             nero_log("unable to load font resource");
 			nero_log("folder not found : " + m_SelectedDirectory);
@@ -119,7 +119,7 @@ namespace nero
 		std::experimental::filesystem::directory_iterator it{folderPath};
 		while(it != std::experimental::filesystem::directory_iterator{})
         {
-			if(checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
+			if(file::checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
             {
 				loadFile(it->path().string());
             }

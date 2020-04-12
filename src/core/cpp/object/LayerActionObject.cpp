@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -11,7 +11,7 @@ namespace nero
     LayerActionObject::LayerActionObject():
          m_LayerObject(nullptr)
         ,m_ActionTable()
-        ,m_TimeStep(TIME_PER_FRAME)
+		,m_TimeStep(EngineConstant.TIME_PER_FRAME)
     {
 
     }

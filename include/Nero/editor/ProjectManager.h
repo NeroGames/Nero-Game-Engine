@@ -7,7 +7,7 @@
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/lua/scene/LuaScene.h>
 #include <boost/function.hpp>
-#include <Nero/core/cpp/utility/StringUtil.h>
+#include <Nero/core/cpp/utility/String.h>
 #include <Nero/core/cpp/engine/BackgroundTask.h>
 
 #include <Nero/core/cpp/engine/Parameter.h>
@@ -52,7 +52,7 @@ namespace  nero
 
            const nlohmann::json findWorkspace(const std::string& name) const;
 
-		   void compileProject(const std::string& projectDirectory = StringPool.BLANK);
+		   void compileProject(const std::string& projectDirectory = string::StringPool.BLANK);
 		   void compileProject(const std::string& projectDirectory, BackgroundTask::Ptr backgroundTask);
 		   void editProject();
 

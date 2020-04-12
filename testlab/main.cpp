@@ -1,10 +1,8 @@
-#include "get_file_size.h"
+#include "PocoProcess.h"
 
 int main()
 {
-	nero::Logger::init();
-	nero_log("calling main");
-	get_file_size();
+	pocoProcess();
 
 	return 0;
 }

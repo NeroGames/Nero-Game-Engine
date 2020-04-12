@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 #ifndef EDITORCONSTANT_H
 #define EDITORCONSTANT_H
@@ -75,6 +75,9 @@ namespace nero
 		const std::string NERO_GAME_HOME					= "NERO_GAME_HOME";
 		const std::string NERO_GAME_QT_CREATOR				= "NERO_GAME_QT_CREATOR";
 		const std::string NERO_GAME_VISUAL_STUDIO			= "NERO_GAME_VISUAL_STUDIO";
+
+		const sf::Time  AUTO_SAVE_TIME              = sf::seconds(30.f);
+
 	};
 
 	const _EditorConstant EditorConstant;

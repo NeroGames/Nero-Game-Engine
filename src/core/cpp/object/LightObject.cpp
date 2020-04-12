@@ -1,15 +1,15 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
 #include <Nero/core/cpp/object/LightObject.h>
-#include <Nero/core/cpp/utility/StringUtil.h>
+#include <Nero/core/cpp/utility/String.h>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
 	LightObject::LightObject():
-		m_Lightmap(StringPool.BLANK)
+		m_Lightmap(string::StringPool.BLANK)
 	   ,m_Color(sf::Color::White)
 	   ,m_Light(nullptr)
 	{

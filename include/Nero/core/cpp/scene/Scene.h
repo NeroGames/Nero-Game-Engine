@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 #ifndef SCENE_H
 #define SCENE_H
@@ -155,7 +155,7 @@ namespace nero
 			//physic world
 			b2World*                        m_PhysicWorld;
 			int32							m_ContactPointCount;
-			ContactPoint					m_ContactPointTable[MAX_CONTACT_POINT];
+			ContactPoint					m_ContactVectorTablele[MAX_CONTACT_POINT];
 			//manager
 			ShapeRenderer					m_ShapeRenderer;
 			ObjectManager::Ptr				m_ObjectManager;

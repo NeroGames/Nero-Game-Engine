@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Nero
@@ -9,7 +9,7 @@
 #include <Nero/editor/EditorSetting.h>
 #include <Nero/editor/EditorConstant.h>
 #include <Nero/editor/EditorInterface.h>
-#include <Nero/core/cpp/utility/FileUtil.h>
+#include <Nero/core/cpp/utility/File.h>
 //STD
 #include <memory>
 ////////////////////////////////////////////////////////////
@@ -102,7 +102,7 @@ namespace  nero
         else
         {
 			//render interface
-			m_RenderWindow.clear(EngineConstant.CANVAS_COLOR);
+			m_RenderWindow.clear(EngineConstant.COLOR_CANVAS);
                 m_Interface->render();
 			m_RenderWindow.display();
         }
@@ -111,11 +111,11 @@ namespace  nero
 	void EngineEditor::initLogging()
 	{
 		//initialize the engine logger
-		Logger::init();
+		logging::Logger::init();
 
 		//TODO load with setting
 		//Setting loggingSetting;
-		//loggingSetting.loadJson(loadJson(getPath({"setting", "logging"})));
+		//loggingSetting.file::loadJson(file::loadJson(file::getPath({"setting", "logging"})));
 		//Logger::init(loggingSetting);
 
 		nero_log("Nero Game Engine");
@@ -132,20 +132,20 @@ namespace  nero
 		m_EditorSetting = std::make_shared<Setting>();
 
 		nero_log("loading render window settings")
-		std::string window_setting = getPath({"setting", "window"}, StringPool.EXTENSION_JSON);
-		if(!fileExist(window_setting))
+		std::string window_setting = file::getPath({"setting", "window"}, string::StringPool.EXT_JSON);
+		if(!file::fileExist(window_setting))
 		{
-			saveFile(window_setting, EditorSetting.windowSetting.dump(3));
+			file::saveFile(window_setting, EditorSetting.windowSetting.dump(3));
 		}
 		m_EditorSetting->loadSetting(window_setting, true);
 
 
 		nero_log("loading resource settings");
-		std::string resource_setting = getPath({"setting", "resource"}, StringPool.EXTENSION_JSON);
-		if(!fileExist(resource_setting))
+		std::string resource_setting = file::getPath({"setting", "resource"}, string::StringPool.EXT_JSON);
+		if(!file::fileExist(resource_setting))
 		{
 			//TODO
-			//saveFile(file, EditorSetting.resourceSetting.dump(3));
+			//file::saveFile(file, EditorSetting.resourceSetting.dump(3));
 		}
 		m_EditorSetting->loadSetting(resource_setting, true);
 
@@ -243,35 +243,35 @@ namespace  nero
 		nero_log("building editor directory");
 
 		//create directory
-		createDirectory(getPath({"setting"}));
-		createDirectory(getPath({"logging"}));
-		createDirectory(getPath({"plugin"}));
-		createDirectory(getPath({"template"}));
-			createDirectory(getPath({"template", "cpp-project"}));
-			createDirectory(getPath({"template", "lua-project"}));
-			createDirectory(getPath({"template", "cpp-lua-project"}));
-		createDirectory(getPath({"resource"}));
-			createDirectory(getPath({"resource", "startup"}));
-				createDirectory(getPath({"resource", "startup", "texture"}));
-				createDirectory(getPath({"resource", "startup", "animation"}));
-				createDirectory(getPath({"resource", "startup", "sound"}));
-				createDirectory(getPath({"resource", "startup", "music"}));
-				createDirectory(getPath({"resource", "startup", "font"}));
-			createDirectory(getPath({"resource", "editor"}));
-				createDirectory(getPath({"resource", "startup", "texture"}));
-				createDirectory(getPath({"resource", "startup", "sound"}));
-				createDirectory(getPath({"resource", "startup", "language"}));
-			createDirectory(getPath({"resource", "starterpack"}));
-				createDirectory(getPath({"resource", "starterpack", "font"}));
-				createDirectory(getPath({"resource", "starterpack", "texture"}));
-				createDirectory(getPath({"resource", "starterpack", "animation"}));
-				createDirectory(getPath({"resource", "starterpack", "lightmap"}));
-				createDirectory(getPath({"resource", "starterpack", "sound"}));
-				createDirectory(getPath({"resource", "starterpack", "music"}));
-				createDirectory(getPath({"resource", "starterpack", "language"}));
-				createDirectory(getPath({"resource", "starterpack", "shader"}));
-				createDirectory(getPath({"resource", "starterpack", "luascript"}));
-				createDirectory(getPath({"resource", "starterpack", "cppscript"}));
+		file::createDirectory(file::getPath({"setting"}));
+		file::createDirectory(file::getPath({"logging"}));
+		file::createDirectory(file::getPath({"plugin"}));
+		file::createDirectory(file::getPath({"template"}));
+			file::createDirectory(file::getPath({"template", "cpp-project"}));
+			file::createDirectory(file::getPath({"template", "lua-project"}));
+			file::createDirectory(file::getPath({"template", "cpp-lua-project"}));
+		file::createDirectory(file::getPath({"resource"}));
+			file::createDirectory(file::getPath({"resource", "startup"}));
+				file::createDirectory(file::getPath({"resource", "startup", "texture"}));
+				file::createDirectory(file::getPath({"resource", "startup", "animation"}));
+				file::createDirectory(file::getPath({"resource", "startup", "sound"}));
+				file::createDirectory(file::getPath({"resource", "startup", "music"}));
+				file::createDirectory(file::getPath({"resource", "startup", "font"}));
+			file::createDirectory(file::getPath({"resource", "editor"}));
+				file::createDirectory(file::getPath({"resource", "startup", "texture"}));
+				file::createDirectory(file::getPath({"resource", "startup", "sound"}));
+				file::createDirectory(file::getPath({"resource", "startup", "language"}));
+			file::createDirectory(file::getPath({"resource", "starterpack"}));
+				file::createDirectory(file::getPath({"resource", "starterpack", "font"}));
+				file::createDirectory(file::getPath({"resource", "starterpack", "texture"}));
+				file::createDirectory(file::getPath({"resource", "starterpack", "animation"}));
+				file::createDirectory(file::getPath({"resource", "starterpack", "lightmap"}));
+				file::createDirectory(file::getPath({"resource", "starterpack", "sound"}));
+				file::createDirectory(file::getPath({"resource", "starterpack", "music"}));
+				file::createDirectory(file::getPath({"resource", "starterpack", "language"}));
+				file::createDirectory(file::getPath({"resource", "starterpack", "shader"}));
+				file::createDirectory(file::getPath({"resource", "starterpack", "luascript"}));
+				file::createDirectory(file::getPath({"resource", "starterpack", "cppscript"}));
 	}
 
 	void EngineEditor::loadSetting()
@@ -280,69 +280,69 @@ namespace  nero
 
 		nero_log("loading recent project settings");
 		checkRecentProject();
-		m_EditorSetting->loadSetting(getPath({"setting", "recent_project"}));
+		m_EditorSetting->loadSetting(file::getPath({"setting", "recent_project"}));
 
 		nero_log("loading workspace settings");
 		checkWorkspace();
-		m_EditorSetting->loadSetting(getPath({"setting", "worksapce"}));
+		m_EditorSetting->loadSetting(file::getPath({"setting", "worksapce"}));
 
 		nero_log("loading dockspace settings");
-		m_EditorSetting->loadSetting(getPath({"setting", "dockspace"}));
+		m_EditorSetting->loadSetting(file::getPath({"setting", "dockspace"}));
 		m_EditorSetting->getSetting("dockspace").setBool("imgui_setting_exist",
-			fileExist(getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, StringPool.EXTENSION_INI)));
+			file::fileExist(file::getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, string::StringPool.EXT_INI)));
 
 
 		nero_log("loading startup settings");
 		checkWorkspace();
-		m_EditorSetting->loadSetting(getPath({"setting", "startup"}));
+		m_EditorSetting->loadSetting(file::getPath({"setting", "startup"}));
 	}
 
 	void EngineEditor::checkRecentProject()
 	{
-		if(!fileExist(getPath({"setting", "recent_project"}, StringPool.EXTENSION_JSON)))
+		if(!file::fileExist(file::getPath({"setting", "recent_project"}, string::StringPool.EXT_JSON)))
 		{
-			saveFile(getPath({"setting", "recent_project"}, StringPool.EXTENSION_JSON), nlohmann::json::array().dump(3));
+			file::saveFile(file::getPath({"setting", "recent_project"}, string::StringPool.EXT_JSON), nlohmann::json::array().dump(3));
 
 			return;
 		}
 
-		auto recent_project_old = loadJson(getPath({"setting", "recent_project"}));
+		auto recent_project_old = file::loadJson(file::getPath({"setting", "recent_project"}));
 
 		nlohmann::json recent_project = nlohmann::json::array();
 
 		for(auto project : recent_project_old)
 		{
-			if(fileExist(getPath({project["project_directory"], ".project"})))
+			if(file::fileExist(file::getPath({project["project_directory"], ".project"})))
 			{
 				recent_project.push_back(project);
 			}
 		}
 
-		saveFile(getPath({"setting", "recent_project"}, StringPool.EXTENSION_JSON), recent_project.dump(3), true);
+		file::saveFile(file::getPath({"setting", "recent_project"}, string::StringPool.EXT_JSON), recent_project.dump(3), true);
 	}
 
 	void EngineEditor::checkWorkspace()
 	{
-		if(!fileExist(getPath({"setting", "workspace"}, StringPool.EXTENSION_JSON)))
+		if(!file::fileExist(file::getPath({"setting", "workspace"}, string::StringPool.EXT_JSON)))
 		{
-			saveFile(getPath({"setting", "workspace"}, StringPool.EXTENSION_JSON), nlohmann::json::array().dump(3));
+			file::saveFile(file::getPath({"setting", "workspace"}, string::StringPool.EXT_JSON), nlohmann::json::array().dump(3));
 
 			return;
 		}
 
-		auto workspace_setting_old= loadJson(getPath({"setting", "workspace"}));
+		auto workspace_setting_old= file::loadJson(file::getPath({"setting", "workspace"}));
 
 		nlohmann::json workspace_setting;
 
 		for(auto workspace : workspace_setting_old)
 		{
-			if(fileExist(getPath({workspace["workspace_directory"], ".workspace"})))
+			if(file::fileExist(file::getPath({workspace["workspace_directory"], ".workspace"})))
 			{
 				workspace_setting.push_back(workspace);
 			}
 		}
 
-		saveFile(getPath({"setting", "workspace"}, StringPool.EXTENSION_JSON), workspace_setting.dump(3), true);
+		file::saveFile(file::getPath({"setting", "workspace"}, string::StringPool.EXT_JSON), workspace_setting.dump(3), true);
 	}
 
 	void EngineEditor::checkEnvironmentVariable()
@@ -353,9 +353,9 @@ namespace  nero
 		char* visual_studio_char	= getenv("NERO_GAME_VISUAL_STUDIO");
 		char* qt_creator_char		= getenv("NERO_GAME_QT_CREATOR");
 
-		std::string nero_game_home	= nero_game_home_char != nullptr ? std::string(nero_game_home_char)	: StringPool.BLANK;
-		std::string visual_studio	= visual_studio_char != nullptr ? std::string(visual_studio_char)	: StringPool.BLANK;
-		std::string qt_creator		= qt_creator_char != nullptr ? std::string(qt_creator_char)	: StringPool.BLANK;
+		std::string nero_game_home	= nero_game_home_char != nullptr ? std::string(nero_game_home_char)	: string::StringPool.BLANK;
+		std::string visual_studio	= visual_studio_char != nullptr ? std::string(visual_studio_char)	: string::StringPool.BLANK;
+		std::string qt_creator		= qt_creator_char != nullptr ? std::string(qt_creator_char)	: string::StringPool.BLANK;
 
 		Setting environment;
 
@@ -369,7 +369,7 @@ namespace  nero
 		visual_studio_char	= nullptr;
 		qt_creator_char		= nullptr;
 
-		if(nero_game_home != StringPool.BLANK)
+		if(nero_game_home != string::StringPool.BLANK)
 		{
 			nero_log("NERO_GAME_HOME = " + nero_game_home);
 		}
@@ -378,7 +378,7 @@ namespace  nero
 			nero_log("NERO_GAME_HOME not found");
 		}
 
-		if(visual_studio != StringPool.BLANK)
+		if(visual_studio != string::StringPool.BLANK)
 		{
 			nero_log("NERO_GAME_VISUAL_STUDIO = " + visual_studio);
 		}
@@ -388,7 +388,7 @@ namespace  nero
 		}
 
 
-		if(qt_creator != StringPool.BLANK)
+		if(qt_creator != string::StringPool.BLANK)
 		{
 			nero_log("NERO_GAME_QT_CREATOR = " + qt_creator);
 		}
@@ -446,7 +446,7 @@ namespace  nero
 		{
 			nero_log("opening last project");
 
-			auto recent_project = loadJson(getPath({"setting", "recent_project"}));
+			auto recent_project = file::loadJson(file::getPath({"setting", "recent_project"}));
 
 			if(!recent_project.empty())
 			{

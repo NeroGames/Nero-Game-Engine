@@ -1,18 +1,18 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
 //NERO
 #include <Nero/core/cpp/resource/ResourceHolder.h>
-#include <Nero/core/cpp/utility/StringUtil.h>
+#include <Nero/core/cpp/utility/String.h>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
 	ResourceHolder::ResourceHolder():
 		 m_Setting()
 		,m_DirectoryTable()
-		,m_SelectedDirectory(StringPool.BLANK)
+		,m_SelectedDirectory(string::StringPool.BLANK)
 	{
 		//empty
 	}
@@ -20,7 +20,7 @@ namespace nero
 	ResourceHolder::ResourceHolder(const Setting& setting):
 		m_Setting(setting)
 	   ,m_DirectoryTable()
-	   ,m_SelectedDirectory(StringPool.BLANK)
+	   ,m_SelectedDirectory(string::StringPool.BLANK)
 	{
 
 	}
@@ -83,6 +83,6 @@ namespace nero
 	{
 		//setting does not nee to be cleared
 		m_DirectoryTable.clear();
-		m_SelectedDirectory = StringPool.BLANK;
+		m_SelectedDirectory = string::StringPool.BLANK;
 	}
 }

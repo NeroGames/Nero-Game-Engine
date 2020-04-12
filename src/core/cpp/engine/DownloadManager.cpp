@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Poco
@@ -47,7 +47,7 @@ namespace nero
 		catch (Poco::Exception& exc)
 		{
 			downloadProgress->m_Downloading = false;
-			nero_log(exc.displayText(), nero::LOG_ERROR);
+			nero_log(exc.displayText(), nero::logging::LOG_ERROR);
 		}
 
 		nero_log("retrieving download size");
@@ -118,7 +118,7 @@ namespace nero
 		}
 		catch (Poco::Exception& exc)
 		{
-			nero_log(exc.displayText(), nero::LOG_ERROR);
+			nero_log(exc.displayText(), nero::logging::LOG_ERROR);
 		}
 
 		return  -1.f;
@@ -149,19 +149,19 @@ namespace nero
 		}
 		else if(getGigaBytes(bytes) > 1.f)
 		{
-			result = toString(getGigaBytes(bytes)) + " GB";
+			result = string::toString(getGigaBytes(bytes)) + " GB";
 		}
 		else if(getMegaBytes(bytes) > 1.f)
 		{
-			result = toString(getMegaBytes(bytes)) + " MB";
+			result = string::toString(getMegaBytes(bytes)) + " MB";
 		}
 		else if(getKiloBytes(bytes) > 1.f)
 		{
-			result = toString(getKiloBytes(bytes)) + " KB";
+			result = string::toString(getKiloBytes(bytes)) + " KB";
 		}
 		else
 		{
-			result = toString(bytes) + " B";
+			result = string::toString(bytes) + " B";
 		}
 
 		return result;

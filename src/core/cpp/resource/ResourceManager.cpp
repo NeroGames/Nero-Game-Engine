@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 
 ///////////////////////////HEADERS///////////////////////////
 //NERO
 #include <Nero/core/cpp/resource/ResourceManager.h>
-#include <Nero/core/cpp/utility/FileUtil.h>
+#include <Nero/core/cpp/utility/File.h>
 #include <Nero/core/cpp/utility/Logging.h>
 /////////////////////////////////////////////////////////////
 
@@ -68,12 +68,12 @@ namespace nero
 
 	void ResourceManager::loadDirectory(const std::string& directory)
 	{
-		m_TextureHolder->loadDirectory(getPath({directory, "texture"}));
-		m_AnimationHolder->loadDirectory(getPath({directory, "animation"}));
-		m_FontHolder->loadDirectory(getPath({directory, "font"}));
-		m_SoundHolder->loadDirectory(getPath({directory, "sound"}));
-		m_MusicHolder->loadDirectory(getPath({directory, "music"}));
-		m_LightmapHolder->loadDirectory(getPath({directory, "lightmap"}));
+		m_TextureHolder->loadDirectory(file::getPath({directory, "texture"}));
+		m_AnimationHolder->loadDirectory(file::getPath({directory, "animation"}));
+		m_FontHolder->loadDirectory(file::getPath({directory, "font"}));
+		m_SoundHolder->loadDirectory(file::getPath({directory, "sound"}));
+		m_MusicHolder->loadDirectory(file::getPath({directory, "music"}));
+		m_LightmapHolder->loadDirectory(file::getPath({directory, "lightmap"}));
 		//m_LuaScriptHolder->loadDirectory(getPath({directory, "luascript"}));
 		//m_ShaderHolder->loadDirectory(getPath({directory, "shader"}));
 	}
@@ -235,15 +235,15 @@ namespace nero
 
 	void ResourceManager::buildDirectory(const std::string& parentDirectory)
 	{
-		createDirectory(getPath({parentDirectory, "texture"}));
-		createDirectory(getPath({parentDirectory, "animation"}));
-		createDirectory(getPath({parentDirectory, "font"}));
-		createDirectory(getPath({parentDirectory, "sound"}));
-		createDirectory(getPath({parentDirectory, "music"}));
-		createDirectory(getPath({parentDirectory, "luascript"}));
-		createDirectory(getPath({parentDirectory, "shader"}));
-		createDirectory(getPath({parentDirectory, "language"}));
-		createDirectory(getPath({parentDirectory, "lightmap"}));
+		file::createDirectory(file::getPath({parentDirectory, "texture"}));
+		file::createDirectory(file::getPath({parentDirectory, "animation"}));
+		file::createDirectory(file::getPath({parentDirectory, "font"}));
+		file::createDirectory(file::getPath({parentDirectory, "sound"}));
+		file::createDirectory(file::getPath({parentDirectory, "music"}));
+		file::createDirectory(file::getPath({parentDirectory, "luascript"}));
+		file::createDirectory(file::getPath({parentDirectory, "shader"}));
+		file::createDirectory(file::getPath({parentDirectory, "language"}));
+		file::createDirectory(file::getPath({parentDirectory, "lightmap"}));
 	}
 
 

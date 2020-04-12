@@ -561,7 +561,7 @@ int main(int argc, char** argv)
 
 int main()
 {
-	nero::Logger::init();
+	nero::logging::Logger::init();
 	nero_log(Poco::Environment::osName());
 	nero_log(Poco::Environment::osArchitecture());
 	nero_log(Poco::Environment::osDisplayName());

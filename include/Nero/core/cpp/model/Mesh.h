@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 Sanou A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 #ifndef MESH_H
 #define MESH_H
@@ -33,6 +33,8 @@ namespace nero
             typedef std::vector<sf::RectangleShape>     LineTab;
             typedef std::vector<sf::ConvexShape>        PolygonTab;
             typedef std::vector<Mesh>                   Tab;
+			typedef std::vector<sf::Vector2f>			VectorTable;
+
 
             float                                       Vertex_Size             = 8.f;
             int                                         Color_Alpha             = 50.f;
@@ -61,7 +63,7 @@ namespace nero
             sf::Vector2f                getPosition()           const;
             float                       getRotation()           const;
             int                         getPointCount()         const;
-            PointTab                    getAllVertexPoint()     const;
+			VectorTable					getAllVertexPoint()     const;
             sf::FloatRect               getGlobalBounds()       const;
             sf::Vector2f                getCenter()             const;
 
@@ -113,7 +115,7 @@ namespace nero
             sf::RectangleShape          createVertex(const sf::Vector2f& point, const sf::Color& color);
             sf::RectangleShape          createLine(const sf::Vector2f& point1, const sf::Vector2f& point2, const sf::Color& color);
             sf::ConvexShape             createRegularPolygon(const sf::Vector2f& position, const sf::Color& color, const int& pointCount);
-            sf::ConvexShape             createPolygon(const PointTab& pointTab, const sf::Color& color);
+            sf::ConvexShape             createPolygon(const VectorTable& VectorTable, const sf::Color& color);
 
             virtual void			    draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

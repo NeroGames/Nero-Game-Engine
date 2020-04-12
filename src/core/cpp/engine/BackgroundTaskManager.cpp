@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
 //Nero
@@ -23,7 +23,7 @@ namespace nero
 		//TODO, two task cannot have the same name
 		m_CountTask++;
 
-		std::string name = taskName == StringPool.BLANK ? "Task_" + toString(m_CountTask) : taskName;
+		std::string name = taskName == string::StringPool.BLANK ? "Task_" + string::toString(m_CountTask) : taskName;
 
 		m_BackgroundTaskTable.push_back(std::make_shared<BackgroundTask>(name, taskCategory));
 
