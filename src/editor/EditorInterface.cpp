@@ -45,6 +45,7 @@ namespace  nero
 		,m_InputSelectedGameScreenId(-1)
 		,m_MouseInformation("Mouse Position")
 		,m_CountCreateProject(0)
+		,m_ConsoleApplication()
     {
 		//empty
 	}
@@ -286,6 +287,7 @@ namespace  nero
 			//game project
 		showGameProjectWindow();
 			//imgui demo
+		showResourceWindow();
 		ImGui::ShowDemoWindow();
 
 
@@ -309,7 +311,7 @@ namespace  nero
 
 		//bottom dockspacer
 		showLoggingWindow();
-		showResourceWindow();
+		showConsoleWindow();
 
 		//init
 		interfaceFirstDraw();
@@ -750,6 +752,7 @@ namespace  nero
 					//bottom
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LOGGING.c_str(),				bottomDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_RESOURCE.c_str(),			bottomDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_CONSOLE.c_str(),				bottomDockspaceID);
 					//center
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_GAME_SCENE.c_str(),			centralDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_GAME_SETTING.c_str(),		centralDockspaceID);
@@ -2510,6 +2513,11 @@ namespace  nero
 			nero::logging::Logger::clearStringStream();
 		}
 		m_LoggerApplication.Draw("Logging");
+	}
+
+	void EditorInterface::showConsoleWindow()
+	{
+		m_ConsoleApplication.Draw("Console", nullptr);
 	}
 
 	ImVec4 EditorInterface::getLoggingColor(logging::LEVEL level)

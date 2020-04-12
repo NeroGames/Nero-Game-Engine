@@ -33,6 +33,7 @@
 #include <future>
 #include <map>
 # include <nodeeditor/imgui_node_editor.h>
+# include <Nero/editor/ConsoleApplication.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -318,6 +319,8 @@ namespace nero
 			ImVec4 getLoggingColor(logging::LEVEL level);
 
 			std::string m_MouseInformation;
+			ConsoleApplication m_ConsoleApplication;
+			void showConsoleWindow();
 
 	};
 

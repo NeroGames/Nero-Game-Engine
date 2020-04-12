@@ -39,6 +39,7 @@ namespace nero
 			//bottom
 		const std::string WINDOW_RESOURCE				= "Resource";
 		const std::string WINDOW_LOGGING				= "Logging";
+		const std::string WINDOW_CONSOLE				= "Console";
 			//center
 		const std::string WINDOW_GAME_SCENE				= "Scene     ";
 		const std::string WINDOW_GAME_SETTING			= "Game Settings";
