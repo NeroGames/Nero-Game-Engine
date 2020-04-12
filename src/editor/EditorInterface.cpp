@@ -934,7 +934,6 @@ namespace  nero
 			if(ImGui::MenuItem("Profiler", "Ctrl+Alt+P", nullptr))
 			{
 				std::string profiler = m_EditorSetting->getSetting("environment").getString("nero_game_home") + "/Tools/Profiler/profiler_gui.exe";
-				nero_log("\"" + file::getWindowsPath(profiler) + "\"");
 				cmd::launchApplication(profiler);
 			}
 

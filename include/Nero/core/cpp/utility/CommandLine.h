@@ -18,9 +18,10 @@ namespace nero
 {
 	namespace cmd
 	{
-		const int				NO_EXIT_CODE			= -9999999; //TODO
-		const std::string		KILL_PROCESS_WINDOWS	= "taskkill /F /PID ";
-		const std::string		KILL_PROCESS_LINUX		= "kill -9 ";
+		const int				NO_EXIT_CODE					= -9999999; //TODO
+		const std::string		KILL_PROCESS_WINDOWS			= "taskkill /F /PID ";
+		const std::string		KILL_PROCESS_LINUX				= "kill -9 ";
+		const std::string		LAUNCH_APPLICATION_WINDOWS		= "START /B ";
 
 		class Process
 		{

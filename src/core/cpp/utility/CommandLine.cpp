@@ -122,19 +122,8 @@ namespace nero
 		void launchApplication(const std::string& application)
 		{
 			#ifdef NERO_OS_WINDOW
-				//nero_log(formatPathWindows(file::getWindowsPath(application)))
-				Poco::Pipe outPipe, errorPipe;
-				std::string cmd = "START /B C:\\Users\\sk-landry\\Desktop\\Origin\\Project\\\"Nero Game Engine\"\\Tools\\Profiler\\profiler_gui.exe";
-				try {
-					nero_log(cmd);
-					//Poco::Process::launch("start", {"/B", cmd});
-					system(cmd.c_str());
-
-				} catch (Poco::SystemException e) {
-					nero_log(e.message());
-				}
-				//return runCommand(formatPathWindows(file::getWindowsPath(application)), {}, false);
-
+				std::string command =  LAUNCH_APPLICATION_WINDOWS + formatPathWindows(file::getWindowsPath(application)) ;
+				system(command.c_str());
 			#elif NERO_OS_LINUX
 				//TODO
 
