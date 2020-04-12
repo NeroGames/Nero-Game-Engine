@@ -56,7 +56,7 @@ namespace nero
 		std::string getWindowsPath(const std::string& path)
 		{
 			//replace all slash by a double back_slash
-			return boost::algorithm::replace_all_copy(path, "/", "\\\\");
+			return boost::algorithm::replace_all_copy(path, "/", "\\");
 		}
 
 		std::string getLinuxPath(const std::string& path)

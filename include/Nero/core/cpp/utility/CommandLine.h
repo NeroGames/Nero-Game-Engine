@@ -44,6 +44,8 @@ namespace nero
 		};
 
 		Process							runCommand(const std::string& command, const std::vector<std::string>& argument = {}, bool waitCompletion = true);
+		void							launchApplication(const std::string& program);
+		void							launchBrowser(const std::string& url);
 		bool							killProcess(const unsigned int& processId);
 	}
 }

@@ -321,7 +321,6 @@ namespace nero
 			std::string m_MouseInformation;
 			ConsoleApplication m_ConsoleApplication;
 			void showConsoleWindow();
-
 	};
 
 }

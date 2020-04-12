@@ -933,7 +933,9 @@ namespace  nero
 		{
 			if(ImGui::MenuItem("Profiler", "Ctrl+Alt+P", nullptr))
 			{
-
+				std::string profiler = m_EditorSetting->getSetting("environment").getString("nero_game_home") + "/Tools/Profiler/profiler_gui.exe";
+				nero_log("\"" + file::getWindowsPath(profiler) + "\"");
+				cmd::launchApplication(profiler);
 			}
 
 			if(ImGui::MenuItem("Texture Packer", "Ctrl+Alt+T", nullptr))
@@ -2024,9 +2026,6 @@ namespace  nero
 				if (ImGui::CollapsingHeader(workspace.c_str()))
                 {
                     ImGui::SetCursorPosX(20.f);
-                    std::string message = "List of Projects in workspace : " + workspace;
-                    ImGui::Text(message.c_str());
-                    ImGui::Separator();
 
                     ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
@@ -2078,12 +2077,14 @@ namespace  nero
 
 
                             ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 100.f);
-                            if (ImGui::Button("Open Project", ImVec2(100, 0)))
+							pushToolbarStyle();
+							if (ImGui::Button("Open Project", ImVec2(100, 25.f)))
                             {
 								openProject(file::getPath({m_ProjectManager->findWorkspace(workspace)["workspace_directory"].get<std::string>(), "Project", project_name}));
 
                                 ImGui::CloseCurrentPopup();
                             }
+							popToolbarStyle();
 
                             ImGui::Dummy(ImVec2(0.0f, 10.0f));
 

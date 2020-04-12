@@ -29,6 +29,7 @@ set(NERO_GAME_HOME $ENV{NERO_GAME_HOME})
 
     Nero Game Engien r2.0.0 <--- [Home]
         Editor
+        Compiler
         Library
         NGCore
         Tools
@@ -59,6 +60,7 @@ add_definitions(-DBOOST_DLL_USE_STD_FS)
 add_definitions(-DSOL_ALL_SAFETIES_ON=1)
 add_definitions(-DSOL_USING_CXX_LUA)
 add_definitions(-DNERO_GAME_DEBUG)
+add_definitions(-DBUILD_WITH_EASY_PROFILER)
 
 # Include Files & Libraries
 #----------------------------------------------------------------------------------#
