@@ -29,6 +29,11 @@ set(NERO_GAME_HOME $ENV{NERO_GAME_HOME})
 #----------------------------------------------------------------------------------#
 set(CMAKE_MODULE_PATH "${NERO_GAME_HOME}/Tools/Cmake/share/cmake-3.17/Modules")
 
+# Compiler
+#----------------------------------------------------------------------------------#
+set(CMAKE_CXX_COMPILER "${NERO_GAME_HOME}/Compiler/bin/g++.exe")
+set(CMAKE_C_COMPILER "${NERO_GAME_HOME}/Compiler/bin/gcc.exe")
+
 # Compiler Configuration
 #----------------------------------------------------------------------------------#
 # Activate C++17

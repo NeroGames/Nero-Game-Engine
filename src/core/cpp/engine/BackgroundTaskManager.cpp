@@ -10,7 +10,7 @@
 namespace nero
 {
 	std::vector<BackgroundTask::Ptr>				BackgroundTaskManager::m_BackgroundTaskTable = std::vector<BackgroundTask::Ptr>();
-	std::map<std::string, std::shared_future<int>>	BackgroundTaskManager::m_BackgroundFutureMap = std::map<std::string, std::shared_future<int>>();
+	std::map<std::string, std::shared_future<int>>	BackgroundTaskManager::m_FutureMap = std::map<std::string, std::shared_future<int>>();
 	int												BackgroundTaskManager::m_CountTask = 0;
 
 	BackgroundTaskManager::BackgroundTaskManager()
@@ -32,7 +32,7 @@ namespace nero
 
 	void BackgroundTaskManager::startTask(void (*callback)(BackgroundTask::Ptr backgroundTask), const std::string& taskName, const std::string& taskCategory)
 	{
-		BackgroundTaskManager::m_BackgroundFutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, callback]()
+		BackgroundTaskManager::m_FutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, callback]()
 		{
 			BackgroundTask::Ptr backgroundTask = createTask(taskName, taskCategory);
 			callback(backgroundTask);
@@ -43,7 +43,7 @@ namespace nero
 
 	void BackgroundTaskManager::startTask(void (*callback)(const Parameter& parameter, BackgroundTask::Ptr backgroundTask), const Parameter& parameter, const std::string& taskName, const std::string& taskCategory)
 	{
-		BackgroundTaskManager::m_BackgroundFutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, callback, parameter]()
+		BackgroundTaskManager::m_FutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, callback, parameter]()
 		{
 			BackgroundTask::Ptr backgroundTask = createTask(taskName, taskCategory);
 			callback(parameter, backgroundTask);
@@ -54,7 +54,7 @@ namespace nero
 
 	void BackgroundTaskManager::startTask(std::function<void (BackgroundTask::Ptr backgroundTask)> callback, const std::string& taskName, const std::string& taskCategory)
 	{
-		BackgroundTaskManager::m_BackgroundFutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, callback]()
+		BackgroundTaskManager::m_FutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, callback]()
 		{
 			BackgroundTask::Ptr backgroundTask = createTask(taskName, taskCategory);
 			callback(backgroundTask);
@@ -65,7 +65,7 @@ namespace nero
 
 	void BackgroundTaskManager::startTask(std::function<void (const Parameter& parameter, BackgroundTask::Ptr backgroundTask)> callback, const Parameter& parameter, const std::string& taskName, const std::string& taskCategory)
 	{
-		BackgroundTaskManager::m_BackgroundFutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, callback, parameter]()
+		BackgroundTaskManager::m_FutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, callback, parameter]()
 		{
 			BackgroundTask::Ptr backgroundTask = createTask(taskName, taskCategory);
 			callback(parameter, backgroundTask);
@@ -107,21 +107,12 @@ namespace nero
 		return result;
 	}
 
-	const BackgroundTask::Ptr BackgroundTaskManager::getLastTask()
+	void BackgroundTaskManager::pauseTask(const std::string& name, unsigned int milliSecond)
 	{
-		if(!m_BackgroundTaskTable.empty())
+		if(m_FutureMap.find(name) != m_FutureMap.end())
 		{
-			return m_BackgroundTaskTable.back();
+			m_FutureMap[name].wait_for(std::chrono::milliseconds(milliSecond));
 		}
-
-		return nullptr;
 	}
-
-	std::shared_future<int>& BackgroundTaskManager::getLastFuture()
-	{
-		return m_BackgroundFutureMap.rbegin()->second;
-	}
-
-
 }
 

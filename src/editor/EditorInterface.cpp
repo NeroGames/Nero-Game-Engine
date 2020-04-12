@@ -44,6 +44,7 @@ namespace  nero
 		,m_InputSelectedGameLevelId(-1)
 		,m_InputSelectedGameScreenId(-1)
 		,m_MouseInformation("Mouse Position")
+		,m_CountCreateProject(0)
     {
 		//empty
 	}
@@ -688,7 +689,7 @@ namespace  nero
 
 	//1- create workspace
     void EditorInterface::createDockSpace()
-    {
+	{
 		//tranfer viewport state to dockspace window
         ImGuiViewport* viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(viewport->Pos);
@@ -773,6 +774,8 @@ namespace  nero
 				lowerLeftDockNode	= nullptr;
 				rightDockNode		= nullptr;
 				bottomDockNode		= nullptr;
+
+				nero_log(nero_ssv(toolbarDockspaceID));
 
 				//update and save dockspace setting
 				m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").setUInt("id", toolbarDockspaceID);
@@ -1305,278 +1308,6 @@ namespace  nero
 		}
 	}
 
-	//3-  show toolbar
-	void showToolbarWindow()
-	{
-		/*ImGuiWindowFlags window_flags = ImGuiWindowFlags_None | ImGuiWindowFlags_NoResize;
-		window_flags |= ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
-
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 2.0f));
-
-		ImGui::SetNextWindowSize(ImVec2(0.f, 32.f), ImGuiCond_Always);
-		ImGui::Begin(EditorConstant.WINDOW_TOOLBAR.c_str(), nullptr, window_flags);
-
-		float content_region_width = ImGui::GetWindowContentRegionWidth();
-		float toolbar_min_width = 1000.f;
-		bool scrollToolbar = false;
-		if(content_region_width < toolbar_min_width)
-		{
-			scrollToolbar = true;
-		}
-
-
-		if(scrollToolbar)
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
-			ImGui::BeginChild("##croll_back", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.260f, 0.590f, 0.980f, 1.000f));
-				if(ImGui::Button("<<##scroll_back_button", ImVec2(32.f, 36.f)))
-				{
-					if(m_toolbar_window)
-					{
-						auto window = m_toolbar_window;
-						ImVec2 max_step;
-						max_step.x = window->InnerRect.GetSize().x * 0.67f;
-						max_step.y = window->InnerRect.GetSize().y * 0.67f;
-
-						float scroll_step = ImFloor(ImMin(2 * window->CalcFontSize(), max_step.x));
-						ImGui::SetWindowScrollX(window, window->Scroll.x - 1 * scroll_step);
-					}
-				}
-				ImGui::PopStyleColor();
-			ImGui::EndChild();
-			ImGui::PopStyleVar();
-			ImGui::SameLine(25.f, 8.f);
-		}
-
-
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8.f, 5.f));
-		if(scrollToolbar)
-		{
-				ImGui::SetNextWindowContentWidth(toolbar_min_width);
-				ImGui::BeginChild("ghfgh##toolbar_window", ImVec2(content_region_width-67.f, 0.f), false, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoScrollbar |ImGuiWindowFlags_ScrollToolbar | ImGuiWindowFlags_NoResize);
-
-				m_toolbar_window = ImGui::GetCurrentWindow();
-		}
-		else
-		{
-				ImGui::BeginChild("tool_bar_button", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-		}
-				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.5f, 2.5f));
-
-					float width = ImGui::GetWindowContentRegionWidth();
-					float start = (width - (60.f * 5.f + 10.f * 4.f))/2.f;
-					float buttonSpace = 60.f + 14.f;
-					int i = 0;
-
-					if(scrollToolbar)
-					{
-						width = toolbar_min_width;
-						start = (width - (60.f * 5.f + 10.f * 4.f))/2.f + 32.f - 50.f;
-					}
-
-					ImGui::SameLine(10.f);
-
-
-					if(m_EditorMode != EditorMode::WORLD_BUILDER && m_GameProject)
-					{
-						if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("world_button")))
-						{
-							m_EditorMode = EditorMode::WORLD_BUILDER;
-							ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
-						}
-
-						ImGui::SameLine(buttonSpace + 6.f);
-					}
-
-					if(m_EditorMode != EditorMode::SCREEN_BUILDER && m_GameProject)
-					{
-						if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("screen_button")))
-						{
-						   m_EditorMode = EditorMode::SCREEN_BUILDER;
-						   ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
-						}
-
-						ImGui::SameLine(buttonSpace + 6.f);
-					}
-
-
-					if(m_EditorMode != EditorMode::OBJECT_BUILDER && m_GameProject)
-					{
-						if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("factory_button")))
-						{
-						   m_EditorMode = EditorMode::OBJECT_BUILDER;
-						   ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
-						}
-					}
-
-
-					if(m_GameProject)
-					{
-						ImGui::SameLine(start + buttonSpace*i++);
-
-						if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("play_button")))
-						{
-						   playScene();
-						}
-
-						ImGui::SameLine(start + buttonSpace*i++);
-
-						if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("pause_button")))
-						{
-						   pauseScene();
-						}
-
-						ImGui::SameLine(start + buttonSpace*i++);
-
-						if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("step_button")))
-						{
-						   stepScene();
-						}
-
-						ImGui::SameLine(start + buttonSpace*i++);
-
-						if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("reset_button")))
-						{
-						   resetScene();
-						}
-
-						ImGui::SameLine(start + buttonSpace*i++);
-
-						if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("render_button")))
-						{
-						   renderScene();
-						}
-					}
-
-
-					float padding = 10.f;
-
-					if(scrollToolbar)
-					{
-						//padding += 200.f;
-						width = toolbar_min_width + 13.f;
-					}
-
-					ImGui::SameLine(width - 72.f - padding - 10.f);
-
-					if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_PROJECT_BUTTON)))
-					{
-						ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-						m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_RECENT_PROJECT);
-					}
-					else
-					{
-						if(m_MenuBarInput.newProject)
-						{
-							m_MenuBarInput.newProject = false;
-							ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-							m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_CREATE_PROJECT);
-						}
-						else if(m_MenuBarInput.openProject)
-						{
-							m_MenuBarInput.openProject = false;
-							ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-							m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_OPEN_PROJECT);
-						}
-						else if(m_MenuBarInput.newWorkspace)
-						{
-							m_MenuBarInput.newWorkspace		= false;
-							ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-							m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_WORKSPACE);
-						}
-					}
-
-					/*ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.f);
-					//ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2.f, 5.f));
-					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
-					ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.000f, 1.000f, 1.000f, 1.000f));
-					ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.000f, 1.000f, 1.000f, .950f));
-					ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.000f, 1.000f, 1.000f, .900f));
-					ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.000f, 0.474f, 0.083f, 1.000f));
-					ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1.000f, 0.474f, 0.083f, 1.000f));
-					ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
-					if(ImGui::Button(ICON_FA_ANCHOR " Project", ImVec2(90.f, 28.f)))
-					{
-						ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-					}
-					ImGui::PopStyleVar(2);
-					ImGui::PopStyleColor(5);
-					ImGui::PopFont();*/
-					/*0.609f*/
-
-					/*if(m_GameProject)
-					{
-						ImGui::SameLine(width - 72.f - 24.f - 3.f - 10.f - padding);
-
-						if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_RELOAD_BUTTON)))
-						{
-							reloadProject();
-						}
-
-						ImGui::SameLine(width - 72.f - 48.f - 6.f - 20.f - padding);
-
-						if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_EDIT_BUTTON)))
-						{
-							editProject();
-						}
-
-						ImGui::SameLine(width - 72.f - 72.f - 9.f - 30.f - padding);
-
-						if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_COMPILE_BUTTON)))
-						{
-							compileProject();
-						}
-
-						ImGui::SameLine(width - 72.f - 96.f - 12.f - 40.f - 30.f - padding);
-
-						if(ImGui::ImageButton(m_EditorTextureHolder->getTexture(EditorConstant.TEXTURE_SCRIPT_BUTTON)))
-						{
-							ImGui::OpenPopup(EditorConstant.WINDOW_SCRIPT_WIZARD.c_str());
-						}
-					}
-
-
-					ImGui::PopStyleVar();
-
-					//show project manager window
-					showProjectManagerWindow();
-
-					//show script creaton window
-					showScriptCreationWindow();
-
-
-
-			ImGui::EndChild();
-			ImGui::PopStyleVar();
-
-			ImGui::SameLine(content_region_width - 33.f);
-
-		if(scrollToolbar)
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
-			ImGui::BeginChild("##scroll_forward", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.260f, 0.590f, 0.980f, 1.000f));
-				if(ImGui::Button(">>##scroll_forward_button", ImVec2(32.f, 36.f)))
-				{
-					auto window = m_toolbar_window;
-					ImVec2 max_step;
-					max_step.x = window->InnerRect.GetSize().x * 0.67f;
-					max_step.y = window->InnerRect.GetSize().y * 0.67f;
-
-					float scroll_step = ImFloor(ImMin(2 * window->CalcFontSize(), max_step.x));
-					ImGui::SetWindowScrollX(window, window->Scroll.x + 1 * scroll_step);
-				}
-				ImGui::PopStyleColor();
-				ImGui::PopStyleVar();
-			ImGui::EndChild();
-		}
-
-
-		ImGui::End();
-		ImGui::PopStyleVar();*/
-	}
-
 	//4- project manager
     void EditorInterface::showProjectManagerWindow()
     {
@@ -1959,36 +1690,26 @@ namespace  nero
 
 		}
 
-
-
 		ImGui::SetCursorPosY(EditorConstant.WINDOW_PROJECT_MANAGER_SIZE.y * 0.74f);
-
 
 		//ImGui::Separator();
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionWidth() - 450.f)/2.f);
 
-
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.f, 0.f));
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.f, 0.f, 0.f, 0.f));
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.f, 0.f, 0.f, 0.f));
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.f, 0.f, 0.f, 0.f));
-		if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("recent_project_create_project")))
+		pushToolbarStyle();
+		if(ImGui::Button("Create New Project", ImVec2(200.f, 40.f)))
 		{
 			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_CREATE_PROJECT);
 		}
 
 		ImGui::SameLine(0.f, 50.f);
 
-		if(ImGui::ImageButton(m_EditorTextureHolder->getTexture("recent_project_open_project")))
+		if(ImGui::Button("Open Other Projects", ImVec2(200.f, 40.f)))
 		{
 			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_OPEN_PROJECT);
 		}
-
-		ImGui::PopStyleVar();
-		ImGui::PopStyleColor(3);
-
+		popToolbarStyle();
 	}
 
     void EditorInterface::showCreateProjectWindow()
@@ -2228,17 +1949,17 @@ namespace  nero
 				ImGui::EndPopup();
 			 }
 
-			ImGui::SetNextWindowSize(ImVec2(300.f, 120.f));
+			ImGui::SetNextWindowSize(ImVec2(300.f, 170.f));
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(25.f, 10.f));
 			if(ImGui::BeginPopupModal("Wait Project Creation", nullptr, window_flags))
 			{
-				//nero_log("block thread for a second");
-				std::shared_future<int>& future = BTManager::getLastFuture();
 				//nero_log("retrieve background task");
-				BackgroundTask::Ptr createProjectTask = BTManager::getLastTask();
+				std::string taskName = EditorConstant.TASK_CREATE_PROJECT + string::toString(m_CountCreateProject-1);
+				BackgroundTask::Ptr createProjectTask = BTManager::findTaskByName(taskName);
 
 				if(createProjectTask)
 				{
-					future.wait_for(std::chrono::milliseconds(1));
+					BTManager::pauseTask(taskName, 1);
 					std::string message = createProjectTask->printMessage();
 
 					ImGui::TextWrapped("%s", message.c_str());
@@ -2249,34 +1970,24 @@ namespace  nero
 					{
 						if (ImGui::Button("Open project", ImVec2(100, 0)))
 						{
-
 							ImGui::CloseCurrentPopup();
 							ImGui::ClosePopupToLevel(0, true);
 
 							 openProject(m_ProjectInput.lastCreatedProject);
 						}
 
-						ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 95.f);
+						ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 85.f);
 
 						if (ImGui::Button("Close", ImVec2(100, 0)))
 						{
 							ImGui::CloseCurrentPopup();
 						}
 					}
-					//else
-					//{
-						//ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 95.f);
-
-						//if (ImGui::Button("Close", ImVec2(100, 0)))
-						//{
-						//	ImGui::CloseCurrentPopup();
-						//}
-					//}
-
 				}
 
 				ImGui::EndPopup();
 			 }
+			ImGui::PopStyleVar();
 
 
 		ImGui::SetNextWindowSize(ImVec2(200.f, 100.f));
@@ -2664,7 +2375,8 @@ namespace  nero
 	void EditorInterface::createProject(const Parameter& parameter)
 	{
 		nero_log("on create project in background");
-		BTManager::startTask(&ProjectManager::createProject, m_ProjectManager.get(), parameter);
+		std::string taskName = EditorConstant.TASK_CREATE_PROJECT + string::toString(m_CountCreateProject++);
+		BTManager::startTask(&ProjectManager::createProject, m_ProjectManager.get(), parameter, taskName);
 	}
 
 	void EditorInterface::openProject(const std::string& projectDirectory)

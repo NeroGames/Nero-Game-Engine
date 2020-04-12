@@ -5,12 +5,12 @@
 #ifndef COMMANDLINE_H
 #define COMMANDLINE_H
 ///////////////////////////HEADERS//////////////////////////
-//Poco
-#include "Poco/Process.h"
-#include "Poco/PipeStream.h"
-#include "Poco/StreamCopier.h"
 //Nero
 #include <Nero/core/cpp/utility/Logging.h>
+//Poco
+#include <Poco/Process.h>
+#include <Poco/PipeStream.h>
+#include <Poco/StreamCopier.h>
 //Cpp
 #include <fstream>
 ////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@ namespace nero
 				int						m_ExitCode;
 		};
 
-		Process							runCommand(const std::string& command, const std::vector<std::string>& argument, bool waitCompletion = true);
+		Process							runCommand(const std::string& command, const std::vector<std::string>& argument = {}, bool waitCompletion = true);
 		bool							killProcess(const unsigned int& processId);
 	}
 }

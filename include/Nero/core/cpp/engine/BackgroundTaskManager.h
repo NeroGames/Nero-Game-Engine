@@ -56,9 +56,8 @@ namespace nero
 			//get task
 			static const std::vector<BackgroundTask::Ptr>&	getTaskTable();
 			static const BackgroundTask::Ptr				findTaskByName(const std::string& name);
-			static const std::vector<BackgroundTask::Ptr>	findTaskByCategory(const std::string& category);
-			static const BackgroundTask::Ptr				getLastTask();
-			static std::shared_future<int>&					getLastFuture();
+			static const std::vector<BackgroundTask::Ptr>	findTaskByCategory(const std::string& category);			
+			static void										pauseTask(const std::string& name, unsigned int milliSecond);
 
 
 		private:
@@ -68,7 +67,7 @@ namespace nero
 		private:
 			static std::vector<BackgroundTask::Ptr> m_BackgroundTaskTable;
 			static int m_CountTask;
-			static std::map<std::string, std::shared_future<int>>	m_BackgroundFutureMap;
+			static std::map<std::string, std::shared_future<int>>	m_FutureMap;
 	};
 
 	template<typename T>
@@ -77,7 +76,7 @@ namespace nero
 										  const std::string& taskName,
 										  const std::string& taskCategory)
 	{
-		BackgroundTaskManager::m_BackgroundFutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, parent, callBack]()
+		BackgroundTaskManager::m_FutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, parent, callBack]()
 		{
 			BackgroundTask::Ptr backgroundTask = createTask(taskName, taskCategory);
 			(parent->*callBack)(backgroundTask);
@@ -93,7 +92,7 @@ namespace nero
 										  const std::string& taskName,
 										  const std::string& taskCategory)
 	{
-		BackgroundTaskManager::m_BackgroundFutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, parent, callBack, parameter]()
+		BackgroundTaskManager::m_FutureMap[taskName] = std::async(std::launch::async, [taskName, taskCategory, parent, callBack, parameter]()
 		{
 			BackgroundTask::Ptr backgroundTask = createTask(taskName, taskCategory);
 			(parent->*callBack)(parameter, backgroundTask);

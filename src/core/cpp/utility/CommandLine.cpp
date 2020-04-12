@@ -6,6 +6,8 @@
 //Nero
 #include <Nero/core/cpp/utility/CommandLine.h>
 #include <Nero/core/cpp/utility/Platform.h>
+//Cpp
+#include <iostream>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -55,8 +57,13 @@ namespace nero
 
 			Poco::PipeInputStream outStream(outPipe);
 			Poco::PipeInputStream errorStream(errorPipe);
+			//string stream
 			Poco::StreamCopier::copyStream(outStream, nero::logging::Logger::getStringStream());
 			Poco::StreamCopier::copyStream(errorStream, nero::logging::Logger::getStringStream());
+			//standard output
+			Poco::StreamCopier::copyStream(outStream, std::cout);
+			Poco::StreamCopier::copyStream(errorStream, std::cout);
+			//logging file
 
 			process.m_OutPipe	= outPipe;
 			process.m_ErrorPipe = errorPipe;

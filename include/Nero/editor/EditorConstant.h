@@ -14,7 +14,7 @@ namespace nero
 	const struct
 	{
 		//ImGUI ID
-		const std::string ID_DOCKSPACE					= "editor-dockspace";
+		const std::string ID_DOCKSPACE					= "editor_dockspace";
 
 		//ImGUI layout file
 		const std::string FILE_IMGUI_SETTING			= "imgui";
@@ -46,7 +46,7 @@ namespace nero
 		const std::string WINDOW_FACTORY				= "Factory";
 		const std::string WINDOW_IMGUI_DEMO				= "Dear ImGui Demo";
 			//dockspace
-		const std::string WINDOW_EDITOR_DOCKSPACE		= "editor-dockspace";
+		const std::string WINDOW_EDITOR_DOCKSPACE		= "editor_dockspace";
 			//project manager
 		const std::string WINDOW_PROJECT_MANAGER		= "Project Manager";
 		sf::Vector2f	  WINDOW_PROJECT_MANAGER_SIZE	= sf::Vector2f(800.f, 500.f);
@@ -78,6 +78,8 @@ namespace nero
 		const std::string NERO_GAME_VISUAL_STUDIO			= "NERO_GAME_VISUAL_STUDIO";
 
 		const sf::Time  AUTO_SAVE_TIME              = sf::seconds(30.f);
+
+		const std::string TASK_CREATE_PROJECT				= "task_create_project_";
 
 	} EditorConstant;
 }

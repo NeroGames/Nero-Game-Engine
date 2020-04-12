@@ -7,6 +7,7 @@
 #include <Nero/core/cpp/utility/String.h>
 //Cpp
 #include <fstream>
+#include <regex>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -135,6 +136,11 @@ namespace nero
 		std::string escapeAntiSlash(const std::string& word)
 		{
 			return boost::algorithm::replace_all_copy(word, "\\", "\\\\");
+		}
+
+		bool matchPattern(const std::string& input, const std::string& pattern)
+		{
+			return std::regex_match(input, std::regex(pattern));
 		}
 	}
 }

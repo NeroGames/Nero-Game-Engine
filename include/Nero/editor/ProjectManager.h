@@ -1,6 +1,7 @@
 #ifndef PROJECTMANAGER_H
 #define PROJECTMANAGER_H
 
+#include <Nero/core/cpp/utility/CommandLine.h>
 #include <memory>
 #include <json/json.hpp>
 #include <Nero/editor/GameProject.h>

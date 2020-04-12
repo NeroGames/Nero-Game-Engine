@@ -126,6 +126,7 @@ namespace nero
 			void											showWorkspaceWindow();
 			//////////////Project
 			ProjectInput									m_ProjectInput;
+			int												m_CountCreateProject;
 			void											createProject(const Parameter& parameter);
 			void											openProject(const std::string& projectDirectory);
 			void											compileProject();

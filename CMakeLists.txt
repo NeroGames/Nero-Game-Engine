@@ -106,6 +106,7 @@ target_link_libraries(nerogame-core ${NERO_GAME_CORE_DEP})
 
 # Install Nero Game Core Library
 #----------------------------------------------------------------------------------#
+#[[
 add_custom_command(TARGET nerogame-core
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E remove_directory    "${NERO_GAME_HOME}/NGCore/include/Nero/core"
@@ -113,7 +114,7 @@ add_custom_command(TARGET nerogame-core
         COMMAND ${CMAKE_COMMAND} -E make_directory      "${NERO_GAME_HOME}/NGCore/lib/"
         COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:nerogame-core>" "${NERO_GAME_HOME}/NGCore/lib/"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/include/Nero/core" "${NERO_GAME_HOME}/NGCore/include/Nero/core")
-
+#]]
 # Nero Game Render Engine (Desktop)
 #----------------------------------------------------------------------------------#
 # Render Engine Source Files
@@ -146,11 +147,12 @@ target_link_libraries(GameEditor ${NERO_GAME_EDITOR_DEP})
 
 # Install Nero Game Editor
 #----------------------------------------------------------------------------------#
+#[[#]]
 add_custom_command(TARGET nerogame-core
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E remove_directory    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/template"
         COMMAND ${CMAKE_COMMAND} -E copy_directory      "${CMAKE_SOURCE_DIR}/template" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/template")
-
+#]]
 # Test Laboratory
 #----------------------------------------------------------------------------------#
 # Test Lab Source Files
@@ -165,6 +167,7 @@ target_link_libraries(TestLab ${TEST_LABORATORY_DEP})
 # Doxygen Documentation
 #----------------------------------------------------------------------------------#
 # check if Doxygen is installed
+#[[
 find_package(Doxygen REQUIRED dot OPTIONAL_COMPONENTS mscgen dia)
 if (DOXYGEN_FOUND)
     # set input and output files
@@ -184,3 +187,4 @@ if (DOXYGEN_FOUND)
 else (DOXYGEN_FOUND)
   message("Doxygen need to be installed to generate the doxygen documentation")
 endif (DOXYGEN_FOUND)
+#]]

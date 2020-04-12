@@ -33,6 +33,7 @@ namespace nero
 
 
 		private:
+			friend class				BackgroundTaskManager;
 			std::string					m_Name;
 			std::string					m_Category;
 			int							m_Status;

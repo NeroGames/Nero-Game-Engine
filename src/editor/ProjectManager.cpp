@@ -65,9 +65,9 @@ namespace nero
 
 	void ProjectManager::createCppProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
 	{
-		nero_log("creating cpp_project");
+		nero_log("creating a new cpp project");
 
-		//Step 1-1 : Create directory struture
+		//step 1-1 : Create directory struture
 		backgroundTask->setStatus(1);
 		backgroundTask->addMessage("generating project directory ...");
 
@@ -81,11 +81,11 @@ namespace nero
 		file::createDirectory(file::getPath({projectDirectory, "Resource"}));
 			file::createDirectory(file::getPath({projectDirectory, "Source", project_name}));
 				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp"}));
-				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "script"}));
-					file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "gameobject"}));
-					file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "level"}));
-					file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "screen"}));
-					file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "startupscreen"}));
+				/*file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "script"}));
+				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "gameobject"}));
+				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "level"}));
+				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "screen"}));
+				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "startupscreen"}));*/
 		file::createDirectory(file::getPath({projectDirectory, "Build"}));
 		file::createDirectory(file::getPath({projectDirectory, "Scene"}));
 			file::createDirectory(file::getPath({projectDirectory, "Scene", "Level"}));
@@ -116,13 +116,13 @@ namespace nero
 
 		//Step 2 : generate project source
 		backgroundTask->setStatus(2);
-		backgroundTask->addMessage("generating project file ...");
+		backgroundTask->addMessage("generating project files ...");
 
 		//Step 2 : Generate file
-		std::string cmake_template			= file::loadText("template/cpp-project/CMakeLists.txt");
-		std::string cmake_setting_template	= file::loadText("template/cpp-project/CMakeSettings.json");
-		std::string scene_header_template	= file::loadText("template/cpp-project/CppScene.h");
-		std::string scene_source_template	= file::loadText("template/cpp-project/CppScene.cpp");
+		std::string cmake_template			= file::loadText("template/cpp_project/CMakeLists.txt");
+		std::string cmake_setting_template	= file::loadText("template/cpp_project/CMakeSettings.json");
+		std::string scene_header_template	= file::loadText("template/cpp_project/CppScene.h");
+		std::string scene_source_template	= file::loadText("template/cpp_project/CppScene.cpp");
 
 		auto wordTable = string::getWordTable(parameter.getString("project_name"));
 
@@ -146,7 +146,6 @@ namespace nero
 
 		//file 3 : cmake text list
 		boost::algorithm::replace_all(cmake_template, "::Project_Name::",					formatCmakeProjectName(wordTable));
-		boost::algorithm::replace_all(cmake_template, "::Engine_Installation_Directory::",	getEngineDirectory());
 		boost::algorithm::replace_all(cmake_template, "::Project_Library::",				formatCmakeProjectLibrary(wordTable));
 
 		//file 4 : cmake setting
@@ -156,8 +155,8 @@ namespace nero
 
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeLists"}, string::StringPool.EXT_TEXT), cmake_template);
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeSettings"}, string::StringPool.EXT_JSON), cmake_setting_template);
-		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, string::StringPool.EXT_CPP), scene_header_template);
-		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, string::StringPool.EXT_H), scene_source_template);
+		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, string::StringPool.EXT_H), scene_header_template);
+		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, string::StringPool.EXT_CPP), scene_source_template);
 
 		//Step 3 : compile the project
 		backgroundTask->setStatus(3);
@@ -374,42 +373,24 @@ namespace nero
 		std::string sourcePath  = file::getPath({projectDirectory, "Source", parameter.getString("project_name")});
 		std::string buildPath   = file::getPath({projectDirectory, "Build"});
 
-		std::string clean       = "mingw32-make -C \"" + buildPath + "\" -k clean";
-		std::string run_cmake   = "cmake -G \"MinGW Makefiles\" -S \"" + sourcePath + "\" -B \"" + buildPath + "\"";
-		std::string build       = "mingw32-make -C \"" + buildPath + "\"";
+		std::string mingw32		= m_EditorSetting->getSetting("environment").getString("nero_game_home") + "/Compiler/bin/mingw32-make.exe";
+		std::string cmake		= m_EditorSetting->getSetting("environment").getString("nero_game_home") + "/Tools/Cmake/bin/cmake.exe";
+		std::string gxx			= m_EditorSetting->getSetting("environment").getString("nero_game_home") + "/Compiler/bin/g++.exe";
+		std::string gcc			= m_EditorSetting->getSetting("environment").getString("nero_game_home") + "/Compiler/bin/gcc.exe";
 
-		int error_code;
+		backgroundTask->addMessage("  -> cleaning project");
+		cmd::Process cleanProcess	=  cmd::runCommand(mingw32, {"-C", buildPath, "-k", "clean"});
+		nero_log("clean project exit code = " + string::toString(cleanProcess.getExistCode()));
 
-		error_code =  system(clean.c_str());
-		nero_log("cleaning project error code : " + nero_ss(error_code));
-		if(error_code != 0 && false)
-		{
-			backgroundTask->addMessage("Failed to clean project");
-			backgroundTask->setErrorCode(error_code);
-		}
+		backgroundTask->addMessage("  -> configuring project");
+		cmd::Process configProcess	=  cmd::runCommand(cmake, {"-G", "MinGW Makefiles", "-S", sourcePath, "-B", buildPath,
+															   "-D", "CMAKE_CXX_COMPILER=" + file::getLinuxPath(gxx), "-D", "CMAKE_C_COMPILER="	+ file::getLinuxPath(gcc)});
+		nero_log("configure project exit code = " + string::toString(configProcess.getExistCode()));
 
-		error_code = system(run_cmake.c_str());
-		nero_log("configuring project error code : " + nero_ss(error_code));
-		if(error_code != 0 && false)
-		{
-			backgroundTask->addMessage("Failed to configure project");
-			backgroundTask->setErrorCode(error_code);
-
-			return;
-		}
-
-		error_code = system(build.c_str());
-		nero_log("building project error code : " + nero_ss(error_code));
-		if(error_code != 0 && false)
-		{
-			backgroundTask->addMessage("Failed to build project");
-			backgroundTask->setErrorCode(error_code);
-
-			return;
-		}
+		backgroundTask->addMessage("  -> building project");
+		cmd::Process buildProcess	=  cmd::runCommand(mingw32, {"-C", buildPath});
+		nero_log("build project exit code = " + string::toString(buildProcess.getExistCode()));
 	}
-
-
 
 	void ProjectManager::compileProject(const std::string& projectDirectory)
     {

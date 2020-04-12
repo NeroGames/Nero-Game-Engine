@@ -164,7 +164,7 @@ namespace  nero
 
 		m_RenderWindow.setVerticalSyncEnabled(true);
 		m_RenderWindow.resetGLStates();
-		setWindowIcon(m_EditorSetting->getSetting("window").getString("icon_file"));
+		setWindowIcon(m_EditorSetting->getSetting("window").getString("icon"));
 
 		nero_log("initializing imgui");
 		ImGui::SFML::Init(m_RenderWindow, false);
@@ -349,53 +349,49 @@ namespace  nero
 	{
 		nero_log("checking environment variable");
 
-		char* nero_game_home_char	= getenv("NERO_GAME_HOME");
-		char* visual_studio_char	= getenv("NERO_GAME_VISUAL_STUDIO");
-		char* qt_creator_char		= getenv("NERO_GAME_QT_CREATOR");
+		char* env_1		= getenv("NERO_GAME_HOME");
+		char* env_2		= getenv("NERO_GAME_VS");
+		char* env_3		= getenv("NERO_GAME_QT");
+		char* env_4		= getenv("NERO_GAME_TP");
 
-		std::string nero_game_home	= nero_game_home_char != nullptr ? std::string(nero_game_home_char)	: string::StringPool.BLANK;
-		std::string visual_studio	= visual_studio_char != nullptr ? std::string(visual_studio_char)	: string::StringPool.BLANK;
-		std::string qt_creator		= qt_creator_char != nullptr ? std::string(qt_creator_char)	: string::StringPool.BLANK;
+		std::string neroGamHome		= env_1 != nullptr ? std::string(env_1)	: string::StringPool.BLANK;
+		std::string visualStudio	= env_2 != nullptr ? std::string(env_2)	: string::StringPool.BLANK;
+		std::string qtCreator		= env_3 != nullptr ? std::string(env_3)	: string::StringPool.BLANK;
+		std::string texturePacker	= env_4 != nullptr ? std::string(env_4)	: string::StringPool.BLANK;
 
 		Setting environment;
 
-		environment.setString("nero_game_home", nero_game_home);
-		environment.setString("visual_studio", visual_studio);
-		environment.setString("qt_creator",	qt_creator);
+		environment.setString("nero_game_home", neroGamHome);
+		environment.setString("visual_studio",	visualStudio);
+		environment.setString("qt_creator",		qtCreator);
+		environment.setString("texture_packer",	texturePacker);
 
 		m_EditorSetting->setSetting("environment", environment);
 
-		nero_game_home_char	= nullptr;
-		visual_studio_char	= nullptr;
-		qt_creator_char		= nullptr;
-
-		if(nero_game_home != string::StringPool.BLANK)
-		{
-			nero_log("NERO_GAME_HOME = " + nero_game_home);
-		}
+		if(env_1)
+			{nero_log("NERO_GAME_HOME = " + neroGamHome);}
 		else
-		{
-			nero_log("NERO_GAME_HOME not found");
-		}
+			{nero_log("NERO_GAME_HOME not found");}
 
-		if(visual_studio != string::StringPool.BLANK)
-		{
-			nero_log("NERO_GAME_VISUAL_STUDIO = " + visual_studio);
-		}
+		if(env_2)
+			{nero_log("NERO_GAME_VS = " + visualStudio);}
 		else
-		{
-			nero_log("NERO_GAME_VISUAL_STUDIO not found");
-		}
+			{nero_log("NERO_GAME_VS not found");}
 
-
-		if(qt_creator != string::StringPool.BLANK)
-		{
-			nero_log("NERO_GAME_QT_CREATOR = " + qt_creator);
-		}
+		if(env_3)
+			{nero_log("NERO_GAME_QT = " + qtCreator);}
 		else
-		{
-			nero_log("NERO_GAME_QT_CREATOR not found");
-		}
+			{nero_log("NERO_GAME_QT not found");}
+
+		if(env_4)
+			{nero_log("NERO_GAME_TP = " + texturePacker);}
+		else
+			{nero_log("NERO_GAME_TP not found");}
+
+		env_1	= nullptr;
+		env_2	= nullptr;
+		env_3	= nullptr;
+		env_4	= nullptr;
 	}
 
 	void EngineEditor::loadEditorResource()

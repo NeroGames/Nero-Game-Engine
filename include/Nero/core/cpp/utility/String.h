@@ -74,6 +74,7 @@ namespace nero
 		std::vector<std::string>&		splitString(const std::string &s, char delim,std::vector<std::string> &elems);
 		std::vector<std::string>		splitString(const std::string &s, char delim);
 		std::string						escapeAntiSlash(const std::string& word);
+		bool							matchPattern(const std::string& input, const std::string& pattern);
 
 		template <typename T>
 		std::string toString(T const& value)
