@@ -85,6 +85,9 @@ namespace nero
 		}
 
 	}///@}
+
+	template<typename T>
+	constexpr auto toString = string::toString<T>;
 }
 ////////////////////////////MACRO///////////////////////////
 #define nero_fill_char_array(arrayTable, vectorTable) for(unsigned int i = 0; i < vectorTable.size(); i++ ) arrayTable[i] = vectorTable[i].c_str();
