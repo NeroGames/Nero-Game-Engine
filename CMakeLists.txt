@@ -108,7 +108,7 @@ target_link_libraries(nerogame-core ${NERO_GAME_CORE_DEP})
 
 # Install Nero Game Core Library
 #----------------------------------------------------------------------------------#
-#[[
+#[[#]]
 add_custom_command(TARGET nerogame-core
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E remove_directory    "${NERO_GAME_HOME}/NGCore/include/Nero/core"

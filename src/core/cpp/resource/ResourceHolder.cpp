@@ -12,7 +12,7 @@ namespace nero
 	ResourceHolder::ResourceHolder():
 		 m_Setting()
 		,m_DirectoryTable()
-		,m_SelectedDirectory(string::StringPool.BLANK)
+		,m_SelectedDirectory(StringPool.BLANK)
 	{
 		//empty
 	}
@@ -20,7 +20,7 @@ namespace nero
 	ResourceHolder::ResourceHolder(const Setting& setting):
 		m_Setting(setting)
 	   ,m_DirectoryTable()
-	   ,m_SelectedDirectory(string::StringPool.BLANK)
+	   ,m_SelectedDirectory(StringPool.BLANK)
 	{
 
 	}
@@ -83,6 +83,6 @@ namespace nero
 	{
 		//setting does not nee to be cleared
 		m_DirectoryTable.clear();
-		m_SelectedDirectory = string::StringPool.BLANK;
+		m_SelectedDirectory = StringPool.BLANK;
 	}
 }

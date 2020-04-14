@@ -132,7 +132,7 @@ namespace  nero
 		m_EditorSetting = std::make_shared<Setting>();
 
 		nero_log("loading render window settings")
-		std::string window_setting = file::getPath({"setting", "window"}, string::StringPool.EXT_JSON);
+		std::string window_setting = file::getPath({"setting", "window"}, StringPool.EXT_JSON);
 		if(!file::fileExist(window_setting))
 		{
 			file::saveFile(window_setting, EditorSetting.windowSetting.dump(3));
@@ -141,7 +141,7 @@ namespace  nero
 
 
 		nero_log("loading resource settings");
-		std::string resource_setting = file::getPath({"setting", "resource"}, string::StringPool.EXT_JSON);
+		std::string resource_setting = file::getPath({"setting", "resource"}, StringPool.EXT_JSON);
 		if(!file::fileExist(resource_setting))
 		{
 			//TODO
@@ -289,7 +289,7 @@ namespace  nero
 		nero_log("loading dockspace settings");
 		m_EditorSetting->loadSetting(file::getPath({"setting", "dockspace"}));
 		m_EditorSetting->getSetting("dockspace").setBool("imgui_setting_exist",
-			file::fileExist(file::getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, string::StringPool.EXT_INI)));
+			file::fileExist(file::getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, StringPool.EXT_INI)));
 
 
 		nero_log("loading startup settings");
@@ -299,9 +299,9 @@ namespace  nero
 
 	void EngineEditor::checkRecentProject()
 	{
-		if(!file::fileExist(file::getPath({"setting", "recent_project"}, string::StringPool.EXT_JSON)))
+		if(!file::fileExist(file::getPath({"setting", "recent_project"}, StringPool.EXT_JSON)))
 		{
-			file::saveFile(file::getPath({"setting", "recent_project"}, string::StringPool.EXT_JSON), nlohmann::json::array().dump(3));
+			file::saveFile(file::getPath({"setting", "recent_project"}, StringPool.EXT_JSON), nlohmann::json::array().dump(3));
 
 			return;
 		}
@@ -318,14 +318,14 @@ namespace  nero
 			}
 		}
 
-		file::saveFile(file::getPath({"setting", "recent_project"}, string::StringPool.EXT_JSON), recent_project.dump(3), true);
+		file::saveFile(file::getPath({"setting", "recent_project"}, StringPool.EXT_JSON), recent_project.dump(3), true);
 	}
 
 	void EngineEditor::checkWorkspace()
 	{
-		if(!file::fileExist(file::getPath({"setting", "workspace"}, string::StringPool.EXT_JSON)))
+		if(!file::fileExist(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON)))
 		{
-			file::saveFile(file::getPath({"setting", "workspace"}, string::StringPool.EXT_JSON), nlohmann::json::array().dump(3));
+			file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON), nlohmann::json::array().dump(3));
 
 			return;
 		}
@@ -342,7 +342,7 @@ namespace  nero
 			}
 		}
 
-		file::saveFile(file::getPath({"setting", "workspace"}, string::StringPool.EXT_JSON), workspace_setting.dump(3), true);
+		file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON), workspace_setting.dump(3), true);
 	}
 
 	void EngineEditor::checkEnvironmentVariable()
@@ -354,10 +354,10 @@ namespace  nero
 		char* env_3		= getenv("NERO_GAME_QT");
 		char* env_4		= getenv("NERO_GAME_TP");
 
-		std::string neroGamHome		= env_1 != nullptr ? std::string(env_1)	: string::StringPool.BLANK;
-		std::string visualStudio	= env_2 != nullptr ? std::string(env_2)	: string::StringPool.BLANK;
-		std::string qtCreator		= env_3 != nullptr ? std::string(env_3)	: string::StringPool.BLANK;
-		std::string texturePacker	= env_4 != nullptr ? std::string(env_4)	: string::StringPool.BLANK;
+		std::string neroGamHome		= env_1 != nullptr ? std::string(env_1)	: StringPool.BLANK;
+		std::string visualStudio	= env_2 != nullptr ? std::string(env_2)	: StringPool.BLANK;
+		std::string qtCreator		= env_3 != nullptr ? std::string(env_3)	: StringPool.BLANK;
+		std::string texturePacker	= env_4 != nullptr ? std::string(env_4)	: StringPool.BLANK;
 
 		Setting environment;
 

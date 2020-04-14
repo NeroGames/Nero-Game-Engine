@@ -158,11 +158,11 @@ namespace nero
 			if(m_LevelSetting->getBool("pause_level") && !m_LevelSetting->getBool("single_step"))
 			{
 				b2TimeStep = 0.0f;
-				m_SceneContext.engineType == EngineType::RENDER_ENGINE ? m_InformationContent = string::StringPool.BLANK : m_InformationContent = "#-- PAUSED --#";
+				m_SceneContext.engineType == EngineType::RENDER_ENGINE ? m_InformationContent = StringPool.BLANK : m_InformationContent = "#-- PAUSED --#";
 			}
 			else
 			{
-				m_InformationContent = string::StringPool.BLANK;
+				m_InformationContent = StringPool.BLANK;
 			}
 
 			uint32 flags = 0;
@@ -435,7 +435,7 @@ namespace nero
 		//if game level has script object
 		GameLevelScriptObject::Ptr scriptObject = nullptr;
 		std::string script_class = gameLevelJson["script_class"].get<std::string>();
-		if(script_class != string::StringPool.BLANK)
+		if(script_class != StringPool.BLANK)
 		{
 			boost::dll::fs::path game_library_path(file::removeFileExtension(m_GameSetting->getString("game_library_file")));
 

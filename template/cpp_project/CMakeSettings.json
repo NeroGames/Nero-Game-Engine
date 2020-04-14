@@ -1,7 +1,7 @@
 ﻿{
   "configurations": [
     {
-      "name": "Nero Game",
+      "name": "Nero Game Engine",
       "cacheRoot": "::Project_Build_Directory::",
       "inheritEnvironments": [],
       "variables": []

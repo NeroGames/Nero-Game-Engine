@@ -193,9 +193,6 @@ namespace nero
 			void						showBackgroundTaskWindow();
 
 
-
-
-
             ////////////////////////Project and Workspace////////////////////////
             //General
             //Project Workspace
@@ -252,9 +249,9 @@ namespace nero
 
             //
 
-			void				buildRenderContext();
+			void						buildRenderContext();
 			void						prepareRenderTexture();
-			bool				isMouseOnCanvas();
+			bool						mouseOnCanvas();
 
 			ax::NodeEditor::EditorContext*	g_Context;
 

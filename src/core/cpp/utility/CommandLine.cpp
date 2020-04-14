@@ -10,30 +10,11 @@
 #include <Nero/core/cpp/utility/String.h>
 //Cpp
 #include <iostream>
+#include <sstream>
 #ifdef NERO_OS_WINDOW
 #include <shellapi.h>
 #endif
 ////////////////////////////////////////////////////////////
-namespace nero
-{
-	std::string formatPathWindows(const std::string& path)
-	{
-		std::string result = string::StringPool.BLANK;
-
-		std::vector<std::string> table = string::splitString(path, '\\');
-		for(std::string word : table)
-		{
-			if(string::splitString(word, ' ').size() > 1)
-				result += "\"" + word + "\"\\";
-			else
-				result += word + "\\";
-		}
-
-		result.pop_back();
-
-		return result;
-	}
-}
 namespace nero
 {
 	namespace cmd
@@ -69,9 +50,9 @@ namespace nero
 			return m_ExitCode;
 		}
 
-		bool Process::killProcess()
+		void Process::killProcess()
 		{
-			return nero::cmd::killProcess(m_Handle.id());
+			Poco::Process::kill(m_Handle);
 		}
 
 		Process runCommand(const std::string& command, const std::vector<std::string>& argument, bool waitCompletion)
@@ -106,25 +87,22 @@ namespace nero
 			return process;
 		}
 
-		bool killProcess(const unsigned int& processId)
+		void killProcess(const unsigned int& processId)
 		{
-			#ifdef NERO_OS_WINDOW
-				runCommand(KILL_PROCESS_WINDOWS, {string::toString(processId)});
-				return true; //TODO
-
-			#elif NERO_OS_LINUX
-				runCommand(KILL_PROCESS_LINUX, {string::toString(processId)});
-				return true //TODO
-
-			#endif
+			Poco::Process::kill(processId);
 		}
 
-		void launchApplication(const std::string& application)
+		std::string launchApplication(const std::string& path, const std::string& processName)
 		{
 			#ifdef NERO_OS_WINDOW
-				std::string command =  LAUNCH_APPLICATION_WINDOWS + formatPathWindows(file::getWindowsPath(application)) ;
-				system(command.c_str());
+
+			std::string command =  LAUNCH_APPLICATION_WINDOWS + file::getWindowsPath(path);
+			system(command.c_str());
+
+			return findProcessId(processName == StringPool.BLANK ? file::getFileName(path) : processName);
+
 			#elif NERO_OS_LINUX
+
 				//TODO
 
 			#endif
@@ -133,10 +111,65 @@ namespace nero
 		void launchBrowser(const std::string& url)
 		{
 			#ifdef NERO_OS_WINDOW
-				ShellExecute(NULL, "open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
+
+			ShellExecute(nullptr, "open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+
 			#elif NERO_OS_LINUX
-				system(url.c_str());
-			#endif // _WIN32
+
+			system(url.c_str());
+
+			#endif
+		}
+
+		std::string findProcessId(const std::string& application)
+		{
+			#ifdef NERO_OS_WINDOW
+
+			Poco::Pipe outPipe;
+			Poco::Pipe outPipe2;
+			Poco::ProcessHandle handle	= Poco::Process::launch("tasklist", {"/fo", "csv"}, nullptr, &outPipe, &outPipe);
+			Poco::ProcessHandle handle2 = Poco::Process::launch("findstr", {"/i", application}, &outPipe, &outPipe2, &outPipe2);
+
+			Poco::PipeInputStream	outStream(outPipe2);
+			std::stringstream		stringStream;
+			Poco::StreamCopier::copyStream(outStream, stringStream);
+
+			auto processTableSplit		= string::splitString(stringStream.str(), '\r\n');
+
+			std::string result = string::splitString(processTableSplit.back(), ',').at(1);
+			result.pop_back();
+			result.erase(result.begin());
+
+			return result;
+
+			#elif NERO_OS_LINUX
+
+				//TODO
+
+			#endif
+		}
+
+		bool processRunning(const std::string& processId)
+		{
+			if(processId == StringPool.BLANK) return false;
+
+			#ifdef NERO_OS_WINDOW
+
+			Poco::Pipe outPipe;
+			Poco::ProcessHandle handle	= Poco::Process::launch("tasklist", {"/fo", "csv"}, nullptr, &outPipe, &outPipe);
+
+			Poco::PipeInputStream	outStream(outPipe);
+			std::stringstream		stringStream;
+			Poco::StreamCopier::copyStream(outStream, stringStream);
+			handle.wait();
+
+			return stringStream.str().find(processId) != std::string::npos;
+
+			#elif NERO_OS_LINUX
+
+				//TODO
+
+			#endif
 		}
 	}
 }

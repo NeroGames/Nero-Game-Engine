@@ -18,9 +18,9 @@ namespace nero
 	namespace file
 	{
 		//get file path : OS dependent
-		std::string			getPath(const std::vector<std::string>& list, const std::string& extension = string::StringPool.BLANK);
-		std::string			getWindowsPath(const std::vector<std::string>& list, const std::string& extension = string::StringPool.BLANK);
-		std::string			getLinuxPath(const std::vector<std::string>& list, const std::string& extension = string::StringPool.BLANK);
+		std::string			getPath(const std::vector<std::string>& list, const std::string& extension = StringPool.BLANK);
+		std::string			getWindowsPath(const std::vector<std::string>& list, const std::string& extension = StringPool.BLANK);
+		std::string			getLinuxPath(const std::vector<std::string>& list, const std::string& extension = StringPool.BLANK);
 		std::string			getWindowsPath(const std::string& path);
 		std::string			getLinuxPath(const std::string& path);
 		//get file content

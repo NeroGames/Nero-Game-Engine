@@ -48,8 +48,8 @@ namespace nero
 			AdvancedScene::Ptr					getAdvancedScene();
 			void								setRenderTexture(const RenderTexturePtr& renderTexture);
 			void								setCamera(const Camera::Ptr& camera);
-			void								openQtCreator(const std::string& file = string::StringPool.BLANK);
-			void								openVisualStudio(const std::string& file = string::StringPool.BLANK);
+			void								openQtCreator(const std::string& file = StringPool.BLANK);
+			void								openVisualStudio(const std::string& file = StringPool.BLANK);
 			void								setRenderContext(const RenderContextPtr& renderContext);
 			void								setSetting(const Setting::Ptr& setting);
 			void								close();

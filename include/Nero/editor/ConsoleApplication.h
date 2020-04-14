@@ -23,20 +23,21 @@ namespace nero
 			ClearLog();
 			memset(InputBuf, 0, sizeof(InputBuf));
 			HistoryPos = -1;
-			Commands.push_back("HELP");
-			Commands.push_back("HISTORY");
-			Commands.push_back("CLEAR");
-			Commands.push_back("CLASSIFY");  // "classify" is only here to provide an example of "C"+[tab] completing to "CL" and displaying matches.
+			Commands.push_back("help");
+			Commands.push_back("history");
+			Commands.push_back("clear");
 			AutoScroll = true;
 			ScrollToBottom = true;
-			AddLog("Welcome to Dear ImGui!");
+			AddLog("Engine Console");
 		}
 
 		~ConsoleApplication()
 		{
 			ClearLog();
 			for (int i = 0; i < History.Size; i++)
+			{
 				free(History[i]);
+			}
 		}
 
 		// Portable helpers
@@ -48,7 +49,10 @@ namespace nero
 		void    ClearLog()
 		{
 			for (int i = 0; i < Items.Size; i++)
+			{
 				free(Items[i]);
+			}
+
 			Items.clear();
 			ScrollToBottom = true;
 		}
@@ -64,20 +68,22 @@ namespace nero
 			va_end(args);
 			Items.push_back(Strdup(buf));
 			if (AutoScroll)
+			{
 				ScrollToBottom = true;
+			}
 		}
 
 		void    Draw(const char* title, bool* p_open)
 		{
 			ImGui::SetNextWindowSize(ImVec2(520,600), ImGuiCond_FirstUseEver);
-			if (!ImGui::Begin(title, p_open))
+			if (!ImGui::Begin(title, p_open, ImGuiWindowFlags_NoScrollbar))
 			{
 				ImGui::End();
 				return;
 			}
 
 			ImGui::SameLine(100.f);
-			ImGui::TextWrapped("Enter 'HELP' for help, press TAB to use text completion.");
+			ImGui::TextWrapped("Enter 'help' for help, press TAB to use text completion.");
 			// Command-line
 			bool reclaim_focus = false;
 			ImGui::Text("Command"); ImGui::SameLine(100.f);
@@ -100,8 +106,8 @@ namespace nero
 
 			ImGui::Dummy(ImVec2(0.f, 3.f));
 
-			const float footer_height_to_reserve = ImGui::GetStyle().ItemSpacing.y + ImGui::GetFrameHeightWithSpacing(); // 1 separator, 1 input text
-			ImGui::BeginChild("ScrollingRegion", ImVec2(0, -footer_height_to_reserve), true, ImGuiWindowFlags_HorizontalScrollbar); // Leave room for 1 separator + 1 InputText
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.000f, 0.000f, 0.000f, 1.000f));
+			ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar); // Leave room for 1 separator + 1 InputText
 			if (ImGui::BeginPopupContextWindow())
 			{
 				if (ImGui::Selectable("Clear")) ClearLog();
@@ -143,12 +149,14 @@ namespace nero
 			ScrollToBottom = false;
 			ImGui::PopStyleVar();
 			ImGui::EndChild();
+			ImGui::PopStyleColor();
 
 			// Auto-focus on window apparition
 			ImGui::SetItemDefaultFocus();
 			if (reclaim_focus)
-				ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
+				ImGui::SetKeyboardFocusHere(0); // Auto focus previous widget
 
+			ImGui::Dummy(ImVec2(5.f, 0.f));
 			ImGui::End();
 		}
 
@@ -168,26 +176,23 @@ namespace nero
 			History.push_back(Strdup(command_line));
 
 			// Process command
-			if (Stricmp(command_line, "CLEAR") == 0)
+			if (Stricmp(command_line, "clear") == 0)
 			{
 				ClearLog();
 			}
-			else if (Stricmp(command_line, "HELP") == 0)
+			else if (Stricmp(command_line, "help") == 0)
 			{
 				AddLog("Commands:");
 				for (int i = 0; i < Commands.Size; i++)
 					AddLog("- %s", Commands[i]);
 			}
-			else if (Stricmp(command_line, "HISTORY") == 0)
+			else if (Stricmp(command_line, "history") == 0)
 			{
 				int first = History.Size - 10;
 				for (int i = first > 0 ? first : 0; i < History.Size; i++)
 					AddLog("%3d: %s\n", i, History[i]);
 			}
-			else
-			{
-				AddLog("Unknown command: '%s'\n", command_line);
-			}
+
 
 			// On commad input, we scroll to bottom even if AutoScroll==false
 			ScrollToBottom = true;

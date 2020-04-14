@@ -89,19 +89,19 @@ namespace nero
 }
 ////////////////////////////MACRO///////////////////////////
 #define EXPAND(x) x
-#define nero_log_info(message) nero::logging::Logger::log(nero::string::toString(message));
-#define nero_log_level(message, level) nero::logging::Logger::log(nero::string::toString(message), level);
-#define nero_log_info_if(message, condition) nero::logging::Logger::logIf(nero::string::toString(message), condition);
-#define nero_log_level_if(message, condition, level) nero::logging::Logger::logIf(nero::string::toString(message), condition, level);
+#define nero_log_info(message) nero::logging::Logger::log(nero::toString(message));
+#define nero_log_level(message, level) nero::logging::Logger::log(nero::toString(message), level);
+#define nero_log_info_if(message, condition) nero::logging::Logger::logIf(nero::toString(message), condition);
+#define nero_log_level_if(message, condition, level) nero::logging::Logger::logIf(nero::toString(message), condition, level);
 #define GET_NERO_LOG_MACRO(_1,_2,NAME,...) NAME
 #define _nero_log(...) GET_NERO_LOG_MACRO(__VA_ARGS__, nero_log_level, nero_log_info)(__VA_ARGS__)
 #define GET_NERO_LOG_IF_MACRO(_1,_2,_3,NAME,...) NAME
 #define _nero_log_if(...) GET_NERO_LOG_IF_MACRO(__VA_ARGS__, nero_log_level_if, nero_log_info_if)(__VA_ARGS__)
 #define nero_log(...) EXPAND(_nero_log(__VA_ARGS__))
 #define nero_log_if(...) EXPAND(_nero_log_if(__VA_ARGS__))
-#define nero_ss(value) nero::string::toString(value)
-#define nero_ssp(value) nero::string::toString(value) + nero::string::toString(" ")
-#define nero_ssv(value) nero::string::toString(#value) + nero::string::toString(" = ") + nero::string::toString(value)
-#define nero_ssn(object)  nero::string::toString(object->toString())
+#define nero_ss(value) nero::toString(value)
+#define nero_ssp(value) nero::toString(value) + nero::toString(" ")
+#define nero_ssv(value) nero::toString(#value) + nero::toString(" = ") + nero::toString(value)
+#define nero_ssn(object)  nero::toString(object->toString())
 ////////////////////////////////////////////////////////////
 #endif // LOGGING_H

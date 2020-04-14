@@ -149,19 +149,19 @@ namespace nero
 		}
 		else if(getGigaBytes(bytes) > 1.f)
 		{
-			result = string::toString(getGigaBytes(bytes)) + " GB";
+			result = toString(getGigaBytes(bytes)) + " GB";
 		}
 		else if(getMegaBytes(bytes) > 1.f)
 		{
-			result = string::toString(getMegaBytes(bytes)) + " MB";
+			result = toString(getMegaBytes(bytes)) + " MB";
 		}
 		else if(getKiloBytes(bytes) > 1.f)
 		{
-			result = string::toString(getKiloBytes(bytes)) + " KB";
+			result = toString(getKiloBytes(bytes)) + " KB";
 		}
 		else
 		{
-			result = string::toString(bytes) + " B";
+			result = toString(bytes) + " B";
 		}
 
 		return result;

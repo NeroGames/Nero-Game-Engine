@@ -5,6 +5,8 @@
 #ifndef EDITORINTERFACEUTILITY_H
 #define EDITORINTERFACEUTILITY_H
 ///////////////////////////HEADERS///////////////////////////
+//Poco
+#include <Nero/core/cpp/utility/CommandLine.h>
 //Nero
 #include <Nero/core/cpp/utility/String.h>
 //Json
@@ -60,12 +62,12 @@ namespace nero
 
 		void clear()
 		{
-			string::fillCharArray(location,			sizeof(location),			string::StringPool.BLANK);
-			string::fillCharArray(name,				sizeof(name),				string::StringPool.BLANK);
-			string::fillCharArray(projectLead,		sizeof(projectLead),		string::StringPool.BLANK);
-			string::fillCharArray(company,			sizeof(company),			string::StringPool.BLANK);
-			string::fillCharArray(projectNamespace,	sizeof(projectNamespace),	string::StringPool.BLANK);
-			string::fillCharArray(locationImport,	sizeof(locationImport),		string::StringPool.BLANK);
+			string::fillCharArray(location,			sizeof(location),			StringPool.BLANK);
+			string::fillCharArray(name,				sizeof(name),				StringPool.BLANK);
+			string::fillCharArray(projectLead,		sizeof(projectLead),		StringPool.BLANK);
+			string::fillCharArray(company,			sizeof(company),			StringPool.BLANK);
+			string::fillCharArray(projectNamespace,	sizeof(projectNamespace),	StringPool.BLANK);
+			string::fillCharArray(locationImport,	sizeof(locationImport),		StringPool.BLANK);
 		}
 	};
 
@@ -88,11 +90,11 @@ namespace nero
 
 		void clear()
 		{
-			string::fillCharArray(name,					sizeof(name),				string::StringPool.BLANK);
-			string::fillCharArray(projectLead,			sizeof(projectLead),		string::StringPool.BLANK);
-			string::fillCharArray(company,				sizeof(company),			string::StringPool.BLANK);
-			string::fillCharArray(projectNamespace,		sizeof(projectNamespace),	string::StringPool.BLANK);
-			string::fillCharArray(description,			sizeof(description),		string::StringPool.BLANK);
+			string::fillCharArray(name,					sizeof(name),				StringPool.BLANK);
+			string::fillCharArray(projectLead,			sizeof(projectLead),		StringPool.BLANK);
+			string::fillCharArray(company,				sizeof(company),			StringPool.BLANK);
+			string::fillCharArray(projectNamespace,		sizeof(projectNamespace),	StringPool.BLANK);
+			string::fillCharArray(description,			sizeof(description),		StringPool.BLANK);
 
 			startupPack = true;
 		}
@@ -125,6 +127,24 @@ namespace nero
 
 	void			popToolbarStyle();
 	void			pushToolbarStyle();
+
+	struct AppLauncher
+	{
+		//let the Interface only access
+		//friend class			EditorInterface;
+
+		static std::string		NERO_GAME_HOME;
+		static std::string		qtCreatorProcessId;
+		static std::string		visaulStudioProcessId;
+		static std::string		profilerProcessId;
+		static std::string		texturePackerProcessId;
+
+		static void				launchTexturePacker();
+
+		static void				launchProfiler();
+		static void				showApplication(const std::string& name, const std::string& proccessId);
+
+	};
 }
 
 

@@ -33,6 +33,23 @@ set(CMAKE_MODULE_PATH "${NERO_GAME_HOME}/Tools/Cmake/share/cmake-3.17/Modules")
 #----------------------------------------------------------------------------------#
 set(CMAKE_CXX_COMPILER "${NERO_GAME_HOME}/Compiler/bin/g++.exe")
 set(CMAKE_C_COMPILER "${NERO_GAME_HOME}/Compiler/bin/gcc.exe")
+set(CMAKE_ADDR2LINE "${NERO_GAME_HOME}/Compiler/bin/addr2line.exe")
+set(CMAKE_AR "${NERO_GAME_HOME}/Compiler/bin/ar.exe")
+set(CMAKE_CXX_COMPILER_AR "${NERO_GAME_HOME}/Compiler/bin/gcc-ar.exe")
+set(CMAKE_CXX_COMPILER_RANLIB "${NERO_GAME_HOME}/Compiler/bin/gcc-ranlib.exe")
+set(CMAKE_C_COMPILER_AR "${NERO_GAME_HOME}/Compiler/bin/gcc-ar.exe")
+set(CMAKE_C_COMPILER_RANLIB "${NERO_GAME_HOME}/Compiler/bin/gcc-ranlib.exe")
+set(CMAKE_DLLTOOL "${NERO_GAME_HOME}/Compiler/bin/dlltool.exe")
+set(CMAKE_LINKER "${NERO_GAME_HOME}/Compiler/bin/ld.exe")
+set(CMAKE_MAKE_PROGRAM "${NERO_GAME_HOME}/Compiler/bin/mingw32-make.exe")
+set(CMAKE_NM "${NERO_GAME_HOME}/Compiler/bin/nm.exe")
+set(CMAKE_OBJCOPY "${NERO_GAME_HOME}/Compiler/bin/objcopy.exe")
+set(CMAKE_OBJDUMP "${NERO_GAME_HOME}/Compiler/bin/objdump.exe")
+set(CMAKE_PREFIX_PATH "${NERO_GAME_HOME}/Compiler")
+set(CMAKE_RANLIB "${NERO_GAME_HOME}/Compiler/bin/ranlib.exe")
+set(CMAKE_RC_COMPILER "${NERO_GAME_HOME}/Compiler/bin/windres.exe")
+set(CMAKE_READELF "${NERO_GAME_HOME}/Compiler/bin/readelf.exe")
+set(CMAKE_STRIP "${NERO_GAME_HOME}/Compiler/bin/strip.exe")
 
 # Compiler Configuration
 #----------------------------------------------------------------------------------#

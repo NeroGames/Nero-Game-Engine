@@ -26,7 +26,7 @@ namespace nero
 					trim_left(result);
 					trim_right(result);
 					to_lower(result);
-					replace_all(result, string::StringPool.SPACE, string::StringPool.UNDERSCORE);
+					replace_all(result, StringPool.SPACE, StringPool.UNDERSCORE);
 
 				}break;
 
@@ -35,7 +35,7 @@ namespace nero
 					trim_left(result);
 					trim_right(result);
 					to_lower(result);
-					replace_all(result, string::StringPool.SPACE, string::StringPool.BLANK);
+					replace_all(result, StringPool.SPACE, StringPool.BLANK);
 
 				}break;
 			}
@@ -94,11 +94,11 @@ namespace nero
 
 			trim_left(string);
 			trim_right(string);
-			replace_all(string, string::StringPool.NEW_LINE, string::StringPool.BLANK);
+			replace_all(string, StringPool.NEW_LINE, StringPool.BLANK);
 
-			auto result = splitString(string, string::StringPool.SPACE_CHAR);
+			auto result = splitString(string, StringPool.SPACE_CHAR);
 
-			std::remove_if(result.begin(), result.end(), [](std::string word){return word == string::StringPool.BLANK;});
+			std::remove_if(result.begin(), result.end(), [](std::string word){return word == StringPool.BLANK;});
 
 			return result;
 		}
@@ -110,21 +110,21 @@ namespace nero
 				return message;
 			}
 
-			std::string result = string::StringPool.BLANK;
+			std::string result = StringPool.BLANK;
 
 			auto wordTable = getWordTable(message);
 
-			std::string line = string::StringPool.BLANK;
+			std::string line = StringPool.BLANK;
 			for(const std::string& word : wordTable)
 			{
 				if((line.size() + word.size() + 1) <= maxLetter)
 				{
-					line += word + string::StringPool.SPACE;
+					line += word + StringPool.SPACE;
 				}
 				else
 				{
-					result += line + string::StringPool.NEW_LINE;
-					line = word + string::StringPool.SPACE;
+					result += line + StringPool.NEW_LINE;
+					line = word + StringPool.SPACE;
 				}
 			}
 

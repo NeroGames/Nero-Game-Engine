@@ -53,7 +53,7 @@ namespace nero
 			TextureHolder::Ptr			getLightmapHolder();
 
 		public:
-			static void					buildDirectory(const std::string& parentDirectory = string::StringPool.BLANK);
+			static void					buildDirectory(const std::string& parentDirectory = StringPool.BLANK);
 
 		private:
 			FontHolder::Ptr				m_FontHolder;

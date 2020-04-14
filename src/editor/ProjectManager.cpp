@@ -17,7 +17,7 @@ namespace nero
 {
     ProjectManager::ProjectManager():
          m_ProjectTable()
-        ,m_EditorPid(string::StringPool.BLANK)
+        ,m_EditorPid(StringPool.BLANK)
         ,m_GameProject()
 		,m_EditorSetting(nullptr)
     {
@@ -135,14 +135,14 @@ namespace nero
 		boost::algorithm::replace_all(scene_header_template, "::Namespace::",		parameter.getString("project_namespace"));
 		boost::algorithm::replace_all(scene_header_template, "::Project_Name::",	parameter.getString("project_name"));
 		boost::algorithm::replace_all(scene_header_template, "::Project_Lead::",	parameter.getString("project_lead"));
-		boost::algorithm::replace_all(scene_header_template, "::Coypright_Date::",	string::toString(datetime::getCurrentDateTime().date().year()));
+		boost::algorithm::replace_all(scene_header_template, "::Coypright_Date::",	toString(datetime::getCurrentDateTime().date().year()));
 
 		//file 2 : source
 		boost::algorithm::replace_all(scene_source_template, "::Scene_Class::",		scene_class);
 		boost::algorithm::replace_all(scene_source_template, "::Namespace::",		parameter.getString("project_namespace"));
 		boost::algorithm::replace_all(scene_source_template, "::Project_Name::",	parameter.getString("project_name"));
 		boost::algorithm::replace_all(scene_source_template, "::Project_Lead::",	parameter.getString("project_lead"));
-		boost::algorithm::replace_all(scene_source_template, "::Coypright_Date::",	string::toString(datetime::getCurrentDateTime().date().year()));
+		boost::algorithm::replace_all(scene_source_template, "::Coypright_Date::",	toString(datetime::getCurrentDateTime().date().year()));
 
 		//file 3 : cmake text list
 		boost::algorithm::replace_all(cmake_template, "::Project_Name::",					formatCmakeProjectName(wordTable));
@@ -153,10 +153,10 @@ namespace nero
 		nero_log(file::getPath({projectDirectory, "Build"}));
 		boost::algorithm::replace_all(cmake_setting_template, "::Project_Build_Directory::", string::escapeAntiSlash(file::getPath({projectDirectory, "Build"})));
 
-		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeLists"}, string::StringPool.EXT_TEXT), cmake_template);
-		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeSettings"}, string::StringPool.EXT_JSON), cmake_setting_template);
-		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, string::StringPool.EXT_H), scene_header_template);
-		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, string::StringPool.EXT_CPP), scene_source_template);
+		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeLists"}, StringPool.EXT_TEXT), cmake_template);
+		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeSettings"}, StringPool.EXT_JSON), cmake_setting_template);
+		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXT_H), scene_header_template);
+		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXT_CPP), scene_source_template);
 
 		//Step 3 : compile the project
 		backgroundTask->setStatus(3);
@@ -196,7 +196,7 @@ namespace nero
         }
 
         //check if project file exist
-		std::string project_file = file::getPath({m_EditorSetting["workspace_folder"].get<std::string>(), string::formatString(projectName), "nero_project"}, string::StringPool.EXT_JSON);
+		std::string project_file = file::getPath({m_EditorSetting["workspace_folder"].get<std::string>(), string::formatString(projectName), "nero_project"}, StringPool.EXT_JSON);
         if(!fileExist(project_file))
         {
             return false;
@@ -227,7 +227,7 @@ namespace nero
         while (it != directory_iterator{})
         {
             std::string project_folder = it->path().string();
-			std::string project_file = file::getPath({project_folder, "nero_project"}, string::StringPool.EXT_JSON);
+			std::string project_file = file::getPath({project_folder, "nero_project"}, StringPool.EXT_JSON);
 
             if(fileExist(project_file))
             {
@@ -303,7 +303,7 @@ namespace nero
 
 		worksapceSetting.push_back(workspace);
 
-		file::saveFile(file::getPath({"setting", "workspace"}, string::StringPool.EXT_JSON), worksapceSetting.dump(3), true);
+		file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON), worksapceSetting.dump(3), true);
     }
 
 	void ProjectManager::importWorkspace(const std::string& directory)
@@ -324,7 +324,7 @@ namespace nero
 
 		worksapceSetting.push_back(workspace);
 
-		file::saveFile(file::getPath({"setting", "workspace"}, string::StringPool.EXT_JSON), worksapceSetting.dump(3), true);
+		file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON), worksapceSetting.dump(3), true);
 	}
 
 
@@ -380,16 +380,16 @@ namespace nero
 
 		backgroundTask->addMessage("  -> cleaning project");
 		cmd::Process cleanProcess	=  cmd::runCommand(mingw32, {"-C", buildPath, "-k", "clean"});
-		nero_log("clean project exit code = " + string::toString(cleanProcess.getExistCode()));
+		nero_log("clean project exit code = " + toString(cleanProcess.getExistCode()));
 
 		backgroundTask->addMessage("  -> configuring project");
 		cmd::Process configProcess	=  cmd::runCommand(cmake, {"-G", "MinGW Makefiles", "-S", sourcePath, "-B", buildPath,
 															   "-D", "CMAKE_CXX_COMPILER=" + file::getLinuxPath(gxx), "-D", "CMAKE_C_COMPILER="	+ file::getLinuxPath(gcc)});
-		nero_log("configure project exit code = " + string::toString(configProcess.getExistCode()));
+		nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
 
 		backgroundTask->addMessage("  -> building project");
 		cmd::Process buildProcess	=  cmd::runCommand(mingw32, {"-C", buildPath});
-		nero_log("build project exit code = " + string::toString(buildProcess.getExistCode()));
+		nero_log("build project exit code = " + toString(buildProcess.getExistCode()));
 	}
 
 	void ProjectManager::compileProject(const std::string& projectDirectory)
@@ -417,11 +417,11 @@ namespace nero
 
 	std::string ProjectManager::formatSceneClassName(std::vector<std::string> wordTable)
 	{
-		 std::string result = string::StringPool.BLANK;
+		 std::string result = StringPool.BLANK;
 
 		 for(std::string s : wordTable)
 		 {
-			 if(s != string::StringPool.BLANK)
+			 if(s != StringPool.BLANK)
 			 {
 				 boost::algorithm::to_lower(s);
 				 s[0] = std::toupper(s[0]);
@@ -437,11 +437,11 @@ namespace nero
 	std::string ProjectManager::formatHeaderGard(std::vector<std::string> wordTable)
 	{
 
-		 std::string result = string::StringPool.BLANK;
+		 std::string result = StringPool.BLANK;
 
 		 for(std::string s : wordTable)
 		 {
-			 if(s != string::StringPool.BLANK)
+			 if(s != StringPool.BLANK)
 			 {
 				 boost::algorithm::to_upper(s);
 				 result += s + "_";
@@ -456,11 +456,11 @@ namespace nero
 	std::string ProjectManager::formatCmakeProjectName(std::vector<std::string> wordTable)
 	{
 
-		 std::string result = string::StringPool.BLANK;
+		 std::string result = StringPool.BLANK;
 
 		 for(std::string s : wordTable)
 		 {
-			 if(s != string::StringPool.BLANK)
+			 if(s != StringPool.BLANK)
 			 {
 				 boost::algorithm::to_lower(s);
 				 s[0] = std::toupper(s[0]);
@@ -477,11 +477,11 @@ namespace nero
      std::string ProjectManager::formatCmakeProjectLibrary(std::vector<std::string> wordTable)
      {
 
-         std::string result = string::StringPool.BLANK;
+         std::string result = StringPool.BLANK;
 
          for(std::string s : wordTable)
          {
-             if(s != string::StringPool.BLANK)
+             if(s != StringPool.BLANK)
              {
                  boost::algorithm::to_lower(s);
                  result += s;
@@ -560,7 +560,7 @@ namespace nero
 
 		recentProject.push_back(recent.toJson());
 
-		file::saveFile(file::getPath({"setting", "recent_project"}, string::StringPool.EXT_JSON), recentProject.dump(3), true);
+		file::saveFile(file::getPath({"setting", "recent_project"}, StringPool.EXT_JSON), recentProject.dump(3), true);
 
 
 	 }

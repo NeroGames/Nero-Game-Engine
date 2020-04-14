@@ -73,7 +73,7 @@ namespace  nero
 
 	std::string LuaScene::getLuaSceneFile()
 	{
-		return string::StringPool.BLANK;
+		return StringPool.BLANK;
 	}
 
 

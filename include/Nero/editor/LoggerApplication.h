@@ -49,6 +49,12 @@ namespace nero
 
 		void    Draw(const char* title)
 		{
+			if (!ImGui::Begin(title, nullptr, ImGuiWindowFlags_NoScrollbar))
+			{
+				ImGui::End();
+				return;
+			}
+
 			// Options menu
 			if (ImGui::BeginPopup("Options"))
 			{
@@ -68,7 +74,8 @@ namespace nero
 			ImGui::SameLine();
 			Filter.Draw("Filter", -100.0f);
 
-			ImGui::Separator();
+			ImGui::Dummy(ImVec2(0.f, 5.f));
+
 			ImGui::BeginChild("scrolling", ImVec2(0,0), true, ImGuiWindowFlags_HorizontalScrollbar);
 
 			if (clear)
@@ -123,6 +130,7 @@ namespace nero
 				ImGui::SetScrollHereY(1.0f);
 			ScrollToBottom = false;
 			ImGui::EndChild();
+			ImGui::Dummy(ImVec2(0.f, 5.f));
 			ImGui::End();
 		}
 	};

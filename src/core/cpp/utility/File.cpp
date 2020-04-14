@@ -32,11 +32,11 @@ namespace nero
 		{
 			if(list.empty())
 			{
-				return string::StringPool.BLANK;
+				return StringPool.BLANK;
 			}
 
 
-			std::string path = string::StringPool.BLANK;
+			std::string path = StringPool.BLANK;
 
 			for(const std::string& name : list)
 			{
@@ -45,7 +45,7 @@ namespace nero
 
 			path.pop_back();
 
-			if(extansion != string::StringPool.BLANK)
+			if(extansion != StringPool.BLANK)
 			{
 				path += extansion;
 			}
@@ -56,7 +56,23 @@ namespace nero
 		std::string getWindowsPath(const std::string& path)
 		{
 			//replace all slash by a double back_slash
-			return boost::algorithm::replace_all_copy(path, "/", "\\");
+			std::string temp =  boost::algorithm::replace_all_copy(path, "/", "\\");
+
+			std::string result = StringPool.BLANK;
+
+			//add double quote if needed
+			std::vector<std::string> table = string::splitString(temp, '\\');
+			for(std::string word : table)
+			{
+				if(string::splitString(word, ' ').size() > 1)
+					result += "\"" + word + "\"\\";
+				else
+					result += word + "\\";
+			}
+
+			result.pop_back();
+
+			return result;
 		}
 
 		std::string getLinuxPath(const std::string& path)
@@ -70,7 +86,7 @@ namespace nero
 		std::string getLinuxPath(const std::vector<std::string>& list, const std::string& extansion)
 		{
 			//TODO get linux path
-			 return string::StringPool.BLANK;
+			 return StringPool.BLANK;
 		}
 
 		std::string loadText(const std::string& file)
@@ -94,7 +110,7 @@ namespace nero
 
 			if(!path_has_extantion)
 			{
-				file  = file + string::StringPool.EXT_JSON;
+				file  = file + StringPool.EXT_JSON;
 			}
 
 			std::ifstream stream(file);

@@ -99,7 +99,7 @@ namespace nero
 
 	void AnimationHolder::loadDirectory()
     {
-		if(m_SelectedDirectory == string::StringPool.BLANK)
+		if(m_SelectedDirectory == StringPool.BLANK)
 		{
 			nero_log("failed to load directory");
 			return;

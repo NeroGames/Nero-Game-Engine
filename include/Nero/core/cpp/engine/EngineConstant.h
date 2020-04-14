@@ -20,7 +20,7 @@ namespace nero
 		const int				ENGINE_VERSION_MAJOR	= 2;
 		const int				ENGINE_VERSION_MINOR	= 0;
 		const int				ENGINE_VERSION_PATCH	= 0;
-		const std::string		ENGINE_VERSION			= string::toString(ENGINE_VERSION_MAJOR) + "." + string::toString(ENGINE_VERSION_MINOR)  + "." + string::toString(ENGINE_VERSION_PATCH);
+		const std::string		ENGINE_VERSION			= toString(ENGINE_VERSION_MAJOR) + "." + toString(ENGINE_VERSION_MINOR)  + "." + toString(ENGINE_VERSION_PATCH);
         //engine window
 		const std::string		ENGINE_WINDOW_TITLE		= "Nero Game Engine";
 		const unsigned int		ENGINE_WINDOW_WIDTH		= 800;

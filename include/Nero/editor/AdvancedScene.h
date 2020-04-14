@@ -55,7 +55,7 @@ namespace nero
 			struct WorldChunk
 			{
 				int					chunkId			= -1;
-				std::string			name			= string::StringPool.BLANK;
+				std::string			name			= StringPool.BLANK;
 				bool				visible			= true;
 				bool				selected		= false;
 				SceneBuilder::Ptr	sceneBuilder	= std::make_shared<SceneBuilder>();
@@ -134,7 +134,7 @@ namespace nero
 				}
 
 				int							levelId			= -1;
-				std::string					name			= string::StringPool.BLANK;
+				std::string					name			= StringPool.BLANK;
 				int							chunkCount		= 0;
 				bool						selected		= false;
 				Setting::Ptr				levelSetting;
@@ -145,7 +145,7 @@ namespace nero
 			struct GameScreen
             {
 				int						screenId		= -1;
-				std::string             name			= string::StringPool.BLANK;
+				std::string             name			= StringPool.BLANK;
 				bool					selected		= false;
 				bool					visible			= true;
 				SceneBuilder::Ptr       sceneBuilder	= std::make_shared<SceneBuilder>();
@@ -170,9 +170,9 @@ namespace nero
 			void								renderScreenBuilder(sf::RenderTexture& texture);
 			void								renderScene(sf::RenderTexture& texture);
 
-			void								addGameLevel(const std::string& name = string::StringPool.BLANK);
-			void								addWorldChunk(const std::string& name = string::StringPool.BLANK);
-			void								addGameScreen(const std::string& name = string::StringPool.BLANK);
+			void								addGameLevel(const std::string& name = StringPool.BLANK);
+			void								addWorldChunk(const std::string& name = StringPool.BLANK);
+			void								addGameScreen(const std::string& name = StringPool.BLANK);
 
 			void								setResourceManager(const ResourceManager::Ptr& resourceManager);
 			void								addObject(Object::Type type, const sf::String& label, sf::Vector2f position, const EditorMode& editorMode);

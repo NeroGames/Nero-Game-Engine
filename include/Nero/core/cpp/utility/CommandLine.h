@@ -22,6 +22,7 @@ namespace nero
 		const std::string		KILL_PROCESS_WINDOWS			= "taskkill /F /PID ";
 		const std::string		KILL_PROCESS_LINUX				= "kill -9 ";
 		const std::string		LAUNCH_APPLICATION_WINDOWS		= "START /B ";
+		const std::string		FILTER_PROCESS_WINDOWS			= "START /B tasklist /fo csv | findstr /i ";
 
 		class Process
 		{
@@ -31,7 +32,7 @@ namespace nero
 				unsigned int			getProcessId();
 				int						getExistCode();
 				int						waitCompletion();
-				bool					killProcess();
+				void					killProcess();
 
 			private:
 										Process(Poco::ProcessHandle handle);
@@ -45,9 +46,11 @@ namespace nero
 		};
 
 		Process							runCommand(const std::string& command, const std::vector<std::string>& argument = {}, bool waitCompletion = true);
-		void							launchApplication(const std::string& program);
+		std::string						launchApplication(const std::string& path, const std::string& processName = StringPool.BLANK);
 		void							launchBrowser(const std::string& url);
-		bool							killProcess(const unsigned int& processId);
+		void							killProcess(const unsigned int& processId);
+		std::string						findProcessId(const std::string& application);
+		bool							processRunning(const std::string& processId);
 	}
 }
 #endif // COMMANDLINE_H

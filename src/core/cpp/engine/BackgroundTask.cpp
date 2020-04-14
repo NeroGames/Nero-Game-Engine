@@ -16,7 +16,7 @@ namespace nero
 	   ,m_Completed(false)
 	   ,m_Failed(false)
 	   ,m_MessageTable()
-	   ,m_Message(string::StringPool.BLANK)
+	   ,m_Message(StringPool.BLANK)
 	{
 
 	}
@@ -44,7 +44,7 @@ namespace nero
 	void BackgroundTask::addMessage(const std::string& message)
 	{
 		nero_log(message);
-		m_Message += message + string::StringPool.NEW_LINE;
+		m_Message += message + StringPool.NEW_LINE;
 		//m_MessageTable.push_back(message);
 	}
 
@@ -60,11 +60,11 @@ namespace nero
 
 	std::string BackgroundTask::printMessage()
 	{
-		/*std::string result = string::StringPool.BLANK;
+		/*std::string result = StringPool.BLANK;
 
 		for (const std::string& message : m_MessageTable)
 		{
-			result += message + string::StringPool.NEW_LINE;
+			result += message + StringPool.NEW_LINE;
 		}*/
 
 		return  m_Message;

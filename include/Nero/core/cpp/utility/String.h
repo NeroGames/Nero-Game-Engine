@@ -19,30 +19,6 @@ namespace nero
 	/// @{
 	namespace string
 	{
-		const struct
-		{
-			//file extension
-			const std::string EXT_JSON			= ".json";
-			const std::string EXT_TEXT			= ".txt";
-			const std::string EXT_LUA			= ".lua";
-			const std::string EXT_DLL			= ".dll";
-			const std::string EXT_H				= ".h";
-			const std::string EXT_CPP			= ".cpp";
-			const std::string EXT_NERO			= ".nero";
-			const std::string EXT_INI			= ".ini";
-			const std::string EXT_PNG			= ".png";
-			//common character
-			const std::string BLANK				= "";
-			const std::string SPACE				= " ";
-			const std::string NEW_LINE			= "\n";
-			const std::string UNDERSCORE		= "_";
-			const std::string SLASH				= "/";
-			const std::string ANTI_SLASH		= "\\";
-			//char
-			const char		  SPACE_CHAR        = ' ';
-
-		} StringPool;
-
 		///\brief List of Formats
 		enum class Format //Input = Nero Game Engine
 		{
@@ -76,18 +52,47 @@ namespace nero
 		std::string						escapeAntiSlash(const std::string& word);
 		bool							matchPattern(const std::string& input, const std::string& pattern);
 
-		template <typename T>
+		/*template <typename T>
 		std::string toString(T const& value)
 		{
 			std::stringstream stream;
 			stream << value;
 			return stream.str();
-		}
+		}*/
 
 	}///@}
 
-	template<typename T>
-	constexpr auto toString = string::toString<T>;
+	const struct
+	{
+		//file extension
+		const std::string EXT_JSON			= ".json";
+		const std::string EXT_TEXT			= ".txt";
+		const std::string EXT_LUA			= ".lua";
+		const std::string EXT_DLL			= ".dll";
+		const std::string EXT_H				= ".h";
+		const std::string EXT_CPP			= ".cpp";
+		const std::string EXT_NERO			= ".nero";
+		const std::string EXT_INI			= ".ini";
+		const std::string EXT_PNG			= ".png";
+		//common character
+		const std::string BLANK				= "";
+		const std::string SPACE				= " ";
+		const std::string NEW_LINE			= "\n";
+		const std::string UNDERSCORE		= "_";
+		const std::string SLASH				= "/";
+		const std::string ANTI_SLASH		= "\\";
+		//char
+		const char		  SPACE_CHAR        = ' ';
+
+	} StringPool;
+
+	template <typename T>
+	std::string toString(T const& value)
+	{
+		std::stringstream stream;
+		stream << value;
+		return stream.str();
+	}
 }
 ////////////////////////////MACRO///////////////////////////
 #define nero_fill_char_array(arrayTable, vectorTable) for(unsigned int i = 0; i < vectorTable.size(); i++ ) arrayTable[i] = vectorTable[i].c_str();

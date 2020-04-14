@@ -56,9 +56,9 @@ namespace nero
 		m_GameLevelCount++;
 
 		std::string levelName = name;
-		if(levelName == string::StringPool.BLANK)
+		if(levelName == StringPool.BLANK)
 		{
-			levelName = "Game Level " + string::toString(m_GameLevelCount);
+			levelName = "Game Level " + toString(m_GameLevelCount);
 		}
 
 		m_GameLevelTable.push_back(std::make_shared<GameLevel>());
@@ -89,9 +89,9 @@ namespace nero
 
 			std::string chunkName = name;
 
-			if(chunkName == string::StringPool.BLANK)
+			if(chunkName == StringPool.BLANK)
 			{
-				chunkName = "World Chunk " + string::toString(m_SelectedGameLevel->chunkCount);
+				chunkName = "World Chunk " + toString(m_SelectedGameLevel->chunkCount);
 			}
 
 			m_SelectedGameLevel->chunkTable.push_back(std::make_shared<WorldChunk>());
@@ -112,9 +112,9 @@ namespace nero
 		m_GameScreenCount++;
 
 		std::string screenName = name;
-		if(screenName == string::StringPool.BLANK)
+		if(screenName == StringPool.BLANK)
 		{
-			screenName = "Game Screen " + string::toString(m_GameScreenCount);
+			screenName = "Game Screen " + toString(m_GameScreenCount);
 		}
 
 
@@ -567,12 +567,12 @@ namespace nero
 			int32 balance       = m_Scene->m_PhysicWorld->GetTreeBalance();
 			float32 quality     = m_Scene->m_PhysicWorld->GetTreeQuality();
 
-			m_StatMessage = "body/contact/joint = " + string::toString(bodyCount) + " / " +  string::toString(contactCount) + " / " + string::toString(jointCount) + "\n" \
-							"proxy/height/balance/quality = " + string::toString(proxyCount) + " / " + string::toString(height) + " / " +  string::toString(balance) + " / " + string::toString(quality) + "\n";
+			m_StatMessage = "body/contact/joint = " + toString(bodyCount) + " / " +  toString(contactCount) + " / " + toString(jointCount) + "\n" \
+							"proxy/height/balance/quality = " + toString(proxyCount) + " / " + toString(height) + " / " +  toString(balance) + " / " + toString(quality) + "\n";
 		}
 		else
 		{
-			m_StatMessage = string::StringPool.BLANK;
+			m_StatMessage = StringPool.BLANK;
 		}
 
 		// Track maximum profile times
@@ -619,18 +619,18 @@ namespace nero
 				aveProfile.broadphase       = scale * m_TotalProfile.broadphase;
 			}
 
-			m_ProfileMessage =  "step [ave] (max) = "           + string::toString(p.step)          + " [" + string::toString(aveProfile.step)          + "]" +  "(" + string::toString(m_MaxProfile.step)          + ") " + "\n" \
-								"collide [ave] (max) = "        + string::toString(p.collide)       + " [" + string::toString(aveProfile.collide)       + "]" +  "(" + string::toString(m_MaxProfile.collide)       + ")" + "\n" \
-								"solve [ave] (max) = "          + string::toString(p.solve)         + " [" + string::toString(aveProfile.solve)         + "]" +  "(" + string::toString(m_MaxProfile.solve)         + ")" + "\n" \
-								"solve init [ave] (max) = "     + string::toString(p.solveInit)     + " [" + string::toString(aveProfile.solveInit)     + "]" +  "(" + string::toString(m_MaxProfile.solveInit)     + ")" + "\n" \
-								"solve velocity [ave] (max) = " + string::toString(p.solveVelocity) + " [" + string::toString(aveProfile.solveVelocity) + "]" +  "(" + string::toString(m_MaxProfile.solveVelocity) + ")" + "\n" \
-								"solve position [ave] (max) = " + string::toString(p.solvePosition) + " [" + string::toString(aveProfile.solvePosition) + "]" +  "(" + string::toString(m_MaxProfile.solvePosition) + ")" + "\n" \
-								"solveTOI [ave] (max) = "       + string::toString(p.solveTOI)      + " [" + string::toString(aveProfile.solveTOI)      + "]" +  "(" + string::toString(m_MaxProfile.solveTOI)      + ")" + "\n" \
-								"broad-phase [ave] (max) = "    + string::toString(p.broadphase)    + " [" + string::toString(aveProfile.broadphase)    + "]" +  "(" + string::toString(m_MaxProfile.broadphase)    + ")" + "\n";
+			m_ProfileMessage =  "step [ave] (max) = "           + toString(p.step)          + " [" + toString(aveProfile.step)          + "]" +  "(" + toString(m_MaxProfile.step)          + ") " + "\n" \
+								"collide [ave] (max) = "        + toString(p.collide)       + " [" + toString(aveProfile.collide)       + "]" +  "(" + toString(m_MaxProfile.collide)       + ")" + "\n" \
+								"solve [ave] (max) = "          + toString(p.solve)         + " [" + toString(aveProfile.solve)         + "]" +  "(" + toString(m_MaxProfile.solve)         + ")" + "\n" \
+								"solve init [ave] (max) = "     + toString(p.solveInit)     + " [" + toString(aveProfile.solveInit)     + "]" +  "(" + toString(m_MaxProfile.solveInit)     + ")" + "\n" \
+								"solve velocity [ave] (max) = " + toString(p.solveVelocity) + " [" + toString(aveProfile.solveVelocity) + "]" +  "(" + toString(m_MaxProfile.solveVelocity) + ")" + "\n" \
+								"solve position [ave] (max) = " + toString(p.solvePosition) + " [" + toString(aveProfile.solvePosition) + "]" +  "(" + toString(m_MaxProfile.solvePosition) + ")" + "\n" \
+								"solveTOI [ave] (max) = "       + toString(p.solveTOI)      + " [" + toString(aveProfile.solveTOI)      + "]" +  "(" + toString(m_MaxProfile.solveTOI)      + ")" + "\n" \
+								"broad-phase [ave] (max) = "    + toString(p.broadphase)    + " [" + toString(aveProfile.broadphase)    + "]" +  "(" + toString(m_MaxProfile.broadphase)    + ")" + "\n";
 		}
 		else
 		{
-			m_ProfileMessage = string::StringPool.BLANK;
+			m_ProfileMessage = StringPool.BLANK;
 		}
 
 

@@ -4,6 +4,7 @@
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
 #include <Nero/editor/EditorUtility.h>
+#include <Nero/core/cpp/utility/File.h>
 /////////////////////////////////////////////////////////////
 
 namespace nero
@@ -88,4 +89,52 @@ namespace nero
 		ImGui::PopFont();
 	}
 
+	std::string AppLauncher::qtCreatorProcessId		= StringPool.BLANK;
+	std::string AppLauncher::visaulStudioProcessId	= StringPool.BLANK;
+	std::string AppLauncher::profilerProcessId		= StringPool.BLANK;
+	std::string AppLauncher::texturePackerProcessId	= StringPool.BLANK;
+	std::string AppLauncher::NERO_GAME_HOME			= getenv("NERO_GAME_HOME") ? std::string(getenv("NERO_GAME_HOME")) : StringPool.BLANK;
+
+	void AppLauncher::launchTexturePacker()
+	{
+		if(cmd::processRunning(AppLauncher::texturePackerProcessId))
+		{
+			showApplication("TexturePacker", AppLauncher::texturePackerProcessId);
+		}
+		else
+		{
+			//TODO
+			std::string texturePacker = "C:/Program Files/CodeAndWeb/TexturePacker/bin/TexturePackerGUI.exe";
+			AppLauncher::texturePackerProcessId = cmd::launchApplication(texturePacker);
+
+			showApplication("TexturePacker", AppLauncher::texturePackerProcessId);
+		}
+	}
+
+	void AppLauncher::launchProfiler()
+	{
+		if(cmd::processRunning(AppLauncher::profilerProcessId))
+		{
+			showApplication("EasyProfiler", AppLauncher::profilerProcessId);
+		}
+		else
+		{
+			std::string profiler = AppLauncher::NERO_GAME_HOME + "/Tools/Profiler/profiler_gui.exe";
+			AppLauncher::profilerProcessId = cmd::launchApplication(profiler);
+
+			showApplication("EasyProfiler", AppLauncher::profilerProcessId);
+		}
+	}
+
+	void AppLauncher::showApplication(const std::string& name, const std::string& proccessId)
+	{
+		std::string windowmode	= file::getWindowsPath(AppLauncher::NERO_GAME_HOME + "/Tools/Script/windowmode.bat");
+		std::string sendkeys	= file::getWindowsPath(AppLauncher::NERO_GAME_HOME + "/Tools/Script/sendkeys.bat");
+
+		std::string cmd1 = windowmode + " -pid " + proccessId + " -mode restore";
+		std::string cmd2 = sendkeys + " " + name + "  \"\"";
+
+		system(cmd1.c_str());
+		system(cmd2.c_str());
+	}
 }

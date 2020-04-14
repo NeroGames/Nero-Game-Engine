@@ -9,7 +9,7 @@
 namespace nero
 {
 	LightObject::LightObject():
-		m_Lightmap(string::StringPool.BLANK)
+		m_Lightmap(StringPool.BLANK)
 	   ,m_Color(sf::Color::White)
 	   ,m_Light(nullptr)
 	{

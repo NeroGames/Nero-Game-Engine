@@ -424,7 +424,7 @@ namespace nero
     {
         int index =  ++m_LayerCount;
 
-		//m_UpdateLog("adding new Layer [Layer " + string::toString(index) + "]", nero::Info);
+		//m_UpdateLog("adding new Layer [Layer " + toString(index) + "]", nero::Info);
 
         if(m_SelectedLayer)
             m_SelectedLayer->setIsSelected(false);
@@ -433,7 +433,7 @@ namespace nero
         Layer_object->setId(getNewId());
         Layer_object->setIsVisible(true);
         Layer_object->setIsSelected(true);
-		Layer_object->setName("Layer " + string::toString(index));
+		Layer_object->setName("Layer " + toString(index));
         Layer_object->setOrder(0);
 
         m_LayerTable.push_back(Layer_object);
@@ -690,40 +690,40 @@ namespace nero
         Object::Ptr object = m_SelectedObject->clone(pos);
         object->setId(getNewId());
 
-		std::string object_name = string::StringPool.BLANK;
+		std::string object_name = StringPool.BLANK;
 
 		switch(object->getSecondType())
 		{
 			case Object::Sprite_Object:
-				object_name = "sprite " + string::toString(object->getId());
+				object_name = "sprite " + toString(object->getId());
 				break;
 
 			case Object::Mesh_Object:
-				object_name = "mesh " + string::toString(object->getId());
+				object_name = "mesh " + toString(object->getId());
 				break;
 
 			case Object::Meshed_Object:
-				object_name = "meshed sprite " + string::toString(object->getId());
+				object_name = "meshed sprite " + toString(object->getId());
 				break;
 
 			case Object::Animation_Object:
-				object_name = "animation " + string::toString(object->getId());
+				object_name = "animation " + toString(object->getId());
 				break;
 
 			case Object::Animation_Meshed_Object:
-				object_name = "meshed animation " + string::toString(object->getId());
+				object_name = "meshed animation " + toString(object->getId());
 				break;
 
 			case Object::Text_Object:
-				object_name = "sprite " + string::toString(object->getId());
+				object_name = "sprite " + toString(object->getId());
 				break;
 
 			case Object::Button_Object:
-				object_name = "button " + string::toString(object->getId());
+				object_name = "button " + toString(object->getId());
 				break;
 
 			default:
-				object_name = "object " + string::toString(object->getId());
+				object_name = "object " + toString(object->getId());
 				break;
 		}
 
@@ -845,7 +845,7 @@ namespace nero
                 sprite_object->setSecondType(Object::Sprite_Object);
                 sprite_object->setPosition(position);
                 sprite_object->setId(getNewId());
-				std::string object_name = "sprite " + string::toString(sprite_object->getId());
+				std::string object_name = "sprite " + toString(sprite_object->getId());
 				sprite_object->setName(object_name);
 
                 object = sprite_object;
@@ -871,7 +871,7 @@ namespace nero
 
                     MeshObject::Ptr mesh_object(new MeshObject());
                     mesh_object->setId(mesh.getId());
-					std::string object_name = "mesh " + string::toString(mesh.getId());
+					std::string object_name = "mesh " + toString(mesh.getId());
 					mesh_object->setName(object_name);
                     mesh_object->setMesh(mesh);
                     mesh_object->setPosition(position);
@@ -941,7 +941,7 @@ namespace nero
                 sprite_object->setSecondType(Object::Meshed_Object);
                 sprite_object->setPosition(position);
                 sprite_object->setId(getNewId());
-				std::string object_name = "sprite " + string::toString(sprite_object->getId());
+				std::string object_name = "sprite " + toString(sprite_object->getId());
 				sprite_object->setName(object_name);
 				sprite_object->setIsUpdateable(true);
 
@@ -950,7 +950,7 @@ namespace nero
                 mesh.setId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getId());
-				object_name = "mesh " + string::toString(mesh.getId());
+				object_name = "mesh " + toString(mesh.getId());
 				mesh_object->setName(object_name);
                 mesh_object->setMesh(mesh);
                 mesh_object->setSecondType(Object::Mesh_Object);
@@ -996,7 +996,7 @@ namespace nero
                 animation_object->setSecondType(Object::Animation_Object);
                 animation_object->setPosition(position);
                 animation_object->setId(getNewId());
-				std::string object_name = "animation " + string::toString(animation_object->getId());
+				std::string object_name = "animation " + toString(animation_object->getId());
 				animation_object->setName(object_name);
 
                 object = animation_object;
@@ -1034,7 +1034,7 @@ namespace nero
                 animation_object->setSecondType(Object::Animation_Meshed_Object);
                 animation_object->setPosition(position);
                 animation_object->setId(getNewId());
-				std::string object_name = "animation " + string::toString(animation_object->getId());
+				std::string object_name = "animation " + toString(animation_object->getId());
 				animation_object->setName(object_name);
 
                   //Mesh Object
@@ -1042,7 +1042,7 @@ namespace nero
                 mesh.setId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getId());
-				object_name = "mesh " + string::toString(mesh.getId());
+				object_name = "mesh " + toString(mesh.getId());
 				mesh_object->setName(object_name);
                 mesh_object->setMesh(mesh);
                 mesh_object->setSecondType(Object::Mesh_Object);
@@ -1072,7 +1072,7 @@ namespace nero
                 text_object->setText(text);
                 text_object->setPosition(position);
                 text_object->setId(getNewId());
-				std::string object_name = "text " + string::toString(text_object->getId());
+				std::string object_name = "text " + toString(text_object->getId());
 				text_object->setName(object_name);
 
                 object = text_object;
@@ -1095,7 +1095,7 @@ namespace nero
                 sprite_object->setSecondType(Object::Button_Object);
                 sprite_object->setPosition(position);
                 sprite_object->setId(getNewId());
-				std::string object_name = "button " + string::toString(sprite_object->getId());
+				std::string object_name = "button " + toString(sprite_object->getId());
 				sprite_object->setName(object_name);
 
                 sprite_object->setColor(sf::Color(255, 255, 255, 150));
@@ -1180,7 +1180,7 @@ namespace nero
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object && m_SelectedObject->getSecondType() != Object::Meshed_Object && m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-		//m_UpdateLog("changing Mesh Type to : " + string::toString(label) + " Mesh", nero::Info);
+		//m_UpdateLog("changing Mesh Type to : " + toString(label) + " Mesh", nero::Info);
 
         Mesh::Type type;
 
@@ -1673,7 +1673,7 @@ namespace nero
 
         SpriteObject::Ptr sprite_object(new SpriteObject());
         sprite_object->setSprite(sprite);
-		sprite_object->setTextureName(string::toString(json["sprite"].get<std::string>()));
+		sprite_object->setTextureName(toString(json["sprite"].get<std::string>()));
         sprite_object->setPosition(json["position"]["x"], json["position"]["y"]);
         sprite_object->setRotation(json["rotation"]);
         sprite_object->setScale(json["scale"]["x"], json["scale"]["y"]);
@@ -2171,7 +2171,7 @@ namespace nero
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
-			//m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font size to "+ string::toString(value), nero::Info);
+			//m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font size to "+ toString(value), nero::Info);
 
             TextObject::Cast(m_SelectedObject)->setFontSize(value);
         }
@@ -2197,7 +2197,7 @@ namespace nero
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
-			//m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] outline thickness to "+ string::toString(value), nero::Info);
+			//m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] outline thickness to "+ toString(value), nero::Info);
 
             TextObject::Cast(m_SelectedObject)->setOutlineThickness(value);
         }

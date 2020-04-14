@@ -30,13 +30,10 @@ namespace ::NameSpace::
 
 	};
 
-	struct _ConstantPool : public GeneratedConstant
+	const struct ConstantPool : public GeneratedConstant
 	{
 
-	};
-
-
-	const _ConstantPool           ConstantPool;
+	} ConstantPool;
 }
 
 #endif // ::Header_Gard::

@@ -198,7 +198,7 @@ namespace nero
 		}
 		void Logger::clearStringStream()
 		{
-			m_StringStream.str(string::StringPool.BLANK);
+			m_StringStream.str(StringPool.BLANK);
 		}
 
 		std::stringstream& Logger::getStringStream()
