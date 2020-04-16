@@ -49,7 +49,7 @@ namespace  nero
 			//TIME_PER_FRAME is constant with a value of 1/60 second (the game is update 60 time per second)
 			while(timeSinceLastUpdate > EngineConstant.TIME_PER_FRAME)
 			{
-				EASY_VALUE("time_since_last_update", timeSinceLastUpdate.asMilliseconds());
+				EASY_VALUE("TIME_SINCE_LAST_UPDATE", timeSinceLastUpdate.asMilliseconds());
 
                 //retrieve 1/60 second in the accumulated time
                 timeSinceLastUpdate -= EngineConstant.TIME_PER_FRAME;

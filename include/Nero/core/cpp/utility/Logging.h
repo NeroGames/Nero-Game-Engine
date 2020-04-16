@@ -99,9 +99,9 @@ namespace nero
 #define _nero_log_if(...) GET_NERO_LOG_IF_MACRO(__VA_ARGS__, nero_log_level_if, nero_log_info_if)(__VA_ARGS__)
 #define nero_log(...) EXPAND(_nero_log(__VA_ARGS__))
 #define nero_log_if(...) EXPAND(_nero_log_if(__VA_ARGS__))
-#define nero_ss(value) nero::toString(value)
-#define nero_ssp(value) nero::toString(value) + nero::toString(" ")
-#define nero_ssv(value) nero::toString(#value) + nero::toString(" = ") + nero::toString(value)
-#define nero_ssn(object)  nero::toString(object->toString())
+#define nero_s(value) nero::toString(value)
+#define nero_sp(value) nero::toString(value) + nero::toString(" ")
+#define nero_sv(value) nero::toString(#value) + nero::toString(" = ") + nero::toString(value)
+#define nero_sn(object)  nero::toString(object->toString())
 ////////////////////////////////////////////////////////////
 #endif // LOGGING_H

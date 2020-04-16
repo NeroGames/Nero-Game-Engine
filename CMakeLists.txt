@@ -31,7 +31,7 @@ set(NERO_GAME_HOME $ENV{NERO_GAME_HOME})
         Editor
         Compiler
         Library
-        NGCore
+        Nerolib
         Tools
 #]]
 
@@ -59,8 +59,9 @@ add_definitions(-DBOOST_ALL_NO_LIB)
 add_definitions(-DBOOST_DLL_USE_STD_FS)
 add_definitions(-DSOL_ALL_SAFETIES_ON=1)
 add_definitions(-DSOL_USING_CXX_LUA)
-add_definitions(-DNERO_GAME_DEBUG)
 add_definitions(-DBUILD_WITH_EASY_PROFILER)
+add_definitions(-DNERO_GAME_DEBUG)
+add_definitions(-DNERO_GAME_DEVMODE)
 
 # Include Files & Libraries
 #----------------------------------------------------------------------------------#
@@ -111,11 +112,11 @@ target_link_libraries(nerogame-core ${NERO_GAME_CORE_DEP})
 #[[#]]
 add_custom_command(TARGET nerogame-core
         POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E remove_directory    "${NERO_GAME_HOME}/NGCore/include/Nero/core"
-        COMMAND ${CMAKE_COMMAND} -E make_directory      "${NERO_GAME_HOME}/NGCore/include/Nero/core"
-        COMMAND ${CMAKE_COMMAND} -E make_directory      "${NERO_GAME_HOME}/NGCore/lib/"
-        COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:nerogame-core>" "${NERO_GAME_HOME}/NGCore/lib/"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/include/Nero/core" "${NERO_GAME_HOME}/NGCore/include/Nero/core")
+        COMMAND ${CMAKE_COMMAND} -E remove_directory    "${NERO_GAME_HOME}/Nerolib/include/Nero/core"
+        COMMAND ${CMAKE_COMMAND} -E make_directory      "${NERO_GAME_HOME}/Nerolib/include/Nero/core"
+        COMMAND ${CMAKE_COMMAND} -E make_directory      "${NERO_GAME_HOME}/Nerolib/lib/"
+        COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:nerogame-core>" "${NERO_GAME_HOME}/Nerolib/lib/"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/include/Nero/core" "${NERO_GAME_HOME}/Nerolib/include/Nero/core")
 #]]
 # Nero Game Render Engine (Desktop)
 #----------------------------------------------------------------------------------#

@@ -215,7 +215,7 @@ namespace nero
         {
             if(!findObject(object_name))
             {
-				//throw std::runtime_error("Object [" + nero_ss(object_name) + "] not found, please check that you have entered the correct object name");
+				//throw std::runtime_error("Object [" + nero_s(object_name) + "] not found, please check that you have entered the correct object name");
             }
         }
     }
@@ -226,7 +226,7 @@ namespace nero
         {
             if(!findScreenUIObject(screen, object_name) && !findScreenObject(screen, object_name))
             {
-				//throw std::runtime_error("Object [" + nero_ss(object_name) + "] not found in Screen [" + nero_ss(screen) + "], please check that you have entered the correct object name");
+				//throw std::runtime_error("Object [" + nero_s(object_name) + "] not found in Screen [" + nero_s(screen) + "], please check that you have entered the correct object name");
             }
         }
     }

@@ -95,6 +95,8 @@ namespace nero
 			GameProject::Ptr								m_GameProject;
 			ResourceManager::Ptr							m_ResourceManager;
 			AdvancedScene::Ptr								m_AdvancedScene;
+			//environment
+			EnvironmentSetup								m_EnvironmentSetup;
 
 		private:
 			//////////////docksapce
@@ -104,7 +106,12 @@ namespace nero
 			void											createDockSpace();
 			void											interfaceFirstDraw();
 			//////////////starter window
-			void											showStarterWindow();
+			void											showConfigurationWindow();
+			void											showConfigurationWelcome();
+			void											showConfigurationFinish();
+			void											showConfigurationEditor();
+			void											showConfigurationTexturePacker();
+			void											showConfigurationWorksapce();
 			//////////////main menu bar
 			MenuBarInput									m_MenuBarInput;
 			void											showEditorMenuBar();
@@ -291,7 +298,11 @@ namespace nero
 			std::string getString(const EditorMode& editorMode);
 
 
-			void selectDirectory(std::function<void(nfdchar_t *outPath)> callback);
+			void selectDirectory(std::function<void(std::string)> callback);
+			void selectFile(std::function<void(std::string)> callback);
+			void selectFile(std::function<void(std::vector<std::string>)> callback);
+
+
 			void clearScriptWizardInput();
 			void showMeshResource();
 			sf::Vector2f getAddObjectPosition();

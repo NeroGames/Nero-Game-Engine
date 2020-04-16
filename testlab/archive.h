@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 		pStr->seekg(0, std::ios::end);
 		unsigned int uiLength = pStr->tellg();
 
-		nero_log(nero_ss(uiLength));
+		nero_log(nero_s(uiLength));
 
 		//std::ofstream file("NeroGameEngine1.0.1.rar", std::ofstream::binary);
 
@@ -567,7 +567,7 @@ int main()
 	nero_log(Poco::Environment::osDisplayName());
 	nero_log(Poco::Environment::osVersion());
 	nero_log(Poco::Environment::processorCount());
-	nero_log(nero_ss(Poco::Environment::arch()));
+	nero_log(nero_s(Poco::Environment::arch()));
 
 	return 0;
 }*/

@@ -53,7 +53,7 @@ namespace nero
 			return path;
 		}
 
-		std::string getWindowsPath(const std::string& path)
+		std::string getWindowsPath(const std::string& path, bool escapeSpace)
 		{
 			//replace all slash by a double back_slash
 			std::string temp =  boost::algorithm::replace_all_copy(path, "/", "\\");
@@ -61,16 +61,23 @@ namespace nero
 			std::string result = StringPool.BLANK;
 
 			//add double quote if needed
-			std::vector<std::string> table = string::splitString(temp, '\\');
-			for(std::string word : table)
+			if(escapeSpace)
 			{
-				if(string::splitString(word, ' ').size() > 1)
-					result += "\"" + word + "\"\\";
-				else
-					result += word + "\\";
-			}
+				std::vector<std::string> table = string::splitString(temp, '\\');
+				for(std::string word : table)
+				{
+					if(string::splitString(word, ' ').size() > 1)
+						result += "\"" + word + "\"\\";
+					else
+						result += word + "\\";
+				}
 
-			result.pop_back();
+				result.pop_back();
+			}
+			else
+			{
+				result = temp;
+			}
 
 			return result;
 		}
@@ -226,9 +233,7 @@ namespace nero
 
 		std::string getCurrentPath()
 		{
-			using namespace  std::experimental::filesystem;
-
-			return getCurrentPath();
+			return std::experimental::filesystem::current_path().string();
 		}
 
 		std::string removeFileExtension(const std::string& filename)
@@ -266,12 +271,12 @@ namespace nero
 		{
 			std::experimental::filesystem::path path(directory);
 
-			for(int i = 1; i < level; i++)
+			for(int i = 1; i <= level; i++)
 			{
 				path = path.parent_path();
 			}
 
-			return getPath({path.string()});
+			return path.string();
 		}
 
 		std::string getFileName(const std::string& filename, bool withExtension)

@@ -68,17 +68,28 @@ namespace nero
 		return original;
 	};
 
-	void pushToolbarStyle()
+	void pushToolbarStyle(bool selected)
 	{
 		ImVec4 color = ImVec4(0.000f, 0.000f, 0.000f, 1.000f);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.f, 7.f));
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.000f, 1.000f, 1.000f, 1.000f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.000f, 1.000f, 1.000f, .950f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.000f, 1.000f, 1.000f, .900f));
 		ImGui::PushStyleColor(ImGuiCol_Text, color);
-		ImGui::PushStyleColor(ImGuiCol_Border, color);
+
+		if(selected)
+		{
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 4.f);
+			ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.929f, 0.595f, 0.308f, 1.000f));
+		}
+		else
+		{
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
+			ImGui::PushStyleColor(ImGuiCol_Border, color);
+		}
+
+
 		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
 	}
 
@@ -137,4 +148,33 @@ namespace nero
 		system(cmd1.c_str());
 		system(cmd2.c_str());
 	}
+
+	bool EnvironmentSetup::configure()
+	{
+		return setupCodeEditor || setupTexturePacker || setupWorkspace;
+	}
+
+	void EnvironmentSetup::showView()
+	{
+		viewTable.at(currentView)();
+	}
+
+	void EnvironmentSetup::nextView()
+	{
+		if(currentView < viewTable.size())
+		{
+			currentView += 1;
+		}
+	}
+
+	bool EnvironmentSetup::finish()
+	{
+		return currentView == (viewTable.size() - 1);
+	}
+
+	bool EnvironmentSetup::finishNext()
+	{
+		return currentView == (viewTable.size() - 2);
+	}
+
 }

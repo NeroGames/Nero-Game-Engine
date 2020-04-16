@@ -15,6 +15,7 @@
 #include <map>
 #include <vector>
 #include <memory>
+#include <functional>
 #include <imgui/imgui.h>
 /////////////////////////////////////////////////////////////
 namespace nero
@@ -126,7 +127,7 @@ namespace nero
 	};
 
 	void			popToolbarStyle();
-	void			pushToolbarStyle();
+	void			pushToolbarStyle(bool selected = false);
 
 	struct AppLauncher
 	{
@@ -144,6 +145,30 @@ namespace nero
 		static void				launchProfiler();
 		static void				showApplication(const std::string& name, const std::string& proccessId);
 
+	};
+
+	struct EnvironmentSetup
+	{
+		bool setupCodeEditor					= false;
+		bool setupTexturePacker					= false;
+		bool setupWorkspace						= false;
+		bool readyNext							= false;
+
+		bool selectQtCreator					= true;
+		bool selectVisualStudio					= false;
+
+		char qtCreatorPath[256];
+		char visualStudioPath[256];
+
+
+
+		bool									configure();
+		std::vector<std::function<void()>>		viewTable;
+		unsigned int							currentView = 0;
+		void									showView();
+		void									nextView();
+		bool									finish();
+		bool									finishNext();
 	};
 }
 

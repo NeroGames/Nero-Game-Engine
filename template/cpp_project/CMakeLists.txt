@@ -71,11 +71,11 @@ add_definitions(-DSOL_USING_CXX_LUA)
 #----------------------------------------------------------------------------------#
 # Make Include Files Visible
 include_directories ("${NERO_GAME_HOME}/Library/include")
-include_directories ("${NERO_GAME_HOME}/NGCore/include")
+include_directories ("${NERO_GAME_HOME}/Nerolib/include")
 # Make Libraries Visible
 link_directories("${NERO_GAME_HOME}/Library/lib")
 link_directories("${NERO_GAME_HOME}/Library/bin")
-link_directories("${NERO_GAME_HOME}/NGCore/lib")
+link_directories("${NERO_GAME_HOME}/Nerolib/lib")
 # Find OpenGL
 find_package(OpenGL)
 # SFML

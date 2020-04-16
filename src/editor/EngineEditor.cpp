@@ -347,6 +347,12 @@ namespace  nero
 
 	void EngineEditor::checkEnvironmentVariable()
 	{
+		#if defined(NERO_OS_WINDOW) || !defined(NERO_GAME_DEVMODE)
+			nero_log("configuring nero game home environment variable");
+			std::string home = "NERO_GAME_HOME="+ file::getWindowsPath(file::getParentDirectory(file::getCurrentPath()), false);
+			putenv(home.c_str());
+		#endif
+
 		nero_log("checking environment variable");
 
 		char* env_1		= getenv("NERO_GAME_HOME");

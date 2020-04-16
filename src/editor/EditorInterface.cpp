@@ -46,6 +46,7 @@ namespace  nero
 		,m_MouseInformation("Mouse Position")
 		,m_CountCreateProject(0)
 		,m_ConsoleApplication()
+		,m_EnvironmentSetup()
     {
 		//empty
 	}
@@ -83,6 +84,12 @@ namespace  nero
 		ImGui::SFML::UpdateFontTexture();
 
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation.ttf", 17.f);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 18.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 18.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 18.0f, &config, icon_ranges);
+		ImGui::SFML::UpdateFontTexture();
+
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation.ttf", 25.f);
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 18.0f, &config, icon_ranges);
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 18.0f, &config, icon_ranges);
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 18.0f, &config, icon_ranges);
@@ -138,6 +145,32 @@ namespace  nero
 
 		//register signal handler
 		registerSignalHandler();
+
+		//check environment
+		Setting envSetting = m_EditorSetting->getSetting("environment");
+			//welcome
+		m_EnvironmentSetup.viewTable.push_back([this](){showConfigurationWelcome();});
+			//editor
+		if(envSetting.getString("qt_creator") == StringPool.BLANK &&
+		   envSetting.getString("visual_studio") == StringPool.BLANK)
+		{
+			m_EnvironmentSetup.setupCodeEditor = true;
+			m_EnvironmentSetup.viewTable.push_back([this](){showConfigurationEditor();});
+		}
+			//texture packer
+		if(envSetting.getString("texture_packer") == StringPool.BLANK)
+		{
+			m_EnvironmentSetup.setupTexturePacker = true;
+			m_EnvironmentSetup.viewTable.push_back([this](){showConfigurationTexturePacker();});
+		}
+			//workspace
+		if(m_ProjectManager->getWorkspaceTable().empty())
+		{
+			m_EnvironmentSetup.setupWorkspace = true;
+			m_EnvironmentSetup.viewTable.push_back([this](){showConfigurationWorksapce();});
+		}
+			//finish
+		m_EnvironmentSetup.viewTable.push_back([this](){showConfigurationWorksapce();});
 	}
 
 	void EditorInterface::closeEditor()
@@ -320,7 +353,11 @@ namespace  nero
 		showBackgroundTaskWindow();
 
 		//show
-		showStarterWindow();
+		if(m_EnvironmentSetup.configure())
+		{
+			showConfigurationWindow();
+		}
+
 
 		//commit
 		ImGui::SFML::Render(m_RenderWindow);
@@ -778,7 +815,7 @@ namespace  nero
 				rightDockNode		= nullptr;
 				bottomDockNode		= nullptr;
 
-				nero_log(nero_ssv(toolbarDockspaceID));
+				nero_log(nero_sv(toolbarDockspaceID));
 
 				//update and save dockspace setting
 				m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").setUInt("id", toolbarDockspaceID);
@@ -993,14 +1030,12 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showStarterWindow()
+	void EditorInterface::showConfigurationWindow()
 	{
-		return;
-		//condition
-			//no workspace detected
-			//user first interaction
-			//create workspace
-			//set code editor path
+		//welcome the user
+		//configure the code editor
+		//configure texture packer
+		//configure workspace
 		ImGui::OpenPopup(EditorConstant.WINDOW_STARTER_WIZARD.c_str());
 
 		//Window flags
@@ -1015,14 +1050,238 @@ namespace  nero
 		if(ImGui::BeginPopupModal(EditorConstant.WINDOW_STARTER_WIZARD.c_str(), nullptr, window_flags))
 		{
 
-			if(ImGui::Button("sdfsdfs"))
-			{
-				ImGui::CloseCurrentPopup();
-			}
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(1.f, 1.f, 1.f, 1.f));
+			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 8.f);
+			ImGui::BeginChild("##banner", ImVec2(winsow_size.x * 0.2f, 0.f));
+				//empty
+			ImGui::EndChild();
+			ImGui::PopStyleVar();
+			ImGui::PopStyleColor();
+
+			ImGui::SameLine();
+
+			ImGui::BeginChild("##configre");
+
+				m_EnvironmentSetup.showView();
+
+
+				if(m_EnvironmentSetup.readyNext)
+				{
+					ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 115.f);
+					ImGui::SetCursorPosY(EditorConstant.WINDOW_STARTER_WIZARD_SIZE.y - 75.f);
+
+					pushToolbarStyle();
+					if(ImGui::Button(m_EnvironmentSetup.finishNext() ? "Close" : "Next", ImVec2(100.f, 0.f)))
+					{
+						m_EnvironmentSetup.nextView();
+
+						if(m_EnvironmentSetup.finish())
+						{
+							m_EnvironmentSetup.setupWorkspace = false;
+							m_EnvironmentSetup.setupCodeEditor = false;
+							m_EnvironmentSetup.setupTexturePacker = false;
+							ImGui::CloseCurrentPopup();
+						}
+					}
+					popToolbarStyle();
+				}
+
+			ImGui::EndChild();
 
 			ImGui::EndPopup();
 		}
+	}
 
+	void EditorInterface::showConfigurationWelcome()
+	{
+		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
+		ImGui::Text("Welcome To The Configuration Wizard");
+		ImGui::PopFont();
+		ImGui::Separator();
+
+		ImGui::Dummy(ImVec2(0.f, 20.f));
+
+		ImGui::TextWrapped("If you see this window it's because it's your first time using the Engine or because you are missing some configurations");
+		ImGui::TextWrapped("The following things need to done in order for the Engine to function properly");
+
+		ImGui::Dummy(ImVec2(0.f, 20.f));
+
+		ImGui::Indent();
+		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
+		if(m_EnvironmentSetup.setupCodeEditor)
+		{
+			ImGui::Text(ICON_FA_CIRCLE "	Configure a Code Editor");
+			ImGui::Dummy(ImVec2(0.f, 5.f));
+		}
+		if(m_EnvironmentSetup.setupTexturePacker)
+		{
+			ImGui::Text(ICON_FA_CIRCLE "	Configure Texture Packer");
+			ImGui::Dummy(ImVec2(0.f, 5.f));
+
+		}
+		if(m_EnvironmentSetup.setupWorkspace)
+		{
+			ImGui::Text(ICON_FA_CIRCLE "	Create a Workspace");
+			ImGui::Dummy(ImVec2(0.f, 5.f));
+		}
+		ImGui::PopFont();
+		ImGui::Unindent();
+
+		ImGui::Dummy(ImVec2(0.f, 15.f));
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("You can learn more on the necessary configurations at "); ImGui::SameLine();
+		if(ImGui::Button("Environment Configurations"))
+		{
+			cmd::launchBrowser("https://nero-game.com/v2/environment-configuration");
+		}
+
+		ImGui::Dummy(ImVec2(0.f, 15.f));
+
+		ImGui::Text("Click on Next to continous the configuration");
+
+		m_EnvironmentSetup.readyNext = true;
+	}
+
+	void EditorInterface::showConfigurationFinish()
+	{
+
+	}
+
+	void EditorInterface::showConfigurationEditor()
+	{
+		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
+		ImGui::Text("Configure a Code Editor");
+		ImGui::PopFont();
+		ImGui::Separator();
+
+		ImGui::Dummy(ImVec2(0.f, 20.f));
+
+		ImGui::TextWrapped("You can use QT Creator or Visual Studio, We recommand using QT Creator");
+
+		ImGui::Dummy(ImVec2(0.f, 20.f));
+
+		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionWidth() - 550.f)/2.f);
+
+		pushToolbarStyle(m_EnvironmentSetup.selectQtCreator);
+		if(ImGui::Button("QT Creator", ImVec2(250.f, 50.f)))
+		{
+			m_EnvironmentSetup.selectQtCreator		= true;
+			m_EnvironmentSetup.selectVisualStudio	= false;
+		}
+		popToolbarStyle();
+
+		ImGui::SameLine(0.f, 50.f);
+
+		pushToolbarStyle(m_EnvironmentSetup.selectVisualStudio);
+		if(ImGui::Button("Visual Studio 2019", ImVec2(250.f, 50.f)))
+		{
+			m_EnvironmentSetup.selectQtCreator		= false;
+			m_EnvironmentSetup.selectVisualStudio	= true;
+		}
+		popToolbarStyle();
+
+		ImGui::Dummy(ImVec2(0.f, 50.f));
+
+		if(m_EnvironmentSetup.selectQtCreator)
+		{
+			ImGui::TextWrapped("Install and Configure QT Creator");
+
+			ImGui::Dummy(ImVec2(0.f, 10.f));
+
+			ImGui::Text("After installing QT Creator, please provide the path to its excutable");
+			ImGui::Text("Here are some examples of path");
+			ImGui::BulletText("C:/Qt/qtcreator-4.11.2/bin/qtcreator.exe");
+			ImGui::BulletText("C:/Qt/Tools/QtCreator/bin/qtcreator.exe");
+
+			ImGui::Dummy(ImVec2(0.f, 10.f));
+
+			float wording_width = 100.f;
+			ImGui::AlignTextToFramePadding();
+			ImGui::Text("Download here");
+			ImGui::SameLine(wording_width);
+			if(ImGui::Button("https://www.qt.io/offline-installers"))
+			{
+				cmd::launchBrowser("https://www.qt.io/offline-installers");
+			}
+
+			ImGui::Dummy(ImVec2(0.f, 10.f));
+
+			float input_width = ImGui::GetWindowContentRegionWidth() * 0.8f;
+			ImGui::Text("QtCreator");
+			ImGui::SameLine(wording_width);
+			ImGui::SetNextItemWidth(input_width - 100.f);
+			ImGui::InputText("##qtcreator", m_EnvironmentSetup.qtCreatorPath, sizeof(m_EnvironmentSetup.qtCreatorPath), ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine(wording_width + input_width - 80.f);
+			if(ImGui::Button("Browse##editor_path", ImVec2(60.f, 0)))
+			{
+				selectFile([this](std::string outPath)
+				{
+					string::fillCharArray(m_EnvironmentSetup.qtCreatorPath, sizeof(m_EnvironmentSetup.qtCreatorPath), outPath);
+				});
+			}
+
+		}
+		else
+		{
+			ImGui::TextWrapped("Install and Configure Visual Studio 2019");
+
+			ImGui::Dummy(ImVec2(0.f, 10.f));
+
+			ImGui::Text("After installing Visual Studio, please provide the path to its excutable.");
+			ImGui::Text("Here are some examples of path");
+			ImGui::BulletText("C:/Program Files (x86)/Microsoft Visual Studio/2019/Preview/Common7/IDE/devenv.exe");
+
+			ImGui::Dummy(ImVec2(0.f, 10.f));
+
+			float wording_width = 100.f;
+			ImGui::AlignTextToFramePadding();
+			ImGui::Text("Download here");
+			ImGui::SameLine(wording_width);
+			if(ImGui::Button("https://visualstudio.microsoft.com/downloads/"))
+			{
+				cmd::launchBrowser("https://visualstudio.microsoft.com/downloads/");
+			}
+
+			ImGui::Dummy(ImVec2(0.f, 10.f));
+
+			float input_width = ImGui::GetWindowContentRegionWidth() * 0.8f;
+			ImGui::Text("Visual Studio");
+			ImGui::SameLine(wording_width);
+			ImGui::SetNextItemWidth(input_width - 100.f);
+			ImGui::InputText("##visualstudio", m_EnvironmentSetup.visualStudioPath, sizeof(m_EnvironmentSetup.visualStudioPath), ImGuiInputTextFlags_ReadOnly);
+			ImGui::SameLine(wording_width + input_width - 80.f);
+			if(ImGui::Button("Browse##editor_path", ImVec2(60.f, 0)))
+			{
+				selectFile([this](std::string outPath)
+				{
+					string::fillCharArray(m_EnvironmentSetup.visualStudioPath, sizeof(m_EnvironmentSetup.visualStudioPath), outPath);
+				});
+			}
+		}
+
+		m_EnvironmentSetup.readyNext =	std::string(m_EnvironmentSetup.qtCreatorPath) != StringPool.BLANK
+										|| std::string(m_EnvironmentSetup.visualStudioPath) != StringPool.BLANK;
+	}
+
+	void EditorInterface::showConfigurationTexturePacker()
+	{
+		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
+		ImGui::Text("Configure Texture Packer");
+		ImGui::PopFont();
+		ImGui::Separator();
+
+		ImGui::Dummy(ImVec2(0.f, 20.f));
+	}
+
+	void EditorInterface::showConfigurationWorksapce()
+	{
+		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
+		ImGui::Text("Create a Workspace");
+		ImGui::PopFont();
+		ImGui::Separator();
+
+		ImGui::Dummy(ImVec2(0.f, 20.f));
 	}
 
 	//3-  show toolbar
@@ -2096,14 +2355,66 @@ namespace  nero
          ImGui::EndChild();
     }
 
-	void EditorInterface::selectDirectory(std::function<void(nfdchar_t *outPath)> callback)
+	void EditorInterface::selectFile(std::function<void(std::string)> callback)
+	{
+		nfdchar_t *outPath = nullptr;
+		nfdresult_t result = NFD_OpenDialog(nullptr, nullptr, &outPath);
+
+		if (result == NFD_OKAY)
+		{
+			callback(std::string(outPath));
+
+			free(outPath);
+		}
+		else if (result == NFD_CANCEL)
+		{
+			nero_log("select file canceled");
+		}
+		else
+		{
+		   nero_log("failed to select file : " + nero_s(NFD_GetError()));
+		}
+	}
+
+	void EditorInterface::selectFile(std::function<void(std::vector<std::string>)> callback)
+	{
+		nfdpathset_t pathSet;
+		nfdresult_t result = NFD_OpenDialogMultiple( nullptr, nullptr, &pathSet);
+
+		if (result == NFD_OKAY)
+		{
+			std::vector<std::string> fileTable;
+
+			size_t i;
+			for ( i = 0; i < NFD_PathSet_GetCount(&pathSet); ++i )
+			{
+				nfdchar_t *path = NFD_PathSet_GetPath(&pathSet, i);
+
+				fileTable.push_back(toString(path));
+			}
+
+			callback(fileTable);
+
+			NFD_PathSet_Free(&pathSet);
+		}
+		else if (result == NFD_CANCEL)
+		{
+			nero_log("select files canceled");
+		}
+		else
+		{
+			nero_log("failed to select files : " + nero_s(NFD_GetError()));
+		}
+	}
+
+	void EditorInterface::selectDirectory(std::function<void(std::string)> callback)
 	{
 		nfdchar_t *outPath = nullptr;
 		nfdresult_t result = NFD_PickFolder(nullptr, &outPath);
 
 		if (result == NFD_OKAY)
 		{
-			callback(outPath);
+			callback(std::string(outPath));
 
 			free(outPath);
 		}
@@ -2113,7 +2424,7 @@ namespace  nero
 		}
 		else
 		{
-		   nero_log("failed to select directory : " + nero_ss(NFD_GetError()));
+		   nero_log("failed to select directory : " + nero_s(NFD_GetError()));
 		}
 	}
 
@@ -2150,9 +2461,9 @@ namespace  nero
         ImGui::SameLine(wording_width + input_width - 60.f);
 		if(ImGui::Button("Browse##choose_workspace_location", ImVec2(60, 0)))
         {
-			selectDirectory([this](nfdchar_t *outPath)
+			selectDirectory([this](std::string outPath)
 			{
-				string::fillCharArray(m_WorkspaceInput.location, sizeof(m_WorkspaceInput.location), std::string(outPath));
+				string::fillCharArray(m_WorkspaceInput.location, sizeof(m_WorkspaceInput.location), outPath);
 			});
         }
         ImGui::Dummy(ImVec2(0.0f, 2.0f));
@@ -2254,10 +2565,10 @@ namespace  nero
 		 ImGui::SameLine(wording_width + input_width - 124.f);
 		if(ImGui::Button("Browse##choose_workspace_import", ImVec2(60.f, 0)))
         {
-			selectDirectory([this](nfdchar_t *outPath)
+			selectDirectory([this](std::string outPath)
 			{
 				//get selected directory
-				string::fillCharArray(m_WorkspaceInput.locationImport, sizeof(m_WorkspaceInput.locationImport), std::string(outPath));
+				string::fillCharArray(m_WorkspaceInput.locationImport, sizeof(m_WorkspaceInput.locationImport), outPath);
 			});
         }
 

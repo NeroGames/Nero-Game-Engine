@@ -337,14 +337,14 @@ namespace nero
     {
 		auto workspaceTable =  file::loadJson(file::getPath({"setting", "workspace"}));
 
-         std::vector<std::string> result;
+		std::vector<std::string> result;
 
-         for(auto workspace : workspaceTable)
-         {
-			 result.push_back(workspace["workspace_name"].get<std::string>());
-         }
+		for(auto workspace : workspaceTable)
+		{
+			result.push_back(workspace["workspace_name"].get<std::string>());
+		}
 
-         return result;
+		return result;
     }
 
     const nlohmann::json ProjectManager::findWorkspace(const std::string& name) const
