@@ -159,8 +159,7 @@ namespace nero
 
 		char qtCreatorPath[256];
 		char visualStudioPath[256];
-
-
+		char texturePackerPath[256];
 
 		bool									configure();
 		std::vector<std::function<void()>>		viewTable;
@@ -169,6 +168,9 @@ namespace nero
 		void									nextView();
 		bool									finish();
 		bool									finishNext();
+		void									clearInput();
+		bool									hasPrevious();
+		void									previousView();
 	};
 }
 

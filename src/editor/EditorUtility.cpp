@@ -156,12 +156,13 @@ namespace nero
 
 	void EnvironmentSetup::showView()
 	{
+		nero_log(nero_s(currentView));
 		viewTable.at(currentView)();
 	}
 
 	void EnvironmentSetup::nextView()
 	{
-		if(currentView < viewTable.size())
+		if(currentView < viewTable.size() - 1)
 		{
 			currentView += 1;
 		}
@@ -175,6 +176,26 @@ namespace nero
 	bool EnvironmentSetup::finishNext()
 	{
 		return currentView == (viewTable.size() - 2);
+	}
+
+	void EnvironmentSetup::clearInput()
+	{
+		string::fillCharArray(qtCreatorPath,	 sizeof(qtCreatorPath),		StringPool.BLANK);
+		string::fillCharArray(visualStudioPath,	 sizeof(visualStudioPath),	StringPool.BLANK);
+		string::fillCharArray(texturePackerPath, sizeof(texturePackerPath),	StringPool.BLANK);
+	}
+
+	bool EnvironmentSetup::hasPrevious()
+	{
+		return currentView >= 1;
+	}
+
+	void EnvironmentSetup::previousView()
+	{
+		if(currentView > 0)
+		{
+			currentView -= 1;
+		}
 	}
 
 }

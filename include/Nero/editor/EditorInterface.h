@@ -132,6 +132,9 @@ namespace nero
 			void											createWorkspace(const Parameter& parameter);
 			void											importWorkspace(const std::string& directory);
 			void											showWorkspaceWindow();
+			void											showCreateWorkspace();
+			void											showImportWorkspace();
+			void											showWorkspaceList();
 			//////////////Project
 			ProjectInput									m_ProjectInput;
 			int												m_CountCreateProject;

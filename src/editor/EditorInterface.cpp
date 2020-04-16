@@ -170,7 +170,9 @@ namespace  nero
 			m_EnvironmentSetup.viewTable.push_back([this](){showConfigurationWorksapce();});
 		}
 			//finish
-		m_EnvironmentSetup.viewTable.push_back([this](){showConfigurationWorksapce();});
+		m_EnvironmentSetup.viewTable.push_back([this](){showConfigurationFinish();});
+			//clear inputs
+		m_EnvironmentSetup.clearInput();
 	}
 
 	void EditorInterface::closeEditor()
@@ -1064,23 +1066,39 @@ namespace  nero
 
 				m_EnvironmentSetup.showView();
 
+				ImGui::SetCursorPosY(EditorConstant.WINDOW_STARTER_WIZARD_SIZE.y - 75.f);
+
+				if(m_EnvironmentSetup.hasPrevious())
+				{
+					pushToolbarStyle();
+					if(ImGui::Button("Back", ImVec2(100.f, 0.f)))
+					{
+						m_EnvironmentSetup.previousView();
+					}
+					popToolbarStyle();
+				}
+
 
 				if(m_EnvironmentSetup.readyNext)
 				{
-					ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 115.f);
-					ImGui::SetCursorPosY(EditorConstant.WINDOW_STARTER_WIZARD_SIZE.y - 75.f);
+					if(m_EnvironmentSetup.hasPrevious())
+						ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 115.f);
+					else
+						ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 115.f);
 
 					pushToolbarStyle();
-					if(ImGui::Button(m_EnvironmentSetup.finishNext() ? "Close" : "Next", ImVec2(100.f, 0.f)))
+					if(ImGui::Button(m_EnvironmentSetup.finish() ? "Finish" : "Next", ImVec2(100.f, 0.f)))
 					{
-						m_EnvironmentSetup.nextView();
-
 						if(m_EnvironmentSetup.finish())
 						{
 							m_EnvironmentSetup.setupWorkspace = false;
 							m_EnvironmentSetup.setupCodeEditor = false;
 							m_EnvironmentSetup.setupTexturePacker = false;
 							ImGui::CloseCurrentPopup();
+						}
+						else
+						{
+							m_EnvironmentSetup.nextView();
 						}
 					}
 					popToolbarStyle();
@@ -1138,14 +1156,27 @@ namespace  nero
 
 		ImGui::Dummy(ImVec2(0.f, 15.f));
 
-		ImGui::Text("Click on Next to continous the configuration");
+		ImGui::Text("Click on Next to continous");
 
 		m_EnvironmentSetup.readyNext = true;
 	}
 
 	void EditorInterface::showConfigurationFinish()
 	{
+		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
+		ImGui::Text("Configuration Completed");
+		ImGui::PopFont();
+		ImGui::Separator();
 
+		ImGui::Dummy(ImVec2(0.f, 20.f));
+
+		ImGui::TextWrapped("Congratulation ! You now have a proper environment");
+
+		ImGui::Dummy(ImVec2(0.f, 20.f));
+
+		ImGui::Text("Click Finish to close the Wizard");
+
+		m_EnvironmentSetup.readyNext = true;
 	}
 
 	void EditorInterface::showConfigurationEditor()
@@ -1271,7 +1302,49 @@ namespace  nero
 		ImGui::PopFont();
 		ImGui::Separator();
 
-		ImGui::Dummy(ImVec2(0.f, 20.f));
+		ImGui::Dummy(ImVec2(0.f, 10.f));
+
+		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionWidth() - 150.f)/2.f);
+		ImGui::Image(m_EditorTextureHolder->getTexture("texture_packer_icon"), ImVec2(150.f, 150.f));
+
+		ImGui::Dummy(ImVec2(0.f, 10.f));
+
+		ImGui::TextWrapped("Install and Configure Texture Packer");
+
+		ImGui::Dummy(ImVec2(0.f, 10.f));
+
+		ImGui::Text("After installing Texture Packer, please provide the path to its excutable.");
+		ImGui::Text("Here are some examples of path");
+		ImGui::BulletText("C:/Program Files/CodeAndWeb/TexturePacker/bin/TexturePackerGUI.exe");
+
+		ImGui::Dummy(ImVec2(0.f, 10.f));
+
+		float wording_width = 100.f;
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Download here");
+		ImGui::SameLine(wording_width);
+		if(ImGui::Button("https://www.codeandweb.com/texturepacker"))
+		{
+			cmd::launchBrowser("https://www.codeandweb.com/texturepacker");
+		}
+
+		ImGui::Dummy(ImVec2(0.f, 10.f));
+
+		float input_width = ImGui::GetWindowContentRegionWidth() * 0.8f;
+		ImGui::Text("Texture Packer");
+		ImGui::SameLine(wording_width);
+		ImGui::SetNextItemWidth(input_width - 100.f);
+		ImGui::InputText("##texturepacker", m_EnvironmentSetup.texturePackerPath, sizeof(m_EnvironmentSetup.texturePackerPath), ImGuiInputTextFlags_ReadOnly);
+		ImGui::SameLine(wording_width + input_width - 80.f);
+		if(ImGui::Button("Browse##texturepacker", ImVec2(60.f, 0)))
+		{
+			selectFile([this](std::string outPath)
+			{
+				string::fillCharArray(m_EnvironmentSetup.texturePackerPath, sizeof(m_EnvironmentSetup.texturePackerPath), outPath);
+			});
+		}
+
+		m_EnvironmentSetup.readyNext =	std::string(m_EnvironmentSetup.texturePackerPath) != StringPool.BLANK;
 	}
 
 	void EditorInterface::showConfigurationWorksapce()
@@ -1282,6 +1355,19 @@ namespace  nero
 		ImGui::Separator();
 
 		ImGui::Dummy(ImVec2(0.f, 20.f));
+
+
+		ImGui::TextWrapped("Create a default Workspace");
+
+		ImGui::Dummy(ImVec2(0.f, 10.f));
+
+		ImGui::TextWrapped("When you create a new Project");
+
+		ImGui::Dummy(ImVec2(0.f, 20.f));
+
+		showCreateWorkspace();
+
+		m_EnvironmentSetup.readyNext = !m_ProjectManager->getWorkspaceTable().empty();
 	}
 
 	//3-  show toolbar
@@ -2448,37 +2534,37 @@ namespace  nero
 		m_ProjectInput.update(m_ProjectManager->getWorkspaceTable());
 	}
 
-    void EditorInterface::showWorkspaceWindow()
-    {
-        float wording_width = 150.f;
-        float input_width   = ImGui::GetWindowContentRegionWidth() - wording_width;
+	void EditorInterface::showCreateWorkspace()
+	{
+		float wording_width = 150.f;
+		float input_width   = ImGui::GetWindowContentRegionWidth() - wording_width;
 
 		//create workspace
 		ImGui::Text("Location");
-        ImGui::SameLine(wording_width);
-        ImGui::SetNextItemWidth(input_width - 65.f);
+		ImGui::SameLine(wording_width);
+		ImGui::SetNextItemWidth(input_width - 65.f);
 		ImGui::InputText("##workspace_location", m_WorkspaceInput.location, sizeof(m_WorkspaceInput.location), ImGuiInputTextFlags_ReadOnly);
-        ImGui::SameLine(wording_width + input_width - 60.f);
+		ImGui::SameLine(wording_width + input_width - 60.f);
 		if(ImGui::Button("Browse##choose_workspace_location", ImVec2(60, 0)))
-        {
+		{
 			selectDirectory([this](std::string outPath)
 			{
 				string::fillCharArray(m_WorkspaceInput.location, sizeof(m_WorkspaceInput.location), outPath);
 			});
-        }
-        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		}
+		ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
-        ImGui::Text("Workspace Name");
-        ImGui::SameLine(wording_width);
-        ImGui::SetNextItemWidth(input_width);
+		ImGui::Text("Workspace Name");
+		ImGui::SameLine(wording_width);
+		ImGui::SetNextItemWidth(input_width);
 		ImGui::InputText("##workspace_name", m_WorkspaceInput.name, sizeof( m_WorkspaceInput.name));
-        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 		ImGui::Text("Company Name");
-        ImGui::SameLine(wording_width);
-        ImGui::SetNextItemWidth(input_width);
+		ImGui::SameLine(wording_width);
+		ImGui::SetNextItemWidth(input_width);
 		ImGui::InputText("##workspace_company",  m_WorkspaceInput.company, sizeof( m_WorkspaceInput.company));
-        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 		ImGui::Text("Project Lead");
 		ImGui::SameLine(wording_width);
@@ -2487,28 +2573,28 @@ namespace  nero
 		ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 		ImGui::Text("Project Namespace");
-        ImGui::SameLine(wording_width);
-        ImGui::SetNextItemWidth(input_width);
+		ImGui::SameLine(wording_width);
+		ImGui::SetNextItemWidth(input_width);
 		ImGui::InputText("##workspace_namespace",  m_WorkspaceInput.projectNamespace, sizeof( m_WorkspaceInput.projectNamespace));
-        ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
-        ImGui::SameLine(wording_width + input_width - 130.f);
-        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10.f);
+		ImGui::SameLine(wording_width + input_width - 130.f);
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10.f);
 
-        bool onCreate               = ImGui::Button("Create Workspace", ImVec2(130.f, 0));
+		bool onCreate               = ImGui::Button("Create Workspace", ImVec2(130.f, 0));
 		std::string error_message   = StringPool.BLANK;
 		bool error = true;
 
 		//workpspace location blank
 		if(std::string(m_WorkspaceInput.location) == StringPool.BLANK)
-        {
+		{
 			error_message = "Please select a location directory";
-        }
+		}
 		//workpspace location not valid
 		else if(!file::directoryExist(std::string(m_WorkspaceInput.location)))
-        {
+		{
 			error_message = "The selected location is not a valid directory";
-        }
+		}
 		//workpspace name blank
 		else if(std::string(m_WorkspaceInput.name) == StringPool.BLANK)
 		{
@@ -2530,16 +2616,16 @@ namespace  nero
 			error_message = "Please enter a project namesapce";
 		}
 		else
-        {
+		{
 			error = false;
 		}
 
-        if (onCreate && error)
+		if (onCreate && error)
 		{
 			ImGui::OpenPopup(EditorConstant.ERROR_CREATING_WORKSPACE.c_str());
 		}
-        else if(onCreate)
-        {
+		else if(onCreate)
+		{
 			Parameter parameter;
 
 			parameter.setString("workspace_location",	std::string(m_WorkspaceInput.location));
@@ -2551,26 +2637,54 @@ namespace  nero
 			m_WorkspaceInput.clear();
 
 			createWorkspace(parameter);
-        }
+		}
 
-        ImGui::Dummy(ImVec2(0.0f, 10.0f));
-        ImGui::Separator();
-        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+		ImGui::SetNextWindowSize(ImVec2(300.f, 130.f));
+		if(ImGui::BeginPopupModal(EditorConstant.ERROR_CREATING_WORKSPACE.c_str()))
+		{
+			ImGui::BeginChild("##error_message", ImVec2(0.f, 70.f));
+
+			if(onCreate)
+			{
+				nero_log("create workspace");
+				ImGui::TextWrapped("%s", error_message.c_str());
+			}
+
+			ImGui::Dummy(ImVec2(0.0f, 35.0f));
+
+			 ImGui::EndChild();
+
+			ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth()/2.f - 50.f);
+
+			if (ImGui::Button("Close##workspace_error_close_button", ImVec2(100, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		 }
+
+	}
+
+	void EditorInterface::showImportWorkspace()
+	{
+		float wording_width = 150.f;
+		float input_width   = ImGui::GetWindowContentRegionWidth() - wording_width;
 
 		//import workspace
 		ImGui::Text("Workspace Directory");
-        ImGui::SameLine(wording_width);
+		ImGui::SameLine(wording_width);
 		ImGui::SetNextItemWidth(input_width - 130.f);
 		ImGui::InputText("##workspace_import", m_WorkspaceInput.locationImport, sizeof(m_WorkspaceInput.locationImport), ImGuiInputTextFlags_ReadOnly);
 		 ImGui::SameLine(wording_width + input_width - 124.f);
 		if(ImGui::Button("Browse##choose_workspace_import", ImVec2(60.f, 0)))
-        {
+		{
 			selectDirectory([this](std::string outPath)
 			{
 				//get selected directory
 				string::fillCharArray(m_WorkspaceInput.locationImport, sizeof(m_WorkspaceInput.locationImport), outPath);
 			});
-        }
+		}
 
 		ImGui::SameLine(wording_width + input_width - 60.f);
 		bool onImport						= ImGui::Button("Import##import_workspace", ImVec2(60.f, 0));
@@ -2609,63 +2723,13 @@ namespace  nero
 			//clear input
 			string::fillCharArray(m_WorkspaceInput.locationImport, sizeof(m_WorkspaceInput.locationImport), StringPool.BLANK);
 		}
-		ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-
-
-        ImGuiWindowFlags window_flag = ImGuiWindowFlags_None;
-        window_flag |= ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar;
-        ImGui::BeginChild("##workspace_list", ImVec2(0.f, 0.f), true, window_flag);
-		ImGui::Dummy(ImVec2(0.0f, 4.0f));
-
-
-            for(const nlohmann::json& worksapce : m_ProjectManager->getWorkspaceTable())
-            {
-                if (ImGui::CollapsingHeader(worksapce["workspace_name"].get<std::string>().c_str()))
-                {
-					std::string project_lead		= ": " + worksapce["project_lead"].get<std::string>();
-					std::string company_name		= ": " + worksapce["company_name"].get<std::string>();
-					std::string project_namespace	= ": " + worksapce["project_namespace"].get<std::string>();
-					std::string workspace_directory	= ": " + worksapce["workspace_directory"].get<std::string>();
-
-                    ImGui::Text("Workspace Directory");
-                    ImGui::SameLine(wording_width);
-                    ImGui::Text(workspace_directory.c_str());
-                    ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
-					ImGui::Text("Company Name");
-					ImGui::SameLine(wording_width);
-					ImGui::Text(company_name.c_str());
-					ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
-					ImGui::Text("Project Lead");
-                    ImGui::SameLine(wording_width);
-					ImGui::Text(project_lead.c_str());
-                    ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
-					ImGui::Text("Project Namespace");
-                    ImGui::SameLine(wording_width);
-					ImGui::Text(project_namespace.c_str());
-                    ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
-                }
-
-            }
-
-        ImGui::EndChild();
-
 
 		ImGui::SetNextWindowSize(ImVec2(300.f, 130.f));
 		if(ImGui::BeginPopupModal(EditorConstant.ERROR_CREATING_WORKSPACE.c_str()))
 		{
 			ImGui::BeginChild("##error_message", ImVec2(0.f, 70.f));
 
-			if(onCreate)
-			{
-				nero_log("create workspace");
-				ImGui::TextWrapped("%s", error_message.c_str());
-			}
-			else if(onImport)
+			if(onImport)
 			{
 				nero_log("import workspace :" + import_error_message);
 				ImGui::TextWrapped("%s", import_error_message.c_str());
@@ -2684,6 +2748,72 @@ namespace  nero
 
 			ImGui::EndPopup();
 		 }
+
+	}
+
+	void EditorInterface::showWorkspaceList()
+	{
+		float wording_width = 150.f;
+		float input_width   = ImGui::GetWindowContentRegionWidth() - wording_width;
+
+		ImGuiWindowFlags window_flag = ImGuiWindowFlags_None;
+		window_flag |= ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar;
+		ImGui::BeginChild("##workspace_list", ImVec2(0.f, 0.f), true, window_flag);
+		ImGui::Dummy(ImVec2(0.0f, 4.0f));
+
+
+			for(const nlohmann::json& worksapce : m_ProjectManager->getWorkspaceTable())
+			{
+				if (ImGui::CollapsingHeader(worksapce["workspace_name"].get<std::string>().c_str()))
+				{
+					std::string project_lead		= ": " + worksapce["project_lead"].get<std::string>();
+					std::string company_name		= ": " + worksapce["company_name"].get<std::string>();
+					std::string project_namespace	= ": " + worksapce["project_namespace"].get<std::string>();
+					std::string workspace_directory	= ": " + worksapce["workspace_directory"].get<std::string>();
+
+					ImGui::Text("Workspace Directory");
+					ImGui::SameLine(wording_width);
+					ImGui::Text(workspace_directory.c_str());
+					ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+					ImGui::Text("Company Name");
+					ImGui::SameLine(wording_width);
+					ImGui::Text(company_name.c_str());
+					ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+					ImGui::Text("Project Lead");
+					ImGui::SameLine(wording_width);
+					ImGui::Text(project_lead.c_str());
+					ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+					ImGui::Text("Project Namespace");
+					ImGui::SameLine(wording_width);
+					ImGui::Text(project_namespace.c_str());
+					ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+				}
+
+			}
+
+		ImGui::EndChild();
+	}
+
+    void EditorInterface::showWorkspaceWindow()
+    {
+
+		showCreateWorkspace();
+
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+        ImGui::Separator();
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+		showImportWorkspace();
+
+		ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+
+		showWorkspaceList();
+
 	}
 
 
@@ -4256,12 +4386,6 @@ namespace  nero
 					static bool draw_profile = gameLevel->levelSetting->getBool("draw_profile");
 					ImGui::Checkbox("Draw Profile##draw_profile", &draw_profile);
 					gameLevel->levelSetting->setBool("draw_profile", draw_profile);
-
-
-
-
-
-
 
 					//
 					/*levelSetting->setBool("enable_warm_starting", true);
