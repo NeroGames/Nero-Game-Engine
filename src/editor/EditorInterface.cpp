@@ -1252,12 +1252,7 @@ namespace  nero
 				selectFile([this](std::string outPath)
 				{
 					string::fillCharArray(m_EnvironmentSetup.qtCreatorPath, sizeof(m_EnvironmentSetup.qtCreatorPath), outPath);
-					std::string env = "NERO_GAME_QT=" + outPath;
-					//Poco::Environment::set("NERO_GAME_QT", outPath);
-					putenv(env.c_str());
-
-					nero_log(nero_s(getenv("NERO_GAME_QT")));
-
+					cmd::setEnvironmnentVariable("NERO_GAME_QT", outPath);
 				});
 			}
 
@@ -1296,10 +1291,7 @@ namespace  nero
 				selectFile([this](std::string outPath)
 				{
 					string::fillCharArray(m_EnvironmentSetup.visualStudioPath, sizeof(m_EnvironmentSetup.visualStudioPath), outPath);
-					std::string env = "NERO_GAME_VS=" + outPath;
-					Poco::Environment::set("NERO_GAME_VS", outPath);
-					//putenv(env.c_str());
-
+					cmd::setEnvironmnentVariable("NERO_GAME_VS", outPath);
 				});
 			}
 		}
@@ -1354,8 +1346,7 @@ namespace  nero
 			selectFile([this](std::string outPath)
 			{
 				string::fillCharArray(m_EnvironmentSetup.texturePackerPath, sizeof(m_EnvironmentSetup.texturePackerPath), outPath);
-				std::string env = "NERO_GAME_TP=" + outPath;
-				putenv(env.c_str());
+				cmd::setEnvironmnentVariable("NERO_GAME_TP", outPath);
 			});
 		}
 
@@ -1526,6 +1517,10 @@ namespace  nero
 
 		if(ImGui::Button(ICON_FA_ANCHOR " Project", ImVec2(95.f, 28.f)))
 		{
+			nero_log(nero_sv(getenv("NERO_GAME_QT")));
+			nero_log(nero_sv(getenv("NERO_GAME_TP")));
+			nero_log(nero_sv(getenv("NERO_GAME_VS")));
+
 			ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
 			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_RECENT_PROJECT);
 		}

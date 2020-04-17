@@ -171,5 +171,22 @@ namespace nero
 
 			#endif
 		}
+
+		void setEnvironmnentVariable(const std::string& name, const std::string& value)
+		{
+			#ifdef NERO_OS_WINDOW
+
+			Poco::Pipe outPipe;
+			Poco::ProcessHandle handle	= Poco::Process::launch("setx", {name, value}, nullptr, &outPipe, &outPipe);
+			Poco::PipeInputStream outStream(outPipe);
+			Poco::StreamCopier::copyStream(outStream, nero::logging::Logger::getStringStream());
+
+			#elif NERO_OS_LINUX
+
+				//TODO
+
+			#endif
+		}
+
 	}
 }

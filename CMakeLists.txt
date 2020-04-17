@@ -147,6 +147,7 @@ set(NERO_GAME_EDITOR_DEP nerogame-core ${NERO_GAME_CORE_DEP} comctl32.lib ${LIBG
 # Build Nero Game Editor
 add_executable(GameEditor ${NERO_GAME_EDITOR_SOURCES})
 target_link_libraries(GameEditor ${NERO_GAME_EDITOR_DEP})
+set_target_properties(GameEditor PROPERTIES OUTPUT_NAME "Nero Game Engine")
 
 # Install Nero Game Editor
 #----------------------------------------------------------------------------------#
@@ -156,16 +157,19 @@ add_custom_command(TARGET nerogame-core
         COMMAND ${CMAKE_COMMAND} -E remove_directory    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/template"
         COMMAND ${CMAKE_COMMAND} -E copy_directory      "${CMAKE_SOURCE_DIR}/template" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/template")
 #]]
-# Test Laboratory
+
+
+# Nero Game Console
 #----------------------------------------------------------------------------------#
-# Test Lab Source Files
-file(GLOB_RECURSE TEST_LABORATORY_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/testlab/*")
+# Engine Console Source Files
+file(GLOB_RECURSE NERO_GAME_CONSOLE_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/console/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/console/*")
 # Dependencies
-set(TEST_LABORATORY_DEP nerogame-core ${NERO_GAME_CORE_DEP})
-# Build Test Laboratory
-add_executable(TestLab ${TEST_LABORATORY_SOURCES})
-target_link_libraries(TestLab ${TEST_LABORATORY_DEP})
+set(NERO_GAME_CORE_DEP ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2D_LIBS} ${EASY_PROFILER} ${POCO})
+# Build Nero Game Core
+add_executable(console ${NERO_GAME_CONSOLE_SOURCES} )
+set_target_properties(console PROPERTIES OUTPUT_NAME "nerogame")
 
 # Doxygen Documentation
 #----------------------------------------------------------------------------------#
@@ -191,3 +195,16 @@ else (DOXYGEN_FOUND)
   message("Doxygen need to be installed to generate the doxygen documentation")
 endif (DOXYGEN_FOUND)
 #]]
+
+
+
+# Test Laboratory
+#----------------------------------------------------------------------------------#
+# Test Lab Source Files
+file(GLOB_RECURSE TEST_LABORATORY_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/testlab/*")
+# Dependencies
+set(TEST_LABORATORY_DEP nerogame-core ${NERO_GAME_CORE_DEP})
+# Build Test Laboratory
+add_executable(TestLab ${TEST_LABORATORY_SOURCES})
+target_link_libraries(TestLab ${TEST_LABORATORY_DEP})
