@@ -1,0 +1,20 @@
+{
+   "bottom_dock": {
+      "height": 150.0
+   },
+   "build_layout": false,
+   "imgui_setting_exist": true,
+   "lower_left_dock": {
+      "height": 600.0
+   },
+   "right_dock": {
+      "width": 300.0
+   },
+   "toolbar_dock": {
+      "height": 32.0,
+      "id": 7
+   },
+   "upper_left_dock": {
+      "width": 180.0
+   }
+}

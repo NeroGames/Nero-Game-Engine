@@ -156,7 +156,6 @@ namespace nero
 
 	void EnvironmentSetup::showView()
 	{
-		nero_log(nero_s(currentView));
 		viewTable.at(currentView)();
 	}
 

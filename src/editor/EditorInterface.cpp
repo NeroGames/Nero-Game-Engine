@@ -3,6 +3,9 @@
 // Copyright (c) 2016-2020 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
+//Poco
+#include <Poco/Environment.h>
+//SFML
 #include <Nero/core/cpp/utility/Logging.h>
 #include <Nero/editor/EditorInterface.h>
 #include <SFML/Window/Event.hpp>
@@ -1249,6 +1252,12 @@ namespace  nero
 				selectFile([this](std::string outPath)
 				{
 					string::fillCharArray(m_EnvironmentSetup.qtCreatorPath, sizeof(m_EnvironmentSetup.qtCreatorPath), outPath);
+					std::string env = "NERO_GAME_QT=" + outPath;
+					//Poco::Environment::set("NERO_GAME_QT", outPath);
+					putenv(env.c_str());
+
+					nero_log(nero_s(getenv("NERO_GAME_QT")));
+
 				});
 			}
 
@@ -1287,6 +1296,10 @@ namespace  nero
 				selectFile([this](std::string outPath)
 				{
 					string::fillCharArray(m_EnvironmentSetup.visualStudioPath, sizeof(m_EnvironmentSetup.visualStudioPath), outPath);
+					std::string env = "NERO_GAME_VS=" + outPath;
+					Poco::Environment::set("NERO_GAME_VS", outPath);
+					//putenv(env.c_str());
+
 				});
 			}
 		}
@@ -1341,6 +1354,8 @@ namespace  nero
 			selectFile([this](std::string outPath)
 			{
 				string::fillCharArray(m_EnvironmentSetup.texturePackerPath, sizeof(m_EnvironmentSetup.texturePackerPath), outPath);
+				std::string env = "NERO_GAME_TP=" + outPath;
+				putenv(env.c_str());
 			});
 		}
 
