@@ -168,8 +168,8 @@ file(GLOB_RECURSE NERO_GAME_CONSOLE_SOURCES
 # Dependencies
 set(NERO_GAME_CORE_DEP ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2D_LIBS} ${EASY_PROFILER} ${POCO})
 # Build Nero Game Core
-add_executable(console ${NERO_GAME_CONSOLE_SOURCES} )
-set_target_properties(console PROPERTIES OUTPUT_NAME "nerogame")
+add_executable(Console ${NERO_GAME_CONSOLE_SOURCES} )
+set_target_properties(Console PROPERTIES OUTPUT_NAME "nero")
 
 # Doxygen Documentation
 #----------------------------------------------------------------------------------#
