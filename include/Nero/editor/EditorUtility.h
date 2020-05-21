@@ -57,7 +57,7 @@ namespace nero
 		char                        name[100];
 		char                        company[100];
 		char                        projectLead[100];
-		char                        projectNamespace[10];
+		char                        projectNamespace[11];
 		//import
 		char						locationImport[256];
 
@@ -77,7 +77,7 @@ namespace nero
 		char                        name[100];
 		char                        projectLead[100];
 		char                        company[100];
-		char                        projectNamespace[10];
+		char                        projectNamespace[11];
 		char                        description[512];
 		const char*                 projectType;
 		const char*                 codeEditor;
@@ -88,6 +88,11 @@ namespace nero
 
 		bool						startupPack;
 		std::string                 lastCreatedProject;
+
+		std::string errorMessage	= StringPool.BLANK;
+		std::string redirectLink	= StringPool.BLANK;
+		bool error					= true;
+
 
 		void clear()
 		{
@@ -121,9 +126,10 @@ namespace nero
 
 	struct MenuBarInput
 	{
-		bool newProject			= false;
-		bool openProject		= false;
-		bool newWorkspace		= false;
+		bool newProject				= false;
+		bool openProject			= false;
+		bool newWorkspace			= false;
+		bool aboutEngine			= false;
 	};
 
 	void			popToolbarStyle();
@@ -157,11 +163,15 @@ namespace nero
 		bool selectQtCreator					= true;
 		bool selectVisualStudio					= false;
 
+		bool createWorkspace					= true;
+		bool importWorkspace					= false;
+
 		char qtCreatorPath[256];
 		char visualStudioPath[256];
 		char texturePackerPath[256];
 
 		bool									configure();
+		bool									restart();
 		std::vector<std::function<void()>>		viewTable;
 		unsigned int							currentView = 0;
 		void									showView();

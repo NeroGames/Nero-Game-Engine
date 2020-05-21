@@ -17,83 +17,119 @@ namespace nero
 	{
 		std::string getPath(const std::vector<std::string>& list, const std::string& extension)
 		{
-			#ifdef NERO_OS_WINDOW
-				return getWindowsPath(list, extension);
-			#endif
+			//Blank path
+			if(list.empty()) return StringPool.BLANK;
 
-			#ifdef NERO_OS_LINUX
-				return getLinuxPath(list, extension);
-			#endif
-		}
-
-
-
-		std::string getWindowsPath(const std::vector<std::string>& list, const std::string& extansion)
-		{
-			if(list.empty())
-			{
-				return StringPool.BLANK;
-			}
-
-
+			//Build path
 			std::string path = StringPool.BLANK;
 
 			for(const std::string& name : list)
 			{
-				path += getWindowsPath(name) + "\\";
+				path += name + "/";
 			}
 
+			//Remove last slash
 			path.pop_back();
 
-			if(extansion != StringPool.BLANK)
+			//Add extension
+			if(extension != StringPool.BLANK)
 			{
-				path += extansion;
+				path += extension;
 			}
 
-			return path;
+			return getPath(path);
 		}
 
-		std::string getWindowsPath(const std::string& path, bool escapeSpace)
+		std::string getPath(const std::string& path)
 		{
-			//replace all slash by a double back_slash
-			std::string temp =  boost::algorithm::replace_all_copy(path, "/", "\\");
+			return boost::algorithm::replace_all_copy(path, "\\", "/");
+		}
 
-			std::string result = StringPool.BLANK;
+		std::string getPath(const std::initializer_list<const char*>& list, const std::string& extension)
+		{
+			return getPath(std::vector<std::string>(list.begin(), list.end()), extension);
+		}
 
-			//add double quote if needed
-			if(escapeSpace)
+		std::string getWindowsPath(const std::vector<std::string>& list, const std::string& extension)
+		{
+			//Blank path
+			if(list.empty()) return StringPool.BLANK;
+
+			//Build path
+			std::string path = StringPool.BLANK;
+
+			for(const std::string& name : list)
 			{
-				std::vector<std::string> table = string::splitString(temp, '\\');
-				for(std::string word : table)
-				{
-					if(string::splitString(word, ' ').size() > 1)
-						result += "\"" + word + "\"\\";
-					else
-						result += word + "\\";
-				}
+				path += name + "\\";
+			}
 
-				result.pop_back();
+			//Remove last slash
+			path.pop_back();
+
+			//Add extension
+			if(extension != StringPool.BLANK)
+			{
+				path += extension;
+			}
+
+			return getWindowsPath(path);
+		}
+
+		std::string getWindowsPath(const std::string& path)
+		{
+			return boost::algorithm::replace_all_copy(path, "/", "\\");
+		}
+
+		std::string getWindowsPath(const std::initializer_list<const char*>& list, const std::string& extension)
+		{
+			return getWindowsPath(std::vector<std::string>(list.begin(), list.end()), extension);
+		}
+
+
+		std::string escapeSpace(const std::string& path)
+		{
+			std::vector<std::string> table;
+			std::string separator = StringPool.BLANK;
+
+			if(path.find("/") != std::string::npos)
+			{
+				table		= string::splitString(path, '/');
+				separator	= "/";
+			}
+			else if (path.find("\\") != std::string::npos)
+			{
+				table		= string::splitString(path, '\\');
+				separator	= "\\";
 			}
 			else
 			{
-				result = temp;
+				table.push_back(path);
 			}
+
+			std::string result = StringPool.BLANK;
+
+			for(std::string word : table)
+			{
+				if(string::splitString(word, ' ').size() > 1)
+					result += "\"" + word + "\"" + separator;
+				else
+					result += word + separator;
+			}
+
+			//Remove last slash (or backslash)
+			result.pop_back();
 
 			return result;
 		}
 
-		std::string getLinuxPath(const std::string& path)
+		std::string escapeSlash(const std::string& path)
 		{
-			//replace all slash by a double back_slash
-			return boost::algorithm::replace_all_copy(path, "\\", "/");
+			return boost::algorithm::replace_all_copy(path, "/", "//");
 		}
 
-
-
-		std::string getLinuxPath(const std::vector<std::string>& list, const std::string& extansion)
+		std::string escapeBackslash(const std::string& path)
 		{
-			//TODO get linux path
-			 return StringPool.BLANK;
+			return boost::algorithm::replace_all_copy(path, "\\", "\\\\");
 		}
 
 		std::string loadText(const std::string& file)
@@ -136,12 +172,6 @@ namespace nero
 			return json;
 		}
 
-		nlohmann::json loadSetting(const std::string& name)
-		{
-			//TODO
-			return nlohmann::json();
-			//return loadJson(getPath({EngineConstant.FOLDER_SETTING, name}));
-		}
 
 		void createDirectory(const std::string& name)
 		{

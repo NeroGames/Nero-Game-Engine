@@ -45,6 +45,7 @@ namespace nero
 		const std::string WINDOW_GAME_SETTING			= "Game Settings";
 		const std::string WINDOW_GAME_PROJECT			= "Game Project";
 		const std::string WINDOW_FACTORY				= "Factory";
+		const std::string WINDOW_VISUAL_SCRIPT			= "Visual Script";
 		const std::string WINDOW_IMGUI_DEMO				= "Dear ImGui Demo";
 			//dockspace
 		const std::string WINDOW_EDITOR_DOCKSPACE		= "editor_dockspace";
@@ -57,14 +58,19 @@ namespace nero
 			//script wizard
 		const std::string WINDOW_SCRIPT_WIZARD			= "Script Wizard";
 		sf::Vector2f	  WINDOW_SCRIPT_WIZARD_SIZE		= sf::Vector2f(600.f, 300.f);
+			//about engine
+		const std::string WINDOW_ABOUT_ENGINE			= "About Nero Game Engine";
+
 		//Window and View
 
 		const std::string TAB_CREATE_PROJECT				= "Create Project";
 		const std::string TAB_OPEN_PROJECT					= "Open Project";
 		const std::string TAB_RECENT_PROJECT				= "Recent Project";
 		const std::string TAB_WORKSPACE						= "Workspace";
-		const std::string ERROR_CREATING_WORKSPACE			= "Error Creating Workspace";
-		const std::string ERROR_CREATING_PROJECT			= "Error Creating Project";
+		const std::string MODAL_ERROR_CREATING_WORKSPACE	= "Error Creating Workspace";
+		const std::string MODAL_ERROR_IMPORTING_WORKSPACE	= "Error Importing Workspace";
+		const std::string MODAL_ERROR_CREATING_PROJECT		= "Error Creating Project";
+		const std::string MODAL_WAITING_PROJECT_CREATION	= "Waiting Project Creation";
 
 		//Texture
 		const std::string TEXTURE_PROJECT_BUTTON			= "project_button";
@@ -81,6 +87,9 @@ namespace nero
 		const sf::Time  AUTO_SAVE_TIME              = sf::seconds(30.f);
 
 		const std::string TASK_CREATE_PROJECT				= "task_create_project_";
+
+		//
+		const std::string MODAL_ERROR_INVALID_PATH				 = "Invalid Path";
 
 	} EditorConstant;
 }

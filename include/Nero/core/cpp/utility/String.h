@@ -40,7 +40,7 @@ namespace nero
 		template <typename T>
 		std::string						toString(T const& value);
 		///\brief Format a string input
-		std::string						formatString(const std::string& input, Format format = Format::SNAKE_CASE);
+		std::string						formatString(const std::string& input, Format format = Format::SNAKE_CASE_LOWER);
 		std::string						wrapString(const std::string& message, size_t maxLetter);
 		void							fillCharTable(const char** charTab, const std::vector<std::string>& stringTab);
 		void							fillCharTable(char** charTab, const std::vector<std::string>& stringTab);
@@ -49,16 +49,7 @@ namespace nero
 		std::vector<std::string>		getWordTable(std::string string);
 		std::vector<std::string>&		splitString(const std::string &s, char delim,std::vector<std::string> &elems);
 		std::vector<std::string>		splitString(const std::string &s, char delim);
-		std::string						escapeAntiSlash(const std::string& word);
 		bool							matchPattern(const std::string& input, const std::string& pattern);
-
-		/*template <typename T>
-		std::string toString(T const& value)
-		{
-			std::stringstream stream;
-			stream << value;
-			return stream.str();
-		}*/
 
 	}///@}
 
@@ -83,6 +74,15 @@ namespace nero
 		const std::string ANTI_SLASH		= "\\";
 		//char
 		const char		  SPACE_CHAR        = ' ';
+
+		//regex
+		const std::string REGEX_NAME_01			= "([a-zA-Z0-9]+)([\\s_-][a-zA-Z0-9]+)+";
+		const std::string REGEX_NAME_02			= "(^[a-zA-Z])([a-zA-Z0-9]+)([\\s_-][a-zA-Z0-9]+)+";
+		const std::string REGEX_NAMESPACE		= "^[a-zA-Z]{2,10}";
+
+		const std::string REGEX_PROJECT_NAME	= "(^[a-zA-Z])([a-zA-Z0-9]+)(\\s[a-zA-Z0-9]+)+";
+		const std::string REGEX_CONSTANTPOOL	= "struct\\sGeneratedConstant(([\n\t]|.)*)\\};";
+		const std::string replace_constantpool  = "struct GeneratedConstant \n\t{\n\t\t const std::string PROJECT_NAME \t= \"My_Project\";\n\t\t const std::string PROJECT_VERSION \t= \"release 01\";\n\t};";
 
 	} StringPool;
 

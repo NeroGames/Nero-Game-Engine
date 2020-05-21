@@ -103,6 +103,7 @@ namespace nero
 		document.setString("creation_date",		datetime::formatDateTime(datetime::getCurrentDateTime()));
 		document.setString("modification_date", datetime::formatDateTime(datetime::getCurrentDateTime()));
 		document.setString("project_name",		parameter.getString("project_name"));
+		document.setString("project_id",		string::formatString(parameter.getString("project_name")));
 		document.setString("project_type",		parameter.getString("project_type"));
 		document.setString("code_editor",		parameter.getString("code_editor"));
 		document.setString("company_name",		parameter.getString("company_name"));
@@ -151,7 +152,7 @@ namespace nero
 		//file 4 : cmake setting
 		nero_log(projectDirectory);
 		nero_log(file::getPath({projectDirectory, "Build"}));
-		boost::algorithm::replace_all(cmake_setting_template, "::Project_Build_Directory::", string::escapeAntiSlash(file::getPath({projectDirectory, "Build"})));
+		boost::algorithm::replace_all(cmake_setting_template, "::Project_Build_Directory::", file::escapeBackslash(file::getPath({projectDirectory, "Build"})));
 
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeLists"}, StringPool.EXT_TEXT), cmake_template);
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeSettings"}, StringPool.EXT_JSON), cmake_setting_template);
@@ -187,56 +188,31 @@ namespace nero
 		nero_log("not_implemented");
 	}
 
-	/*bool ProjectManager::isProjectExist(const std::string& projectName)
+	bool ProjectManager::projectExist(const std::string& projectName, const std::string& workspaceName)
     {
-        //check if project director exist
-		if(!directoryExist(file::getPath({m_EditorSetting["workspace_folder"].get<std::string>(), string::formatString(projectName)})))
-        {
-            return false;
-        }
+		//check workspace exist
+		if(!workspaceExist(workspaceName))
+		{
+			return false;
+		}
 
-        //check if project file exist
-		std::string project_file = file::getPath({m_EditorSetting["workspace_folder"].get<std::string>(), string::formatString(projectName), "nero_project"}, StringPool.EXT_JSON);
-        if(!fileExist(project_file))
-        {
-            return false;
-        }
+		//check project exist
+		std::string project_id = string::formatString(projectName);
+		for(auto project : getWorkspaceProjectTable(workspaceName))
+		{
+			if(project["project_id"].get<std::string>() == project_id)
+			{
+				return true;
+			}
+		}
 
-        //check if project_id exist
-		nlohmann::json project_json = file::loadJson(project_file, true);
-        std::string project_id = project_json["project_id"].get<std::string>();
-		if(project_id != string::formatString(projectName))
-        {
-            return false;
-        }
-
-        return true;
-	}*/
+		return false;
+	}
 
 	void ProjectManager::setSetting(const Setting::Ptr& setting)
     {
 		m_EditorSetting = setting;
     }
-
-	/*void ProjectManager::loadAllProject()
-    {
-        using namespace  std::experimental::filesystem;
-        path folder_path(m_EditorSetting["workspace_folder"].get<std::string>());
-
-        directory_iterator it{folder_path};
-        while (it != directory_iterator{})
-        {
-            std::string project_folder = it->path().string();
-			std::string project_file = file::getPath({project_folder, "nero_project"}, StringPool.EXT_JSON);
-
-            if(fileExist(project_file))
-            {
-				m_ProjectTable.push_back(file::loadJson(project_file, true));
-            }
-
-            it++;
-        }
-	}*/
 
     const std::vector<nlohmann::json>& ProjectManager::getProjectTable() const
     {
@@ -244,10 +220,10 @@ namespace nero
     }
 
     const std::vector<nlohmann::json> ProjectManager::getWorkspaceProjectTable(const std::string& workspace_name)
-    {
+	{
         std::vector<nlohmann::json> result;
 
-        nlohmann::json projectWorkpsace = findWorkspace(workspace_name);
+		nlohmann::json projectWorkpsace = findWorkspace(workspace_name);
 
 		std::experimental::filesystem::path folder_path(file::getPath({projectWorkpsace["workspace_directory"].get<std::string>(), "Project"}));
 
@@ -258,7 +234,7 @@ namespace nero
 			std::string project_file = file::getPath({project_folder, ".project"});
 
 			if(file::fileExist(project_file))
-            {
+			{
 				result.push_back(file::loadJson(project_file, true));
             }
 
@@ -313,6 +289,9 @@ namespace nero
 		Parameter parameter;
 		parameter.loadJson(file::loadJson(file::getPath({directory, ".workspace"}), true));
 
+		//update workspace to match directory
+		parameter.setString("workspace_name", file::getFileName(directory));
+
 		nlohmann::json workspace;
 		workspace["order"]					= worksapceSetting.size() + 1;
 		workspace["workspace_id"]           = string::formatString(parameter.getString("workspace_name"));
@@ -325,6 +304,7 @@ namespace nero
 		worksapceSetting.push_back(workspace);
 
 		file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON), worksapceSetting.dump(3), true);
+		file::saveFile(file::getPath({directory, ".workspace"}), parameter.toString());
 	}
 
 
@@ -384,7 +364,7 @@ namespace nero
 
 		backgroundTask->addMessage("  -> configuring project");
 		cmd::Process configProcess	=  cmd::runCommand(cmake, {"-G", "MinGW Makefiles", "-S", sourcePath, "-B", buildPath,
-															   "-D", "CMAKE_CXX_COMPILER=" + file::getLinuxPath(gxx), "-D", "CMAKE_C_COMPILER="	+ file::getLinuxPath(gcc)});
+															   "-D", "CMAKE_CXX_COMPILER=" + file::getPath(gxx), "-D", "CMAKE_C_COMPILER="	+ file::getPath(gcc)});
 		nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
 
 		backgroundTask->addMessage("  -> building project");
@@ -583,9 +563,19 @@ namespace nero
         return result;
      }
 
-	 bool ProjectManager::isWorksapceExist(const std::string& projectName)
+	 bool ProjectManager::workspaceExist(const std::string& workspaceName)
 	 {
-		 return true;
+		 std::string workspace_id = string::formatString(workspaceName);
+
+		 for(auto workspace : getWorkspaceTable())
+		 {
+			if(workspace["workspace_id"].get<std::string>() == workspace_id)
+			{
+				return true;
+			}
+		 }
+
+		 return false;
 	 }
 
 	 void ProjectManager::setRenderTexture(const RenderTexturePtr& renderTexture)

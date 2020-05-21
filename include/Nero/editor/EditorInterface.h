@@ -115,6 +115,7 @@ namespace nero
 			//////////////main menu bar
 			MenuBarInput									m_MenuBarInput;
 			void											showEditorMenuBar();
+			void											showAboutEngineWindow();
 			//////////////Tool Bar
 			ImGuiWindow*									mToolbarWindow;
 			void											showToolbarWindow();
@@ -199,6 +200,7 @@ namespace nero
             //
             void                        showGameProjectWindow();
             void                        showGameSettingWindow();
+			void						showVisualScriptWindow();
             void                        showSceneWindow();
 			void						showBackgroundTaskWindow();
 

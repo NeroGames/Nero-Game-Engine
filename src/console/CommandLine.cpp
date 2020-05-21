@@ -5,6 +5,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/console/CommandLine.h>
+#include <windows.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -16,23 +17,31 @@ namespace nero
 
 		//editor command
 		m_CommandEditor = add_subcommand("editor", "Interact with the editor");
-			m_CommandEditor->require_subcommand(1, 1);
+		m_CommandEditor->require_subcommand(1, 1);
+		//start
 		m_CommandEditorStart	= m_CommandEditor->add_subcommand("start", "start the editor");
+		//restart
 		m_CommandEditorRestart	= m_CommandEditor->add_subcommand("restart", "restart the editor");
+		auto option1 = m_CommandEditorRestart->add_option("--pid", m_ProcessId, "Process to kill and restart");
+		option1->required();
+		//stop
 		m_CommandEditorStop		= m_CommandEditor->add_subcommand("stop", "stop the editor");
 	}
 
 	void CommandLine::handleCommand()
 	{
-		startEditor();
+		restartEditor();
 	}
 
-	void CommandLine::startEditor()
+	void CommandLine::restartEditor()
 	{
-		auto& commandEditorStart = *m_CommandEditorStart;
-		if(commandEditorStart)
+		auto& commandEditorRestart = *m_CommandEditorRestart;
+		if(commandEditorRestart)
 		{
-			std::cout << "start the engine " << std::endl;
+			std::string cmd = "taskkill /F /PID " + std::to_string(m_ProcessId);
+			system(cmd.c_str());
+			std::string enginePath = std::string(getenv("NERO_GAME_HOME")) + "\\Editor\\\"Nero Game Engine.exe\"";
+			system(enginePath.c_str());
 		}
 	}
 

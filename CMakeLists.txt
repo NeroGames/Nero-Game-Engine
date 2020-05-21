@@ -130,6 +130,7 @@ set(NERO_GAME_RENDERER_DEP nerogame-core ${NERO_GAME_CORE_DEP})
 # Build Nero Render Egnine
 add_executable(RenderEngine ${NERO_GAME_RENDERER_SOURCES})
 target_link_libraries(RenderEngine ${NERO_GAME_RENDERER_DEP})
+set_target_properties(RenderEngine PROPERTIES OUTPUT_NAME "Render Engine")
 
 # Nero Game Editor (Desktop)
 #----------------------------------------------------------------------------------#

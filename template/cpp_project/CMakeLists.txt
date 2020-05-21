@@ -92,9 +92,10 @@ set(LUA_LIBS "-llua")
 set(CPP_FILESYSTEM "stdc++fs")
 # EASY_PROFILER
 set(EASY_PROFILER "-leasy_profiler.dll")
-# POCO
+# Poco
 set(POCO_DEP "-liphlpapi -lcrypto -lssl -lexpat -lzlibstatic -lws2_32")
 set(POCO "-lPocoRedis -lPocoPDF -lPocoCppParser -lPocoZip -lPocoDataSQLite -lPocoData -lPocoNetSSL -lPocoCrypto -lPocoNet -lPocoUtil -lPocoJSON -lPocoXML -lPocoEncodings -lPocoFoundation ${POCO_DEP}")
+# Nero
 set(NERO_GAME_CORE "-lnerogame-core")
 
 # Project Library

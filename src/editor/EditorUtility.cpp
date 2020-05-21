@@ -197,4 +197,8 @@ namespace nero
 		}
 	}
 
+	bool EnvironmentSetup::restart()
+	{
+		return setupCodeEditor || setupTexturePacker;
+	}
 }

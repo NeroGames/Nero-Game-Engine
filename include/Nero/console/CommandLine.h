@@ -19,7 +19,7 @@ namespace nero
 			void			handleCommand();
 
 		private:
-			void			startEditor();
+			void			restartEditor();
 
 		private:
 			CLI::App*		m_CommandEditor;
@@ -27,6 +27,7 @@ namespace nero
 			CLI::App*		m_CommandEditorRestart;
 			CLI::App*		m_CommandEditorStop;
 			CLI::Option*	m_OptionVersion;
+			unsigned int	m_ProcessId;
 	};
 }
 

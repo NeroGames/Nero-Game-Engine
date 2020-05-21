@@ -36,8 +36,8 @@ namespace  nero
 		   void createWorkspace(const Parameter& parameter);
 		   void importWorkspace(const std::string& directory);
 
-		   //bool isProjectExist(const std::string& projectName);
-		   bool isWorksapceExist(const std::string& projectName);
+		   bool projectExist(const std::string& projectName, const std::string& workspaceName);
+		   bool workspaceExist(const std::string& workspaceName);
 
 		   void setSetting(const Setting::Ptr& setting);
 

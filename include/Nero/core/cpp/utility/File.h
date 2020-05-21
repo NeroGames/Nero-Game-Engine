@@ -17,18 +17,26 @@ namespace nero
 {
 	namespace file
 	{
-		//get file path : OS dependent
+		///Convert path to Linux style path
+		std::string			getPath(const std::string& path);
+		///Build path Linux style
+		std::string			getPath(const std::initializer_list<const char*>& list, const std::string& extension = StringPool.BLANK);
 		std::string			getPath(const std::vector<std::string>& list, const std::string& extension = StringPool.BLANK);
+		///Convert path to Windows style path
+		std::string			getWindowsPath(const std::string& path);
+		///Build path Windows style
+		std::string			getWindowsPath(const std::initializer_list<const char*>& list, const std::string& extension = StringPool.BLANK);
 		std::string			getWindowsPath(const std::vector<std::string>& list, const std::string& extension = StringPool.BLANK);
-		std::string			getWindowsPath(const std::string& path, bool escapeSpace = true);
-		std::string			getLinuxPath(const std::vector<std::string>& list, const std::string& extension = StringPool.BLANK);
-		std::string			getLinuxPath(const std::string& path);
+		///Espace space, add double quote
+		std::string			escapeSpace(const std::string& path);
+		///Espace slash
+		std::string			escapeSlash(const std::string& path);
+		///Espace backlash,
+		std::string			escapeBackslash(const std::string& path);
 		//get file content
 		std::string			loadText(const std::string& file);
 		//load Json file
 		nlohmann::json		loadJson(const std::string& path, const bool& path_has_extantion = false);
-		//load setting file
-		nlohmann::json		loadSetting(const std::string& name);
 		//Create a directory if not exist
 		void				createDirectory(const std::string& name);
 		//Check if a file exist

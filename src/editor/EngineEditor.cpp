@@ -360,14 +360,14 @@ namespace  nero
 		char* env_3		= getenv("NERO_GAME_QT");
 		char* env_4		= getenv("NERO_GAME_TP");
 
-		std::string neroGamHome		= env_1 != nullptr ? std::string(env_1)	: StringPool.BLANK;
+		std::string neroGameHome	= env_1 != nullptr ? std::string(env_1)	: StringPool.BLANK;
 		std::string visualStudio	= env_2 != nullptr ? std::string(env_2)	: StringPool.BLANK;
 		std::string qtCreator		= env_3 != nullptr ? std::string(env_3)	: StringPool.BLANK;
 		std::string texturePacker	= env_4 != nullptr ? std::string(env_4)	: StringPool.BLANK;
 
 		Setting environment;
 
-		environment.setString("nero_game_home", neroGamHome);
+		environment.setString("nero_game_home", neroGameHome);
 		environment.setString("visual_studio",	visualStudio);
 		environment.setString("qt_creator",		qtCreator);
 		environment.setString("texture_packer",	texturePacker);
@@ -375,7 +375,7 @@ namespace  nero
 		m_EditorSetting->setSetting("environment", environment);
 
 		if(env_1)
-			{nero_log("NERO_GAME_HOME = " + neroGamHome);}
+			{nero_log("NERO_GAME_HOME = " + neroGameHome);}
 		else
 			{nero_log("NERO_GAME_HOME not found");}
 
