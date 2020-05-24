@@ -21,7 +21,6 @@ namespace nero
 
 	void GameProject::loadResource(const Parameter& parameter)
 	{
-
 		nero_log("loading resource");
 		nero_log(m_EngineSetting->getSetting("resource").toString());
 		m_ResourceManager = ResourceManager::Ptr(new ResourceManager(m_EngineSetting->getSetting("resource")));
@@ -32,7 +31,13 @@ namespace nero
 		{
 			m_ResourceManager->loadDirectory("resource/starterpack");
 		}
+		else
+		{
+			m_ResourceManager->getFontHolder()->loadFile("resource/starterpack/font/Sansation.ttf");
+		}
 
+		nero_log("loading project resource");
+		nero_log(resource_path);
 		m_ResourceManager->loadDirectory(resource_path);
 		nero_log("load resource completed");
 	}
@@ -44,26 +49,13 @@ namespace nero
 		m_ProjectParameter.setString("build_directory", file::getPath({m_ProjectParameter.getString("project_directory"), "Build"}));
 		m_ProjectParameter.setString("cmake_file", file::getPath({m_ProjectParameter.getString("source_directory"), "CMakeLists"}, StringPool.EXT_TEXT));
 
-		std::string cleanProject		= "mingw32-make -C \"" + m_ProjectParameter.getString("build_directory") + "\" -k clean";
-		std::string configureProject	= "cmake -G \"MinGW Makefiles\" -S \"" + m_ProjectParameter.getString("source_directory") + "\" -B \"" + m_ProjectParameter.getString("build_directory") + "\"";
-		std::string buildProject		= "mingw32-make -C \"" + m_ProjectParameter.getString("build_directory") + "\"";
-
-		m_ProjectParameter.setString("clean_project_command", cleanProject);
-		m_ProjectParameter.setString("configure_project_command", configureProject);
-		m_ProjectParameter.setString("build_project_command", buildProject);
-
-		std::string library = formatString(m_ProjectParameter.getString("project_name"), string::Format::COMPACT_LOWER);
+		std::string library = string::formatString(m_ProjectParameter.getString("project_name"), string::Format::COMPACT_LOWER);
 
 		std::string libraryFile			= file::getPath({m_ProjectParameter.getString("build_directory"), "libnerogame-" + library}, StringPool.EXT_DLL);
 		std::string libraryFileCopy		= file::getPath({m_ProjectParameter.getString("build_directory"), "libnerogame-" + library + "-copy"}, StringPool.EXT_DLL);
-		std::string copylibraryCommand	= "copy \"" + libraryFile + "\" \"" + libraryFileCopy + "\"";
 
 		m_ProjectParameter.setString("library_file", libraryFile);
 		m_ProjectParameter.setString("library_file_copy", libraryFileCopy);
-		m_ProjectParameter.setString("copy_library_command", copylibraryCommand);
-
-		m_ProjectParameter.setString("qt_creator", "\"C:\\Qt\\Tools\\QtCreator\\bin\\qtcreator.exe\"");
-		m_ProjectParameter.setString("visual_studio", "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Preview\\Common7\\IDE\\devenv.exe\"");
 
 		//nero_log(m_ProjectParameter.toString());
 
@@ -242,9 +234,7 @@ namespace nero
 		   file::removeFile(m_ProjectParameter.getString("library_file_copy"));
         }
 
-
-		system(m_ProjectParameter.getString("copy_library_command").c_str());
-
+		file::copyFile(m_ProjectParameter.getString("library_file"), m_ProjectParameter.getString("library_file_copy"));
 
 		boost::dll::fs::path library_path(file::removeFileExtension(m_ProjectParameter.getString("library_file_copy")));
 
@@ -264,7 +254,6 @@ namespace nero
 				m_AdvancedScene->setCppSceneCreator(m_CreateCppSceneFn);
 			}
 
-
 		}
 		catch (std::exception e)
 		{
@@ -282,7 +271,6 @@ namespace nero
 			return;
 		}
 
-
 		if(file::fileExist(m_ProjectParameter.getString("library_file_copy")))
 		{
 			m_DemoScene = nullptr;
@@ -291,9 +279,7 @@ namespace nero
 		   file::removeFile(m_ProjectParameter.getString("library_file_copy"));
 		}
 
-
-		system(m_ProjectParameter.getString("copy_library_command").c_str());
-
+		file::copyFile(m_ProjectParameter.getString("library_file"), m_ProjectParameter.getString("library_file_copy"));
 
 		boost::dll::fs::path library_path(file::removeFileExtension(m_ProjectParameter.getString("library_file_copy")));
 
@@ -306,7 +292,6 @@ namespace nero
 			m_CreateCppSceneFn.clear();
 
 			m_CreateCppSceneFn = boost::dll::import_alias<CreateCppSceneFn>(library_path, "createScene", boost::dll::load_mode::append_decorations);
-
 
 			if(!m_CreateCppSceneFn.empty())
 			{
@@ -321,8 +306,6 @@ namespace nero
 
 				m_DemoScene->init();
 			}
-
-
 		}
 		catch (std::exception e)
 		{
@@ -346,104 +329,80 @@ namespace nero
 
 	void GameProject::openQtCreator(const std::string& file)
 	{
-		//get the list of qtcreator process
-		std::string listProcessCmd		= "tasklist /fo csv | findstr /i \"qtcreator\"";
-		std::string processCSV			= exec(listProcessCmd.c_str());
-
-		//if the Editor has been opened and are still available (has not been closed)
-		if(m_EditorProcessId != StringPool.BLANK && processCSV.find(m_EditorProcessId) != std::string::npos)
+		if(cmd::processRunning(m_EditorProcessId))
 		{
-			//open it
-			std::string cmd = "START \"\" " + m_ProjectParameter.getString("qt_creator") + " -pid " + m_EditorProcessId;
+			std::string cmd = "START \"\" " + file::escapeSpace(file::getWindowsPath(m_EngineSetting->getSetting("environment").getString("qt_creator"))) + " -pid " + m_EditorProcessId;
 			system(cmd.c_str());
 		}
 		else
 		{
-			//open a new process
-			std::string open_editor = "START \"\" " + m_ProjectParameter.getString("qt_creator") + " \"" + m_ProjectParameter.getString("cmake_file") +"\"";
-			system(open_editor.c_str());
+			std::string cmd =  "START \"\" " + file::escapeSpace(file::getWindowsPath(m_EngineSetting->getSetting("environment").getString("qt_creator")));
+			cmd += " " + file::escapeSpace(m_ProjectParameter.getString("cmake_file"));
 
-			//save the process id
-				 processCSV  = exec(listProcessCmd.c_str());
-			auto processTab  = string::splitString(processCSV, '\r\n');
+			system(cmd.c_str());
 
-			m_EditorProcessId = string::splitString(processTab.back(), ',').at(1);
+			m_EditorProcessId = cmd::findProcessId("qtcreator");
 		}
 	}
 
 	void GameProject::openVisualStudio(const std::string& file)
 	{
-		std::string listProcessCmd		= "tasklist /fo csv | findstr /i \"devenv\"";
-		std::string processCSV			= exec(listProcessCmd.c_str());
-
 		if(file == StringPool.BLANK)
 		{
-			//if the Editor has been opened and are still available (has not been closed)
-			if(m_EditorProcessId != StringPool.BLANK && processCSV.find(m_EditorProcessId) != std::string::npos)
+			if(cmd::processRunning(m_EditorProcessId))
 			{
-				//open it
-				std::string cmd = m_ProjectParameter.getString("visual_studio") + " /Edit";
-				system(cmd.c_str());
+				cmd::showApplication("devenv", m_EditorProcessId);
 			}
 			else
 			{
-				std::string cmd = "START \"\" " + m_ProjectParameter.getString("visual_studio") + " \"" + m_ProjectParameter.getString("source_directory") +"\"" + " /Edit";
+				std::string cmd =  "START \"\" " + file::escapeSpace(file::getWindowsPath(m_EngineSetting->getSetting("environment").getString("visual_studio")));
+				cmd += " \"" + file::getWindowsPath(m_ProjectParameter.getString("source_directory")) + "\"" + " /Edit";
+
+				nero_log(cmd);
+
 				system(cmd.c_str());
 
-				//save the process id
-					 processCSV  = exec(listProcessCmd.c_str());
-				auto processTab  = string::splitString(processCSV, '\r\n');
-
-				m_EditorProcessId = string::splitString(processTab.back(), ',').at(1);
+				m_EditorProcessId = cmd::findProcessId("devenv");
 			}
 		}
 		else
 		{
-			std::string cmd = "START \"\" " + m_ProjectParameter.getString("visual_studio") + " \"" + file + "\" " + " /Edit";
+			std::string cmd = "START \"\" " + file::escapeSpace(file::getWindowsPath(m_EngineSetting->getSetting("environment").getString("visual_studio"))) + " \"" + file + "\" " + " /Edit";
 			system(cmd.c_str());
 		}
 	}
 
-    std::string GameProject::exec(const char* cmd)
-    {
-        std::stringstream string_buffer;
-        std::streambuf * cout_buffer = std::cout.rdbuf(string_buffer.rdbuf());
-
-        std::array<char, 128> buffer;
-        std::string result;
-        std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
-
-        if (!pipe)
-        {
-            throw std::runtime_error("popen() failed!");
-        }
-
-        while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
-        {
-            result += buffer.data();
-        }
-
-        std::cout.rdbuf(cout_buffer);
-
-        return result;
-    }
-
 	void GameProject::compileProject(const BackgroundTask::Ptr backgroundTask)
-    {
+	{
+		std::string sourcePath  = m_ProjectParameter.getString("source_directory");
+		std::string buildPath   = m_ProjectParameter.getString("build_directory");
+
+		std::string nero_game_home	= m_EngineSetting->getSetting("environment").getString("nero_game_home");
+
+		std::string mingw32			= nero_game_home + "/Compiler/bin/mingw32-make.exe";
+		std::string gxx				= nero_game_home + "/Compiler/bin/g++.exe";
+		std::string gcc				= nero_game_home + "/Compiler/bin/gcc.exe";
+		std::string cmake			= nero_game_home + "/Tools/Cmake/bin/cmake.exe";
+
 		backgroundTask->setStatus(1);
 		backgroundTask->addMessage("Cleaning Project ...");
-		backgroundTask->setErrorCode(
-					system(m_ProjectParameter.getString("clean_project_command").c_str()));
+		cmd::Process cleanProcess	=  cmd::runCommand(mingw32, {"-C", buildPath, "-k", "clean"});
+		backgroundTask->setErrorCode(cleanProcess.getExistCode());
+		nero_log("clean project exit code = " + toString(cleanProcess.getExistCode()));
 
 		backgroundTask->setStatus(2);
 		backgroundTask->addMessage("Configuring Project ...");
-		backgroundTask->setErrorCode(
-					system(m_ProjectParameter.getString("configure_project_command").c_str()));
+		cmd::Process configProcess	=  cmd::runCommand(cmake, {"-G", "MinGW Makefiles", "-S", sourcePath, "-B", buildPath,
+															   "-D", "CMAKE_CXX_COMPILER=" + file::getPath(gxx), "-D", "CMAKE_C_COMPILER="	+ file::getPath(gcc),
+																"-D", "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32)});
+		backgroundTask->setErrorCode(configProcess.getExistCode());
+		nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
 
 		backgroundTask->setStatus(3);
 		backgroundTask->addMessage("Building Project ...");
-		backgroundTask->setErrorCode(
-					system(m_ProjectParameter.getString("build_project_command").c_str()));
+		cmd::Process buildProcess	=  cmd::runCommand(mingw32, {"-C", buildPath});
+		backgroundTask->setErrorCode(buildProcess.getExistCode());
+		nero_log("build project exit code = " + toString(buildProcess.getExistCode()));
 
 		backgroundTask->setStatus(4);
 		backgroundTask->addMessage("Compilation Completed !!");
@@ -451,7 +410,7 @@ namespace nero
 		std::this_thread::sleep_for(std::chrono::seconds(2));
 
 		backgroundTask->setCompleted(true);
-    }
+	}
 
 	BackgroundTask& GameProject::createBackgroundTask(const std::string& name, const std::string& category)
 	{
@@ -498,12 +457,7 @@ namespace nero
 
 	void GameProject::close()
 	{
-		//get the list of qtcreator process
-		std::string listProcessCmd		= "tasklist /fo csv | findstr /i \"qtcreator\"";
-		std::string processCSV			= exec(listProcessCmd.c_str());
-
-		//if the Editor has been opened and are still available (has not been closed)
-		if(m_EditorProcessId != StringPool.BLANK && processCSV.find(m_EditorProcessId) != std::string::npos)
+		if(cmd::processRunning(m_EditorProcessId))
 		{
 			std::string kill_command = "taskkill /F /PID " + m_EditorProcessId;
 			system(kill_command.c_str());

@@ -157,7 +157,7 @@ namespace nero
 			return;
 		}
 
-		nero_log("loading all texture in directory : " + m_SelectedDirectory);
+		nero_log("resource path : " + m_SelectedDirectory);
 
 		std::experimental::filesystem::path directoryPath(m_SelectedDirectory);
 

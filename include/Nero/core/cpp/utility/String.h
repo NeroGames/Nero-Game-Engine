@@ -50,6 +50,8 @@ namespace nero
 		std::vector<std::string>&		splitString(const std::string &s, char delim,std::vector<std::string> &elems);
 		std::vector<std::string>		splitString(const std::string &s, char delim);
 		bool							matchPattern(const std::string& input, const std::string& pattern);
+		std::string						toUpper(const std::string& input);
+		std::string						toLower(const std::string& input);
 
 	}///@}
 
@@ -76,11 +78,11 @@ namespace nero
 		const char		  SPACE_CHAR        = ' ';
 
 		//regex
-		const std::string REGEX_NAME_01			= "([a-zA-Z0-9]+)([\\s_-][a-zA-Z0-9]+)+";
-		const std::string REGEX_NAME_02			= "(^[a-zA-Z])([a-zA-Z0-9]+)([\\s_-][a-zA-Z0-9]+)+";
+		const std::string REGEX_NAME_01			= "([a-zA-Z0-9]+)([\\s_-][a-zA-Z0-9]+)*";
+		const std::string REGEX_NAME_02			= "(^[a-zA-Z])([a-zA-Z0-9]+)([\\s_-][a-zA-Z0-9]+)*";
 		const std::string REGEX_NAMESPACE		= "^[a-zA-Z]{2,10}";
 
-		const std::string REGEX_PROJECT_NAME	= "(^[a-zA-Z])([a-zA-Z0-9]+)(\\s[a-zA-Z0-9]+)+";
+		const std::string REGEX_PROJECT_NAME	= "(^[a-zA-Z])([a-zA-Z0-9]+)(\\s[a-zA-Z0-9]+)*";
 		const std::string REGEX_CONSTANTPOOL	= "struct\\sGeneratedConstant(([\n\t]|.)*)\\};";
 		const std::string replace_constantpool  = "struct GeneratedConstant \n\t{\n\t\t const std::string PROJECT_NAME \t= \"My_Project\";\n\t\t const std::string PROJECT_VERSION \t= \"release 01\";\n\t};";
 

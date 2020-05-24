@@ -8,6 +8,11 @@
 
 namespace ::Namespace::
 {
+    nero::Scene::Ptr ::Scene_Class::::createScene(nero::Scene::Context context) noexcept
+    {
+          return ::Scene_Class::::Ptr(new ::Scene_Class::(context));
+    }
+
     ::Scene_Class::::::Scene_Class::(nero::Scene::Context context) : nero::Scene(context)
     {
 
@@ -18,9 +23,9 @@ namespace ::Namespace::
 
     }
 
-    nero::Scene::Ptr ::Scene_Class::::createScene(nero::Scene::Context context) noexcept
+    void ::Scene_Class::::init()
     {
-          return ::Scene_Class::::Ptr(new ::Scene_Class::(context));
+
     }
 
     void ::Scene_Class::::handleEvent(const sf::Event& event)

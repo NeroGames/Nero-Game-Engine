@@ -6,6 +6,7 @@
 #define GAMEPROJECT_H
 ///////////////////////////HEADERS///////////////////////////
 //STD
+#include <Nero/core/cpp/utility/CommandLine.h>
 #include <memory>
 #include <json/json.hpp>
 #include <Nero/editor/AdvancedScene.h>
@@ -44,7 +45,6 @@ namespace nero
 			//void								compileProject();
 			void								compileProject(const BackgroundTask::Ptr backgroundTask);
 
-			std::string							exec(const char* cmd);
 			AdvancedScene::Ptr					getAdvancedScene();
 			void								setRenderTexture(const RenderTexturePtr& renderTexture);
 			void								setCamera(const Camera::Ptr& camera);

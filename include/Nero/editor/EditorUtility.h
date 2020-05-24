@@ -61,6 +61,10 @@ namespace nero
 		//import
 		char						locationImport[256];
 
+		std::string errorMessage	= StringPool.BLANK;
+		std::string redirectLink	= StringPool.BLANK;
+		bool error					= true;
+
 		void clear()
 		{
 			string::fillCharArray(location,			sizeof(location),			StringPool.BLANK);
@@ -141,6 +145,7 @@ namespace nero
 		//friend class			EditorInterface;
 
 		static std::string		NERO_GAME_HOME;
+		static std::string		TEXTURE_PACKER;
 		static std::string		qtCreatorProcessId;
 		static std::string		visaulStudioProcessId;
 		static std::string		profilerProcessId;
@@ -149,8 +154,6 @@ namespace nero
 		static void				launchTexturePacker();
 
 		static void				launchProfiler();
-		static void				showApplication(const std::string& name, const std::string& proccessId);
-
 	};
 
 	struct EnvironmentSetup

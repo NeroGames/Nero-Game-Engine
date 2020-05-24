@@ -174,7 +174,7 @@ namespace nero
 
 		//compplet
 		backgroundTask->setStatus(4);
-		backgroundTask->addMessage("project creation completed ...");
+		backgroundTask->addMessage("project creation completed");
 		backgroundTask->setCompleted(true);
 	}
 
@@ -353,42 +353,27 @@ namespace nero
 		std::string sourcePath  = file::getPath({projectDirectory, "Source", parameter.getString("project_name")});
 		std::string buildPath   = file::getPath({projectDirectory, "Build"});
 
-		std::string mingw32		= m_EditorSetting->getSetting("environment").getString("nero_game_home") + "/Compiler/bin/mingw32-make.exe";
-		std::string cmake		= m_EditorSetting->getSetting("environment").getString("nero_game_home") + "/Tools/Cmake/bin/cmake.exe";
-		std::string gxx			= m_EditorSetting->getSetting("environment").getString("nero_game_home") + "/Compiler/bin/g++.exe";
-		std::string gcc			= m_EditorSetting->getSetting("environment").getString("nero_game_home") + "/Compiler/bin/gcc.exe";
+		std::string nero_game_home	= m_EditorSetting->getSetting("environment").getString("nero_game_home");
 
-		backgroundTask->addMessage("  -> cleaning project");
+		std::string mingw32			= nero_game_home + "/Compiler/bin/mingw32-make.exe";
+		std::string gxx				= nero_game_home + "/Compiler/bin/g++.exe";
+		std::string gcc				= nero_game_home + "/Compiler/bin/gcc.exe";
+		std::string cmake			= nero_game_home + "/Tools/Cmake/bin/cmake.exe";
+
+		backgroundTask->addMessage("  -> (1/3) cleaning project");
 		cmd::Process cleanProcess	=  cmd::runCommand(mingw32, {"-C", buildPath, "-k", "clean"});
 		nero_log("clean project exit code = " + toString(cleanProcess.getExistCode()));
 
-		backgroundTask->addMessage("  -> configuring project");
+		backgroundTask->addMessage("  -> (2/3) configuring project");
 		cmd::Process configProcess	=  cmd::runCommand(cmake, {"-G", "MinGW Makefiles", "-S", sourcePath, "-B", buildPath,
-															   "-D", "CMAKE_CXX_COMPILER=" + file::getPath(gxx), "-D", "CMAKE_C_COMPILER="	+ file::getPath(gcc)});
+															   "-D", "CMAKE_CXX_COMPILER=" + file::getPath(gxx), "-D", "CMAKE_C_COMPILER="	+ file::getPath(gcc),
+																"-D", "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32)});
 		nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
 
-		backgroundTask->addMessage("  -> building project");
+		backgroundTask->addMessage("  -> (3/3) building project");
 		cmd::Process buildProcess	=  cmd::runCommand(mingw32, {"-C", buildPath});
 		nero_log("build project exit code = " + toString(buildProcess.getExistCode()));
 	}
-
-	void ProjectManager::compileProject(const std::string& projectDirectory)
-    {
-		//
-		Parameter parameter;
-		parameter.loadJson(file::loadJson(file::getPath({projectDirectory, ".project"}), true));
-        //remote
-		std::string sourcePath  = file::getPath({projectDirectory, "Source", parameter.getString("project_name")});
-		std::string buildPath   = file::getPath({projectDirectory, "Build"});
-
-        std::string clean       = "mingw32-make -C \"" + buildPath + "\" -k clean";
-		std::string run_cmake   = "cmake -G \"MinGW Makefiles\" -S \"" + sourcePath + "\" -B \"" + buildPath + "\"";
-        std::string build       = "mingw32-make -C \"" + buildPath + "\"";
-
-        system(clean.c_str());
-        system(run_cmake.c_str());
-        system(build.c_str());
-    }
 
 	void ProjectManager::editProject()
     {
@@ -475,9 +460,7 @@ namespace nero
 
      std::string ProjectManager::getEngineDirectory() const
      {
-        //return getCurrentPath();
-
-         return "C:/Program Files (x86)/Nero Game Engine";
+		return file::getCurrentPath();
      }
 
 	 GameProject::Ptr ProjectManager::openProject(const std::string& projectDirectory)
@@ -501,12 +484,12 @@ namespace nero
 		nero_log("loading project");
 		//m_GameProject->loadProject();
 		nero_log("loading project library");
+		//m_GameProject->loadLibrary();
 		m_GameProject->loadLibraryDemo();
 		nero_log("openning editor");
 		m_GameProject->openEditor();
 
 		updateRecentProject(projectDirectory);
-
 
         return m_GameProject;
      }

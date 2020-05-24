@@ -15,24 +15,23 @@ namespace ::Namespace::
 {
     class ::Scene_Class:: : public nero::Scene
     {
-        public: //Utility
-            typedef std::shared_ptr<::Scene_Class::> Ptr;
+		public: //Utility
+			typedef std::shared_ptr<::Scene_Class::> Ptr;
 
         public: //Scene Factory
             static nero::Scene::Ptr createScene(nero::Scene::Context context) noexcept;
 
         public: //Scene core
-                                        ::Scene_Class::(nero::Scene::Context context);
-           virtual                     ~::Scene_Class::() override;
+										::Scene_Class::(nero::Scene::Context context);
+			virtual                     ~::Scene_Class::() override;
 
-           virtual void                 handleEvent(const sf::Event& event) override;
-           virtual void                 update(const sf::Time& timeStep) override;
-           virtual void                 render() override;
+			virtual void				init();
+			virtual void                handleEvent(const sf::Event& event) override;
+			virtual void                update(const sf::Time& timeStep) override;
+			virtual void                render() override;
     };
 
-
-
-    //Class export
+	//Class export (DOT NOT MODIFY)
     BOOST_DLL_ALIAS(::Namespace::::::Scene_Class::::createScene, createScene)
 }
 

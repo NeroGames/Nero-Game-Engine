@@ -137,5 +137,15 @@ namespace nero
 		{
 			return std::regex_match(input, std::regex(pattern));
 		}
+
+		std::string toUpper(const std::string& input)
+		{
+			return boost::to_upper_copy<std::string>(input);
+		}
+
+		std::string	 toLower(const std::string& input)
+		{
+			return boost::to_lower_copy<std::string>(input);
+		}
 	}
 }

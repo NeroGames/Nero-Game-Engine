@@ -267,29 +267,29 @@ namespace nero
 		}
 
 		std::string removeFileExtension(const std::string& filename)
-	   {
+		{
 		   size_t lastdot = filename.find_last_of(".");
 
 		   if (lastdot == std::string::npos)
 			   return filename;
 
 		   return filename.substr(0, lastdot);
-	   }
+		}
 
 		bool checkExtention(const std::string& extention, const std::vector<std::string>& extentionTable)
 		{
-		   bool result = false;
+			bool result = false;
 
-		   for (const std::string& ext : extentionTable)
-		   {
-			   if(extention == "." + ext)
-			   {
-				   result = true;
-				   break;
-			   }
-		   }
+			for (const std::string& ext : extentionTable)
+			{
+				if(extention == "." + ext || extention == "." + string::toUpper(ext))
+				{
+					result = true;
+					break;
+				}
+			}
 
-		   return result;
+			return result;
 		}
 
 		std::string replaceExtension(const std::string& filename, const std::string& extension)

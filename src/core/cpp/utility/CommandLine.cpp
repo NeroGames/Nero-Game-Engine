@@ -96,7 +96,7 @@ namespace nero
 		{
 			#ifdef NERO_OS_WINDOW
 
-			std::string command =  LAUNCH_APPLICATION_WINDOWS + file::getWindowsPath(path);
+			std::string command =  LAUNCH_APPLICATION_WINDOWS + file::escapeSpace(file::getWindowsPath(path));
 			system(command.c_str());
 
 			return findProcessId(processName == StringPool.BLANK ? file::getFileName(path) : processName);
@@ -186,6 +186,23 @@ namespace nero
 				//TODO
 
 			#endif
+		}
+
+		void showApplication(const std::string& name, const std::string& proccessId)
+		{
+			std::string NERO_GAME_HOME = getenv("NERO_GAME_HOME") ? std::string(getenv("NERO_GAME_HOME")) : StringPool.BLANK;
+
+			std::string windowmode	= file::escapeSpace(file::getWindowsPath(NERO_GAME_HOME + "/Tools/Script/windowmode.bat"));
+			std::string sendkeys	= file::escapeSpace(file::getWindowsPath(NERO_GAME_HOME + "/Tools/Script/sendkeys.bat"));
+
+			std::string cmd1 = windowmode + " -pid " + proccessId + " -mode restore";
+			std::string cmd2 = sendkeys + " " + name + "  \"\"";
+
+			//cmd::runCommand(windowmode, {"-pid", proccessId, "-mode", "restore"});
+			//cmd::runCommand(sendkeys, {" ", name, "\"\""});
+
+			system(cmd1.c_str());
+			system(cmd2.c_str());
 		}
 
 	}

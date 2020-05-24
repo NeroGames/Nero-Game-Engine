@@ -52,6 +52,8 @@ namespace nero
 		std::string						findProcessId(const std::string& application);
 		bool							processRunning(const std::string& processId);
 		void							setEnvironmnentVariable(const std::string& name, const std::string& value);
+		void							showApplication(const std::string& name, const std::string& proccessId);
+
 	}
 }
 #endif // COMMANDLINE_H

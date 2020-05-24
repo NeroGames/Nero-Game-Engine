@@ -8,7 +8,9 @@
 	Team Lead 	 		: ::ProjectLead::
 
 	Project Name 		: ::ProjectName::
-	Project Description	: ::ProjectDescription::
+	Project Description	:
+
+	::ProjectDescription::
 
 	Team Members 		
 		- ::ProjectLead::

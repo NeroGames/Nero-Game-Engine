@@ -328,7 +328,7 @@ namespace  nero
 		showVisualScriptWindow();
 			//imgui demo
 		showResourceWindow();
-		ImGui::ShowDemoWindow();
+		//ImGui::ShowDemoWindow();
 
 		//left dockspace
 			//upper left
@@ -876,7 +876,7 @@ namespace  nero
 				m_MenuBarInput.openProject = true;
 			}
 
-			if(ImGui::MenuItem("Save Project", nullptr, false))
+			if(ImGui::MenuItem("Save Project", nullptr, false, m_GameProject != nullptr))
 			{
 				//saveProject();
 			}
@@ -1052,7 +1052,7 @@ namespace  nero
 
 		//Window flags
 		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
-										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar |ImGuiWindowFlags_NoMove;
+										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
 		//Winsow size
 		ImVec2 winsow_size              = EditorConstant.WINDOW_STARTER_WIZARD_SIZE;
 
@@ -1061,14 +1061,9 @@ namespace  nero
 		//Begin window
 		if(ImGui::BeginPopupModal(EditorConstant.WINDOW_STARTER_WIZARD.c_str(), nullptr, window_flags))
 		{
-
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(1.f, 1.f, 1.f, 1.f));
-			ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 8.f);
 			ImGui::BeginChild("##banner", ImVec2(winsow_size.x * 0.2f, 0.f));
-				//empty
+				ImGui::Image(m_EditorTextureHolder->getTexture("editor_configuration"));
 			ImGui::EndChild();
-			ImGui::PopStyleVar();
-			ImGui::PopStyleColor();
 
 			ImGui::SameLine();
 
@@ -2120,13 +2115,20 @@ namespace  nero
 		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
 										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
 		//Winsow size
-		ImVec2 winsow_size              = ImVec2(400.f, 300.f);
+		ImVec2 winsow_size              = ImVec2(400.f, 250.f);
 
 		//Project manager window
 		ImGui::SetNextWindowSize(winsow_size);
 		//Begin window
 		if(ImGui::BeginPopupModal(EditorConstant.WINDOW_ABOUT_ENGINE.c_str(), nullptr, window_flags))
 		{
+			std::string aboutEngine = "Nero Game Engine d2.0.1 (Demo version 2.0.1)\n\n"
+									  "Licence : BSD 4-Clause \"Original\" or \"Old\" License\n\n"
+									  "Built on May 24 2020\n\n"
+									  "Copyright 2016-2020 Sanou A. K. Landry. All rights reserved.\n\n"
+									  "The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.";
+
+			ImGui::TextWrapped("%s", aboutEngine.c_str());
 
 			ImGui::SetCursorPosY(winsow_size.y - 38.f);
 			ImGui::Separator();
@@ -2497,13 +2499,17 @@ namespace  nero
 				ImGui::OpenPopup(EditorConstant.MODAL_WAITING_PROJECT_CREATION.c_str());
 			}
 
+			//Error modal
+			ImGuiWindowFlags modal_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
+											  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
 			ImGui::SetNextWindowSize(ImVec2(300.f, 130.f));
-			if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_CREATING_PROJECT.c_str()))
+			if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_CREATING_PROJECT.c_str(), nullptr, modal_flags))
 			{
 				ImGui::TextWrapped("%s", m_ProjectInput.errorMessage.c_str());
 
 				if(m_ProjectInput.redirectLink != StringPool.BLANK)
 				{
+					ImGui::SetCursorPosY(130.f - 60.f);
 					ImGui::SetCursorPosX((300.f - 150.f)/2.f);
 					if(ImGui::Button("Learn more here", ImVec2(150.f, 0.f)))
 					{
@@ -2522,8 +2528,7 @@ namespace  nero
 				ImGui::EndPopup();
 			}
 
-			ImGui::SetNextWindowSize(ImVec2(300.f, 170.f));
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(25.f, 10.f));
+			ImGui::SetNextWindowSize(ImVec2(400.f, 200.f));
 			if(ImGui::BeginPopupModal(EditorConstant.MODAL_WAITING_PROJECT_CREATION.c_str(), nullptr, window_flags))
 			{
 				std::string taskName = EditorConstant.TASK_CREATE_PROJECT + toString(m_CountCreateProject-1);
@@ -2540,6 +2545,8 @@ namespace  nero
 
 					if(createProjectTask->getStatus() == 4)
 					{
+						ImGui::SetCursorPosY(200.f - 40.f);
+						ImGui::SetCursorPosX(50.f);
 						if (ImGui::Button("Open project", ImVec2(100, 0)))
 						{
 							ImGui::CloseCurrentPopup();
@@ -2548,8 +2555,8 @@ namespace  nero
 							openProject(m_ProjectInput.lastCreatedProject);
 						}
 
-						ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 85.f);
-
+						ImGui::SetCursorPosY(200.f - 40.f);
+						ImGui::SetCursorPosX(250.f);
 						if (ImGui::Button("Close", ImVec2(100, 0)))
 						{
 							ImGui::CloseCurrentPopup();
@@ -2559,7 +2566,6 @@ namespace  nero
 
 				ImGui::EndPopup();
 			 }
-			ImGui::PopStyleVar();
 
 		ImGui::EndChild();
     }
@@ -2593,7 +2599,7 @@ namespace  nero
                         {
                             std::string project_lead        = ": " + project["project_lead"].get<std::string>();
 							std::string project_company     = ": " + project["company_name"].get<std::string>();
-							std::string project_description = ": " + project["description"].get<std::string>();
+							std::string project_description = project["description"].get<std::string>();
 							std::string project_type		= ": " + project["project_type"].get<std::string>();
 							std::string code_editor			= ": " + project["code_editor"].get<std::string>();
 							std::string project_namespace	= ": " + project["project_namespace"].get<std::string>();
@@ -2626,14 +2632,16 @@ namespace  nero
 
                             ImGui::SetCursorPosX(40.f);
                             ImGui::Text("Project Description");
-                            ImGui::SameLine(wording_width);
-                            ImGui::Text(project_description.c_str());
+							ImGui::SetCursorPosX(40.f);
+							ImGui::BeginChild(project_name.c_str(), ImVec2(0.f, 100.f), true, ImGuiWindowFlags_ScrollToolbar);
+								ImGui::TextWrapped("%s", project_description.c_str());
+							ImGui::EndChild();
                             ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 
-                            ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 100.f);
+							ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 130.f);
 							pushToolbarStyle();
-							if (ImGui::Button("Open Project", ImVec2(100, 25.f)))
+							if (ImGui::Button("Open Project", ImVec2(125, 30.f)))
                             {
 								openProject(file::getPath({m_ProjectManager->findWorkspace(workspace)["workspace_directory"].get<std::string>(), "Project", project_name}));
 
@@ -2786,83 +2794,87 @@ namespace  nero
 		ImGui::SameLine(wording_width + input_width - 130.f);
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10.f);
 
-		bool onCreate               = ImGui::Button("Create Workspace", ImVec2(130.f, 0));
-		std::string error_message   = StringPool.BLANK;
-		std::string redirect_link	= StringPool.BLANK;
-		bool error					= true;
+		bool onCreate = ImGui::Button("Create Workspace", ImVec2(130.f, 0));
 
-		//workpspace location blank
-		if(std::string(m_WorkspaceInput.location) == StringPool.BLANK)
+		if(onCreate)
 		{
-			error_message	= "Please select a Location Directory";
-			redirect_link	= StringPool.BLANK;
-		}
-		//workpspace location not valid
-		else if(!file::directoryExist(std::string(m_WorkspaceInput.location)))
-		{
-			error_message	= "The selected location is not a valid directory";
-			redirect_link	= StringPool.BLANK;
-		}
-		//workpspace name blank
-		else if(std::string(m_WorkspaceInput.name) == StringPool.BLANK)
-		{
-			error_message	= "Please enter a Workspace Name";
-			redirect_link	= StringPool.BLANK;
-		}
-		//workpspace name not matching regex
-		else if(!string::matchPattern(std::string(m_WorkspaceInput.name), StringPool.REGEX_NAME_01))
-		{
-			error_message = "Invalid Workspace Name";
-			redirect_link = "https://nero-game.com/learn/engine-v2/create-workspace#workspace_name";
-		}
-		//workpspace already exist
-		else if(m_ProjectManager->workspaceExist(m_WorkspaceInput.name))
-		{
-			error_message	= "A Workspace with the same Id already exist, Please choose another Name";
-		}
-		//workpspace company name blank
-		else if(std::string(m_WorkspaceInput.company) == StringPool.BLANK)
-		{
-			error_message	= "Please enter a Company Name";
-			redirect_link	= StringPool.BLANK;
+			m_WorkspaceInput.errorMessage = StringPool.BLANK;
+			m_WorkspaceInput.redirectLink = StringPool.BLANK;
+			m_WorkspaceInput.error = true;
 
-		}
-		//workpspace company not matching regex
-		else if(!string::matchPattern(std::string(m_WorkspaceInput.company), StringPool.REGEX_NAME_01))
-		{
-			error_message = "Invalid Company Name";
-			redirect_link = "https://nero-game.com/learn/engine-v2/create-workspace#company_name";
-		}
-		//workpspace project lead name blank
-		else if(std::string(m_WorkspaceInput.projectLead) == StringPool.BLANK)
-		{
-			error_message	= "Please enter a Project Lead";
-			redirect_link	= StringPool.BLANK;
-		}
-		//workpspace project lead not matching regex
-		else if(!string::matchPattern(std::string(m_WorkspaceInput.projectLead), StringPool.REGEX_NAME_01))
-		{
-			error_message	= "Invalid Project Lead";
-			redirect_link	= "https://nero-game.com/learn/engine-v2/create-workspace#project_lead";
-		}
-		//workpspace namespace blank
-		else if(std::string(m_WorkspaceInput.projectNamespace) == StringPool.BLANK)
-		{
-			error_message	= "Please enter a Project Namesapce";
-			redirect_link	= StringPool.BLANK;
-		}
-		//workpspace namespace not matching regex
-		else if(!string::matchPattern(std::string(m_WorkspaceInput.projectNamespace), StringPool.REGEX_NAMESPACE))
-		{
-			error_message = "Invalid Project Namespace";
-			redirect_link = "https://nero-game.com/learn/engine-v2/create-workspace#namespace";
-		}
-		else
-		{
-			error = false;
+			//workpspace location blank
+			if(std::string(m_WorkspaceInput.location) == StringPool.BLANK)
+			{
+				m_WorkspaceInput.errorMessage   = "Please select a Location Directory";
+				m_WorkspaceInput.redirectLink   = StringPool.BLANK;
+			}
+			//workpspace location not valid
+			else if(!file::directoryExist(std::string(m_WorkspaceInput.location)))
+			{
+				m_WorkspaceInput.errorMessage   = "The selected location is not a valid directory";
+				m_WorkspaceInput.redirectLink   = StringPool.BLANK;
+			}
+			//workpspace name blank
+			else if(std::string(m_WorkspaceInput.name) == StringPool.BLANK)
+			{
+				m_WorkspaceInput.errorMessage   = "Please enter a Workspace Name";
+				m_WorkspaceInput.redirectLink   = StringPool.BLANK;
+			}
+			//workpspace name not matching regex
+			else if(!string::matchPattern(std::string(m_WorkspaceInput.name), StringPool.REGEX_NAME_01))
+			{
+				m_WorkspaceInput.errorMessage = "Invalid Workspace Name";
+				m_WorkspaceInput.redirectLink = "https://nero-game.com/learn/engine-v2/create-workspace#workspace_name";
+			}
+			//workpspace already exist
+			else if(m_ProjectManager->workspaceExist(m_WorkspaceInput.name))
+			{
+				m_WorkspaceInput.errorMessage   = "A Workspace with the same Id already exist, Please choose another Name";
+				m_WorkspaceInput.redirectLink = "https://nero-game.com/learn/engine-v2/create-workspace#workspace_name";
+			}
+			//workpspace company name blank
+			else if(std::string(m_WorkspaceInput.company) == StringPool.BLANK)
+			{
+				m_WorkspaceInput.errorMessage   = "Please enter a Company Name";
+				m_WorkspaceInput.redirectLink   = StringPool.BLANK;
+			}
+			//workpspace company not matching regex
+			else if(!string::matchPattern(std::string(m_WorkspaceInput.company), StringPool.REGEX_NAME_01))
+			{
+				m_WorkspaceInput.errorMessage = "Invalid Company Name";
+				m_WorkspaceInput.redirectLink = "https://nero-game.com/learn/engine-v2/create-workspace#company_name";
+			}
+			//workpspace project lead name blank
+			else if(std::string(m_WorkspaceInput.projectLead) == StringPool.BLANK)
+			{
+				m_WorkspaceInput.errorMessage   = "Please enter a Project Lead";
+				m_WorkspaceInput.redirectLink   = StringPool.BLANK;
+			}
+			//workpspace project lead not matching regex
+			else if(!string::matchPattern(std::string(m_WorkspaceInput.projectLead), StringPool.REGEX_NAME_01))
+			{
+				m_WorkspaceInput.errorMessage   = "Invalid Project Lead";
+				m_WorkspaceInput.redirectLink   = "https://nero-game.com/learn/engine-v2/create-workspace#project_lead";
+			}
+			//workpspace namespace blank
+			else if(std::string(m_WorkspaceInput.projectNamespace) == StringPool.BLANK)
+			{
+				m_WorkspaceInput.errorMessage   = "Please enter a Project Namesapce";
+				m_WorkspaceInput.redirectLink   = StringPool.BLANK;
+			}
+			//workpspace namespace not matching regex
+			else if(!string::matchPattern(std::string(m_WorkspaceInput.projectNamespace), StringPool.REGEX_NAMESPACE))
+			{
+				m_WorkspaceInput.errorMessage = "Invalid Project Namespace";
+				m_WorkspaceInput.redirectLink = "https://nero-game.com/learn/engine-v2/create-workspace#namespace";
+			}
+			else
+			{
+				m_WorkspaceInput.error = false;
+			}
 		}
 
-		if (onCreate && error)
+		if (onCreate && m_WorkspaceInput.error)
 		{
 			ImGui::OpenPopup(EditorConstant.MODAL_ERROR_CREATING_WORKSPACE.c_str());
 		}
@@ -2881,20 +2893,23 @@ namespace  nero
 			createWorkspace(parameter);
 		}
 
+		ImGuiWindowFlags modal_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
+										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
 		ImGui::SetNextWindowSize(ImVec2(300.f, 130.f));
-		if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_CREATING_WORKSPACE.c_str()))
+		if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_CREATING_WORKSPACE.c_str(), nullptr, modal_flags))
 		{
-			ImGui::TextWrapped("%s", error_message.c_str());
+			ImGui::TextWrapped("%s", m_WorkspaceInput.errorMessage.c_str());
 
-			if(redirect_link != StringPool.BLANK)
+			if(m_WorkspaceInput.redirectLink != StringPool.BLANK)
 			{
+				ImGui::Dummy(ImVec2(0.f, 5.f));
+
 				ImGui::SetCursorPosX((300.f - 150.f)/2.f);
 				if(ImGui::Button("Learn more here", ImVec2(150.f, 0.f)))
 				{
-					cmd::launchBrowser(redirect_link);
+					cmd::launchBrowser(m_WorkspaceInput.redirectLink);
 				}
 			}
-
 
 			ImGui::Dummy(ImVec2(0.0f, 35.0f));
 
@@ -2930,40 +2945,40 @@ namespace  nero
 
 		ImGui::SameLine(wording_width + input_width - 60.f);
 		bool onImport				= ImGui::Button("Import##import_workspace", ImVec2(60.f, 0));
-		std::string error_message	= StringPool.BLANK;
-		bool error					= false;
 
 		if(onImport)
 		{
-			error = true;
+			m_WorkspaceInput.errorMessage = StringPool.BLANK;
+			m_WorkspaceInput.redirectLink = StringPool.BLANK;
+			m_WorkspaceInput.error = true;
 
 			//workpspace location blank
 			if(std::string(m_WorkspaceInput.locationImport) == StringPool.BLANK)
 			{
-				error_message = "Please select a Workspace Location";
+				m_WorkspaceInput.errorMessage = "Please select a Workspace Location";
 			}
 			//workpspace location not valid
 			else if(!file::directoryExist(std::string(m_WorkspaceInput.locationImport)))
 			{
-				error_message	= "The selected location is not a valid directory";
+				m_WorkspaceInput.errorMessage	= "The selected location is not a valid directory";
 			}
 			//workpspace already exist
 			else if(m_ProjectManager->workspaceExist(file::getFileName(std::string(m_WorkspaceInput.locationImport))))
 			{
-				error_message	= "A Workspace with the same Id already exist, Please choose another Name";
+				m_WorkspaceInput.errorMessage	= "A Workspace with the same Id already exist, Please choose another Name";
 			}
 			//workpspace location not valid
 			else if(!file::fileExist(file::getPath({std::string(m_WorkspaceInput.locationImport), ".workspace"})))
 			{
-				error_message = "The selected directory is not a valid Workspace";
+				m_WorkspaceInput.errorMessage = "The selected directory is not a valid Workspace";
 			}
 			else
 			{
-				error = false;
+				m_WorkspaceInput.error = false;
 			}
 		}
 
-		if (onImport && error)
+		if (onImport && m_WorkspaceInput.error)
 		{
 			ImGui::OpenPopup(EditorConstant.MODAL_ERROR_IMPORTING_WORKSPACE.c_str());
 		}
@@ -2975,10 +2990,23 @@ namespace  nero
 			string::fillCharArray(m_WorkspaceInput.locationImport, sizeof(m_WorkspaceInput.locationImport), StringPool.BLANK);
 		}
 
+		ImGuiWindowFlags modal_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
+										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
 		ImGui::SetNextWindowSize(ImVec2(300.f, 130.f));
-		if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_IMPORTING_WORKSPACE.c_str()))
+		if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_IMPORTING_WORKSPACE.c_str(), nullptr, modal_flags))
 		{
-			ImGui::TextWrapped("%s", error_message.c_str());
+			ImGui::TextWrapped("%s", m_WorkspaceInput.errorMessage.c_str());
+
+			if(m_WorkspaceInput.redirectLink != StringPool.BLANK)
+			{
+				ImGui::Dummy(ImVec2(0.f, 5.f));
+
+				ImGui::SetCursorPosX((300.f - 150.f)/2.f);
+				if(ImGui::Button("Learn more here", ImVec2(150.f, 0.f)))
+				{
+					cmd::launchBrowser(m_WorkspaceInput.redirectLink);
+				}
+			}
 
 			ImGui::Dummy(ImVec2(0.0f, 35.0f));
 
@@ -2988,6 +3016,7 @@ namespace  nero
 			{
 				ImGui::CloseCurrentPopup();
 			}
+
 			ImGui::EndPopup();
 		}
 	}

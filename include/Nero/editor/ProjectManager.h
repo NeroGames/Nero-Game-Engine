@@ -53,7 +53,6 @@ namespace  nero
 
            const nlohmann::json findWorkspace(const std::string& name) const;
 
-		   void compileProject(const std::string& projectDirectory = StringPool.BLANK);
 		   void compileProject(const std::string& projectDirectory, BackgroundTask::Ptr backgroundTask);
 		   void editProject();
 
