@@ -42,7 +42,7 @@ namespace nero
         ,m_RenderScene(false)
         ,m_ColorPickerColor(1.0f,1.0f,1.0f,1.0f)
         ,m_ColorPickerLastColor(1.0f,1.0f,1.0f,1.0f)
-        ,m_RenderColorPicker(false)
+        ,m_RenderColorPicker(true)
         ,m_RendererActive(false)
     {
         //Empty
@@ -268,7 +268,6 @@ namespace nero
         m_Desktop.SetProperty("Notebook#layer_note_book", "Padding", 0.f);
         m_Desktop.SetProperty("Frame#grid_frame", "Padding", 2.f);
         m_Desktop.SetProperty("ScrolledWindow#help_window", "BorderColor", sf::Color::Transparent);
-        m_Desktop.SetProperty("Window#render_canvas_window", "Gap", 3.f);
 
         //Build the UI
         auto main_box = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL);
@@ -304,7 +303,10 @@ namespace nero
         m_InfoText.setFont(m_ResourceManager->font.getDefaultFont());
         m_InfoText.setCharacterSize(13.f);
         m_InfoText.setFillColor(sf::Color::White);
-        m_InfoText.setPosition(sf::Vector2f(470.f, 460.f));
+
+        float width = m_Window.getSize().x - 1305.f * 0.14f - 412.f - 230.f;
+        float height = m_Window.getSize().y * 0.75f - 35.f;
+        m_InfoText.setPosition(sf::Vector2f(width, height));
 
         m_ObjectModeRadioButton->SetActive(true);
         m_AutoSaveChekButton->SetActive(m_EngineSetting.autoSave);
@@ -938,10 +940,6 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onSaveButton()
     {
-        std::string scene_name  = m_SceneComboBox->GetSelectedText();
-        std::string file        = WORKSPACE_FOLDER + "/" +  scene_name + "/" + scene_name +  ".json";
-        updateLog("saving Scene [" + scene_name + "] to " + file, nero::Info);
-        
         m_SceneManager->updateSceneSaveFile();
     }
 
@@ -1049,19 +1047,21 @@ namespace nero
             onQuitButton()
         */
 
+        float base_width = win_width - 1305.f * 0.14f - 412.f;
+
         //Render_Canvas
         m_RenderCanvas              = sfg::Canvas::Create();
         m_CanvasFrontView           = m_RenderCanvas->GetView();
-        float frontViewWidth        = 720.f;
+        //float frontViewWidth      = win_width*0.15f*3.63f-11.f;
+        float frontViewWidth        = base_width - 11.f;
         float frontViewHeight       = win_height*0.75f-11.f;
-        m_CanvasFrontView.setCenter(720.f/2.f, frontViewHeight/2.f);
+        m_CanvasFrontView.setCenter(frontViewWidth/2.f, frontViewHeight/2.f);
         m_CanvasFrontView.setSize(sf::Vector2f(frontViewWidth, frontViewHeight));
 
         auto render_canvas_window   = sfg::Window::Create();
         render_canvas_window->SetStyle(sfg::Window::Style::BACKGROUND);
-        render_canvas_window->SetRequisition(sf::Vector2f(720.f + 10.f, win_height*0.79f));
+        render_canvas_window->SetRequisition(sf::Vector2f(base_width, win_height*0.75f));
         render_canvas_window->Add(m_RenderCanvas);
-        render_canvas_window->SetId("render_canvas_window");
 
         m_RenderCanvas->GetSignal(sfg::Canvas::OnMouseEnter).Connect([this](){m_MouseOnCanvas = true; m_RenderCanvas->GrabFocus();});
         m_RenderCanvas->GetSignal(sfg::Canvas::OnMouseLeave).Connect([this](){m_MouseOnCanvas = false; m_Camera->cancelAction();});
@@ -1072,7 +1072,7 @@ namespace nero
         auto log_window = sfg::ScrolledWindow::Create();
         log_window->SetScrollbarPolicy(sfg::ScrolledWindow::VERTICAL_ALWAYS  | sfg::ScrolledWindow::HORIZONTAL_NEVER);
         log_window->AddWithViewport(log_window_box);
-        log_window->SetRequisition(sf::Vector2f(win_width*0.15f*3.63f, win_height*0.15f+4.f));
+        log_window->SetRequisition(sf::Vector2f(base_width, win_height*0.15f+4.f));
         log_window_box->Pack(m_LogLabel);
         m_LogAdjustment = log_window->GetVerticalAdjustment();
 
@@ -1128,7 +1128,8 @@ namespace nero
         auto sprite_window = sfg::ScrolledWindow::Create();
         sprite_window->SetScrollbarPolicy(sfg::ScrolledWindow::VERTICAL_ALWAYS  | sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC);
         sprite_window->AddWithViewport(sprite_box);
-        sprite_window->SetRequisition(sf::Vector2f(win_width*0.135f, win_height*0.53f));
+        //sprite_window->SetRequisition(sf::Vector2f(win_width*0.14f, win_height*0.53f));
+        sprite_window->SetRequisition(sf::Vector2f(1305.f*0.14f, win_height - 670.f*0.47f));
         build_sprite_box(sprite_box);
         sprite_box->GetSignal(sfg::Button::OnMouseLeave).Connect(std::bind(&DevEngineUI::onClosePreview, this));
         //Animation
@@ -1136,7 +1137,8 @@ namespace nero
         auto animation_window = sfg::ScrolledWindow::Create();
         animation_window->SetScrollbarPolicy(sfg::ScrolledWindow::VERTICAL_ALWAYS  | sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC);
         animation_window->AddWithViewport(animation_box);
-        animation_window->SetRequisition(sf::Vector2f(win_width*0.135f, win_height*0.53f));
+        //animation_window->SetRequisition(sf::Vector2f(win_width*0.14f, win_height*0.53f));
+        animation_window->SetRequisition(sf::Vector2f(1305.f*0.14f, win_height - 670.f*0.47f));
         build_animation_box(animation_box);
         animation_box->GetSignal(sfg::Button::OnMouseLeave).Connect(std::bind(&DevEngineUI::onClosePreview, this));
 
@@ -1146,7 +1148,8 @@ namespace nero
         //Mesh
         auto mesh_Window = sfg::Window::Create();
         mesh_Window->SetStyle(sfg::Window::Style::BACKGROUND);
-        mesh_Window->SetRequisition(sf::Vector2f(win_width*0.135f, 0.f));
+        //mesh_Window->SetRequisition(sf::Vector2f(win_width*0.14f, 0.f));
+        mesh_Window->SetRequisition(sf::Vector2f(1305.f*0.14f, 0.f));
         build_mesh_window(mesh_Window);
         //Sequence
         m_SequenceBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 10.f);
@@ -1157,13 +1160,16 @@ namespace nero
         //Text
         auto text_Window = sfg::Window::Create();
         text_Window->SetStyle(sfg::Window::Style::BACKGROUND);
-        text_Window->SetRequisition(sf::Vector2f(win_width*0.135f, 0.f));
+        //text_Window->SetRequisition(sf::Vector2f(win_width*0.14f, 0.f));
+        text_Window->SetRequisition(sf::Vector2f(1305.f*0.14f, 0.f));
         build_text_window(text_Window);
 
         auto sequence_window = sfg::ScrolledWindow::Create();
         sequence_window->SetScrollbarPolicy(sfg::ScrolledWindow::VERTICAL_ALWAYS | sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC);
         sequence_window->AddWithViewport(m_SequenceNoteBook);
-        sequence_window->SetRequisition(sf::Vector2f(win_width*0.135f, win_height*0.53f));
+        //sequence_window->SetRequisition(sf::Vector2f(win_width*0.14f, win_height*0.53f));
+        sequence_window->SetRequisition(sf::Vector2f(1305.f*0.14f, win_height - 670.f*0.47f));
+
         //
         m_ColorNotebook = sfg::Notebook::Create();
         m_ColorNotebook->AppendPage(sprite_window, sfg::Label::Create("Sprite"));
@@ -1174,8 +1180,9 @@ namespace nero
         m_ColorNotebook->AppendPage(color_box, sfg::Label::Create("Color"));
 
         m_ColorNotebook->SetScrollable(true);
-        m_ColorNotebook->SetRequisition(sf::Vector2f(win_width*0.15f, 0.f));
-        m_ColorNotebook->GetSignal(sfg::Notebook::OnTabChange).Connect(std::bind(&DevEngineUI::onColorNotebook, this));
+        //m_ColorNotebook->SetRequisition(sf::Vector2f(win_width*0.160f, 0.f));
+        m_ColorNotebook->SetRequisition(sf::Vector2f(1305.f*0.160f, 0.f));
+        //m_ColorNotebook->GetSignal(sfg::Notebook::OnTabChange).Connect(std::bind(&DevEngineUI::onColorNotebook, this));
 
         //Left_End
         auto left_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f);
@@ -1859,7 +1866,7 @@ namespace nero
         auto window = sfg::ScrolledWindow::Create();
         window->SetScrollbarPolicy(sfg::ScrolledWindow::VERTICAL_ALWAYS | sfg::ScrolledWindow::HORIZONTAL_NEVER);
         window->AddWithViewport(m_LayerNoteBook);
-        window->SetRequisition(sf::Vector2f(0.f, m_Window.getSize().y*0.36f));
+        window->SetRequisition(sf::Vector2f(0.f, m_Window.getSize().y - 670.f*0.64f));
 
         //Pack buttons
         auto button_box = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL);
@@ -2303,7 +2310,7 @@ namespace nero
         selectRadioButton   = sfg::RadioButton::Create("");
         nameEntry           = sfg::Entry::Create();
 
-        nameEntry->SetRequisition(sf::Vector2f(90.f, 0.f));
+        nameEntry->SetRequisition(sf::Vector2f(100.f, 0.f));
     }
 
     ////////////////////////////////////////////////////////////
@@ -2840,7 +2847,7 @@ namespace nero
             if(m_ElapseTime > sf::seconds(m_EngineSetting.autoSaveTime))
             {
                 m_ElapseTime -= sf::seconds(m_EngineSetting.autoSaveTime);
-                m_SceneManager->updateSceneSaveFile();
+                onSaveButton();
             }
         }
     }
@@ -3109,7 +3116,9 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::buildCamera()
     {
-        m_Camera = AdvancedCamera::Ptr(new AdvancedCamera(sf::Vector2f(m_Window.getSize().x*0.15f*3.63f, m_Window.getSize().y*0.75f), m_RenderCanvas));
+        float camera_width = m_Window.getSize().x - 1305.f * 0.14f - 412.f;
+
+        m_Camera = AdvancedCamera::Ptr(new AdvancedCamera(sf::Vector2f(camera_width, m_Window.getSize().y*0.75f), m_RenderCanvas));
     }
 
     ////////////////////////////////////////////////////////////

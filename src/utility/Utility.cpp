@@ -989,8 +989,8 @@ namespace nero
         createDirectory(RESOURCE_FOLDER + "/" + FONT_FOLDER);
         createDirectory(RESOURCE_FOLDER + "/" + SOUND_FOLDER);
         createDirectory(RESOURCE_FOLDER + "/" + MUSIC_FOLDER);
-        //createDirectory(RESOURCE_FOLDER + "/" + SHADER_FOLDER);
-        //createDirectory(RESOURCE_FOLDER + "/" + SCRIPT_FOLDER);
+        createDirectory(RESOURCE_FOLDER + "/" + SHADER_FOLDER);
+        createDirectory(RESOURCE_FOLDER + "/" + SCRIPT_FOLDER);
         createDirectory(RESOURCE_FOLDER + "/" + TEXTURE_FOLDER);
         createDirectory(RESOURCE_FOLDER + "/" + ANIMATION_FOLDER);
         createDirectory(LOG_FOLDER);
@@ -1023,7 +1023,7 @@ namespace nero
         }
 
         //Create Shader files if not exit
-        /*if(!fileExist(RESOURCE_FOLDER + "/" + SHADER_FOLDER + "/" + SHADER_LIST))
+        if(!fileExist(RESOURCE_FOLDER + "/" + SHADER_FOLDER + "/" + SHADER_LIST))
         {
             saveFile(RESOURCE_FOLDER + "/" + SHADER_FOLDER + "/" + SHADER_LIST, shader_json, shader_json_len);
         }
@@ -1036,7 +1036,7 @@ namespace nero
         if(!fileExist(RESOURCE_FOLDER + "/" + SHADER_FOLDER + "/" + SIMPLE_VERTEX))
         {
             saveFile(RESOURCE_FOLDER + "/" + SHADER_FOLDER + "/" + SIMPLE_VERTEX, simple_vertex_ver, simple_vertex_ver_len);
-        }*/
+        }
     }
 
     nlohmann::json toJson(sf::Color color)

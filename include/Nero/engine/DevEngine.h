@@ -39,7 +39,7 @@ namespace
 
                 //Load Log configuration
                 el::Configurations logSetting(nero::CONFIGURATION_FOLDER + "/" + nero::LOG_CONFIGURATION);
-                //el::Loggers::reconfigureAllLoggers(logSetting);
+                el::Loggers::reconfigureAllLoggers(logSetting);
 
                 return true;
             }
@@ -62,7 +62,8 @@ namespace nero
     {
         public:
             //Method
-                                    DevEngine(const unsigned int& windowWidth = 1325.f, const unsigned int& windowHeight = 670.f, const std::string& windowTitle = "Nero Game Engine");
+                                    DevEngine(const unsigned int& windowWidth, const unsigned int& windowHeight);
+                                    DevEngine(const unsigned int& windowWidth);
             virtual                ~DevEngine();
 
             template <typename T>

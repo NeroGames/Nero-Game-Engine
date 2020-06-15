@@ -79,7 +79,7 @@ namespace nero
             sfg::Canvas::Ptr            getRenderCanvas() const;
 
             template <typename T>
-            void                        addScene(std::string name);
+            void                            addScene(std::string name);
 
             void                        setResourceManager(ResourceManager::Ptr resourceManager);
             void                        updateFrameRate(const float& frameRate, const float& frameTime);

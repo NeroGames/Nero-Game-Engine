@@ -44,6 +44,7 @@ namespace nero
         ,m_PauseMessage("")
         ,m_HideWorld(false)
         ,m_SceenCanvasColor(sf::Color::Transparent)
+        ,m_Resolution(800.f, 600.f)
     {
         //Setup the world
         m_PhysicWorld = new b2World(m_SceneSetting.gravity);
@@ -54,7 +55,7 @@ namespace nero
         m_Text.setFont(context.resourceManager->font.getDefaultFont());
         m_Text.setCharacterSize(15.f);
         m_Text.setFillColor(sf::Color::White);
-        m_Text.setPosition(sf::Vector2f(context.renderCanvas->GetAllocation().width/2.f-55.f, 10.f));
+        m_Text.setPosition(sf::Vector2f(55.f, 10.f));
 
         //
         m_QuitEngine = [](){};
@@ -699,9 +700,14 @@ namespace nero
         }
     }
 
-    sf::Vector2f Scene::getSceneResolution()
+    const sf::Vector2f Scene::getResolution() const
     {
-       return sf::Vector2f(800.f, 600.f);
+       return m_Resolution;
+    }
+
+    void Scene::setResolution(const float& width, const float& height)
+    {
+        m_Resolution = sf::Vector2f(width, height);
     }
 
     b2World* Scene::getPhysicWorld()

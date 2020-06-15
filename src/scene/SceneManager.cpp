@@ -430,6 +430,8 @@ namespace nero
     {
         std::string file = WORKSPACE_FOLDER + "/" +  m_AdvancedScene->m_SceneName + "/" + m_AdvancedScene->m_SceneName +  ".json";
 
+        m_UpdateLog("saving Scene [" + m_AdvancedScene->m_SceneName + "] to " + file, nero::Info);
+
         m_AdvancedScene->m_SceneBuilder->updateLayerOrder();
 
         saveFile(file, saveScene().dump(3));
@@ -454,6 +456,11 @@ namespace nero
 
             saveFile(file, saveScene(factory.second.first).dump(3));
         }
+    }
+
+    const sf::Vector2f SceneManager::getSceneResolution() const
+    {
+        return m_AdvancedScene->m_Scene->m_Resolution;
     }
 
     Scene::Ptr SceneManager::getScene()
@@ -492,6 +499,6 @@ namespace nero
 
     sf::Vector2f SceneManager::getSceneResolution(Scene::Ptr scene)
     {
-        return scene->getSceneResolution();
+        return scene->m_Resolution;
     }
 }
