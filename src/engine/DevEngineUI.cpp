@@ -3109,11 +3109,11 @@ namespace nero
     void DevEngineUI::onAccessAPIButton()
     {
         #ifdef _WIN32
-            updateLog("openning browser at : https://nero-game.com/documentation");
-            ShellExecute(NULL, "open", "https://nero-game.com/documentation", NULL, NULL, SW_SHOWNORMAL);
+            updateLog("openning browser at : https://nero-game.com/learn/engine-v1/cpp-api/");
+            ShellExecute(NULL, "open", "https://nero-game.com/learn/engine-v1/cpp-api/", NULL, NULL, SW_SHOWNORMAL);
         #else
-            updateLog("openning browser at : https://nero-game.com/documentation");
-            system("https://nero-game.com/documentation");
+            updateLog("openning browser at : https://nero-game.com/learn/engine-v1/cpp-api/");
+            system("https://nero-game.com/learn/engine-v1/cpp-api/");
         #endif // _WIN32
     }
 
