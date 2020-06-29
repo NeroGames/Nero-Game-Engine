@@ -91,10 +91,10 @@ namespace nero
                     for (auto& frame : frame_table)
                     {
                         std::string spriteName      = removeFileExtension(frame["filename"].get<std::string>());
-                        int rectLeft                = frame["x"];
-                        int rectTop                 = frame["y"];
-                        int rectWidth               = frame["w"];
-                        int rectHeight              = frame["h"];
+                        int rectLeft                = frame["frame"]["x"];
+                        int rectTop                 = frame["frame"]["y"];
+                        int rectWidth               = frame["frame"]["w"];
+                        int rectHeight              = frame["frame"]["h"];
 
                         sf::IntRect spriteBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
 

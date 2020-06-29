@@ -102,8 +102,8 @@ namespace nero
             std::function<void(const std::string&, int)>            getLog();
             std::function<void(const std::string&, bool, int)>      getLogIf();
             //resolution
-            const sf::Vector2f          getResolution() const;
-            void                        setResolution(const float& width, const float& height);
+            virtual sf::Vector2f                getSceneResolution();
+
             //
             void                        disableLayer(const std::string& name);
             void                        enableLayer(const std::string& name);
@@ -154,8 +154,6 @@ namespace nero
             //FrameRate
             float                       m_FrameRate;
             float                       m_FrameTime;
-            //Resolution
-            sf::Vector2f                m_Resolution;
             //Callback
             std::function<void()>                           m_QuitEngine;
             std::function<void()>                           m_ResetScene;

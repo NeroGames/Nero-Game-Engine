@@ -16,7 +16,7 @@
 namespace nero
 {
     ////////////////////////////////////////////////////////////
-    DevEngine::DevEngine(const unsigned int& windowWidth, const unsigned int& windowHeight):
+     DevEngine::DevEngine(const unsigned int& windowWidth, const unsigned int& windowHeight):
          Engine(windowWidth  < 1305.f ? 1305.f : windowWidth, windowHeight  < 670.f ? 670.f : windowHeight, "Nero Game Engine")
         ,m_LoadingScreen(nullptr)
         ,m_EngineUI(nullptr)
@@ -42,12 +42,13 @@ namespace nero
         m_StartEngineFuture = std::async(std::launch::async, &DevEngine::startEngine, this, std::ref(m_EngineStarted), m_LoadingScreen->getMinTime());
     }
 
-     ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////
     DevEngine::DevEngine(const unsigned int& windowWidth): DevEngine::DevEngine(windowWidth, windowWidth*670.f/1305.f)
     {
 
 
     }
+
     ////////////////////////////////////////////////////////////
     DevEngine::~DevEngine()
     {

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Project Adventure Scene
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef ADVENTURESCENE_H
 #define ADVENTURESCENE_H
@@ -25,10 +25,10 @@ namespace ng
         protected:
             void                init();
             void                checkSceneObject();
+            sf::Vector2f        getSceneResolution();
             void                handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
             void                handleCollisionContactBegin(nero::Collision collision);
 
-            sf::Vector2f        getSceneResolution();
 
         private:
             //Startup Screen
@@ -38,9 +38,9 @@ namespace ng
             void                setupPlatform();
 
         private:
-            Player              mPlayer;
-            int                 mCoinCount;
-            int                 mStarCount;
+            Player                          mPlayer;
+            int                             mCoinCount;
+            int                             mStarCount;
             nero::SimpleMovingObject::Ptr   mPlatform;
     };
 }

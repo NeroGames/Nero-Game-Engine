@@ -11,7 +11,7 @@
 
     int main()
     {
-        nero::DevEngine engine;
+        nero::DevEngine engine(1305);
             engine.addScene<ng::AdventureScene>("Adventure Scene");
         engine.run();
 

@@ -38,7 +38,7 @@ namespace
 
                 //Load Log configuration
                 el::Configurations logSetting(nero::CONFIGURATION_FOLDER + "/" + nero::LOG_CONFIGURATION);
-                el::Loggers::reconfigureAllLoggers(logSetting);
+                //el::Loggers::reconfigureAllLoggers(logSetting);
 
                 return true;
             }

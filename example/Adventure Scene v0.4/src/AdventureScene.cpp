@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Project Adventure Scene
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2020 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Adventure Scene
@@ -75,7 +75,7 @@ namespace ng
 	{
 	     /*
             --> This method let you build the initial state of your Scene
-            --> This method is called automatically when the Scene is render
+            --> This method is called automatically when the Scene is rendered
             --> It's the Second method in your Scene to be called
         */
 
