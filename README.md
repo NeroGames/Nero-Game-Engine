@@ -1,6 +1,8 @@
 
 ![alt text](https://www.nero-game.com/resource/artwork/github/github_readme_header.png)
-![alt text](https://www.nero-game.com/resource/artwork/github/github_readme_engine_ui.png)
+![alt text](https://www.nero-game.com/resource/artwork/github/github_readme_engine_v1.png)
+![alt text](https://www.nero-game.com/resource/artwork/github/github_readme_download.png)
+
 
 ## Project Nero Game Engine
 
