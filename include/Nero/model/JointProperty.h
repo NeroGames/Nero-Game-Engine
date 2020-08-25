@@ -76,7 +76,7 @@ namespace nero
         float           lowerTranslation    = 0.f;
         float           upperTranslation    = 0.f;
         bool            enableMotor         = false;
-        float           maxMotorForce       = 10.f;
+        float           maxMotorTorque      = 10.f;
         float           motorSpeed          = 0.f;
     };
 
@@ -106,7 +106,7 @@ namespace nero
         float           lowerAngle          = 0.f;
         float           upperAngle          = 0.f;
         bool            enableMotor         = false;
-        float           maxMotorForce       = 10.f;
+        float           maxMotorTorque       = 10.f;
         float           motorSpeed          = 0.f;
     };
 
@@ -142,7 +142,7 @@ namespace nero
         sf::Vector2f    localAxisA          = sf::Vector2f(0.f, 0.f);
         float           referenceAngle      = 0.f;
         bool            enableMotor         = false;
-        float           maxMotorForce       = 10.f;
+        float           maxMotorTorque      = 10.f;
         float           motorSpeed          = 0.f;
         float           frequencyHz         = 5.f;
         float           dampingRatio        = 0.5f;

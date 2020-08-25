@@ -65,10 +65,10 @@ namespace nero
             std::vector<float>          getNormalImpulses();
             std::vector<float>          getTangentImpulses();
             //
-            bool                        isCollising(sf::String catA);
-            bool                        isCollising(sf::String catA, sf::String catB);
-            bool                        isObjectCollising(sf::String nameA);
-            bool                        isObjectCollising(sf::String nameA, sf::String nameB);
+            bool                        isColliding(sf::String catA);
+            bool                        isColliding(sf::String catA, sf::String catB);
+            bool                        isObjectColliding(sf::String nameA);
+            bool                        isObjectColliding(sf::String nameA, sf::String nameB);
 
             PhysicObject::Ptr           getObject(sf::String indicator);
 

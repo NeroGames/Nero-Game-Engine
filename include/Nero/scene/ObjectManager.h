@@ -68,6 +68,9 @@ namespace nero
             bool                            removeObject(Object::Ptr object);
             bool                            removeObject(sf::String name);
             bool                            removeLayer(std::string name);
+             //
+            void                            disableLayer(const std::string& name);
+            void                            enableLayer(const std::string& name);
             //
             void                            checkWorldObject(std::vector<sf::String> objectNameTab);
             void                            checkScreenObject(std::string screen, std::vector<sf::String> objectNameTab);
@@ -100,6 +103,7 @@ namespace nero
             bool                            removeJoint(const std::string& jointName);
 
             int                             getNewObjectId();
+            int                             getNewJointId();
             void                            setObjectCount(int count);
 
         private:

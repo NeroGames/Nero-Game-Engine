@@ -151,6 +151,8 @@ namespace nero
 
     Object::Ptr ObjectManager::findChildObject(Object::Ptr object, int id)
     {
+        if(!object) return nullptr;
+
         auto childTab = object->getAllChild();
 
         for (auto it = childTab->begin(); it != childTab->end(); it++)
@@ -573,9 +575,9 @@ namespace nero
         jointDef.userData = (void *)joint->getJointId();
         jointDef.localAnchorA = sf_to_b2(property.localAnchorA, SCALE);
         jointDef.localAnchorB = sf_to_b2(property.localAnchorB, SCALE);
-        jointDef.localAxisA = sf_to_b2(property.localAnchorA, SCALE);
+        jointDef.localAxisA = sf_to_b2(property.localAxisA, SCALE);
         jointDef.enableMotor = property.enableMotor;
-        jointDef.maxMotorTorque = property.maxMotorForce;
+        jointDef.maxMotorTorque = property.maxMotorTorque;
         jointDef.motorSpeed = property.motorSpeed;
         jointDef.frequencyHz = property.frequencyHz;
         jointDef.dampingRatio = property.dampingRatio;
@@ -638,7 +640,7 @@ namespace nero
         jointDef.lowerTranslation = property.lowerTranslation/SCALE;
         jointDef.upperTranslation = property.upperTranslation/SCALE;
         jointDef.enableMotor = property.enableMotor;
-        jointDef.maxMotorForce = property.maxMotorForce;
+        jointDef.maxMotorForce = property.maxMotorTorque;
         jointDef.motorSpeed = property.motorSpeed;
 
         joint->setJoint((b2PrismaticJoint*)m_PhysicWorld->CreateJoint(&jointDef));
@@ -670,7 +672,7 @@ namespace nero
         jointDef.upperAngle = toRadian(property.upperAngle);
         jointDef.enableMotor = property.enableMotor;
         jointDef.motorSpeed = property.motorSpeed;
-        jointDef.maxMotorTorque = property.maxMotorForce;
+        jointDef.maxMotorTorque = property.maxMotorTorque;
 
         joint->setJoint((b2RevoluteJoint*)m_PhysicWorld->CreateJoint(&jointDef));
 
@@ -787,9 +789,54 @@ namespace nero
         return ++m_ObjectCount;
     }
 
+    int ObjectManager::getNewJointId()
+    {
+        return ++m_JointCount;
+    }
+
     void ObjectManager::setObjectCount(int count)
     {
         m_ObjectCount = count;
+    }
+
+    void ObjectManager::disableLayer(const std::string& name)
+    {
+        Object::Ptr layer = findLayerObject(name);
+
+        if(!layer)
+            return;
+
+        layer->setIsVisible(false);
+        layer->setIsUpdateable(false);
+
+        if(layer->getSecondType() == Object::Physic_Object || layer->getSecondType() == Object::Solid_Object || layer->getSecondType() == Object::Animation_Solid_Object)
+        {
+            auto childTable = layer->getAllChild();
+            for(Object::Ptr object : *childTable)
+            {
+                PhysicObject::Cast(object)->setActive(false);
+            }
+        }
+    }
+
+    void ObjectManager::enableLayer(const std::string& name)
+    {
+        Object::Ptr layer = findLayerObject(name);
+
+        if(!layer)
+            return;
+
+        layer->setIsVisible(true);
+        layer->setIsUpdateable(true);
+
+        if(layer->getSecondType() == Object::Physic_Object || layer->getSecondType() == Object::Solid_Object || layer->getSecondType() == Object::Animation_Solid_Object)
+        {
+            auto childTable = layer->getAllChild();
+            for(Object::Ptr object : *childTable)
+            {
+                PhysicObject::Cast(object)->setActive(true);
+            }
+        }
     }
 }
 

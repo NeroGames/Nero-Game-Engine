@@ -258,14 +258,14 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    bool Collision::isCollising(sf::String catA)
+    bool Collision::isColliding(sf::String catA)
     {
         return  getObjectA()->getCategory() == catA ||
                 getObjectB()->getCategory() == catA;
     }
 
     ////////////////////////////////////////////////////////////
-    bool Collision::isCollising(sf::String catA, sf::String catB)
+    bool Collision::isColliding(sf::String catA, sf::String catB)
     {
         if(!getObjectA() || !getObjectB()) return false;
 
@@ -276,14 +276,14 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    bool Collision::isObjectCollising(sf::String nameA)
+    bool Collision::isObjectColliding(sf::String nameA)
     {
         return  getObjectA()->getName() == nameA ||
                 getObjectB()->getName() == nameA;
     }
 
     ////////////////////////////////////////////////////////////
-    bool Collision::isObjectCollising(sf::String nameA, sf::String nameB)
+    bool Collision::isObjectColliding(sf::String nameA, sf::String nameB)
     {
         return  (   getObjectA()->getName() == nameA &&
                     getObjectB()->getName() == nameB   ) ||

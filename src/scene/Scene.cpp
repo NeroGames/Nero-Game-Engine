@@ -173,7 +173,7 @@ namespace nero
 
             m_Text.setString(m_PauseMessage);
 
-            followTarget();
+            cameraFollowTarget();
         }
 
         if(isRenderEngine())
@@ -376,13 +376,13 @@ namespace nero
     }
 
       ////////////////////////////////////////////////////////////
-    void Scene::enableFollowTaget(bool flag)
+    void Scene::enableCameraTaget(bool flag)
     {
         m_CameraTarget.followTarget = flag;
     }
 
     ////////////////////////////////////////////////////////////
-    void Scene::updateTargetOffset(const float left, const float right, const float up, const float down)
+    void Scene::setCameraTargetOffset(const float left, const float right, const float up, const float down)
     {
         m_CameraTarget.offsetLeft   = left;
         m_CameraTarget.offsetRight  = right;
@@ -391,7 +391,7 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    void Scene::followTarget()
+    void Scene::cameraFollowTarget()
     {
         //Check
         if(!m_CameraTarget.target || !m_CameraTarget.followTarget) return;
@@ -526,7 +526,7 @@ namespace nero
          return m_SceneName;
      }
 
-    const Scene::Context& Scene::getContext() const
+    Scene::Context& Scene::getContext()
     {
         return m_Context;
     }
@@ -709,43 +709,8 @@ namespace nero
         return m_PhysicWorld;
     }
 
-    void Scene::disableLayer(const std::string& name)
+    Camera::Ptr Scene::getCamera()
     {
-        Object::Ptr layer = m_ObjectManager->findLayerObject(name);
-
-        if(!layer)
-            return;
-
-        layer->setIsVisible(false);
-        layer->setIsUpdateable(false);
-
-        if(layer->getSecondType() == Object::Physic_Object || layer->getSecondType() == Object::Solid_Object || layer->getSecondType() == Object::Animation_Solid_Object)
-        {
-            auto childTable = layer->getAllChild();
-            for(Object::Ptr object : *childTable)
-            {
-                PhysicObject::Cast(object)->setActive(false);
-            }
-        }
-    }
-
-    void Scene::enableLayer(const std::string& name)
-    {
-        Object::Ptr layer = m_ObjectManager->findLayerObject(name);
-
-        if(!layer)
-            return;
-
-        layer->setIsVisible(true);
-        layer->setIsUpdateable(true);
-
-        if(layer->getSecondType() == Object::Physic_Object || layer->getSecondType() == Object::Solid_Object || layer->getSecondType() == Object::Animation_Solid_Object)
-        {
-            auto childTable = layer->getAllChild();
-            for(Object::Ptr object : *childTable)
-            {
-                PhysicObject::Cast(object)->setActive(true);
-            }
-        }
+        return m_Context.camera;
     }
 }

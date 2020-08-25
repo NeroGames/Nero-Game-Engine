@@ -54,6 +54,7 @@ namespace nero
         protected:
             virtual void                init();
             virtual void                checkSceneObject();
+            virtual sf::Vector2f        getSceneResolution();
             //Collision
             virtual void                handleCollisionContactBegin(Collision collision);
             virtual void                handleCollisionContactEnd(Collision collision);
@@ -64,6 +65,8 @@ namespace nero
             virtual void                handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
             virtual void                handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
             virtual void                handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse);
+            //camera
+            virtual void                cameraFollowTarget();
             //Scene
             bool                        isScenePause();
             void                        pauseScene();
@@ -79,7 +82,7 @@ namespace nero
             bool                        isRenderEngine();
             //
             const std::string&          getSceneName() const;
-            const Context&              getContext() const;
+            Context&                    getContext();
             Object::Ptr                 getWorld();
             b2World*                    getPhysicWorld();
             void                        setCanvasColor(const sf::Color& color);
@@ -92,30 +95,22 @@ namespace nero
             CameraSetting&              getCameraSetting();
             float                       getFrameRate();
             float                       getFrameTime();
-            //Camera Target
+            //Camera & Target
+            Camera::Ptr                 getCamera();
             void                        setCameraTarget(Object::Ptr target);
-            void                        enableFollowTaget(bool flag);
-            void                        updateTargetOffset(const float left, const float right, const float up, const float down);
+            void                        enableCameraTaget(bool flag);
+            void                        setCameraTargetOffset(const float left, const float right, const float up, const float down);
             //Log
             void                                                    log(const std::string& content, int level = nero::Info);
             void                                                    logIf(const std::string& content, bool condition, int level = nero::Info);
             std::function<void(const std::string&, int)>            getLog();
             std::function<void(const std::string&, bool, int)>      getLogIf();
-            //resolution
-            virtual sf::Vector2f                getSceneResolution();
-
-            //
-            void                        disableLayer(const std::string& name);
-            void                        enableLayer(const std::string& name);
 
         private:
             void                        BeginContact(b2Contact* contact);
             void                        EndContact(b2Contact* contact);
             void                        PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
             void                        PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
-
-            void                        followTarget();
-
             void                        enableScreen(const std::string& name, bool flag);
 
         private:
