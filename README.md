@@ -1,8 +1,7 @@
-<a href="https://github.com/NeroGames/Nero-Game-Engine/tree/master" style="font-family: &quot;Autour One&quot;, Sans-serif;font-size: 20px;fill: #54595F;color: #54595F;background-color: #FFFFFF;border-style: solid;border-width: 6px 2px 6px 2px;box-shadow: 9px 10px 14px 0px rgba(0,0,0,0.5);padding: 14px 90px 14px 90px;">Find New Engine Here !</a>
-
 ![alt text](https://www.nero-game.com/resource/artwork/github/github_readme_header_02.png)
 ![alt text](https://www.nero-game.com/resource/artwork/github/github_readme_engine_v1.png) 
 
+<div align="center"><a href="https://github.com/NeroGames/Nero-Game-Engine/tree/master" style="font-family: &quot;Autour One&quot;, Sans-serif;font-size: 20px;fill: #54595F;color: #54595F;background-color: #FFFFFF;border-style: solid;border-width: 6px 2px 6px 2px;box-shadow: 9px 10px 14px 0px rgba(0,0,0,0.5);padding: 14px 90px 14px 90px;">Find New Engine Here !</a> </div>
 
 ## Nero Game Engine r1.0.5
 
