@@ -5,7 +5,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //STD
 #include <windows.h>
-#include <stdio.h>
+#include <stdio.h>Copyright (c) 2016-2021 Sanou A. K. Landry
 //NERO
 #include <Nero/engine/DevEngineUI.h>
 #include <Nero/utility/Utility.h>
@@ -350,7 +350,7 @@ namespace nero
             else if(key == sf::Keyboard::L && CTRL())
                 onLoadButton();
 
-            else if(key == sf::Keyboard::Space && !CTRL_SHIFT_ALT() && m_MouseOnCanvas)
+            else if(key == sf::Keyboard::Space && m_MouseOnCanvas && !m_FrontScreen)
                 switchEngineSubMode();
         }
         else
@@ -714,14 +714,22 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onFrontScreenToggleButton()
     {
-        if(m_EngineMode == SCENE && m_EngineSubMode == PLAY)
+        if(m_EngineMode == SCENE && (m_EngineSubMode == PLAY) || (m_EngineSubMode == MESH))
+        {
+            m_FrontScreenToggleButton->SetActive(false);
             return;
+        }
 
         m_FrontScreen = m_FrontScreenToggleButton->IsActive();
 
         if(m_FrontScreen)
         {
             updateLog("changing View Mode to Screen View");
+
+            //Desactivate submode button
+            m_ObjectModeRadioButton->SetState(sfg::Widget::State::INSENSITIVE);
+            m_MeshModeRadioButton->SetState(sfg::Widget::State::INSENSITIVE);
+            m_PlayModeRadioButton->SetState(sfg::Widget::State::INSENSITIVE);
 
             //Update the Active Managers
             m_ActiveSceneBuilder          = m_SceneManager->getScreenBuilder();
@@ -743,6 +751,11 @@ namespace nero
         else
         {
             updateLog("changing View Mode to World View");
+
+            //Activate submode button
+            m_ObjectModeRadioButton->SetState(sfg::Widget::State::NORMAL);
+            m_MeshModeRadioButton->SetState(sfg::Widget::State::NORMAL);
+            m_PlayModeRadioButton->SetState(sfg::Widget::State::NORMAL);
 
             //Update the Active Managers
             m_ActiveSceneBuilder          = m_SceneManager->getSceneBuilder();
@@ -1150,11 +1163,11 @@ namespace nero
         auto color_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 5.f);
         build_color_box(color_box);
         //Mesh
-        auto mesh_Window = sfg::Window::Create();
-        mesh_Window->SetStyle(sfg::Window::Style::BACKGROUND);
-        //mesh_Window->SetRequisition(sf::Vector2f(win_width*0.14f, 0.f));
-        mesh_Window->SetRequisition(sf::Vector2f(1305.f*0.14f, 0.f));
-        build_mesh_window(mesh_Window);
+        auto mesh_window = sfg::Window::Create();
+        mesh_window->SetStyle(sfg::Window::Style::BACKGROUND);
+        //mesh_window->SetRequisition(sf::Vector2f(win_width*0.14f, 0.f));
+        mesh_window->SetRequisition(sf::Vector2f(1305.f*0.14f, 0.f));
+        build_mesh_window(mesh_window);
         //Sequence
         m_SequenceBox = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 10.f);
         m_SequenceNoteBook = sfg::Notebook::Create();
@@ -1162,12 +1175,16 @@ namespace nero
         m_SequenceNoteBook->SetTabPosition(sfg::Notebook::TabPosition::BOTTOM);
         m_SequenceNoteBook->AppendPage(m_SequenceBox, sfg::Label::Create(""));
         //Text
-        auto text_Window = sfg::Window::Create();
-        text_Window->SetStyle(sfg::Window::Style::BACKGROUND);
-        //text_Window->SetRequisition(sf::Vector2f(win_width*0.14f, 0.f));
-        text_Window->SetRequisition(sf::Vector2f(1305.f*0.14f, 0.f));
-        build_text_window(text_Window);
+        auto text_window = sfg::Window::Create();
+        text_window->SetStyle(sfg::Window::Style::BACKGROUND);
+        //text_window->SetRequisition(sf::Vector2f(win_width*0.14f, 0.f));
+        text_window->SetRequisition(sf::Vector2f(1305.f*0.14f, 0.f));
+        build_text_window(text_window);
+        //Info
+        auto info_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 4.f);
+        build_info_box(info_box);
 
+        //sequence window
         auto sequence_window = sfg::ScrolledWindow::Create();
         sequence_window->SetScrollbarPolicy(sfg::ScrolledWindow::VERTICAL_ALWAYS | sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC);
         sequence_window->AddWithViewport(m_SequenceNoteBook);
@@ -1179,9 +1196,10 @@ namespace nero
         m_ColorNotebook->AppendPage(sprite_window, sfg::Label::Create("Sprite"));
         m_ColorNotebook->AppendPage(animation_window, sfg::Label::Create("Animation"));
         m_ColorNotebook->AppendPage(sequence_window, sfg::Label::Create("Sequence"));
-        m_ColorNotebook->AppendPage(mesh_Window, sfg::Label::Create("Mesh"));
-        m_ColorNotebook->AppendPage(text_Window, sfg::Label::Create("Text"));
+        m_ColorNotebook->AppendPage(mesh_window, sfg::Label::Create("Mesh"));
+        m_ColorNotebook->AppendPage(text_window, sfg::Label::Create("Text"));
         m_ColorNotebook->AppendPage(color_box, sfg::Label::Create("Color"));
+        m_ColorNotebook->AppendPage(info_box, sfg::Label::Create("Info"));
 
         m_ColorNotebook->SetScrollable(true);
         //m_ColorNotebook->SetRequisition(sf::Vector2f(win_width*0.160f, 0.f));
@@ -1621,6 +1639,31 @@ namespace nero
         m_TextItalicCheckButton->GetSignal(sfg::CheckButton::OnLeftClick).Connect(std::bind(&DevEngineUI::onTextStyle, this));
         m_TextUnderlinedCheckButton->GetSignal(sfg::CheckButton::OnLeftClick).Connect(std::bind(&DevEngineUI::onTextStyle, this));
         m_TextStrikeThroughCheckButton->GetSignal(sfg::CheckButton::OnLeftClick).Connect(std::bind(&DevEngineUI::onTextStyle, this));
+    }
+
+    ////////////////////////////////////////////////////////////
+    void DevEngineUI::build_info_box(sfg::Box::Ptr info_box)
+    {
+        m_ObjectPostionX = sfg::Label::Create("Position x");
+        m_ObjectPostionY = sfg::Label::Create("Position y");
+        m_ObjectRotation = sfg::Label::Create("Rotation");
+        m_ObjectScale = sfg::Label::Create("Scale");
+
+        m_ObjectPostionX->SetRequisition(sf::Vector2f(170.f, 0.f));
+        m_ObjectPostionY->SetRequisition(sf::Vector2f(170.f, 0.f));
+        m_ObjectRotation->SetRequisition(sf::Vector2f(170.f, 0.f));
+        m_ObjectScale->SetRequisition(sf::Vector2f(170.f, 0.f));
+
+        auto transform_box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 4.f);
+        transform_box->Pack(m_ObjectPostionX, false);
+        transform_box->Pack(m_ObjectPostionY, false);
+        transform_box->Pack(m_ObjectRotation, false);
+        transform_box->Pack(m_ObjectScale, false);
+
+        auto transform_frame = sfg::Frame::Create("Transform");
+        transform_frame->Add(transform_box);
+
+        info_box->Pack(transform_frame, false);
     }
 
     ////////////////////////////////////////////////////////////
@@ -2296,6 +2339,14 @@ namespace nero
             m_TextItalicCheckButton->SetActive(text_object->isItalic());
             m_TextUnderlinedCheckButton->SetActive(text_object->isUnderlined());
             m_TextStrikeThroughCheckButton->SetActive(text_object->isStrikeThrough());
+        }
+
+        //Update Info tab
+        {
+            m_ObjectPostionX->SetText("Position x : " + toString(object->getPosition().x));
+            m_ObjectPostionY->SetText("Position y : " + toString(object->getPosition().y));
+            m_ObjectRotation->SetText("Rotation : " + toString(object->getRotation()));
+            m_ObjectScale->SetText("Scale : " + toString(object->getScale().x));
         }
 
     }
@@ -3013,16 +3064,6 @@ namespace nero
         m_ScreenComboBoxSecond->SelectItem(0);
     }
 
-    ////////////////////////////////////////////////////////////
-    void DevEngineUI::disableFrontScreen()
-    {
-        //Return to world view
-        if(m_FrontScreen)
-        {
-            m_FrontScreenToggleButton->SetActive(false);
-            m_CurrentView = "World View";
-        }
-    }
 
     ////////////////////////////////////////////////////////////
     void DevEngineUI::onAddFrontScreen()

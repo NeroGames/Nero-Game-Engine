@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 #ifndef SCENEOBJECTMANAGER_H
 #define SCENEOBJECTMANAGER_H
@@ -48,6 +48,10 @@ namespace nero
             Object::Ptr                     findSpriteObject(sf::String name);
             Object::Ptr                     findPhysicObject(sf::String name);
             Object::Ptr                     findSolidObject(sf::String name);
+            Object::Ptr                     findTextObject(sf::String name);
+            Object::Ptr                     findAnimationObject(sf::String name);
+            Object::Ptr                     findSolidAnimationObject(sf::String name);
+
 
             Object::Ptr                     findScreenUIObject(std::string screenName, std::string ObjectName);
             Object::Ptr                     findScreenObject(std::string screenName, std::string ObjectName);
@@ -59,6 +63,10 @@ namespace nero
             Object::Ptr                     findSpriteObject(int id);
             Object::Ptr                     findPhysicObject(int id);
             Object::Ptr                     findSolidObject(int id);
+            Object::Ptr                     findTextObject(int id);
+            Object::Ptr                     findAnimationObject(int id);
+            Object::Ptr                     findSolidAnimationObject(int id);
+
             //Move
             Object::Ptr                     moveObject(sf::String name);
             Object::Ptr                     movePhysicObject(sf::String name);

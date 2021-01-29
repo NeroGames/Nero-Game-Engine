@@ -5,7 +5,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/scene/PhysicObjectManager.h>
-#include <Nero/utility/Utility.h>
+#include <Nero/utility/Utility.h>Copyright (c) 2016-2021 Sanou A. K. Landry
 //BOX2D
 #include <Box2D/Collision/Shapes/b2EdgeShape.h>
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>

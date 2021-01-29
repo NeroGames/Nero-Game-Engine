@@ -5,7 +5,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/utility/Utility.h>
-//SFML
+//Copyright (c) 2016-2021 Sanou A. K. Landry
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/View.hpp>

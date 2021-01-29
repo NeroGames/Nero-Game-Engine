@@ -5,7 +5,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/engine/RenderEngine.h>
-#include <Nero/utility/Utility.h>
+#include <Nero/utility/Utility.h>Copyright (c) 2016-2021 Sanou A. K. Landry
 //SFML
 #include <SFML/Window/Context.hpp>
 //SFGUI

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef DEVENGINEUI_H_INCLUDED
 #define DEVENGINEUI_H_INCLUDED
@@ -99,7 +99,6 @@ namespace nero
             void                        updateGridSetting();
             void                        updateSoundSetting();
             void                        autoSave();
-            void                        disableFrontScreen();
 
         private:
             ////////////////////////////////////////////////////////////
@@ -140,6 +139,7 @@ namespace nero
             void                                build_color_box(sfg::Box::Ptr color_box);
             void                                build_mesh_window(sfg::Window::Ptr mesh_window);
             void                                build_text_window(sfg::Window::Ptr text_window);
+            void                                build_info_box(sfg::Box::Ptr info_box);
             void                                build_help_box(sfg::Box::Ptr help_box);
             //Utility
             sfg::RadioButton::Ptr               m_ObjectModeRadioButton;
@@ -216,6 +216,11 @@ namespace nero
             //Sequence
             sfg::Box::Ptr                       m_SequenceBox;
             sfg::Notebook::Ptr                  m_SequenceNoteBook;
+            //Object Info
+            sfg::Label::Ptr                     m_ObjectPostionX;
+            sfg::Label::Ptr                     m_ObjectPostionY;
+            sfg::Label::Ptr                     m_ObjectRotation;
+            sfg::Label::Ptr                     m_ObjectScale;
             //Callback
             std::function<void ()>              onSpriteButton(const std::string &label);
             std::function<void ()>              onSpriteButtonMouseOver(const std::string &label);

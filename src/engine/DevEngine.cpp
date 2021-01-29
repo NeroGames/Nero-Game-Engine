@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -133,6 +133,12 @@ namespace nero
         m_Window.resetGLStates();
         m_Window.setPosition(sf::Vector2i(m_Window.getPosition().x, 15));
 
+        auto windowIcon = sf::Image{};
+        if (windowIcon.loadFromFile("icon.png"))
+        {
+            m_Window.setIcon(windowIcon.getSize().x, windowIcon.getSize().y, windowIcon.getPixelsPtr());
+        }
+
         //setup IMGUI
         ImGui::SFML::Init(m_Window);
     }
@@ -193,7 +199,10 @@ namespace nero
 
         //Register the default Scene
         nero_log("adding the default scene");
-        addScene<Scene>(DEFAULT_SCENE);
+        if(m_TaskTable.size() == 0)
+        {
+            addScene<Scene>(DEFAULT_SCENE);
+        }
 
         nero_log("registering all scenes");
         for(int i=0; i < m_TaskTable.size(); i++)

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef DEVENGINE_H
 #define DEVENGINE_H
@@ -80,6 +80,7 @@ namespace nero
             void                    loadEngineSetting();
             void                    setupRenderWindow();
             void                    buildStartupScreen();
+            void                    removeDefaultScene();
 
         private:
             //Startup Thread

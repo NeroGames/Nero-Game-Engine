@@ -5,7 +5,7 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+//NEROCopyright (c) 2016-2021 Sanou A. K. Landry
 #include <Nero/object/PhysicObject.h>
 //BOX2D
 #include <Box2D/Dynamics/Contacts/b2Contact.h>

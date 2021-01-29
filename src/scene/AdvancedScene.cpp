@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -429,8 +429,10 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void AdvancedScene::launchBomb()
     {
-        b2Vec2 p(randomFloat(-15.0f, 15.0f), -30.0f);
-        b2Vec2 v = -5.0f * p;
+        sf::Vector2f spaw_pos = sf::Vector2f(m_Context.camera->getPosition().x, m_Context.camera->getPosition().y - m_Context.renderCanvas->GetView().getSize().y / 2.f);
+        b2Vec2 p = sf_to_b2(spaw_pos, SCALE);
+        p.x = p.x + randomFloat(-30.0f, 30.0f);
+        b2Vec2 v = -5.0f * b2Vec2(randomFloat(-15.0f, 15.0f), -30.0f);
         launchBomb(p, v);
     }
     ////////////////////////////////////////////////////////////

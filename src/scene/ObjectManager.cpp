@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2019 SANOU A. K. Landry
+// Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
@@ -113,6 +113,21 @@ namespace nero
         return findObjectByLayerType(name, Object::Solid_Object);
     }
 
+    Object::Ptr ObjectManager::findTextObject(sf::String name)
+    {
+        return findObjectByLayerType(name, Object::Text_Object);
+    }
+
+    Object::Ptr ObjectManager::findAnimationObject(sf::String name)
+    {
+        return findObjectByLayerType(name, Object::Animation_Object);
+    }
+
+    Object::Ptr ObjectManager::findSolidAnimationObject(sf::String name)
+    {
+        return findObjectByLayerType(name, Object::Animation_Solid_Object);
+    }
+
     Object::Ptr ObjectManager::findObjectInLayer(sf::String name, sf::String layer)
     {
         return findChildObject(findLayerObject(layer), name);
@@ -200,6 +215,21 @@ namespace nero
     Object::Ptr ObjectManager::findSolidObject(int id)
     {
         return findObjectByLayerType(id, Object::Solid_Object);
+    }
+
+    Object::Ptr ObjectManager::findTextObject(int id)
+    {
+        return findObjectByLayerType(id, Object::Text_Object);
+    }
+
+    Object::Ptr ObjectManager::findAnimationObject(int id)
+    {
+        return findObjectByLayerType(id, Object::Animation_Object);
+    }
+
+    Object::Ptr ObjectManager::findSolidAnimationObject(int id)
+    {
+        return findObjectByLayerType(id, Object::Animation_Solid_Object);
     }
 
     Object::Ptr ObjectManager::findObjectInLayer(int id, sf::String layer)
