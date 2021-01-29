@@ -5,7 +5,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/engine/EngineSetting.h>
-#include <Nero/utility/ConstantPool.h>Copyright (c) 2016-2021 Sanou A. K. Landry
+#include <Nero/utility/ConstantPool.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {

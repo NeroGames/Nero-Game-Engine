@@ -5,7 +5,7 @@
 #ifndef SCENE_UTIL_H
 #define SCENE_UTIL_H
 ///////////////////////////HEADERS//////////////////////////
-//NEROCopyright (c) 2016-2021 Sanou A. K. Landry
+//NERO
 #include <Nero/resource/ResourceManager.h>
 #include <Nero/camera/Camera.h>
 #include <Nero/Object/Object.h>

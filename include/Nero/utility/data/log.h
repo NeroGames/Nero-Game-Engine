@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2021 Sanou A. K. Landry
+// Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef LOG_CONFIG_H_INCLUDED
 #define LOG_CONFIG_H_INCLUDED

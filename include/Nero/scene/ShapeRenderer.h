@@ -3,7 +3,7 @@
 // Copyright (c) 2016-2019 SANOU A. K. Landry
 /////////////////////////////////////////////////////////////
 #ifndef SHAPERENDERER_H
-#define SHAPERENDERER_HCopyright (c) 2016-2021 Sanou A. K. Landry
+#define SHAPERENDERER_H
 ///////////////////////////HEADERS//////////////////////////
 //SFGUI
 #include <SFGUI/Canvas.hpp>

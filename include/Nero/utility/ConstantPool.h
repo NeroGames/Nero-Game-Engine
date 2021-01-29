@@ -5,7 +5,7 @@
 #ifndef CONSTANTPOOL_H_INCLUDED
 #define CONSTANTPOOL_H_INCLUDED
 ///////////////////////////HEADERS//////////////////////////
-//STDCopyright (c) 2016-2021 Sanou A. K. Landry
+//STD
 #include <string>
 //SFML
 #include <SFML/Graphics/Shader.hpp>
@@ -49,6 +49,6 @@ namespace nero
     const std::string   SIMPLE_FRAGMENT                         = "simpleFragment.frag";
     const std::string   SIMPLE_VERTEX                           = "simpleVertex.ver";
     const std::string   ENGINE_VERSION                          = "v1.0.0";
-    const std::string   ENGINE_COPYRIGHT                        = "Copyright (c) 2016-2021 Sanou A. K. Landry";
+    const std::string   ENGINE_COPYRIGHT                        = "Copyright (c) 2016-2019 SANOU A. K. Landry";
 }
 #endif // CONSTANTPOOL_H_INCLUDED

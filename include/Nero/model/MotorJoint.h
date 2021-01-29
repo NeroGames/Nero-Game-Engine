@@ -3,7 +3,7 @@
 // Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef MOTORJOINT_H
-#define MOTORJOINT_HCopyright (c) 2016-2021 Sanou A. K. Landry
+#define MOTORJOINT_H
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/model/PhysicJoint.h>

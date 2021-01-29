@@ -3,7 +3,7 @@
 // Copyright (c) 2016-2019 SANOU A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef SHADER_H_INCLUDED
-#define SHADER_H_INCLUDEDCopyright (c) 2016-2021 Sanou A. K. Landry
+#define SHADER_H_INCLUDED
 ////////////////////////////////////////////////////////////
 const unsigned char shader_json[] =
 {
