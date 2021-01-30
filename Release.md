@@ -1,3 +1,20 @@
+#### Release 1.0.6 [Engine Update]
+	- [Bug Fix]
+		- fix crash when changing mode (object to mesh) in screen_view
+		- fix switching to play_mode with ctrl + spacebar not working
+		- fix random bomb spawn position does not follow camera
+	- [Enhancement]
+		- remove editor default_scene when a scene is added
+		- add alias nero::Editor for nero::DevEngine
+		- add editor render_window icon
+		- link Glew in SDK to allow the creation of openGL projects
+		- add new finders in nero::ObjectManager (find [Text, Animation, SolidAnimation])
+		- add InfoTab (display selected object transforms)
+		- prevent mode switching in screen_view
+		- screen_view activation only work in object_mode
+		- add doxygen documentation generation in CMakelists.txt
+		- add Doxygen and Graphviz (dot) binaries in SDK
+
 #### Release 1.0.5 [Engine Update]
 	- [Bug Fix]
 		- in method nero::ObjectManager::createJoint, in the case of wheel-joint, fix property localAxisA 
@@ -48,3 +65,5 @@
 #### Release 1.0.0 [Initial Release]
 	
 	- None
+
+

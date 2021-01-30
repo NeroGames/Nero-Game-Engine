@@ -1,9 +1,9 @@
 ![alt text](https://www.nero-game.com/resource/artwork/github/github_readme_header_02.png)
 ![alt text](https://www.nero-game.com/resource/artwork/github/github_readme_engine_v1.png) 
 
-<div align="center"><a href="https://github.com/NeroGames/Nero-Game-Engine/tree/master" style="font-family: &quot;Autour One&quot;, Sans-serif;font-size: 20px;fill: #54595F;color: #54595F;background-color: #FFFFFF;border-style: solid;border-width: 6px 2px 6px 2px;box-shadow: 9px 10px 14px 0px rgba(0,0,0,0.5);padding: 14px 90px 14px 90px;">Find New Engine Here !</a> </div>
+<div align="center"><a href="https://github.com/NeroGames/Nero-Game-Engine/tree/master" style="font-family: &quot;Autour One&quot;, Sans-serif;font-size: 20px;fill: #54595F;color: #54595F;background-color: #FFFFFF;border-style: solid;border-width: 6px 2px 6px 2px;box-shadow: 9px 10px 14px 0px rgba(0,0,0,0.5);padding: 14px 90px 14px 90px;">Find New Engine Here -- Nero Game Engine II -- !</a> </div>
 
-## Nero Game Engine r1.0.5
+## Nero Game Engine r1.0.6
 
 The Nero Game Engine is an Advanced SFML Game Engine built around Box2D. Its design follows two rules : Simplicity and Intuitiveness. <br> 
 SFML (Simple and Fast Multimedia Library) is a cross-platform library designed to ease the development of games and multimedia applications.  Box2D is a 2D physics engine. It can simulate the behavior of rigid bodies in a world affected by gravity. <br>
@@ -20,7 +20,7 @@ The Engine Interface (image above) allows you to build a Game World without codi
 The Engine API is built around a Class called **nero::Scene**. The Scene represents your Game. From your Game Scene, you can retrieve all your Games Objects created using the Engine Interface and then manage their lifetime.
 
 ```cpp
-#include <Nero/engine/DevEngine.h>
+#include <Nero/engine/Editor.h>
 
 //Forward declaration
 class MyScene;
@@ -29,9 +29,9 @@ int main()
 {
     nero_log("hello world");
     
-    nero::DevEngine engine(1305);
-        engine.addScene<MyScene>("new scene");
-    engine.run();
+    nero::Editor editor(1305);
+        editor.addScene<MyScene>("new scene");
+    editor.run();
 
     return 0;
 }
