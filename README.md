@@ -54,15 +54,15 @@ The Engine Development is related to the SFML Forum. If you want a history of th
 [Follow the Engine Development Journey \[SFML Forum\]](https://en.sfml-dev.org/forums/index.php?topic=21019.0)
 
 ## Where to Start
-If you are using the Windows OS,  the easiest way to start is to download the Engine SDK on the [Website Download Page](https://www.nero-game.com) and then follow some tutorials. The SDK is built around the **MinGW compiler** and the **CodeBlocks IDE**. It offers an already setup environment where you can start coding just after downloading.
+If you are using the Windows OS,  the easiest way to start is to download the Engine SDK on the [Website Download Page](https://nero-games.com) and then follow some tutorials. The SDK is built around the **MinGW compiler** and the **CodeBlocks IDE**. It offers an already setup environment where you can start coding just after downloading.
 
 If you want to work in another environment you can still build the Engine.
 
 ## Links
-- [Website](https://www.nero-game.com/) 	Download the Engine and learn how to use it
+- [Website](https://nero-games.com/) 	Download the Engine and learn how to use it
 - [Twitter](https://twitter.com/nerogameengine) Don't miss any news
 - [Youtube](https://www.youtube.com/channel/UCIR0nDUMGzJ3Pkpa3gDCUeQ?view_as=subscriber) Find some videos tutorial here
-- [Forum](https://www.nero-game.com/forum/) Ask any questions here
+- [Forum](https://nero-games.com/forum/) Ask any questions here
 
 
 ## Support the Project
