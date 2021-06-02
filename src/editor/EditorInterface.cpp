@@ -4176,7 +4176,7 @@ namespace  nero
 	{
 		ImGui::Begin(EditorConstant.WINDOW_LEVEL.c_str());
 
-			ImGui::Text("Manage Scene Level");
+			ImGui::Text("Manage Game Level");
 			ImGui::Separator();
 			ImGui::Dummy(ImVec2(0.f, 2.f));
 
