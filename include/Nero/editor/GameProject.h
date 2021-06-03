@@ -27,7 +27,7 @@ namespace nero
             typedef std::shared_ptr<GameProject> Ptr;
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 
-            typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
+			typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
 			//typedef LuaScene::Ptr (CreateLuaSceneFn)(Scene::Context);
 
         public:
@@ -50,7 +50,7 @@ namespace nero
 			void								setCamera(const Camera::Ptr& camera);
 			void								openQtCreator(const std::string& file = StringPool.BLANK);
 			void								openVisualStudio(const std::string& file = StringPool.BLANK);
-			void								setRenderContext(const RenderContextPtr& renderContext);
+			void								setRenderContext(const RenderContext::Ptr& renderContext);
 			void								setSetting(const Setting::Ptr& setting);
 			void								close();
 			AdvancedScene::GameLevelPtr			loadGameLevel(const nlohmann::json& level);
@@ -73,7 +73,7 @@ namespace nero
 			Camera::Ptr							m_Camera;
 			ResourceManager::Ptr				m_ResourceManager;
 			Setting::Ptr						m_EngineSetting;
-			RenderContextPtr					m_RenderContext;
+			RenderContext::Ptr					m_RenderContext;
 			AdvancedScene::Ptr					m_AdvancedScene;
 			std::string							m_EditorProcessId;
 			boost::function<CreateCppSceneFn>	m_CreateCppSceneFn;
@@ -81,13 +81,14 @@ namespace nero
 
 			//TODO Remove
 		private:
-			Scene::Ptr							m_DemoScene;
+			Scene::Ptr							m_Scene;
+			//Scene::Ptr							m_DemoScene;
 		public:
-			void								renderDemo();
-			void								loadLibraryDemo();
+			void								render();
+			//void								loadLibrary();
 			void								destroyScene();
-			void								handleEventDemo(const sf::Event& event);
-			void								updateDemo(const sf::Time& timestep);
+			void								handleEvent(const sf::Event& event);
+			void								update(const sf::Time& timestep);
     };
 }
 

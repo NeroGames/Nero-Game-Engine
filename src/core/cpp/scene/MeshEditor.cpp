@@ -605,7 +605,7 @@ namespace nero
         m_UpdateLogIf = fn;
     }
 
-	void MeshEditor::setRenderContext(const RenderContextPtr& renderContext)
+	void MeshEditor::setRenderContext(const RenderContext::Ptr& renderContext)
 	{
 		m_RenderContext = renderContext;
 	}

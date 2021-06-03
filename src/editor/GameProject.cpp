@@ -49,8 +49,7 @@ namespace nero
 		m_ProjectParameter.setString("build_directory", file::getPath({m_ProjectParameter.getString("project_directory"), "Build"}));
 		m_ProjectParameter.setString("cmake_file", file::getPath({m_ProjectParameter.getString("source_directory"), "CMakeLists"}, StringPool.EXT_TEXT));
 
-		std::string library = string::formatString(m_ProjectParameter.getString("project_name"), string::Format::COMPACT_LOWER);
-
+		std::string library				= string::formatString(m_ProjectParameter.getString("project_name"), string::Format::COMPACT_LOWER);
 		std::string libraryFile			= file::getPath({m_ProjectParameter.getString("build_directory"), "libnerogame-" + library}, StringPool.EXT_DLL);
 		std::string libraryFileCopy		= file::getPath({m_ProjectParameter.getString("build_directory"), "libnerogame-" + library + "-copy"}, StringPool.EXT_DLL);
 
@@ -59,14 +58,14 @@ namespace nero
 
 		//nero_log(m_ProjectParameter.toString());
 
-		/*m_AdvancedScene = std::make_shared<AdvancedScene>();
+		m_AdvancedScene = std::make_shared<AdvancedScene>();
 		m_AdvancedScene->setSetting(m_EngineSetting);
 		m_AdvancedScene->setRenderTexture(m_RenderTexture);
 		m_AdvancedScene->setResourceManager(m_ResourceManager);
 		m_AdvancedScene->setRenderContext(m_RenderContext);
 		m_AdvancedScene->setCamera(m_Camera);
 		m_AdvancedScene->setProjectParameter(m_ProjectParameter);
-		m_AdvancedScene->initialize();*/
+		m_AdvancedScene->initialize();
     }
 
 	ResourceManager::Ptr GameProject::getResourceManager()
@@ -213,8 +212,8 @@ namespace nero
 
 	void GameProject::loadLibrary()
     {
-		loadLibraryDemo();
-		return;
+		//loadLibraryDemo();
+		//return;
 
 		nero_log(m_ProjectParameter.getString("library_file"));
 
@@ -261,7 +260,7 @@ namespace nero
 		}
     }
 
-	void GameProject::loadLibraryDemo()
+	/*void GameProject::loadLibraryDemo()
 	{
 		nero_log(m_ProjectParameter.getString("library_file"));
 
@@ -311,7 +310,7 @@ namespace nero
 		{
 			nero_log("loading failed");
 		}
-	}
+	}*/
 
     void GameProject::openEditor()
     {
@@ -445,7 +444,7 @@ namespace nero
 		return m_ProjectParameter.getString("project_name");
 	}
 
-	void GameProject::setRenderContext(const RenderContextPtr& renderContext)
+	void GameProject::setRenderContext(const RenderContext::Ptr& renderContext)
 	{
 		m_RenderContext = renderContext;
 	}
@@ -466,19 +465,19 @@ namespace nero
 		nero_log("clearing resources");
 		m_ResourceManager->clearResource();
 
-		m_DemoScene = nullptr;
+		//m_DemoScene = nullptr;
 		m_CreateCppSceneFn.clear();
 
 		//delete scene
-		//m_AdvancedScene->m_Scene = nullptr;
-		//m_AdvancedScene->m_CreateCppScene.clear();
-		//m_CreateCppSceneFn.clear();
+		m_AdvancedScene->m_Scene = nullptr;
+		m_AdvancedScene->m_CreateCppScene.clear();
+		m_CreateCppSceneFn.clear();
 
 		//delete level and screen
-		//m_AdvancedScene->m_GameLevelTable.clear();
-		//m_AdvancedScene->m_GameScreenTable.clear();
+		m_AdvancedScene->m_GameLevelTable.clear();
+		m_AdvancedScene->m_GameScreenTable.clear();
 
-		//m_CreateCppSceneFn.clear();
+		m_CreateCppSceneFn.clear();
 	}
 
 	void GameProject::createScriptObject(const Parameter& parameter)
@@ -532,34 +531,34 @@ namespace nero
 		return file::getPath({m_ProjectParameter.getString("project_directory"), "Resource"});
 	}
 
-	void GameProject::renderDemo()
+	void GameProject::render()
 	{
-		if(m_DemoScene)
+		if(m_Scene)
 		{
-			m_DemoScene->render();
-			m_DemoScene->renderShape();
+			m_Scene->render();
+			m_Scene->renderShape();
 		}
 	}
 
-	void GameProject::handleEventDemo(const sf::Event& event)
+	void GameProject::handleEvent(const sf::Event& event)
 	{
-		if(m_DemoScene)
+		if(m_Scene)
 		{
-			m_DemoScene->handleEvent(event);
+			m_Scene->handleEvent(event);
 		}
 	}
 
-	void GameProject::updateDemo(const sf::Time& timestep)
+	void GameProject::update(const sf::Time& timestep)
 	{
-		if(m_DemoScene)
+		if(m_Scene)
 		{
-			m_DemoScene->update(timestep);
+			m_Scene->update(timestep);
 		}
 	}
 
 	void GameProject::destroyScene()
 	{
-		m_DemoScene = nullptr;
+		m_Scene = nullptr;
 		m_CreateCppSceneFn.clear();
 	}
 }

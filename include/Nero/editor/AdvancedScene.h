@@ -40,7 +40,6 @@ namespace nero
 		public:
 			typedef std::shared_ptr<AdvancedScene> Ptr;
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
-			typedef std::shared_ptr<RenderContext> RenderContextPtr;
 			typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
 
 
@@ -161,7 +160,7 @@ namespace nero
 
 			void								initialize();
 			void								setScene(Scene::Ptr scene);
-			void								setRenderContext(const RenderContextPtr& renderContext);
+			void								setRenderContext(const RenderContext::Ptr& renderContext);
 			void								setRenderTexture(const RenderTexturePtr& renderTexture);
 			void								setResourceMananger(const ResourceManager::Ptr& resourceManager);
 			void								setCamera(const Camera::Ptr& camera);
@@ -233,7 +232,7 @@ namespace nero
 			GameScreenPtr						m_SelectedGameScreen;
 			//
 			Scene::Ptr							m_Scene;
-			RenderContextPtr					m_RenderContext;
+			RenderContext::Ptr					m_RenderContext;
 			ResourceManager::Ptr				m_ResourceManager;
 			RenderTexturePtr					m_RenderTexture;
 			Camera::Ptr							m_Camera;

@@ -8,12 +8,12 @@
 
 namespace ::Namespace::
 {
-    nero::Scene::Ptr ::Scene_Class::::createScene(nero::Scene::Context context) noexcept
+    nero::GameScene::Ptr ::Scene_Class::::createScene(nero::GameScene::Context context) noexcept
     {
           return ::Scene_Class::::Ptr(new ::Scene_Class::(context));
     }
 
-    ::Scene_Class::::::Scene_Class::(nero::Scene::Context context) : nero::Scene(context)
+    ::Scene_Class::::::Scene_Class::(nero::GameScene::Context context) : nero::GameScene(context)
     {
 
     }
@@ -30,16 +30,16 @@ namespace ::Namespace::
 
     void ::Scene_Class::::handleEvent(const sf::Event& event)
     {
-        nero::Scene::handleEvent(event);
+        nero::GameScene::handleEvent(event);
     }
 
     void ::Scene_Class::::update(const sf::Time& timeStep)
     {
-        nero::Scene::update(timeStep);
+        nero::GameScene::update(timeStep);
     }
 
     void  ::Scene_Class::::render()
     {
-        nero::Scene::render();
+        nero::GameScene::render();
     }
 }

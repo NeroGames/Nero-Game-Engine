@@ -1,28 +1,159 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2020 Sanou A. K. Landry
+////////////////////////////////////////////////////////////
+///////////////////////////HEADERS///////////////////////////
+//Nero
 #include <Nero/editor/ProjectManager.h>
 #include <Nero/core/cpp/utility/File.h>
 #include <Nero/core/cpp/utility/DateTime.h>
-
 #include <Nero/core/cpp/engine/EngineConstant.h>
 #include <Nero/core/cpp/engine/BackgroundTaskManager.h>
-//STD
-#include <windows.h>
-#include <stdio.h>
+//Boost
 #include <boost/algorithm/string.hpp>
 #include <boost/dll/import.hpp>
-#include <experimental/filesystem>
-
 #include <boost/dll.hpp>
-
+//Std
+#include <windows.h>
+#include <stdio.h>
+#include <experimental/filesystem>
+////////////////////////////////////////////////////////////
 namespace nero
 {
-    ProjectManager::ProjectManager():
-         m_ProjectTable()
-        ,m_EditorPid(StringPool.BLANK)
-        ,m_GameProject()
+	ProjectManager::ProjectManager():
+		 m_GameProject(nullptr)
 		,m_EditorSetting(nullptr)
-    {
+		,m_RenderTexture(nullptr)
+		,m_RenderContext(nullptr)
+		,m_Camera(nullptr)
+	{
 
-    }
+	}
+
+	ProjectManager::~ProjectManager()
+	{
+
+	}
+
+	void ProjectManager::createWorkspace(const Parameter& parameter)
+	{
+		nero_log("creating new project worksapce");
+
+		nero_log(parameter.getString("workspace_location"));
+		nero_log(parameter.getString("workspace_name"));
+
+		std::string directory = file::getPath({parameter.getString("workspace_location"), parameter.getString("workspace_name")});
+		file::createDirectory(directory);
+		file::createDirectory(file::getPath({directory, "Project"}));
+
+		//create workspace document
+		Parameter document;
+		document.setString("engine_version", EngineConstant.ENGINE_VERSION);
+		document.setString("document_type", EngineConstant.DOCUMENT_TYPE_WORKSPACE);
+		document.setString("workspace_name", parameter.getString("workspace_name"));
+		document.setString("project_lead", parameter.getString("project_lead"));
+		document.setString("project_namespace", parameter.getString("project_namespace"));
+		document.setString("company_name", parameter.getString("company_name"));
+		file::saveFile(file::getPath({directory, ".workspace"}), document.toString());
+
+		//update workspace setting
+		auto worksapceSetting =  file::loadJson(file::getPath({"setting", "workspace"}));
+
+		nlohmann::json workspace;
+		workspace["order"]					= worksapceSetting.size() + 1;
+		workspace["workspace_id"]           = string::formatString(parameter.getString("workspace_name"));
+		workspace["workspace_name"]         = parameter.getString("workspace_name");
+		workspace["workspace_directory"]    = directory;
+		workspace["project_lead"]			= parameter.getString("project_lead");
+		workspace["company_name"]			= parameter.getString("company_name");
+		workspace["project_namespace"]      = parameter.getString("project_namespace");
+
+		worksapceSetting.push_back(workspace);
+
+		file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON), worksapceSetting.dump(3), true);
+	}
+
+	void ProjectManager::importWorkspace(const std::string& directory)
+	{
+		auto worksapceSetting =  file::loadJson(file::getPath({"setting", "workspace"}));
+
+		Parameter parameter;
+		parameter.loadJson(file::loadJson(file::getPath({directory, ".workspace"}), true));
+
+		//update workspace to match directory
+		parameter.setString("workspace_name", file::getFileName(directory));
+
+		nlohmann::json workspace;
+		workspace["order"]					= worksapceSetting.size() + 1;
+		workspace["workspace_id"]           = string::formatString(parameter.getString("workspace_name"));
+		workspace["workspace_name"]         = parameter.getString("workspace_name");
+		workspace["workspace_directory"]    = directory;
+		workspace["project_lead"]			= parameter.getString("project_lead");
+		workspace["company_name"]			= parameter.getString("company_name");
+		workspace["project_namespace"]      = parameter.getString("project_namespace");
+
+		worksapceSetting.push_back(workspace);
+
+		file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON), worksapceSetting.dump(3), true);
+		file::saveFile(file::getPath({directory, ".workspace"}), parameter.toString());
+	}
+
+	void ProjectManager::deleteWorksapce(const std::string &directory)
+	{
+		//TODO delete workspace
+	}
+
+	const nlohmann::json ProjectManager::getWorkspaceTable() const
+	{
+		return file::loadJson(file::getPath({"setting", "workspace"}));
+	}
+
+	bool ProjectManager::workspaceExist(const std::string& workspaceName)
+	{
+		std::string workspace_id = string::formatString(workspaceName);
+
+		for(auto workspace : getWorkspaceTable())
+		{
+		   if(workspace["workspace_id"].get<std::string>() == workspace_id)
+		   {
+			   return true;
+		   }
+		}
+
+		return false;
+	}
+
+	const std::vector<std::string> ProjectManager::getWorkspaceNameTable() const
+	{
+		auto workspaceTable =  file::loadJson(file::getPath({"setting", "workspace"}));
+
+		std::vector<std::string> result;
+
+		for(auto workspace : workspaceTable)
+		{
+			result.push_back(workspace["workspace_name"].get<std::string>());
+		}
+
+		return result;
+	}
+
+	const nlohmann::json ProjectManager::findWorkspace(const std::string& name) const
+	{
+		auto workspaceTable =  file::loadJson(file::getPath({"setting", "workspace"}));
+
+		nlohmann::json result;
+
+		for(auto workspace : workspaceTable)
+		{
+			if(workspace["workspace_name"] == name)
+			{
+				result = workspace;
+				break;
+			}
+		}
+
+		return result;
+	}
 
 	void ProjectManager::createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
 	{
@@ -43,18 +174,10 @@ namespace nero
 			createCppLuaProject(parameter, backgroundTask);
 		}
 
-		/*if(backgroundTask->getErrorCode() != 0)
+		if(backgroundTask->getErrorCode() == 0)
 		{
-			std::string workspaceDirectory	= findWorkspace(parameter.getString("workspace_name"))["workspace_directory"].get<std::string>();
-			std::string projectDirectory	= file::getPath({workspaceDirectory, "Project", parameter.getString("project_name")});
-
-			//std::this_thread::sleep_for(std::chrono::seconds(1));
-			removeDirectory(projectDirectory, true);
-
-			return;
-		}*/
-
-		updateRecentProject(getProjectDirectory(parameter));
+			updateRecentProject(getProjectDirectory(parameter));
+		}
 	}
 
 	std::string ProjectManager::getProjectDirectory(const Parameter& parameter)
@@ -81,9 +204,9 @@ namespace nero
 		file::createDirectory(file::getPath({projectDirectory, "Resource"}));
 			file::createDirectory(file::getPath({projectDirectory, "Source", project_name}));
 				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp"}));
+					file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "level"}));
 				/*file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "script"}));
 				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "gameobject"}));
-				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "level"}));
 				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "screen"}));
 				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "startupscreen"}));*/
 		file::createDirectory(file::getPath({projectDirectory, "Build"}));
@@ -214,10 +337,6 @@ namespace nero
 		m_EditorSetting = setting;
     }
 
-    const std::vector<nlohmann::json>& ProjectManager::getProjectTable() const
-    {
-        return m_ProjectTable;
-    }
 
     const std::vector<nlohmann::json> ProjectManager::getWorkspaceProjectTable(const std::string& workspace_name)
 	{
@@ -244,106 +363,7 @@ namespace nero
         return result;
     }
 
-	void ProjectManager::createWorkspace(const Parameter& parameter)
-    {
-		nero_log("creating new project worksapce");
 
-		nero_log(parameter.getString("workspace_location"));
-		nero_log(parameter.getString("workspace_name"));
-
-		std::string directory = file::getPath({parameter.getString("workspace_location"), parameter.getString("workspace_name")});
-		file::createDirectory(directory);
-		file::createDirectory(file::getPath({directory, "Project"}));
-
-		//create workspace document
-		Parameter document;
-		document.setString("engine_version", EngineConstant.ENGINE_VERSION);
-		document.setString("document_type", EngineConstant.DOCUMENT_TYPE_WORKSPACE);
-		document.setString("workspace_name", parameter.getString("workspace_name"));
-		document.setString("project_lead", parameter.getString("project_lead"));
-		document.setString("project_namespace", parameter.getString("project_namespace"));
-		document.setString("company_name", parameter.getString("company_name"));
-		file::saveFile(file::getPath({directory, ".workspace"}), document.toString());
-
-        //update workspace setting
-		auto worksapceSetting =  file::loadJson(file::getPath({"setting", "workspace"}));
-
-		nlohmann::json workspace;
-		workspace["order"]					= worksapceSetting.size() + 1;
-		workspace["workspace_id"]           = string::formatString(parameter.getString("workspace_name"));
-		workspace["workspace_name"]         = parameter.getString("workspace_name");
-		workspace["workspace_directory"]    = directory;
-		workspace["project_lead"]			= parameter.getString("project_lead");
-		workspace["company_name"]			= parameter.getString("company_name");
-		workspace["project_namespace"]      = parameter.getString("project_namespace");
-
-		worksapceSetting.push_back(workspace);
-
-		file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON), worksapceSetting.dump(3), true);
-    }
-
-	void ProjectManager::importWorkspace(const std::string& directory)
-	{
-		auto worksapceSetting =  file::loadJson(file::getPath({"setting", "workspace"}));
-
-		Parameter parameter;
-		parameter.loadJson(file::loadJson(file::getPath({directory, ".workspace"}), true));
-
-		//update workspace to match directory
-		parameter.setString("workspace_name", file::getFileName(directory));
-
-		nlohmann::json workspace;
-		workspace["order"]					= worksapceSetting.size() + 1;
-		workspace["workspace_id"]           = string::formatString(parameter.getString("workspace_name"));
-		workspace["workspace_name"]         = parameter.getString("workspace_name");
-		workspace["workspace_directory"]    = directory;
-		workspace["project_lead"]			= parameter.getString("project_lead");
-		workspace["company_name"]			= parameter.getString("company_name");
-		workspace["project_namespace"]      = parameter.getString("project_namespace");
-
-		worksapceSetting.push_back(workspace);
-
-		file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON), worksapceSetting.dump(3), true);
-		file::saveFile(file::getPath({directory, ".workspace"}), parameter.toString());
-	}
-
-
-    const nlohmann::json ProjectManager::getWorkspaceTable() const
-    {
-		return file::loadJson(file::getPath({"setting", "workspace"}));
-    }
-
-    const std::vector<std::string> ProjectManager::getWorkspaceNameTable() const
-    {
-		auto workspaceTable =  file::loadJson(file::getPath({"setting", "workspace"}));
-
-		std::vector<std::string> result;
-
-		for(auto workspace : workspaceTable)
-		{
-			result.push_back(workspace["workspace_name"].get<std::string>());
-		}
-
-		return result;
-    }
-
-    const nlohmann::json ProjectManager::findWorkspace(const std::string& name) const
-    {
-		auto workspaceTable =  file::loadJson(file::getPath({"setting", "workspace"}));
-
-        nlohmann::json result;
-
-        for(auto workspace : workspaceTable)
-        {
-            if(workspace["workspace_name"] == name)
-            {
-                result = workspace;
-				break;
-            }
-        }
-
-        return result;
-    }
 
 	void ProjectManager::compileProject(const std::string& projectDirectory, BackgroundTask::Ptr backgroundTask)
 	{
@@ -375,10 +395,6 @@ namespace nero
 		nero_log("build project exit code = " + toString(buildProcess.getExistCode()));
 	}
 
-	void ProjectManager::editProject()
-    {
-
-    }
 
 	std::string ProjectManager::formatSceneClassName(std::vector<std::string> wordTable)
 	{
@@ -478,16 +494,16 @@ namespace nero
 		m_GameProject->setRenderContext(m_RenderContext);
 		m_GameProject->setCamera(m_Camera);
 
-		m_GameProject->loadResource(parameter);
+		/*m_GameProject->loadResource(parameter);
 		nero_log("initializing project");
 		m_GameProject->init(parameter);
 		nero_log("loading project");
-		//m_GameProject->loadProject();
+		m_GameProject->loadProject();
 		nero_log("loading project library");
-		//m_GameProject->loadLibrary();
-		m_GameProject->loadLibraryDemo();
+		m_GameProject->loadLibrary();
+		//m_GameProject->loadLibraryDemo();
 		nero_log("openning editor");
-		m_GameProject->openEditor();
+		m_GameProject->openEditor();*/
 
 		updateRecentProject(projectDirectory);
 
@@ -546,20 +562,7 @@ namespace nero
         return result;
      }
 
-	 bool ProjectManager::workspaceExist(const std::string& workspaceName)
-	 {
-		 std::string workspace_id = string::formatString(workspaceName);
 
-		 for(auto workspace : getWorkspaceTable())
-		 {
-			if(workspace["workspace_id"].get<std::string>() == workspace_id)
-			{
-				return true;
-			}
-		 }
-
-		 return false;
-	 }
 
 	 void ProjectManager::setRenderTexture(const RenderTexturePtr& renderTexture)
 	 {
@@ -571,7 +574,7 @@ namespace nero
 		m_Camera = camera;
 	 }
 
-	 void ProjectManager::setRenderContext(const RenderContextPtr& renderContext)
+	 void ProjectManager::setRenderContext(const RenderContext::Ptr& renderContext)
 	 {
 		 m_RenderContext = renderContext;
 	 }

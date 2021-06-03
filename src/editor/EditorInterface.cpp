@@ -236,7 +236,7 @@ namespace  nero
 		{
 			try
 			{
-				m_GameProject->handleEventDemo(event);
+				m_GameProject->handleEvent(event);
 			}
 			catch (std::exception e)
 			{
@@ -296,7 +296,7 @@ namespace  nero
 		{
 			try
 			{
-				m_GameProject->updateDemo(timeStep);
+				m_GameProject->update(timeStep);
 			}
 			catch (std::exception e)
 			{
@@ -500,7 +500,7 @@ namespace  nero
 			{
 				try
 				{
-					m_GameProject->renderDemo();
+					m_GameProject->render();
 				}
 				catch(std::exception e)
 				{
@@ -3198,7 +3198,7 @@ namespace  nero
 		{
 			nero_log("reloading project ...");
 
-			m_GameProject->loadLibraryDemo();
+			m_GameProject->loadLibrary();
 
 		}
 	}
@@ -3408,10 +3408,8 @@ namespace  nero
 
 	void EditorInterface::showResourceBrowserWindow()
 	{
-		if(!m_ResourceManager)
-		{
-			return;
-		}
+		if(!m_ResourceManager) { return;}
+
 		//project manager window
 		if(m_ResourceBrowserType != ResourceType::None)
 		{
@@ -4180,11 +4178,11 @@ namespace  nero
 			ImGui::Separator();
 			ImGui::Dummy(ImVec2(0.f, 2.f));
 
-			float width = 90.f;
+			//float width = 90.f;
 
 			ImGui::Dummy(ImVec2(0.f, 2.f));
 
-			ImVec2 button_size = ImVec2(width, 0.f);
+			ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth()-8.f)/2.f, 0.f);
 
 			if(ImGui::Button("Add##add_game_level", button_size))
 			{
@@ -4196,6 +4194,11 @@ namespace  nero
 			if(ImGui::Button("Remove##remove_game_level", button_size))
 			{
 				removeGameLevel();
+			}
+
+			if(ImGui::Button("Edit##edit_game_level", ImVec2(button_size.x * 2.f + 8.f, button_size.y)))
+			{
+				editGameLevel();
 			}
 
 			ImGui::Dummy(ImVec2(0.f, 5.f));
@@ -4233,18 +4236,56 @@ namespace  nero
 
 			ImGui::EndChild();
 
+			showGameLevelPopup();
+
 		ImGui::End();
 	};
 
+	void EditorInterface::showGameLevelPopup()
+	{
+		//Window flags
+		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
+										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+		//Winsow size
+		ImVec2 winsow_size              = ImVec2(400.f, 250.f);
+
+		//Project manager window
+		ImGui::SetNextWindowSize(winsow_size);
+		//Begin window
+		if(ImGui::BeginPopupModal("Create Game Level", nullptr, window_flags))
+		{
+
+			if (ImGui::Button("Close##close_about_engine", ImVec2(100, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
 	void EditorInterface::addGameLevel()
 	{
+		nero_log("create new game level")
+		ImGui::OpenPopup("Create Game Level");
+
 		if(m_AdvancedScene)
 		{
-			m_AdvancedScene->addGameLevel();
+
+
+			//m_AdvancedScene->addGameLevel();
 		}
 	}
 
 	void EditorInterface::removeGameLevel()
+	{
+		if(m_AdvancedScene)
+		{
+
+		}
+	}
+
+	void EditorInterface::editGameLevel()
 	{
 		if(m_AdvancedScene)
 		{

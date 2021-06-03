@@ -37,7 +37,7 @@ namespace nero
             void                    setUpdateUndo(std::function<void()>  fn);
             void                    setUpdateLog(std::function<void(const std::string&, int)>  fn);
             void                    setUpdateLogIf(std::function<void(const std::string&, bool, int)>  fn);
-			void					setRenderContext(const RenderContextPtr& renderContext);
+			void					setRenderContext(const RenderContext::Ptr& renderContext);
 			void					setRenderTexture(const RenderTexturePtr& renderTexture);
 
         private: //Methods
@@ -54,7 +54,7 @@ namespace nero
             std::vector<sf::RectangleShape*>                    m_SelectedVertexTab;
             int                                                 m_MeshCount;
 			RenderTexturePtr                                    m_RenderTexture;
-			RenderContextPtr									m_RenderContext;
+			RenderContext::Ptr									m_RenderContext;
             sf::Vector2f                                        m_LastMousePosition;
             std::function<void()>                               m_UpdateUndo;
             std::function<void(const std::string&, int)>        m_UpdateLog;

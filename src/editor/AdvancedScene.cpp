@@ -239,7 +239,7 @@ namespace nero
 		m_Scene = scene;
     }
 
-	void AdvancedScene::setRenderContext(const RenderContextPtr& renderContext)
+	void AdvancedScene::setRenderContext(const RenderContext::Ptr& renderContext)
 	{
 		m_RenderContext = renderContext;
 	}

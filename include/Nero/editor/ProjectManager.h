@@ -1,114 +1,87 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2020 Sanou A. K. Landry
+////////////////////////////////////////////////////////////
 #ifndef PROJECTMANAGER_H
 #define PROJECTMANAGER_H
-
+///////////////////////////HEADERS///////////////////////////
+//Nero
 #include <Nero/core/cpp/utility/CommandLine.h>
-#include <memory>
-#include <json/json.hpp>
 #include <Nero/editor/GameProject.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/lua/scene/LuaScene.h>
-#include <boost/function.hpp>
 #include <Nero/core/cpp/utility/String.h>
 #include <Nero/core/cpp/engine/BackgroundTask.h>
-
 #include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/editor/AdvancedCamera.h>
-
+//Json
+#include <json/json.hpp>
+//Boost
+#include <boost/function.hpp>
+//Std
+#include <memory>
+////////////////////////////////////////////////////////////
 namespace  nero
 {
     class ProjectManager
     {
         public:
-			typedef std::shared_ptr<ProjectManager> Ptr;
-			typedef std::shared_ptr<RenderContext> RenderContextPtr;
-			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
-			typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
-			//typedef LuaScene::Ptr (CreateLuaSceneFn)(Scene::Context);
-
-            enum Project_Type {LUA_PROJECT, CPP_PROJECT, CPP_LUA_PROJECT};
+			//attribute
+			typedef std::shared_ptr<ProjectManager>			Ptr;
+			typedef std::shared_ptr<sf::RenderTexture>		RenderTexturePtr;
 
         public:
-            ProjectManager();
+			//ctr & dtr
+													ProjectManager();
+												   ~ProjectManager();
+			//workspace
+				//main
+			void									createWorkspace(const Parameter& parameter);
+			void									deleteWorksapce(const std::string& directory);
+			void									importWorkspace(const std::string& directory);
+				//utility
+			const nlohmann::json					getWorkspaceTable() const;
+			bool									workspaceExist(const std::string& workspaceName);
+			const std::vector<std::string>			getWorkspaceNameTable() const;
+			const nlohmann::json					findWorkspace(const std::string& name) const;
 
-		   //void createProject(const Setting& parameter, int& status);
-		   void createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-
-		   void createWorkspace(const Parameter& parameter);
-		   void importWorkspace(const std::string& directory);
-
-		   bool projectExist(const std::string& projectName, const std::string& workspaceName);
-		   bool workspaceExist(const std::string& workspaceName);
-
-		   void setSetting(const Setting::Ptr& setting);
-
-		   //void loadAllProject();
-
-           const std::vector<nlohmann::json>& getProjectTable() const;
-
-           const std::vector<nlohmann::json> getWorkspaceProjectTable(const std::string& workpsace);
-
-
-           const nlohmann::json getWorkspaceTable() const;
-           const std::vector<std::string> getWorkspaceNameTable() const;
-
-           const nlohmann::json findWorkspace(const std::string& name) const;
-
-		   void compileProject(const std::string& projectDirectory, BackgroundTask::Ptr backgroundTask);
-		   void editProject();
-
-           void loadLibrary();
-		   void closeProject();
-
-            std::string exec(const char* cmd);
-            std::string formatSceneClassName(std::vector<std::string> wordTable);
-            std::string formatHeaderGard(std::vector<std::string> wordTable);
-            std::string formatCmakeProjectName(std::vector<std::string> wordTable);
-            std::string formatCmakeProjectLibrary(std::vector<std::string> wordTable);
+			//game project
+				//main
+			void									createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+			void									createCppProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+			void									createLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+			void									createCppLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+			void									closeProject();
+			void									deleteProject();
+			void									compileProject(const std::string& projectDirectory, BackgroundTask::Ptr backgroundTask);
+			GameProject::Ptr						openProject(const std::string& projectDirectory);
+				//utiliy
+			bool									projectExist(const std::string& projectName, const std::string& workspaceName);
+			const std::vector<nlohmann::json>		getWorkspaceProjectTable(const std::string& workpsace);
+			nlohmann::json							findProject(const std::string& workspace_name, const std::string& project_name);
+			void									updateRecentProject(const std::string& projectDirectory);
+			std::string								getProjectDirectory(const Parameter& parameter);
 
 
-            std::string getEngineDirectory() const;
-
-			GameProject::Ptr openProject(const std::string& projectPath);
-            nlohmann::json findProject(const std::string& workspace_name, const std::string& project_name);
-
-            void openEditor(std::string cmake_project);
-
-			void createCppProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-			void createLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-			void createCppLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-
-			void updateRecentProject(const std::string& projectDirectory);
-
-			std::string getProjectDirectory(const Parameter& parameter);
-
-			void setRenderTexture(const RenderTexturePtr& renderTexture);
-			void setCamera(const Camera::Ptr& camera);
-
-			void setRenderContext(const RenderContextPtr& renderContext);
-
-
+			//other
+			void									setSetting(const Setting::Ptr& setting);
+			std::string								getEngineDirectory() const;
+			void									setRenderTexture(const RenderTexturePtr& renderTexture);
+			void									setCamera(const Camera::Ptr& camera);
+			void									setRenderContext(const RenderContext::Ptr& renderContext);
+			std::string								formatSceneClassName(std::vector<std::string> wordTable);
+			std::string								formatHeaderGard(std::vector<std::string> wordTable);
+			std::string								formatCmakeProjectName(std::vector<std::string> wordTable);
+			std::string								formatCmakeProjectLibrary(std::vector<std::string> wordTable);
 
 
         private:
-		   Setting::Ptr      m_EditorSetting;
-           std::vector<nlohmann::json>  m_ProjectTable;
-
-           std::string m_EditorPid;
-
-           GameProject::Ptr m_GameProject;
-
-           boost::function<CreateCppSceneFn> m_CreateCppSceneFn;
-		   //boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;
-		   Scene::Ptr					m_GameScene;
-
-		   RenderTexturePtr				m_RenderTexture;
-		   Camera::Ptr					m_Camera;
-		   ResourceManager::Ptr			m_ResourceManager;
-		   RenderContextPtr				m_RenderContext;
-
+			GameProject::Ptr						m_GameProject;
+			Setting::Ptr							m_EditorSetting;
+			RenderTexturePtr						m_RenderTexture;
+			RenderContext::Ptr						m_RenderContext;
+			Camera::Ptr								m_Camera;
     };
 }
-
-
 
 #endif // PROJECTMANAGER_H

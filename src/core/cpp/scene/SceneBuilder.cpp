@@ -2228,7 +2228,7 @@ namespace nero
         return m_ObjectCount;
     }
 
-	void SceneBuilder::setRenderContext(const RenderContextPtr& renderContext)
+	void SceneBuilder::setRenderContext(const RenderContext::Ptr& renderContext)
 	{
 		m_RenderContext = renderContext;
 

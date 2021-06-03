@@ -124,7 +124,7 @@ namespace nero
 
             int                             getObjectCount();
 
-			void							setRenderContext(const RenderContextPtr& renderContext);
+			void							setRenderContext(const RenderContext::Ptr& renderContext);
 			void							setRenderTexture(const RenderTexturePtr& renderTexture);
 			void							setResourceManager(const ResourceManager::Ptr& resourceManager);
 			void							setLightManager(const LightManagerPtr& lightManager);
@@ -172,7 +172,7 @@ namespace nero
             sf::Color                       m_CanvasColor;
 
 			RenderTexturePtr				m_RenderTexture;
-			RenderContextPtr				m_RenderContext;
+			RenderContext::Ptr				m_RenderContext;
 			LightManagerPtr					m_LightManager;
 
 

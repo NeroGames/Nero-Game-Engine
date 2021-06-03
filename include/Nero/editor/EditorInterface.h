@@ -234,6 +234,8 @@ namespace nero
 			//
 			void						addGameLevel();
 			void						removeGameLevel();
+			void						editGameLevel();
+			void						showGameLevelPopup();
 			int							m_InputSelectedGameLevelId;
 			//
 			void						addGameScreen();
@@ -297,7 +299,7 @@ namespace nero
 			void			renderGameModeInfo();
 
 
-			RenderContextPtr m_RenderContext;
+			RenderContext::Ptr m_RenderContext;
 
 
 			std::string getString(const EditorMode& editorMode);
