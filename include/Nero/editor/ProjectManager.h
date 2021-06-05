@@ -66,9 +66,6 @@ namespace  nero
 			//other
 			void									setSetting(const Setting::Ptr& setting);
 			std::string								getEngineDirectory() const;
-			void									setRenderTexture(const RenderTexturePtr& renderTexture);
-			void									setCamera(const Camera::Ptr& camera);
-			void									setRenderContext(const RenderContext::Ptr& renderContext);
 			std::string								formatSceneClassName(std::vector<std::string> wordTable);
 			std::string								formatHeaderGard(std::vector<std::string> wordTable);
 			std::string								formatCmakeProjectName(std::vector<std::string> wordTable);
@@ -78,9 +75,6 @@ namespace  nero
         private:
 			GameProject::Ptr						m_GameProject;
 			Setting::Ptr							m_EditorSetting;
-			RenderTexturePtr						m_RenderTexture;
-			RenderContext::Ptr						m_RenderContext;
-			Camera::Ptr								m_Camera;
     };
 }
 

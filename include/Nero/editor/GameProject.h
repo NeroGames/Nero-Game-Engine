@@ -73,11 +73,8 @@ namespace nero
 			Scene::Ptr							m_Scene;
 			std::vector<BackgroundTask>			m_BackgroundTaskTable;
 			Parameter							m_ProjectParameter;
-			RenderTexturePtr					m_RenderTexture;
-			Camera::Ptr							m_Camera;
 			ResourceManager::Ptr				m_ResourceManager;
 			Setting::Ptr						m_EngineSetting;
-			RenderContext::Ptr					m_RenderContext;
 			AdvancedScene::Ptr					m_AdvancedScene;
 			std::string							m_EditorProcessId;
 			boost::function<CreateCppSceneFn>	m_CreateCppSceneFn;

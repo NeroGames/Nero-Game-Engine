@@ -28,6 +28,11 @@ namespace ::Namespace::
 
     }
 
+    void ::Scene_Class::::destroy()
+    {
+
+    }
+
     void ::Scene_Class::::handleEvent(const sf::Event& event)
     {
         nero::GameScene::handleEvent(event);

@@ -23,9 +23,6 @@ namespace nero
 	ProjectManager::ProjectManager():
 		 m_GameProject(nullptr)
 		,m_EditorSetting(nullptr)
-		,m_RenderTexture(nullptr)
-		,m_RenderContext(nullptr)
-		,m_Camera(nullptr)
 	{
 
 	}
@@ -489,6 +486,8 @@ namespace nero
 		parameter.setString("workspace_directory", file::getParentDirectory(projectDirectory, 2));
 
 		m_GameProject = GameProject::Ptr(new GameProject());
+		m_GameProject->init(parameter);
+
 		/*m_GameProject->setSetting(m_EditorSetting);
 		m_GameProject->setRenderTexture(m_RenderTexture);
 		m_GameProject->setRenderContext(m_RenderContext);
@@ -496,7 +495,7 @@ namespace nero
 
 		/*m_GameProject->loadResource(parameter);
 		nero_log("initializing project");
-		m_GameProject->init(parameter);
+
 		nero_log("loading project");
 		m_GameProject->loadProject();
 		nero_log("loading project library");
@@ -561,21 +560,4 @@ namespace nero
 
         return result;
      }
-
-
-
-	 void ProjectManager::setRenderTexture(const RenderTexturePtr& renderTexture)
-	 {
-		m_RenderTexture = renderTexture;
-	 }
-
-	 void ProjectManager::setCamera(const Camera::Ptr& camera)
-	 {
-		m_Camera = camera;
-	 }
-
-	 void ProjectManager::setRenderContext(const RenderContext::Ptr& renderContext)
-	 {
-		 m_RenderContext = renderContext;
-	 }
 }

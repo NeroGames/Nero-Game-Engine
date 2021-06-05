@@ -2,23 +2,25 @@
 // ::Project_Name::
 // Copyright (c) ::Coypright_Date:: ::Project_Lead::
 /////////////////////////////////////////////////////////////
-
 /*
-	Date 				: ::ProjectDate::
-	Team Lead 	 		: ::ProjectLead::
 
-	Project Name 		: ::ProjectName::
-	Project Description	:
+- Project Name			: ::ProjectName::
+- Creation Date			: ::ProjectDate::
+- Team Lead 	 		: ::ProjectLead::
 
-	::ProjectDescription::
+- Delivery Date			: When it is done
 
-	Team Members 		
-		- ::ProjectLead::
+- Team Members
+	- ::ProjectLead::
 
-	Project Tools
- 		- Nero Game Engine
- 		- Texture Packer
+- Project Tools
+	- Nero Game Engine
+	- Texture Packer
 
- 	Delivery Date		: When it is done
+
+- Project Description	:
+
+::ProjectDescription::
+
 
 */

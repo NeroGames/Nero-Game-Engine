@@ -25,11 +25,11 @@ namespace ::Namespace::
 										::Scene_Class::(nero::GameScene::Context context);
 			virtual                     ~::Scene_Class::() override;
 
-			virtual void				init();
-			virtual void				destroy();
+			virtual void				init()								override;
+			virtual void				destroy()							override;
 			virtual void                handleEvent(const sf::Event& event) override;
-			virtual void                update(const sf::Time& timeStep) override;
-			virtual void                render() override;
+			virtual void                update(const sf::Time& timeStep)	override;
+			virtual void                render()							override;
     };
 
 	//Class export (DOT NOT MODIFY)

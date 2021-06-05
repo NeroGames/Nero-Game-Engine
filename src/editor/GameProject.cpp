@@ -58,6 +58,11 @@ namespace nero
 		m_ProjectParameter.setString("library_file", libraryFile);
 		m_ProjectParameter.setString("library_file_copy", libraryFileCopy);
 
+
+		//create advanced scene
+		m_AdvancedScene = std::make_shared<AdvancedScene>();
+
+
 		//nero_log(m_ProjectParameter.toString());
 
 		/*m_AdvancedScene = std::make_shared<AdvancedScene>();
@@ -431,25 +436,11 @@ namespace nero
         return m_AdvancedScene;
     }
 
-	void GameProject::setRenderTexture(const RenderTexturePtr& renderTexture)
-	{
-	   m_RenderTexture = renderTexture;
-	}
-
-	void GameProject::setCamera(const Camera::Ptr& camera)
-	{
-	   m_Camera = camera;
-	}
-
 	std::string GameProject::getProjectName() const
 	{
 		return m_ProjectParameter.getString("project_name");
 	}
 
-	void GameProject::setRenderContext(const RenderContext::Ptr& renderContext)
-	{
-		m_RenderContext = renderContext;
-	}
 
 	void GameProject::setSetting(const Setting::Ptr& setting)
 	{

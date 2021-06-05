@@ -115,10 +115,10 @@
                          </base-DElement>
                          <object>{733fac8c-2ade-4bdb-8405-8dcf9648111e}</object>
                          <name>Screen Builder</name>
-                         <pos>x:625;y:450</pos>
+                         <pos>x:495;y:400</pos>
                          <rect>x:-60;y:-15;w:120;h:30</rect>
                          <auto-sized>false</auto-sized>
-                         <visual-role>0</visual-role>
+                         <visual-role>8</visual-role>
                         </DObject>
                        </base-DObject>
                        <shape-editable>false</shape-editable>
@@ -140,7 +140,7 @@
                          <pos>x:495;y:450</pos>
                          <rect>x:-60;y:-15;w:120;h:30</rect>
                          <auto-sized>false</auto-sized>
-                         <visual-role>0</visual-role>
+                         <visual-role>7</visual-role>
                         </DObject>
                        </base-DObject>
                        <shape-editable>false</shape-editable>
@@ -159,7 +159,7 @@
                          </base-DElement>
                          <object>{a3865a20-f871-4c1d-9012-69ed088cc772}</object>
                          <name>Object Builder</name>
-                         <pos>x:750;y:450</pos>
+                         <pos>x:615;y:450</pos>
                          <rect>x:-45;y:-15;w:90;h:30</rect>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -223,7 +223,7 @@
                          </base-DElement>
                          <object>{dc5bc7e8-a6cc-4cef-a243-47cad28fffe9}</object>
                          <name>Visual Script Builder</name>
-                         <pos>x:495;y:405</pos>
+                         <pos>x:735;y:450</pos>
                          <rect>x:-55;y:-15;w:110;h:30</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
@@ -340,7 +340,7 @@
                     </item>
                    </qlist>
                   </elements>
-                  <last-modified>1622825239850</last-modified>
+                  <last-modified>1622904911277</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>

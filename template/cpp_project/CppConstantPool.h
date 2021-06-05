@@ -10,6 +10,7 @@
 /////////////////////////////////////////////////////////////
 namespace ::NameSpace::
 {
+	//Generated Begin
 	struct GeneratedConstant
 	{
 		//Project
@@ -29,6 +30,7 @@ namespace ::NameSpace::
 		//Object Name
 
 	};
+	//Generated End
 
 	const struct ConstantPool : public GeneratedConstant
 	{

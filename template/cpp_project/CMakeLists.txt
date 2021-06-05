@@ -1,11 +1,11 @@
 # DO NOT MODIFY
 #----------------------------------------------------------------------------------#
 #[[
-    This document as been generated automatically by the Nero Game Engine EditorZ.
-    Any modification to this document can break the Build of your Game.
+    This document as been generated automatically by the Nero Game Engine Editor.
+    Any modification to this document can break the build of your Game.
     Do not modify this document if you are not familiar with CMAKE.
 
-    Learn more at https://nero-game.com/v2/game-project-compilation
+    Learn more at https://nero-games.com/learn/engine-v2/game-project-compilation
 #]]
 
 # Cmake Version

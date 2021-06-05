@@ -142,9 +142,6 @@ namespace  nero
 
 		//
 		m_ProjectManager->setSetting(m_EditorSetting);
-		m_ProjectManager->setRenderTexture(m_RenderTexture);
-		m_ProjectManager->setRenderContext(m_RenderContext);
-		m_ProjectManager->setCamera(m_EditorCamera);
 
 		//register signal handler
 		registerSignalHandler();
@@ -3105,7 +3102,6 @@ namespace  nero
 		//open new project
 		m_GameProject		= m_ProjectManager->openProject(projectDirectory);
 		m_AdvancedScene		= m_GameProject->getAdvancedScene();
-		m_ResourceManager	= m_GameProject->getResourceManager();
 
 		//update editor window title
 		updateWindowTitle(m_GameProject->getProjectName());
