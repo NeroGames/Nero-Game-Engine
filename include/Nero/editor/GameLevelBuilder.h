@@ -1,0 +1,24 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2021 Sanou A. K. Landry
+////////////////////////////////////////////////////////////
+#ifndef GAMELEVELBUILDER_H
+#define GAMELEVELBUILDER_H
+///////////////////////////HEADERS//////////////////////////
+//STD
+#include <memory>
+////////////////////////////////////////////////////////////
+namespace nero
+{
+	class GameLevelBuilder
+	{
+		public:
+			typedef std::shared_ptr<GameLevelBuilder> Ptr;
+
+		public:
+			GameLevelBuilder();
+	};
+}
+
+
+#endif // GAMELEVELBUILDER_H

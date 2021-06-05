@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 Sanou A. K. Landry
+// Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
 //Nero
@@ -489,10 +489,10 @@ namespace nero
 		parameter.setString("workspace_directory", file::getParentDirectory(projectDirectory, 2));
 
 		m_GameProject = GameProject::Ptr(new GameProject());
-		m_GameProject->setSetting(m_EditorSetting);
+		/*m_GameProject->setSetting(m_EditorSetting);
 		m_GameProject->setRenderTexture(m_RenderTexture);
 		m_GameProject->setRenderContext(m_RenderContext);
-		m_GameProject->setCamera(m_Camera);
+		m_GameProject->setCamera(m_Camera);*/
 
 		/*m_GameProject->loadResource(parameter);
 		nero_log("initializing project");

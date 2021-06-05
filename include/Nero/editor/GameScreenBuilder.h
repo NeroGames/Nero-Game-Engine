@@ -1,0 +1,23 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2021 Sanou A. K. Landry
+////////////////////////////////////////////////////////////
+#ifndef GAMESCREENBUILDER_H
+#define GAMESCREENBUILDER_H
+///////////////////////////HEADERS//////////////////////////
+//STD
+#include <memory>
+////////////////////////////////////////////////////////////
+namespace nero
+{
+	class GameScreenBuilder
+	{
+		public:
+			typedef std::shared_ptr<GameScreenBuilder> Ptr;
+
+		public:
+			GameScreenBuilder();
+	};
+}
+
+#endif // GAMESCREENBUILDER_H

@@ -1,14 +1,16 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 Sanou A. K. Landry
+// Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
-//NERO
+//Nero
 #include <Nero/editor/GameProject.h>
 #include <Nero/core/cpp/utility/File.h>
 #include <Nero/core/cpp/utility/DateTime.h>
+//Boost
 #include <boost/dll.hpp>
 #include <boost/algorithm/string.hpp>
+//STD
 #include <thread>
 /////////////////////////////////////////////////////////////
 

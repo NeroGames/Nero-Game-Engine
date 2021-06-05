@@ -49,7 +49,7 @@
                          </base-DElement>
                          <object>{24854702-fa19-40f2-86d9-840b2fd5efee}</object>
                          <name>GameProject</name>
-                         <pos>x:190;y:385</pos>
+                         <pos>x:635;y:230</pos>
                          <rect>x:-110;y:-60;w:220;h:120</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
@@ -70,7 +70,7 @@
                          </base-DElement>
                          <object>{27721bbe-5ffa-47b3-9256-a72e97309858}</object>
                          <name>ProjectManager</name>
-                         <pos>x:205;y:120</pos>
+                         <pos>x:325;y:210</pos>
                          <rect>x:-135;y:-85;w:270;h:170</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
@@ -83,7 +83,7 @@
                     </item>
                    </qlist>
                   </elements>
-                  <last-modified>1622682397153</last-modified>
+                  <last-modified>1622774819943</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
@@ -133,7 +133,7 @@
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{dccd6fd0-7511-488b-bdff-3b7dcfb4c4b1}</uid>
+                    <uid>{2cf48acb-22e4-4b34-94bd-4ab62e1270d9}</uid>
                     <group>Workspace</group>
                     <visibility>1</visibility>
                     <type>2</type>
@@ -142,7 +142,7 @@
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{a4afa52d-a0a7-43ca-bf0c-390b72b16068}</uid>
+                    <uid>{060c793d-6153-4281-ac41-ae3464c70c19}</uid>
                     <group>Workspace</group>
                     <visibility>1</visibility>
                     <type>2</type>
@@ -151,7 +151,7 @@
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{98a92264-a007-4294-bb83-9019d46f6dd1}</uid>
+                    <uid>{e1c457cb-a55b-4537-862d-bd3fe765ca8d}</uid>
                     <group>Workspace</group>
                     <visibility>1</visibility>
                     <type>2</type>
@@ -160,7 +160,7 @@
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{8a7ed2b1-d31d-475c-b7df-294f848d1646}</uid>
+                    <uid>{f10ae7e9-048d-45d8-a9ba-9e2e732def8c}</uid>
                     <group>GameProject</group>
                     <visibility>1</visibility>
                     <type>2</type>
@@ -169,7 +169,7 @@
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{7d49ce1a-e2af-4222-9ba3-5223080ec797}</uid>
+                    <uid>{b6950b14-39ca-404a-a7f8-c801c2ff8047}</uid>
                     <group>GameProject</group>
                     <visibility>1</visibility>
                     <type>2</type>

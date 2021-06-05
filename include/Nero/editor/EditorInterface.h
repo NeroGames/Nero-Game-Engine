@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 Sanou A. K. Landry
+// Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef EDITORINTERFACE_H
 #define EDITORINTERFACE_H
@@ -10,30 +10,38 @@
 //IMGUI
 #include <imgui/imgui.h>
 #include <imgui/imgui-SFML.h>
-#include <memory>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/Texture.hpp>
+#include <imgui/imgui.h>
+#include <imgui/imgui_internal.h>
+//Nero
 #include <Nero/editor/ProjectManager.h>
-#include <functional>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/core/lua/scene/LuaScene.h>
 #include <Nero/editor/GameProject.h>
-#include <json/json.hpp>
 #include <Nero/editor/LoggerApplication.h>
 #include <Nero/core/cpp/utility/String.h>
 #include <Nero/editor/AdvancedScene.h>
 #include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/editor/AdvancedCamera.h>
 #include <Nero/editor/EditorUtility.h>
+#include <Nero/editor/ConsoleApplication.h>
+#include <Nero/editor/GameLevelBuilder.h>
+#include <Nero/editor/GameScreenBuilder.h>
+//Json
+#include <json/json.hpp>
+//SFML
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+//File Diaglog
 #include <nativefiledialog/include/nfd.h>
-#include <imgui/imgui.h>
-#include <imgui/imgui_internal.h>
+//Node Editor
+# include <nodeeditor/imgui_node_editor.h>
+//STD
+#include <memory>
+#include <functional>
 #include <future>
 #include <map>
-# include <nodeeditor/imgui_node_editor.h>
-# include <Nero/editor/ConsoleApplication.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -80,7 +88,7 @@ namespace nero
 			static void						handleSignalTerminsationRequest(int signal);
 
 		private:
-			//////////////Main Attributes
+			//////////////main attributes
 			friend class									EngineEditor;
 			sf::RenderWindow&								m_RenderWindow;
 			float											m_FrameRate;
@@ -90,13 +98,15 @@ namespace nero
 			SoundHolder::Ptr								m_EditorSoundHolder;
 			FontHolder::Ptr									m_EditorFontHolder;
 			std::function<void (const std::string&)>		m_UpdateWindowTile;
+			//environment
+			EnvironmentSetup								m_EnvironmentSetup;
 			//game project
 			ProjectManager::Ptr								m_ProjectManager;
 			GameProject::Ptr								m_GameProject;
-			ResourceManager::Ptr							m_ResourceManager;
 			AdvancedScene::Ptr								m_AdvancedScene;
-			//environment
-			EnvironmentSetup								m_EnvironmentSetup;
+			GameLevelBuilder::Ptr							m_GameLevelBuilder;
+			GameScreenBuilder::Ptr							m_GameScreenBuilder;
+			ResourceManager::Ptr							m_ResourceManager;
 
 		private:
 			//////////////docksapce
@@ -149,193 +159,149 @@ namespace nero
 			void											showCreateProjectWindow();
 			void											showOpenProjectWindow();
 			void											showRecentProjectWindow();
-
             //
-
-            sf::Sprite             flipTexture(const sf::Texture& texture);
-
+			sf::Sprite										flipTexture(const sf::Texture& texture);
 			//editor view
 				//upper left
-			void                    showUtilityWindow();
-			void                    showGameLevelWindow();
-			void                    showWorldChunckWindow();
+			void											showUtilityWindow();
+			void											showGameLevelWindow();
+			void											showWorldChunckWindow();
 				//bottom left
-			void					showObjectLayerWindow();
-			void                    showGameScreenWindow();
-                //right
-			void                    showExplorerWindow();
-			void                    showResourceBrowserWindow();
-			void					showHelpWindow();
+			void											showObjectLayerWindow();
+			void											showGameScreenWindow();
+				//right
+			void											showExplorerWindow();
+			void											showResourceBrowserWindow();
+			void											showHelpWindow();
 				//bottom
-            void                    showResourceWindow();
-			void                    showLoggingWindow();
-                //terminate
-
-            //utility
-            void                    showToggleButton(bool toggle, const std::string& label, std::function<void()> callback);
-
+			void											showResourceWindow();
+			void											showLoggingWindow();
+			//utility
+			void											showToggleButton(bool toggle, const std::string& label, std::function<void()> callback);
 			//Docksapce
-
-
-            bool        setup_dock = false;
-			ImGuiID actionBarId;
-			ImGuiID dock_id_right;
-            ImGuiID dock_id_upper_left;
-			ImGuiID dock_id_left_bottom;
-
-            bool            show_project_window = false;
-
+			bool											setup_dock = false;
+			ImGuiID											actionBarId;
+			ImGuiID											dock_id_right;
+			ImGuiID											dock_id_upper_left;
+			ImGuiID											dock_id_left_bottom;
+			bool											show_project_window = false;
             //project creation
-
-            std::string test_log;
-
-            LoggerApplication m_LoggerApplication;
-            bool   m_InterfaceFirstDraw;
-            ImGuiIO baseio;
-            std::stringstream buffer;
-            std::streambuf * old;
-
-
-
+			LoggerApplication								m_LoggerApplication;
+			bool											m_InterfaceFirstDraw;
+			ImGuiIO											baseio;
+			std::stringstream								buffer;
+			std::streambuf*									old;
             //
-            void                        showGameProjectWindow();
-            void                        showGameSettingWindow();
-			void						showVisualScriptWindow();
-            void                        showSceneWindow();
-			void						showBackgroundTaskWindow();
-
-
+			void											showGameProjectWindow();
+			void											showGameSettingWindow();
+			void											showVisualScriptWindow();
+			void											showSceneWindow();
+			void											showBackgroundTaskWindow();
             ////////////////////////Project and Workspace////////////////////////
             //General
-            //Project Workspace
-
-
-
-            //Game Project
-
 			//Script Wizard
-			char                        m_InputClassName[100];
-			char                        m_InputParentClass[100];
-			const char*                 m_SelectedScriptType;
-			int                         m_SelectedScriptTypeIndex;
-			const char*                 m_SelectedGameLevel;
-			int                         m_SelectedGameLevelIndex;
-			const char*                 m_SelectedGameScreen;
-			int                         m_SelectedGameScreenIndex;
-
+			char											m_InputClassName[100];
+			char											m_InputParentClass[100];
+			const char*										m_SelectedScriptType;
+			int												m_SelectedScriptTypeIndex;
+			const char*										m_SelectedGameLevel;
+			int												m_SelectedGameLevelIndex;
+			const char*										m_SelectedGameScreen;
+			int												m_SelectedGameScreenIndex;
 			//World chunk
-			void						addWorldChunk();
-			void						removeWorldChunk();
-			int							m_InputSelectedWorldChunkId;
+			void											addWorldChunk();
+			void											removeWorldChunk();
+			int												m_InputSelectedWorldChunkId;
 			//Object Layer
-			void						addObjectLayer();
-			void						removeObjectLayer();
-			int							m_InputSelectedObjectLayerId;
+			void											addObjectLayer();
+			void											removeObjectLayer();
+			int												m_InputSelectedObjectLayerId;
 			//
-			void						addGameLevel();
-			void						removeGameLevel();
-			void						editGameLevel();
-			void						showGameLevelPopup();
-			int							m_InputSelectedGameLevelId;
+			void											addGameLevel();
+			void											removeGameLevel();
+			void											editGameLevel();
+			void											showGameLevelPopup();
+			int												m_InputSelectedGameLevelId;
 			//
-			void						addGameScreen();
-			void						removeGameScreen();
-			int							m_InputSelectedGameScreenId;
-
-            //Tabs
-			TabBarSwitch				m_ProjectManagerTabBarSwitch;
-			TabBarSwitch				m_BottomDockspaceTabBarSwitch;
-            //Banner
-            //show view
-
-
+			void											addGameScreen();
+			void											removeGameScreen();
+			int												m_InputSelectedGameScreenId;
+			//Tabs
+			TabBarSwitch									m_ProjectManagerTabBarSwitch;
+			TabBarSwitch									m_BottomDockspaceTabBarSwitch;
+			//Banner
+			//show view
 			//
-			void						showScriptCreationWindow();
+			void											showScriptCreationWindow();
             //function
-
-
-
-			void						playScene();
-			void						pauseScene();
-			void						stepScene();
-			void						resetScene();
-			void						renderScene();
-
-            //
-
-			void						buildRenderContext();
-			void						prepareRenderTexture();
-			bool						mouseOnCanvas();
-
-			ax::NodeEditor::EditorContext*	g_Context;
-
-
-
-
-
-			ResourceType				m_ResourceBrowserType;
-
-			void		showSpriteResource();
-			void		showAnimationResource();
-			void		showFontResource();
-			void		showLightmapResource();
-
-			sf::Texture& getFontTexture(const std::string& fontName);
-			std::map<std::string, sf::Texture> m_FontTextureMap;
-
-			RenderTexturePtr			m_RenderTexture;
-			EditorMode					m_EditorMode;
-			BuilderMode					m_BuilderMode;
-
-			sf::RectangleShape      m_CameraXAxis;
-			sf::RectangleShape      m_CameraYAxis;
-
-			AdvancedCamera::Ptr		m_EditorCamera;
-
-			void renderCamera();
-			sf::View				m_CanvasFrontView;
-			sf::Text				m_GameModeInfo;
-
-			void			renderGameModeInfo();
-
-
-			RenderContext::Ptr m_RenderContext;
-
-
-			std::string getString(const EditorMode& editorMode);
-
-
-			void selectDirectory(std::function<void(std::string)> callback);
-			void selectFile(std::function<void(std::string)> callback);
-			void selectFile(std::function<void(std::vector<std::string>)> callback);
-
-
-			void clearScriptWizardInput();
-			void showMeshResource();
-			sf::Vector2f getAddObjectPosition();
-
-			void switchBuilderMode();
-			void showCanvasMenu();
-
-			std::string m_SelectedChunkNode;
-			void saveResourceFile(ResourceType type, const std::vector<std::string> loadedFileTable);
-
-			void onSaveProject();
-			void onLoadProject();
-			void autoSaveProject();
-			sf::Clock	m_AutoSaveClock;
-			std::tuple<ImVec4, ImVec4> getLayerColor(Object::Type type);
-
-			ImVec4 ambient_light;
-
-			void createScriptObject(const Parameter& parameter);
-
+			void											playScene();
+			void											pauseScene();
+			void											stepScene();
+			void											resetScene();
+			void											renderScene();
 			//
-			ImVec4 getLoggingColor(logging::LEVEL level);
-
-			std::string m_MouseInformation;
-			ConsoleApplication m_ConsoleApplication;
-			void showConsoleWindow();
+			void											buildRenderContext();
+			void											prepareRenderTexture();
+			bool											mouseOnCanvas();
+			//
+			ax::NodeEditor::EditorContext*					g_Context;
+			//
+			ResourceType									m_ResourceBrowserType;
+			//
+			void											showSpriteResource();
+			void											showAnimationResource();
+			void											showFontResource();
+			void											showLightmapResource();
+			//
+			sf::Texture&									getFontTexture(const std::string& fontName);
+			std::map<std::string, sf::Texture>				m_FontTextureMap;
+			//
+			RenderTexturePtr								m_RenderTexture;
+			EditorMode										m_EditorMode;
+			BuilderMode										m_BuilderMode;
+			//
+			sf::RectangleShape								m_CameraXAxis;
+			sf::RectangleShape								m_CameraYAxis;
+			//
+			AdvancedCamera::Ptr								m_EditorCamera;
+			//
+			void renderCamera();
+			sf::View										m_CanvasFrontView;
+			sf::Text										m_GameModeInfo;
+			//
+			void											renderGameModeInfo();
+			RenderContext::Ptr								m_RenderContext;
+			//
+			std::string										getString(const EditorMode& editorMode);
+			//
+			void											selectDirectory(std::function<void(std::string)> callback);
+			void											selectFile(std::function<void(std::string)> callback);
+			void											selectFile(std::function<void(std::vector<std::string>)> callback);
+			//
+			void											clearScriptWizardInput();
+			void											showMeshResource();
+			sf::Vector2f									getAddObjectPosition();
+			//
+			void											switchBuilderMode();
+			void											showCanvasMenu();
+			//
+			std::string										m_SelectedChunkNode;
+			void											saveResourceFile(ResourceType type, const std::vector<std::string> loadedFileTable);
+			//
+			void											onSaveProject();
+			void											onLoadProject();
+			void											autoSaveProject();
+			sf::Clock										m_AutoSaveClock;
+			std::tuple<ImVec4, ImVec4>						getLayerColor(Object::Type type);
+			//
+			ImVec4											ambient_light;
+			//
+			void											createScriptObject(const Parameter& parameter);
+			//
+			ImVec4											getLoggingColor(logging::LEVEL level);
+			std::string										m_MouseInformation;
+			ConsoleApplication								m_ConsoleApplication;
+			void											showConsoleWindow();
 	};
 
 }

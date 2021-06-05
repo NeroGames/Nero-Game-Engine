@@ -49,13 +49,13 @@
                         <DObject>
                          <base-DElement>
                           <DElement>
-                           <uid>{ee9a9c2f-0dad-4a2d-bb96-5ecb37342e9a}</uid>
+                           <uid>{65eb39b1-fba8-4da8-b57a-cdc6e56ca224}</uid>
                           </DElement>
                          </base-DElement>
-                         <object>{7606d925-36bc-46f6-8b05-da99ca42c821}</object>
-                         <name>Game Scene</name>
-                         <pos>x:505;y:330</pos>
-                         <rect>x:-235;y:-80;w:470;h:160</rect>
+                         <object>{ee7c0fc6-73d2-46bb-891d-c473fe4055b7}</object>
+                         <name>Render Engine</name>
+                         <pos>x:430;y:485</pos>
+                         <rect>x:-315;y:-15;w:630;h:30</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -71,94 +71,13 @@
                         <DObject>
                          <base-DElement>
                           <DElement>
-                           <uid>{850bc32d-d516-4169-aa32-b1295febfbd8}</uid>
+                           <uid>{5c2e443a-59c2-40e1-a2e1-607ed9518a35}</uid>
                           </DElement>
                          </base-DElement>
-                         <object>{eb30e1a4-0f11-412c-b15c-e97303572f85}</object>
-                         <name>Game Screen Stack</name>
-                         <pos>x:400;y:380</pos>
-                         <rect>x:-55;y:-15;w:110;h:30</rect>
-                         <visual-role>5</visual-role>
-                        </DObject>
-                       </base-DObject>
-                       <shape-editable>false</shape-editable>
-                      </DItem>
-                     </instance>
-                    </item>
-                    <item>
-                     <instance type="DItem">
-                      <DItem>
-                       <base-DObject>
-                        <DObject>
-                         <base-DElement>
-                          <DElement>
-                           <uid>{3cb0939c-c018-4b7a-9bd3-f8cca2b82b31}</uid>
-                          </DElement>
-                         </base-DElement>
-                         <object>{30192c97-dc7c-45b0-8279-22b2a863ab4a}</object>
-                         <name>Game Level Stack</name>
-                         <pos>x:645;y:355</pos>
-                         <rect>x:-85;y:-40;w:170;h:80</rect>
-                         <auto-sized>false</auto-sized>
-                         <visual-role>8</visual-role>
-                         <stereotype-display>0</stereotype-display>
-                        </DObject>
-                       </base-DObject>
-                       <shape-editable>false</shape-editable>
-                      </DItem>
-                     </instance>
-                    </item>
-                    <item>
-                     <instance type="DItem">
-                      <DItem>
-                       <base-DObject>
-                        <DObject>
-                         <base-DElement>
-                          <DElement>
-                           <uid>{8009344b-6985-4eae-85e2-19f67b64781a}</uid>
-                          </DElement>
-                         </base-DElement>
-                         <object>{e8ea87d8-986d-4b4e-9fd1-75bad745b643}</object>
-                         <name>Resource Manager</name>
-                         <pos>x:400;y:330</pos>
-                         <rect>x:-110;y:-15;w:220;h:30</rect>
-                         <auto-sized>false</auto-sized>
-                         <visual-role>6</visual-role>
-                        </DObject>
-                       </base-DObject>
-                       <shape-editable>false</shape-editable>
-                      </DItem>
-                     </instance>
-                    </item>
-                    <item>
-                     <instance type="DAnnotation">
-                      <DAnnotation>
-                       <base-DElement>
-                        <DElement>
-                         <uid>{ff6c53e4-9786-43ca-b0d5-51f6ba80cb40}</uid>
-                        </DElement>
-                       </base-DElement>
-                       <text>Game Scene - Resource Manager : use only for Startup Screen and Game Screens</text>
-                       <pos>x:190;y:520</pos>
-                       <rect>x:0;y:0;w:440;h:29</rect>
-                       <auto-sized>false</auto-sized>
-                      </DAnnotation>
-                     </instance>
-                    </item>
-                    <item>
-                     <instance type="DItem">
-                      <DItem>
-                       <base-DObject>
-                        <DObject>
-                         <base-DElement>
-                          <DElement>
-                           <uid>{b6389acc-a1df-406a-aaac-6ff9ff82d4ca}</uid>
-                          </DElement>
-                         </base-DElement>
-                         <object>{e9121069-f922-4160-a76f-ca3a32b4c2fc}</object>
+                         <object>{5c623087-4094-49f5-8c78-7924ea6aa48c}</object>
                          <name>Startup Screen</name>
-                         <pos>x:180;y:330</pos>
-                         <rect>x:-70;y:-80;w:140;h:160</rect>
+                         <pos>x:160;y:445</pos>
+                         <rect>x:-45;y:-15;w:90;h:30</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -168,21 +87,25 @@
                      </instance>
                     </item>
                     <item>
-                     <instance type="DDependency">
-                      <DDependency>
-                       <base-DRelation>
-                        <DRelation>
+                     <instance type="DItem">
+                      <DItem>
+                       <base-DObject>
+                        <DObject>
                          <base-DElement>
                           <DElement>
-                           <uid>{12e24777-c480-4a77-a1d2-710f7dc8ebed}</uid>
+                           <uid>{59cd302a-1b0e-4cc4-a394-33c979d3c376}</uid>
                           </DElement>
                          </base-DElement>
-                         <object>{494b9e32-2bc9-4fe2-9533-6883ba3a67ea}</object>
-                         <a>{850bc32d-d516-4169-aa32-b1295febfbd8}</a>
-                         <b>{8009344b-6985-4eae-85e2-19f67b64781a}</b>
-                        </DRelation>
-                       </base-DRelation>
-                      </DDependency>
+                         <object>{037b5703-cfaf-4c80-8b8f-4dc911c031e0}</object>
+                         <name>Game Scene</name>
+                         <pos>x:485;y:445</pos>
+                         <rect>x:-255;y:-15;w:510;h:30</rect>
+                         <auto-sized>false</auto-sized>
+                         <visual-role>0</visual-role>
+                        </DObject>
+                       </base-DObject>
+                       <shape-editable>false</shape-editable>
+                      </DItem>
                      </instance>
                     </item>
                     <item>
@@ -192,13 +115,121 @@
                         <DObject>
                          <base-DElement>
                           <DElement>
-                           <uid>{27cb74ff-0f79-498e-8c59-ecc29b48d0f9}</uid>
+                           <uid>{84ca3b7a-d7bf-4bb3-aa35-eea8fac3efa7}</uid>
                           </DElement>
                          </base-DElement>
-                         <object>{7e4b0170-f0cd-4389-8a1b-f2b8fcf12d2c}</object>
-                         <name>Engine</name>
-                         <pos>x:425;y:470</pos>
-                         <rect>x:-310;y:-30;w:620;h:60</rect>
+                         <object>{d96b2d35-f338-43d5-a01a-8bbae5291c3f}</object>
+                         <name>Game Screen 01</name>
+                         <pos>x:285;y:405</pos>
+                         <rect>x:-50;y:-15;w:100;h:30</rect>
+                         <visual-role>0</visual-role>
+                        </DObject>
+                       </base-DObject>
+                       <shape-editable>false</shape-editable>
+                      </DItem>
+                     </instance>
+                    </item>
+                    <item>
+                     <instance type="DItem">
+                      <DItem>
+                       <base-DObject>
+                        <DObject>
+                         <base-DElement>
+                          <DElement>
+                           <uid>{8bbcd969-1e8e-4c70-b35b-c329902a10d4}</uid>
+                          </DElement>
+                         </base-DElement>
+                         <object>{6285428a-d859-4c60-9cba-c1349a91e336}</object>
+                         <name>Game Screen 02</name>
+                         <pos>x:285;y:360</pos>
+                         <rect>x:-50;y:-15;w:100;h:30</rect>
+                         <visual-role>0</visual-role>
+                        </DObject>
+                       </base-DObject>
+                       <shape-editable>false</shape-editable>
+                      </DItem>
+                     </instance>
+                    </item>
+                    <item>
+                     <instance type="DItem">
+                      <DItem>
+                       <base-DObject>
+                        <DObject>
+                         <base-DElement>
+                          <DElement>
+                           <uid>{45ed60b0-c634-43a7-a443-4af9dfdf6720}</uid>
+                          </DElement>
+                         </base-DElement>
+                         <object>{3254926f-8f23-4ca2-ac6d-7510a1d14e6d}</object>
+                         <name>Game Screen N</name>
+                         <pos>x:285;y:315</pos>
+                         <rect>x:-50;y:-15;w:100;h:30</rect>
+                         <auto-sized>false</auto-sized>
+                         <visual-role>0</visual-role>
+                        </DObject>
+                       </base-DObject>
+                       <shape-editable>false</shape-editable>
+                      </DItem>
+                     </instance>
+                    </item>
+                    <item>
+                     <instance type="DItem">
+                      <DItem>
+                       <base-DObject>
+                        <DObject>
+                         <base-DElement>
+                          <DElement>
+                           <uid>{85ab4ce7-c851-4c5c-b1b4-e679aa9d1537}</uid>
+                          </DElement>
+                         </base-DElement>
+                         <object>{1cc3fb04-7a0a-4fc7-b78f-e321bf9d577a}</object>
+                         <name>Game Level 01</name>
+                         <pos>x:410;y:405</pos>
+                         <rect>x:-50;y:-15;w:100;h:30</rect>
+                         <auto-sized>false</auto-sized>
+                         <visual-role>0</visual-role>
+                        </DObject>
+                       </base-DObject>
+                       <shape-editable>false</shape-editable>
+                      </DItem>
+                     </instance>
+                    </item>
+                    <item>
+                     <instance type="DItem">
+                      <DItem>
+                       <base-DObject>
+                        <DObject>
+                         <base-DElement>
+                          <DElement>
+                           <uid>{295098f6-0628-40d1-8056-9261bee976e1}</uid>
+                          </DElement>
+                         </base-DElement>
+                         <object>{14c2defb-0c57-4232-99e2-04dece2358ab}</object>
+                         <name>Game Level 02</name>
+                         <pos>x:410;y:360</pos>
+                         <rect>x:-50;y:-15;w:100;h:30</rect>
+                         <auto-sized>false</auto-sized>
+                         <visual-role>0</visual-role>
+                        </DObject>
+                       </base-DObject>
+                       <shape-editable>false</shape-editable>
+                      </DItem>
+                     </instance>
+                    </item>
+                    <item>
+                     <instance type="DItem">
+                      <DItem>
+                       <base-DObject>
+                        <DObject>
+                         <base-DElement>
+                          <DElement>
+                           <uid>{2eacda49-07f3-4c84-9fb5-dbab1d6002a3}</uid>
+                          </DElement>
+                         </base-DElement>
+                         <object>{779383e5-911b-4111-a334-e3d39dc04ee7}</object>
+                         <name>Game Level N</name>
+                         <pos>x:410;y:315</pos>
+                         <rect>x:-50;y:-15;w:100;h:30</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -209,7 +240,7 @@
                     </item>
                    </qlist>
                   </elements>
-                  <last-modified>1622679687758</last-modified>
+                  <last-modified>1622824180225</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
@@ -397,6 +428,195 @@
                    </MElement>
                   </base-MElement>
                   <name>Engine</name>
+                 </MObject>
+                </base-MObject>
+               </MItem>
+              </instance>
+             </target>
+            </handle>
+           </item>
+           <item>
+            <handle>
+             <uid>{ee7c0fc6-73d2-46bb-891d-c473fe4055b7}</uid>
+             <target>
+              <instance type="MItem">
+               <MItem>
+                <base-MObject>
+                 <MObject>
+                  <base-MElement>
+                   <MElement>
+                    <uid>{ee7c0fc6-73d2-46bb-891d-c473fe4055b7}</uid>
+                   </MElement>
+                  </base-MElement>
+                  <name>Render Engine</name>
+                 </MObject>
+                </base-MObject>
+               </MItem>
+              </instance>
+             </target>
+            </handle>
+           </item>
+           <item>
+            <handle>
+             <uid>{5c623087-4094-49f5-8c78-7924ea6aa48c}</uid>
+             <target>
+              <instance type="MItem">
+               <MItem>
+                <base-MObject>
+                 <MObject>
+                  <base-MElement>
+                   <MElement>
+                    <uid>{5c623087-4094-49f5-8c78-7924ea6aa48c}</uid>
+                   </MElement>
+                  </base-MElement>
+                  <name>Startup Screen</name>
+                 </MObject>
+                </base-MObject>
+               </MItem>
+              </instance>
+             </target>
+            </handle>
+           </item>
+           <item>
+            <handle>
+             <uid>{037b5703-cfaf-4c80-8b8f-4dc911c031e0}</uid>
+             <target>
+              <instance type="MItem">
+               <MItem>
+                <base-MObject>
+                 <MObject>
+                  <base-MElement>
+                   <MElement>
+                    <uid>{037b5703-cfaf-4c80-8b8f-4dc911c031e0}</uid>
+                   </MElement>
+                  </base-MElement>
+                  <name>Game Scene</name>
+                 </MObject>
+                </base-MObject>
+               </MItem>
+              </instance>
+             </target>
+            </handle>
+           </item>
+           <item>
+            <handle>
+             <uid>{d96b2d35-f338-43d5-a01a-8bbae5291c3f}</uid>
+             <target>
+              <instance type="MItem">
+               <MItem>
+                <base-MObject>
+                 <MObject>
+                  <base-MElement>
+                   <MElement>
+                    <uid>{d96b2d35-f338-43d5-a01a-8bbae5291c3f}</uid>
+                   </MElement>
+                  </base-MElement>
+                  <name>Game Screen 01</name>
+                 </MObject>
+                </base-MObject>
+               </MItem>
+              </instance>
+             </target>
+            </handle>
+           </item>
+           <item>
+            <handle>
+             <uid>{6285428a-d859-4c60-9cba-c1349a91e336}</uid>
+             <target>
+              <instance type="MItem">
+               <MItem>
+                <base-MObject>
+                 <MObject>
+                  <base-MElement>
+                   <MElement>
+                    <uid>{6285428a-d859-4c60-9cba-c1349a91e336}</uid>
+                   </MElement>
+                  </base-MElement>
+                  <name>Game Screen 02</name>
+                 </MObject>
+                </base-MObject>
+               </MItem>
+              </instance>
+             </target>
+            </handle>
+           </item>
+           <item>
+            <handle>
+             <uid>{3254926f-8f23-4ca2-ac6d-7510a1d14e6d}</uid>
+             <target>
+              <instance type="MItem">
+               <MItem>
+                <base-MObject>
+                 <MObject>
+                  <base-MElement>
+                   <MElement>
+                    <uid>{3254926f-8f23-4ca2-ac6d-7510a1d14e6d}</uid>
+                   </MElement>
+                  </base-MElement>
+                  <name>Game Screen N</name>
+                 </MObject>
+                </base-MObject>
+               </MItem>
+              </instance>
+             </target>
+            </handle>
+           </item>
+           <item>
+            <handle>
+             <uid>{1cc3fb04-7a0a-4fc7-b78f-e321bf9d577a}</uid>
+             <target>
+              <instance type="MItem">
+               <MItem>
+                <base-MObject>
+                 <MObject>
+                  <base-MElement>
+                   <MElement>
+                    <uid>{1cc3fb04-7a0a-4fc7-b78f-e321bf9d577a}</uid>
+                   </MElement>
+                  </base-MElement>
+                  <name>Game Level 01</name>
+                 </MObject>
+                </base-MObject>
+               </MItem>
+              </instance>
+             </target>
+            </handle>
+           </item>
+           <item>
+            <handle>
+             <uid>{14c2defb-0c57-4232-99e2-04dece2358ab}</uid>
+             <target>
+              <instance type="MItem">
+               <MItem>
+                <base-MObject>
+                 <MObject>
+                  <base-MElement>
+                   <MElement>
+                    <uid>{14c2defb-0c57-4232-99e2-04dece2358ab}</uid>
+                   </MElement>
+                  </base-MElement>
+                  <name>Game Level 02</name>
+                 </MObject>
+                </base-MObject>
+               </MItem>
+              </instance>
+             </target>
+            </handle>
+           </item>
+           <item>
+            <handle>
+             <uid>{779383e5-911b-4111-a334-e3d39dc04ee7}</uid>
+             <target>
+              <instance type="MItem">
+               <MItem>
+                <base-MObject>
+                 <MObject>
+                  <base-MElement>
+                   <MElement>
+                    <uid>{779383e5-911b-4111-a334-e3d39dc04ee7}</uid>
+                   </MElement>
+                  </base-MElement>
+                  <name>Game Level N</name>
                  </MObject>
                 </base-MObject>
                </MItem>

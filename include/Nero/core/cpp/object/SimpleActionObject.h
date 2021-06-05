@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 Sanou A. K. Landry
+// Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 #ifndef SIMPLEACTIONOBJECT_H
 #define SIMPLEACTIONOBJECT_H

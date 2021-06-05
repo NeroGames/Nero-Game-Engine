@@ -1,24 +1,24 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 Sanou A. K. Landry
+// Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 #ifndef GAMEPROJECT_H
 #define GAMEPROJECT_H
 ///////////////////////////HEADERS///////////////////////////
-//STD
+//Nero
 #include <Nero/core/cpp/utility/CommandLine.h>
-#include <memory>
-#include <json/json.hpp>
 #include <Nero/editor/AdvancedScene.h>
-#include <boost/function.hpp>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/lua/scene/LuaScene.h>
 #include <Nero/core/cpp/engine/BackgroundTask.h>
 #include <Nero/editor/AdvancedCamera.h>
-
+//Json
+#include <json/json.hpp>
+//Boost
+#include <boost/function.hpp>
+//STD
+#include <memory>
 /////////////////////////////////////////////////////////////
-
-
 namespace nero
 {
     class GameProject
@@ -42,8 +42,11 @@ namespace nero
 			void								loadGameScreen();
 			void								loadLibrary();
 			void								openEditor();
-			//void								compileProject();
 			void								compileProject(const BackgroundTask::Ptr backgroundTask);
+			void								render();
+			void								destroyScene();
+			void								handleEvent(const sf::Event& event);
+			void								update(const sf::Time& timestep);
 
 			AdvancedScene::Ptr					getAdvancedScene();
 			void								setRenderTexture(const RenderTexturePtr& renderTexture);
@@ -67,6 +70,7 @@ namespace nero
 			BackgroundTask&						createBackgroundTask(const std::string& name, const std::string& category);
 
 		private:
+			Scene::Ptr							m_Scene;
 			std::vector<BackgroundTask>			m_BackgroundTaskTable;
 			Parameter							m_ProjectParameter;
 			RenderTexturePtr					m_RenderTexture;
@@ -78,17 +82,6 @@ namespace nero
 			std::string							m_EditorProcessId;
 			boost::function<CreateCppSceneFn>	m_CreateCppSceneFn;
 			//boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;
-
-			//TODO Remove
-		private:
-			Scene::Ptr							m_Scene;
-			//Scene::Ptr							m_DemoScene;
-		public:
-			void								render();
-			//void								loadLibrary();
-			void								destroyScene();
-			void								handleEvent(const sf::Event& event);
-			void								update(const sf::Time& timestep);
     };
 }
 

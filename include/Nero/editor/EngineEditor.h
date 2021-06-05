@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 Sanou A. K. Landry
+// Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 #ifndef ENGINEEDITOR_H
 #define ENGINEEDITOR_H
@@ -57,9 +57,9 @@ namespace nero
 			//advanced camera
 			AdvancedCamera::Ptr     m_EditorCamera;
 			//editor settings
-			Setting::Ptr			m_EditorSetting;
+			Setting::Ptr			m_EditorSetting; //TODO rename m_Setting
 			//editor resource
-			TextureHolder::Ptr		m_EditorTextureHolder;
+			TextureHolder::Ptr		m_EditorTextureHolder;	//TODO replace with m_ResourceManager
 			FontHolder::Ptr			m_EditorFontHolder;
 			SoundHolder::Ptr		m_EditorSoundHolder;
 	};

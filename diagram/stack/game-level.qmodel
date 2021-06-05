@@ -49,8 +49,8 @@
                          </base-DElement>
                          <object>{ba8c8cd2-104a-4e7a-b509-9c524508ffa0}</object>
                          <name>Game Level</name>
-                         <pos>x:440;y:350</pos>
-                         <rect>x:-250;y:-105;w:500;h:210</rect>
+                         <pos>x:535;y:520</pos>
+                         <rect>x:-325;y:-15;w:650;h:30</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -71,7 +71,7 @@
                          </base-DElement>
                          <object>{aba5d8e0-f7fa-4145-ba0d-a28fbfc8c033}</object>
                          <name>Game World</name>
-                         <pos>x:270;y:330</pos>
+                         <pos>x:275;y:475</pos>
                          <rect>x:-60;y:-15;w:120;h:30</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
@@ -93,7 +93,7 @@
                          </base-DElement>
                          <object>{937e4a3f-b834-4015-b148-c70fb0ef746e}</object>
                          <name>Physics World</name>
-                         <pos>x:270;y:375</pos>
+                         <pos>x:415;y:475</pos>
                          <rect>x:-60;y:-15;w:120;h:30</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
@@ -115,7 +115,7 @@
                          </base-DElement>
                          <object>{fde71041-53f2-4b2e-bd2d-2cdbf7679491}</object>
                          <name>Light Engine</name>
-                         <pos>x:270;y:420</pos>
+                         <pos>x:550;y:475</pos>
                          <rect>x:-60;y:-15;w:120;h:30</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
@@ -137,7 +137,7 @@
                          </base-DElement>
                          <object>{f9e22f08-c6cc-4b83-bbad-d10e0159310c}</object>
                          <name>Resource Manager</name>
-                         <pos>x:435;y:330</pos>
+                         <pos>x:680;y:475</pos>
                          <rect>x:-55;y:-15;w:110;h:30</rect>
                          <visual-role>6</visual-role>
                         </DObject>
@@ -158,7 +158,7 @@
                          </base-DElement>
                          <object>{38c193c5-cc38-4cdd-afc1-c5053d01679f}</object>
                          <name>Camera </name>
-                         <pos>x:435;y:375</pos>
+                         <pos>x:805;y:475</pos>
                          <rect>x:-55;y:-15;w:110;h:30</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
@@ -170,7 +170,7 @@
                     </item>
                    </qlist>
                   </elements>
-                  <last-modified>1622677092101</last-modified>
+                  <last-modified>1622824374351</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
