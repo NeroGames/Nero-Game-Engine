@@ -38,9 +38,9 @@ namespace nero
 			void								saveProject();
 			void								saveGameLevel();
 			void								loadGameLevel();
-			void								saveGameScreen();
+			//void								saveGameScreen();
 			void								loadGameScreen();
-			void								loadLibrary();
+			//void								loadLibrary();
 			void								openEditor();
 			void								compileProject(const BackgroundTask::Ptr backgroundTask);
 			void								render();
@@ -56,7 +56,7 @@ namespace nero
 			void								setRenderContext(const RenderContext::Ptr& renderContext);
 			void								setSetting(const Setting::Ptr& setting);
 			void								close();
-			AdvancedScene::GameLevelPtr			loadGameLevel(const nlohmann::json& level);
+			//AdvancedScene::GameLevelPtr			loadGameLevel(const nlohmann::json& level);
 			std::string							getProjectName() const;
 			std::vector<BackgroundTask>&		getBackgroundTaskTable();
 			void								createScriptObject(const Parameter& parameter);

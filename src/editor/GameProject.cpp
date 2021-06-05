@@ -60,14 +60,14 @@ namespace nero
 
 		//nero_log(m_ProjectParameter.toString());
 
-		m_AdvancedScene = std::make_shared<AdvancedScene>();
+		/*m_AdvancedScene = std::make_shared<AdvancedScene>();
 		m_AdvancedScene->setSetting(m_EngineSetting);
 		m_AdvancedScene->setRenderTexture(m_RenderTexture);
 		m_AdvancedScene->setResourceManager(m_ResourceManager);
 		m_AdvancedScene->setRenderContext(m_RenderContext);
 		m_AdvancedScene->setCamera(m_Camera);
 		m_AdvancedScene->setProjectParameter(m_ProjectParameter);
-		m_AdvancedScene->initialize();
+		m_AdvancedScene->initialize();*/
     }
 
 	ResourceManager::Ptr GameProject::getResourceManager()
@@ -78,7 +78,7 @@ namespace nero
 
     void GameProject::loadProject()
     {
-		std::string levelDirectory = file::getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Level"});
+		/*std::string levelDirectory = file::getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Level"});
 		std::experimental::filesystem::path directoryPath(levelDirectory);
 
 		if(std::experimental::filesystem::is_empty(directoryPath))
@@ -115,10 +115,10 @@ namespace nero
 			}
 
 			it++;
-		}
+		}*/
     }
 
-	AdvancedScene::GameLevelPtr GameProject::loadGameLevel(const nlohmann::json& level)
+	/*AdvancedScene::GameLevelPtr GameProject::loadGameLevel(const nlohmann::json& level)
 	{
 		auto gameLevel = std::make_shared<AdvancedScene::GameLevel>();
 		gameLevel->name			= level["level_name"].get<std::string>();
@@ -143,14 +143,14 @@ namespace nero
 		}
 
 		return gameLevel;
-	}
+	}*/
 
 	void GameProject::saveProject()
 	{
 
 	}
 
-	void GameProject::saveGameLevel()
+	/*void GameProject::saveGameLevel()
 	{
 		if(m_AdvancedScene->m_SelectedGameLevel)
 		{
@@ -182,14 +182,14 @@ namespace nero
 			std::string levelFile = file::getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Level", level->name}, StringPool.EXT_JSON);
 			file::saveFile(levelFile, level_save.dump(3), true);
 		}
-	}
+	}*/
 
 	void GameProject::loadGameLevel()
 	{
 
 	}
 
-	void GameProject::saveGameScreen()
+	/*void GameProject::saveGameScreen()
 	{
 		if(m_AdvancedScene->m_SelectedGameScreen)
 		{
@@ -205,14 +205,14 @@ namespace nero
 			std::string screenFile = file::getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Screen", screen->name}, StringPool.EXT_JSON);
 			file::saveFile(screenFile, screen_save.dump(3), true);
 		}
-	}
+	}*/
 
 	void GameProject::loadGameScreen()
 	{
 
 	}
 
-	void GameProject::loadLibrary()
+	/*void GameProject::loadLibrary()
     {
 		//loadLibraryDemo();
 		//return;
@@ -260,7 +260,7 @@ namespace nero
 		{
 			nero_log("loading failed");
 		}
-    }
+	}*/
 
 	/*void GameProject::loadLibraryDemo()
 	{
@@ -471,13 +471,13 @@ namespace nero
 		m_CreateCppSceneFn.clear();
 
 		//delete scene
-		m_AdvancedScene->m_Scene = nullptr;
+		/*m_AdvancedScene->m_Scene = nullptr;
 		m_AdvancedScene->m_CreateCppScene.clear();
 		m_CreateCppSceneFn.clear();
 
 		//delete level and screen
 		m_AdvancedScene->m_GameLevelTable.clear();
-		m_AdvancedScene->m_GameScreenTable.clear();
+		m_AdvancedScene->m_GameScreenTable.clear();*/
 
 		m_CreateCppSceneFn.clear();
 	}

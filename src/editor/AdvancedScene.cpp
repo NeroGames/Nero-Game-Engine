@@ -1,10 +1,44 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2021 Sanou A. K. Landry
+////////////////////////////////////////////////////////////
+///////////////////////////HEADERS///////////////////////////
+//Nero
 #include <Nero/editor/AdvancedScene.h>
-#include <Nero/core/cpp/utility/Math.h>
+////////////////////////////////////////////////////////////
+/*#include <Nero/core/cpp/utility/Math.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 #include <Nero/core/cpp/object/GameLevelObject.h>
-#include <SFML/Graphics/Sprite.hpp>
-
+#include <SFML/Graphics/Sprite.hpp>*/
+////////////////////////////////////////////////////////////
 namespace nero
+{
+	AdvancedScene::AdvancedScene():
+		 m_SelectedGameLevel(nullptr)
+		,m_SelectedGameScreen(nullptr)
+		,m_GameLevelTable()
+		,m_GameScreenTable()
+	{
+
+	}
+
+	GameLevelBuilder::Ptr AdvancedScene::addGameLevel(const Parameter& parameter)
+	{
+		auto gameLevelBuilder = std::make_shared<GameLevelBuilder>();
+
+		return gameLevelBuilder;
+	}
+
+	GameScreenBuilder::Ptr AdvancedScene::addGameScreen(const Parameter& parameter)
+	{
+		auto gameScreenBuilder = std::make_shared<GameScreenBuilder>();
+
+		return gameScreenBuilder;
+	}
+
+}
+
+/*namespace nero
 {
     ////////////////////////////////////////////////////////////
    //DestructionListener
@@ -782,5 +816,5 @@ namespace nero
 		return result;
 	}
 
-}
+}*/
 

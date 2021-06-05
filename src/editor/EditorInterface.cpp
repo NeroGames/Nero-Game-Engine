@@ -226,10 +226,10 @@ namespace  nero
 			m_EditorCamera->handleEvent(event);
 		}
 
-		if(m_AdvancedScene)
+		/*if(m_AdvancedScene)
 		{
 			m_AdvancedScene->handleEvent(event, m_EditorMode, m_BuilderMode);
-		}
+		}*/
 
 		//Demo
 		if(m_GameProject)
@@ -286,10 +286,10 @@ namespace  nero
 	{
 		m_EditorCamera->update(timeStep);
 
-		if(m_AdvancedScene)
+		/*if(m_AdvancedScene)
 		{
 			m_AdvancedScene->update(timeStep, m_EditorMode, m_BuilderMode);
-		}
+		}*/
 
 		//Demo
 		if(m_GameProject)
@@ -490,10 +490,10 @@ namespace  nero
 
 			prepareRenderTexture();
 
-			if(m_AdvancedScene)
+			/*if(m_AdvancedScene)
 			{
 				m_AdvancedScene->render(m_EditorMode, m_BuilderMode);
-			}
+			}*/
 
 			//Demo
 			if(m_GameProject)
@@ -512,10 +512,10 @@ namespace  nero
 
 			//Render on Front Screen
 			m_RenderTexture->setView(m_RenderTexture->getDefaultView());
-				if(m_AdvancedScene)
+				/*if(m_AdvancedScene)
 				{
 					m_AdvancedScene->renderFrontScreen(m_EditorMode, m_BuilderMode);
-				}
+				}*/
 				renderCamera();
 				renderGameModeInfo();
 			m_RenderTexture->setView(m_EditorCamera->getView());
@@ -675,10 +675,10 @@ namespace  nero
 
 		if(m_EditorMode == EditorMode::PLAY_GAME)
 		{
-			if(m_AdvancedScene && m_AdvancedScene->getSelectedGameLevel()->levelSetting->getBool("enable_lighting"))
+			/*if(m_AdvancedScene && m_AdvancedScene->getSelectedGameLevel()->levelSetting->getBool("enable_lighting"))
 			{
 				clearColor = sf::Color::White;
-			}
+			}*/
 		}
 
 
@@ -1910,7 +1910,7 @@ namespace  nero
 
 					ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-					if(std::string(m_InputParentClass) == "Game Level Script")
+					/*if(std::string(m_InputParentClass) == "Game Level Script")
 					{
 						ImGui::Text("Game Level");
 						ImGui::SameLine(wording_width);
@@ -2013,7 +2013,7 @@ namespace  nero
 						delete[] screenComboTable ;
 						screenComboTable = nullptr;
 
-					}
+					}*/
 
 
 					ImGui::SetNextWindowSize(ImVec2(500.f, 400.f));
@@ -3129,7 +3129,7 @@ namespace  nero
 		{
 			try
 			{
-				m_AdvancedScene->playScene();
+				//m_AdvancedScene->playScene();
 				m_EditorMode = EditorMode::PLAY_GAME;
 			}
 			catch(std::exception const& e)
@@ -3141,32 +3141,32 @@ namespace  nero
 
 	void EditorInterface::pauseScene()
 	{
-		if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
+		/*if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
 		{
 			auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
 
 			gameLevel->levelSetting->setBool("pause_level", !gameLevel->levelSetting->getBool("pause_level"));
-		}
+		}*/
 	}
 
 	void EditorInterface::stepScene()
 	{
 
-		if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
+		/*if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
 		{
 			auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
 
 			gameLevel->levelSetting->setBool("pause_scene", true);
 			gameLevel->levelSetting->setBool("single_step", true);
-		}
+		}*/
 	}
 
 	void EditorInterface::resetScene()
 	{
-		if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
+		/*if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
 		{
 			m_AdvancedScene->playScene();
-		}
+		}*/
 	}
 
 	void EditorInterface::renderScene()
@@ -3198,7 +3198,7 @@ namespace  nero
 		{
 			nero_log("reloading project ...");
 
-			m_GameProject->loadLibrary();
+			//m_GameProject->loadLibrary();
 
 		}
 	}
@@ -3597,24 +3597,24 @@ namespace  nero
 
 		if(ImGui::Button("Polygon", ImVec2(100.f, 100.f)))
 		{
-			if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-				m_AdvancedScene->addObject(Object::Mesh_Object, "Polygon", getAddObjectPosition(), m_EditorMode);
+			/*if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
+				m_AdvancedScene->addObject(Object::Mesh_Object, "Polygon", getAddObjectPosition(), m_EditorMode);*/
 		}
 
 		printSameLine();
 
 		if(ImGui::Button("Circle", ImVec2(100.f, 100.f)))
 		{
-			if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-				m_AdvancedScene->addObject(Object::Mesh_Object, "Circle", getAddObjectPosition(), m_EditorMode);
+			/*if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
+				m_AdvancedScene->addObject(Object::Mesh_Object, "Circle", getAddObjectPosition(), m_EditorMode);*/
 		}
 
 		printSameLine();
 
 		if(ImGui::Button("Line", ImVec2(100.f, 100.f)))
 		{
-			if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-				m_AdvancedScene->addObject(Object::Mesh_Object, "Line", getAddObjectPosition(), m_EditorMode);
+			/*if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
+				m_AdvancedScene->addObject(Object::Mesh_Object, "Line", getAddObjectPosition(), m_EditorMode);*/
 		}
 	}
 
@@ -3659,8 +3659,8 @@ namespace  nero
 
 			if(ImGui::ImageButton(m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]), button_size))
 			{
-				if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-					m_AdvancedScene->addObject(Object::Sprite_Object, spriteTable[n], getAddObjectPosition(), m_EditorMode);
+				/*if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
+					m_AdvancedScene->addObject(Object::Sprite_Object, spriteTable[n], getAddObjectPosition(), m_EditorMode);*/
 			}
 
 			if (ImGui::BeginPopupContextItem())
@@ -3719,7 +3719,7 @@ namespace  nero
 			{
 				if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
 				{
-					m_AdvancedScene->addObject(Object::Light_Object, spriteTable[n], getAddObjectPosition(), m_EditorMode);
+					//m_AdvancedScene->addObject(Object::Light_Object, spriteTable[n], getAddObjectPosition(), m_EditorMode);
 				}
 			}
 
@@ -3783,8 +3783,8 @@ namespace  nero
 
 			if(ImGui::ImageButton(sprite, button_size))
 			{
-				if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-					m_AdvancedScene->addObject(Object::Animation_Object, animationTable[n], getAddObjectPosition(), m_EditorMode);
+				/*if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
+					m_AdvancedScene->addObject(Object::Animation_Object, animationTable[n], getAddObjectPosition(), m_EditorMode);*/
 			}
 
 			if(ImGui::IsItemHovered())
@@ -4003,7 +4003,7 @@ namespace  nero
 
 			ImGui::BeginChild("##manage_game_screen", ImVec2(), true);
 
-				if(m_AdvancedScene)
+				/*if(m_AdvancedScene)
 				{
 					m_InputSelectedGameScreenId = m_AdvancedScene->getSelectedGameScreen()->screenId;
 
@@ -4035,7 +4035,7 @@ namespace  nero
 							gameScreen->name = std::string(screen_name);
 						}
 					}
-				}
+				}*/
 
 			ImGui::EndChild();
 
@@ -4044,10 +4044,10 @@ namespace  nero
 
 	void EditorInterface::addGameScreen()
 	{
-		if(m_AdvancedScene)
+		/*if(m_AdvancedScene)
 		{
 			m_AdvancedScene->addGameScreen();
-		}
+		}*/
 	}
 
 	void EditorInterface::removeGameScreen()
@@ -4087,7 +4087,7 @@ namespace  nero
 
 			ImGui::BeginChild("##manage_object_layer", ImVec2(), true);
 
-				if(m_AdvancedScene)
+				/*if(m_AdvancedScene)
 				{
 					auto sceneBuilder = m_AdvancedScene->getSelectedSceneBuilder(m_EditorMode);
 
@@ -4129,7 +4129,7 @@ namespace  nero
 
 						ImGui::PopStyleColor(2);
 					}
-				}
+				}*/
 
 			ImGui::EndChild();
 
@@ -4156,10 +4156,10 @@ namespace  nero
 
 	void EditorInterface::addObjectLayer()
 	{
-		if(m_AdvancedScene)
+		/*if(m_AdvancedScene)
 		{
 			m_AdvancedScene->getSelectedSceneBuilder(m_EditorMode)->addLayer();
-		}
+		}*/
 	}
 
 	void EditorInterface::removeObjectLayer()
@@ -4205,7 +4205,7 @@ namespace  nero
 
 			ImGui::BeginChild("##manage_game_level", ImVec2(), true);
 
-				if(m_AdvancedScene)
+				/*if(m_AdvancedScene)
 				{
 					m_InputSelectedGameLevelId = m_AdvancedScene->getSelectedGameLevel()->levelId;
 
@@ -4232,7 +4232,7 @@ namespace  nero
 							gameLevel->name = std::string(level_name);
 						}
 					}
-				}
+				}*/
 
 			ImGui::EndChild();
 
@@ -4324,7 +4324,7 @@ namespace  nero
 			ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
 			ImGui::BeginChild("##manage_world_chunk", ImVec2(), true);
 
-				if(m_AdvancedScene)
+				/*if(m_AdvancedScene)
 				{
 					auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
 
@@ -4358,7 +4358,7 @@ namespace  nero
 							worldChunk->name = std::string(chunk_name);
 						}
 					}
-				}
+				}*/
 
 			ImGui::EndChild();
 
@@ -4367,10 +4367,10 @@ namespace  nero
 
 	void EditorInterface::addWorldChunk()
 	{
-		if(m_AdvancedScene && m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT)
+		/*if(m_AdvancedScene && m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT)
 		{
 			m_AdvancedScene->addWorldChunk();
-		}
+		}*/
 	}
 
 	void EditorInterface::removeWorldChunk()
@@ -4434,7 +4434,7 @@ namespace  nero
 
 		if (ImGui::CollapsingHeader("Game World", m_AdvancedScene ? ImGuiTreeNodeFlags_DefaultOpen :ImGuiTreeNodeFlags_None))
 		{
-			if(m_AdvancedScene)
+			/*if(m_AdvancedScene)
 			{
 				auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
 
@@ -4565,14 +4565,14 @@ namespace  nero
 									{
 										object_selection_mask = (1 << object_node_clicked);
 
-										/*if (ImGui::GetIO().KeyCtrl)
-										{
-											object_selection_mask ^= (1 << object_node_clicked);
-										}
-										else
-										{
-											object_selection_mask = (1 << object_node_clicked);
-										}*/
+										//f (ImGui::GetIO().KeyCtrl)
+										//{
+											//object_selection_mask ^= (1 << object_node_clicked);
+										//}
+										//else
+										//{
+											//object_selection_mask = (1 << object_node_clicked);
+										//}//
 									}
 
 									ImGui::TreePop();
@@ -4585,14 +4585,14 @@ namespace  nero
 							{
 								layer_selection_mask = (1 << layer_node_clicked);
 
-								/*if (ImGui::GetIO().KeyCtrl)
-								{
-									layer_selection_mask ^= (1 << layer_node_clicked);
-								}
-								else
-								{
-									layer_selection_mask = (1 << layer_node_clicked);
-								}*/
+								//if (ImGui::GetIO().KeyCtrl)
+								//{
+									//layer_selection_mask ^= (1 << layer_node_clicked);
+								//}
+								//else
+								//{
+									//layer_selection_mask = (1 << layer_node_clicked);
+								//}
 							}
 
 							ImGui::TreePop();
@@ -4605,14 +4605,14 @@ namespace  nero
 					{
 						chunk_selection_mask = (1 << chunk_node_clicked);
 
-						/*if (ImGui::GetIO().KeyCtrl)
-						{
-							chunk_selection_mask ^= (1 << chunk_node_clicked);
-						}
-						else
-						{
-							chunk_selection_mask = (1 << chunk_node_clicked);
-						}*/
+						//if (ImGui::GetIO().KeyCtrl)
+						//{
+							//chunk_selection_mask ^= (1 << chunk_node_clicked);
+						//}
+						//else
+						//{
+							//chunk_selection_mask = (1 << chunk_node_clicked);
+						//}
 					}
 
 					ImGui::TreePop();
@@ -4620,14 +4620,14 @@ namespace  nero
 
 				ImGui::PopStyleVar();
 				ImGui::EndChild();
-			}
+			}*/
 		}
 
 		if (ImGui::CollapsingHeader("Game Level"))
 		{
 			if(m_AdvancedScene)
 			{
-				ImGuiViewport* viewport = ImGui::GetMainViewport();
+				/*ImGuiViewport* viewport = ImGui::GetMainViewport();
 				float window_height = viewport->Size.y * 0.25f;
 				viewport = nullptr;
 
@@ -4699,15 +4699,15 @@ namespace  nero
 					gameLevel->levelSetting->setBool("draw_profile", draw_profile);
 
 					//
-					/*levelSetting->setBool("enable_warm_starting", true);
-					levelSetting->setBool("enable_continous", true);
-					levelSetting->setBool("enable_sub_stepping", false);
-					levelSetting->setBool("enable_sleep", true);
+					//levelSetting->setBool("enable_warm_starting", true);
+					//levelSetting->setBool("enable_continous", true);
+					//levelSetting->setBool("enable_sub_stepping", false);
+					//levelSetting->setBool("enable_sleep", true);
 					//
-					levelSetting->setBool("pause_level", false);
-					levelSetting->setBool("single_step", false);*/
+					//levelSetting->setBool("pause_level", false);
+					//levelSetting->setBool("single_step", false);
 
-				ImGui::EndChild();
+				ImGui::EndChild();*/
 			}
 
 

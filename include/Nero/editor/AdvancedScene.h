@@ -1,8 +1,19 @@
+////////////////////////////////////////////////////////////
+// Nero Game Engine
+// Copyright (c) 2016-2021 Sanou A. K. Landry
+////////////////////////////////////////////////////////////
 #ifndef ADVANCEDSCENE_H
 #define ADVANCEDSCENE_H
-
-#include <vector>
+///////////////////////////HEADERS///////////////////////////
+//Nero
+#include <Nero/core/cpp/engine/Parameter.h>
+#include <Nero/editor/GameLevelBuilder.h>
+#include <Nero/editor/GameScreenBuilder.h>
+//STD
 #include <memory>
+#include <vector>
+////////////////////////////////////////////////////////////
+/*#include <vector>
 //Box2D
 #include <Box2D/Dynamics/Joints/b2MouseJoint.h>
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
@@ -13,13 +24,34 @@
 //#include <Nero/core/cpp/scene/UndoManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <SFML/Graphics/RenderTexture.hpp>
-#include <memory>
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <Nero/editor/EditorUtility.h>
-#include <Nero/core/cpp/scene/SceneBuilder.h>
-
+#include <Nero/core/cpp/scene/SceneBuilder.h>*/
+////////////////////////////////////////////////////////////
 namespace nero
+{
+	class AdvancedScene
+	{
+		public:
+			typedef std::shared_ptr<AdvancedScene> Ptr;
+
+		public:
+															AdvancedScene();
+
+			GameLevelBuilder::Ptr							addGameLevel(const Parameter& parameter);
+			GameScreenBuilder::Ptr							addGameScreen(const Parameter& parameter);
+
+		private:
+			//selection
+			GameLevelBuilder::Ptr							m_SelectedGameLevel;
+			GameScreenBuilder::Ptr							m_SelectedGameScreen;
+			//storage
+			std::vector<GameLevelBuilder::Ptr>				m_GameLevelTable;
+			std::vector<GameScreenBuilder::Ptr>				m_GameScreenTable;
+	};
+}
+/*namespace nero
 {
     //Forward declaration
     class AdvancedScene;
@@ -273,6 +305,6 @@ namespace nero
 			boost::function<CreateCppSceneFn>	m_CreateCppScene;
 			Parameter								m_ProjectParameter;
     };
-}
+}*/
 
 #endif // ADVANCEDSCENE_H
