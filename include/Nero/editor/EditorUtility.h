@@ -185,6 +185,21 @@ namespace nero
 		bool									hasPrevious();
 		void									previousView();
 	};
+
+	struct NewGameLevelInput
+	{
+		char                        name[100];
+		bool						enablePhysics;
+		bool						enableLight;
+		char                        prototype[100]; //template
+	};
+
+	struct NewGameScrenInput
+	{
+		char                        name[100];
+		char                        parent[100];
+		char                        prototype[100]; //template
+	};
 }
 
 

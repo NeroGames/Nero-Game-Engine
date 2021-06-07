@@ -449,17 +449,17 @@ namespace nero
 
 	void GameProject::close()
 	{
-		if(cmd::processRunning(m_EditorProcessId))
+		/*if(cmd::processRunning(m_EditorProcessId))
 		{
 			std::string kill_command = "taskkill /F /PID " + m_EditorProcessId;
 			system(kill_command.c_str());
-		}
+		}*/
 
-		nero_log("clearing resources");
-		m_ResourceManager->clearResource();
+		//nero_log("clearing resources");
+		//m_ResourceManager->clearResource();
 
 		//m_DemoScene = nullptr;
-		m_CreateCppSceneFn.clear();
+		//m_CreateCppSceneFn.clear();
 
 		//delete scene
 		/*m_AdvancedScene->m_Scene = nullptr;
@@ -470,7 +470,7 @@ namespace nero
 		m_AdvancedScene->m_GameLevelTable.clear();
 		m_AdvancedScene->m_GameScreenTable.clear();*/
 
-		m_CreateCppSceneFn.clear();
+		//m_CreateCppSceneFn.clear();
 	}
 
 	void GameProject::createScriptObject(const Parameter& parameter)

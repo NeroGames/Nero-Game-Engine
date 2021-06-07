@@ -3101,10 +3101,10 @@ namespace  nero
 
 		//open new project
 		m_GameProject		= m_ProjectManager->openProject(projectDirectory);
-		m_AdvancedScene		= m_GameProject->getAdvancedScene();
+		//m_AdvancedScene		= m_GameProject->getAdvancedScene();
 
 		//update editor window title
-		updateWindowTitle(m_GameProject->getProjectName());
+		//updateWindowTitle(m_GameProject->getProjectName());
     }
 
 	void EditorInterface::closeProject()
@@ -4174,27 +4174,13 @@ namespace  nero
 			ImGui::Separator();
 			ImGui::Dummy(ImVec2(0.f, 2.f));
 
-			//float width = 90.f;
-
 			ImGui::Dummy(ImVec2(0.f, 2.f));
 
-			ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth()-8.f)/2.f, 0.f);
+			ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth()-8.f), 0.f);
 
-			if(ImGui::Button("Add##add_game_level", button_size))
+			if(ImGui::Button("New Game Level##add_game_level", button_size))
 			{
 				addGameLevel();
-			}
-
-			ImGui::SameLine();
-
-			if(ImGui::Button("Remove##remove_game_level", button_size))
-			{
-				removeGameLevel();
-			}
-
-			if(ImGui::Button("Edit##edit_game_level", ImVec2(button_size.x * 2.f + 8.f, button_size.y)))
-			{
-				editGameLevel();
 			}
 
 			ImGui::Dummy(ImVec2(0.f, 5.f));
@@ -4232,26 +4218,166 @@ namespace  nero
 
 			ImGui::EndChild();
 
-			showGameLevelPopup();
+			showNewGameLevelPopup();
+			showNewGameScreenPopup();
 
 		ImGui::End();
 	};
 
-	void EditorInterface::showGameLevelPopup()
+	void EditorInterface::showNewGameLevelPopup()
 	{
 		//Window flags
 		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
 										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
 		//Winsow size
-		ImVec2 winsow_size              = ImVec2(400.f, 250.f);
-
-		//Project manager window
+		ImVec2 winsow_size = ImVec2(400.f, 220.f);
 		ImGui::SetNextWindowSize(winsow_size);
+
 		//Begin window
 		if(ImGui::BeginPopupModal("Create Game Level", nullptr, window_flags))
 		{
+			float wording_width = 130.f;
+			float input_width = ImGui::GetWindowContentRegionWidth() * 0.8f;
 
-			if (ImGui::Button("Close##close_about_engine", ImVec2(100, 0)))
+			ImGui::Text("Level Name");
+			ImGui::SameLine(wording_width);
+			//ImGui::SetNextItemWidth(input_width - 30.f);
+			ImGui::InputText("##new_level_name", m_NewGameLevelInput.name, sizeof(m_NewGameLevelInput.name));
+			ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+			ImGui::Text("Enable Physics");
+			ImGui::SameLine(wording_width);
+			ImGui::Checkbox("##new_level_physics", &m_NewGameLevelInput.enablePhysics);
+			ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+			ImGui::Text("Enable Light");
+			ImGui::SameLine(wording_width);
+			ImGui::Checkbox("##new_level_light", &m_NewGameLevelInput.enableLight);
+			ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+			ImGui::Text("Template");
+			ImGui::SameLine(wording_width);
+			const char* items[] = { "None"};
+			static int item_current = 0;
+			ImGui::Combo("combo", &item_current, items, IM_ARRAYSIZE(items));
+			ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+			ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 102.f);
+			ImGui::SetCursorPosY(winsow_size.y * 0.85f - 40.f);
+			bool onCreate = ImGui::Button("Create", ImVec2(100, 0));
+			ImGui::Dummy(ImVec2(0.0f, 4.0f));
+
+			bool error = false;
+
+			if(onCreate)
+			{
+				if(error)
+				{
+
+				}
+				else
+				{
+					Parameter parameter;
+					parameter.setString("level_name", std::string(m_NewGameLevelInput.name));
+					parameter.setBool("enable_physics", m_NewGameLevelInput.enablePhysics);
+					parameter.setBool("enable_light", m_NewGameLevelInput.enableLight);
+					parameter.setString("template", "None");
+
+					createGameLevel(parameter);
+				}
+			}
+
+			ImGui::Separator();
+			ImGui::Dummy(ImVec2(0.0f, 4.0f));
+			ImGui::SetCursorPosX(winsow_size.x/2.f - 50.f);
+			if (ImGui::Button("Close##clow_new_level", ImVec2(100, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
+	void EditorInterface::createGameLevel(const Parameter& parameter)
+	{
+		if(m_AdvancedScene)
+		{
+			m_AdvancedScene->addGameLevel(parameter);
+		}
+	}
+
+	void EditorInterface::createGameScreen(const Parameter& parameter)
+	{
+		if(m_AdvancedScene)
+		{
+			m_AdvancedScene->addGameScreen(parameter);
+		}
+	}
+
+	void EditorInterface::showNewGameScreenPopup()
+	{
+		//Window flags
+		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
+										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+		//Winsow size
+		ImVec2 winsow_size = ImVec2(400.f, 100.f);
+		ImGui::SetNextWindowSize(winsow_size);
+
+		//Begin window
+		if(ImGui::BeginPopupModal("Create Game Screen", nullptr, window_flags))
+		{
+			float wording_width = 130.f;
+			float input_width = ImGui::GetWindowContentRegionWidth() * 0.8f;
+
+			ImGui::Text("Screen Name");
+			ImGui::SameLine(wording_width);
+			ImGui::InputText("##new_screen_name", m_NewGameScreenInput.name, sizeof(m_NewGameScreenInput.name));
+			ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+			ImGui::Text("parent");
+			ImGui::SameLine(wording_width);
+			const char* parents[] = { "None"};
+			static int parent = 0;
+			ImGui::Combo("parent", &parent, parents, IM_ARRAYSIZE(parents));
+			ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+
+			ImGui::Text("Template");
+			ImGui::SameLine(wording_width);
+			const char* prototypes[] = { "None"};
+			static int prototype = 0;
+			ImGui::Combo("template", &prototype, prototypes, IM_ARRAYSIZE(prototypes));
+			ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+			ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 102.f);
+			ImGui::SetCursorPosY(winsow_size.y * 0.85f - 40.f);
+			bool onCreate = ImGui::Button("Create", ImVec2(100, 0));
+			ImGui::Dummy(ImVec2(0.0f, 4.0f));
+
+			bool error = false;
+
+			if(onCreate)
+			{
+				if(error)
+				{
+
+				}
+				else
+				{
+					Parameter parameter;
+					parameter.setString("screen_name", std::string(m_NewGameScreenInput.name));
+					//parameter.setString("parent", std::string(m_NewGameScreenInput.parent));
+					parameter.setString("template", std::string(m_NewGameScreenInput.prototype));
+
+					createGameScreen(parameter);
+				}
+			}
+
+			ImGui::Separator();
+			ImGui::Dummy(ImVec2(0.0f, 4.0f));
+			ImGui::SetCursorPosX(winsow_size.x/2.f - 50.f);
+			if (ImGui::Button("Close##close_new_screen", ImVec2(100, 0)))
 			{
 				ImGui::CloseCurrentPopup();
 			}
@@ -4264,13 +4390,6 @@ namespace  nero
 	{
 		nero_log("create new game level")
 		ImGui::OpenPopup("Create Game Level");
-
-		if(m_AdvancedScene)
-		{
-
-
-			//m_AdvancedScene->addGameLevel();
-		}
 	}
 
 	void EditorInterface::removeGameLevel()
