@@ -221,14 +221,12 @@ namespace nero
 			void											removeObjectLayer();
 			int												m_InputSelectedObjectLayerId;
 			//
-			void											addGameLevel();
 			void											removeGameLevel();
 			void											editGameLevel();
 			void											showNewGameLevelPopup();
 			void											showNewGameScreenPopup();
 			int												m_InputSelectedGameLevelId;
 			//
-			void											addGameScreen();
 			void											removeGameScreen();
 			int												m_InputSelectedGameScreenId;
 			//Tabs

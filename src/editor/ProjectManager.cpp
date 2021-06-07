@@ -202,10 +202,8 @@ namespace nero
 			file::createDirectory(file::getPath({projectDirectory, "Source", project_name}));
 				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp"}));
 					file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "level"}));
-				/*file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "script"}));
-				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "gameobject"}));
-				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "screen"}));
-				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "startupscreen"}));*/
+					file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "screen"}));
+					file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "script"}));
 		file::createDirectory(file::getPath({projectDirectory, "Build"}));
 		file::createDirectory(file::getPath({projectDirectory, "Scene"}));
 			file::createDirectory(file::getPath({projectDirectory, "Scene", "Level"}));

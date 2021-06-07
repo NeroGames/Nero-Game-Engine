@@ -1601,11 +1601,18 @@ namespace  nero
 	{
 		float rightOffset = 95.f;
 		if(m_GameProject)
-			rightOffset += 45.f * 3.f + 8.f * 3.f;
+			rightOffset += 45.f * 3.f + 8.f * 3.f + 90.f + 3.f;
 		ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - rightOffset);
 
 		if(m_GameProject)
 		{
+			if(ImGui::Button(ICON_FA_CODE, ImVec2(90.f, 28.f)))
+			{
+				ImGui::OpenPopup(EditorConstant.WINDOW_SCRIPT_WIZARD.c_str());
+			}
+
+			ImGui::SameLine();
+
 			if(ImGui::Button(ICON_FA_EDIT, ImVec2(45.f, 28.f)))
 			{
 				editProject();
@@ -1903,7 +1910,7 @@ namespace  nero
 
 					ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-					ImGui::Separator();
+					//ImGui::Separator();
 
 					ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
@@ -3975,24 +3982,13 @@ namespace  nero
 
 			ImGui::Text("Manage Game Screen");
 			ImGui::Separator();
-			ImGui::Dummy(ImVec2(0.f, 2.f));
+			ImGui::Dummy(ImVec2(0.f, 4.f));
 
-			float width = 90.f;
+			ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth()-8.f), 0.f);
 
-			ImGui::Dummy(ImVec2(0.f, 2.f));
-
-			ImVec2 button_size = ImVec2(width, 0.f);
-
-			if(ImGui::Button("Add##add_game_screen", button_size))
+			if(ImGui::Button("New Game Screen##add_game_screen", button_size))
 			{
-				addGameScreen();
-			}
-
-			ImGui::SameLine();
-
-			if(ImGui::Button("Remove##remove_game_screen", button_size))
-			{
-				removeGameScreen();
+				ImGui::OpenPopup("Create Game Screen");
 			}
 
 			ImGui::Dummy(ImVec2(0.f, 5.f));
@@ -4035,15 +4031,9 @@ namespace  nero
 
 			ImGui::EndChild();
 
-		ImGui::End();
-	}
+			showNewGameScreenPopup();
 
-	void EditorInterface::addGameScreen()
-	{
-		/*if(m_AdvancedScene)
-		{
-			m_AdvancedScene->addGameScreen();
-		}*/
+		ImGui::End();
 	}
 
 	void EditorInterface::removeGameScreen()
@@ -4172,15 +4162,13 @@ namespace  nero
 
 			ImGui::Text("Manage Game Level");
 			ImGui::Separator();
-			ImGui::Dummy(ImVec2(0.f, 2.f));
-
-			ImGui::Dummy(ImVec2(0.f, 2.f));
+			ImGui::Dummy(ImVec2(0.f, 4.f));
 
 			ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth()-8.f), 0.f);
 
 			if(ImGui::Button("New Game Level##add_game_level", button_size))
 			{
-				addGameLevel();
+				ImGui::OpenPopup("Create Game Level");
 			}
 
 			ImGui::Dummy(ImVec2(0.f, 5.f));
@@ -4219,7 +4207,6 @@ namespace  nero
 			ImGui::EndChild();
 
 			showNewGameLevelPopup();
-			showNewGameScreenPopup();
 
 		ImGui::End();
 	};
@@ -4321,7 +4308,7 @@ namespace  nero
 		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
 										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
 		//Winsow size
-		ImVec2 winsow_size = ImVec2(400.f, 100.f);
+		ImVec2 winsow_size = ImVec2(400.f, 200.f);
 		ImGui::SetNextWindowSize(winsow_size);
 
 		//Begin window
@@ -4384,12 +4371,6 @@ namespace  nero
 
 			ImGui::EndPopup();
 		}
-	}
-
-	void EditorInterface::addGameLevel()
-	{
-		nero_log("create new game level")
-		ImGui::OpenPopup("Create Game Level");
 	}
 
 	void EditorInterface::removeGameLevel()
