@@ -2,14 +2,23 @@
 // Nero Game Engine
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
+#ifndef PHYSICALWORLD_H
+#define PHYSICALWORLD_H
 ///////////////////////////HEADERS///////////////////////////
-//Nero
-#include <Nero/core/cpp/scene/GameLevel.h>
+//STD
+#include <memory>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	GameLevel::GameLevel()
+	class PhysicalWorld
 	{
+		public:
+			//type definiton
+			typedef std::shared_ptr	<PhysicalWorld> Ptr;
 
-	}
+		public:
+			PhysicalWorld();
+	};
 }
+
+#endif // PHYSICALWORLD_H

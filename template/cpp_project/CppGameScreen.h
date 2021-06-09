@@ -5,24 +5,23 @@
 #ifndef ::Header_Gard::
 #define ::Header_Gard::
 ///////////////////////////HEADERS///////////////////////////
-//NERO
-#include <Nero/core/cpp/object/GameScreenScriptObject.h>
-//BOOST
+//Nero
+#include <Nero/core/cpp/scene/GameScreen.h>
+//Boost
 #include <boost/dll/alias.hpp>
 /////////////////////////////////////////////////////////////
-
 namespace ::Namespace::
 {
-	class ::Class_Name:: : public nero::GameScreenScriptObject
+	class ::Class_Name:: : public nero::GameScreen
     {
         public: //Utility
 			typedef std::shared_ptr<::Class_Name::> Ptr;
 
 		public: //Factory
-			static nero::GameScreenScriptObject::Ptr create::Class_Name::(nero::ScriptObject::Context context) noexcept;
+			static nero::GameScreen::Ptr create::Class_Name::(nero::GameScreen::Context context) noexcept;
 
         public: //Scene core
-										::Class_Name::(nero::ScriptObject::Context context);
+										::Class_Name::(nero::GameScreen::Context context);
 			virtual                    ~::Class_Name::() override;
 
 			virtual	void				init();

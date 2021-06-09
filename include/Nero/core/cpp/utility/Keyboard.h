@@ -18,5 +18,13 @@ namespace nero
 		bool	SHIFT_ALT();
 		bool	CTRL_SHIFT_ALT();
 	}
+
+	struct ModifierKey
+	{
+		bool alt        = false;
+		bool control    = false;
+		bool shift      = false;
+		bool system     = false;
+	};
 }
 #endif // KEYBOARD_H

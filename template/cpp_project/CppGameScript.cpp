@@ -7,7 +7,7 @@
 /////////////////////////////////////////////////////////////
 namespace ::Namespace::
 {
-    ::Class_Name::::::Class_Name::(nero::GameScreen::Context context) : nero::GameScreen(context)
+    ::Class_Name::::::Class_Name::(nero::ScriptObject::Context context) : nero::GameScript(context)
     {
 
     }
@@ -22,23 +22,24 @@ namespace ::Namespace::
 
     }
 
-    nero::GameScreen::Ptr ::Class_Name::::create::Class_Name::(nero::GameScreen::Context context) noexcept
+    nero::GameScript::Ptr ::Class_Name::::create::Class_Name::(nero::GameScript::Context context) noexcept
     {
         return ::Class_Name::::Ptr(new ::Class_Name::(context));
     }
 
+
     void ::Class_Name::::handleEvent(const sf::Event& event)
     {
-        nero::GameScreen::handleEvent(event);
+        nero::GameScript::handleEvent(event);
     }
 
     void ::Class_Name::::update(const sf::Time& timeStep)
     {
-        nero::GameScreen::update(timeStep);
+        nero::GameScript::update(timeStep);
     }
 
-    void ::Class_Name::::render()
+    void  ::Class_Name::::render()
     {
-        nero::GameScreen::render();
+        nero::GameScript::render();
     }
 }

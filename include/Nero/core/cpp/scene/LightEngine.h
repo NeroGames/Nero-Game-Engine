@@ -2,14 +2,23 @@
 // Nero Game Engine
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
+#ifndef LIGHTENGINE_H
+#define LIGHTENGINE_H
 ///////////////////////////HEADERS///////////////////////////
-//Nero
-#include <Nero/core/cpp/scene/GameLevel.h>
+//STD
+#include <memory>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	GameLevel::GameLevel()
+	class LightEngine
 	{
+		public:
+			//type definiton
+			typedef std::shared_ptr	<LightEngine> Ptr;
 
-	}
+		public:
+			LightEngine();
+	};
 }
+
+#endif // LIGHTENGINE_H

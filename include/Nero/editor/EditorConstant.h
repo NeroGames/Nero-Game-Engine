@@ -56,7 +56,7 @@ namespace nero
 		const std::string WINDOW_STARTER_WIZARD			= "Configuration Wizard";
 		sf::Vector2f	  WINDOW_STARTER_WIZARD_SIZE	= sf::Vector2f(900.f, 500.f);
 			//script wizard
-		const std::string WINDOW_SCRIPT_WIZARD			= "Script Wizard";
+		const std::string WINDOW_SCRIPT_WIZARD			= "Create Game Script";
 		sf::Vector2f	  WINDOW_SCRIPT_WIZARD_SIZE		= sf::Vector2f(600.f, 300.f);
 			//about engine
 		const std::string WINDOW_ABOUT_ENGINE			= "About Nero Game Engine";

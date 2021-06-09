@@ -3,13 +3,16 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
-//Nero
-#include <Nero/core/cpp/scene/GameLevel.h>
+//SFML
+#include <Nero/core/cpp/scene/PhysicalWorld.h>
+//STD
+#include <memory>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	GameLevel::GameLevel()
+	PhysicalWorld::PhysicalWorld()
 	{
 
 	}
 }
+
