@@ -470,7 +470,7 @@ namespace  nero
 			ImGui::SetCursorPosX(start);
 			ImGui::Text(m_MouseInformation.c_str());
 
-			//if(m_AdvancedScene)
+			if(m_AdvancedScene)
 			{
 				ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 95.f);
 
@@ -3126,10 +3126,10 @@ namespace  nero
 
 		//open new project
 		m_GameProject		= m_ProjectManager->openProject(projectDirectory);
-		//m_AdvancedScene		= m_GameProject->getAdvancedScene();
+		m_AdvancedScene		= m_GameProject->getAdvancedScene();
 
 		//update editor window title
-		//updateWindowTitle(m_GameProject->getProjectName());
+		updateWindowTitle(m_GameProject->getProjectName());
     }
 
 	void EditorInterface::closeProject()
@@ -4224,7 +4224,7 @@ namespace  nero
 
 			ImGui::EndChild();
 
-			showNewGameLevelPopup();
+			//showNewGameLevelPopup();
 
 		ImGui::End();
 	};
@@ -4235,7 +4235,7 @@ namespace  nero
 		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
 										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
 		//Winsow size
-		ImVec2 winsow_size = ImVec2(400.f, 220.f);
+		ImVec2 winsow_size = ImVec2(400.f, 200.f);
 		ImGui::SetNextWindowSize(winsow_size);
 
 		//Begin window
@@ -4267,8 +4267,16 @@ namespace  nero
 			ImGui::Combo("combo", &item_current, items, IM_ARRAYSIZE(items));
 			ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
-			ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 102.f);
-			ImGui::SetCursorPosY(winsow_size.y * 0.85f - 40.f);
+			ImGui::SetCursorPosY(winsow_size.y - 50.f);
+
+			if (ImGui::Button("Close##clow_new_level", ImVec2(100, 0)))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 95.f);
+
+			//ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 102.f);
 			bool onCreate = ImGui::Button("Create", ImVec2(100, 0));
 			ImGui::Dummy(ImVec2(0.0f, 4.0f));
 
@@ -4294,13 +4302,13 @@ namespace  nero
 				}
 			}
 
-			ImGui::Separator();
+			/*ImGui::Separator();
 			ImGui::Dummy(ImVec2(0.0f, 4.0f));
 			ImGui::SetCursorPosX(winsow_size.x/2.f - 50.f);
 			if (ImGui::Button("Close##clow_new_level", ImVec2(100, 0)))
 			{
 				ImGui::CloseCurrentPopup();
-			}
+			}*/
 
 			ImGui::EndPopup();
 		}

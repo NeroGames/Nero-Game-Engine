@@ -47,7 +47,7 @@ namespace nero
 	void GameProject::init(const Parameter& parameter)
     {
 		m_ProjectParameter = parameter;
-		m_ProjectParameter.setString("source_directory", file::getPath({m_ProjectParameter.getString("project_directory"), "Source", parameter.getString("project_name")}));
+		/*m_ProjectParameter.setString("source_directory", file::getPath({m_ProjectParameter.getString("project_directory"), "Source", parameter.getString("project_name")}));
 		m_ProjectParameter.setString("build_directory", file::getPath({m_ProjectParameter.getString("project_directory"), "Build"}));
 		m_ProjectParameter.setString("cmake_file", file::getPath({m_ProjectParameter.getString("source_directory"), "CMakeLists"}, StringPool.EXT_TEXT));
 
@@ -56,7 +56,7 @@ namespace nero
 		std::string libraryFileCopy		= file::getPath({m_ProjectParameter.getString("build_directory"), "libnerogame-" + library + "-copy"}, StringPool.EXT_DLL);
 
 		m_ProjectParameter.setString("library_file", libraryFile);
-		m_ProjectParameter.setString("library_file_copy", libraryFileCopy);
+		m_ProjectParameter.setString("library_file_copy", libraryFileCopy);*/
 
 
 		//create advanced scene

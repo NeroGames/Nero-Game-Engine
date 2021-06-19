@@ -504,7 +504,7 @@ namespace nero
 		parameter.setString("workspace_directory", file::getParentDirectory(projectDirectory, 2));
 
 		m_GameProject = GameProject::Ptr(new GameProject());
-		//m_GameProject->init(parameter);
+		m_GameProject->init(parameter);
 
 		/*m_GameProject->setSetting(m_EditorSetting);
 		m_GameProject->setRenderTexture(m_RenderTexture);
