@@ -154,7 +154,7 @@ set_target_properties(GameEditor PROPERTIES OUTPUT_NAME "Nero Game Engine")
 #----------------------------------------------------------------------------------#
 #[[#]]
 add_custom_command(TARGET nerogame-core
-        POST_BUILD
+        PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E remove_directory    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/template"
         COMMAND ${CMAKE_COMMAND} -E copy_directory      "${CMAKE_SOURCE_DIR}/template" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/template")
 #]]

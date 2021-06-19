@@ -1,14 +1,14 @@
 ////////////////////////////////////////////////////////////
-// Project ::ProjectName::
-// Copyright (c) ::Date:: ::ProjectLead::
-////////////////////////////////////////////////////////////
-#ifndef ::HeaderGard::_H
-#define ::HeaderGard::_H
+// ::ProjectName::
+// Copyright (c) ::CoyprightDate:: ::ProjectLead::
+/////////////////////////////////////////////////////////////
+#ifndef ::HeaderGard::
+#define ::HeaderGard::
 ///////////////////////////HEADERS///////////////////////////
 //Nero
 #include <Nero/engine/StartupScreen.h>
 ////////////////////////////////////////////////////////////
-namespace ::NameSpace::
+namespace ::Namespace::
 {
 	class ::StartupScreenClass:: : public nero::StartupScreen
     {
@@ -25,4 +25,4 @@ namespace ::NameSpace::
     };
 }
 
-#endif // :HeaderGard:_H
+#endif // ::HeaderGard::

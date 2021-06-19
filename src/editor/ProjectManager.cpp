@@ -242,6 +242,8 @@ namespace nero
 		std::string cmake_setting_template	= file::loadText("template/cpp_project/CMakeSettings.json");
 		std::string scene_header_template	= file::loadText("template/cpp_project/CppScene.h");
 		std::string scene_source_template	= file::loadText("template/cpp_project/CppScene.cpp");
+		std::string screen_header_template	= file::loadText("template/cpp_project/CppStartupScreen.h");
+		std::string screen_source_template	= file::loadText("template/cpp_project/CppStartupScreen.cpp");
 
 		auto wordTable = string::getWordTable(parameter.getString("project_name"));
 
@@ -249,19 +251,19 @@ namespace nero
 		std::string class_header	= formatHeaderGard(wordTable);
 
 		//file 1 : header
-		boost::algorithm::replace_all(scene_header_template, "::Scene_Class::",		scene_class);
-		boost::algorithm::replace_all(scene_header_template, "::Header_Gard::",		class_header);
+		boost::algorithm::replace_all(scene_header_template, "::SceneClass::",		scene_class);
+		boost::algorithm::replace_all(scene_header_template, "::HeaderGard::",		class_header);
 		boost::algorithm::replace_all(scene_header_template, "::Namespace::",		parameter.getString("project_namespace"));
-		boost::algorithm::replace_all(scene_header_template, "::Project_Name::",	parameter.getString("project_name"));
-		boost::algorithm::replace_all(scene_header_template, "::Project_Lead::",	parameter.getString("project_lead"));
-		boost::algorithm::replace_all(scene_header_template, "::Coypright_Date::",	toString(datetime::getCurrentDateTime().date().year()));
+		boost::algorithm::replace_all(scene_header_template, "::ProjectName::",	parameter.getString("project_name"));
+		boost::algorithm::replace_all(scene_header_template, "::ProjectLead::",	parameter.getString("project_lead"));
+		boost::algorithm::replace_all(scene_header_template, "::CoyprightDate::",	toString(datetime::getCurrentDateTime().date().year()));
 
 		//file 2 : source
-		boost::algorithm::replace_all(scene_source_template, "::Scene_Class::",		scene_class);
+		boost::algorithm::replace_all(scene_source_template, "::SceneClass::",		scene_class);
 		boost::algorithm::replace_all(scene_source_template, "::Namespace::",		parameter.getString("project_namespace"));
-		boost::algorithm::replace_all(scene_source_template, "::Project_Name::",	parameter.getString("project_name"));
-		boost::algorithm::replace_all(scene_source_template, "::Project_Lead::",	parameter.getString("project_lead"));
-		boost::algorithm::replace_all(scene_source_template, "::Coypright_Date::",	toString(datetime::getCurrentDateTime().date().year()));
+		boost::algorithm::replace_all(scene_source_template, "::ProjectName::",	parameter.getString("project_name"));
+		boost::algorithm::replace_all(scene_source_template, "::ProjectLead::",	parameter.getString("project_lead"));
+		boost::algorithm::replace_all(scene_source_template, "::CoyprightDate::",	toString(datetime::getCurrentDateTime().date().year()));
 
 		//file 3 : cmake text list
 		boost::algorithm::replace_all(cmake_template, "::Project_Name::",					formatCmakeProjectName(wordTable));
@@ -272,10 +274,28 @@ namespace nero
 		nero_log(file::getPath({projectDirectory, "Build"}));
 		boost::algorithm::replace_all(cmake_setting_template, "::Project_Build_Directory::", file::escapeBackslash(file::getPath({projectDirectory, "Build"})));
 
+		//file 5 : startup screen header
+		boost::algorithm::replace_all(screen_header_template, "::StartupScreenClass::", "StartupScreen");
+		boost::algorithm::replace_all(screen_header_template, "::HeaderGard::",		"STARTUPSCREEN_H");
+		boost::algorithm::replace_all(screen_header_template, "::Namespace::",		parameter.getString("project_namespace"));
+		boost::algorithm::replace_all(screen_header_template, "::ProjectName::",	parameter.getString("project_name"));
+		boost::algorithm::replace_all(screen_header_template, "::ProjectLead::",	parameter.getString("project_lead"));
+		boost::algorithm::replace_all(screen_header_template, "::CoyprightDate::",	toString(datetime::getCurrentDateTime().date().year()));
+
+		//file 6 : startup screen header
+		boost::algorithm::replace_all(screen_source_template, "::StartupScreenClass::", "StartupScreen");
+		boost::algorithm::replace_all(screen_source_template, "::Namespace::",		parameter.getString("project_namespace"));
+		boost::algorithm::replace_all(screen_source_template, "::ProjectName::",	parameter.getString("project_name"));
+		boost::algorithm::replace_all(screen_source_template, "::ProjectLead::",	parameter.getString("project_lead"));
+		boost::algorithm::replace_all(screen_source_template, "::CoyprightDate::",	toString(datetime::getCurrentDateTime().date().year()));
+
+		//save file
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeLists"}, StringPool.EXT_TEXT), cmake_template);
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeSettings"}, StringPool.EXT_JSON), cmake_setting_template);
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXT_H), scene_header_template);
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXT_CPP), scene_source_template);
+		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", "StartupScreen"}, StringPool.EXT_H), screen_header_template);
+		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", "StartupScreen"}, StringPool.EXT_CPP), screen_source_template);
 
 		//Step 3 : compile the project
 		backgroundTask->setStatus(3);

@@ -1,49 +1,48 @@
 ////////////////////////////////////////////////////////////
-// ::Project_Name::
-// Copyright (c) ::Coypright_Date:: ::Project_Lead::
+// ::ProjectName::
+// Copyright (c) ::CoyprightDate:: ::ProjectLead::
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
-#include "::Scene_Class::.h"
+#include "::SceneClass::.h"
 /////////////////////////////////////////////////////////////
-
 namespace ::Namespace::
 {
-    nero::GameScene::Ptr ::Scene_Class::::createScene(nero::GameScene::Context context) noexcept
+    nero::GameScene::Ptr ::SceneClass::::createScene(nero::GameScene::Context context) noexcept
     {
-          return ::Scene_Class::::Ptr(new ::Scene_Class::(context));
+          return ::SceneClass::::Ptr(new ::SceneClass::(context));
     }
 
-    ::Scene_Class::::::Scene_Class::(nero::GameScene::Context context) : nero::GameScene(context)
-    {
-
-    }
-
-    ::Scene_Class::::~::Scene_Class::()
+    ::SceneClass::::::SceneClass::(nero::GameScene::Context context) : nero::GameScene(context)
     {
 
     }
 
-    void ::Scene_Class::::init()
+    ::SceneClass::::~::SceneClass::()
     {
 
     }
 
-    void ::Scene_Class::::destroy()
+    void ::SceneClass::::init()
     {
 
     }
 
-    void ::Scene_Class::::handleEvent(const sf::Event& event)
+    void ::SceneClass::::destroy()
+    {
+
+    }
+
+    void ::SceneClass::::handleEvent(const sf::Event& event)
     {
         nero::GameScene::handleEvent(event);
     }
 
-    void ::Scene_Class::::update(const sf::Time& timeStep)
+    void ::SceneClass::::update(const sf::Time& timeStep)
     {
         nero::GameScene::update(timeStep);
     }
 
-    void  ::Scene_Class::::render()
+    void  ::SceneClass::::render()
     {
         nero::GameScene::render();
     }

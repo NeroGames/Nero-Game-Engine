@@ -25,6 +25,7 @@ namespace nero
 
 	GameLevelBuilder::Ptr AdvancedScene::addGameLevel(const Parameter& parameter)
 	{
+		nero_log(parameter.toString());
 		//generate source file
 			//paremeter
 		std::string header			= file::loadText("template/cpp_project/CppGameLevel.h");

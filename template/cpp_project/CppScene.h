@@ -1,22 +1,22 @@
 ////////////////////////////////////////////////////////////
-// ::Project_Name::
-// Copyright (c) ::Coypright_Date:: ::Project_Lead::
+// ::ProjectName::
+// Copyright (c) ::CoyprightDate:: ::ProjectLead::
 /////////////////////////////////////////////////////////////
-#ifndef ::Header_Gard::
-#define ::Header_Gard::
+#ifndef ::HeaderGard::
+#define ::HeaderGard::
 ///////////////////////////HEADERS///////////////////////////
-//NERO
+//Nero
 #include <Nero/core/cpp/scene/GameScene.h>
-//BOOST
+//Boost
 #include <boost/dll/alias.hpp>
 /////////////////////////////////////////////////////////////
 
 namespace ::Namespace::
 {
-	class ::Scene_Class:: : public nero::GameScene
+	class ::SceneClass:: : public nero::GameScene
     {
 		public: //Utility
-			typedef std::shared_ptr<::Scene_Class::> Ptr;
+			typedef std::shared_ptr<::SceneClass::> Ptr;
 
         public: //Scene Factory
 			static nero::GameScene::Ptr createScene(nero::GameScene::Context context) noexcept;

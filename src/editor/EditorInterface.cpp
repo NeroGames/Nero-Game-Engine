@@ -330,10 +330,10 @@ namespace  nero
 		//left dockspace
 			//upper left
 		showUtilityWindow();
-		if(m_EditorMode == EditorMode::WORLD_BUILDER)
+		/*if(m_EditorMode == EditorMode::WORLD_BUILDER)
 			showGameLevelWindow();
 		if(m_EditorMode == EditorMode::SCREEN_BUILDER)
-			showGameScreenWindow();
+			showGameScreenWindow();*/
 
 			//lower left
 		showObjectLayerWindow();
@@ -448,7 +448,7 @@ namespace  nero
 			std::string wrold_pos_string = "World x = " + toString(world_pos.x) + " y = "  + toString(world_pos.y);
 			std::string camera_pos_string = "Camera x = " + toString(m_EditorCamera->getPosition().x) + " y = "  + toString(m_EditorCamera->getPosition().y);
 
-			if(ImGui::Button("Black", ImVec2(50.f, 0.f)))
+			/*if(ImGui::Button("Black", ImVec2(50.f, 0.f)))
 			{
 
 			}
@@ -458,7 +458,7 @@ namespace  nero
 			if(ImGui::Button("Gray", ImVec2(50.f, 0.f)))
 			{
 
-			}
+			}*/
 
 			ImGui::SameLine();
 
@@ -470,19 +470,33 @@ namespace  nero
 			ImGui::SetCursorPosX(start);
 			ImGui::Text(m_MouseInformation.c_str());
 
-			 ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 45.f);
+			//if(m_AdvancedScene)
+			{
+				ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 95.f);
 
-			 if(ImGui::Button("Blue", ImVec2(50.f, 0.f)))
-			 {
+				if(m_EditorMode == EditorMode::WORLD_BUILDER)
+				{
+					if(ImGui::Button("New Level", ImVec2(100.f, 0.f)))
+					{
+						ImGui::OpenPopup("Create Game Level");
+					}
+				}
+				else if(m_EditorMode == EditorMode::SCREEN_BUILDER)
+				{
+					if(ImGui::Button("New Screen", ImVec2(100.f, 0.f)))
+					{
+						ImGui::OpenPopup("Create Game Screen");
+					}
+				}
+				else if(m_EditorMode == EditorMode::OBJECT_BUILDER)
+				{
+					if(ImGui::Button("New Object", ImVec2(100.f, 0.f)))
+					{
 
-			 }
+					}
+				}
+			}
 
-			 ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 100.f - 4.f);
-
-			 if(ImGui::Button("White", ImVec2(50.f, 0.f)))
-			 {
-
-			 }
 
 
 			prepareRenderTexture();
@@ -521,6 +535,10 @@ namespace  nero
 			ImGui::Image(flipTexture(m_RenderTexture->getTexture()));
 
 			showCanvasMenu();
+
+			showNewGameLevelPopup();
+			showNewGameScreenPopup();
+
 
         ImGui::End();
     }
@@ -786,8 +804,8 @@ namespace  nero
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_TOOLBAR.c_str(),				toolbarDockspaceID);
 					//upper left
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_UTILITY.c_str(),				upperLeftDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LEVEL.c_str(),				upperLeftDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_SCREEN.c_str(),				upperLeftDockspaceID);
+				//ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LEVEL.c_str(),				upperLeftDockspaceID);
+				//ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_SCREEN.c_str(),				upperLeftDockspaceID);
 					//lower left
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_CHUNCK.c_str(),				lowerLeftDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LAYER.c_str(),				lowerLeftDockspaceID);
@@ -4164,7 +4182,7 @@ namespace  nero
 			ImGui::Separator();
 			ImGui::Dummy(ImVec2(0.f, 4.f));
 
-			ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth()-8.f), 0.f);
+			ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth()), 0.f);
 
 			if(ImGui::Button("New Game Level##add_game_level", button_size))
 			{
@@ -4271,6 +4289,8 @@ namespace  nero
 					parameter.setString("template", "None");
 
 					createGameLevel(parameter);
+
+					ImGui::CloseCurrentPopup();
 				}
 			}
 
