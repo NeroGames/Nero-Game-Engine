@@ -7,6 +7,7 @@
 ///////////////////////////HEADERS///////////////////////////
 //Nero
 #include <Nero/core/cpp/engine/Parameter.h>
+#include <Nero/core/cpp/engine/Setting.h>
 #include <Nero/editor/GameLevelBuilder.h>
 #include <Nero/editor/GameScreenBuilder.h>
 //STD
@@ -41,6 +42,9 @@ namespace nero
 
 			GameLevelBuilder::Ptr							addGameLevel(const Parameter& parameter);
 			GameScreenBuilder::Ptr							addGameScreen(const Parameter& parameter);
+			//setting
+			void											setEngineSetting(const Setting::Ptr& setting);
+			void											setProjectSetting(const Setting::Ptr& setting);
 
 		private:
 			//selection
@@ -49,6 +53,11 @@ namespace nero
 			//storage
 			std::vector<GameLevelBuilder::Ptr>				m_GameLevelTable;
 			std::vector<GameScreenBuilder::Ptr>				m_GameScreenTable;
+			//setting
+			Setting::Ptr									m_EngineSetting;
+			Setting::Ptr									m_ProjectSetting;
+			Setting::Ptr									m_SceneSetting;
+
 	};
 }
 /*namespace nero

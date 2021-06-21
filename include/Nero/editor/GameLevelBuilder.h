@@ -5,6 +5,9 @@
 #ifndef GAMELEVELBUILDER_H
 #define GAMELEVELBUILDER_H
 ///////////////////////////HEADERS//////////////////////////
+//Nero
+#include <Nero/core/cpp/engine/Setting.h>
+#include <Nero/core/cpp/resource/ResourceManager.h>
 //STD
 #include <memory>
 ////////////////////////////////////////////////////////////
@@ -16,7 +19,15 @@ namespace nero
 			typedef std::shared_ptr<GameLevelBuilder> Ptr;
 
 		public:
-			GameLevelBuilder();
+												GameLevelBuilder();
+
+			ResourceManager::Ptr				getResourceManager();
+			void								setEngineSetting(const Setting::Ptr& setting);
+
+		private:
+			Setting::Ptr						m_LevelSetting;
+			Setting::Ptr						m_EngineSetting;
+			ResourceManager::Ptr				m_ResourceManager;
 	};
 }
 

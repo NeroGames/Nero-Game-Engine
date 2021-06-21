@@ -19,6 +19,8 @@ namespace nero
 		,m_SelectedGameScreen(nullptr)
 		,m_GameLevelTable()
 		,m_GameScreenTable()
+		,m_EngineSetting(nullptr)
+		,m_ProjectSetting(nullptr)
 	{
 
 	}
@@ -30,27 +32,28 @@ namespace nero
 			//paremeter
 		std::string header			= file::loadText("template/cpp_project/CppGameLevel.h");
 		std::string source			= file::loadText("template/cpp_project/CppGameLevel.cpp");
-		std::string class_name		= parameter.getString("class_name") + "GameLevel";
+		std::string class_name		= parameter.getString("level_name") + "GameLevel";
 		std::string class_header	= boost::algorithm::to_upper_copy(class_name) + "_H";
 			//file 1 : header
 		boost::algorithm::replace_all(header, "::Class_Name::",		class_name);
 		boost::algorithm::replace_all(header, "::Header_Gard::",	class_header);
-		boost::algorithm::replace_all(header, "::Namespace::",		parameter.getString("project_namespace"));
-		boost::algorithm::replace_all(header, "::Project_Name::",	parameter.getString("project_name"));
-		boost::algorithm::replace_all(header, "::Project_Lead::",	parameter.getString("project_lead"));
+		boost::algorithm::replace_all(header, "::Namespace::",		m_ProjectSetting->getString("project_namespace"));
+		boost::algorithm::replace_all(header, "::Project_Name::",	m_ProjectSetting->getString("project_name"));
+		boost::algorithm::replace_all(header, "::Project_Lead::",	m_ProjectSetting->getString("project_lead"));
 		boost::algorithm::replace_all(header, "::Coypright_Date::",	toString(datetime::getCurrentDateTime().date().year()));
 			//file 2 : source
 		boost::algorithm::replace_all(source, "::Class_Name::",		class_name);
-		boost::algorithm::replace_all(source, "::Namespace::",		parameter.getString("project_namespace"));
-		boost::algorithm::replace_all(source, "::Project_Name::",	parameter.getString("project_name"));
-		boost::algorithm::replace_all(source, "::Project_Lead::",	parameter.getString("project_lead"));
+		boost::algorithm::replace_all(source, "::Namespace::",		m_ProjectSetting->getString("project_namespace"));
+		boost::algorithm::replace_all(source, "::Project_Name::",	m_ProjectSetting->getString("project_name"));
+		boost::algorithm::replace_all(source, "::Project_Lead::",	m_ProjectSetting->getString("project_lead"));
 		boost::algorithm::replace_all(source, "::Coypright_Date::",	toString(datetime::getCurrentDateTime().date().year()));
 			//save file
-		file::saveFile(file::getPath({parameter.getString("source_directory"),"cpp", "level", class_name}, StringPool.EXT_CPP), header);
-		file::saveFile(file::getPath({parameter.getString("source_directory"), "cpp", "level", class_name}, StringPool.EXT_CPP), source);
+		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"),"cpp", "level", class_name}, StringPool.EXT_H), header);
+		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"), "cpp", "level", class_name}, StringPool.EXT_CPP), source);
 
 		//create new builder
 		auto gameLevelBuilder = std::make_shared<GameLevelBuilder>();
+		gameLevelBuilder->setEngineSetting(m_EngineSetting);
 		m_GameLevelTable.push_back(gameLevelBuilder);
 
 		return gameLevelBuilder;
@@ -63,6 +66,15 @@ namespace nero
 		return gameScreenBuilder;
 	}
 
+	void AdvancedScene::setEngineSetting(const Setting::Ptr& setting)
+	{
+		m_EngineSetting = setting;
+	}
+
+	void AdvancedScene::setProjectSetting(const Setting::Ptr& setting)
+	{
+		m_ProjectSetting = setting;
+	}
 }
 
 /*namespace nero

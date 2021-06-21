@@ -33,7 +33,7 @@ namespace nero
         public:
 												GameProject();
 
-			void								init(const Parameter& parameter);
+			void								init(const Setting::Ptr& setting);
 			void								loadProject();
 			void								saveProject();
 			void								saveGameLevel();
@@ -72,7 +72,7 @@ namespace nero
 		private:
 			Scene::Ptr							m_Scene;
 			std::vector<BackgroundTask>			m_BackgroundTaskTable;
-			Parameter							m_ProjectParameter;
+			Setting::Ptr						m_ProjectSetting;
 			ResourceManager::Ptr				m_ResourceManager;
 			Setting::Ptr						m_EngineSetting;
 			AdvancedScene::Ptr					m_AdvancedScene;

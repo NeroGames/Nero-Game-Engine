@@ -44,26 +44,27 @@ namespace nero
 		nero_log("load resource completed");
 	}
 
-	void GameProject::init(const Parameter& parameter)
+	void GameProject::init(const Setting::Ptr& setting)
     {
-		m_ProjectParameter = parameter;
-		/*m_ProjectParameter.setString("source_directory", file::getPath({m_ProjectParameter.getString("project_directory"), "Source", parameter.getString("project_name")}));
-		m_ProjectParameter.setString("build_directory", file::getPath({m_ProjectParameter.getString("project_directory"), "Build"}));
-		m_ProjectParameter.setString("cmake_file", file::getPath({m_ProjectParameter.getString("source_directory"), "CMakeLists"}, StringPool.EXT_TEXT));
+		m_ProjectSetting = setting;
+		m_ProjectSetting->setString("source_directory", file::getPath({m_ProjectSetting->getString("project_directory"), "Source", setting->getString("project_name")}));
+		m_ProjectSetting->setString("build_directory", file::getPath({m_ProjectSetting->getString("project_directory"), "Build"}));
+		m_ProjectSetting->setString("cmake_file", file::getPath({m_ProjectSetting->getString("source_directory"), "CMakeLists"}, StringPool.EXT_TEXT));
 
-		std::string library				= string::formatString(m_ProjectParameter.getString("project_name"), string::Format::COMPACT_LOWER);
-		std::string libraryFile			= file::getPath({m_ProjectParameter.getString("build_directory"), "libnerogame-" + library}, StringPool.EXT_DLL);
-		std::string libraryFileCopy		= file::getPath({m_ProjectParameter.getString("build_directory"), "libnerogame-" + library + "-copy"}, StringPool.EXT_DLL);
+		std::string library				= string::formatString(m_ProjectSetting->getString("project_name"), string::Format::COMPACT_LOWER);
+		std::string libraryFile			= file::getPath({m_ProjectSetting->getString("build_directory"), "libnerogame-" + library}, StringPool.EXT_DLL);
+		std::string libraryFileCopy		= file::getPath({m_ProjectSetting->getString("build_directory"), "libnerogame-" + library + "-copy"}, StringPool.EXT_DLL);
 
-		m_ProjectParameter.setString("library_file", libraryFile);
-		m_ProjectParameter.setString("library_file_copy", libraryFileCopy);*/
-
+		m_ProjectSetting->setString("library_file", libraryFile);
+		m_ProjectSetting->setString("library_file_copy", libraryFileCopy);
 
 		//create advanced scene
 		m_AdvancedScene = std::make_shared<AdvancedScene>();
+		m_AdvancedScene->setEngineSetting(m_EngineSetting);
+		m_AdvancedScene->setProjectSetting(m_ProjectSetting);
 
 
-		//nero_log(m_ProjectParameter.toString());
+		//nero_log(m_ProjectSetting->toString());
 
 		/*m_AdvancedScene = std::make_shared<AdvancedScene>();
 		m_AdvancedScene->setSetting(m_EngineSetting);
@@ -71,7 +72,7 @@ namespace nero
 		m_AdvancedScene->setResourceManager(m_ResourceManager);
 		m_AdvancedScene->setRenderContext(m_RenderContext);
 		m_AdvancedScene->setCamera(m_Camera);
-		m_AdvancedScene->setProjectParameter(m_ProjectParameter);
+		m_AdvancedScene->setProjectParameter(m_ProjectSetting);
 		m_AdvancedScene->initialize();*/
     }
 
@@ -83,7 +84,7 @@ namespace nero
 
     void GameProject::loadProject()
     {
-		/*std::string levelDirectory = file::getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Level"});
+		/*std::string levelDirectory = file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "Level"});
 		std::experimental::filesystem::path directoryPath(levelDirectory);
 
 		if(std::experimental::filesystem::is_empty(directoryPath))
@@ -184,7 +185,7 @@ namespace nero
 			}
 
 
-			std::string levelFile = file::getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Level", level->name}, StringPool.EXT_JSON);
+			std::string levelFile = file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "Level", level->name}, StringPool.EXT_JSON);
 			file::saveFile(levelFile, level_save.dump(3), true);
 		}
 	}*/
@@ -207,7 +208,7 @@ namespace nero
 			screen_save["screen_name"]	= screen->name;
 			screen_save["selected"]		= screen->selected;
 
-			std::string screenFile = file::getPath({m_ProjectParameter.getString("project_directory"), "Scene", "Screen", screen->name}, StringPool.EXT_JSON);
+			std::string screenFile = file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "Screen", screen->name}, StringPool.EXT_JSON);
 			file::saveFile(screenFile, screen_save.dump(3), true);
 		}
 	}*/
@@ -222,31 +223,31 @@ namespace nero
 		//loadLibraryDemo();
 		//return;
 
-		nero_log(m_ProjectParameter.getString("library_file"));
+		nero_log(m_ProjectSetting->getString("library_file"));
 
-		if(!file::fileExist(m_ProjectParameter.getString("library_file")))
+		if(!file::fileExist(m_ProjectSetting->getString("library_file")))
 		{
 			nero_log("no library to load");
 			return;
 		}
 
 
-		if(file::fileExist(m_ProjectParameter.getString("library_file_copy")))
+		if(file::fileExist(m_ProjectSetting->getString("library_file_copy")))
 		{
 			m_AdvancedScene->m_Scene = nullptr;
 			m_AdvancedScene->m_CreateCppScene.clear();
 			m_CreateCppSceneFn.clear();
 
-		   file::removeFile(m_ProjectParameter.getString("library_file_copy"));
+		   file::removeFile(m_ProjectSetting->getString("library_file_copy"));
         }
 
-		file::copyFile(m_ProjectParameter.getString("library_file"), m_ProjectParameter.getString("library_file_copy"));
+		file::copyFile(m_ProjectSetting->getString("library_file"), m_ProjectSetting->getString("library_file_copy"));
 
-		boost::dll::fs::path library_path(file::removeFileExtension(m_ProjectParameter.getString("library_file_copy")));
+		boost::dll::fs::path library_path(file::removeFileExtension(m_ProjectSetting->getString("library_file_copy")));
 
 		try
 		{
-			boost::dll::shared_library lib(m_ProjectParameter.getString("library_file_copy"));
+			boost::dll::shared_library lib(m_ProjectSetting->getString("library_file_copy"));
 
 			nero_log_if("project library loaded", lib.is_loaded());
 
@@ -269,29 +270,29 @@ namespace nero
 
 	/*void GameProject::loadLibraryDemo()
 	{
-		nero_log(m_ProjectParameter.getString("library_file"));
+		nero_log(m_ProjectSetting->getString("library_file"));
 
-		if(!file::fileExist(m_ProjectParameter.getString("library_file")))
+		if(!file::fileExist(m_ProjectSetting->getString("library_file")))
 		{
 			nero_log("no library to load");
 			return;
 		}
 
-		if(file::fileExist(m_ProjectParameter.getString("library_file_copy")))
+		if(file::fileExist(m_ProjectSetting->getString("library_file_copy")))
 		{
 			m_DemoScene = nullptr;
 			m_CreateCppSceneFn.clear();
 
-		   file::removeFile(m_ProjectParameter.getString("library_file_copy"));
+		   file::removeFile(m_ProjectSetting->getString("library_file_copy"));
 		}
 
-		file::copyFile(m_ProjectParameter.getString("library_file"), m_ProjectParameter.getString("library_file_copy"));
+		file::copyFile(m_ProjectSetting->getString("library_file"), m_ProjectSetting->getString("library_file_copy"));
 
-		boost::dll::fs::path library_path(file::removeFileExtension(m_ProjectParameter.getString("library_file_copy")));
+		boost::dll::fs::path library_path(file::removeFileExtension(m_ProjectSetting->getString("library_file_copy")));
 
 		try
 		{
-			boost::dll::shared_library lib(m_ProjectParameter.getString("library_file_copy"));
+			boost::dll::shared_library lib(m_ProjectSetting->getString("library_file_copy"));
 
 			nero_log_if("project library loaded", lib.is_loaded());
 
@@ -302,7 +303,7 @@ namespace nero
 			if(!m_CreateCppSceneFn.empty())
 			{
 				m_DemoScene = m_CreateCppSceneFn(Scene::Context(
-					 m_ProjectParameter.getString("project_name"),
+					 m_ProjectSetting->getString("project_name"),
 					 m_RenderTexture,
 					 m_ResourceManager,
 					 m_Camera,
@@ -321,7 +322,7 @@ namespace nero
 
     void GameProject::openEditor()
     {
-		std::string codeEditor = m_ProjectParameter.getString("code_editor");
+		std::string codeEditor = m_ProjectSetting->getString("code_editor");
 
 		if(codeEditor == "Qt Creator")
 		{
@@ -343,7 +344,7 @@ namespace nero
 		else
 		{
 			std::string cmd =  "START \"\" " + file::escapeSpace(file::getWindowsPath(m_EngineSetting->getSetting("environment").getString("qt_creator")));
-			cmd += " " + file::escapeSpace(m_ProjectParameter.getString("cmake_file"));
+			cmd += " " + file::escapeSpace(m_ProjectSetting->getString("cmake_file"));
 
 			system(cmd.c_str());
 
@@ -362,7 +363,7 @@ namespace nero
 			else
 			{
 				std::string cmd =  "START \"\" " + file::escapeSpace(file::getWindowsPath(m_EngineSetting->getSetting("environment").getString("visual_studio")));
-				cmd += " \"" + file::getWindowsPath(m_ProjectParameter.getString("source_directory")) + "\"" + " /Edit";
+				cmd += " \"" + file::getWindowsPath(m_ProjectSetting->getString("source_directory")) + "\"" + " /Edit";
 
 				nero_log(cmd);
 
@@ -380,8 +381,8 @@ namespace nero
 
 	void GameProject::compileProject(const BackgroundTask::Ptr backgroundTask)
 	{
-		std::string sourcePath  = m_ProjectParameter.getString("source_directory");
-		std::string buildPath   = m_ProjectParameter.getString("build_directory");
+		std::string sourcePath  = m_ProjectSetting->getString("source_directory");
+		std::string buildPath   = m_ProjectSetting->getString("build_directory");
 
 		std::string nero_game_home	= m_EngineSetting->getSetting("environment").getString("nero_game_home");
 
@@ -438,7 +439,7 @@ namespace nero
 
 	std::string GameProject::getProjectName() const
 	{
-		return m_ProjectParameter.getString("project_name");
+		return m_ProjectSetting->getString("project_name");
 	}
 
 
@@ -498,30 +499,30 @@ namespace nero
 		//file 1 : header
 		boost::algorithm::replace_all(header_template, "::Class_Name::",		class_name);
 		boost::algorithm::replace_all(header_template, "::Header_Gard::",		class_header);
-		boost::algorithm::replace_all(header_template, "::Namespace::",			m_ProjectParameter.getString("project_namespace"));
-		boost::algorithm::replace_all(header_template, "::Project_Name::",		m_ProjectParameter.getString("project_name"));
-		boost::algorithm::replace_all(header_template, "::Project_Lead::",		m_ProjectParameter.getString("project_lead"));
+		boost::algorithm::replace_all(header_template, "::Namespace::",			m_ProjectSetting->getString("project_namespace"));
+		boost::algorithm::replace_all(header_template, "::Project_Name::",		m_ProjectSetting->getString("project_name"));
+		boost::algorithm::replace_all(header_template, "::Project_Lead::",		m_ProjectSetting->getString("project_lead"));
 		boost::algorithm::replace_all(header_template, "::Coypright_Date::",	toString(datetime::getCurrentDateTime().date().year()));
 
 		//file 2 : source
 		boost::algorithm::replace_all(source_template, "::Class_Name::",		class_name);
-		boost::algorithm::replace_all(source_template, "::Namespace::",			m_ProjectParameter.getString("project_namespace"));
-		boost::algorithm::replace_all(source_template, "::Project_Name::",		m_ProjectParameter.getString("project_name"));
-		boost::algorithm::replace_all(source_template, "::Project_Lead::",		m_ProjectParameter.getString("project_lead"));
+		boost::algorithm::replace_all(source_template, "::Namespace::",			m_ProjectSetting->getString("project_namespace"));
+		boost::algorithm::replace_all(source_template, "::Project_Name::",		m_ProjectSetting->getString("project_name"));
+		boost::algorithm::replace_all(source_template, "::Project_Lead::",		m_ProjectSetting->getString("project_lead"));
 		boost::algorithm::replace_all(source_template, "::Coypright_Date::",	toString(datetime::getCurrentDateTime().date().year()));
 
-		nero_log(m_ProjectParameter.getString("source_directory"));
+		nero_log(m_ProjectSetting->getString("source_directory"));
 
-		std::string header_file = file::getPath({m_ProjectParameter.getString("source_directory"),"cpp", "script", class_name}, StringPool.EXT_CPP);
+		std::string header_file = file::getPath({m_ProjectSetting->getString("source_directory"),"cpp", "script", class_name}, StringPool.EXT_CPP);
 		nero_log(header_file);
 
 		file::saveFile(header_file, header_template);
-		file::saveFile(file::getPath({m_ProjectParameter.getString("source_directory"), "cpp", "script", class_name}, StringPool.EXT_CPP), source_template);
+		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"), "cpp", "script", class_name}, StringPool.EXT_CPP), source_template);
 	}
 
 	const std::string GameProject::getResourceFoler() const
 	{
-		return file::getPath({m_ProjectParameter.getString("project_directory"), "Resource"});
+		return file::getPath({m_ProjectSetting->getString("project_directory"), "Resource"});
 	}
 
 	void GameProject::render()

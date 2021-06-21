@@ -498,13 +498,13 @@ namespace nero
      {
 		nero_log("openning project " + projectDirectory);
 
-		Parameter parameter;
-		parameter.loadJson(file::loadJson(file::getPath({projectDirectory, ".project"}), true));
-		parameter.setString("project_directory", projectDirectory);
-		parameter.setString("workspace_directory", file::getParentDirectory(projectDirectory, 2));
+		Setting::Ptr setting = std::make_shared<Setting>();
+		setting->loadSetting(file::getPath({projectDirectory, ".project"}), true, true);
+		setting->setString("project_directory", projectDirectory);
+		setting->setString("workspace_directory", file::getParentDirectory(projectDirectory, 2));
 
 		m_GameProject = GameProject::Ptr(new GameProject());
-		m_GameProject->init(parameter);
+		m_GameProject->init(setting);
 
 		/*m_GameProject->setSetting(m_EditorSetting);
 		m_GameProject->setRenderTexture(m_RenderTexture);

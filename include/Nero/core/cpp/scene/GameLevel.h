@@ -64,7 +64,7 @@ namespace nero
 			virtual void								onCollisionPostSolveContact(Collision collision);
 
 		private:
-			Setting::Ptr								m_GameLevelSetting;
+			Setting::Ptr								m_LevelSetting;
 			std::shared_ptr<sf::RenderTexture>			m_RenderTexture;
 			ResourceManager								m_ResourceManager;
 			PhysicalWorld::Ptr							m_PhysicalWorld;

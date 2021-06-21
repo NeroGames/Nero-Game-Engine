@@ -20,7 +20,7 @@ namespace nero
 	}
 
 	//load setting from file
-	void Setting::loadSetting(const std::string& file, const bool& hasExtention)
+	void Setting::loadSetting(const std::string& file, const bool& hasExtention, const bool& root)
 	{
 		//can load a json object or a json array
 		std::string filePath			= file::getPath({file});
@@ -29,17 +29,31 @@ namespace nero
 
 		if(!loaded.is_null())
 		{
-			(*m_SettingHolder)[setting]		= loaded;
+			if(root)
+			{
+				m_SettingHolder.reset(new nlohmann::json(loaded));
+			}
+			else
+			{
+				(*m_SettingHolder)[setting] = loaded;
+			}
 		}
 	}
 
 	//load setting from json
-	void Setting::loadJson(const std::string& setting, const nlohmann::json& json)
+	void Setting::loadJson(const std::string& setting, const nlohmann::json& json, const bool& root)
 	{
 		//can load a json object or a json array
 		if(!json.is_null())
 		{
-			(*m_SettingHolder)[setting] = json;
+			if(root)
+			{
+				m_SettingHolder.reset(new nlohmann::json(json));
+			}
+			else
+			{
+				(*m_SettingHolder)[setting] = json;
+			}
 		}
 	}
 

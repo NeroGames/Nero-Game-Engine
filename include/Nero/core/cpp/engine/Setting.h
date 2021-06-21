@@ -25,9 +25,9 @@ namespace nero
 											Setting();
 
 		public:
-			//load setting
-			void							loadSetting(const std::string& file, const bool& hasExtention = false);
-			void							loadJson(const std::string& setting, const nlohmann::json& json);
+			//load sub setting
+			void							loadSetting(const std::string& file, const bool& hasExtention = false, const bool& root = false);
+			void							loadJson(const std::string& setting, const nlohmann::json& json, const bool& root = false);
 			//check states
 			const std::string&				getName()	const;
 			bool							empty()		const;

@@ -8,9 +8,21 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	GameLevelBuilder::GameLevelBuilder()
+	GameLevelBuilder::GameLevelBuilder():
+		m_ResourceManager(new ResourceManager(m_EngineSetting->getSetting("resource")))
 	{
 
 	}
+
+	ResourceManager::Ptr GameLevelBuilder::getResourceManager()
+	{
+		return m_ResourceManager;
+	}
+
+	void GameLevelBuilder::setEngineSetting(const Setting::Ptr& setting)
+	{
+		m_EngineSetting = setting;
+	}
+
 }
 
