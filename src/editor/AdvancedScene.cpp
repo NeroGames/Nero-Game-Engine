@@ -55,12 +55,12 @@ namespace nero
 
 		//create new builder
 		auto gameLevelBuilder = std::make_shared<GameLevelBuilder>();
-		gameLevelBuilder->setEngineSetting(m_EngineSetting);
-		gameLevelBuilder->getLevelSetting()->loadJson(parameter.toJson());
-		gameLevelBuilder->init();
 		m_GameLevelTable.push_back(gameLevelBuilder);
+		m_GameLevelTable.back()->setEngineSetting(m_EngineSetting);
+		m_GameLevelTable.back()->getLevelSetting()->loadJson(parameter.toJson());
+		m_GameLevelTable.back()->init();
 
-		return gameLevelBuilder;
+		return m_GameLevelTable.back();
 	}
 
 	GameScreenBuilder::Ptr AdvancedScene::addGameScreen(const Parameter& parameter)
@@ -85,10 +85,12 @@ namespace nero
 		return m_GameLevelNameTable;
 	}
 
-	GameLevelBuilder::Ptr AdvancedScene::selectLevelBuilder(const std::string &name)
+	GameLevelBuilder::Ptr AdvancedScene::selectLevelBuilder(const std::string& name)
 	{
 		for(auto level : m_GameLevelTable)
 		{
+			nero_log(level->getLevelName());
+
 			if(level->getLevelName() == name)
 			{
 				m_SelectedGameLevel = level;
@@ -96,9 +98,8 @@ namespace nero
 			}
 		}
 
-		return nullptr;
+		return nullptr; //show never happen
 	}
-
 }
 
 /*namespace nero

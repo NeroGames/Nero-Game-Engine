@@ -32,7 +32,7 @@ namespace nero
 
 	std::string GameLevelBuilder::getLevelName()
 	{
-		m_LevelSetting->getString("level_name");
+		return m_LevelSetting->getString("level_name");
 	}
 
 	Setting::Ptr GameLevelBuilder::getLevelSetting()
