@@ -504,6 +504,7 @@ namespace nero
 		setting->setString("workspace_directory", file::getParentDirectory(projectDirectory, 2));
 
 		m_GameProject = GameProject::Ptr(new GameProject());
+		m_GameProject->setEngineSetting(m_EditorSetting);
 		m_GameProject->init(setting);
 
 		/*m_GameProject->setSetting(m_EditorSetting);

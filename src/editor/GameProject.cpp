@@ -443,7 +443,7 @@ namespace nero
 	}
 
 
-	void GameProject::setSetting(const Setting::Ptr& setting)
+	void GameProject::setEngineSetting(const Setting::Ptr& setting)
 	{
 		m_EngineSetting = setting;
 	}

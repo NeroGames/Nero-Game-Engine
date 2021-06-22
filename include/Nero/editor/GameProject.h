@@ -54,7 +54,7 @@ namespace nero
 			void								openQtCreator(const std::string& file = StringPool.BLANK);
 			void								openVisualStudio(const std::string& file = StringPool.BLANK);
 			void								setRenderContext(const RenderContext::Ptr& renderContext);
-			void								setSetting(const Setting::Ptr& setting);
+			void								setEngineSetting(const Setting::Ptr& setting);
 			void								close();
 			//AdvancedScene::GameLevelPtr			loadGameLevel(const nlohmann::json& level);
 			std::string							getProjectName() const;

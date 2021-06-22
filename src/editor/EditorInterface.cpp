@@ -50,6 +50,7 @@ namespace  nero
 		,m_CountCreateProject(0)
 		,m_ConsoleApplication()
 		,m_EnvironmentSetup()
+		,m_SelectedResourceManager(nullptr)
     {
 		//empty
 	}
@@ -323,16 +324,15 @@ namespace  nero
 		showGameSettingWindow();
 			//visual script
 		showVisualScriptWindow();
-			//imgui demo
+			//resource manager
 		showResourceWindow();
-		//ImGui::ShowDemoWindow();
+			//imgui demo
+		ImGui::ShowDemoWindow();
 
 		//left dockspace
 			//upper left
 		showUtilityWindow();
-		/*if(m_EditorMode == EditorMode::WORLD_BUILDER)
-			showGameLevelWindow();
-		if(m_EditorMode == EditorMode::SCREEN_BUILDER)
+		/*if(m_EditorMode == EditorMode::SCREEN_BUILDER)
 			showGameScreenWindow();*/
 
 			//lower left
@@ -348,6 +348,10 @@ namespace  nero
 		//bottom dockspacer
 		showLoggingWindow();
 		showConsoleWindow();
+		if(m_AdvancedScene && m_EditorMode == EditorMode::WORLD_BUILDER)
+		{
+			showGameLevelWindow();
+		}
 
 		//init
 		interfaceFirstDraw();
@@ -804,7 +808,6 @@ namespace  nero
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_TOOLBAR.c_str(),				toolbarDockspaceID);
 					//upper left
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_UTILITY.c_str(),				upperLeftDockspaceID);
-				//ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LEVEL.c_str(),				upperLeftDockspaceID);
 				//ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_SCREEN.c_str(),				upperLeftDockspaceID);
 					//lower left
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_CHUNCK.c_str(),				lowerLeftDockspaceID);
@@ -817,6 +820,7 @@ namespace  nero
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LOGGING.c_str(),				bottomDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_RESOURCE.c_str(),			bottomDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_CONSOLE.c_str(),				bottomDockspaceID);
+				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LEVEL.c_str(),				bottomDockspaceID);
 					//center
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_GAME_SCENE.c_str(),			centralDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_GAME_PROJECT.c_str(),		centralDockspaceID);
@@ -4178,49 +4182,80 @@ namespace  nero
 	{
 		ImGui::Begin(EditorConstant.WINDOW_LEVEL.c_str());
 
-			ImGui::Text("Manage Game Level");
-			ImGui::Separator();
-			ImGui::Dummy(ImVec2(0.f, 4.f));
-
-			ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth()), 0.f);
-
-			if(ImGui::Button("New Game Level##add_game_level", button_size))
+			ImVec2 button_size = ImVec2(100.f, 0.f);
+			if(ImGui::Button("Open##open_game_level", button_size))
 			{
-				ImGui::OpenPopup("Create Game Level");
+
+			}
+
+			ImGui::SameLine();
+
+			if(ImGui::Button("Close##close_game_level", button_size))
+			{
+
+			}
+
+			ImGui::SameLine();
+
+			if(ImGui::Button("Close##close_game_level", button_size))
+			{
+
+			}
+
+			ImGui::SameLine();
+
+
+			if(ImGui::Button("Copy##close_game_level", button_size))
+			{
+
+			}
+
+
+			ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 115.f);
+
+			if(ImGui::Button("Delete##delete_game_level", button_size))
+			{
+
 			}
 
 			ImGui::Dummy(ImVec2(0.f, 5.f));
 
-			ImGui::BeginChild("##manage_game_level", ImVec2(), true);
+			ImGui::BeginChild("##show_game_level", ImVec2(), true);
 
-				/*if(m_AdvancedScene)
+				auto levelNameTable = m_AdvancedScene->getGameLevelNameTable();
+				ImGuiStyle& style = ImGui::GetStyle();
+				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionWidth();
+
+				int level_count		= levelNameTable.size();
+				int count			= 0;
+				auto printSameLine	= [&count, &level_count, &style, &window_visible_x2]()
 				{
-					m_InputSelectedGameLevelId = m_AdvancedScene->getSelectedGameLevel()->levelId;
-
-					for(const auto& gameLevel : m_AdvancedScene->getGameLevelTable())
+					float last_button_x2 = ImGui::GetItemRectMax().x;
+					float next_button_x2 = last_button_x2 + style.ItemSpacing.x + 100.f;
+					if (count++ + 1 < level_count && next_button_x2 < window_visible_x2)
 					{
-						std::string itemId = "##select_level" + toString(gameLevel->levelId);
-						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedGameLevelId, gameLevel->levelId);
-
-						if(ImGui::IsItemClicked())
-						{
-							m_AdvancedScene->setSelectedGameLevel(gameLevel);
-						}
-
 						ImGui::SameLine();
-
-						char level_name[100];
-						string::fillCharArray(level_name, sizeof(level_name), gameLevel->name);
-						ImGui::SetNextItemWidth(118.f);
-						itemId = "##level_name" + toString(gameLevel->levelId);
-						ImGui::InputText(itemId.c_str(), level_name, sizeof(level_name));
-
-						if(ImGui::IsItemEdited())
-						{
-							gameLevel->name = std::string(level_name);
-						}
 					}
-				}*/
+					else
+					{
+						ImGui::Dummy(ImVec2(0.0f, 4.0f));
+					}
+				};
+
+				for (const std::string& name :  levelNameTable)
+				{
+					ImVec2 button_size(200.f, 75.f);
+
+					pushToolbarStyle(m_GameLevelBuilder->getLevelName() == name);
+					if(ImGui::Button(name.c_str(), button_size))
+					{
+						m_GameLevelBuilder = m_AdvancedScene->selectLevelBuilder(name);
+					}
+
+					popToolbarStyle();
+
+					printSameLine();
+				}
 
 			ImGui::EndChild();
 
@@ -4318,7 +4353,7 @@ namespace  nero
 	{
 		if(m_AdvancedScene)
 		{
-			m_AdvancedScene->addGameLevel(parameter);
+			m_GameLevelBuilder =  m_AdvancedScene->addGameLevel(parameter);
 		}
 	}
 

@@ -27,7 +27,9 @@ namespace nero
 
 	GameLevelBuilder::Ptr AdvancedScene::addGameLevel(const Parameter& parameter)
 	{
-		nero_log(parameter.toString());
+		//level name
+		m_GameLevelNameTable.push_back(parameter.getString("level_name"));
+
 		//generate source file
 			//paremeter
 		std::string header			= file::loadText("template/cpp_project/CppGameLevel.h");
@@ -54,6 +56,8 @@ namespace nero
 		//create new builder
 		auto gameLevelBuilder = std::make_shared<GameLevelBuilder>();
 		gameLevelBuilder->setEngineSetting(m_EngineSetting);
+		gameLevelBuilder->getLevelSetting()->loadJson(parameter.toJson());
+		gameLevelBuilder->init();
 		m_GameLevelTable.push_back(gameLevelBuilder);
 
 		return gameLevelBuilder;
@@ -75,6 +79,26 @@ namespace nero
 	{
 		m_ProjectSetting = setting;
 	}
+
+	std::vector<std::string> AdvancedScene::getGameLevelNameTable()
+	{
+		return m_GameLevelNameTable;
+	}
+
+	GameLevelBuilder::Ptr AdvancedScene::selectLevelBuilder(const std::string &name)
+	{
+		for(auto level : m_GameLevelTable)
+		{
+			if(level->getLevelName() == name)
+			{
+				m_SelectedGameLevel = level;
+				return m_SelectedGameLevel;
+			}
+		}
+
+		return nullptr;
+	}
+
 }
 
 /*namespace nero

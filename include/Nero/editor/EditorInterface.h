@@ -107,6 +107,7 @@ namespace nero
 			GameLevelBuilder::Ptr							m_GameLevelBuilder;
 			GameScreenBuilder::Ptr							m_GameScreenBuilder;
 			ResourceManager::Ptr							m_ResourceManager;
+			ResourceManager::Ptr							m_SelectedResourceManager;
 
 		private:
 			//////////////docksapce

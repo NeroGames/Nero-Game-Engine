@@ -9,9 +9,15 @@
 namespace nero
 {
 	GameLevelBuilder::GameLevelBuilder():
-		m_ResourceManager(new ResourceManager(m_EngineSetting->getSetting("resource")))
+		 m_LevelSetting(std::make_shared<Setting>())
+		,m_EngineSetting(nullptr)
 	{
 
+	}
+
+	void GameLevelBuilder::init()
+	{
+		m_ResourceManager = std::make_shared<ResourceManager>(m_EngineSetting->getSetting("resource"));
 	}
 
 	ResourceManager::Ptr GameLevelBuilder::getResourceManager()
@@ -24,5 +30,14 @@ namespace nero
 		m_EngineSetting = setting;
 	}
 
+	std::string GameLevelBuilder::getLevelName()
+	{
+		m_LevelSetting->getString("level_name");
+	}
+
+	Setting::Ptr GameLevelBuilder::getLevelSetting()
+	{
+		return m_LevelSetting;
+	}
 }
 

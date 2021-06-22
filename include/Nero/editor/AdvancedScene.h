@@ -45,6 +45,8 @@ namespace nero
 			//setting
 			void											setEngineSetting(const Setting::Ptr& setting);
 			void											setProjectSetting(const Setting::Ptr& setting);
+			std::vector<std::string> 						getGameLevelNameTable();
+			GameLevelBuilder::Ptr							selectLevelBuilder(const std::string& name);
 
 		private:
 			//selection
@@ -53,6 +55,7 @@ namespace nero
 			//storage
 			std::vector<GameLevelBuilder::Ptr>				m_GameLevelTable;
 			std::vector<GameScreenBuilder::Ptr>				m_GameScreenTable;
+			std::vector<std::string>						m_GameLevelNameTable;
 			//setting
 			Setting::Ptr									m_EngineSetting;
 			Setting::Ptr									m_ProjectSetting;

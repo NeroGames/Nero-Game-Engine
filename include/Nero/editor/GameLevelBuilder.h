@@ -21,8 +21,11 @@ namespace nero
 		public:
 												GameLevelBuilder();
 
+			void								init();
 			ResourceManager::Ptr				getResourceManager();
 			void								setEngineSetting(const Setting::Ptr& setting);
+			std::string							getLevelName();
+			Setting::Ptr						getLevelSetting();
 
 		private:
 			Setting::Ptr						m_LevelSetting;
