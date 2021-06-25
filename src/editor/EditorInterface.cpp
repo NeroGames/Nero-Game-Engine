@@ -1022,27 +1022,27 @@ namespace  nero
 		{
 			if(ImGui::MenuItem("Learn", "Alt+L", nullptr))
 			{
-				cmd::launchBrowser("https://nero-game.com/learn");
+				cmd::launchBrowser("https://nero-games.com/learn");
 			}
 
 			if(ImGui::MenuItem("Snippet", "Alt+S", nullptr))
 			{
-				cmd::launchBrowser("https://nero-game.com/snippet");
+				cmd::launchBrowser("https://nero-games.com/snippet");
 			}
 
 			if(ImGui::MenuItem("Forum", "Alt+F", nullptr))
 			{
-				cmd::launchBrowser("https://nero-game.com/forum/index.php");
+				cmd::launchBrowser("https://nero-games.com/forum/index.php");
 			}
 
 			if(ImGui::MenuItem("Engine API", "Alt+A", nullptr))
 			{
-				cmd::launchBrowser("https://nero-game.com/engine-v2/api");
+				cmd::launchBrowser("https://nero-games.com/engine-v2/api");
 			}
 
 			if(ImGui::MenuItem("Website", "Alt+W", nullptr))
 			{
-				cmd::launchBrowser("https://nero-game.com");
+				cmd::launchBrowser("https://nero-games.com");
 			}
 
 			ImGui::Separator();
@@ -1175,7 +1175,7 @@ namespace  nero
 		ImGui::Text("You can learn more on the necessary configurations at "); ImGui::SameLine();
 		if(ImGui::Button("Environment Configurations"))
 		{
-			cmd::launchBrowser("https://nero-game.com/learn/engine-v2/environment-configuration");
+			cmd::launchBrowser("https://nero-games.com/learn/engine-v2/environment-configuration");
 		}
 
 		ImGui::Dummy(ImVec2(0.f, 15.f));
@@ -2433,12 +2433,12 @@ namespace  nero
 				else if(!string::matchPattern(std::string(m_ProjectInput.name), StringPool.REGEX_NAME_02))
 				{
 					m_ProjectInput.errorMessage = "Invalid Project Name";
-					m_ProjectInput.redirectLink = "https://nero-game.com/learn/engine-v2/create-project#project_name";
+					m_ProjectInput.redirectLink = "https://nero-games.com/learn/engine-v2/create-project#project_name";
 				}
 				else if(m_ProjectManager->projectExist(std::string(m_ProjectInput.name), std::string(m_ProjectInput.workspace)))
 				{
 					m_ProjectInput.errorMessage = "A project with the same Id already exist, please choose another Project Name";
-					m_ProjectInput.redirectLink = "https://nero-game.com/learn/engine-v2/create-project#project_name";
+					m_ProjectInput.redirectLink = "https://nero-games.com/learn/engine-v2/create-project#project_name";
 				}
 				//Worksapce blank
 				else if(std::string(m_ProjectInput.workspace) == StringPool.BLANK)
@@ -2465,7 +2465,7 @@ namespace  nero
 				else if(!string::matchPattern(std::string(m_ProjectInput.company), StringPool.REGEX_NAME_01))
 				{
 					m_ProjectInput.errorMessage = "Invalid Company Name";
-					m_ProjectInput.redirectLink = "https://nero-game.com/learn/engine-v2/create-project#company_name";
+					m_ProjectInput.redirectLink = "https://nero-games.com/learn/engine-v2/create-project#company_name";
 				}
 				//workpspace project lead name blank
 				else if(std::string(m_ProjectInput.projectLead) == StringPool.BLANK)
@@ -2477,7 +2477,7 @@ namespace  nero
 				else if(!string::matchPattern(std::string(m_ProjectInput.projectLead), StringPool.REGEX_NAME_01))
 				{
 					m_ProjectInput.errorMessage	= "Invalid Project Lead";
-					m_ProjectInput.redirectLink	= "https://nero-game.com/learn/engine-v2/create-project#project_lead";
+					m_ProjectInput.redirectLink	= "https://nero-games.com/learn/engine-v2/create-project#project_lead";
 				}
 				//workpspace namespace blank
 				else if(std::string(m_ProjectInput.projectNamespace) == StringPool.BLANK)
@@ -2489,7 +2489,7 @@ namespace  nero
 				else if(!string::matchPattern(std::string(m_ProjectInput.projectNamespace), StringPool.REGEX_NAMESPACE))
 				{
 					m_ProjectInput.errorMessage = "Invalid Project Namespace";
-					m_ProjectInput.redirectLink = "https://nero-game.com/learn/engine-v2/create-project#namespace";
+					m_ProjectInput.redirectLink = "https://nero-games.com/learn/engine-v2/create-project#namespace";
 				}
 				else
 				{
@@ -2850,13 +2850,13 @@ namespace  nero
 			else if(!string::matchPattern(std::string(m_WorkspaceInput.name), StringPool.REGEX_NAME_01))
 			{
 				m_WorkspaceInput.errorMessage = "Invalid Workspace Name";
-				m_WorkspaceInput.redirectLink = "https://nero-game.com/learn/engine-v2/create-workspace#workspace_name";
+				m_WorkspaceInput.redirectLink = "https://nero-games.com/learn/engine-v2/create-workspace#workspace_name";
 			}
 			//workpspace already exist
 			else if(m_ProjectManager->workspaceExist(m_WorkspaceInput.name))
 			{
 				m_WorkspaceInput.errorMessage   = "A Workspace with the same Id already exist, Please choose another Name";
-				m_WorkspaceInput.redirectLink = "https://nero-game.com/learn/engine-v2/create-workspace#workspace_name";
+				m_WorkspaceInput.redirectLink = "https://nero-games.com/learn/engine-v2/create-workspace#workspace_name";
 			}
 			//workpspace company name blank
 			else if(std::string(m_WorkspaceInput.company) == StringPool.BLANK)
@@ -2868,7 +2868,7 @@ namespace  nero
 			else if(!string::matchPattern(std::string(m_WorkspaceInput.company), StringPool.REGEX_NAME_01))
 			{
 				m_WorkspaceInput.errorMessage = "Invalid Company Name";
-				m_WorkspaceInput.redirectLink = "https://nero-game.com/learn/engine-v2/create-workspace#company_name";
+				m_WorkspaceInput.redirectLink = "https://nero-games.com/learn/engine-v2/create-workspace#company_name";
 			}
 			//workpspace project lead name blank
 			else if(std::string(m_WorkspaceInput.projectLead) == StringPool.BLANK)
@@ -2880,7 +2880,7 @@ namespace  nero
 			else if(!string::matchPattern(std::string(m_WorkspaceInput.projectLead), StringPool.REGEX_NAME_01))
 			{
 				m_WorkspaceInput.errorMessage   = "Invalid Project Lead";
-				m_WorkspaceInput.redirectLink   = "https://nero-game.com/learn/engine-v2/create-workspace#project_lead";
+				m_WorkspaceInput.redirectLink   = "https://nero-games.com/learn/engine-v2/create-workspace#project_lead";
 			}
 			//workpspace namespace blank
 			else if(std::string(m_WorkspaceInput.projectNamespace) == StringPool.BLANK)
@@ -2892,7 +2892,7 @@ namespace  nero
 			else if(!string::matchPattern(std::string(m_WorkspaceInput.projectNamespace), StringPool.REGEX_NAMESPACE))
 			{
 				m_WorkspaceInput.errorMessage = "Invalid Project Namespace";
-				m_WorkspaceInput.redirectLink = "https://nero-game.com/learn/engine-v2/create-workspace#namespace";
+				m_WorkspaceInput.redirectLink = "https://nero-games.com/learn/engine-v2/create-workspace#namespace";
 			}
 			else
 			{
@@ -3923,27 +3923,27 @@ namespace  nero
 
 				 if(ImGui::Button("Learn", button_size))
 				 {
-					cmd::launchBrowser("https://nero-game.com/learn/engine-v2");
+					cmd::launchBrowser("https://nero-games.com/learn/engine-v2");
 				 }
 
 				ImGui::SameLine();
 
 				 if(ImGui::Button("Forum", button_size))
 				 {
-					 cmd::launchBrowser("https://nero-game.com/forum");
+					 cmd::launchBrowser("https://nero-games.com/forum");
 				 }
 
 
 				 if(ImGui::Button("Snippet", button_size))
 				 {
-					 cmd::launchBrowser("https://nero-game.com/snippet/engine-v2");
+					 cmd::launchBrowser("https://nero-games.com/snippet/engine-v2");
 				 }
 
 				 ImGui::SameLine();
 
 				 if(ImGui::Button("API", button_size))
 				 {
-					 cmd::launchBrowser("https://nero-game.com/learn/engine-v2/api");
+					 cmd::launchBrowser("https://nero-games.com/learn/engine-v2/api");
 				 }
 
 			ImGui::EndChild();
