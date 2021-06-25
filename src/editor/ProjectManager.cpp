@@ -297,6 +297,9 @@ namespace nero
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", "LoadingScreen"}, StringPool.EXT_CPP), screen_source_template);
 			//scene
 		Setting scene_setting;
+		scene_setting.setStringTable("level_table", std::vector<std::string>());
+		scene_setting.setStringTable("screen_table", std::vector<std::string>());
+		scene_setting.setStringTable("object_table", std::vector<std::string>());
 		file::saveFile(file::getPath({projectDirectory, "Scene", "scene"}, StringPool.EXT_NERO), scene_setting.toString());
 
 		//Step 3 : compile the project

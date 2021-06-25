@@ -51,6 +51,7 @@ namespace  nero
 		,m_ConsoleApplication()
 		,m_EnvironmentSetup()
 		,m_SelectedResourceManager(nullptr)
+	   ,m_SeletedGamelevelName(StringPool.BLANK)
     {
 		//empty
 	}
@@ -4246,12 +4247,11 @@ namespace  nero
 				{
 					ImVec2 button_size(200.f, 75.f);
 
-					pushToolbarStyle(m_GameLevelBuilder->getLevelName() == name);
+					pushToolbarStyle(m_SeletedGamelevelName == name);
 					if(ImGui::Button(name.c_str(), button_size))
 					{
-						m_GameLevelBuilder = m_AdvancedScene->selectLevelBuilder(name);
+						m_SeletedGamelevelName = name;
 					}
-
 					popToolbarStyle();
 
 					printSameLine();
@@ -4354,6 +4354,7 @@ namespace  nero
 		if(m_AdvancedScene)
 		{
 			m_GameLevelBuilder =  m_AdvancedScene->addGameLevel(parameter);
+			m_SeletedGamelevelName = parameter.getString("level_name");
 		}
 	}
 

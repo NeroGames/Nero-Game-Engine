@@ -62,6 +62,7 @@ namespace nero
 		m_AdvancedScene = std::make_shared<AdvancedScene>();
 		m_AdvancedScene->setEngineSetting(m_EngineSetting);
 		m_AdvancedScene->setProjectSetting(m_ProjectSetting);
+		m_AdvancedScene->init();
 
 
 		//nero_log(m_ProjectSetting->toString());

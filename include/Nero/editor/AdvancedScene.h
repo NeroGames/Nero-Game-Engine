@@ -40,13 +40,14 @@ namespace nero
 		public:
 															AdvancedScene();
 
+			void											init();
+
 			GameLevelBuilder::Ptr							addGameLevel(const Parameter& parameter);
 			GameScreenBuilder::Ptr							addGameScreen(const Parameter& parameter);
 			//setting
 			void											setEngineSetting(const Setting::Ptr& setting);
 			void											setProjectSetting(const Setting::Ptr& setting);
 			std::vector<std::string> 						getGameLevelNameTable();
-			GameLevelBuilder::Ptr							selectLevelBuilder(const std::string& name);
 
 		private:
 			//selection

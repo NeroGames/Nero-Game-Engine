@@ -25,6 +25,13 @@ namespace nero
 
 	}
 
+	void AdvancedScene::init()
+	{
+		Setting sceneSetting;
+		sceneSetting.loadSetting(file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"}, StringPool.EXT_NERO), true, true);
+		m_GameLevelNameTable = sceneSetting.getStringTable("level_table");
+	}
+
 	GameLevelBuilder::Ptr AdvancedScene::addGameLevel(const Parameter& parameter)
 	{
 		//level name
@@ -56,6 +63,7 @@ namespace nero
 
 		std::string level_directory = file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "level", boost::algorithm::to_lower_copy(parameter.getString("level_name"))});
 		file::createDirectory(level_directory);
+		file::createDirectory(file::getPath({level_directory, "chunk"}));
 		file::createDirectory(file::getPath({level_directory, "resource"}));
 		ResourceManager::buildDirectory(file::getPath({level_directory, "resource"}));
 
@@ -70,6 +78,12 @@ namespace nero
 		m_GameLevelTable.back()->setEngineSetting(m_EngineSetting);
 		m_GameLevelTable.back()->getLevelSetting()->loadJson(parameter.toJson());
 		m_GameLevelTable.back()->init();
+
+		//register level
+		Setting sceneSetting;
+		sceneSetting.loadSetting(file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"}, StringPool.EXT_NERO), true, true);
+		sceneSetting.setStringTable("level_table", m_GameLevelNameTable);
+		file::saveFile(file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"}, StringPool.EXT_NERO), sceneSetting.toString(), true);
 
 		return m_GameLevelTable.back();
 	}
@@ -96,21 +110,6 @@ namespace nero
 		return m_GameLevelNameTable;
 	}
 
-	GameLevelBuilder::Ptr AdvancedScene::selectLevelBuilder(const std::string& name)
-	{
-		for(auto level : m_GameLevelTable)
-		{
-			nero_log(level->getLevelName());
-
-			if(level->getLevelName() == name)
-			{
-				m_SelectedGameLevel = level;
-				return m_SelectedGameLevel;
-			}
-		}
-
-		return nullptr; //show never happen
-	}
 }
 
 /*namespace nero
