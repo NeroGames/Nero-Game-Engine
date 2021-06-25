@@ -34,24 +34,24 @@ namespace nero
 			//paremeter
 		std::string header			= file::loadText("template/cpp_project/CppGameLevel.h");
 		std::string source			= file::loadText("template/cpp_project/CppGameLevel.cpp");
-		std::string class_name		= parameter.getString("level_name") + "GameLevel";
-		std::string class_header	= boost::algorithm::to_upper_copy(class_name) + "_H";
+		std::string ClassName		= parameter.getString("level_name") + "GameLevel";
+		std::string class_header	= boost::algorithm::to_upper_copy(ClassName) + "_H";
 			//file 1 : header
-		boost::algorithm::replace_all(header, "::Class_Name::",		class_name);
-		boost::algorithm::replace_all(header, "::Header_Gard::",	class_header);
+		boost::algorithm::replace_all(header, "::ClassName::",		ClassName);
+		boost::algorithm::replace_all(header, "::HeaderGard::",	class_header);
 		boost::algorithm::replace_all(header, "::Namespace::",		m_ProjectSetting->getString("project_namespace"));
-		boost::algorithm::replace_all(header, "::Project_Name::",	m_ProjectSetting->getString("project_name"));
-		boost::algorithm::replace_all(header, "::Project_Lead::",	m_ProjectSetting->getString("project_lead"));
-		boost::algorithm::replace_all(header, "::Coypright_Date::",	toString(datetime::getCurrentDateTime().date().year()));
+		boost::algorithm::replace_all(header, "::ProjectName::",	m_ProjectSetting->getString("project_name"));
+		boost::algorithm::replace_all(header, "::ProjectLead::",	m_ProjectSetting->getString("project_lead"));
+		boost::algorithm::replace_all(header, "::CoyprightDate::",	toString(datetime::getCurrentDateTime().date().year()));
 			//file 2 : source
-		boost::algorithm::replace_all(source, "::Class_Name::",		class_name);
+		boost::algorithm::replace_all(source, "::ClassName::",		ClassName);
 		boost::algorithm::replace_all(source, "::Namespace::",		m_ProjectSetting->getString("project_namespace"));
-		boost::algorithm::replace_all(source, "::Project_Name::",	m_ProjectSetting->getString("project_name"));
-		boost::algorithm::replace_all(source, "::Project_Lead::",	m_ProjectSetting->getString("project_lead"));
-		boost::algorithm::replace_all(source, "::Coypright_Date::",	toString(datetime::getCurrentDateTime().date().year()));
+		boost::algorithm::replace_all(source, "::ProjectName::",	m_ProjectSetting->getString("project_name"));
+		boost::algorithm::replace_all(source, "::ProjectLead::",	m_ProjectSetting->getString("project_lead"));
+		boost::algorithm::replace_all(source, "::CoyprightDate::",	toString(datetime::getCurrentDateTime().date().year()));
 			//save file
-		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"),"cpp", "level", class_name}, StringPool.EXT_H), header);
-		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"), "cpp", "level", class_name}, StringPool.EXT_CPP), source);
+		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"),"cpp", "level", ClassName}, StringPool.EXT_H), header);
+		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"), "cpp", "level", ClassName}, StringPool.EXT_CPP), source);
 
 		//create new builder
 		auto gameLevelBuilder = std::make_shared<GameLevelBuilder>();

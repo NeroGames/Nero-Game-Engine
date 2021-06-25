@@ -275,15 +275,15 @@ namespace nero
 		boost::algorithm::replace_all(cmake_setting_template, "::Project_Build_Directory::", file::escapeBackslash(file::getPath({projectDirectory, "Build"})));
 
 		//file 5 : startup screen header
-		boost::algorithm::replace_all(screen_header_template, "::StartupScreenClass::", "StartupScreen");
-		boost::algorithm::replace_all(screen_header_template, "::HeaderGard::",		"STARTUPSCREEN_H");
+		boost::algorithm::replace_all(screen_header_template, "::StartupScreenClass::", "LoadingScreen");
+		boost::algorithm::replace_all(screen_header_template, "::HeaderGard::",		"LOADINGSCREEN_H");
 		boost::algorithm::replace_all(screen_header_template, "::Namespace::",		parameter.getString("project_namespace"));
 		boost::algorithm::replace_all(screen_header_template, "::ProjectName::",	parameter.getString("project_name"));
 		boost::algorithm::replace_all(screen_header_template, "::ProjectLead::",	parameter.getString("project_lead"));
 		boost::algorithm::replace_all(screen_header_template, "::CoyprightDate::",	toString(datetime::getCurrentDateTime().date().year()));
 
 		//file 6 : startup screen header
-		boost::algorithm::replace_all(screen_source_template, "::StartupScreenClass::", "StartupScreen");
+		boost::algorithm::replace_all(screen_source_template, "::StartupScreenClass::", "LoadingScreen");
 		boost::algorithm::replace_all(screen_source_template, "::Namespace::",		parameter.getString("project_namespace"));
 		boost::algorithm::replace_all(screen_source_template, "::ProjectName::",	parameter.getString("project_name"));
 		boost::algorithm::replace_all(screen_source_template, "::ProjectLead::",	parameter.getString("project_lead"));
@@ -294,8 +294,8 @@ namespace nero
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeSettings"}, StringPool.EXT_JSON), cmake_setting_template);
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXT_H), scene_header_template);
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXT_CPP), scene_source_template);
-		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", "StartupScreen"}, StringPool.EXT_H), screen_header_template);
-		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", "StartupScreen"}, StringPool.EXT_CPP), screen_source_template);
+		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", "LoadingScreen"}, StringPool.EXT_H), screen_header_template);
+		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", "LoadingScreen"}, StringPool.EXT_CPP), screen_source_template);
 
 		//Step 3 : compile the project
 		backgroundTask->setStatus(3);

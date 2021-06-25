@@ -5,9 +5,9 @@
 ///////////////////////////HEADERS///////////////////////////
 #include "::StartupScreenClass::.h"
 //Nero
-#include <Nero/utility/Utility.h>
+#include <Nero/core/cpp/utility/Utility.h>
 ////////////////////////////////////////////////////////////
-namespace ::NameSpace::
+namespace ::Namespace::
 {
     ::StartupScreenClass::::::StartupScreenClass::(): nero::StartupScreen()
     {
@@ -34,14 +34,13 @@ namespace ::NameSpace::
          //render
     }
 
-    const sf::Color ::StartupScreenClass::::getBackgroundColor() const
+    const sf::Color ::StartupScreenClass::::getCanvasColor() const
     {
         return sf::Color::White;
     }
 
-    const float ::StartupScreenClass::::getDuration() const
+    float ::StartupScreenClass::::getDuration() const
     {
         return 10.f; //seconds
     }
 }
-

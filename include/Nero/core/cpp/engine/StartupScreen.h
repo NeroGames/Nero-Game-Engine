@@ -28,7 +28,7 @@ namespace nero
             virtual void                    update(const sf::Time& timeStep)            = 0;
             virtual void                    render()                                    = 0;
 			virtual const sf::Color         getCanvasColor()	const					= 0;
-			virtual float					getDuration()		const					= 0;
+			virtual  float					getDuration()		const					= 0;
 
 		public:
             void                            setRenderWindow(sf::RenderWindow* renderWindow);

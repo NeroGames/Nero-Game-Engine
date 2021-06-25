@@ -22,8 +22,8 @@ namespace ::Namespace::
 			static nero::GameScene::Ptr createScene(nero::GameScene::Context context) noexcept;
 
         public: //Scene core
-										::Scene_Class::(nero::GameScene::Context context);
-			virtual                     ~::Scene_Class::() override;
+										::SceneClass::(nero::GameScene::Context context);
+			virtual                     ~::SceneClass::() override;
 
 			virtual void				init()								override;
 			virtual void				destroy()							override;
@@ -33,7 +33,7 @@ namespace ::Namespace::
     };
 
 	//Class export (DOT NOT MODIFY)
-    BOOST_DLL_ALIAS(::Namespace::::::Scene_Class::::createScene, createScene)
+	BOOST_DLL_ALIAS(::Namespace::::::SceneClass::::createScene, createScene)
 }
 
-#endif // ::Header_Gard::
+#endif // ::HeaderGard::
