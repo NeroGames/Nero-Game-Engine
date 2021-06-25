@@ -1,44 +1,43 @@
 ////////////////////////////////////////////////////////////
-// ::Project_Name::
-// Copyright (c) ::Coypright_Date:: ::Project_Lead::
+// ::ProjectName::
+// Copyright (c) ::CoyprightDate:: ::ProjectLead::
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
-#include "::ClassName::.h"
+#include "::GameLevelClass::.h"
 /////////////////////////////////////////////////////////////
 namespace ::Namespace::
 {
-    ::ClassName::::::ClassName::(nero::GameLevel::Context context) : nero::GameLevel(context)
+    nero::GameLevel::Ptr ::GameLevelClass::::create::GameLevelClass::(nero::GameLevel::Context context) noexcept
+    {
+        return ::GameLevelClass::::Ptr(new ::GameLevelClass::(context));
+    }
+
+    ::GameLevelClass::::::GameLevelClass::(nero::GameLevel::Context context) : nero::GameLevel(context)
     {
 
     }
 
-    ::ClassName::::~::ClassName::()
+    ::GameLevelClass::::~::GameLevelClass::()
     {
 
     }
 
-    ::ClassName::::init()
+    void ::GameLevelClass::::init()
     {
 
     }
 
-    nero::GameLevel::Ptr ::ClassName::::create::ClassName::(nero::GameLevel::Context context) noexcept
-    {
-        return ::ClassName::::Ptr(new ::ClassName::(context));
-    }
-
-
-    void ::ClassName::::handleEvent(const sf::Event& event)
+    void ::GameLevelClass::::handleEvent(const sf::Event& event)
     {
         nero::GameLevel::handleEvent(event);
     }
 
-    void ::ClassName::::update(const sf::Time& timeStep)
+    void ::GameLevelClass::::update(const sf::Time& timeStep)
     {
         nero::GameLevel::update(timeStep);
     }
 
-    void  ::ClassName::::render()
+    void ::GameLevelClass::::render()
     {
         nero::GameLevel::render();
     }

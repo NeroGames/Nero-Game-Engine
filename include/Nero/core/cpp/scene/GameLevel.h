@@ -24,9 +24,14 @@ namespace nero
 		public: //utility
 			typedef std::shared_ptr<GameLevel> Ptr;
 
+			class Context
+			{
+
+			};
+
 		public:
 			//ctr & dtr
-														GameLevel();
+														GameLevel(GameLevel::Context context);
 			virtual					   				   ~GameLevel();
 			//main
 			virtual void								init();

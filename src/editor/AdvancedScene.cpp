@@ -34,24 +34,35 @@ namespace nero
 			//paremeter
 		std::string header			= file::loadText("template/cpp_project/CppGameLevel.h");
 		std::string source			= file::loadText("template/cpp_project/CppGameLevel.cpp");
-		std::string ClassName		= parameter.getString("level_name") + "GameLevel";
-		std::string class_header	= boost::algorithm::to_upper_copy(ClassName) + "_H";
+		std::string class_name		= parameter.getString("level_name") + "GameLevel";
+		std::string class_header	= boost::algorithm::to_upper_copy(class_name) + "_H";
 			//file 1 : header
-		boost::algorithm::replace_all(header, "::ClassName::",		ClassName);
-		boost::algorithm::replace_all(header, "::HeaderGard::",	class_header);
+		boost::algorithm::replace_all(header, "::GameLevelClass::",		class_name);
+		boost::algorithm::replace_all(header, "::HeaderGard::",		class_header);
 		boost::algorithm::replace_all(header, "::Namespace::",		m_ProjectSetting->getString("project_namespace"));
 		boost::algorithm::replace_all(header, "::ProjectName::",	m_ProjectSetting->getString("project_name"));
 		boost::algorithm::replace_all(header, "::ProjectLead::",	m_ProjectSetting->getString("project_lead"));
 		boost::algorithm::replace_all(header, "::CoyprightDate::",	toString(datetime::getCurrentDateTime().date().year()));
 			//file 2 : source
-		boost::algorithm::replace_all(source, "::ClassName::",		ClassName);
+		boost::algorithm::replace_all(source, "::GameLevelClass::",		class_name);
 		boost::algorithm::replace_all(source, "::Namespace::",		m_ProjectSetting->getString("project_namespace"));
 		boost::algorithm::replace_all(source, "::ProjectName::",	m_ProjectSetting->getString("project_name"));
 		boost::algorithm::replace_all(source, "::ProjectLead::",	m_ProjectSetting->getString("project_lead"));
 		boost::algorithm::replace_all(source, "::CoyprightDate::",	toString(datetime::getCurrentDateTime().date().year()));
 			//save file
-		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"),"cpp", "level", ClassName}, StringPool.EXT_H), header);
-		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"), "cpp", "level", ClassName}, StringPool.EXT_CPP), source);
+		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"),"cpp", "level", class_name}, StringPool.EXT_H), header);
+		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"), "cpp", "level", class_name}, StringPool.EXT_CPP), source);
+			//scene
+
+		std::string level_directory = file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "level", boost::algorithm::to_lower_copy(parameter.getString("level_name"))});
+		file::createDirectory(level_directory);
+		file::createDirectory(file::getPath({level_directory, "resource"}));
+		ResourceManager::buildDirectory(file::getPath({level_directory, "resource"}));
+
+		Setting level_document;
+		Setting level_setting;
+		file::saveFile(file::getPath({level_directory, "level"}, StringPool.EXT_NERO), level_document.toString());
+		file::saveFile(file::getPath({level_directory, "setting"}, StringPool.EXT_NERO), level_setting.toString());
 
 		//create new builder
 		auto gameLevelBuilder = std::make_shared<GameLevelBuilder>();

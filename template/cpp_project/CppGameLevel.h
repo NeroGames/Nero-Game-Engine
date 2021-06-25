@@ -12,27 +12,27 @@
 /////////////////////////////////////////////////////////////
 namespace ::Namespace::
 {
-	class ::ClassName:: : public nero::GameLevel
+	class ::GameLevelClass:: : public nero::GameLevel
     {
         public: //Utility
-			typedef std::shared_ptr<::ClassName::> Ptr;
+			typedef std::shared_ptr<::GameLevelClass::> Ptr;
 
 		public: //Factory
-			static nero::GameLevel::Ptr create::ClassName::(nero::GameLevel::Context context) noexcept;
+			static nero::GameLevel::Ptr create::GameLevelClass::(nero::GameLevel::Context context) noexcept;
 
         public: //Scene core
-										::ClassName::(nero::GameLevel::Context context);
-			virtual                    ~::ClassName::() override;
+										::GameLevelClass::(nero::GameLevel::Context context);
+			virtual                    ~::GameLevelClass::() override;
 
-			virtual	void				init();
+			virtual	void				init()								override;
 			virtual void                handleEvent(const sf::Event& event) override;
-			virtual void                update(const sf::Time& timeStep) override;
-			virtual void                render() override;
+			virtual void                update(const sf::Time& timeStep)	override;
+			virtual void                render()							override;
     };
 
 
     //Class export
-	BOOST_DLL_ALIAS(::Namespace::::::ClassName::::create::ClassName::, create::ClassName::)
+	BOOST_DLL_ALIAS(::Namespace::::::GameLevelClass::::create::GameLevelClass::, create::GameLevelClass::)
 }
 
 #endif // ::HeaderGard::

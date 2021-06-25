@@ -198,7 +198,6 @@ namespace nero
 
 		file::createDirectory(file::getPath({projectDirectory}));
 		file::createDirectory(file::getPath({projectDirectory, "Source"}));
-		file::createDirectory(file::getPath({projectDirectory, "Resource"}));
 			file::createDirectory(file::getPath({projectDirectory, "Source", project_name}));
 				file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp"}));
 					file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "level"}));
@@ -206,13 +205,12 @@ namespace nero
 					file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "script"}));
 		file::createDirectory(file::getPath({projectDirectory, "Build"}));
 		file::createDirectory(file::getPath({projectDirectory, "Scene"}));
-			file::createDirectory(file::getPath({projectDirectory, "Scene", "Level"}));
-			file::createDirectory(file::getPath({projectDirectory, "Scene", "Screen"}));
-			file::createDirectory(file::getPath({projectDirectory, "Scene", "Factory"}));
-			file::createDirectory(file::getPath({projectDirectory, "Scene", "Class"}));
-		file::createDirectory(file::getPath({projectDirectory, "Setting"}));
+			file::createDirectory(file::getPath({projectDirectory, "Scene", "level"}));
+			file::createDirectory(file::getPath({projectDirectory, "Scene", "screen"}));
+			file::createDirectory(file::getPath({projectDirectory, "Scene", "factory"}));
 
-		ResourceManager::buildDirectory(file::getPath({projectDirectory, "Resource"}));
+		//file::createDirectory(file::getPath({projectDirectory, "Resource"}));
+		//ResourceManager::buildDirectory(file::getPath({projectDirectory, "Resource"}));
 
 		//Step 1-2 : Create project document
 		Setting document;
@@ -290,12 +288,16 @@ namespace nero
 		boost::algorithm::replace_all(screen_source_template, "::CoyprightDate::",	toString(datetime::getCurrentDateTime().date().year()));
 
 		//save file
+			//source
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeLists"}, StringPool.EXT_TEXT), cmake_template);
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeSettings"}, StringPool.EXT_JSON), cmake_setting_template);
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXT_H), scene_header_template);
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXT_CPP), scene_source_template);
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", "LoadingScreen"}, StringPool.EXT_H), screen_header_template);
 		file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", "LoadingScreen"}, StringPool.EXT_CPP), screen_source_template);
+			//scene
+		Setting scene_setting;
+		file::saveFile(file::getPath({projectDirectory, "Scene", "scene"}, StringPool.EXT_NERO), scene_setting.toString());
 
 		//Step 3 : compile the project
 		backgroundTask->setStatus(3);
