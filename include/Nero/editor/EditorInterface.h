@@ -107,8 +107,7 @@ namespace nero
 			GameLevelBuilder::Ptr							m_GameLevelBuilder;
 			GameScreenBuilder::Ptr							m_GameScreenBuilder;
 			ResourceManager::Ptr							m_ResourceManager;
-			ResourceManager::Ptr							m_SelectedResourceManager;
-			std::string										m_SeletedGamelevel;
+			ResourceManager::Ptr							m_EditorResourceManager;
 
 		private:
 			//////////////docksapce
@@ -165,6 +164,9 @@ namespace nero
 			NewGameLevelInput								m_NewGameScreenInput;
 			void											createGameLevel(const Parameter& parameter);
 			void											createGameScreen(const Parameter& parameter);
+			void											openGameLevel();
+			void											closeGameLevel();
+			std::string										m_SelectedGameLevel;
             //
 			sf::Sprite										flipTexture(const sf::Texture& texture);
 			//editor view
@@ -210,7 +212,7 @@ namespace nero
 			char											m_InputParentClass[100];
 			const char*										m_SelectedScriptType;
 			int												m_SelectedScriptTypeIndex;
-			const char*										m_SelectedGameLevel;
+			const char*										m_InputSelectedGameLevel;
 			int												m_SelectedGameLevelIndex;
 			const char*										m_SelectedGameScreen;
 			int												m_SelectedGameScreenIndex;

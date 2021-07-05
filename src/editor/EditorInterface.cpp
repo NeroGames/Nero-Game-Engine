@@ -50,8 +50,7 @@ namespace  nero
 		,m_CountCreateProject(0)
 		,m_ConsoleApplication()
 		,m_EnvironmentSetup()
-		,m_SelectedResourceManager(nullptr)
-	   ,m_SeletedGamelevel(StringPool.BLANK)
+		,m_SelectedGameLevel(StringPool.BLANK)
     {
 		//empty
 	}
@@ -4186,7 +4185,7 @@ namespace  nero
 			ImVec2 button_size = ImVec2(100.f, 0.f);
 			if(ImGui::Button("Open##open_game_level", button_size))
 			{
-
+				openGameLevel();
 			}
 
 			ImGui::SameLine();
@@ -4208,7 +4207,7 @@ namespace  nero
 
 			if(ImGui::Button("Close##close_game_level", button_size))
 			{
-
+				closeGameLevel();
 			}
 
 
@@ -4247,10 +4246,11 @@ namespace  nero
 				{
 					ImVec2 button_size(200.f, 75.f);
 
-					pushToolbarStyle(m_SeletedGamelevel == name);
+					pushToolbarStyle(m_SelectedGameLevel == name);
 					if(ImGui::Button(name.c_str(), button_size))
 					{
-						m_SeletedGamelevel = name;
+						m_SelectedGameLevel = name;
+						nero_log(m_SelectedGameLevel);
 					}
 					popToolbarStyle();
 
@@ -4263,6 +4263,17 @@ namespace  nero
 
 		ImGui::End();
 	};
+
+	void EditorInterface::openGameLevel()
+	{
+		m_GameLevelBuilder			= m_AdvancedScene->openGameLevel(m_SelectedGameLevel);
+		m_ResourceManager			= m_GameLevelBuilder->getResourceManager();
+	}
+
+	void EditorInterface::closeGameLevel()
+	{
+		m_AdvancedScene->closeSelectedGameLevel();
+	}
 
 	void EditorInterface::showNewGameLevelPopup()
 	{
@@ -4355,9 +4366,10 @@ namespace  nero
 		{
 			//create
 			m_AdvancedScene->createGameLevel(parameter);
+			m_SelectedGameLevel = parameter.getString("level_name");
+
 			//open
-			m_AdvancedScene->openGameLevel(parameter.getString("level_name"));
-			m_SeletedGamelevel = parameter.getString("level_name");
+			openGameLevel();
 		}
 	}
 
