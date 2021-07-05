@@ -19,6 +19,8 @@ namespace nero
 	/// @{
 	namespace string
 	{
+		std::string trim(const std::string& input);
+
 		///\brief List of Formats
 		enum class Format //Input = Nero Game Engine
 		{

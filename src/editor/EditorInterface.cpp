@@ -51,7 +51,7 @@ namespace  nero
 		,m_ConsoleApplication()
 		,m_EnvironmentSetup()
 		,m_SelectedResourceManager(nullptr)
-	   ,m_SeletedGamelevelName(StringPool.BLANK)
+	   ,m_SeletedGamelevel(StringPool.BLANK)
     {
 		//empty
 	}
@@ -4191,14 +4191,14 @@ namespace  nero
 
 			ImGui::SameLine();
 
-			if(ImGui::Button("Close##close_game_level", button_size))
+			if(ImGui::Button("Edit##edit_game_level", button_size))
 			{
 
 			}
 
 			ImGui::SameLine();
 
-			if(ImGui::Button("Close##close_game_level", button_size))
+			if(ImGui::Button("Copy##copy_game_level", button_size))
 			{
 
 			}
@@ -4206,24 +4206,24 @@ namespace  nero
 			ImGui::SameLine();
 
 
-			if(ImGui::Button("Copy##close_game_level", button_size))
+			if(ImGui::Button("Close##close_game_level", button_size))
 			{
 
 			}
 
 
-			ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 115.f);
+			ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 93.f);
 
 			if(ImGui::Button("Delete##delete_game_level", button_size))
 			{
 
 			}
 
-			ImGui::Dummy(ImVec2(0.f, 5.f));
+			ImGui::Dummy(ImVec2(0.f, 2.f));
 
 			ImGui::BeginChild("##show_game_level", ImVec2(), true);
 
-				auto levelNameTable = m_AdvancedScene->getGameLevelNameTable();
+				auto levelNameTable = m_AdvancedScene->getRegisteredGameLevel();
 				ImGuiStyle& style = ImGui::GetStyle();
 				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionWidth();
 
@@ -4247,10 +4247,10 @@ namespace  nero
 				{
 					ImVec2 button_size(200.f, 75.f);
 
-					pushToolbarStyle(m_SeletedGamelevelName == name);
+					pushToolbarStyle(m_SeletedGamelevel == name);
 					if(ImGui::Button(name.c_str(), button_size))
 					{
-						m_SeletedGamelevelName = name;
+						m_SeletedGamelevel = name;
 					}
 					popToolbarStyle();
 
@@ -4326,7 +4326,7 @@ namespace  nero
 				else
 				{
 					Parameter parameter;
-					parameter.setString("level_name", std::string(m_NewGameLevelInput.name));
+					parameter.setString("level_name", string::trim(std::string(m_NewGameLevelInput.name)));
 					parameter.setBool("enable_physics", m_NewGameLevelInput.enablePhysics);
 					parameter.setBool("enable_light", m_NewGameLevelInput.enableLight);
 					parameter.setString("template", "None");
@@ -4353,8 +4353,11 @@ namespace  nero
 	{
 		if(m_AdvancedScene)
 		{
-			m_GameLevelBuilder =  m_AdvancedScene->addGameLevel(parameter);
-			m_SeletedGamelevelName = parameter.getString("level_name");
+			//create
+			m_AdvancedScene->createGameLevel(parameter);
+			//open
+			m_AdvancedScene->openGameLevel(parameter.getString("level_name"));
+			m_SeletedGamelevel = parameter.getString("level_name");
 		}
 	}
 
@@ -4362,7 +4365,7 @@ namespace  nero
 	{
 		if(m_AdvancedScene)
 		{
-			m_AdvancedScene->addGameScreen(parameter);
+			m_AdvancedScene->createGameScreen(parameter);
 		}
 	}
 

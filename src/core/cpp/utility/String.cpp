@@ -13,6 +13,22 @@ namespace nero
 {
 	namespace string
 	{
+		std::string trim(const std::string& input)
+		{
+			//check empty string
+			if(input == StringPool.BLANK) return input;
+
+			//trim left and right
+			using namespace boost::algorithm;
+
+			std::string result = input;
+
+			trim_left(result);
+			trim_right(result);
+
+			return result;
+		}
+
 		std::string formatString(const std::string& input, Format format)
 		{
 			using namespace boost::algorithm;
@@ -36,6 +52,33 @@ namespace nero
 					trim_right(result);
 					to_lower(result);
 					replace_all(result, StringPool.SPACE, StringPool.BLANK);
+
+				}break;
+
+				case Format::COMPACT_UPPER:
+				{
+					trim_left(result);
+					trim_right(result);
+					to_upper(result);
+					replace_all(result, StringPool.SPACE, StringPool.BLANK);
+
+				}break;
+
+				case Format::CAMEL_CASE_UPPER:
+				{
+					result = StringPool.BLANK;
+
+					std::vector<std::string> wordTable = string::getWordTable(input);
+
+					for(std::string s : wordTable)
+					{
+						if(s != StringPool.BLANK)
+						{
+							boost::algorithm::to_lower(s);
+							s[0] = std::toupper(s[0]);
+							result += s;
+						}
+					}
 
 				}break;
 			}

@@ -108,7 +108,7 @@ namespace nero
 			GameScreenBuilder::Ptr							m_GameScreenBuilder;
 			ResourceManager::Ptr							m_ResourceManager;
 			ResourceManager::Ptr							m_SelectedResourceManager;
-			std::string										m_SeletedGamelevelName;
+			std::string										m_SeletedGamelevel;
 
 		private:
 			//////////////docksapce

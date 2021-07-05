@@ -41,22 +41,28 @@ namespace nero
 															AdvancedScene();
 
 			void											init();
-
-			GameLevelBuilder::Ptr							addGameLevel(const Parameter& parameter);
-			GameScreenBuilder::Ptr							addGameScreen(const Parameter& parameter);
+			//game level
+			void											createGameLevel(const Parameter& parameter);
+			GameLevelBuilder::Ptr							openGameLevel(const std::string& levelName);
+			void											removeGameLevel(const std::string& levelName);
+			void											registerGameLevel(const std::string& levelName);
+			void											unregisterGameLevel(const std::string& levelName);
+			void											closeSelectedGameLevel();
+			//game screen
+			void											createGameScreen(const Parameter& parameter);
 			//setting
 			void											setEngineSetting(const Setting::Ptr& setting);
 			void											setProjectSetting(const Setting::Ptr& setting);
-			std::vector<std::string> 						getGameLevelNameTable();
+			std::vector<std::string> 						getRegisteredGameLevel();
+
 
 		private:
 			//selection
 			GameLevelBuilder::Ptr							m_SelectedGameLevel;
 			GameScreenBuilder::Ptr							m_SelectedGameScreen;
 			//storage
-			std::vector<GameLevelBuilder::Ptr>				m_GameLevelTable;
 			std::vector<GameScreenBuilder::Ptr>				m_GameScreenTable;
-			std::vector<std::string>						m_GameLevelNameTable;
+			std::vector<std::string>						m_RegisteredLevelTable;
 			//setting
 			Setting::Ptr									m_EngineSetting;
 			Setting::Ptr									m_ProjectSetting;
