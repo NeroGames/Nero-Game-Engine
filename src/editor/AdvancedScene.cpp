@@ -76,6 +76,7 @@ namespace nero
 		setting.setString("level_id", level_id);
 		setting.setBool("enable_physics", parameter.getBool("enable_physics"));
 		setting.setBool("enable_light",  parameter.getBool("enable_light"));
+		setting.setString("resource_directory",  file::getPath({level_directory, "resource"}));
 		file::saveFile(file::getPath({level_directory, "setting"}, StringPool.EXT_NERO), setting.toString());
 
 		registerGameLevel(level_name);

@@ -167,6 +167,7 @@ namespace nero
 			void											openGameLevel();
 			void											closeGameLevel();
 			std::string										m_SelectedGameLevel;
+			std::string										m_OpenedGameLevel;
             //
 			sf::Sprite										flipTexture(const sf::Texture& texture);
 			//editor view
@@ -275,6 +276,7 @@ namespace nero
 			void renderCamera();
 			sf::View										m_CanvasFrontView;
 			sf::Text										m_GameModeInfo;
+			sf::Text										m_GameBuilderInfo;
 			//
 			void											renderGameModeInfo();
 			RenderContext::Ptr								m_RenderContext;

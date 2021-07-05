@@ -18,6 +18,7 @@ namespace nero
 	void GameLevelBuilder::init()
 	{
 		m_ResourceManager = std::make_shared<ResourceManager>(m_EngineSetting->getSetting("resource"));
+		m_ResourceManager->loadDirectory(m_LevelSetting->getString("resource_directory"));
 	}
 
 	ResourceManager::Ptr GameLevelBuilder::getResourceManager()
@@ -38,6 +39,11 @@ namespace nero
 	Setting::Ptr GameLevelBuilder::getLevelSetting()
 	{
 		return m_LevelSetting;
+	}
+
+	std::string GameLevelBuilder::getResourceFoler()
+	{
+		return m_LevelSetting->getString("resource_directory");
 	}
 }
 

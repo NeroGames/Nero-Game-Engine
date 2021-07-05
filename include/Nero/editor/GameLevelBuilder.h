@@ -26,6 +26,7 @@ namespace nero
 			void								setEngineSetting(const Setting::Ptr& setting);
 			std::string							getLevelName();
 			Setting::Ptr						getLevelSetting();
+			std::string							getResourceFoler();
 
 		private:
 			Setting::Ptr						m_LevelSetting;

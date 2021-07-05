@@ -51,6 +51,7 @@ namespace  nero
 		,m_ConsoleApplication()
 		,m_EnvironmentSetup()
 		,m_SelectedGameLevel(StringPool.BLANK)
+		,m_OpenedGameLevel(StringPool.BLANK)
     {
 		//empty
 	}
@@ -133,6 +134,10 @@ namespace  nero
 		m_GameModeInfo.setFont(m_EditorFontHolder->getDefaultFont());
 		m_GameModeInfo.setCharacterSize(18.f);
 		m_GameModeInfo.setFillColor(sf::Color::White);
+
+		m_GameBuilderInfo.setFont(m_EditorFontHolder->getDefaultFont());
+		m_GameBuilderInfo.setCharacterSize(18.f);
+		m_GameBuilderInfo.setFillColor(sf::Color::White);
 
 		//clear workspace input
 		m_WorkspaceInput.clear();
@@ -631,6 +636,7 @@ namespace  nero
 		std::string info = gameMode + "  |  " + frameRate + "  |  " + frameTime;
 
 		m_GameModeInfo.setString(info);
+		m_GameBuilderInfo.setString(m_OpenedGameLevel);
 
 		sf::Vector2f position;
 		position.x = m_RenderTexture->getSize().x - m_GameModeInfo.getLocalBounds().width - 20.f;
@@ -638,7 +644,10 @@ namespace  nero
 
 		m_GameModeInfo.setPosition(position);
 
+		m_GameBuilderInfo.setPosition(sf::Vector2f(20.f, position.y));
+
 		m_RenderTexture->draw(m_GameModeInfo);
+		m_RenderTexture->draw(m_GameBuilderInfo);
 	}
 
 	void EditorInterface::renderCamera()
@@ -3540,12 +3549,12 @@ namespace  nero
 				//copy texture file and json helper
 				for(std::string file : loadedFileTable)
 				{
-					file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "texture", file::getFileName(file, true)}));
+					file::copyFile(file, file::getPath({m_GameLevelBuilder->getResourceFoler(), "texture", file::getFileName(file, true)}));
 
 					std::string jsonHelper  = file::replaceExtension(file, "json");
 					if(file::fileExist(jsonHelper))
 					{
-						file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "texture", file::getFileName(jsonHelper, true)}));
+						file::copyFile(file, file::getPath({m_GameLevelBuilder->getResourceFoler(), "texture", file::getFileName(jsonHelper, true)}));
 					}
 				}
 
@@ -4268,11 +4277,13 @@ namespace  nero
 	{
 		m_GameLevelBuilder			= m_AdvancedScene->openGameLevel(m_SelectedGameLevel);
 		m_ResourceManager			= m_GameLevelBuilder->getResourceManager();
+		m_OpenedGameLevel			= m_SelectedGameLevel;
 	}
 
 	void EditorInterface::closeGameLevel()
 	{
 		m_AdvancedScene->closeSelectedGameLevel();
+		m_OpenedGameLevel = StringPool.BLANK;
 	}
 
 	void EditorInterface::showNewGameLevelPopup()
