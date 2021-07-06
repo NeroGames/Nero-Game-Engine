@@ -4255,13 +4255,12 @@ namespace  nero
 				{
 					ImVec2 button_size(200.f, 75.f);
 
-					pushToolbarStyle(m_SelectedGameLevel == name);
+					pushGameLevelStyle(m_SelectedGameLevel == name, m_OpenedGameLevel == name);
 					if(ImGui::Button(name.c_str(), button_size))
 					{
 						m_SelectedGameLevel = name;
-						nero_log(m_SelectedGameLevel);
 					}
-					popToolbarStyle();
+					popGameLevelStyle();
 
 					printSameLine();
 				}
@@ -4282,8 +4281,10 @@ namespace  nero
 
 	void EditorInterface::closeGameLevel()
 	{
+		m_OpenedGameLevel	= StringPool.BLANK;
+		m_GameLevelBuilder	= nullptr;
+		m_ResourceManager	= nullptr;
 		m_AdvancedScene->closeSelectedGameLevel();
-		m_OpenedGameLevel = StringPool.BLANK;
 	}
 
 	void EditorInterface::showNewGameLevelPopup()

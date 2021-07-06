@@ -100,6 +100,68 @@ namespace nero
 		ImGui::PopFont();
 	}
 
+	void pushGameLevelStyle(bool selected, bool opened)
+	{
+		ImVec4 color = ImVec4(0.000f, 0.000f, 0.000f, 1.000f);
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.f);
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.f, 7.f));
+
+		if(opened)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.929f, 0.595f, 0.308f, 1.000f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.000f, 1.000f, 1.000f, .950f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.000f, 1.000f, 1.000f, .900f));
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.000f, 1.000f, 1.000f, 1.000f));
+		}
+		else
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.000f, 1.000f, 1.000f, 1.000f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.000f, 1.000f, 1.000f, .950f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.000f, 1.000f, 1.000f, .900f));
+			ImGui::PushStyleColor(ImGuiCol_Text, color);
+		}
+
+
+		if(selected)
+		{
+			if(opened)
+			{
+				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 4.f);
+				ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1.000f, 1.000f, 1.000f, 1.000f));
+			}
+			else
+			{
+				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 4.f);
+				ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.929f, 0.595f, 0.308f, 1.000f));
+			}
+
+		}
+		else
+		{
+			if(opened)
+			{
+				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 4.f);
+				ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.929f, 0.595f, 0.308f, 1.000f));
+			}
+			else
+			{
+				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
+				ImGui::PushStyleColor(ImGuiCol_Border, color);
+			}
+		}
+
+
+		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
+	}
+
+	void popGameLevelStyle()
+	{
+		ImGui::PopStyleVar(3);
+		ImGui::PopStyleColor(5);
+		ImGui::PopFont();
+	}
+
+
 	std::string AppLauncher::qtCreatorProcessId		= StringPool.BLANK;
 	std::string AppLauncher::visaulStudioProcessId	= StringPool.BLANK;
 	std::string AppLauncher::profilerProcessId		= StringPool.BLANK;
