@@ -220,7 +220,7 @@ namespace nero
 			//World chunk
 			void											addWorldChunk();
 			void											removeWorldChunk();
-			int												m_InputSelectedWorldChunkId;
+			int												m_InputSelectedChunkId;
 			//Object Layer
 			void											addObjectLayer();
 			void											removeObjectLayer();

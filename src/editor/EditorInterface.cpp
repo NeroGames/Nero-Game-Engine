@@ -42,7 +42,7 @@ namespace  nero
 		,m_BuilderMode(BuilderMode::OBJECT)
 		,m_EditorCamera(nullptr)
 		,m_SelectedChunkNode(StringPool.BLANK)
-		,m_InputSelectedWorldChunkId(-1)
+		,m_InputSelectedChunkId(-1)
 		,m_InputSelectedObjectLayerId(-1)
 		,m_InputSelectedGameLevelId(-1)
 		,m_InputSelectedGameScreenId(-1)
@@ -4511,41 +4511,44 @@ namespace  nero
 			ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
 			ImGui::BeginChild("##manage_world_chunk", ImVec2(), true);
 
-				/*if(m_AdvancedScene)
+				if(m_GameLevelBuilder)
 				{
-					auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
+					auto& chunkTable = m_GameLevelBuilder->getWorldChunkTable();
 
-					m_InputSelectedWorldChunkId = m_AdvancedScene->getSelectedWorldChunk()->chunkId;
+					auto selectedChunk		= m_GameLevelBuilder->getSelectedWorldChunk();
+					m_InputSelectedChunkId	= selectedChunk ? selectedChunk->getChunkId() : -1;
 
-					for(const auto& worldChunk : gameLevel->chunkTable)
+					for(const auto& worldChunk : chunkTable)
 					{
-						std::string itemId = "##select_chunk" + toString(worldChunk->chunkId);
-						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedWorldChunkId, worldChunk->chunkId);
+						std::string itemId = "##select_chunk" + toString(worldChunk->getChunkId());
+						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedChunkId, worldChunk->getChunkId());
 
 						if(ImGui::IsItemClicked())
 						{
-							m_AdvancedScene->setSelectedWorldChunk(worldChunk);
+							m_GameLevelBuilder->setSelectedWorldChunk(worldChunk);
 						}
 
 						ImGui::SameLine();
 
-						itemId = "##visible_chunk" + toString(worldChunk->chunkId);
-						ImGui::Checkbox(itemId.c_str(), &worldChunk->visible);
+						itemId = "##visible_chunk" + toString(worldChunk->getChunkId());
+						bool visible = worldChunk->isVisible();
+						ImGui::Checkbox(itemId.c_str(), &visible);
+						worldChunk->setVisible(visible);
 
 						ImGui::SameLine();
 
 						char chunk_name[100];
-						string::fillCharArray(chunk_name, sizeof(chunk_name), worldChunk->name);
+						string::fillCharArray(chunk_name, sizeof(chunk_name), worldChunk->getName());
 						ImGui::SetNextItemWidth(118.f);
-						itemId = "##chunk_name" + toString(worldChunk->chunkId);
+						itemId = "##chunk_name" + toString(worldChunk->getChunkId());
 						ImGui::InputText(itemId.c_str(), chunk_name, sizeof(chunk_name));
 
 						if(ImGui::IsItemEdited())
 						{
-							worldChunk->name = std::string(chunk_name);
+							worldChunk->setName(std::string(chunk_name));
 						}
 					}
-				}*/
+				}
 
 			ImGui::EndChild();
 
@@ -4554,10 +4557,10 @@ namespace  nero
 
 	void EditorInterface::addWorldChunk()
 	{
-		/*if(m_AdvancedScene && m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT)
+		if(m_GameLevelBuilder && m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT)
 		{
-			m_AdvancedScene->addWorldChunk();
-		}*/
+			m_GameLevelBuilder->addWorldChunk();
+		}
 	}
 
 	void EditorInterface::removeWorldChunk()

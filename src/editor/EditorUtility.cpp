@@ -109,8 +109,8 @@ namespace nero
 		if(opened)
 		{
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.929f, 0.595f, 0.308f, 1.000f));
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.000f, 1.000f, 1.000f, .950f));
-			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.000f, 1.000f, 1.000f, .900f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.929f, 0.595f, 0.308f, .950f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.929f, 0.595f, 0.308f, .900f));
 			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.000f, 1.000f, 1.000f, 1.000f));
 		}
 		else

@@ -8,6 +8,7 @@
 //Nero
 #include <Nero/core/cpp/engine/Setting.h>
 #include <Nero/core/cpp/resource/ResourceManager.h>
+#include <Nero/core/cpp/scene/WorldChunk.h>
 //STD
 #include <memory>
 ////////////////////////////////////////////////////////////
@@ -27,11 +28,21 @@ namespace nero
 			std::string							getLevelName();
 			Setting::Ptr						getLevelSetting();
 			std::string							getResourceFoler();
+			//world chunk
+			void								addWorldChunk();
+			std::vector<WorldChunk::Ptr>&		getWorldChunkTable();
+			WorldChunk::Ptr						getSelectedWorldChunk();
+			void								setSelectedWorldChunk(WorldChunk::Ptr worldChunk);
+
 
 		private:
 			Setting::Ptr						m_LevelSetting;
 			Setting::Ptr						m_EngineSetting;
 			ResourceManager::Ptr				m_ResourceManager;
+			//world chunk
+			WorldChunk::Ptr						m_SelectedWorldChunk;
+			std::vector<WorldChunk::Ptr>		m_WorldChunkTable;
+			int									m_CountWorldChunk;
 	};
 }
 
