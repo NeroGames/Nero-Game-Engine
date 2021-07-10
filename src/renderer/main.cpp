@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Nero
-#include <Nero/renderer/EngineRenderer.h>
+#include <Nero/renderer/RenderEngine.h>
 //Profiler
 #include <easy/profiler.h>
 ////////////////////////////////////////////////////////////
@@ -15,11 +15,11 @@ int main()
 	EASY_MAIN_THREAD;
 	profiler::startListen();
 
-	//Instantiate the editor
-	nero::EngineRenderer renderer;
+	//Instantiate the Game
+	nero::RenderEngine game;
 
 	//Launch the editor
-	renderer.run();
+	game.run();
 
 	return 0;
 }

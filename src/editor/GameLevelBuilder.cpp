@@ -52,12 +52,15 @@ namespace nero
 	void GameLevelBuilder::addWorldChunk()
 	{
 		auto worldChunk = std::make_shared<WorldChunk>();
-		worldChunk->m_ChunkId		= ++m_CountWorldChunk;
-		worldChunk->m_ChunkName		= std::string("world chunk ") + toString(worldChunk->m_ChunkId);
-		worldChunk->m_Selected		= false;
-		worldChunk->m_LoadWithLevel	= false;
+		worldChunk->setChunkId(++m_CountWorldChunk);
+		worldChunk->setName(std::string("world chunk ") + toString(worldChunk->getChunkId()));
+		worldChunk->setSelected(false);
+		worldChunk->setLoadWithLevel(false);
+		worldChunk->setVisible(true);
 
 		m_WorldChunkTable.push_back(worldChunk);
+
+		setSelectedWorldChunk(m_WorldChunkTable.back());
 	}
 
 	std::vector<WorldChunk::Ptr>& GameLevelBuilder::getWorldChunkTable()

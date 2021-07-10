@@ -14,7 +14,6 @@
 #include <Nero/core/cpp/scene/ShapeRenderer.h>
 #include <Nero/core/cpp/scene/ObjectManager.h>
 #include <Nero/core/cpp/scene/SoundManager.h>
-#include <Nero/core/cpp/scene/SceneBuilder.h>
 #include <Nero/core/cpp/object/GameLevelScriptObject.h>
 #include <Nero/core/cpp/object/GameScreenScriptObject.h>
 //SFML
@@ -181,7 +180,6 @@ namespace nero
 			//std::map<std::string, boost::function<CreateCppPhysicScript>> m_CreateGameScreenMap;
 			//
 			Setting::Ptr					m_GameSetting;
-			SceneBuilder::Ptr				m_SceneBuilder;
 			//
 			std::map<std::string, ResourceManager::Ptr> m_GameLevelResourceMap;
 			//

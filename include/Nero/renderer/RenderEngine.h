@@ -2,8 +2,8 @@
 // Nero Game Engine
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
-#ifndef ENGINERENDERER_H
-#define ENGINERENDERER_H
+#ifndef RENDERENGINE_H
+#define RENDERENGINE_H
 ///////////////////////////HEADERS///////////////////////////
 //Nero
 #include <Nero/core/cpp/engine/CoreEngine.h>
@@ -21,7 +21,7 @@
 /////////////////////////////////////////////////////////////
 namespace  nero
 {
-	class EngineRenderer : public CoreEngine
+	class RenderEngine : public CoreEngine
 	{
 		public:
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
@@ -30,8 +30,8 @@ namespace  nero
 			typedef StartupScreen::Ptr			(CreateCppStartupScreen)();
 
 		public:
-									EngineRenderer();
-			virtual                ~EngineRenderer() override;
+									RenderEngine();
+			virtual                ~RenderEngine() override;
 		private:
 			bool					checkDirectory();
 			//
@@ -74,4 +74,4 @@ namespace  nero
 
 }
 
-#endif // ENGINERENDERER_H
+#endif // RENDERENGINE_H

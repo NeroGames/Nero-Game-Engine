@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <Nero/core/cpp/scene/SceneBuilder.h>
+#include <Nero/editor/WorldBuilder.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 //STD
 #include <fstream>
@@ -12,7 +12,7 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	SceneBuilder::SceneBuilder():
+	WorldBuilder::WorldBuilder():
         //Main
 		 m_PhysicWorld(nullptr)
         ,m_PhysicObjectManager()
@@ -42,7 +42,7 @@ namespace nero
         m_UpdateLogIf   = [](const std::string&, bool, int){};
     }
 
-    void SceneBuilder::handleEvent(const sf::Event& event)
+	void WorldBuilder::handleEvent(const sf::Event& event)
     {
         switch(event.type)
         {
@@ -69,7 +69,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::update(const sf::Time& timeStep)
+	void WorldBuilder::update(const sf::Time& timeStep)
     {
         float32 b2TimeStep = m_SceneSetting.hz > 0.0f ? 1.0f / m_SceneSetting.hz : float32(0.0f);
 
@@ -91,7 +91,7 @@ namespace nero
             m_SelectedLayer->update(sf::seconds(b2TimeStep));
     }
 
-    void SceneBuilder::render()
+	void WorldBuilder::render()
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
@@ -103,7 +103,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
+	void WorldBuilder::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
     {
         //Object
         if(isPressed && m_SelectedLayer && m_SelectedObject)
@@ -289,7 +289,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
+	void WorldBuilder::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
     {
 		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
 
@@ -323,7 +323,7 @@ namespace nero
         }
     }
 
-    void  SceneBuilder::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
+	void  WorldBuilder::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
     {
 		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
 
@@ -350,7 +350,7 @@ namespace nero
         }
     }
 
-    Object::Ptr SceneBuilder::findObject(Object::Ptr object, sf::Vector2f pos)
+	Object::Ptr WorldBuilder::findObject(Object::Ptr object, sf::Vector2f pos)
     {
         Object::Ptr result = nullptr;
         findObject(object, pos, result);
@@ -359,7 +359,7 @@ namespace nero
     }
 
 
-    void SceneBuilder::findObject(Object::Ptr object, sf::Vector2f pos, Object::Ptr& result)
+	void WorldBuilder::findObject(Object::Ptr object, sf::Vector2f pos, Object::Ptr& result)
     {
         if(result != nullptr)
             return;
@@ -374,7 +374,7 @@ namespace nero
         }
     }
 
-    Object::Ptr SceneBuilder::findObject(Object::Ptr object, sf::String name)
+	Object::Ptr WorldBuilder::findObject(Object::Ptr object, sf::String name)
     {
         Object::Ptr result = nullptr;
         findObject(object, name, result);
@@ -382,7 +382,7 @@ namespace nero
         return result;
     }
 
-    void SceneBuilder::findObject(Object::Ptr object, sf::String name, Object::Ptr& result)
+	void WorldBuilder::findObject(Object::Ptr object, sf::String name, Object::Ptr& result)
     {
         if(result != nullptr)
             return;
@@ -397,7 +397,7 @@ namespace nero
         }
     }
 
-    Object::Ptr SceneBuilder::findObject(Object::Ptr object, int id)
+	Object::Ptr WorldBuilder::findObject(Object::Ptr object, int id)
     {
         Object::Ptr result = nullptr;
         findObject(object, id, result);
@@ -405,7 +405,7 @@ namespace nero
         return result;
     }
 
-    void SceneBuilder::findObject(Object::Ptr object, int id, Object::Ptr& result)
+	void WorldBuilder::findObject(Object::Ptr object, int id, Object::Ptr& result)
     {
         if(result != nullptr)
             return;
@@ -420,7 +420,7 @@ namespace nero
         }
     }
 
-    const LayerObject::Ptr SceneBuilder::addLayer()
+	const LayerObject::Ptr WorldBuilder::addLayer()
     {
         int index =  ++m_LayerCount;
 
@@ -446,7 +446,7 @@ namespace nero
         return m_LayerTable.back();
     }
 
-    void SceneBuilder::deleteLayer(int id)
+	void WorldBuilder::deleteLayer(int id)
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
@@ -468,7 +468,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::moveLayerDown(int id)
+	void WorldBuilder::moveLayerDown(int id)
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
@@ -486,7 +486,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::moveLayerUp(int id)
+	void WorldBuilder::moveLayerUp(int id)
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
@@ -504,7 +504,7 @@ namespace nero
         }
     }
 
-    bool SceneBuilder::mergeLayerUp(int id)
+	bool WorldBuilder::mergeLayerUp(int id)
     {
         nero_log("up up my layer");
 
@@ -537,7 +537,7 @@ namespace nero
         return false;
     }
 
-    bool SceneBuilder::mergeLayerDown(int id)
+	bool WorldBuilder::mergeLayerDown(int id)
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
@@ -568,7 +568,7 @@ namespace nero
         return false;
     }
 
-    void SceneBuilder::updateLayerVisibility(int id)
+	void WorldBuilder::updateLayerVisibility(int id)
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
@@ -585,7 +585,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::updateLayerName(int id, sf::String name)
+	void WorldBuilder::updateLayerName(int id, sf::String name)
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
@@ -601,7 +601,7 @@ namespace nero
     }
 
 
-    void SceneBuilder::selectLayer(int id)
+	void WorldBuilder::selectLayer(int id)
     {
         m_SelectedLayer->setIsSelected(false);
         m_SelectedLayer = nullptr;
@@ -623,7 +623,7 @@ namespace nero
         }
     }
 
-	void SceneBuilder::setSelectedLayer(LayerObject::Ptr layerObject)
+	void WorldBuilder::setSelectedLayer(LayerObject::Ptr layerObject)
 	{
 		//unselect
 		m_SelectedLayer->setIsSelected(false);
@@ -635,13 +635,13 @@ namespace nero
 		m_SelectedObject = nullptr;
 	}
 
-	void SceneBuilder::setSelectedObject(Object::Ptr object)
+	void WorldBuilder::setSelectedObject(Object::Ptr object)
 	{
 		m_SelectedObject = object;
 	}
 
 
-    void SceneBuilder::copyObject(const Position& position)
+	void WorldBuilder::copyObject(const Position& position)
     {
         if(!m_SelectedLayer || !m_SelectedObject)
             return;
@@ -759,7 +759,7 @@ namespace nero
         m_SelectedLayer->addChild(m_SelectedObject);
     }
 
-    void SceneBuilder::updateLayerColor(const sf::Color& color)
+	void WorldBuilder::updateLayerColor(const sf::Color& color)
     {
         if(m_SelectedLayer->getSecondType() == Object::Mesh_Object)
             return;
@@ -774,7 +774,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::updateAllLayerAlpha(int alpha)
+	void WorldBuilder::updateAllLayerAlpha(int alpha)
     {
 
         for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
@@ -795,35 +795,35 @@ namespace nero
 
     }
 
-    void SceneBuilder::updateSpriteColor(const sf::Color& color)
+	void WorldBuilder::updateSpriteColor(const sf::Color& color)
     {
         if(m_SelectedObject != nullptr && (m_SelectedObject->getFirstType() == Object::Sprite_Object || m_SelectedObject->getFirstType() == Object::Animation_Object))
             m_SelectedObject->setColor(color);
     }
 
-    void SceneBuilder::updateTextColor(const sf::Color& color)
+	void WorldBuilder::updateTextColor(const sf::Color& color)
     {
         if(m_SelectedObject != nullptr && m_SelectedObject->getFirstType() == Object::Text_Object)
             TextObject::Cast(m_SelectedObject)->setColor(color);
     }
 
-    void SceneBuilder::updateOutlineTextColor(const sf::Color& color)
+	void WorldBuilder::updateOutlineTextColor(const sf::Color& color)
     {
         if(m_SelectedObject != nullptr && m_SelectedObject->getFirstType() == Object::Text_Object)
             TextObject::Cast(m_SelectedObject)->setOutlineColor(color);
     }
 
-    const LayerObject::Tab& SceneBuilder::getLayerTable() const
+	const LayerObject::Tab& WorldBuilder::getLayerTable() const
     {
        return m_LayerTable;
     }
 
-    MeshEditor::Ptr SceneBuilder::getMeshEditor()
+	MeshEditor::Ptr WorldBuilder::getMeshEditor()
     {
         return  m_MeshEditor;
     }
 
-    bool SceneBuilder::addObject(Object::Type type, const sf::String& label, sf::Vector2f position)
+	bool WorldBuilder::addObject(Object::Type type, const sf::String& label, sf::Vector2f position)
     {
         Object::Ptr object = nullptr;
 
@@ -1151,7 +1151,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::deleteObject(Object::Ptr object)
+	void WorldBuilder::deleteObject(Object::Ptr object)
     {
 		//m_UpdateLog("removing Object [" + object->getName() + "]", nero::Info);
 
@@ -1172,7 +1172,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-    void SceneBuilder::setMeshType(const sf::String& label)
+	void WorldBuilder::setMeshType(const sf::String& label)
     {
         if(!m_SelectedObject)
             return;
@@ -1204,7 +1204,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-    void SceneBuilder::setMeshFixedRotation(bool flag)
+	void WorldBuilder::setMeshFixedRotation(bool flag)
     {
         if(!m_SelectedObject)
             return;
@@ -1227,7 +1227,7 @@ namespace nero
 
     }
 
-    void SceneBuilder::setMeshSensor(bool flag)
+	void WorldBuilder::setMeshSensor(bool flag)
     {
          if(!m_SelectedObject)
             return;
@@ -1250,7 +1250,7 @@ namespace nero
 
     }
 
-    void SceneBuilder::setMeshAllowSleep(bool flag)
+	void WorldBuilder::setMeshAllowSleep(bool flag)
     {
        if(!m_SelectedObject)
             return;
@@ -1272,7 +1272,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-    void SceneBuilder::setMeshDensity(float density)
+	void WorldBuilder::setMeshDensity(float density)
     {
         if(!m_SelectedObject)
             return;
@@ -1292,7 +1292,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-    void SceneBuilder::setMeshFriction(float friction)
+	void WorldBuilder::setMeshFriction(float friction)
     {
         if(!m_SelectedObject)
             return;
@@ -1312,7 +1312,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-    void SceneBuilder::setMeshRestitution(float restitution)
+	void WorldBuilder::setMeshRestitution(float restitution)
     {
         if(!m_SelectedObject)
             return;
@@ -1332,7 +1332,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-    void SceneBuilder::setMeshGravityScale(float gravityScale)
+	void WorldBuilder::setMeshGravityScale(float gravityScale)
     {
         if(!m_SelectedObject)
             return;
@@ -1352,7 +1352,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-    void SceneBuilder::buildScene(Object::Ptr rootObject)
+	void WorldBuilder::buildScene(Object::Ptr rootObject)
     {
         for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
         {
@@ -1589,7 +1589,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::destroyAllPhysicObject(Object::Ptr rootObject)
+	void WorldBuilder::destroyAllPhysicObject(Object::Ptr rootObject)
     {
         auto children = rootObject->getAllChild();
 
@@ -1609,35 +1609,35 @@ namespace nero
     }
 
 
-    void SceneBuilder::setUpdateUI(std::function<void()>  fn)
+	void WorldBuilder::setUpdateUI(std::function<void()>  fn)
     {
         m_UpdateUI = fn;
     }
 
-    void SceneBuilder::setUpdateUndo(std::function<void()>  fn)
+	void WorldBuilder::setUpdateUndo(std::function<void()>  fn)
     {
         m_UpdateUndo = fn;
          m_MeshEditor->setUpdateUndo(fn);
     }
 
-    void SceneBuilder::setUpdateLog(std::function<void(const std::string&, int)>  fn)
+	void WorldBuilder::setUpdateLog(std::function<void(const std::string&, int)>  fn)
     {
         m_UpdateLog = fn;
         m_MeshEditor->setUpdateLog(fn);
     }
 
-    void SceneBuilder::setUpdateLogIf(std::function<void(const std::string&, bool, int)>  fn)
+	void WorldBuilder::setUpdateLogIf(std::function<void(const std::string&, bool, int)>  fn)
     {
         m_UpdateLogIf = fn;
         m_MeshEditor->setUpdateLogIf(fn);
     }
 
-    Object::Ptr SceneBuilder::getSelectedObject()
+	Object::Ptr WorldBuilder::getSelectedObject()
     {
         return m_SelectedObject;
     }
 
-    void SceneBuilder::setObjectName(const sf::String& name)
+	void WorldBuilder::setObjectName(const sf::String& name)
     {
         if(!m_SelectedObject)
             return;
@@ -1650,7 +1650,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-    void SceneBuilder::setObjectCategory(const sf::String& category)
+	void WorldBuilder::setObjectCategory(const sf::String& category)
     {
         if(!m_SelectedObject)
             return;
@@ -1663,7 +1663,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-    SpriteObject::Ptr SceneBuilder::loadSprite(nlohmann::json& json)
+	SpriteObject::Ptr WorldBuilder::loadSprite(nlohmann::json& json)
     {
         sf::Sprite sprite;
 		sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound(json["sprite"].get<std::string>());
@@ -1691,7 +1691,7 @@ namespace nero
         return sprite_object;
     }
 
-    MeshObject::Ptr SceneBuilder::loadMesh(nlohmann::json& json)
+	MeshObject::Ptr WorldBuilder::loadMesh(nlohmann::json& json)
     {
         Mesh mesh = Mesh();
 
@@ -1751,7 +1751,7 @@ namespace nero
         return mesh_object;
     }
 
-    TextObject::Ptr SceneBuilder::loadText(nlohmann::json& json)
+	TextObject::Ptr WorldBuilder::loadText(nlohmann::json& json)
     {
         nero_log("loading text");
 
@@ -1799,14 +1799,14 @@ namespace nero
     }
 
 
-    void SceneBuilder::updateLayerOrder()
+	void WorldBuilder::updateLayerOrder()
     {
         int i = 0;
         for(auto layer : m_LayerTable)
             layer->setOrder(i++);
     }
 
-    sf::Color SceneBuilder::getLayerColor()
+	sf::Color WorldBuilder::getLayerColor()
     {
         if(m_SelectedLayer && !m_SelectedLayer->isEmpty())
         {
@@ -1816,7 +1816,7 @@ namespace nero
         return sf::Color::White;
     }
 
-    nlohmann::json SceneBuilder::saveScene()
+	nlohmann::json WorldBuilder::saveScene()
     {
         std::vector<nlohmann::json> layer_table;
 
@@ -1835,7 +1835,7 @@ namespace nero
         return scene;
     }
 
-    void SceneBuilder::loadScene(nlohmann::json scene)
+	void WorldBuilder::loadScene(nlohmann::json scene)
     {
         nero_log("loading scene");
 
@@ -1999,18 +1999,18 @@ namespace nero
         }
     }
 
-    void SceneBuilder::setPhysicWorld(b2World* world)
+	void WorldBuilder::setPhysicWorld(b2World* world)
     {
         m_PhysicWorld = world;
         m_PhysicObjectManager.setWorld(world);
     }
 
-    int SceneBuilder::getNewId()
+	int WorldBuilder::getNewId()
     {
         return m_ObjectCount++;
     }
 
-    AnimationObject::Ptr SceneBuilder::loadAnimation(nlohmann::json& json)
+	AnimationObject::Ptr WorldBuilder::loadAnimation(nlohmann::json& json)
     {
         nero_log("loading animation");
 
@@ -2066,7 +2066,7 @@ namespace nero
         return animation_object;
     }
 
-    void SceneBuilder::moveObjectUp()
+	void WorldBuilder::moveObjectUp()
     {
         if(!m_SelectedLayer || !m_SelectedObject)
             return;
@@ -2087,7 +2087,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::moveObjectDown()
+	void WorldBuilder::moveObjectDown()
     {
         if(!m_SelectedLayer || !m_SelectedObject)
             return;
@@ -2108,7 +2108,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::buildUI(UIObject::Ptr rootObject)
+	void WorldBuilder::buildUI(UIObject::Ptr rootObject)
     {
         for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
         {
@@ -2147,7 +2147,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::setTextContent(const sf::String& content)
+	void WorldBuilder::setTextContent(const sf::String& content)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
@@ -2155,7 +2155,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::setTextFont(const sf::String& font)
+	void WorldBuilder::setTextFont(const sf::String& font)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
@@ -2167,7 +2167,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::setTextFontSize(float value)
+	void WorldBuilder::setTextFontSize(float value)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
@@ -2177,7 +2177,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::setTextLetterSpacing(float value)
+	void WorldBuilder::setTextLetterSpacing(float value)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
@@ -2185,7 +2185,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::setTextLineSpacing(float value)
+	void WorldBuilder::setTextLineSpacing(float value)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
@@ -2193,7 +2193,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::setTextOutlineThickness(float value)
+	void WorldBuilder::setTextOutlineThickness(float value)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
@@ -2203,7 +2203,7 @@ namespace nero
         }
     }
 
-    void SceneBuilder::setTextStyle(bool bold, bool italic, bool underLined, bool strikeThrough)
+	void WorldBuilder::setTextStyle(bool bold, bool italic, bool underLined, bool strikeThrough)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
@@ -2213,46 +2213,46 @@ namespace nero
         }
     }
 
-    const sf::Color& SceneBuilder::getCanvasColor() const
+	const sf::Color& WorldBuilder::getCanvasColor() const
     {
         return m_CanvasColor;
     }
 
-    void SceneBuilder::setCanvasColor(const sf::Color& color)
+	void WorldBuilder::setCanvasColor(const sf::Color& color)
     {
         m_CanvasColor = color;
     }
 
-    int SceneBuilder::getObjectCount()
+	int WorldBuilder::getObjectCount()
     {
         return m_ObjectCount;
     }
 
-	void SceneBuilder::setRenderContext(const RenderContext::Ptr& renderContext)
+	void WorldBuilder::setRenderContext(const RenderContext::Ptr& renderContext)
 	{
 		m_RenderContext = renderContext;
 
 		m_MeshEditor->setRenderContext(renderContext);
 	}
 
-	void SceneBuilder::setRenderTexture(const RenderTexturePtr& renderTexture)
+	void WorldBuilder::setRenderTexture(const RenderTexturePtr& renderTexture)
 	{
 		m_RenderTexture = renderTexture;
 
 		m_MeshEditor->setRenderTexture(renderTexture);
 	}
 
-	void SceneBuilder::setResourceManager(const ResourceManager::Ptr& resourceManager)
+	void WorldBuilder::setResourceManager(const ResourceManager::Ptr& resourceManager)
 	{
 		m_ResourceManager = resourceManager;
 	}
 
-	LayerObject::Ptr SceneBuilder::getSelectedLayer()
+	LayerObject::Ptr WorldBuilder::getSelectedLayer()
 	{
 		return m_SelectedLayer;
 	}
 
-	void SceneBuilder::setLightManager(const LightManagerPtr& lightManager)
+	void WorldBuilder::setLightManager(const LightManagerPtr& lightManager)
 	{
 		m_LightManager = lightManager;
 	}

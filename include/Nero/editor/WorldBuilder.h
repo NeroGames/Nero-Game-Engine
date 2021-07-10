@@ -2,8 +2,8 @@
 // Nero Game Engine
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
-#ifndef SCENEBUILDER_H
-#define SCENEBUILDER_H
+#ifndef WorldBuilder_H
+#define WorldBuilder_H
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/core/cpp/resource/ResourceManager.h>
@@ -32,15 +32,15 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class SceneBuilder
+	class WorldBuilder
     {
         public:
-            typedef std::shared_ptr<SceneBuilder> Ptr;
+			typedef std::shared_ptr<WorldBuilder> Ptr;
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 			typedef std::shared_ptr<ltbl::LightSystem>	LightManagerPtr;
 
         public:
-			SceneBuilder();
+			WorldBuilder();
 
             //Main
             void                            handleEvent(const sf::Event& event);
@@ -183,4 +183,4 @@ namespace nero
             std::function<void(const std::string&, bool, int)>  m_UpdateLogIf;
     };
 }
-#endif // SCENEBUILDER_H
+#endif // WorldBuilder_H

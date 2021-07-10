@@ -460,8 +460,8 @@ namespace nero
 		levelOject->init(levelParameter);
 
 		//setup scene builder
-		m_SceneBuilder->setResourceManager(m_GameLevelResourceMap[levelName]);
-		m_SceneBuilder->setPhysicWorld(levelOject->getPhysicWorld());
+		//m_SceneBuilder->setResourceManager(m_GameLevelResourceMap[levelName]);
+		//m_SceneBuilder->setPhysicWorld(levelOject->getPhysicWorld());
 
 		//build world chunk
 		for(auto worldChunkJson : gameLevelJson["world_chunk_table"])
@@ -470,8 +470,8 @@ namespace nero
 			{
 				Object::Ptr chunkOject = std::make_shared<Object>();
 
-				m_SceneBuilder->loadScene(worldChunkJson["world_chunk"]);
-				m_SceneBuilder->buildScene(chunkOject);
+				//m_SceneBuilder->loadScene(worldChunkJson["world_chunk"]);
+				//m_SceneBuilder->buildScene(chunkOject);
 
 				levelOject->addChild(chunkOject);
 			}

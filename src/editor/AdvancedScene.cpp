@@ -84,6 +84,8 @@ namespace nero
 
 	GameLevelBuilder::Ptr AdvancedScene::openGameLevel(const std::string& levelName)
 	{
+		if(levelName == StringPool.BLANK) return nullptr;
+
 		if(m_SelectedGameLevel)
 		{
 			closeSelectedGameLevel();

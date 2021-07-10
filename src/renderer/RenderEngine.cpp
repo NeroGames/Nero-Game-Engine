@@ -4,17 +4,15 @@
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
 //Nero
-#include <Nero/renderer/EngineRenderer.h>
+#include <Nero/renderer/RenderEngine.h>
 #include <Nero/renderer/NoGameFound.h>
-
-#include <Nero/core/cpp/scene/SceneBuilder.h>
 //Boost
 #include <boost/dll.hpp>
 /////////////////////////////////////////////////////////////
 
 namespace  nero
 {
-	EngineRenderer::EngineRenderer() : CoreEngine(true)
+	RenderEngine::RenderEngine() : CoreEngine(true)
 		,m_GameScene(nullptr)
 		,m_StartupScreen(nullptr)
 		,m_EngineStarted(false)
@@ -35,17 +33,17 @@ namespace  nero
 		}
 	}
 
-	EngineRenderer::~EngineRenderer()
+	RenderEngine::~RenderEngine()
 	{
 
 	}
 
-	bool EngineRenderer::checkDirectory()
+	bool RenderEngine::checkDirectory()
 	{
 		return false;
 	}
 
-	void EngineRenderer::noGameFound()
+	void RenderEngine::noGameFound()
 	{
 		//create window
 		m_RenderWindow.create(sf::VideoMode(
@@ -65,13 +63,13 @@ namespace  nero
 							Scene::PlatformType::WINDOWS)));
 
 		//set quit engine callback
-		m_GameScene->m_QuitEngine = [this](){ m_RenderWindow.close();};
+		//m_GameScene->m_QuitEngine = [this](){ m_RenderWindow.close();};
 
 		//skip startup screen display
 		m_EngineStarted = true;
 	}
 
-	void EngineRenderer::loadGame()
+	void RenderEngine::loadGame()
 	{
 		//load game setting
 		m_GameSetting->loadSetting(file::getPath({"Game", "Setting", "game_setting"}));
@@ -94,7 +92,7 @@ namespace  nero
 		//start bacground initialization
 	}
 
-	void EngineRenderer::createRenderWindow()
+	void RenderEngine::createRenderWindow()
 	{
 		m_RenderWindow.create(sf::VideoMode(
 							m_GameSetting->getUInt("window_width"),
@@ -103,12 +101,12 @@ namespace  nero
 							getWindowStyle(m_GameSetting->getString("window_style")));
 	}
 
-	void EngineRenderer::startEngineInBackground()
+	void RenderEngine::startEngineInBackground()
 	{
-		m_StartEngineFuture = std::async(std::launch::async, &EngineRenderer::startEngine, this, std::ref(m_EngineStarted), m_StartupScreen->getDuration());
+		m_StartEngineFuture = std::async(std::launch::async, &RenderEngine::startEngine, this, std::ref(m_EngineStarted), m_StartupScreen->getDuration());
 	}
 
-	void EngineRenderer::loadStartupScreen()
+	void RenderEngine::loadStartupScreen()
 	{
 		boost::dll::fs::path game_library_path(file::removeFileExtension(m_GameSetting->getString("game_library_file")));
 
@@ -135,7 +133,7 @@ namespace  nero
 		}
 	}
 
-	int EngineRenderer::startEngine(bool& engineStarted, const unsigned int duration)
+	int RenderEngine::startEngine(bool& engineStarted, const unsigned int duration)
 	{
 		//load scene class
 		boost::dll::fs::path game_library_path(file::removeFileExtension(m_GameSetting->getString("game_library_file")));
@@ -185,20 +183,20 @@ namespace  nero
 		}
 
 		//
-		m_GameScene->m_SceneBuilder = std::make_shared<SceneBuilder>();
+		//m_GameScene->m_SceneBuilder = std::make_shared<SceneBuilder>();
 
 		//provide callback
-		m_GameScene->m_QuitEngine = [this](){m_RenderWindow.close();};
+		//m_GameScene->m_QuitEngine = [this](){m_RenderWindow.close();};
 
 		//initialize game scene
-		m_GameScene->init();
+		//m_GameScene->init();
 
 
 
 		return EngineConstant.NUMBER_ZERO;
 	}
 
-	void EngineRenderer::handleEvent()
+	void RenderEngine::handleEvent()
 	{
 		sf::Event event;
 		while(m_RenderWindow.pollEvent(event))
@@ -214,7 +212,7 @@ namespace  nero
 		}
 	}
 
-	void EngineRenderer::update(const sf::Time& timeStep)
+	void RenderEngine::update(const sf::Time& timeStep)
 	{
 		if(m_StartupScreen && !m_EngineStarted)
 		{
@@ -226,7 +224,7 @@ namespace  nero
 		}
 	}
 
-	void EngineRenderer::render()
+	void RenderEngine::render()
 	{
 		if(m_StartupScreen && !m_EngineStarted)
 		{
@@ -238,7 +236,7 @@ namespace  nero
 		}
 	}
 
-	sf::Uint32 EngineRenderer::getWindowStyle(const std::string& style)
+	sf::Uint32 RenderEngine::getWindowStyle(const std::string& style)
 	{
 		if(style == "window_style_default")
 		{

@@ -34,7 +34,6 @@ namespace nero
 			void				setLoadWithLevel(const bool& loadWithLevel);
 
 		private:
-			friend class		GameLevelBuilder;
 			int					m_ChunkId;
 			std::string			m_ChunkName;
 			bool				m_Visible;
