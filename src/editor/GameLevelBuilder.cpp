@@ -49,9 +49,9 @@ namespace nero
 		return m_LevelSetting->getString("resource_directory");
 	}
 
-	WorldChunk::Ptr GameLevelBuilder::addWorldChunk()
+	WorldChunkBuilder::Ptr GameLevelBuilder::addWorldChunk()
 	{
-		WorldChunk::Ptr worldChunk = std::make_shared<WorldChunk>();
+		WorldChunkBuilder::Ptr worldChunk = std::make_shared<WorldChunkBuilder>();
 		worldChunk->setChunkId(++m_CountWorldChunk);
 		worldChunk->setName(std::string("world chunk ") + toString(worldChunk->getChunkId()));
 		worldChunk->setSelected(false);
@@ -79,17 +79,17 @@ namespace nero
 		return m_WorldChunkTable.back();
 	}
 
-	std::vector<WorldChunk::Ptr>& GameLevelBuilder::getWorldChunkTable()
+	std::vector<WorldChunkBuilder::Ptr>& GameLevelBuilder::getWorldChunkTable()
 	{
 		return m_WorldChunkTable;
 	}
 
-	WorldChunk::Ptr GameLevelBuilder::getSelectedWorldChunk()
+	WorldChunkBuilder::Ptr GameLevelBuilder::getSelectedWorldChunk()
 	{
 		return m_SelectedWorldChunk;
 	}
 
-	void GameLevelBuilder::setSelectedWorldChunk(WorldChunk::Ptr worldChunk)
+	void GameLevelBuilder::setSelectedWorldChunk(WorldChunkBuilder::Ptr worldChunk)
 	{
 		m_SelectedWorldChunk = worldChunk;
 	}

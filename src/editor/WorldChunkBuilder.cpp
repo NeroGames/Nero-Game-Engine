@@ -4,12 +4,12 @@
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
 //Nero
-#include <Nero/core/cpp/scene/WorldChunk.h>
+#include <Nero/editor/WorldChunkBuilder.h>
 #include <Nero/core/cpp/utility/String.h>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	WorldChunk::WorldChunk():
+	WorldChunkBuilder::WorldChunkBuilder():
 		 m_ChunkId(-1)
 		,m_ChunkName(StringPool.BLANK)
 		,m_Visible(false)
@@ -20,67 +20,67 @@ namespace nero
 
 	}
 
-	WorldChunk::~WorldChunk()
+	WorldChunkBuilder::~WorldChunkBuilder()
 	{
 
 	}
 
-	int WorldChunk::getChunkId() const
+	int WorldChunkBuilder::getChunkId() const
 	{
 		return m_ChunkId;
 	}
 
-	std::string WorldChunk::getName() const
+	std::string WorldChunkBuilder::getName() const
 	{
 		return m_ChunkName;
 	}
 
-	bool WorldChunk::isVisible() const
+	bool WorldChunkBuilder::isVisible() const
 	{
 		return m_Visible;
 	}
 
-	bool WorldChunk::isSelected() const
+	bool WorldChunkBuilder::isSelected() const
 	{
 		return m_Selected;
 	}
 
-	bool WorldChunk::isLoadWithLevel() const
+	bool WorldChunkBuilder::isLoadWithLevel() const
 	{
 		return m_LoadWithLevel;
 	}
 
-	void WorldChunk::setChunkId(const int& chunkId)
+	void WorldChunkBuilder::setChunkId(const int& chunkId)
 	{
 		m_ChunkId = chunkId;
 	}
 
-	void WorldChunk::setName(const std::string& chunkName)
+	void WorldChunkBuilder::setName(const std::string& chunkName)
 	{
 		m_ChunkName = chunkName;
 	}
 
-	void WorldChunk::setVisible(const bool& visible)
+	void WorldChunkBuilder::setVisible(const bool& visible)
 	{
 		m_Visible = visible;
 	}
 
-	void WorldChunk::setSelected(const bool& selected)
+	void WorldChunkBuilder::setSelected(const bool& selected)
 	{
 		m_Selected = selected;
 	}
 
-	void WorldChunk::setLoadWithLevel(const bool &loadWithLevel)
+	void WorldChunkBuilder::setLoadWithLevel(const bool &loadWithLevel)
 	{
 		m_LoadWithLevel = loadWithLevel;
 	}
 
-	WorldBuilder::Ptr WorldChunk::getWorldBuilder()
+	WorldBuilder::Ptr WorldChunkBuilder::getWorldBuilder()
 	{
 		return m_WorldBuilder;
 	}
 
-	void WorldChunk::setWorldBuilder(WorldBuilder::Ptr worldBuilder)
+	void WorldChunkBuilder::setWorldBuilder(WorldBuilder::Ptr worldBuilder)
 	{
 		m_WorldBuilder = worldBuilder;
 	}

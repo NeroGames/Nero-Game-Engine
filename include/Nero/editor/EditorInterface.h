@@ -27,7 +27,7 @@
 #include <Nero/editor/ConsoleApplication.h>
 #include <Nero/editor/GameLevelBuilder.h>
 #include <Nero/editor/GameScreenBuilder.h>
-#include <Nero/core/cpp/scene/WorldBuilder.h>
+#include <Nero/editor/WorldBuilder.h>
 //Json
 #include <json/json.hpp>
 //SFML

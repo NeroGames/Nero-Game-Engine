@@ -2,24 +2,24 @@
 // Nero Game Engine
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
-#ifndef WORLDCHUNK_H
-#define WORLDCHUNK_H
+#ifndef WORLDCHUNKBUILDER_H
+#define WORLDCHUNKBUILDER_H
 ///////////////////////////HEADERS///////////////////////////
 //Nero
-#include <Nero/core/cpp/scene/WorldBuilder.h>
+#include <Nero/editor/WorldBuilder.h>
 //STD
 #include <memory>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	class WorldChunk
+	class WorldChunkBuilder
 	{
 		public: //utility
-			typedef std::shared_ptr	<WorldChunk> Ptr;
+			typedef std::shared_ptr	<WorldChunkBuilder> Ptr;
 
 		public:
-								WorldChunk();
-							   ~WorldChunk();
+								WorldChunkBuilder();
+							   ~WorldChunkBuilder();
 
 			//getters
 			int					getChunkId()		const;
@@ -46,4 +46,4 @@ namespace nero
 	};
 }
 
-#endif // WORLDCHUNK_H
+#endif // WORLDCHUNKBUILDER_H
