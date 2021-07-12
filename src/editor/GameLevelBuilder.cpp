@@ -49,9 +49,9 @@ namespace nero
 		return m_LevelSetting->getString("resource_directory");
 	}
 
-	void GameLevelBuilder::addWorldChunk()
+	WorldChunk::Ptr GameLevelBuilder::addWorldChunk()
 	{
-		auto worldChunk = std::make_shared<WorldChunk>();
+		WorldChunk::Ptr worldChunk = std::make_shared<WorldChunk>();
 		worldChunk->setChunkId(++m_CountWorldChunk);
 		worldChunk->setName(std::string("world chunk ") + toString(worldChunk->getChunkId()));
 		worldChunk->setSelected(false);
@@ -60,7 +60,23 @@ namespace nero
 
 		m_WorldChunkTable.push_back(worldChunk);
 
+
+		WorldBuilder::Ptr worldBuilder = std::make_shared<WorldBuilder>();
+
+		worldBuilder->setRenderContext(m_RenderContext);
+		worldBuilder->setRenderTexture(m_RenderTexture);
+		worldBuilder->setResourceManager(m_ResourceManager);
+		//worldBuilder->setLightManager(const LightManagerPtr& lightManager);
+
+		//add first layer
+		auto layer = worldBuilder->addLayer();
+		worldBuilder->selectLayer(layer->getObjectId());
+
+		worldChunk->setWorldBuilder(worldBuilder);
+
 		setSelectedWorldChunk(m_WorldChunkTable.back());
+
+		return m_WorldChunkTable.back();
 	}
 
 	std::vector<WorldChunk::Ptr>& GameLevelBuilder::getWorldChunkTable()
@@ -76,6 +92,16 @@ namespace nero
 	void GameLevelBuilder::setSelectedWorldChunk(WorldChunk::Ptr worldChunk)
 	{
 		m_SelectedWorldChunk = worldChunk;
+	}
+
+	void GameLevelBuilder::setRenderContext(const RenderContext::Ptr& renderContext)
+	{
+		m_RenderContext = renderContext;
+	}
+
+	void GameLevelBuilder::setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture)
+	{
+		m_RenderTexture = renderTexture;
 	}
 }
 

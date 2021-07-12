@@ -20,6 +20,8 @@ namespace nero
 		,m_GameScreenTable()
 		,m_EngineSetting(nullptr)
 		,m_ProjectSetting(nullptr)
+		,m_RenderContext(nullptr)
+		,m_RenderTexture(nullptr)
 	{
 
 	}
@@ -97,6 +99,8 @@ namespace nero
 		m_SelectedGameLevel = std::make_shared<GameLevelBuilder>();
 		m_SelectedGameLevel->setEngineSetting(m_EngineSetting);
 		m_SelectedGameLevel->getLevelSetting()->loadSetting(file::getPath({level_directory, "setting"}, StringPool.EXT_NERO), true, true);
+		m_SelectedGameLevel->setRenderContext(m_RenderContext);
+		m_SelectedGameLevel->setRenderTexture(m_RenderTexture);
 		m_SelectedGameLevel->init();
 
 		return m_SelectedGameLevel;
@@ -158,6 +162,15 @@ namespace nero
 		return m_RegisteredLevelTable;
 	}
 
+	void AdvancedScene::setRenderContext(const RenderContext::Ptr& renderContext)
+	{
+		m_RenderContext = renderContext;
+	}
+
+	void AdvancedScene::setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture)
+	{
+		m_RenderTexture = renderTexture;
+	}
 }
 
 /*namespace nero

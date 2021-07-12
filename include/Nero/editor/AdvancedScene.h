@@ -54,6 +54,8 @@ namespace nero
 			void											setEngineSetting(const Setting::Ptr& setting);
 			void											setProjectSetting(const Setting::Ptr& setting);
 			std::vector<std::string> 						getRegisteredGameLevel();
+			void											setRenderContext(const RenderContext::Ptr& renderContext);
+			void											setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
 
 
 		private:
@@ -67,6 +69,8 @@ namespace nero
 			Setting::Ptr									m_EngineSetting;
 			Setting::Ptr									m_ProjectSetting;
 			Setting::Ptr									m_SceneSetting;
+			RenderContext::Ptr								m_RenderContext;
+			std::shared_ptr<sf::RenderTexture>				m_RenderTexture;
 
 	};
 }

@@ -229,13 +229,13 @@ namespace  nero
 			m_EditorCamera->handleEvent(event);
 		}
 
-		/*if(m_AdvancedScene)
+		if(m_WorldBuilder)
 		{
-			m_AdvancedScene->handleEvent(event, m_EditorMode, m_BuilderMode);
-		}*/
+			m_WorldBuilder->handleEvent(event);
+		}
 
 		//Demo
-		if(m_GameProject)
+		/*if(m_GameProject)
 		{
 			try
 			{
@@ -245,7 +245,7 @@ namespace  nero
 			{
 				m_GameProject->destroyScene();
 			}
-		}
+		}*/
 
 
 		switch(event.type)
@@ -289,13 +289,13 @@ namespace  nero
 	{
 		m_EditorCamera->update(timeStep);
 
-		/*if(m_AdvancedScene)
+		if(m_WorldBuilder)
 		{
-			m_AdvancedScene->update(timeStep, m_EditorMode, m_BuilderMode);
-		}*/
+			m_WorldBuilder->update(timeStep);
+		}
 
 		//Demo
-		if(m_GameProject)
+		/*if(m_GameProject)
 		{
 			try
 			{
@@ -306,7 +306,7 @@ namespace  nero
 				m_GameProject->destroyScene();
 			}
 
-		}
+		}*/
     }
 
     void EditorInterface::render()
@@ -510,13 +510,13 @@ namespace  nero
 
 			prepareRenderTexture();
 
-			/*if(m_AdvancedScene)
+			if(m_WorldBuilder)
 			{
-				m_AdvancedScene->render(m_EditorMode, m_BuilderMode);
-			}*/
+				m_WorldBuilder->render();
+			}
 
 			//Demo
-			if(m_GameProject)
+			/*if(m_GameProject)
 			{
 				try
 				{
@@ -528,7 +528,7 @@ namespace  nero
 					nero_log("failed to render scene");
 					nero_log("please rebuild the scene")
 				}
-			}
+			}*/
 
 			//Render on Front Screen
 			m_RenderTexture->setView(m_RenderTexture->getDefaultView());
@@ -3140,6 +3140,8 @@ namespace  nero
 		//open new project
 		m_GameProject		= m_ProjectManager->openProject(projectDirectory);
 		m_AdvancedScene		= m_GameProject->getAdvancedScene();
+		m_AdvancedScene->setRenderTexture(m_RenderTexture);
+		m_AdvancedScene->setRenderContext(m_RenderContext);
 
 		//update editor window title
 		updateWindowTitle(m_GameProject->getProjectName());
@@ -3631,24 +3633,24 @@ namespace  nero
 
 		if(ImGui::Button("Polygon", ImVec2(100.f, 100.f)))
 		{
-			/*if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-				m_AdvancedScene->addObject(Object::Mesh_Object, "Polygon", getAddObjectPosition(), m_EditorMode);*/
+			if(m_WorldBuilder && m_BuilderMode == BuilderMode::OBJECT)
+				m_WorldBuilder->addObject(Object::Mesh_Object, "Polygon", getAddObjectPosition());
 		}
 
 		printSameLine();
 
 		if(ImGui::Button("Circle", ImVec2(100.f, 100.f)))
 		{
-			/*if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-				m_AdvancedScene->addObject(Object::Mesh_Object, "Circle", getAddObjectPosition(), m_EditorMode);*/
+			if(m_WorldBuilder && m_BuilderMode == BuilderMode::OBJECT)
+				m_WorldBuilder->addObject(Object::Mesh_Object, "Circle", getAddObjectPosition());
 		}
 
 		printSameLine();
 
 		if(ImGui::Button("Line", ImVec2(100.f, 100.f)))
 		{
-			/*if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-				m_AdvancedScene->addObject(Object::Mesh_Object, "Line", getAddObjectPosition(), m_EditorMode);*/
+			if(m_WorldBuilder && m_BuilderMode == BuilderMode::OBJECT)
+				m_WorldBuilder->addObject(Object::Mesh_Object, "Line", getAddObjectPosition());
 		}
 	}
 
@@ -3693,8 +3695,8 @@ namespace  nero
 
 			if(ImGui::ImageButton(m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]), button_size))
 			{
-				/*if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-					m_AdvancedScene->addObject(Object::Sprite_Object, spriteTable[n], getAddObjectPosition(), m_EditorMode);*/
+				if(m_WorldBuilder && m_BuilderMode == BuilderMode::OBJECT)
+					m_WorldBuilder->addObject(Object::Sprite_Object, spriteTable[n], getAddObjectPosition());
 			}
 
 			if (ImGui::BeginPopupContextItem())
@@ -4117,7 +4119,7 @@ namespace  nero
 
 						if(ImGui::IsItemClicked())
 						{
-							sceneBuilder->setSelectedLayer(objectLayer);
+							sceneBuilder-<setSelectedLayer(objectLayer);
 						}
 
 						ImGui::SameLine();
@@ -4173,10 +4175,10 @@ namespace  nero
 
 	void EditorInterface::addObjectLayer()
 	{
-		/*if(m_AdvancedScene)
+		if(m_WorldBuilder)
 		{
-			m_AdvancedScene->getSelectedSceneBuilder(m_EditorMode)->addLayer();
-		}*/
+			m_WorldBuilder->addLayer();
+		}
 	}
 
 	void EditorInterface::removeObjectLayer()
@@ -4526,6 +4528,7 @@ namespace  nero
 						if(ImGui::IsItemClicked())
 						{
 							m_GameLevelBuilder->setSelectedWorldChunk(worldChunk);
+							m_WorldBuilder = worldChunk->getWorldBuilder();
 						}
 
 						ImGui::SameLine();
@@ -4559,7 +4562,8 @@ namespace  nero
 	{
 		if(m_GameLevelBuilder && m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT)
 		{
-			m_GameLevelBuilder->addWorldChunk();
+			auto worldChunk = m_GameLevelBuilder->addWorldChunk();
+			m_WorldBuilder  = worldChunk->getWorldBuilder();
 		}
 	}
 

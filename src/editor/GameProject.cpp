@@ -62,6 +62,9 @@ namespace nero
 		m_AdvancedScene = std::make_shared<AdvancedScene>();
 		m_AdvancedScene->setEngineSetting(m_EngineSetting);
 		m_AdvancedScene->setProjectSetting(m_ProjectSetting);
+
+
+
 		m_AdvancedScene->init();
 
 
@@ -69,18 +72,16 @@ namespace nero
 
 		/*m_AdvancedScene = std::make_shared<AdvancedScene>();
 		m_AdvancedScene->setSetting(m_EngineSetting);
-		m_AdvancedScene->setRenderTexture(m_RenderTexture);
 		m_AdvancedScene->setResourceManager(m_ResourceManager);
-		m_AdvancedScene->setRenderContext(m_RenderContext);
 		m_AdvancedScene->setCamera(m_Camera);
 		m_AdvancedScene->setProjectParameter(m_ProjectSetting);
 		m_AdvancedScene->initialize();*/
     }
 
-	ResourceManager::Ptr GameProject::getResourceManager()
+	/*ResourceManager::Ptr GameProject::getResourceManager()
 	{
 		return m_ResourceManager;
-	}
+	}*/
 
 
     void GameProject::loadProject()

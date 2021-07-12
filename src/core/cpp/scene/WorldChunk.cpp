@@ -15,6 +15,7 @@ namespace nero
 		,m_Visible(false)
 		,m_Selected(false)
 		,m_LoadWithLevel(false)
+		,m_WorldBuilder(nullptr)
 	{
 
 	}
@@ -72,5 +73,15 @@ namespace nero
 	void WorldChunk::setLoadWithLevel(const bool &loadWithLevel)
 	{
 		m_LoadWithLevel = loadWithLevel;
+	}
+
+	WorldBuilder::Ptr WorldChunk::getWorldBuilder()
+	{
+		return m_WorldBuilder;
+	}
+
+	void WorldChunk::setWorldBuilder(WorldBuilder::Ptr worldBuilder)
+	{
+		m_WorldBuilder = worldBuilder;
 	}
 }

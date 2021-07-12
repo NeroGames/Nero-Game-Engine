@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <Nero/editor/WorldBuilder.h>
+#include <Nero/core/cpp/scene/WorldBuilder.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 //STD
 #include <fstream>
@@ -441,7 +441,7 @@ namespace nero
         m_SelectedLayer = Layer_object;
         m_SelectedObject = nullptr;
 
-        m_UpdateUndo();
+		m_UpdateUndo();
 
         return m_LayerTable.back();
     }

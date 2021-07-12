@@ -27,6 +27,7 @@
 #include <Nero/editor/ConsoleApplication.h>
 #include <Nero/editor/GameLevelBuilder.h>
 #include <Nero/editor/GameScreenBuilder.h>
+#include <Nero/core/cpp/scene/WorldBuilder.h>
 //Json
 #include <json/json.hpp>
 //SFML
@@ -105,7 +106,7 @@ namespace nero
 			GameProject::Ptr								m_GameProject;
 			AdvancedScene::Ptr								m_AdvancedScene;
 			GameLevelBuilder::Ptr							m_GameLevelBuilder;
-			GameScreenBuilder::Ptr							m_GameScreenBuilder;
+			WorldBuilder::Ptr								m_WorldBuilder;
 			ResourceManager::Ptr							m_ResourceManager;
 			ResourceManager::Ptr							m_EditorResourceManager;
 

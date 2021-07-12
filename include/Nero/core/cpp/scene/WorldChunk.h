@@ -6,6 +6,7 @@
 #define WORLDCHUNK_H
 ///////////////////////////HEADERS///////////////////////////
 //Nero
+#include <Nero/core/cpp/scene/WorldBuilder.h>
 //STD
 #include <memory>
 /////////////////////////////////////////////////////////////
@@ -32,6 +33,8 @@ namespace nero
 			void				setVisible(const bool& visible);
 			void				setSelected(const bool& selected);
 			void				setLoadWithLevel(const bool& loadWithLevel);
+			WorldBuilder::Ptr	getWorldBuilder();
+			void				setWorldBuilder(WorldBuilder::Ptr worldBuilder);
 
 		private:
 			int					m_ChunkId;
@@ -39,6 +42,7 @@ namespace nero
 			bool				m_Visible;
 			bool				m_Selected;
 			bool				m_LoadWithLevel;
+			WorldBuilder::Ptr	m_WorldBuilder;
 	};
 }
 
