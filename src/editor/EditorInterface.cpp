@@ -3320,6 +3320,7 @@ namespace  nero
 	{
 		ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::Begin("Resource", nullptr, flags);
+		bool selected = false;
 
 		int resource_count		= 9;
 		int count				= 0;
@@ -3335,25 +3336,36 @@ namespace  nero
 		};
 
 
+		selected = m_ResourceBrowserType == ResourceType::Texture;
+		pushResourceStyle(selected);
 		if(ImGui::Button("Sprite##open_sprite_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Texture;
 		}
+		popResourceStyle(selected);
+
 
 		printSameLine();
 
+		selected = m_ResourceBrowserType == ResourceType::Animation;
+		pushResourceStyle(selected);
 		if(ImGui::Button("Animation##open_sprite_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Animation;
 		}
+		popResourceStyle(selected);
 
 		printSameLine();
 
 
+		selected = m_ResourceBrowserType == ResourceType::Mesh;
+		pushResourceStyle(selected);
 		if(ImGui::Button("Mesh##open_sprite_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Mesh;
 		}
+		popResourceStyle(selected);
+
 
 		printSameLine();
 
@@ -3371,10 +3383,14 @@ namespace  nero
 
 		printSameLine();*/
 
+		selected = m_ResourceBrowserType == ResourceType::Font;
+		pushResourceStyle(selected);
 		if(ImGui::Button("Font##open_shape_resource", ImVec2(100.f, 100.f)))
 		{
 			m_ResourceBrowserType = ResourceType::Font;
 		}
+		popResourceStyle(selected);
+
 
 		printSameLine();
 

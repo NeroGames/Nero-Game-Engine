@@ -100,6 +100,25 @@ namespace nero
 		ImGui::PopFont();
 	}
 
+
+	void pushResourceStyle(bool selected)
+	{
+		if(selected)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.929f, 0.596f, 0.310f, 1.000f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.929f, 0.596f, 0.310f, .950f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.929f, 0.596f, 0.310f, .900f));
+		}
+	}
+
+	void popResourceStyle(bool selected)
+	{
+		if(selected)
+		{
+			ImGui::PopStyleColor(3);
+		}
+	}
+
 	void pushGameLevelStyle(bool selected, bool opened)
 	{
 		ImVec4 color = ImVec4(0.000f, 0.000f, 0.000f, 1.000f);

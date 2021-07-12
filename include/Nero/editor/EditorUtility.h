@@ -140,7 +140,8 @@ namespace nero
 	void			pushToolbarStyle(bool selected = false);
 	void			pushGameLevelStyle(bool selected = false, bool opened = false);
 	void			popGameLevelStyle();
-
+	void			popResourceStyle(bool selected = false);
+	void			pushResourceStyle(bool selected = false);
 
 	struct AppLauncher
 	{
