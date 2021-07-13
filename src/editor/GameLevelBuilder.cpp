@@ -141,6 +141,8 @@ namespace nero
 
 	void GameLevelBuilder::loadWorldChunk(const std::string& fileName)
 	{
+		nero_log(fileName);
+
 		nlohmann::json save = file::loadJson(fileName, true);
 
 		WorldChunkBuilder::Ptr worldChunk = std::make_shared<WorldChunkBuilder>();
@@ -150,9 +152,6 @@ namespace nero
 		worldChunk->setLoadWithLevel(save["load_with_level"]);
 		worldChunk->setVisible(save["visible"]);
 
-		m_WorldChunkTable.push_back(worldChunk);
-
-
 		WorldBuilder::Ptr worldBuilder = std::make_shared<WorldBuilder>();
 
 		worldBuilder->setRenderContext(m_RenderContext);
@@ -160,7 +159,7 @@ namespace nero
 		worldBuilder->setResourceManager(m_ResourceManager);
 
 		//add first layer
-		worldBuilder->loadScene(file::loadJson(fileName, true)["world"]);
+		worldBuilder->loadScene(save["world"]);
 		worldChunk->setWorldBuilder(worldBuilder);
 
 		m_WorldChunkTable.push_back(worldChunk);
@@ -169,6 +168,8 @@ namespace nero
 		{
 			setSelectedWorldChunk(worldChunk);
 		}
+
+		nero_log("loading chunk end");
 	}
 }
 

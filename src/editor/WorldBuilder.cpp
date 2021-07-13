@@ -1882,7 +1882,7 @@ namespace nero
             layer_object->setIsSelectable(layer["is_selectable"]);
             layer_object->setIsSelected(layer["is_selected"]);
 
-            layer_object->setOrder(layer["order"]);
+			//layer_object->setOrder(layer["order"]);
 
             if(layer["is_selected"])
                 m_SelectedLayer = layer_object;
