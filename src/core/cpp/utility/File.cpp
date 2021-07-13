@@ -328,6 +328,13 @@ namespace nero
 
 			destinationStream << sourceStream.rdbuf();
 		}
+
+		bool directoryEmpty(const std::string& name)
+		{
+			using namespace  std::experimental::filesystem;
+
+			return is_empty(path(name));
+		}
 	}
 }
 

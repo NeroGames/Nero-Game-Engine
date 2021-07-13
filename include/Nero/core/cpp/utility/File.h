@@ -49,6 +49,8 @@ namespace nero
 		bool				removeFile(const std::string& name);
 		//remove directory
 		bool				removeDirectory(const std::string& name, bool recursive = true);
+		//
+		bool				directoryEmpty(const std::string& name);
 		//Save a text to a file
 		void				saveFile(const std::string& name, const std::string& content, bool overwrite = false);
 		//Save binary date to a file

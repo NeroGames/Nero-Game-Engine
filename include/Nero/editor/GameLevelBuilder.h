@@ -35,6 +35,9 @@ namespace nero
 			void								setSelectedWorldChunk(WorldChunkBuilder::Ptr worldChunk);
 			void								setRenderContext(const RenderContext::Ptr& renderContext);
 			void								setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
+			void								saveGameLevel();
+			void								loadGameLevel();
+			void								loadWorldChunk(const std::string& fileName);
 
 		private:
 			Setting::Ptr						m_LevelSetting;

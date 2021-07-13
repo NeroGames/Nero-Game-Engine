@@ -3986,7 +3986,8 @@ namespace  nero
 			{
 				case EditorMode::WORLD_BUILDER:
 				{
-					//m_GameProject->saveGameLevel();
+					if(m_GameLevelBuilder)
+						m_GameLevelBuilder->saveGameLevel();
 				}break;
 
 				case EditorMode::SCREEN_BUILDER:
@@ -4122,20 +4123,18 @@ namespace  nero
 
 			ImGui::BeginChild("##manage_object_layer", ImVec2(), true);
 
-				/*if(m_AdvancedScene)
+				if(m_WorldBuilder)
 				{
-					auto sceneBuilder = m_AdvancedScene->getSelectedSceneBuilder(m_EditorMode);
+					m_InputSelectedObjectLayerId = m_WorldBuilder->getSelectedLayer()->getObjectId();
 
-					m_InputSelectedObjectLayerId = sceneBuilder->getSelectedLayer()->getObjectId();
-
-					for(const auto& objectLayer : sceneBuilder->getLayerTable())
+					for(const auto& objectLayer : m_WorldBuilder->getLayerTable())
 					{
 						std::string itemId = "##select_layer" + toString(objectLayer->getObjectId());
 						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedObjectLayerId, objectLayer->getObjectId());
 
 						if(ImGui::IsItemClicked())
 						{
-							sceneBuilder-<setSelectedLayer(objectLayer);
+							m_WorldBuilder->setSelectedLayer(objectLayer);
 						}
 
 						ImGui::SameLine();
@@ -4164,7 +4163,7 @@ namespace  nero
 
 						ImGui::PopStyleColor(2);
 					}
-				}*/
+				}
 
 			ImGui::EndChild();
 
@@ -4201,7 +4200,7 @@ namespace  nero
 	{
 		if(m_AdvancedScene)
 		{
-
+			m_WorldBuilder->deleteLayer(m_WorldBuilder->getSelectedLayer()->getObjectId());
 		}
 	}
 
@@ -4294,6 +4293,7 @@ namespace  nero
 	{
 		m_GameLevelBuilder			= m_AdvancedScene->openGameLevel(m_SelectedGameLevel);
 		m_ResourceManager			= m_GameLevelBuilder->getResourceManager();
+		m_WorldBuilder				= m_GameLevelBuilder->getSelectedWorldChunk()->getWorldBuilder();
 		m_OpenedGameLevel			= m_SelectedGameLevel;
 	}
 

@@ -78,6 +78,7 @@ namespace nero
 		setting.setString("level_id", level_id);
 		setting.setBool("enable_physics", parameter.getBool("enable_physics"));
 		setting.setBool("enable_light",  parameter.getBool("enable_light"));
+		setting.setString("level_directory",  level_directory);
 		setting.setString("resource_directory",  file::getPath({level_directory, "resource"}));
 		file::saveFile(file::getPath({level_directory, "setting"}, StringPool.EXT_NERO), setting.toString());
 
@@ -102,6 +103,18 @@ namespace nero
 		m_SelectedGameLevel->setRenderContext(m_RenderContext);
 		m_SelectedGameLevel->setRenderTexture(m_RenderTexture);
 		m_SelectedGameLevel->init();
+
+		if(file::directoryEmpty(file::getPath({level_directory, "chunk"})))
+		{
+			auto worldChunk = m_SelectedGameLevel->addWorldChunk();
+			m_SelectedGameLevel->setSelectedWorldChunk(worldChunk);
+
+			m_SelectedGameLevel->saveGameLevel();
+		}
+		else
+		{
+			m_SelectedGameLevel->loadGameLevel();
+		}
 
 		return m_SelectedGameLevel;
 	}
