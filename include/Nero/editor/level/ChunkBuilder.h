@@ -2,48 +2,51 @@
 // Nero Game Engine
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
-#ifndef WORLDCHUNKBUILDER_H
-#define WORLDCHUNKBUILDER_H
+#ifndef CHUNKBUILDER_H
+#define CHUNKBUILDER_H
 ///////////////////////////HEADERS///////////////////////////
 //Nero
 #include <Nero/editor/level/WorldBuilder.h>
-//STD
+//Std
 #include <memory>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	class WorldChunkBuilder
+	class ChunkBuilder
 	{
 		public: //utility
-			typedef std::shared_ptr	<WorldChunkBuilder> Ptr;
+			typedef std::shared_ptr	<ChunkBuilder> Ptr;
 
 		public:
-								WorldChunkBuilder();
-							   ~WorldChunkBuilder();
-
-			//getters
-			int					getChunkId()		const;
-			std::string			getName()			const;
-			bool				isVisible()			const;
-			bool				isSelected()		const;
-			bool				isLoadWithLevel()	const;
-			//setters
-			void				setChunkId(const int& chunkId);
-			void				setName(const std::string& chunkName);
-			void				setVisible(const bool& visible);
-			void				setSelected(const bool& selected);
-			void				setLoadWithLevel(const bool& loadWithLevel);
-			WorldBuilder::Ptr	getWorldBuilder();
-			void				setWorldBuilder(WorldBuilder::Ptr worldBuilder);
+									ChunkBuilder();
+								   ~ChunkBuilder();
+			//set
+			void					setChunkId(const int& chunkId);
+			void					setChunkName(const std::string& chunkName);
+			void					setVisible(const bool& visible);
+			void					setSelected(const bool& selected);
+			void					setAutoLoad(const bool& autoLoad);
+			void					setWorldBuilder(WorldBuilder::Ptr worldBuilder);
+			//get
+			int						getChunkId()		const;
+			std::string				getChunkName()		const;
+			bool					isVisible()			const;
+			bool					isSelected()		const;
+			bool					isAutoLoad()		const;
+			WorldBuilder::Ptr		getWorldBuilder()	const;
+			//
+			nlohmann::json			saveChunk()			const;
+			void					loadChunk(const  nlohmann::json& chunkSaved);
 
 		private:
-			int					m_ChunkId;
-			std::string			m_ChunkName;
-			bool				m_Visible;
-			bool				m_Selected;
-			bool				m_LoadWithLevel;
-			WorldBuilder::Ptr	m_WorldBuilder;
+			//primary
+			int						m_ChunkId;
+			std::string				m_ChunkName;
+			bool					m_Visible;
+			bool					m_Selected;
+			bool					m_AutoLoad;
+			//game world
+			WorldBuilder::Ptr		m_WorldBuilder;
 	};
 }
-
-#endif // WORLDCHUNKBUILDER_H
+#endif // CHUNKBUILDER_H

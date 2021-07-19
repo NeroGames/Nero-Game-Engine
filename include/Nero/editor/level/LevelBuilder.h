@@ -29,10 +29,10 @@ namespace nero
 			Setting::Ptr						getLevelSetting();
 			std::string							getResourceFoler();
 			//world chunk
-			WorldChunkBuilder::Ptr						addWorldChunk();
-			std::vector<WorldChunkBuilder::Ptr>&		getWorldChunkTable();
-			WorldChunkBuilder::Ptr						getSelectedWorldChunk();
-			void								setSelectedWorldChunk(WorldChunkBuilder::Ptr worldChunk);
+			ChunkBuilder::Ptr						addWorldChunk();
+			std::vector<ChunkBuilder::Ptr>&		getWorldChunkTable();
+			ChunkBuilder::Ptr						getSelectedWorldChunk();
+			void								setSelectedWorldChunk(ChunkBuilder::Ptr worldChunk);
 			void								setRenderContext(const RenderContext::Ptr& renderContext);
 			void								setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
 			void								saveGameLevel();
@@ -44,8 +44,8 @@ namespace nero
 			Setting::Ptr						m_EngineSetting;
 			ResourceManager::Ptr				m_ResourceManager;
 			//world chunk
-			WorldChunkBuilder::Ptr						m_SelectedWorldChunk;
-			std::vector<WorldChunkBuilder::Ptr>		m_WorldChunkTable;
+			ChunkBuilder::Ptr						m_SelectedWorldChunk;
+			std::vector<ChunkBuilder::Ptr>		m_WorldChunkTable;
 			int									m_CountWorldChunk;
 
 			RenderContext::Ptr								m_RenderContext;

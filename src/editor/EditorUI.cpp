@@ -4557,14 +4557,14 @@ namespace  nero
 						ImGui::SameLine();
 
 						char chunk_name[100];
-						string::fillCharArray(chunk_name, sizeof(chunk_name), worldChunk->getName());
+						string::fillCharArray(chunk_name, sizeof(chunk_name), worldChunk->getChunkName());
 						ImGui::SetNextItemWidth(118.f);
 						itemId = "##chunk_name" + toString(worldChunk->getChunkId());
 						ImGui::InputText(itemId.c_str(), chunk_name, sizeof(chunk_name));
 
 						if(ImGui::IsItemEdited())
 						{
-							worldChunk->setName(std::string(chunk_name));
+							worldChunk->setChunkName(std::string(chunk_name));
 						}
 					}
 				}

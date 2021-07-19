@@ -9,79 +9,104 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	WorldChunkBuilder::WorldChunkBuilder():
+	ChunkBuilder::ChunkBuilder():
 		 m_ChunkId(-1)
 		,m_ChunkName(StringPool.BLANK)
 		,m_Visible(false)
 		,m_Selected(false)
-		,m_LoadWithLevel(false)
+		,m_AutoLoad(false)
 		,m_WorldBuilder(nullptr)
 	{
 
 	}
 
-	WorldChunkBuilder::~WorldChunkBuilder()
+	ChunkBuilder::~ChunkBuilder()
 	{
 
 	}
 
-	int WorldChunkBuilder::getChunkId() const
+	int ChunkBuilder::getChunkId() const
 	{
 		return m_ChunkId;
 	}
 
-	std::string WorldChunkBuilder::getName() const
+	std::string ChunkBuilder::getChunkName() const
 	{
 		return m_ChunkName;
 	}
 
-	bool WorldChunkBuilder::isVisible() const
+	bool ChunkBuilder::isVisible() const
 	{
 		return m_Visible;
 	}
 
-	bool WorldChunkBuilder::isSelected() const
+	bool ChunkBuilder::isSelected() const
 	{
 		return m_Selected;
 	}
 
-	bool WorldChunkBuilder::isLoadWithLevel() const
+	bool ChunkBuilder::isAutoLoad() const
 	{
-		return m_LoadWithLevel;
+		return m_AutoLoad;
 	}
 
-	void WorldChunkBuilder::setChunkId(const int& chunkId)
+	void ChunkBuilder::setChunkId(const int& chunkId)
 	{
 		m_ChunkId = chunkId;
 	}
 
-	void WorldChunkBuilder::setName(const std::string& chunkName)
+	void ChunkBuilder::setChunkName(const std::string& chunkName)
 	{
 		m_ChunkName = chunkName;
 	}
 
-	void WorldChunkBuilder::setVisible(const bool& visible)
+	void ChunkBuilder::setVisible(const bool& visible)
 	{
 		m_Visible = visible;
 	}
 
-	void WorldChunkBuilder::setSelected(const bool& selected)
+	void ChunkBuilder::setSelected(const bool& selected)
 	{
 		m_Selected = selected;
 	}
 
-	void WorldChunkBuilder::setLoadWithLevel(const bool &loadWithLevel)
+	void ChunkBuilder::setAutoLoad(const bool& autoLoad)
 	{
-		m_LoadWithLevel = loadWithLevel;
+		m_AutoLoad = autoLoad;
 	}
 
-	WorldBuilder::Ptr WorldChunkBuilder::getWorldBuilder()
+	WorldBuilder::Ptr ChunkBuilder::getWorldBuilder() const
 	{
 		return m_WorldBuilder;
 	}
 
-	void WorldChunkBuilder::setWorldBuilder(WorldBuilder::Ptr worldBuilder)
+	void ChunkBuilder::setWorldBuilder(WorldBuilder::Ptr worldBuilder)
 	{
 		m_WorldBuilder = worldBuilder;
+	}
+
+	nlohmann::json ChunkBuilder::saveChunk() const
+	{
+		nlohmann::json chunkSaved;
+
+		chunkSaved["chunk_id"]		= m_ChunkId;
+		chunkSaved["chunk_name"]	= m_ChunkName;
+		chunkSaved["visible"]		= m_Visible;
+		chunkSaved["selected"]		= m_Selected;
+		chunkSaved["auto_load"]		= m_AutoLoad;
+		chunkSaved["game_world"]	= m_WorldBuilder->saveScene();
+
+		return chunkSaved;
+	}
+
+	void ChunkBuilder::loadChunk(const  nlohmann::json& chunkSaved)
+	{
+		m_ChunkId	= chunkSaved["chunk_id"];
+		m_ChunkName	= chunkSaved["chunk_name"];
+		m_Visible	= chunkSaved["visible"];
+		m_Selected	= chunkSaved["selected"];
+		m_AutoLoad	= chunkSaved["auto_load"];
+
+		m_WorldBuilder->loadScene(chunkSaved["game_world"]);
 	}
 }

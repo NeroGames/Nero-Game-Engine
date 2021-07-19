@@ -49,13 +49,13 @@ namespace nero
 		return m_LevelSetting->getString("resource_directory");
 	}
 
-	WorldChunkBuilder::Ptr GameLevelBuilder::addWorldChunk()
+	ChunkBuilder::Ptr GameLevelBuilder::addWorldChunk()
 	{
-		WorldChunkBuilder::Ptr worldChunk = std::make_shared<WorldChunkBuilder>();
+		ChunkBuilder::Ptr worldChunk = std::make_shared<ChunkBuilder>();
 		worldChunk->setChunkId(++m_CountWorldChunk);
-		worldChunk->setName(std::string("world chunk ") + toString(worldChunk->getChunkId()));
+		worldChunk->setChunkName(std::string("world chunk ") + toString(worldChunk->getChunkId()));
 		worldChunk->setSelected(false);
-		worldChunk->setLoadWithLevel(false);
+		worldChunk->setAutoLoad(false);
 		worldChunk->setVisible(true);
 
 		m_WorldChunkTable.push_back(worldChunk);
@@ -79,17 +79,17 @@ namespace nero
 		return m_WorldChunkTable.back();
 	}
 
-	std::vector<WorldChunkBuilder::Ptr>& GameLevelBuilder::getWorldChunkTable()
+	std::vector<ChunkBuilder::Ptr>& GameLevelBuilder::getWorldChunkTable()
 	{
 		return m_WorldChunkTable;
 	}
 
-	WorldChunkBuilder::Ptr GameLevelBuilder::getSelectedWorldChunk()
+	ChunkBuilder::Ptr GameLevelBuilder::getSelectedWorldChunk()
 	{
 		return m_SelectedWorldChunk;
 	}
 
-	void GameLevelBuilder::setSelectedWorldChunk(WorldChunkBuilder::Ptr worldChunk)
+	void GameLevelBuilder::setSelectedWorldChunk(ChunkBuilder::Ptr worldChunk)
 	{
 		m_SelectedWorldChunk = worldChunk;
 	}
@@ -115,13 +115,13 @@ namespace nero
 
 			nlohmann::json save		= nlohmann::json::object();
 			save["chunk_id"]		= worldChunk->getChunkId();
-			save["name"]			= worldChunk->getName();
+			save["name"]			= worldChunk->getChunkName();
 			save["selected"]		= worldChunk->isSelected();
-			save["load_with_level"] = worldChunk->isLoadWithLevel();
+			save["load_with_level"] = worldChunk->isAutoLoad();
 			save["visible"]			= worldChunk->isVisible();
 			save["world"]			= worldBuilder->saveScene();
 
-			file::saveFile(file::getPath({m_LevelSetting->getString("level_directory"), "chunk", worldChunk->getName()}, StringPool.EXT_NERO), save.dump(3), true);
+			file::saveFile(file::getPath({m_LevelSetting->getString("level_directory"), "chunk", worldChunk->getChunkName()}, StringPool.EXT_NERO), save.dump(3), true);
 		}
 	}
 
@@ -145,11 +145,11 @@ namespace nero
 
 		nlohmann::json save = file::loadJson(fileName, true);
 
-		WorldChunkBuilder::Ptr worldChunk = std::make_shared<WorldChunkBuilder>();
+		ChunkBuilder::Ptr worldChunk = std::make_shared<ChunkBuilder>();
 		worldChunk->setChunkId(save["chunk_id"]);
-		worldChunk->setName(save["name"]);
+		worldChunk->setChunkName(save["name"]);
 		worldChunk->setSelected(save["selected"]);
-		worldChunk->setLoadWithLevel(save["load_with_level"]);
+		worldChunk->setAutoLoad(save["load_with_level"]);
 		worldChunk->setVisible(save["visible"]);
 
 		WorldBuilder::Ptr worldBuilder = std::make_shared<WorldBuilder>();
