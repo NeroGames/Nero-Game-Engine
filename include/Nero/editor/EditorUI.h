@@ -25,8 +25,8 @@
 #include <Nero/editor/EditorCamera.h>
 #include <Nero/editor/EditorUtility.h>
 #include <Nero/editor/ConsoleUI.h>
-#include <Nero/editor/level/GameLevelBuilder.h>
-#include <Nero/editor/screen/GameScreenBuilder.h>
+#include <Nero/editor/level/LevelBuilder.h>
+#include <Nero/editor/screen/ScreenBuilder.h>
 #include <Nero/editor/level/WorldBuilder.h>
 //Json
 #include <json/json.hpp>

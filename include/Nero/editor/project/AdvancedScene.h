@@ -8,8 +8,8 @@
 //Nero
 #include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/core/cpp/engine/Setting.h>
-#include <Nero/editor/level/GameLevelBuilder.h>
-#include <Nero/editor/screen/GameScreenBuilder.h>
+#include <Nero/editor/level/LevelBuilder.h>
+#include <Nero/editor/screen/ScreenBuilder.h>
 //STD
 #include <memory>
 #include <vector>
