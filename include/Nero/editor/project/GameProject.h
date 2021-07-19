@@ -7,11 +7,11 @@
 ///////////////////////////HEADERS///////////////////////////
 //Nero
 #include <Nero/core/cpp/utility/CommandLine.h>
-#include <Nero/editor/AdvancedScene.h>
+#include <Nero/editor/project/AdvancedScene.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/lua/scene/LuaScene.h>
 #include <Nero/core/cpp/engine/BackgroundTask.h>
-#include <Nero/editor/AdvancedCamera.h>
+#include <Nero/editor/EditorCamera.h>
 //Json
 #include <json/json.hpp>
 //Boost

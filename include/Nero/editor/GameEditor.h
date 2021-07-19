@@ -8,9 +8,9 @@
 //Nero
 #include <Nero/core/cpp/engine/CoreEngine.h>
 #include <Nero/core/cpp/engine/Setting.h>
-#include <Nero/editor/AdvancedCamera.h>
+#include <Nero/editor/EditorCamera.h>
 #include <Nero/editor/LoadingScreen.h>
-#include <Nero/editor/EditorInterface.h>
+#include <Nero/editor/EditorUI.h>
 //Cpp
 #include <future>
 ////////////////////////////////////////////////////////////

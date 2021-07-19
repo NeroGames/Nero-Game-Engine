@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
 //Nero
-#include <Nero/editor/GameProject.h>
+#include <Nero/editor/project/GameProject.h>
 #include <Nero/core/cpp/utility/File.h>
 #include <Nero/core/cpp/utility/DateTime.h>
 //Boost

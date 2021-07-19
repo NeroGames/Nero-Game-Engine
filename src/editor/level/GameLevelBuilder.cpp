@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Nero
-#include <Nero/editor/GameLevelBuilder.h>
+#include <Nero/editor/level/GameLevelBuilder.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -13,7 +13,7 @@ namespace nero
 		,m_EngineSetting(nullptr)
 		,m_SelectedWorldChunk(nullptr)
 		,m_WorldChunkTable()
-		,m_CountWorldChunk(-1)
+		,m_CountWorldChunk(0)
 	{
 
 	}

@@ -7,7 +7,7 @@
 #include <Poco/Environment.h>
 //SFML
 #include <Nero/core/cpp/utility/Logging.h>
-#include <Nero/editor/EditorInterface.h>
+#include <Nero/editor/EditorUI.h>
 #include <SFML/Window/Event.hpp>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 #include <Nero/core/cpp/utility/File.h>

@@ -5,10 +5,10 @@
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/core/cpp/utility/Logging.h>
-#include <Nero/editor/EngineEditor.h>
+#include <Nero/editor/GameEditor.h>
 #include <Nero/editor/EditorSetting.h>
 #include <Nero/editor/EditorConstant.h>
-#include <Nero/editor/EditorInterface.h>
+#include <Nero/editor/EditorUI.h>
 #include <Nero/core/cpp/utility/File.h>
 //STD
 #include <memory>

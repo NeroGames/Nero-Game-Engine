@@ -13,21 +13,21 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 //Nero
-#include <Nero/editor/ProjectManager.h>
+#include <Nero/editor/project/ProjectManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/core/lua/scene/LuaScene.h>
-#include <Nero/editor/GameProject.h>
-#include <Nero/editor/LoggerApplication.h>
+#include <Nero/editor/project/GameProject.h>
+#include <Nero/editor/LoggerUI.h>
 #include <Nero/core/cpp/utility/String.h>
-#include <Nero/editor/AdvancedScene.h>
+#include <Nero/editor/project/AdvancedScene.h>
 #include <Nero/core/cpp/resource/ResourceManager.h>
-#include <Nero/editor/AdvancedCamera.h>
+#include <Nero/editor/EditorCamera.h>
 #include <Nero/editor/EditorUtility.h>
-#include <Nero/editor/ConsoleApplication.h>
-#include <Nero/editor/GameLevelBuilder.h>
-#include <Nero/editor/GameScreenBuilder.h>
-#include <Nero/editor/WorldBuilder.h>
+#include <Nero/editor/ConsoleUI.h>
+#include <Nero/editor/level/GameLevelBuilder.h>
+#include <Nero/editor/screen/GameScreenBuilder.h>
+#include <Nero/editor/level/WorldBuilder.h>
 //Json
 #include <json/json.hpp>
 //SFML

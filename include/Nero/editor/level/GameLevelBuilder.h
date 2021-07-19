@@ -8,7 +8,7 @@
 //Nero
 #include <Nero/core/cpp/engine/Setting.h>
 #include <Nero/core/cpp/resource/ResourceManager.h>
-#include <Nero/editor/WorldChunkBuilder.h>
+#include <Nero/editor/level/WorldChunkBuilder.h>
 //STD
 #include <memory>
 ////////////////////////////////////////////////////////////

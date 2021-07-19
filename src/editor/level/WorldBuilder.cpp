@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <Nero/editor/WorldBuilder.h>
+#include <Nero/editor/level/WorldBuilder.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 //STD
 #include <fstream>
