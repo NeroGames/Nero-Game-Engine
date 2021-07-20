@@ -15,7 +15,7 @@ namespace nero
 		,m_Visible(false)
 		,m_Selected(false)
 		,m_AutoLoad(false)
-		,m_WorldBuilder(nullptr)
+		,m_WorldBuilder(std::make_shared<WorldBuilder>())
 	{
 
 	}
@@ -80,14 +80,9 @@ namespace nero
 		return m_WorldBuilder;
 	}
 
-	void ChunkBuilder::setWorldBuilder(WorldBuilder::Ptr worldBuilder)
-	{
-		m_WorldBuilder = worldBuilder;
-	}
-
 	nlohmann::json ChunkBuilder::saveChunk() const
 	{
-		nlohmann::json chunkSaved;
+		nlohmann::json chunkSaved = nlohmann::json::object();
 
 		chunkSaved["chunk_id"]		= m_ChunkId;
 		chunkSaved["chunk_name"]	= m_ChunkName;

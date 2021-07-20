@@ -42,6 +42,8 @@ namespace nero
         public:
 			WorldBuilder();
 
+			void							init();
+
             //Main
             void                            handleEvent(const sf::Event& event);
             void                            update(const sf::Time& elapsedTime);

@@ -2,56 +2,63 @@
 // Nero Game Engine
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
-#ifndef GAMELEVELBUILDER_H
-#define GAMELEVELBUILDER_H
+#ifndef LEVELBUILDER_H
+#define LEVELBUILDER_H
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/core/cpp/engine/Setting.h>
 #include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/editor/level/ChunkBuilder.h>
-//STD
+//Std
 #include <memory>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	class GameLevelBuilder
+	class LevelBuilder
 	{
-		public:
-			typedef std::shared_ptr<GameLevelBuilder> Ptr;
+		public: //utility
+			typedef std::shared_ptr<LevelBuilder> Ptr;
 
 		public:
-												GameLevelBuilder();
+												LevelBuilder();
+											   ~LevelBuilder();
 
-			void								init();
-			ResourceManager::Ptr				getResourceManager();
-			void								setEngineSetting(const Setting::Ptr& setting);
-			std::string							getLevelName();
+			void								loadResource();
 			Setting::Ptr						getLevelSetting();
+			std::string							getLevelName();
 			std::string							getResourceFoler();
-			//world chunk
-			ChunkBuilder::Ptr						addWorldChunk();
-			std::vector<ChunkBuilder::Ptr>&		getWorldChunkTable();
-			ChunkBuilder::Ptr						getSelectedWorldChunk();
-			void								setSelectedWorldChunk(ChunkBuilder::Ptr worldChunk);
-			void								setRenderContext(const RenderContext::Ptr& renderContext);
-			void								setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
+			ResourceManager::Ptr				getResourceManager();
+			void								setEditorSetting(const Setting::Ptr& setting);
 			void								saveGameLevel();
 			void								loadGameLevel();
-			void								loadWorldChunk(const std::string& fileName);
+			void								setRenderContext(const RenderContext::Ptr& renderContext);
+			void								setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
+			//chunk
+			ChunkBuilder::Ptr					addChunk();
+			void								removeChunk();
+			std::vector<ChunkBuilder::Ptr>&		getChunkTable();
+			ChunkBuilder::Ptr					getSelectedChunk();
+			void								setSelectedChunk(ChunkBuilder::Ptr worldChunk);
+			void								loadChunk(const std::string& fileName);
+			//
+			void								setOpened(const bool& opened);
+			bool								isOpened() const;
 
 		private:
+			//render
+			RenderContext::Ptr					m_RenderContext;
+			std::shared_ptr<sf::RenderTexture>	m_RenderTexture;
+			//setting
 			Setting::Ptr						m_LevelSetting;
-			Setting::Ptr						m_EngineSetting;
+			Setting::Ptr						m_EditorSetting;
+			//resource
 			ResourceManager::Ptr				m_ResourceManager;
-			//world chunk
-			ChunkBuilder::Ptr						m_SelectedWorldChunk;
-			std::vector<ChunkBuilder::Ptr>		m_WorldChunkTable;
-			int									m_CountWorldChunk;
-
-			RenderContext::Ptr								m_RenderContext;
-			std::shared_ptr<sf::RenderTexture>				m_RenderTexture;
+			//chunk
+			ChunkBuilder::Ptr					m_SelectedChunk;
+			std::vector<ChunkBuilder::Ptr>		m_ChunkTable;
+			int									m_ChunkCount;
+			//
+			bool								m_Opened;
 	};
 }
-
-
-#endif // GAMELEVELBUILDER_H
+#endif // LEVELBUILDER_H

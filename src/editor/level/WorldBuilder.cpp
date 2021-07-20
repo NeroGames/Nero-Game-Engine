@@ -42,6 +42,12 @@ namespace nero
         m_UpdateLogIf   = [](const std::string&, bool, int){};
     }
 
+	void WorldBuilder::init()
+	{
+		auto layer = addLayer();
+		selectLayer(layer->getObjectId());
+	}
+
 	void WorldBuilder::handleEvent(const sf::Event& event)
     {
         switch(event.type)

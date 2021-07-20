@@ -43,7 +43,7 @@ namespace nero
 			void											init();
 			//game level
 			void											createGameLevel(const Parameter& parameter);
-			GameLevelBuilder::Ptr							openGameLevel(const std::string& levelName);
+			LevelBuilder::Ptr								openGameLevel(const std::string& levelName);
 			void											removeGameLevel(const std::string& levelName);
 			void											registerGameLevel(const std::string& levelName);
 			void											unregisterGameLevel(const std::string& levelName);
@@ -60,7 +60,7 @@ namespace nero
 
 		private:
 			//selection
-			GameLevelBuilder::Ptr							m_SelectedGameLevel;
+			LevelBuilder::Ptr							m_SelectedGameLevel;
 			GameScreenBuilder::Ptr							m_SelectedGameScreen;
 			//storage
 			std::vector<GameScreenBuilder::Ptr>				m_GameScreenTable;

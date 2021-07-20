@@ -3152,6 +3152,8 @@ namespace  nero
 		m_ResourceManager	= nullptr;
 		m_AdvancedScene		= nullptr;
 		m_GameProject		= nullptr;
+		m_GameLevelBuilder	= nullptr;
+		m_WorldBuilder		= nullptr;
 		m_ProjectManager->closeProject();
 
 
@@ -4293,7 +4295,7 @@ namespace  nero
 	{
 		m_GameLevelBuilder			= m_AdvancedScene->openGameLevel(m_SelectedGameLevel);
 		m_ResourceManager			= m_GameLevelBuilder->getResourceManager();
-		m_WorldBuilder				= m_GameLevelBuilder->getSelectedWorldChunk()->getWorldBuilder();
+		m_WorldBuilder				= m_GameLevelBuilder->getSelectedChunk()->getWorldBuilder();
 		m_OpenedGameLevel			= m_SelectedGameLevel;
 	}
 
@@ -4531,9 +4533,9 @@ namespace  nero
 
 				if(m_GameLevelBuilder)
 				{
-					auto& chunkTable = m_GameLevelBuilder->getWorldChunkTable();
+					auto& chunkTable = m_GameLevelBuilder->getChunkTable();
 
-					auto selectedChunk		= m_GameLevelBuilder->getSelectedWorldChunk();
+					auto selectedChunk		= m_GameLevelBuilder->getSelectedChunk();
 					m_InputSelectedChunkId	= selectedChunk ? selectedChunk->getChunkId() : -1;
 
 					for(const auto& worldChunk : chunkTable)
@@ -4543,7 +4545,7 @@ namespace  nero
 
 						if(ImGui::IsItemClicked())
 						{
-							m_GameLevelBuilder->setSelectedWorldChunk(worldChunk);
+							m_GameLevelBuilder->setSelectedChunk(worldChunk);
 							m_WorldBuilder = worldChunk->getWorldBuilder();
 						}
 
@@ -4578,7 +4580,7 @@ namespace  nero
 	{
 		if(m_GameLevelBuilder && m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT)
 		{
-			auto worldChunk = m_GameLevelBuilder->addWorldChunk();
+			auto worldChunk = m_GameLevelBuilder->addChunk();
 			m_WorldBuilder  = worldChunk->getWorldBuilder();
 		}
 	}
@@ -4661,7 +4663,7 @@ namespace  nero
 				{
 					int			chunk_node_clicked		= -1;
 					static int	chunk_selection_mask	= (1 << gameLevel->chunkTable.size());
-					int			selectedWorldChunkId	= m_AdvancedScene->getSelectedWorldChunk()->chunkId;
+					int			selectedWorldChunkId	= m_AdvancedScene->getSelectedChunk()->chunkId;
 
 					int loop_chunk = 0;
 					for(const auto& worldChunk : gameLevel->chunkTable)
@@ -4682,7 +4684,7 @@ namespace  nero
 						if (ImGui::IsItemClicked())
 						{
 							chunk_node_clicked = loop_chunk;
-							m_AdvancedScene->setSelectedWorldChunk(worldChunk);
+							m_AdvancedScene->setSelectedChunk(worldChunk);
 							selectedWorldChunkId = worldChunk->chunkId;
 						}
 
@@ -4715,7 +4717,7 @@ namespace  nero
 								{
 									layer_node_clicked = loop_layer;
 									chunk_node_clicked = loop_chunk;
-									m_AdvancedScene->setSelectedWorldChunk(worldChunk);
+									m_AdvancedScene->setSelectedChunk(worldChunk);
 									worldChunk->sceneBuilder->setSelectedLayer(objectLayer);
 									selectedWorldChunkId = worldChunk->chunkId;
 									selectedObjectLayerId = objectLayer->getObjectId();
@@ -4759,7 +4761,7 @@ namespace  nero
 											layer_node_clicked	= loop_layer;
 											chunk_node_clicked	= loop_chunk;
 
-											m_AdvancedScene->setSelectedWorldChunk(worldChunk);
+											m_AdvancedScene->setSelectedChunk(worldChunk);
 											worldChunk->sceneBuilder->setSelectedLayer(objectLayer);
 											worldChunk->sceneBuilder->setSelectedObject(gameObject);
 

@@ -105,7 +105,7 @@ namespace nero
 			ProjectManager::Ptr								m_ProjectManager;
 			GameProject::Ptr								m_GameProject;
 			AdvancedScene::Ptr								m_AdvancedScene;
-			GameLevelBuilder::Ptr							m_GameLevelBuilder;
+			LevelBuilder::Ptr							m_GameLevelBuilder;
 			WorldBuilder::Ptr								m_WorldBuilder;
 			ResourceManager::Ptr							m_ResourceManager;
 			ResourceManager::Ptr							m_EditorResourceManager;

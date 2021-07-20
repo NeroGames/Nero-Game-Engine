@@ -70,7 +70,11 @@ namespace nero
 		file::createDirectory(file::getPath({level_directory, "resource"}));
 		ResourceManager::buildDirectory(file::getPath({level_directory, "resource"}));
 			//document
-		Parameter document = parameter;
+		Parameter document;
+		document.setString("creation_date", datetime::formatDateTime(datetime::getCurrentDateTime()));
+		document.setString("level_name", level_name);
+		document.setString("level_id", level_id);
+		document.setString("template", parameter.getString("template"));
 		file::saveFile(file::getPath({level_directory, "level"}, StringPool.EXT_NERO), document.toString());
 			//setting
 		Setting setting;
@@ -78,14 +82,17 @@ namespace nero
 		setting.setString("level_id", level_id);
 		setting.setBool("enable_physics", parameter.getBool("enable_physics"));
 		setting.setBool("enable_light",  parameter.getBool("enable_light"));
+		setting.setInt("chunk_count", 0);
+		setting.setBool("opened", false);
 		setting.setString("level_directory",  level_directory);
 		setting.setString("resource_directory",  file::getPath({level_directory, "resource"}));
+		setting.setString("chunk_directory",  file::getPath({level_directory, "chunk"}));
 		file::saveFile(file::getPath({level_directory, "setting"}, StringPool.EXT_NERO), setting.toString());
 
 		registerGameLevel(level_name);
 	}
 
-	GameLevelBuilder::Ptr AdvancedScene::openGameLevel(const std::string& levelName)
+	LevelBuilder::Ptr AdvancedScene::openGameLevel(const std::string& levelName)
 	{
 		if(levelName == StringPool.BLANK) return nullptr;
 
@@ -97,17 +104,17 @@ namespace nero
 		std::string level_directory = file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "level", boost::algorithm::to_lower_copy(levelName)});
 
 		//create level builder
-		m_SelectedGameLevel = std::make_shared<GameLevelBuilder>();
-		m_SelectedGameLevel->setEngineSetting(m_EngineSetting);
+		m_SelectedGameLevel = std::make_shared<LevelBuilder>();
+		m_SelectedGameLevel->setEditorSetting(m_EngineSetting);
 		m_SelectedGameLevel->getLevelSetting()->loadSetting(file::getPath({level_directory, "setting"}, StringPool.EXT_NERO), true, true);
 		m_SelectedGameLevel->setRenderContext(m_RenderContext);
 		m_SelectedGameLevel->setRenderTexture(m_RenderTexture);
-		m_SelectedGameLevel->init();
+		m_SelectedGameLevel->loadResource();
 
 		if(file::directoryEmpty(file::getPath({level_directory, "chunk"})))
 		{
-			auto worldChunk = m_SelectedGameLevel->addWorldChunk();
-			m_SelectedGameLevel->setSelectedWorldChunk(worldChunk);
+			auto worldChunk = m_SelectedGameLevel->addChunk();
+			m_SelectedGameLevel->setSelectedChunk(worldChunk);
 
 			m_SelectedGameLevel->saveGameLevel();
 		}
@@ -285,7 +292,7 @@ namespace nero
 			m_SelectedWorldBuilder->setRenderTexture(m_RenderTexture);
 			m_SelectedWorldBuilder->setRenderContext(m_RenderContext);
 			m_SelectedWorldBuilder->addLayer();
-			m_SelectedGameLevel->setSelectedWorldChunk(m_SelectedWorldChunk->chunkId);
+			m_SelectedGameLevel->setSelectedChunk(m_SelectedWorldChunk->chunkId);
 		}
 	}
 
@@ -481,7 +488,7 @@ namespace nero
 	void AdvancedScene::setSelectedGameLevel(AdvancedScene::GameLevelPtr gameLevel)
 	{
 		m_SelectedGameLevel		= gameLevel;
-		m_SelectedWorldChunk	= gameLevel->getSelectedWorldChunk();
+		m_SelectedWorldChunk	= gameLevel->getSelectedChunk();
 		m_SelectedWorldBuilder	= m_SelectedWorldChunk->sceneBuilder;
 	}
 
@@ -495,7 +502,7 @@ namespace nero
 	{
 		m_SelectedWorldChunk	= worldChunk;
 		m_SelectedWorldBuilder	= worldChunk->sceneBuilder;
-		m_SelectedGameLevel->setSelectedWorldChunk(worldChunk->chunkId);
+		m_SelectedGameLevel->setSelectedChunk(worldChunk->chunkId);
 	}
 
 	SceneBuilder::Ptr AdvancedScene::getSelectedSceneBuilder(const EditorMode& editorMode)

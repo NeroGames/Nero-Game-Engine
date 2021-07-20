@@ -26,7 +26,6 @@ namespace nero
 			void					setVisible(const bool& visible);
 			void					setSelected(const bool& selected);
 			void					setAutoLoad(const bool& autoLoad);
-			void					setWorldBuilder(WorldBuilder::Ptr worldBuilder);
 			//get
 			int						getChunkId()		const;
 			std::string				getChunkName()		const;

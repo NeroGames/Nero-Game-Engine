@@ -8,168 +8,178 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	GameLevelBuilder::GameLevelBuilder():
-		 m_LevelSetting(std::make_shared<Setting>())
-		,m_EngineSetting(nullptr)
-		,m_SelectedWorldChunk(nullptr)
-		,m_WorldChunkTable()
-		,m_CountWorldChunk(0)
+	LevelBuilder::LevelBuilder():
+		 m_RenderContext(nullptr)
+		,m_RenderTexture(nullptr)
+		,m_LevelSetting(std::make_shared<Setting>())
+		,m_EditorSetting(nullptr)
+		,m_ResourceManager(nullptr)
+		,m_SelectedChunk(nullptr)
+		,m_ChunkTable()
+		,m_ChunkCount(0)
+		,m_Opened(false)
 	{
 
 	}
 
-	void GameLevelBuilder::init()
+	LevelBuilder::~LevelBuilder()
 	{
-		m_ResourceManager = std::make_shared<ResourceManager>(m_EngineSetting->getSetting("resource"));
+
+	}
+
+	void LevelBuilder::loadResource()
+	{
+		m_ResourceManager = std::make_shared<ResourceManager>(m_EditorSetting->getSetting("resource"));
 		m_ResourceManager->loadDirectory(m_LevelSetting->getString("resource_directory"));
 	}
 
-	ResourceManager::Ptr GameLevelBuilder::getResourceManager()
+	ResourceManager::Ptr LevelBuilder::getResourceManager()
 	{
 		return m_ResourceManager;
 	}
 
-	void GameLevelBuilder::setEngineSetting(const Setting::Ptr& setting)
+	void LevelBuilder::setEditorSetting(const Setting::Ptr &setting)
 	{
-		m_EngineSetting = setting;
+		m_EditorSetting = setting;
 	}
 
-	std::string GameLevelBuilder::getLevelName()
-	{
-		return m_LevelSetting->getString("level_name");
-	}
-
-	Setting::Ptr GameLevelBuilder::getLevelSetting()
+	Setting::Ptr LevelBuilder::getLevelSetting()
 	{
 		return m_LevelSetting;
 	}
 
-	std::string GameLevelBuilder::getResourceFoler()
+	std::string LevelBuilder::getLevelName()
+	{
+		return m_LevelSetting->getString("level_name");
+	}
+
+	std::string LevelBuilder::getResourceFoler()
 	{
 		return m_LevelSetting->getString("resource_directory");
 	}
 
-	ChunkBuilder::Ptr GameLevelBuilder::addWorldChunk()
+	ChunkBuilder::Ptr LevelBuilder::addChunk()
 	{
-		ChunkBuilder::Ptr worldChunk = std::make_shared<ChunkBuilder>();
-		worldChunk->setChunkId(++m_CountWorldChunk);
-		worldChunk->setChunkName(std::string("world chunk ") + toString(worldChunk->getChunkId()));
-		worldChunk->setSelected(false);
-		worldChunk->setAutoLoad(false);
-		worldChunk->setVisible(true);
+		//create
+		ChunkBuilder::Ptr chunkBuilder = std::make_shared<ChunkBuilder>();
+		chunkBuilder->setChunkId(++m_ChunkCount);
+		chunkBuilder->setChunkName(std::string("world chunk ") + toString(chunkBuilder->getChunkId()));
+		chunkBuilder->setSelected(false);
+		chunkBuilder->setVisible(true);
+		chunkBuilder->setAutoLoad(false);
 
-		m_WorldChunkTable.push_back(worldChunk);
-
-
-		WorldBuilder::Ptr worldBuilder = std::make_shared<WorldBuilder>();
-
+		WorldBuilder::Ptr worldBuilder = chunkBuilder->getWorldBuilder();
 		worldBuilder->setRenderContext(m_RenderContext);
 		worldBuilder->setRenderTexture(m_RenderTexture);
 		worldBuilder->setResourceManager(m_ResourceManager);
-		//worldBuilder->setLightManager(const LightManagerPtr& lightManager);
+		worldBuilder->init();
 
-		//add first layer
-		auto layer = worldBuilder->addLayer();
-		worldBuilder->selectLayer(layer->getObjectId());
+		//register
+		m_ChunkTable.push_back(chunkBuilder);
 
-		worldChunk->setWorldBuilder(worldBuilder);
+		//select
+		setSelectedChunk(chunkBuilder);
 
-		setSelectedWorldChunk(m_WorldChunkTable.back());
-
-		return m_WorldChunkTable.back();
+		return chunkBuilder;
 	}
 
-	std::vector<ChunkBuilder::Ptr>& GameLevelBuilder::getWorldChunkTable()
+	void LevelBuilder::removeChunk()
 	{
-		return m_WorldChunkTable;
+		//TODO remove chunk
 	}
 
-	ChunkBuilder::Ptr GameLevelBuilder::getSelectedWorldChunk()
+	std::vector<ChunkBuilder::Ptr>& LevelBuilder::getChunkTable()
 	{
-		return m_SelectedWorldChunk;
+		return m_ChunkTable;
 	}
 
-	void GameLevelBuilder::setSelectedWorldChunk(ChunkBuilder::Ptr worldChunk)
+	ChunkBuilder::Ptr LevelBuilder::getSelectedChunk()
 	{
-		m_SelectedWorldChunk = worldChunk;
+		return m_SelectedChunk;
 	}
 
-	void GameLevelBuilder::setRenderContext(const RenderContext::Ptr& renderContext)
+	void LevelBuilder::setSelectedChunk(ChunkBuilder::Ptr worldChunk)
+	{
+		m_SelectedChunk = worldChunk;
+	}
+
+	void LevelBuilder::setRenderContext(const RenderContext::Ptr& renderContext)
 	{
 		m_RenderContext = renderContext;
 	}
 
-	void GameLevelBuilder::setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture)
+	void LevelBuilder::setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture)
 	{
 		m_RenderTexture = renderTexture;
 	}
 
-	void GameLevelBuilder::saveGameLevel()
+	void LevelBuilder::saveGameLevel()
 	{
-		for(auto worldChunk : m_WorldChunkTable)
+		//chunk
+		for(auto chunk : m_ChunkTable)
 		{
-			//update selections status
-			m_SelectedWorldChunk->getChunkId() == worldChunk->getChunkId() ? worldChunk->setSelected(true) : worldChunk->setSelected(false);
+			//update is_seleted
+			chunk->getChunkId() == m_SelectedChunk->getChunkId() ? chunk->setSelected(true) : chunk->setSelected(false);
 
-			auto worldBuilder = worldChunk->getWorldBuilder();
-
-			nlohmann::json save		= nlohmann::json::object();
-			save["chunk_id"]		= worldChunk->getChunkId();
-			save["name"]			= worldChunk->getChunkName();
-			save["selected"]		= worldChunk->isSelected();
-			save["load_with_level"] = worldChunk->isAutoLoad();
-			save["visible"]			= worldChunk->isVisible();
-			save["world"]			= worldBuilder->saveScene();
-
-			file::saveFile(file::getPath({m_LevelSetting->getString("level_directory"), "chunk", worldChunk->getChunkName()}, StringPool.EXT_NERO), save.dump(3), true);
+			//save chunk
+			file::saveFile(
+				file::getPath({m_LevelSetting->getString("chunk_directory"), chunk->getChunkName()}, StringPool.EXT_NERO),
+				chunk->saveChunk().dump(3), true);
 		}
+
+		//setting
+		m_LevelSetting->setInt("chunk_count", m_ChunkCount);
+		m_LevelSetting->setBool("opened", m_Opened);
+
+		file::saveFile(
+			file::getPath({m_LevelSetting->getString("level_directory"), "setting"}, StringPool.EXT_NERO),
+			m_LevelSetting->toString(), true);
 	}
 
-	void GameLevelBuilder::loadGameLevel()
+	void LevelBuilder::loadGameLevel()
 	{
+		std::experimental::filesystem::path chunkDirectory(m_LevelSetting->getString("chunk_directory"));
 
-		std::experimental::filesystem::path folderPath(file::getPath({m_LevelSetting->getString("level_directory"), "chunk"}));
-
-		std::experimental::filesystem::directory_iterator it{folderPath};
+		std::experimental::filesystem::directory_iterator it{chunkDirectory};
 		while(it != std::experimental::filesystem::directory_iterator{})
 		{
-			loadWorldChunk(it->path().string());
+			loadChunk(it->path().string());
 
 			it++;
 		}
+
+		m_Opened		= m_LevelSetting->getBool("opened");
+		m_ChunkCount	= m_LevelSetting->getInt("chunk_count");
 	}
 
-	void GameLevelBuilder::loadWorldChunk(const std::string& fileName)
+	void LevelBuilder::loadChunk(const std::string& fileName)
 	{
-		nero_log(fileName);
-
-		nlohmann::json save = file::loadJson(fileName, true);
-
-		ChunkBuilder::Ptr worldChunk = std::make_shared<ChunkBuilder>();
-		worldChunk->setChunkId(save["chunk_id"]);
-		worldChunk->setChunkName(save["name"]);
-		worldChunk->setSelected(save["selected"]);
-		worldChunk->setAutoLoad(save["load_with_level"]);
-		worldChunk->setVisible(save["visible"]);
-
-		WorldBuilder::Ptr worldBuilder = std::make_shared<WorldBuilder>();
+		ChunkBuilder::Ptr chunkBuilder = std::make_shared<ChunkBuilder>();
+		WorldBuilder::Ptr worldBuilder = chunkBuilder->getWorldBuilder();
 
 		worldBuilder->setRenderContext(m_RenderContext);
 		worldBuilder->setRenderTexture(m_RenderTexture);
 		worldBuilder->setResourceManager(m_ResourceManager);
 
-		//add first layer
-		worldBuilder->loadScene(save["world"]);
-		worldChunk->setWorldBuilder(worldBuilder);
+		chunkBuilder->loadChunk(file::loadJson(fileName, true));
 
-		m_WorldChunkTable.push_back(worldChunk);
-
-		if(worldChunk->isSelected())
+		if(chunkBuilder->isSelected())
 		{
-			setSelectedWorldChunk(worldChunk);
+			setSelectedChunk(chunkBuilder);
 		}
 
-		nero_log("loading chunk end");
+		m_ChunkTable.push_back(chunkBuilder);
 	}
+
+	void LevelBuilder::setOpened(const bool& opened)
+	{
+		m_Opened = opened;
+	}
+
+	bool LevelBuilder::isOpened() const
+	{
+		return m_Opened;
+	}
+
 }
 
