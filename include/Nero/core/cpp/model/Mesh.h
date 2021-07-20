@@ -143,6 +143,8 @@ namespace nero
             float                       m_Friction;
             float                       m_Restitution;
             float                       m_GravityScale;
+			sf::RectangleShape              m_SelectionRect;
+
     };
 }
 #endif // MESH_H

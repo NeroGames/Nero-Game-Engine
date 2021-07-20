@@ -180,6 +180,5 @@ namespace nero
 	{
 		return m_Opened;
 	}
-
 }
 

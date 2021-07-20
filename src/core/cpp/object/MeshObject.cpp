@@ -52,7 +52,7 @@ namespace nero
 
     void MeshObject::updateObject(sf::Time time_step)
     {
-        //*//panning
+		//*//panning
         auto pos_diff = m_Parent->getPosition() - m_ParentLastPosition;
         auto pos = getPosition();
         setPosition(0.f, 0.f);
@@ -61,7 +61,7 @@ namespace nero
 
         m_ParentLastPosition = m_Parent->getPosition(); //*/
 
-        //*//rotation
+		//*//rotation
         float rot_diff = m_Parent->getRotation() - m_ParentLastRotation;
         float rot = getRotation();
         setRotation(0.f);
@@ -70,14 +70,14 @@ namespace nero
 
         m_ParentLastRotation = m_Parent->getRotation();//*/
 
-        //scaling
+		//scaling
         auto scale_diff = m_Parent->getScale() - m_ParentLastScale;
         auto scale = getScale();
         setScale(1.f, 1.f);
 
         m_Mesh.scale(scale + scale_diff);
 
-        m_ParentLastScale = m_Parent->getScale();
+		m_ParentLastScale = m_Parent->getScale();
     }
 
     void MeshObject::setParentLastPosition(const sf::Vector2f& position)

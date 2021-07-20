@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	GameScreenBuilder::GameScreenBuilder()
+	ScreenBuilder::ScreenBuilder()
 	{
 
 	}

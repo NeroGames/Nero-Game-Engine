@@ -10,13 +10,13 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	class GameScreenBuilder
+	class ScreenBuilder
 	{
 		public:
-			typedef std::shared_ptr<GameScreenBuilder> Ptr;
+			typedef std::shared_ptr<ScreenBuilder> Ptr;
 
 		public:
-			GameScreenBuilder();
+			ScreenBuilder();
 	};
 }
 

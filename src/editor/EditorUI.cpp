@@ -4250,7 +4250,7 @@ namespace  nero
 
 			ImGui::BeginChild("##show_game_level", ImVec2(), true);
 
-				auto levelNameTable = m_AdvancedScene->getRegisteredGameLevel();
+				auto levelNameTable = m_AdvancedScene->getRegisteredLevelTable();
 				ImGuiStyle& style = ImGui::GetStyle();
 				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionWidth();
 
@@ -4293,7 +4293,13 @@ namespace  nero
 
 	void EditorInterface::openGameLevel()
 	{
-		m_GameLevelBuilder			= m_AdvancedScene->openGameLevel(m_SelectedGameLevel);
+		if(m_SelectedGameLevel == StringPool.BLANK)
+			return;
+
+		if(m_GameLevelBuilder && m_GameLevelBuilder->getLevelName() == m_SelectedGameLevel)
+			return;
+
+		m_GameLevelBuilder			= m_AdvancedScene->openLevel(m_SelectedGameLevel);
 		m_ResourceManager			= m_GameLevelBuilder->getResourceManager();
 		m_WorldBuilder				= m_GameLevelBuilder->getSelectedChunk()->getWorldBuilder();
 		m_OpenedGameLevel			= m_SelectedGameLevel;
@@ -4304,7 +4310,7 @@ namespace  nero
 		m_OpenedGameLevel	= StringPool.BLANK;
 		m_GameLevelBuilder	= nullptr;
 		m_ResourceManager	= nullptr;
-		m_AdvancedScene->closeSelectedGameLevel();
+		m_AdvancedScene->closeSelectedLevel();
 	}
 
 	void EditorInterface::showNewGameLevelPopup()
@@ -4397,7 +4403,7 @@ namespace  nero
 		if(m_AdvancedScene)
 		{
 			//create
-			m_AdvancedScene->createGameLevel(parameter);
+			m_AdvancedScene->createLevel(parameter);
 			m_SelectedGameLevel = parameter.getString("level_name");
 
 			//open
@@ -4409,7 +4415,7 @@ namespace  nero
 	{
 		if(m_AdvancedScene)
 		{
-			m_AdvancedScene->createGameScreen(parameter);
+			m_AdvancedScene->createScreen(parameter);
 		}
 	}
 

@@ -29,6 +29,8 @@ namespace nero
         ,m_LineTab()
         ,m_PolygonTab()
         ,m_CircleShape()
+	   ,m_SelectionRect()
+
     {
         switch(shape)
         {
@@ -48,6 +50,14 @@ namespace nero
 
                 //Create line
                 updateLineShape();
+
+
+				m_SelectionRect.setFillColor(sf::Color::Transparent);
+				m_SelectionRect.setOutlineColor(sf::Color::Green);
+				m_SelectionRect.setOutlineThickness(-3.f);
+
+				m_SelectionRect.setPosition(getGlobalBounds().left,  getGlobalBounds().top);
+				m_SelectionRect.setSize(sf::Vector2f(getGlobalBounds().width,  getGlobalBounds().height));
 
             }break;
 
@@ -401,14 +411,19 @@ namespace nero
 
         switch(m_Shape)
         {
-            case Mesh::Line_Mesh:
+			case Mesh::Line_Mesh:
             {
-                boundRect = m_LineTab[0].getGlobalBounds();
+				/*boundRect = m_LineTab[0].getGlobalBounds();
                 boundRect.left = boundRect.left - 10.f;
                 boundRect.top = boundRect.top  -10.f;
                 boundRect.height = boundRect.height + 20.f;
-                boundRect.width = boundRect.width + 20.f;
-            }break;
+				boundRect.width = boundRect.width + 20.f;*/
+
+				 boundRect.left = getTransform().transformPoint(m_VertexTab[0].getPosition()).x - 10.f;
+				 boundRect.top = getTransform().transformPoint(m_VertexTab[0].getPosition()).x - 10.f;
+				 boundRect.width = getTransform().transformPoint(m_VertexTab[1].getPosition()).x -  getTransform().transformPoint(m_VertexTab[0].getPosition()).x + 20.f;
+				 boundRect.height = 20.f;
+			}break;
 
             case Mesh::Circle_Mesh:
             {
@@ -478,6 +493,11 @@ namespace nero
 
         for(auto vertex : m_VertexTab)
             target.draw(vertex, states);
+
+		if(m_Shape == Mesh::Line_Mesh)
+		{
+			target.draw(m_SelectionRect, states);
+		}
     }
 
     void Mesh::move(const sf::Vector2f& offset)
