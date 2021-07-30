@@ -17,6 +17,9 @@ namespace nero
 		,m_GravityCenter(sf::Vector2f(0.f, 0.f))
 		,m_Valid(true)
 		,m_CircleShape(nullptr)
+		,m_Position(sf::Vector2f(0.f, 0.f))
+		,m_Scale(sf::Vector2f(1.f, 1.f))
+		,m_Rotation(0.f)
 	{
 		switch(shape)
 		{
@@ -376,13 +379,21 @@ namespace nero
 		scale.x = sxc/static_cast<float>(std::cos(angle));
 		scale.y = syc/static_cast<float>(std::cos(angle));
 
-		moveMesh(position - m_Position);
-		scaleMesh(scale - m_Scale);
-		rotateMesh(rotation - m_Rotation);
-
-		m_Position		= position;
-		m_Scale			= scale;
-		m_Rotation		= rotation;
+		if(position != m_Position)
+		{
+			moveMesh(position - m_Position);
+			m_Position = position;
+		}
+		else if(scale != m_Scale)
+		{
+			scaleMesh(sf::Vector2f(1.f, 1.f) + scale - m_Scale);
+			m_Scale = scale;
+		}
+		else if(rotation != m_Rotation)
+		{
+			rotateMesh(rotation - m_Rotation);
+			m_Rotation = rotation;
+		}
 	}
 
 	void Mesh::moveMesh(const sf::Vector2f& offset)
@@ -395,14 +406,72 @@ namespace nero
 		updateMesh();
 	}
 
-	void Mesh::scaleMesh(const sf::Vector2f& offset)
+	void Mesh::scaleMesh(const sf::Vector2f& factor)
 	{
+		float scale = factor.x;
+
+		if(m_MeshShape == Shape::Line)
+		{
+			sf::Vector2f pos1 = m_VertexTable.front().getPosition();
+			sf::Vector2f pos2 = m_VertexTable.back().getPosition();
+
+			sf::Vector2f center = math::getLineCenter(pos1, pos2);
+
+			sf::Vector2f new_pos1 = sf::Vector2f((pos1.x-center.x)*scale + center.x, (pos1.y-center.y)*scale + center.y);
+			sf::Vector2f new_pos2 = sf::Vector2f((pos2.x-center.x)*scale + center.x, (pos2.y-center.y)*scale + center.y);
+
+			m_VertexTable.front().setPosition(new_pos1);
+			m_VertexTable.back().setPosition(new_pos2);
+		}
+		else if (m_MeshShape == Shape::Circle)
+		{
+			sf::Vector2f center = m_VertexTable.front().getPosition();
+			sf::Vector2f pos = m_VertexTable.back().getPosition();
+			sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale + center.x, (pos.y-center.y)*scale + center.y);
+			m_VertexTable.back().setPosition(new_pos);
+		}
+		else
+		{
+			std::vector<sf::Vector2f> posTable = getVertexPosition();
+			sf::Vector2f center = math::getPolygonCenter(posTable);
+
+			for(auto it = m_VertexTable.begin(); it != m_VertexTable.end(); it++)
+			{
+				sf::Vector2f pos = it->getPosition();
+				sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale + center.x, (pos.y-center.y)*scale + center.y);
+
+				it->setPosition(new_pos);
+			}
+		}
 
 	}
 
-	void Mesh::rotateMesh(const float& offset)
+	void Mesh::rotateMesh(const float& angle)
 	{
+		if(m_MeshShape == Shape::Line)
+		{
+			sf::Vector2f center = math::getLineCenter(m_VertexTable.front().getPosition(), m_VertexTable.back().getPosition());
+			m_VertexTable.front().setPosition(math::rotateVertex(center, angle, m_VertexTable.front().getPosition()));
+			m_VertexTable.back().setPosition(math::rotateVertex(center, angle, m_VertexTable.back().getPosition()));
 
+		}
+		else if (m_MeshShape == Shape::Circle)
+		{
+			m_VertexTable.back().setPosition(math::rotateVertex(m_VertexTable.front().getPosition(), angle, m_VertexTable.back().getPosition()));
+		}
+		else
+		{
+			std::vector<sf::Vector2f> posTable = getVertexPosition();
+			sf::Vector2f center = math::getPolygonCenter(posTable);
+
+
+			for(auto it = m_VertexTable.begin(); it != m_VertexTable.end(); it++)
+			{
+				it->setPosition(math::rotateVertex(center, angle, it->getPosition()));
+			}
+		}
+
+		updateMesh();
 	}
 }
 
@@ -941,48 +1010,48 @@ namespace nero
 
     void Mesh::scale(const sf::Vector2f& factor)
     {
-        float scale = factor.x;
+		float scale = factor.x;
 
-        if(m_Shape == Mesh::Line_Mesh)
-        {
-            sf::Vector2f pos1 = m_VertexTab.front().getPosition();
-            sf::Vector2f pos2 = m_VertexTab.back().getPosition();
+		if(m_Shape == Mesh::Line_Mesh)
+		{
+			sf::Vector2f pos1 = m_VertexTab.front().getPosition();
+			sf::Vector2f pos2 = m_VertexTab.back().getPosition();
 
 			sf::Vector2f center = math::getLineCenter(pos1, pos2);
 
-            sf::Vector2f new_pos1 = sf::Vector2f((pos1.x-center.x)*scale + center.x, (pos1.y-center.y)*scale + center.y);
-            sf::Vector2f new_pos2 = sf::Vector2f((pos2.x-center.x)*scale + center.x, (pos2.y-center.y)*scale + center.y);
+			sf::Vector2f new_pos1 = sf::Vector2f((pos1.x-center.x)*scale + center.x, (pos1.y-center.y)*scale + center.y);
+			sf::Vector2f new_pos2 = sf::Vector2f((pos2.x-center.x)*scale + center.x, (pos2.y-center.y)*scale + center.y);
 
-            m_VertexTab.front().setPosition(new_pos1);
-            m_VertexTab.back().setPosition(new_pos2);
-        }
-        else if (m_Shape == Mesh::Circle_Mesh)
-        {
-            sf::Vector2f center = m_VertexTab.front().getPosition();
-            sf::Vector2f pos = m_VertexTab.back().getPosition();
-            sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale + center.x, (pos.y-center.y)*scale + center.y);
-            m_VertexTab.back().setPosition(new_pos);
-        }
-        else
-        {
-            VectorTable vectorTab = getAllVertexPoint();
+			m_VertexTab.front().setPosition(new_pos1);
+			m_VertexTab.back().setPosition(new_pos2);
+		}
+		else if (m_Shape == Mesh::Circle_Mesh)
+		{
+			sf::Vector2f center = m_VertexTab.front().getPosition();
+			sf::Vector2f pos = m_VertexTab.back().getPosition();
+			sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale + center.x, (pos.y-center.y)*scale + center.y);
+			m_VertexTab.back().setPosition(new_pos);
+		}
+		else
+		{
+			VectorTable vectorTab = getAllVertexPoint();
 			sf::Vector2f center = math::getPolygonCenter(vectorTab);
 
-            for(auto it = m_VertexTab.begin(); it != m_VertexTab.end(); it++)
-            {
-                sf::Vector2f pos = it->getPosition();
-                sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale + center.x, (pos.y-center.y)*scale + center.y);
+			for(auto it = m_VertexTab.begin(); it != m_VertexTab.end(); it++)
+			{
+				sf::Vector2f pos = it->getPosition();
+				sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale + center.x, (pos.y-center.y)*scale + center.y);
 
-                it->setPosition(new_pos);
-            }
-        }
+				it->setPosition(new_pos);
+			}
+		}
 
-        updateShape();
-    }
+		updateShape();
+	}
 
-    int Mesh::getId() const
-    {
-        return m_Id;
+	int Mesh::getId() const
+	{
+		return m_Id;
     }
 
     Mesh::Type Mesh::getType() const

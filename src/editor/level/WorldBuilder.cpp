@@ -21,7 +21,7 @@ namespace nero
         //Speed
         ,m_PanningSpeed(1.f)
         ,m_RotationSpeed(0.5f)
-        ,m_ZoomingRatio(0.1f)
+		,m_ZoomingRatio(0.07f)
         //Object
         ,m_SelectedLayer(nullptr)
         ,m_SelectedObject(nullptr)
@@ -882,6 +882,8 @@ namespace nero
                     mesh_object->setMesh(mesh);
                     mesh_object->setPosition(position);
                     mesh_object->setSecondType(Object::Mesh_Object);
+					sf::FloatRect bound = mesh_object->getGlobalBounds();
+					mesh_object->setOrigin(bound.width/2.f, bound.height/2.f);
 
 					//m_MeshEditor->addMesh(mesh_object->getMesh());
 

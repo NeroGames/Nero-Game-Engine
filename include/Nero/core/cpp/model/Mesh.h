@@ -54,8 +54,8 @@ namespace nero
 			std::vector<sf::Vector2f>				getVertexPosition() const;
 			//
 			void									moveMesh(const sf::Vector2f& offset);
-			void									scaleMesh(const sf::Vector2f& offset);
-			void									rotateMesh(const float& offset);
+			void									scaleMesh(const sf::Vector2f& factor);
+			void									rotateMesh(const float& angle);
 
 		private:
 			int										m_MeshId;
