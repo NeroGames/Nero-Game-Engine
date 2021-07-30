@@ -30,7 +30,7 @@ namespace nero
 		,m_RenderContext(nullptr)
 		,m_LightManager(nullptr)
     {
-		m_MeshEditor = MeshEditor::Ptr(new MeshEditor());
+		////m_MeshEditor = MeshEditor::Ptr(new MeshEditor());
 
         m_SelectionRect.setFillColor(sf::Color::Transparent);
         m_SelectionRect.setOutlineColor(sf::Color::Green);
@@ -738,8 +738,8 @@ namespace nero
         if(object->getSecondType() == Object::Mesh_Object)
         {
             MeshObject::Ptr mesh_object = MeshObject::Cast(object);
-            mesh_object->getMesh()->setId(mesh_object->getId());
-            m_MeshEditor->addMesh(mesh_object->getMesh());
+			mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
+			//m_MeshEditor->addMesh(mesh_object->getMesh());
         }
 
         else if(object->getSecondType() == Object::Meshed_Object || object->getSecondType() == Object::Animation_Meshed_Object)
@@ -749,7 +749,7 @@ namespace nero
             child_object->setId(getNewId());
 
             MeshObject::Ptr mesh_object = MeshObject::Cast(child_object);
-            mesh_object->getMesh()->setId(mesh_object->getId());
+			mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
             mesh_object->setParentLastPosition(object->getPosition()-pos);
             mesh_object->setParentLastRotation(object->getRotation());
             mesh_object->setParentLastScale(object->getScale());
@@ -758,7 +758,7 @@ namespace nero
             object->setIsUpdateable(true);
             object->addChild(child_object);
 
-            m_MeshEditor->addMesh(mesh_object->getMesh());
+			//m_MeshEditor->addMesh(mesh_object->getMesh());
         }
 
         m_SelectedObject = object;
@@ -824,10 +824,10 @@ namespace nero
        return m_LayerTable;
     }
 
-	MeshEditor::Ptr WorldBuilder::getMeshEditor()
+	/*MeshEditor::Ptr WorldBuilder::getMeshEditor()
     {
-        return  m_MeshEditor;
-    }
+		return  //m_MeshEditor;
+	}*/
 
 	bool WorldBuilder::addObject(Object::Type type, const sf::String& label, sf::Vector2f position)
     {
@@ -867,23 +867,23 @@ namespace nero
                     Mesh mesh;
 
                     if(label == "Polygon")
-						mesh = Mesh(Mesh::Polygon_Mesh);
+						mesh = Mesh(Mesh::Shape::Polygon);
                     else if(label == "Circle")
-						mesh = Mesh(Mesh::Circle_Mesh);
+						mesh = Mesh(Mesh::Shape::Circle);
                     else if(label == "Line")
-						mesh = Mesh(Mesh::Line_Mesh);
+						mesh = Mesh(Mesh::Shape::Line);
 
-                    mesh.setId(getNewId());
+					mesh.setMeshId(getNewId());
 
                     MeshObject::Ptr mesh_object(new MeshObject());
-                    mesh_object->setId(mesh.getId());
-					std::string object_name = "mesh " + toString(mesh.getId());
+					mesh_object->setId(mesh.getMeshId());
+					std::string object_name = "mesh " + toString(mesh.getMeshId());
 					mesh_object->setName(object_name);
                     mesh_object->setMesh(mesh);
                     mesh_object->setPosition(position);
                     mesh_object->setSecondType(Object::Mesh_Object);
 
-                    m_MeshEditor->addMesh(mesh_object->getMesh());
+					//m_MeshEditor->addMesh(mesh_object->getMesh());
 
                     object = mesh_object;
                 }
@@ -891,28 +891,28 @@ namespace nero
                 {
 					//m_UpdateLog("changing Object [" + m_SelectedObject->getName() + "] Mesh Type to [" + label + "]", nero::Info);
 
-                    m_MeshEditor->deleteMesh(m_SelectedObject->getFirstChild()->getId());
+					//m_MeshEditor->deleteMesh(m_SelectedObject->getFirstChild()->getId());
                     m_SelectedObject->removeFirstChild();
 
                     Mesh mesh;
 
-                    if(label == "Polygon")
-						mesh = Mesh(Mesh::Polygon_Mesh);
-                    else if(label == "Circle")
-						mesh = Mesh(Mesh::Circle_Mesh);
-                    else if(label == "Line")
-						mesh = Mesh(Mesh::Line_Mesh);
+					if(label == "Polygon")
+						mesh = Mesh(Mesh::Shape::Polygon);
+					else if(label == "Circle")
+						mesh = Mesh(Mesh::Shape::Circle);
+					else if(label == "Line")
+						mesh = Mesh(Mesh::Shape::Line);
 
-                    mesh.setId(getNewId());
+					mesh.setMeshId(getNewId());
                     std::shared_ptr<MeshObject> mesh_object(new MeshObject());
-                    mesh_object->setId(mesh.getId());
+					mesh_object->setId(mesh.getMeshId());
                     mesh_object->setMesh(mesh);
                     mesh_object->setIsSelectable(false);
                     mesh_object->setSecondType(Object::Mesh_Object);
                     mesh_object->setName(m_SelectedObject->getName());
                     mesh_object->setCategory(m_SelectedObject->getCategory());
 
-                    m_MeshEditor->addMesh(mesh_object->getMesh());
+					//m_MeshEditor->addMesh(mesh_object->getMesh());
 
                     m_SelectedObject->addChild(mesh_object);
 
@@ -952,17 +952,17 @@ namespace nero
 				sprite_object->setIsUpdateable(true);
 
                 //Mesh Object
-				Mesh mesh = Mesh(Mesh::Polygon_Mesh);
-                mesh.setId(getNewId());
+				Mesh mesh = Mesh(Mesh::Shape::Polygon);
+				mesh.setMeshId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
-                mesh_object->setId(mesh.getId());
-				object_name = "mesh " + toString(mesh.getId());
+				mesh_object->setId(mesh.getMeshId());
+				object_name = "mesh " + toString(mesh.getMeshId());
 				mesh_object->setName(object_name);
                 mesh_object->setMesh(mesh);
                 mesh_object->setSecondType(Object::Mesh_Object);
                 mesh_object->setIsSelectable(false);
 
-                m_MeshEditor->addMesh(mesh_object->getMesh());
+				//m_MeshEditor->addMesh(mesh_object->getMesh());
                 sprite_object->addChild(mesh_object);
 
                 //update one time
@@ -1044,17 +1044,17 @@ namespace nero
 				animation_object->setName(object_name);
 
                   //Mesh Object
-				Mesh mesh = Mesh(Mesh::Polygon_Mesh);
-                mesh.setId(getNewId());
+				Mesh mesh = Mesh(Mesh::Shape::Polygon);
+				mesh.setMeshId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
-                mesh_object->setId(mesh.getId());
-				object_name = "mesh " + toString(mesh.getId());
+				mesh_object->setId(mesh.getMeshId());
+				object_name = "mesh " + toString(mesh.getMeshId());
 				mesh_object->setName(object_name);
                 mesh_object->setMesh(mesh);
                 mesh_object->setSecondType(Object::Mesh_Object);
                 mesh_object->setIsSelectable(false);
 
-                m_MeshEditor->addMesh(mesh_object->getMesh());
+				//m_MeshEditor->addMesh(mesh_object->getMesh());
                 animation_object->addChild(mesh_object);
 
                 //update one time
@@ -1163,12 +1163,12 @@ namespace nero
 
         if(object->getFirstType() == Object::Mesh_Object)
         {
-            m_MeshEditor->deleteMesh(object->getId());
+			//m_MeshEditor->deleteMesh(object->getId());
         }
 
         else if(object->getSecondType() == Object::Meshed_Object)
         {
-            m_MeshEditor->deleteMesh(object->getFirstChild()->getId());
+			//m_MeshEditor->deleteMesh(object->getFirstChild()->getId());
         }
 
         m_SelectedLayer->removeChild(object);
@@ -1191,11 +1191,11 @@ namespace nero
         Mesh::Type type;
 
         if(label == "Static")
-            type = Mesh::Static_Mesh;
+			type = Mesh::Type::Static;
         else if (label == "Kinematic")
-            type = Mesh::Kinematic_Mesh;
+			type = Mesh::Type::Kinematic;
         else if(label == "Dynamic")
-            type = Mesh::Dynamic_Mesh;
+			type = Mesh::Type::Dynamic;
 
 
         MeshObject::Ptr mesh_object;
@@ -1360,7 +1360,7 @@ namespace nero
 
 	void WorldBuilder::buildScene(Object::Ptr rootObject)
     {
-        for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
+		/*for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
         {
             if(!(*layer)->isVisible())
                 continue;
@@ -1395,16 +1395,16 @@ namespace nero
                         //convert into MeshObject
                         MeshObject::Ptr mesh_object = MeshObject::Cast(*it);
 
-                        if(!mesh_object->getMesh()->isValid())
-                            continue;
+						if(!mesh_object->getMesh()->isValid())
+							continue;
 
                         PhysicObject::Ptr physic_object = m_PhysicObjectManager.createObject(mesh_object->getMesh());
                         physic_object->setName(mesh_object->getName());
                         physic_object->setCategory(mesh_object->getCategory());
-                        physic_object->setId(mesh_object->getId());
+						physic_object->setId(mesh_object->getObjectId());
                         physic_object->setUserData((void*)physic_object->getId());
 
-						if(m_LightManager && mesh_object->getMesh()->getType() == Mesh::Static_Mesh)
+						if(m_LightManager && mesh_object->getMesh()->getType() == Mesh::Type::Static)
 						{
 							switch(mesh_object->getMesh()->getShape())
 							{
@@ -1424,7 +1424,7 @@ namespace nero
 
 								}break;
 
-								case Mesh::Polygon_Mesh:
+								case Mesh::Shape::Polygon:
 								{
 
 									for(sf::ConvexShape shape : mesh_object->getMesh()->getPolygonTable())
@@ -1464,7 +1464,7 @@ namespace nero
                         physic_object->setSecondType(Object::Solid_Object);
                         physic_object->setName(mesh_object->getName());
                         physic_object->setCategory(mesh_object->getCategory());
-                        physic_object->setId(mesh_object->getId());
+						physic_object->setId(mesh_object->getObjectId());
                         physic_object->setUserData((void*)physic_object->getId());
 
                         Object::Ptr sprite_object = (*it)->clone();
@@ -1517,7 +1517,7 @@ namespace nero
                         physic_object->setSecondType(Object::Animation_Solid_Object);
                         physic_object->setName(mesh_object->getName());
                         physic_object->setCategory(mesh_object->getCategory());
-                        physic_object->setId(mesh_object->getId());
+						physic_object->setId(mesh_object->getObjectId());
                         physic_object->setUserData((void*)physic_object->getId());
 
 
@@ -1592,7 +1592,7 @@ namespace nero
 
 				}break;
             }
-        }
+		}*/
     }
 
 	void WorldBuilder::destroyAllPhysicObject(Object::Ptr rootObject)
@@ -1623,19 +1623,19 @@ namespace nero
 	void WorldBuilder::setUpdateUndo(std::function<void()>  fn)
     {
         m_UpdateUndo = fn;
-         m_MeshEditor->setUpdateUndo(fn);
+		 //m_MeshEditor->setUpdateUndo(fn);
     }
 
 	void WorldBuilder::setUpdateLog(std::function<void(const std::string&, int)>  fn)
     {
         m_UpdateLog = fn;
-        m_MeshEditor->setUpdateLog(fn);
+		//m_MeshEditor->setUpdateLog(fn);
     }
 
 	void WorldBuilder::setUpdateLogIf(std::function<void(const std::string&, bool, int)>  fn)
     {
         m_UpdateLogIf = fn;
-        m_MeshEditor->setUpdateLogIf(fn);
+		//m_MeshEditor->setUpdateLogIf(fn);
     }
 
 	Object::Ptr WorldBuilder::getSelectedObject()
@@ -1699,12 +1699,12 @@ namespace nero
 
 	MeshObject::Ptr WorldBuilder::loadMesh(nlohmann::json& json)
     {
-        Mesh mesh = Mesh();
+		/*Mesh mesh = Mesh();
 
         nlohmann::json mesh_json = json["mesh"];
         //shape
         if(mesh_json["shape"] == "polygon_mesh")
-            mesh.setShape(Mesh::Polygon_Mesh);
+			mesh.setShape(Mesh::Shape::Polygon);
         else if(mesh_json["shape"] == "circle_mesh")
             mesh.setShape(Mesh::Circle_Mesh);
         else if(mesh_json["shape"] == "line_mesh")
@@ -1714,11 +1714,11 @@ namespace nero
 
         //type
         if(mesh_json["type"] == "static_mesh")
-            mesh.setType(Mesh::Static_Mesh);
+			mesh.setType(Mesh::Type::Static);
         else if(mesh_json["type"] == "dynamic_mesh")
-            mesh.setType(Mesh::Dynamic_Mesh);
+			mesh.setType(Mesh::Type::Dynamic);
         else if(mesh_json["type"] == "kinematic_mesh")
-            mesh.setType(Mesh::Kinematic_Mesh);
+			mesh.setType(Mesh::Type::Kinematic);
 
         //properties
         mesh.setFixedRotation(mesh_json["fixed_rotation"]);
@@ -1729,7 +1729,7 @@ namespace nero
         mesh.setRestitution(mesh_json["restitution"]);
         mesh.setGravityScale(mesh_json["gravity_scale"]);
         mesh.setIsValid(mesh_json["is_valid"]);
-        mesh.setId(json["object_id"]);
+		mesh.setMeshId(json["object_id"]);
 
         //vertex
         nlohmann::json vertex_table = mesh_json["vertex_table"];
@@ -1752,9 +1752,11 @@ namespace nero
         mesh_object->setIsSelectable(json["is_selectable"]);
         mesh_object->setIsSelected(json["is_selected"]);
 
-        m_MeshEditor->addMesh(mesh_object->getMesh());
+		//m_MeshEditor->addMesh(mesh_object->getMesh());
 
-        return mesh_object;
+		return mesh_object;*/
+
+		return nullptr;
     }
 
 	TextObject::Ptr WorldBuilder::loadText(nlohmann::json& json)
@@ -1846,7 +1848,7 @@ namespace nero
         nero_log("loading scene");
 
         m_LayerTable.clear();
-        m_MeshEditor->destroyAllMesh();
+		//m_MeshEditor->destroyAllMesh();
         m_SelectedObject = nullptr;
 
         m_LayerCount    = scene["layer_count"];
@@ -2008,7 +2010,7 @@ namespace nero
 	void WorldBuilder::setPhysicWorld(b2World* world)
     {
         m_PhysicWorld = world;
-        m_PhysicObjectManager.setWorld(world);
+		//m_PhysicObjectManager.setWorld(world);
     }
 
 	int WorldBuilder::getNewId()
@@ -2238,14 +2240,14 @@ namespace nero
 	{
 		m_RenderContext = renderContext;
 
-		m_MeshEditor->setRenderContext(renderContext);
+		//m_MeshEditor->setRenderContext(renderContext);
 	}
 
 	void WorldBuilder::setRenderTexture(const RenderTexturePtr& renderTexture)
 	{
 		m_RenderTexture = renderTexture;
 
-		m_MeshEditor->setRenderTexture(renderTexture);
+		//m_MeshEditor->setRenderTexture(renderTexture);
 	}
 
 	void WorldBuilder::setResourceManager(const ResourceManager::Ptr& resourceManager)

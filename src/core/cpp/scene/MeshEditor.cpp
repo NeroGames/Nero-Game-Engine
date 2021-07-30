@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	MeshEditor::MeshEditor():
+	/*MeshEditor::MeshEditor():
 		 m_LastMousePosition(0.f, 0.f)
         ,m_SelectedMesh(nullptr)
 		,m_MeshCount(0)
@@ -572,12 +572,13 @@ namespace nero
         {
             sf::Vector2f diff = world_pos - m_LastMousePosition;
 
-			/*if(std::abs(diff.x) > std::abs(diff.y))
+			/* //was commented
+			if(std::abs(diff.x) > std::abs(diff.y))
                 diff.y = 0.f;
             else
 				diff.x = 0.f;*/
 
-            if(!m_SelectedVertexTab.empty() && m_SelectedMesh)
+			/*if(!m_SelectedVertexTab.empty() && m_SelectedMesh)
             {
                 for(auto vertex : m_SelectedVertexTab)
                     vertex->move(diff);
@@ -613,6 +614,6 @@ namespace nero
 	void MeshEditor::setRenderTexture(const RenderTexturePtr& renderTexture)
 	{
 		m_RenderTexture = renderTexture;
-	}
+	}*/
 
 }

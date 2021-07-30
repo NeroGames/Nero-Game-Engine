@@ -96,7 +96,7 @@ namespace nero
             void                            setMeshRestitution(float restitution);
             void                            setMeshGravityScale(float gravityScale);
             //
-            MeshEditor::Ptr                 getMeshEditor();
+			//MeshEditor::Ptr                 getMeshEditor();
             //Scene
             void                            buildScene(Object::Ptr rootObject);
             void                            destroyAllPhysicObject(Object::Ptr mainObject);
@@ -165,7 +165,7 @@ namespace nero
             Object::Ptr                     m_SelectedObject;
             int                             m_ObjectCount;
 
-            MeshEditor::Ptr                 m_MeshEditor;
+			//MeshEditor::Ptr                 //m_MeshEditor;
             PhysicObjectManager             m_PhysicObjectManager;
 
             b2World*                        m_PhysicWorld;

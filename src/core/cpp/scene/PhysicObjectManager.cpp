@@ -15,7 +15,7 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    PhysicObjectManager::PhysicObjectManager():
+	/*PhysicObjectManager::PhysicObjectManager():
          m_World(nullptr)
     {
         //ctor
@@ -204,7 +204,7 @@ namespace nero
     void PhysicObjectManager::setWorld(b2World* world)
     {
         m_World = world;
-    }
+	}*/
 }
 
 

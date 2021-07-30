@@ -19,7 +19,7 @@ namespace nero
 {
     class PhysicObjectManager
     {
-        public:
+		/*public:
                                 PhysicObjectManager();
             virtual            ~PhysicObjectManager();
 
@@ -36,7 +36,7 @@ namespace nero
             b2World*            m_World;
 
             b2BodyDef           m_BodyDef;
-            b2FixtureDef        m_FixtureDef;
+			b2FixtureDef        m_FixtureDef;*/
     };
 }
 #endif // PHYSICOBJECTMANAGER_H

@@ -21,13 +21,58 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
+	struct Mesh : public sf::Transformable, public sf::Drawable
+	{
+		public: //utility
+			enum class Type	{Static, Dynamic, Kinematic};
+			enum class Shape	{Polygon, Circle, Chain, Line, None};
+
+		public: //ctr & dtr
+										Mesh(const Shape& shape = Shape::None);
+									   ~Mesh();
+
+			void						setMeshId(const int& meshId);
+			int							getMeshId() const;
+
+		private:
+			//draw
+			virtual void			    draw(sf::RenderTarget& target, sf::RenderStates states) const;
+			//default
+			void						createDefaultPolygon();
+			void						createDefaultCircle();
+			void						createDefaultLine();
+			//mesh
+			void						addVertex(const sf::Vector2f& position);
+			void						updateMesh(const bool& shape = true, const bool& color = true);
+			std::vector<sf::Vector2f>	generateRegularPolygon(const sf::Vector2f& position, const int& pointCount, const float& radius);
+
+		private:
+			int										m_MeshId;
+			Shape									m_MeshShape;
+			Type									m_MeshType;
+			sf::Vector2f							m_GravityCenter;
+			bool									m_Valid;
+			//
+			std::vector<sf::RectangleShape>			m_VertexTable;
+			std::vector<sf::RectangleShape>			m_LineTable;
+			//constants
+			float									m_VertexSize         = 8.f;
+			int										m_ColorAlpha		 = 50.f;
+			float									m_MinVertexDistance  = 1.f;
+
+	};
+}
+
+/*
+////////////////////////////////////////////////////////////
+namespace nero
+{
     struct Mesh : public sf::Transformable, public sf::Drawable
     {
         public: //Utility
             std::vector<sf::String> String_Type{"static_mesh", "dynamic_mesh", "kinematic_mesh"};
             std::vector<sf::String> String_Shape{"polygon_mesh", "circle_mesh", "chain_mesh", "line_mesh", "none"};
-            enum Type {Static_Mesh, Dynamic_Mesh, Kinematic_Mesh};
-            enum Shape {Polygon_Mesh, Circle_Mesh, Chain_Mesh, Line_Mesh, None};
+
 
             typedef std::vector<sf::RectangleShape>     VertexTab;
             typedef std::vector<sf::RectangleShape>     LineTab;
@@ -148,5 +193,5 @@ namespace nero
 			mutable sf::RectangleShape              m_SelectionRect;
 
     };
-}
+}*/
 #endif // MESH_H

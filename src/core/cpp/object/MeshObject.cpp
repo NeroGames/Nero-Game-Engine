@@ -38,16 +38,16 @@ namespace nero
 
     void MeshObject::drawObject(sf::RenderTarget& target, sf::RenderStates states) const
     {
-		m_Mesh.update(states.transform);
+		//m_Mesh.update(states.transform);
         target.draw(m_Mesh, states);
     }
 
     sf::FloatRect MeshObject::getGlobalBounds() const
     {
-		if(isSelectable())
+		/*if(isSelectable())
 			return  m_Mesh.getGlobalBounds();
         else
-			return sf::FloatRect();
+			return sf::FloatRect();*/
     }
 
     void MeshObject::updateObject(sf::Time time_step)
@@ -97,78 +97,78 @@ namespace nero
 
     void MeshObject::setMeshType(Mesh::Type type)
     {
-        m_Mesh.setType(type);
-        m_Mesh.updateColor();
+		//m_Mesh.setType(type);
+		//m_Mesh.updateColor();
     }
 
     void MeshObject::setMeshFixedRotation(bool flag)
     {
-        m_Mesh.setFixedRotation(flag);
+		//m_Mesh.setFixedRotation(flag);
     }
 
     void MeshObject::setMeshSensor(bool flag)
     {
-        m_Mesh.setIsSensor(flag);
+		//m_Mesh.setIsSensor(flag);
     }
 
     void MeshObject::setMeshAllowSleep(bool flag)
     {
-        m_Mesh.setAllowSleep(flag);
+		//m_Mesh.setAllowSleep(flag);
     }
 
     void MeshObject::setMeshDensity(const float& density)
     {
-        m_Mesh.setDensity(density);
+		//m_Mesh.setDensity(density);
     }
 
     void MeshObject::setMeshFriction(const float& friction)
     {
-        m_Mesh.setFriction(friction);
+		//m_Mesh.setFriction(friction);
     }
 
     void MeshObject::setMeshRestitution(const float& restitution)
     {
-        m_Mesh.setRestitution(restitution);
+		//m_Mesh.setRestitution(restitution);
     }
 
     void MeshObject::setMeshGravityScale(const float& gravityScale)
     {
-        m_Mesh.setGravityScale(gravityScale);
+		//m_Mesh.setGravityScale(gravityScale);
     }
 
     bool MeshObject::getMeshFixedRotation() const
     {
-        return m_Mesh.getFixedRotation();
+		//return m_Mesh.getFixedRotation();
     }
 
     bool MeshObject::getMeshSensor() const
     {
-        return m_Mesh.getIsSensor();
+		//return m_Mesh.getIsSensor();
     }
 
     bool MeshObject::getMeshAllowSleep() const
     {
-        return m_Mesh.getAllowSleep();
+		//return m_Mesh.getAllowSleep();
     }
 
     float MeshObject::getMeshDensity() const
     {
-        return m_Mesh.getDensity();
+		//return m_Mesh.getDensity();
     }
 
     float MeshObject::getMeshFriction() const
     {
-        return m_Mesh.getFriction();
+		//return m_Mesh.getFriction();
     }
 
     float MeshObject::getMeshRestitution() const
     {
-        return m_Mesh.getRestitution();
+		//return m_Mesh.getRestitution();
     }
 
     float MeshObject::getMeshGravityScale() const
     {
-        return m_Mesh.getGravityScale();
+		//return m_Mesh.getGravityScale();
     }
 
     nlohmann::json MeshObject::toJson() const
@@ -176,7 +176,7 @@ namespace nero
         nlohmann::json mesh_json;
 
         mesh_json = Object::toJson();
-        mesh_json["mesh"] = m_Mesh.toJson();
+		//mesh_json["mesh"] = m_Mesh.toJson();
 
         return mesh_json;
     }
@@ -198,7 +198,7 @@ namespace nero
 
         mesh_object->setParentLastPosition(getPosition() - position);
         mesh_object->setId(-1);
-        mesh_object->getMesh()->setId(-1);
+		//mesh_object->getMesh()->setMeshId(-1);
 
         return mesh_object;
     }

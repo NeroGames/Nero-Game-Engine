@@ -5,6 +5,119 @@
 ///////////////////////////HEADERS//////////////////////////
 //NERO
 #include <Nero/core/cpp/model/Mesh.h>
+namespace nero
+{
+	Mesh::Mesh(const Shape& shape):
+		 m_MeshId(-1)
+		,m_MeshShape(shape)
+		,m_MeshType(Type::Dynamic)
+		,m_GravityCenter(sf::Vector2f(0.f, 0.f))
+		,m_Valid(true)
+	{
+		switch(shape)
+		{
+			case Shape::Polygon:
+				createDefaultPolygon();
+				break;
+			case Shape::Circle:
+				createDefaultCircle();
+				break;
+			case Shape::Line:
+				createDefaultLine();
+				break;
+		}
+	}
+
+	Mesh::~Mesh()
+	{
+
+	}
+
+	void Mesh::draw(sf::RenderTarget& target, sf::RenderStates states) const
+	{
+
+	}
+
+	void Mesh::createDefaultPolygon()
+	{
+		m_MeshType = Type::Dynamic;
+
+		std::vector<sf::Vector2f> pointTable = generateRegularPolygon(m_GravityCenter, 4, 50.f);
+
+		for(const sf::Vector2f& point : pointTable)
+		{
+			addVertex(point);
+		}
+
+		updateMesh();
+	}
+
+	void Mesh::createDefaultCircle()
+	{
+		m_MeshType  = Type::Dynamic;
+
+		addVertex(m_GravityCenter);
+		addVertex(sf::Vector2f(m_GravityCenter.x + 50.f, m_GravityCenter.y));
+
+		updateMesh();
+	}
+
+	void Mesh::createDefaultLine()
+	{
+		m_MeshType  = Type::Static;
+
+		addVertex(sf::Vector2f(m_GravityCenter.x + 75.f, m_GravityCenter.y));
+		addVertex(sf::Vector2f(m_GravityCenter.x - 75.f, m_GravityCenter.y));
+
+		updateMesh();
+	}
+
+	void Mesh::addVertex(const sf::Vector2f &position)
+	{
+		sf::RectangleShape vertex;
+
+		vertex.setOrigin(sf::Vector2f(m_VertexSize/2.f, m_VertexSize/2.f));
+		vertex.setSize(sf::Vector2f(m_VertexSize, m_VertexSize));
+		vertex.setPosition(position);
+
+		m_VertexTable.push_back(vertex);
+	}
+
+	void Mesh::updateMesh(const bool& shape, const bool& color)
+	{
+
+	}
+
+	std::vector<sf::Vector2f> Mesh::generateRegularPolygon(const sf::Vector2f& position, const int& pointCount, const float& radius)
+	{
+		std::vector<sf::Vector2f> pointTable;
+
+		float theta = math::PI/4.f;
+		for(int i = 0; i < pointCount; i++)
+		{
+			sf::Vector2f point;
+			point.x = radius * cos(2*math::PI*i/pointCount + theta) + position.x;
+			point.y = radius * sin(2*math::PI*i/pointCount + theta) + position.y;
+
+			pointTable.push_back(point);
+		}
+
+		return pointTable;
+	}
+
+	void Mesh::setMeshId(const int& meshId)
+	{
+		m_MeshId = meshId;
+	}
+
+	int Mesh::getMeshId() const
+	{
+		return m_MeshId;
+	}
+}
+
+/*
+////////////////////////////////////////////////////////////
 #include <Nero/core/cpp/utility/Math.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 ////////////////////////////////////////////////////////////
@@ -762,5 +875,4 @@ namespace nero
 	{
 
 	}
-
-}
+}*/
