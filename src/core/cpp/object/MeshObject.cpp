@@ -43,8 +43,11 @@ namespace nero
     }
 
     sf::FloatRect MeshObject::getGlobalBounds() const
-    {
-		/*if(isSelectable())
+	{
+		return  m_Mesh.getGlobalBounds();
+
+		/* TODO remove
+		if(isSelectable())
 			return  m_Mesh.getGlobalBounds();
         else
 			return sf::FloatRect();*/

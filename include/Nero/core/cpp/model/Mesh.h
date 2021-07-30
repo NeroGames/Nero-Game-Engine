@@ -28,23 +28,29 @@ namespace nero
 			enum class Shape	{Polygon, Circle, Chain, Line, None};
 
 		public: //ctr & dtr
-										Mesh(const Shape& shape = Shape::None);
-									   ~Mesh();
+													Mesh(const Shape& shape = Shape::None);
+												  ~Mesh();
 
-			void						setMeshId(const int& meshId);
-			int							getMeshId() const;
+			void									setMeshId(const int& meshId);
+			int										getMeshId()				const;
+			sf::FloatRect							getGlobalBounds()       const;
 
 		private:
 			//draw
-			virtual void			    draw(sf::RenderTarget& target, sf::RenderStates states) const;
+			virtual void							draw(sf::RenderTarget& target, sf::RenderStates states) const;
 			//default
-			void						createDefaultPolygon();
-			void						createDefaultCircle();
-			void						createDefaultLine();
+			void									createDefaultPolygon();
+			void									createDefaultCircle();
+			void									createDefaultLine();
 			//mesh
-			void						addVertex(const sf::Vector2f& position);
-			void						updateMesh(const bool& shape = true, const bool& color = true);
-			std::vector<sf::Vector2f>	generateRegularPolygon(const sf::Vector2f& position, const int& pointCount, const float& radius);
+			void									addVertex(const sf::Vector2f& position);
+			void									addLine(const sf::Vector2f &point1, const sf::Vector2f &point2);
+			void									addPolygon(const std::vector<sf::Vector2f>& pointTable);
+			void									updateMesh(const bool& shape = true, const bool& color = true);
+			std::vector<sf::Vector2f>				generateRegularPolygon(const sf::Vector2f& position, const int& pointCount, const float& radius);
+			sf::Color								getColor();
+			void									validate(const sf::Vector2f& point1, const sf::Vector2f& point2);
+			std::vector<sf::Vector2f>				getVertexPosition() const;
 
 		private:
 			int										m_MeshId;
@@ -55,6 +61,8 @@ namespace nero
 			//
 			std::vector<sf::RectangleShape>			m_VertexTable;
 			std::vector<sf::RectangleShape>			m_LineTable;
+			std::vector<sf::ConvexShape>			m_PolygonTable;
+			sf::CircleShape*						m_CircleShape;
 			//constants
 			float									m_VertexSize         = 8.f;
 			int										m_ColorAlpha		 = 50.f;
