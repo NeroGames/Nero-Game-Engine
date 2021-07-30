@@ -289,7 +289,7 @@ namespace nero
 
 	sf::FloatRect Mesh::getGlobalBounds() const
 	{
-		sf::FloatRect boundRect(0.f, 0.f, 100.f, 100.f);
+		sf::FloatRect boundRect;
 
 		switch(m_MeshShape)
 		{
@@ -297,48 +297,51 @@ namespace nero
 			{
 				sf::Vector2f point1 = m_VertexTable[0].getPosition();
 				sf::Vector2f point2 = m_VertexTable[1].getPosition();
-				boundRect.left	= point1.x <= point2.x ? point1.x : point2.x;
-				boundRect.top	= point1.y <= point2.y ? point1.y : point2.y;
-						//= boundRect.left	-10.f;
-				//boundRect.top		= boundRect.top		- 10.f;
-				//boundRect.height	= boundRect.height  + 20.f;
-				//boundRect.width		= boundRect.width	+ 20.f;
+				boundRect.left		= point1.x < point2.x ? point1.x : point2.x - 8.f;
+				boundRect.top		= point1.y < point2.y ? point1.y : point2.y - 8.f;
+				boundRect.width		= std::abs(point1.x - point2.x) + 16.f;
+				boundRect.height	= std::abs(point1.y - point2.y) + 16.f;
+			}break;
+
+			case Shape::Circle:
+			{
+				sf::Vector2f point1 = m_VertexTable[0].getPosition();
+				sf::Vector2f point2 = m_VertexTable[1].getPosition();
+				float radius = math::distance(point1, point2);
+
+				boundRect.left		= point1.x - radius - 5.f;
+				boundRect.top		= point1.y - radius - 5.f;
+				boundRect.height	= radius * 2.f + 10.f;
+				boundRect.width		= radius * 2.f + 10.f;
 
 			}break;
 
-			/*case Mesh::Circle_Mesh:
+			case Shape::Polygon:
+			case Shape::Chain:
 			{
-				boundRect = m_CircleShape.getGlobalBounds();
-				boundRect.left = boundRect.left - 7.f;
-				boundRect.top = boundRect.top  -7.f;
-				boundRect.height = boundRect.height + 14.f;
-				boundRect.width = boundRect.width + 14.f;
+				std::vector<sf::Vector2f> posTable = getVertexPosition();
 
-			}break;
+				auto xExtremes = std::minmax_element(posTable.begin(), posTable.end(),
+					[](const sf::Vector2f& lhs, const sf::Vector2f& rhs)
+					{
+						return lhs.x < rhs.x;
+					});
 
-			default:
-			{
-				auto v = getAllVertexPoint();
-
-				auto xExtremes = std::minmax_element(v.begin(), v.end(),
-									 [](const sf::Vector2f& lhs, const sf::Vector2f& rhs) {
-										return lhs.x < rhs.x;
-									 });
-
-				auto yExtremes = std::minmax_element(v.begin(), v.end(),
-													 [](const sf::Vector2f& lhs, const sf::Vector2f& rhs) {
-														return lhs.y < rhs.y;
-													 });
+				auto yExtremes = std::minmax_element(posTable.begin(), posTable.end(),
+					[](const sf::Vector2f& lhs, const sf::Vector2f& rhs)
+					{
+						return lhs.y < rhs.y;
+					});
 
 				sf::Vector2f  upperLeft(xExtremes.first->x, yExtremes.first->y);
 				sf::Vector2f  lowerRight(xExtremes.second->x, yExtremes.second->y);
 
-				boundRect.left = upperLeft.x -10.f;
-				boundRect.top = upperLeft.y -10.f;
-				boundRect.width = lowerRight.x - upperLeft.x + 20.f;
-				boundRect.height = lowerRight.y - upperLeft.y  + 20.f;
+				boundRect.left		= upperLeft.x - 5.f;
+				boundRect.top		= upperLeft.y - 5.f;
+				boundRect.width		= lowerRight.x - upperLeft.x + 10.f;
+				boundRect.height	= lowerRight.y - upperLeft.y  + 10.f;
 
-			}break;*/
+			}break;
 		}
 
 		return boundRect;
