@@ -41,7 +41,7 @@ namespace nero
             float                                       Min_Vertex_Distance     = 1.f;
 
         public: //Method
-                                        Mesh(Shape shape = None, sf::Vector2f position = sf::Vector2f(0.f, 0.f), float size = 100.f, Type type = Static_Mesh);
+										Mesh(Shape shape = None);
 
             void                        updateShape();
             void                        updateCircleShape();
@@ -49,6 +49,7 @@ namespace nero
             void                        updateLineShapeLoop();
             void                        updatePolygonShape();
             void                        updateColor();
+			void						update(const sf::Transform& transform);
 
 
             void                        addVertex(sf::Vector2f point, const int& index);
@@ -107,6 +108,7 @@ namespace nero
 			std::vector<sf::ConvexShape>		getPolygonTable();
 			sf::CircleShape						getCircleShape();
 
+
         private: //Method
             void                        updateLine(bool loop);
             void                        setColor(sf::Color color);
@@ -143,7 +145,7 @@ namespace nero
             float                       m_Friction;
             float                       m_Restitution;
             float                       m_GravityScale;
-			sf::RectangleShape              m_SelectionRect;
+			mutable sf::RectangleShape              m_SelectionRect;
 
     };
 }

@@ -38,37 +38,37 @@ namespace nero
 
     void MeshObject::drawObject(sf::RenderTarget& target, sf::RenderStates states) const
     {
-        states.transform = sf::Transform::Identity;
+		m_Mesh.update(states.transform);
         target.draw(m_Mesh, states);
     }
 
     sf::FloatRect MeshObject::getGlobalBounds() const
     {
-        if(isSelectable())
-            return getTransform().transformRect(m_Mesh.getGlobalBounds());
+		if(isSelectable())
+			return  m_Mesh.getGlobalBounds();
         else
-            return sf::FloatRect();
+			return sf::FloatRect();
     }
 
     void MeshObject::updateObject(sf::Time time_step)
     {
-		//*//panning
-        auto pos_diff = m_Parent->getPosition() - m_ParentLastPosition;
+		//panning
+		/*auto pos_diff = m_Parent->getPosition() - m_ParentLastPosition;
         auto pos = getPosition();
         setPosition(0.f, 0.f);
 
         m_Mesh.move(pos + pos_diff);
 
-        m_ParentLastPosition = m_Parent->getPosition(); //*/
+		m_ParentLastPosition = m_Parent->getPosition();
 
-		//*//rotation
+		//rotation
         float rot_diff = m_Parent->getRotation() - m_ParentLastRotation;
         float rot = getRotation();
         setRotation(0.f);
 
         m_Mesh.rotate(rot + rot_diff);
 
-        m_ParentLastRotation = m_Parent->getRotation();//*/
+		m_ParentLastRotation = m_Parent->getRotation();
 
 		//scaling
         auto scale_diff = m_Parent->getScale() - m_ParentLastScale;
@@ -77,7 +77,7 @@ namespace nero
 
         m_Mesh.scale(scale + scale_diff);
 
-		m_ParentLastScale = m_Parent->getScale();
+		m_ParentLastScale = m_Parent->getScale();*/
     }
 
     void MeshObject::setParentLastPosition(const sf::Vector2f& position)

@@ -10,13 +10,12 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    Mesh::Mesh(Shape shape,  sf::Vector2f position, float size, Type type):
+	Mesh::Mesh(Shape shape):
          m_Id(-1)
         ,m_Shape(shape)
-        ,m_Type(type)
+		,m_Type(Static_Mesh)
         ,m_IsValid(true)
-        ,m_Position(position)
-        ,m_Size(size)
+		,m_Position(sf::Vector2f(0.f,0.f))
 		,m_Color(EngineConstant.COLOR_STATIC_MESH)
         ,m_FixedRotation(false)
         ,m_IsSensor(false)
@@ -41,23 +40,16 @@ namespace nero
 
 				m_Color = EngineConstant.COLOR_STATIC_MESH;
                 m_Type  = Static_Mesh;
+				m_Size = 75.f;
 
                 //Create vertex
-                sf::Vector2f point1 = sf::Vector2f(position.x - size, position.y);
-                sf::Vector2f point2 = sf::Vector2f(position.x + size, position.y);
+				sf::Vector2f point1 = sf::Vector2f(m_Position.x - m_Size, m_Position.y);
+				sf::Vector2f point2 = sf::Vector2f(m_Position.x + m_Size, m_Position.y);
                 m_VertexTab.push_back(createVertex(point1, m_Color));
                 m_VertexTab.push_back(createVertex(point2, m_Color));
 
                 //Create line
                 updateLineShape();
-
-
-				m_SelectionRect.setFillColor(sf::Color::Transparent);
-				m_SelectionRect.setOutlineColor(sf::Color::Green);
-				m_SelectionRect.setOutlineThickness(-3.f);
-
-				m_SelectionRect.setPosition(getGlobalBounds().left,  getGlobalBounds().top);
-				m_SelectionRect.setSize(sf::Vector2f(getGlobalBounds().width,  getGlobalBounds().height));
 
             }break;
 
@@ -68,10 +60,12 @@ namespace nero
 
 				m_Color = EngineConstant.COLOR_DYNAMIC_MESH;
                 m_Type  = Dynamic_Mesh;
+				m_Size = 50.f;
+
 
                 //Create vertex
-                sf::Vector2f center = sf::Vector2f(position);
-                sf::Vector2f point = sf::Vector2f(position.x + size, position.y);
+				sf::Vector2f center = sf::Vector2f(m_Position);
+				sf::Vector2f point = sf::Vector2f(m_Position.x + m_Size, m_Position.y);
                 m_VertexTab.push_back(createVertex(center, m_Color));
                 m_VertexTab.push_back(createVertex(point, m_Color));
 
@@ -90,16 +84,21 @@ namespace nero
 
 				m_Color = EngineConstant.COLOR_DYNAMIC_MESH;
                 m_Type  = Dynamic_Mesh;
+				m_Size = 50.f;
 
                 //Create vertex and polygon
-                m_PolygonTab.push_back(createRegularPolygon(position, m_Color, 4));
+				m_PolygonTab.push_back(createRegularPolygon(m_Position, m_Color, 4));
 
                 //Create line
                 updateLineShapeLoop();
 
             }break;
         }
-    }
+
+		m_SelectionRect.setFillColor(sf::Color::Transparent);
+		m_SelectionRect.setOutlineColor(sf::Color::Green);
+		m_SelectionRect.setOutlineThickness(-3.f);
+	}
 
     void Mesh::validate(const sf::Vector2f& point1, const sf::Vector2f& point2)
     {
@@ -112,10 +111,10 @@ namespace nero
     {
         sf::RectangleShape vertex;
 
+		vertex.setOrigin(sf::Vector2f(Vertex_Size/2.f, Vertex_Size/2.f));
+		vertex.setSize(sf::Vector2f(Vertex_Size, Vertex_Size));
         vertex.setPosition(point);
         vertex.setFillColor(color);
-        vertex.setSize(sf::Vector2f(Vertex_Size, Vertex_Size));
-        vertex.setOrigin(sf::Vector2f(Vertex_Size/2, Vertex_Size/2));
 
         return vertex;
     }
@@ -160,10 +159,10 @@ namespace nero
         sf::RectangleShape line;
 
 		float length = math::distance(point1, point2);
+		line.setOrigin(sf::Vector2f(line.getOrigin().x, Vertex_Size/4.f));
         line.setSize(sf::Vector2f(length, Vertex_Size/2.f));
         line.setPosition(point1);
         line.setFillColor(color);
-        line.setOrigin(sf::Vector2f(line.getOrigin().x, Vertex_Size/4.f));
 
         float delta_x = point2.x - point1.x;
         float delta_y = point2.y - point1.y;
@@ -176,12 +175,12 @@ namespace nero
     void Mesh::updateCircleShape()
     {
 		m_Size = math::distance(m_VertexTab.front().getPosition(), m_VertexTab.back().getPosition());
+		m_CircleShape.setOrigin(sf::Vector2f(m_Size, m_Size));
         m_CircleShape.setOutlineThickness(Vertex_Size/8.f);
         m_CircleShape.setOutlineColor(m_Color);
 		m_CircleShape.setFillColor(graphics::getTransparentColor(m_Color, 50));
         m_CircleShape.setPosition(m_VertexTab.front().getPosition());
         m_CircleShape.setRadius(m_Size);
-        m_CircleShape.setOrigin(sf::Vector2f(m_Size, m_Size));
     }
 
     sf::ConvexShape Mesh::createRegularPolygon(const sf::Vector2f& position, const sf::Color& color, const int& pointCount)
@@ -413,21 +412,17 @@ namespace nero
         {
 			case Mesh::Line_Mesh:
             {
-				/*boundRect = m_LineTab[0].getGlobalBounds();
-                boundRect.left = boundRect.left - 10.f;
-                boundRect.top = boundRect.top  -10.f;
-                boundRect.height = boundRect.height + 20.f;
-				boundRect.width = boundRect.width + 20.f;*/
+				boundRect = m_LineTab[0].getGlobalBounds();
+				boundRect.left = boundRect.left -10.f;
+				boundRect.top = boundRect.top - 10.f;
+				boundRect.height = boundRect.height  + 20.f;
+				boundRect.width = boundRect.width + 20.f;
 
-				 boundRect.left = getTransform().transformPoint(m_VertexTab[0].getPosition()).x - 10.f;
-				 boundRect.top = getTransform().transformPoint(m_VertexTab[0].getPosition()).x - 10.f;
-				 boundRect.width = getTransform().transformPoint(m_VertexTab[1].getPosition()).x -  getTransform().transformPoint(m_VertexTab[0].getPosition()).x + 20.f;
-				 boundRect.height = 20.f;
 			}break;
 
             case Mesh::Circle_Mesh:
             {
-                boundRect = getTransform().transformRect(m_CircleShape.getGlobalBounds());
+				boundRect = m_CircleShape.getGlobalBounds();
                 boundRect.left = boundRect.left - 7.f;
                 boundRect.top = boundRect.top  -7.f;
                 boundRect.height = boundRect.height + 14.f;
@@ -479,7 +474,13 @@ namespace nero
 
     void Mesh::draw(sf::RenderTarget& target, sf::RenderStates states) const
     {
-        states.transform *= getTransform();
+
+		//m_SelectionRect.setPosition(getGlobalBounds().left,  getGlobalBounds().top);
+		//m_SelectionRect.setSize(sf::Vector2f(getGlobalBounds().width,  getGlobalBounds().height));
+
+
+		//states.transform *= getTransform();
+		states.transform = sf::Transform::Identity;
 
         if(m_Shape == Mesh::Polygon_Mesh)
             for(auto polygon : m_PolygonTab)
@@ -494,10 +495,10 @@ namespace nero
         for(auto vertex : m_VertexTab)
             target.draw(vertex, states);
 
-		if(m_Shape == Mesh::Line_Mesh)
-		{
+		//if(m_Shape == Mesh::Line_Mesh)
+		//{
 			target.draw(m_SelectionRect, states);
-		}
+		//}
     }
 
     void Mesh::move(const sf::Vector2f& offset)
@@ -756,4 +757,10 @@ namespace nero
 	{
 		return m_CircleShape;
 	}
+
+	void Mesh::update(const sf::Transform& transform)
+	{
+
+	}
+
 }

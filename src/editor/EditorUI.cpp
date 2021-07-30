@@ -129,6 +129,17 @@ namespace  nero
 		m_CameraYAxis.setPosition(sf::Vector2f(20.f, 20.f));
 		m_CameraYAxis.setRotation(90.f);
 
+		m_CanvasXAxis.setSize(sf::Vector2f(100.f, -2.f));
+		m_CanvasXAxis.setFillColor(sf::Color::Red);
+		m_CanvasXAxis.setOrigin(sf::Vector2f(50.f, -1.f));
+		m_CanvasXAxis.setPosition(sf::Vector2f(0.f, 0.f));
+		m_CanvasYAxis.setSize(sf::Vector2f(100.f, -2.f));
+		m_CanvasYAxis.setOrigin(sf::Vector2f(50.f, -1.f));
+		m_CanvasYAxis.setFillColor(sf::Color::Green);
+		m_CanvasYAxis.setPosition(sf::Vector2f(0.f, 0.f));
+		m_CanvasYAxis.setRotation(90.f);
+
+
 
 		//setup game mode information text
 		m_GameModeInfo.setFont(m_EditorFontHolder->getDefaultFont());
@@ -457,18 +468,6 @@ namespace  nero
 			std::string wrold_pos_string = "World x = " + toString(world_pos.x) + " y = "  + toString(world_pos.y);
 			std::string camera_pos_string = "Camera x = " + toString(m_EditorCamera->getPosition().x) + " y = "  + toString(m_EditorCamera->getPosition().y);
 
-			/*if(ImGui::Button("Black", ImVec2(50.f, 0.f)))
-			{
-
-			}
-
-			ImGui::SameLine();
-
-			if(ImGui::Button("Gray", ImVec2(50.f, 0.f)))
-			{
-
-			}*/
-
 			ImGui::SameLine();
 
 			if(mouseOnCanvas())
@@ -515,21 +514,6 @@ namespace  nero
 				m_WorldBuilder->render();
 			}
 
-			//Demo
-			/*if(m_GameProject)
-			{
-				try
-				{
-					m_GameProject->render();
-				}
-				catch(std::exception e)
-				{
-					m_GameProject->destroyScene();
-					nero_log("failed to render scene");
-					nero_log("please rebuild the scene")
-				}
-			}*/
-
 			//Render on Front Screen
 			m_RenderTexture->setView(m_RenderTexture->getDefaultView());
 				/*if(m_AdvancedScene)
@@ -539,6 +523,12 @@ namespace  nero
 				renderCamera();
 				renderGameModeInfo();
 			m_RenderTexture->setView(m_EditorCamera->getView());
+
+			m_CanvasXAxis.setRotation(m_EditorCamera->getView().getRotation());
+			m_CanvasYAxis.setRotation(m_EditorCamera->getView().getRotation() + 90.f);
+
+			m_RenderTexture->draw(m_CanvasXAxis);
+			m_RenderTexture->draw(m_CanvasYAxis);
 
 
 			ImGui::Image(flipTexture(m_RenderTexture->getTexture()));

@@ -867,11 +867,11 @@ namespace nero
                     Mesh mesh;
 
                     if(label == "Polygon")
-                        mesh = Mesh(Mesh::Polygon_Mesh, sf::Vector2f(0.f, 0.f), 50.f);
+						mesh = Mesh(Mesh::Polygon_Mesh);
                     else if(label == "Circle")
-                        mesh = Mesh(Mesh::Circle_Mesh, sf::Vector2f(0.f, 0.f), 50.f);
+						mesh = Mesh(Mesh::Circle_Mesh);
                     else if(label == "Line")
-                        mesh = Mesh(Mesh::Line_Mesh, sf::Vector2f(0.f, 0.f), 75.f);
+						mesh = Mesh(Mesh::Line_Mesh);
 
                     mesh.setId(getNewId());
 
@@ -897,11 +897,11 @@ namespace nero
                     Mesh mesh;
 
                     if(label == "Polygon")
-                        mesh = Mesh(Mesh::Polygon_Mesh, sf::Vector2f(0.f, 0.f), 50.f);
+						mesh = Mesh(Mesh::Polygon_Mesh);
                     else if(label == "Circle")
-                        mesh = Mesh(Mesh::Circle_Mesh, sf::Vector2f(0.f, 0.f), 50.f);
+						mesh = Mesh(Mesh::Circle_Mesh);
                     else if(label == "Line")
-                        mesh = Mesh(Mesh::Line_Mesh, sf::Vector2f(0.f, 0.f), 75.f);
+						mesh = Mesh(Mesh::Line_Mesh);
 
                     mesh.setId(getNewId());
                     std::shared_ptr<MeshObject> mesh_object(new MeshObject());
@@ -952,7 +952,7 @@ namespace nero
 				sprite_object->setIsUpdateable(true);
 
                 //Mesh Object
-                Mesh mesh = Mesh(Mesh::Polygon_Mesh, sf::Vector2f(0.f, 0.f), 50.f);
+				Mesh mesh = Mesh(Mesh::Polygon_Mesh);
                 mesh.setId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getId());
@@ -1044,7 +1044,7 @@ namespace nero
 				animation_object->setName(object_name);
 
                   //Mesh Object
-                Mesh mesh = Mesh(Mesh::Polygon_Mesh, sf::Vector2f(0.f, 0.f), 50.f);
+				Mesh mesh = Mesh(Mesh::Polygon_Mesh);
                 mesh.setId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getId());

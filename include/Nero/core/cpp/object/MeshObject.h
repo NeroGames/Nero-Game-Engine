@@ -63,7 +63,7 @@ namespace nero
             void                        updateObject(sf::Time time_step);
 
         private:
-            Mesh                        m_Mesh;
+			mutable Mesh                m_Mesh;
             sf::Vector2f                m_ParentLastPosition;
             float                       m_ParentLastRotation;
             sf::Vector2f                m_ParentLastScale;

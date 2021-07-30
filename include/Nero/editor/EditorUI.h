@@ -271,6 +271,8 @@ namespace nero
 			//
 			sf::RectangleShape								m_CameraXAxis;
 			sf::RectangleShape								m_CameraYAxis;
+			sf::RectangleShape								m_CanvasXAxis;
+			sf::RectangleShape								m_CanvasYAxis;
 			//
 			AdvancedCamera::Ptr								m_EditorCamera;
 			//
