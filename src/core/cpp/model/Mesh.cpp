@@ -6,6 +6,7 @@
 //NERO
 #include <Nero/core/cpp/model/Mesh.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
+#include <Nero/core/cpp/utility/Math.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -347,6 +348,62 @@ namespace nero
 		return boundRect;
 	}
 
+	void Mesh::update(const sf::Transform& transform)
+	{
+		const float* matrix = transform.getMatrix();
+		float sxc	=  matrix[0];
+		float sys	=  matrix[4];
+		float tx	=  matrix[12];
+		float sxs	= -matrix[1];
+		float syc	=  matrix[5];
+		float ty	=  matrix[13];
+
+		//origin
+		sf::FloatRect bound = getGlobalBounds();
+		sf::Vector2f origin = sf::Vector2f(bound.width/2.f, bound.height/2.f);
+
+		//position
+		sf::Vector2f position;
+		position.x = tx + origin.x * sxc + origin.y * sys;
+		position.y = ty - origin.x * sxs + origin.y * syc;
+
+		//rotation
+		float angle		= std::atan(sxs/sxc);
+		float rotation	= -angle * 180.f / 3.141592654f;
+
+		//scale
+		sf::Vector2f scale;
+		scale.x = sxc/static_cast<float>(std::cos(angle));
+		scale.y = syc/static_cast<float>(std::cos(angle));
+
+		moveMesh(position - m_Position);
+		scaleMesh(scale - m_Scale);
+		rotateMesh(rotation - m_Rotation);
+
+		m_Position		= position;
+		m_Scale			= scale;
+		m_Rotation		= rotation;
+	}
+
+	void Mesh::moveMesh(const sf::Vector2f& offset)
+	{
+		for(auto& vertex : m_VertexTable)
+		{
+			vertex.move(offset);
+		}
+
+		updateMesh();
+	}
+
+	void Mesh::scaleMesh(const sf::Vector2f& offset)
+	{
+
+	}
+
+	void Mesh::rotateMesh(const float& offset)
+	{
+
+	}
 }
 
 /*

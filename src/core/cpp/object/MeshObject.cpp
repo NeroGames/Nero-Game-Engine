@@ -38,7 +38,7 @@ namespace nero
 
     void MeshObject::drawObject(sf::RenderTarget& target, sf::RenderStates states) const
     {
-		//m_Mesh.update(states.transform);
+		m_Mesh.update(states.transform);
         target.draw(m_Mesh, states);
     }
 

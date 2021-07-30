@@ -34,6 +34,7 @@ namespace nero
 			void									setMeshId(const int& meshId);
 			int										getMeshId()				const;
 			sf::FloatRect							getGlobalBounds()       const;
+			void									update(const sf::Transform& transform);
 
 		private:
 			//draw
@@ -51,6 +52,10 @@ namespace nero
 			sf::Color								getColor();
 			void									validate(const sf::Vector2f& point1, const sf::Vector2f& point2);
 			std::vector<sf::Vector2f>				getVertexPosition() const;
+			//
+			void									moveMesh(const sf::Vector2f& offset);
+			void									scaleMesh(const sf::Vector2f& offset);
+			void									rotateMesh(const float& offset);
 
 		private:
 			int										m_MeshId;
@@ -67,6 +72,10 @@ namespace nero
 			float									m_VertexSize         = 8.f;
 			int										m_ColorAlpha		 = 50.f;
 			float									m_MinVertexDistance  = 1.f;
+			//
+			sf::Vector2f							m_Position;
+			sf::Vector2f							m_Scale;
+			float									m_Rotation;
 
 	};
 }
