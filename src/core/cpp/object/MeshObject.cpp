@@ -11,11 +11,8 @@
 namespace nero
 {
     MeshObject::MeshObject():
-        Object(),
-        m_Mesh(),
-        m_ParentLastPosition(sf::Vector2f(0.f,0.f)),
-        m_ParentLastScale(sf::Vector2f(1.f, 1.f)),
-        m_ParentLastRotation(0.f)
+		 Object()
+		,m_Mesh()
     {
         setFirstType(Object::Mesh_Object);
         setSecondType(Object::Mesh_Object);
@@ -38,7 +35,6 @@ namespace nero
 
     void MeshObject::drawObject(sf::RenderTarget& target, sf::RenderStates states) const
     {
-		//m_Mesh.update(states.transform);
         target.draw(m_Mesh, states);
     }
 
@@ -61,21 +57,6 @@ namespace nero
 		}
 
 		m_Mesh.updateMesh(position, scale, rotation);
-    }
-
-    void MeshObject::setParentLastPosition(const sf::Vector2f& position)
-    {
-        m_ParentLastPosition = position;
-    }
-
-    void MeshObject::setParentLastScale(const sf::Vector2f& factor)
-    {
-        m_ParentLastScale = factor;
-    }
-
-    void MeshObject::setParentLastRotation(const float& angle)
-    {
-        m_ParentLastRotation = angle;
     }
 
     void MeshObject::setMeshType(Mesh::Type type)
@@ -179,9 +160,8 @@ namespace nero
     {
         MeshObject::Ptr mesh_object = Cast(clone());
 
-        mesh_object->setParentLastPosition(getPosition() - position);
         mesh_object->setId(-1);
-		//mesh_object->getMesh()->setMeshId(-1);
+		mesh_object->getMesh()->setMeshId(-1);
 
         return mesh_object;
     }

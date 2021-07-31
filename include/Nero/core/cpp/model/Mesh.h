@@ -37,8 +37,6 @@ namespace nero
 			void									updateMesh(const sf::Vector2f& position,
 															   const sf::Vector2f& scale,
 															   const float& rotation);
-			void									update(const sf::Transform& transform);
-
 		private:
 			//draw
 			virtual void							draw(sf::RenderTarget& target, sf::RenderStates states) const;

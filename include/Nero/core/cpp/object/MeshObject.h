@@ -30,11 +30,7 @@ namespace nero
 
             virtual sf::FloatRect       getGlobalBounds()               const;
 
-            void                        setParentLastPosition(const sf::Vector2f& position);
-            void                        setParentLastScale(const sf::Vector2f& factor);
-            void                        setParentLastRotation(const float& angle);
-
-            void                        setMeshType(Mesh::Type type);
+			void                        setMeshType(Mesh::Type type);
 
             void                        setMeshFixedRotation(bool flag);
             void                        setMeshSensor(bool flag);
@@ -63,10 +59,7 @@ namespace nero
             void                        updateObject(sf::Time time_step);
 
         private:
-			mutable Mesh                m_Mesh;
-            sf::Vector2f                m_ParentLastPosition;
-            float                       m_ParentLastRotation;
-			sf::Vector2f                m_ParentLastScale;
+			Mesh						m_Mesh;
 	};
 }
 #endif // MESHEDOBJECT_H

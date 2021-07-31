@@ -750,9 +750,6 @@ namespace nero
 
             MeshObject::Ptr mesh_object = MeshObject::Cast(child_object);
 			mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
-            mesh_object->setParentLastPosition(object->getPosition()-pos);
-            mesh_object->setParentLastRotation(object->getRotation());
-            mesh_object->setParentLastScale(object->getScale());
             mesh_object->setIsSelectable(false);
 
             object->setIsUpdateable(true);
@@ -1931,9 +1928,6 @@ namespace nero
                         MeshObject::Ptr     mesh_object     = loadMesh(meshed["mesh"]);
 
                         sprite_object->setSecondType(Object::Meshed_Object);
-                        mesh_object->setParentLastPosition(sprite_object->getPosition());
-                        mesh_object->setParentLastRotation(sprite_object->getRotation());
-                        mesh_object->setParentLastScale(sprite_object->getScale());
                         sprite_object->addChild(mesh_object);
 
                         layer_object->addChild(sprite_object);
@@ -1965,9 +1959,6 @@ namespace nero
                         MeshObject::Ptr            mesh_object     = loadMesh(meshed["mesh"]);
 
                         animation_object->setSecondType(Object::Meshed_Object);
-                        mesh_object->setParentLastPosition(animation_object->getPosition());
-                        mesh_object->setParentLastRotation(animation_object->getRotation());
-                        mesh_object->setParentLastScale(animation_object->getScale());
                         animation_object->addChild(mesh_object);
 
                         layer_object->addChild(animation_object);
