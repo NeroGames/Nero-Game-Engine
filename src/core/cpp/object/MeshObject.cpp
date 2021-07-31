@@ -45,50 +45,22 @@ namespace nero
     sf::FloatRect MeshObject::getGlobalBounds() const
 	{
 		return  m_Mesh.getGlobalBounds();
-
-		/* TODO remove
-		if(isSelectable())
-			return  m_Mesh.getGlobalBounds();
-        else
-			return sf::FloatRect();*/
     }
 
     void MeshObject::updateObject(sf::Time time_step)
     {
-		sf::Transform transform = getTransform();
+		sf::Vector2f position	= getPosition();
+		sf::Vector2f scale		= getScale();
+		float rotation			= getRotation();
 		for (Object* parent = getParent(); parent != nullptr; parent = parent->getParent())
 		{
-			transform *= parent->getTransform();
+			position += parent->getPosition();
+			scale.x	 *= parent->getScale().x;
+			scale.y	 *= parent->getScale().y;
+			rotation += parent->getRotation();
 		}
 
-		m_Mesh.update(transform);
-
-		//panning
-		/*auto pos_diff = m_Parent->getPosition() - m_ParentLastPosition;
-        auto pos = getPosition();
-        setPosition(0.f, 0.f);
-
-        m_Mesh.move(pos + pos_diff);
-
-		m_ParentLastPosition = m_Parent->getPosition();
-
-		//rotation
-        float rot_diff = m_Parent->getRotation() - m_ParentLastRotation;
-        float rot = getRotation();
-        setRotation(0.f);
-
-        m_Mesh.rotate(rot + rot_diff);
-
-		m_ParentLastRotation = m_Parent->getRotation();
-
-		//scaling
-        auto scale_diff = m_Parent->getScale() - m_ParentLastScale;
-        auto scale = getScale();
-        setScale(1.f, 1.f);
-
-        m_Mesh.scale(scale + scale_diff);
-
-		m_ParentLastScale = m_Parent->getScale();*/
+		m_Mesh.updateMesh(position, scale, rotation);
     }
 
     void MeshObject::setParentLastPosition(const sf::Vector2f& position)

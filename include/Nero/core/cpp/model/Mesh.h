@@ -34,6 +34,9 @@ namespace nero
 			void									setMeshId(const int& meshId);
 			int										getMeshId()				const;
 			sf::FloatRect							getGlobalBounds()       const;
+			void									updateMesh(const sf::Vector2f& position,
+															   const sf::Vector2f& scale,
+															   const float& rotation);
 			void									update(const sf::Transform& transform);
 
 		private:
@@ -76,7 +79,6 @@ namespace nero
 			sf::Vector2f							m_Position;
 			sf::Vector2f							m_Scale;
 			float									m_Rotation;
-			sf::Vector2f							m_Origin;
 	};
 }
 

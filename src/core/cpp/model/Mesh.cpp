@@ -34,7 +34,10 @@ namespace nero
 				break;
 		}
 
-		m_Origin = sf::Vector2f(getGlobalBounds().width / 2.f, getGlobalBounds().height / 2.f);
+		if(m_MeshShape != Shape::None)
+		{
+			setOrigin(getGlobalBounds().width / 2.f, getGlobalBounds().height / 2.f);
+		}
 	}
 
 	Mesh::~Mesh()
@@ -298,17 +301,7 @@ namespace nero
 		sf::FloatRect boundRect;
 
 		switch(m_MeshShape)
-		{
-			case Shape::Line:
-			{
-				sf::Vector2f point1 = m_VertexTable[0].getPosition();
-				sf::Vector2f point2 = m_VertexTable[1].getPosition();
-				boundRect.left		= point1.x < point2.x ? point1.x : point2.x - 8.f;
-				boundRect.top		= point1.y < point2.y ? point1.y : point2.y - 8.f;
-				boundRect.width		= std::abs(point1.x - point2.x) + 16.f;
-				boundRect.height	= std::abs(point1.y - point2.y) + 16.f;
-			}break;
-
+		{			
 			case Shape::Circle:
 			{
 				sf::Vector2f point1 = m_VertexTable[0].getPosition();
@@ -324,6 +317,7 @@ namespace nero
 
 			case Shape::Polygon:
 			case Shape::Chain:
+			case Shape::Line:
 			{
 				std::vector<sf::Vector2f> posTable = getVertexPosition();
 
@@ -353,6 +347,26 @@ namespace nero
 		return boundRect;
 	}
 
+	void Mesh::updateMesh(const sf::Vector2f& position, const sf::Vector2f& scale, const float& rotation)
+	{
+		if(position != m_Position)
+		{
+			moveMesh(position - m_Position);
+			m_Position = position;
+		}
+		else if(rotation  > m_Rotation || rotation < m_Rotation)
+		{
+			rotateMesh(rotation - m_Rotation);
+			m_Rotation = rotation;
+		}
+		else if(scale.x > m_Scale.x || scale.x < m_Scale.x)
+		{
+			scaleMesh(sf::Vector2f(scale.x/m_Scale.x, scale.y/m_Scale.y));
+			m_Scale = scale;
+		}
+	}
+
+
 	void Mesh::update(const sf::Transform& transform)
 	{
 		const float* matrix = transform.getMatrix();
@@ -363,18 +377,18 @@ namespace nero
 		float syc	=  matrix[5];
 		float ty	=  matrix[13];
 
-		//origin
-		sf::FloatRect bound = getGlobalBounds();
-		sf::Vector2f origin = sf::Vector2f(bound.width/2.f, bound.height/2.f);
-
 		//position
+		sf::Vector2f origin = getOrigin();
 		sf::Vector2f position;
-		position.x = tx + m_Origin.x * sxc + m_Origin.y * sys;
-		position.y = ty - m_Origin.x * sxs + m_Origin.y * syc;
+		position.x = tx + origin.x * sxc + origin.y * sys;
+		position.y = ty - origin.x * sxs + origin.y * syc;
 
 		//rotation
 		float angle		= std::atan(sxs/sxc);
 		float rotation	= -angle * 180.f / 3.141592654f;
+
+		float angle1= std::atan(sxs/sxc);
+		float angle2= std::atan(sys/syc);
 
 		//scale
 		sf::Vector2f scale;
@@ -384,27 +398,23 @@ namespace nero
 
 		if(position != m_Position)
 		{
-			nero_log("position changed");
 			moveMesh(position - m_Position);
 			m_Position = position;
 		}
 		else if(rotation != m_Rotation)
 		{
+			nero_log(nero_sv(angle1));
+			nero_log(nero_sv(angle2));
+			nero_log("\n");
+			//nero_log(nero_sv(angle));
+			//nero_log(nero_sv(rotation));
+			//nero_log("\n");
 			rotateMesh(rotation - m_Rotation);
 			m_Rotation = rotation;
 		}
-		else if(scale.x - m_Scale.x > 0.f)
+		else if(scale.x - m_Scale.x > 0.f || scale.x - m_Scale.x < 0.f)
 		{
-			//auto diff = scale - m_Scale;
-			//nero_log(nero_sv(diff.x) + " " + nero_sv(diff.y));
-			//scaleMesh(sf::Vector2f(1.f, 1.f) + scale - m_Scale);
-
-			scaleMesh(sf::Vector2f(1.1f, 1.1f));
-			m_Scale = scale;
-		}
-		else if(scale.x - m_Scale.x < 0.f)
-		{
-			scaleMesh(sf::Vector2f(0.9f, 0.9f));
+			scaleMesh(sf::Vector2f(scale.x/m_Scale.x, scale.y/m_Scale.y));
 			m_Scale = scale;
 		}
 	}
