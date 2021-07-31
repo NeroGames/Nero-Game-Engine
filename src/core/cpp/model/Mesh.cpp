@@ -412,16 +412,19 @@ namespace nero
 
 		if(m_MeshShape == Shape::Line)
 		{
-			sf::Vector2f pos1 = m_VertexTable.front().getPosition();
-			sf::Vector2f pos2 = m_VertexTable.back().getPosition();
+			sf::Vector2f pos1 = m_VertexTable[0].getPosition();
+			sf::Vector2f pos2 = m_VertexTable[1].getPosition();
 
 			sf::Vector2f center = math::getLineCenter(pos1, pos2);
 
-			sf::Vector2f new_pos1 = sf::Vector2f((pos1.x-center.x)*scale + center.x, (pos1.y-center.y)*scale + center.y);
-			sf::Vector2f new_pos2 = sf::Vector2f((pos2.x-center.x)*scale + center.x, (pos2.y-center.y)*scale + center.y);
+			sf::Vector2f new_pos1 = (pos1 - center)*scale + center;
+			sf::Vector2f new_pos2 = (pos2 - center)*scale + center;
 
-			m_VertexTable.front().setPosition(new_pos1);
-			m_VertexTable.back().setPosition(new_pos2);
+			//sf::Vector2f new_pos1 = sf::Vector2f((pos1.x-center.x)*scale, (pos1.y-center.y)*scale + center.y);
+			//sf::Vector2f new_pos2 = sf::Vector2f((pos2.x-center.x)*scale + center.x, (pos2.y-center.y)*scale + center.y);
+
+			m_VertexTable[0].setPosition(new_pos1);
+			m_VertexTable[1].setPosition(new_pos2);
 		}
 		else if (m_MeshShape == Shape::Circle)
 		{

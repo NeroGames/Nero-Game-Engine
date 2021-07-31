@@ -381,9 +381,9 @@ namespace nero
 
 		sf::Vector2f getLineCenter(const sf::Vector2f& a, const sf::Vector2f& b)
 		{
-			 sf::Vector2f center;
-			center.x = (a.x + b.x) / 2;
-			center.y = (a.y + b.y) / 2;
+			sf::Vector2f center;
+			center.x = (a.x + b.x) / 2.f;
+			center.y = (a.y + b.y) / 2.f;
 
 			return center;
 		}
