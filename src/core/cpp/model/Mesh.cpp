@@ -33,6 +33,8 @@ namespace nero
 				createDefaultLine();
 				break;
 		}
+
+		m_Origin = sf::Vector2f(getGlobalBounds().width / 2.f, getGlobalBounds().height / 2.f);
 	}
 
 	Mesh::~Mesh()
@@ -367,8 +369,8 @@ namespace nero
 
 		//position
 		sf::Vector2f position;
-		position.x = tx + origin.x * sxc + origin.y * sys;
-		position.y = ty - origin.x * sxs + origin.y * syc;
+		position.x = tx + m_Origin.x * sxc + m_Origin.y * sys;
+		position.y = ty - m_Origin.x * sxs + m_Origin.y * syc;
 
 		//rotation
 		float angle		= std::atan(sxs/sxc);
@@ -379,20 +381,31 @@ namespace nero
 		scale.x = sxc/static_cast<float>(std::cos(angle));
 		scale.y = syc/static_cast<float>(std::cos(angle));
 
+
 		if(position != m_Position)
 		{
+			nero_log("position changed");
 			moveMesh(position - m_Position);
 			m_Position = position;
-		}
-		else if(scale != m_Scale)
-		{
-			scaleMesh(sf::Vector2f(1.f, 1.f) + scale - m_Scale);
-			m_Scale = scale;
 		}
 		else if(rotation != m_Rotation)
 		{
 			rotateMesh(rotation - m_Rotation);
 			m_Rotation = rotation;
+		}
+		else if(scale.x - m_Scale.x > 0.f)
+		{
+			//auto diff = scale - m_Scale;
+			//nero_log(nero_sv(diff.x) + " " + nero_sv(diff.y));
+			//scaleMesh(sf::Vector2f(1.f, 1.f) + scale - m_Scale);
+
+			scaleMesh(sf::Vector2f(1.1f, 1.1f));
+			m_Scale = scale;
+		}
+		else if(scale.x - m_Scale.x < 0.f)
+		{
+			scaleMesh(sf::Vector2f(0.9f, 0.9f));
+			m_Scale = scale;
 		}
 	}
 
@@ -412,19 +425,16 @@ namespace nero
 
 		if(m_MeshShape == Shape::Line)
 		{
-			sf::Vector2f pos1 = m_VertexTable[0].getPosition();
-			sf::Vector2f pos2 = m_VertexTable[1].getPosition();
+			sf::Vector2f pos1 = m_VertexTable.front().getPosition();
+			sf::Vector2f pos2 = m_VertexTable.back().getPosition();
 
 			sf::Vector2f center = math::getLineCenter(pos1, pos2);
 
-			sf::Vector2f new_pos1 = (pos1 - center)*scale + center;
-			sf::Vector2f new_pos2 = (pos2 - center)*scale + center;
+			sf::Vector2f new_pos1 = sf::Vector2f((pos1.x-center.x)*scale + center.x, (pos1.y-center.y)*scale + center.y);
+			sf::Vector2f new_pos2 = sf::Vector2f((pos2.x-center.x)*scale + center.x, (pos2.y-center.y)*scale + center.y);
 
-			//sf::Vector2f new_pos1 = sf::Vector2f((pos1.x-center.x)*scale, (pos1.y-center.y)*scale + center.y);
-			//sf::Vector2f new_pos2 = sf::Vector2f((pos2.x-center.x)*scale + center.x, (pos2.y-center.y)*scale + center.y);
-
-			m_VertexTable[0].setPosition(new_pos1);
-			m_VertexTable[1].setPosition(new_pos2);
+			m_VertexTable.front().setPosition(new_pos1);
+			m_VertexTable.back().setPosition(new_pos2);
 		}
 		else if (m_MeshShape == Shape::Circle)
 		{
@@ -446,6 +456,8 @@ namespace nero
 				it->setPosition(new_pos);
 			}
 		}
+
+		updateMesh();
 
 	}
 

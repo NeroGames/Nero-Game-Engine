@@ -76,7 +76,7 @@ namespace nero
 			sf::Vector2f							m_Position;
 			sf::Vector2f							m_Scale;
 			float									m_Rotation;
-
+			sf::Vector2f							m_Origin;
 	};
 }
 

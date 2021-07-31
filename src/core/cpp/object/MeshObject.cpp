@@ -38,7 +38,7 @@ namespace nero
 
     void MeshObject::drawObject(sf::RenderTarget& target, sf::RenderStates states) const
     {
-		m_Mesh.update(states.transform);
+		//m_Mesh.update(states.transform);
         target.draw(m_Mesh, states);
     }
 
@@ -55,6 +55,14 @@ namespace nero
 
     void MeshObject::updateObject(sf::Time time_step)
     {
+		sf::Transform transform = getTransform();
+		for (Object* parent = getParent(); parent != nullptr; parent = parent->getParent())
+		{
+			transform *= parent->getTransform();
+		}
+
+		m_Mesh.update(transform);
+
 		//panning
 		/*auto pos_diff = m_Parent->getPosition() - m_ParentLastPosition;
         auto pos = getPosition();

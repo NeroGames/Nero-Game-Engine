@@ -361,5 +361,11 @@ namespace nero
 		}
 	}
 
+	Object* Object::getParent() const
+	{
+		return m_Parent;
+	}
+
+
 }
 

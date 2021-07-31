@@ -21,7 +21,7 @@ namespace nero
         //Speed
         ,m_PanningSpeed(1.f)
         ,m_RotationSpeed(0.5f)
-		,m_ZoomingRatio(0.07f)
+		,m_ZoomingRatio(0.1f)
         //Object
         ,m_SelectedLayer(nullptr)
         ,m_SelectedObject(nullptr)

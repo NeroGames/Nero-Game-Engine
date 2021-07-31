@@ -66,7 +66,7 @@ namespace nero
 			mutable Mesh                m_Mesh;
             sf::Vector2f                m_ParentLastPosition;
             float                       m_ParentLastRotation;
-            sf::Vector2f                m_ParentLastScale;
-    };
+			sf::Vector2f                m_ParentLastScale;
+	};
 }
 #endif // MESHEDOBJECT_H

@@ -91,6 +91,8 @@ namespace nero
 
             void					        update(sf::Time time_step);
 
+			Object*							getParent() const;
+
         protected:
             void                            setFirstType(const Type& type);
 
