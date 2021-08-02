@@ -314,6 +314,10 @@ namespace nero
 			std::string										m_MouseInformation;
 			ConsoleApplication								m_ConsoleApplication;
 			void											showConsoleWindow();
+
+			std::vector<Object::Ptr>						getComponentTable(Object::Ptr root);
+			void											getComponentTable(Object::Ptr object, std::vector<Object::Ptr>& result);
+
 	};
 
 }

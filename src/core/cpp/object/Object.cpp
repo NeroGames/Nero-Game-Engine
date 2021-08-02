@@ -366,6 +366,5 @@ namespace nero
 		return m_Parent;
 	}
 
-
 }
 

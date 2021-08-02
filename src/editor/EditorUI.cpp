@@ -4942,12 +4942,98 @@ namespace  nero
 
 		}
 
-		if (ImGui::CollapsingHeader("Game Object"))
-		{
 
+
+		if(m_WorldBuilder)
+		{
+			Object::Ptr selectedObject = m_WorldBuilder->getSelectedObject();
+
+			if (ImGui::CollapsingHeader("Game Object", selectedObject ? ImGuiTreeNodeFlags_DefaultOpen :ImGuiTreeNodeFlags_None))
+			{
+
+				ImGuiViewport* viewport = ImGui::GetMainViewport();
+				float height = viewport->Size.y * 0.50f;
+				viewport = nullptr;
+				ImGui::BeginChild("game_object", ImVec2(0.f, height), true);
+
+				if(selectedObject)
+				{
+					if (ImGui::CollapsingHeader("General"))
+					{
+
+						//name
+						//category
+						//type
+
+					}
+
+					if (ImGui::CollapsingHeader("Transform"))
+					{
+						//position
+						//scale
+						//rotation
+					}
+
+					std::vector<Object::Ptr> componentTable = getComponentTable(selectedObject);
+					for(Object::Ptr component : componentTable)
+					{
+
+							switch(component->getFirstType())
+							{
+								case Object::Sprite_Object:
+								{
+									if (ImGui::CollapsingHeader("Sprite"))
+									{
+										SpriteObject::Ptr spriteObject = SpriteObject::Cast(component);
+
+										ImGui::Text(std::string("sprite : " + spriteObject->getTextureName()).c_str());
+									}
+								}break;
+
+								case Object::Mesh_Object:
+								{
+									if (ImGui::CollapsingHeader("Mesh"))
+									{
+										MeshObject::Ptr meshObject = MeshObject::Cast(component);
+
+										//ImGui::Text(std::string("sprite : " + spriteObject->getTextureName()).c_str());
+									}
+								}break;
+
+							}
+
+					}
+				}
+
+				ImGui::EndChild();
+			}
 		}
 
 		ImGui::End();
+	}
+
+	std::vector<Object::Ptr> EditorInterface::getComponentTable(Object::Ptr root)
+	{
+		std::vector<Object::Ptr> result;
+
+		getComponentTable(root, result);
+
+		return result;
+	}
+
+	void EditorInterface::getComponentTable(Object::Ptr object, std::vector<Object::Ptr>& result)
+	{
+
+		if(object != nullptr)
+		{
+			result.push_back(object);
+		}
+
+		auto childTab = object->getAllChild();
+		for (auto it = childTab->rbegin(); it != childTab->rend(); it++)
+		{
+			getComponentTable(*it, result);
+		}
 	}
 
 	void EditorInterface::showBackgroundTaskWindow()

@@ -41,7 +41,7 @@ namespace nero
         m_TextureName = texture;
     }
 
-    sf::String  SpriteObject::getTextureName() const
+	std::string  SpriteObject::getTextureName() const
     {
         return m_TextureName;
     }

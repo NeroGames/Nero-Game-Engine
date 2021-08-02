@@ -29,7 +29,7 @@ namespace nero
             virtual sf::FloatRect           getGlobalBounds()               const;
 
             void                            setTextureName(const sf::String& texture);
-            sf::String                      getTextureName()                const;
+			std::string                     getTextureName()                const;
 
             virtual void                    setColor(const sf::Color& color);
             virtual const sf::Color&        getColor()                      const;
