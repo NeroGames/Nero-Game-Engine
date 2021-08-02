@@ -308,7 +308,7 @@ namespace nero
                 deleteObject(m_SelectedObject);
             }
 
-            m_LastMousePosition = world_pos;
+			m_LastMousePosition = world_pos;
         }
 
         if (mouse.button == sf::Mouse::Right && isPressed && m_SelectedLayer && m_SelectedLayer->isVisible())
@@ -322,7 +322,7 @@ namespace nero
                 m_UpdateUI();
         }
 
-        if (mouse.button == sf::Mouse::Left && !isPressed && m_SelectedLayer && m_SelectedObject)
+		if (mouse.button == sf::Mouse::Left && !isPressed && m_SelectedLayer && m_SelectedObject)
         {
 			m_SelectedObject = nullptr;
             m_UpdateUndo();
