@@ -100,6 +100,12 @@ namespace  nero
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 18.0f, &config, icon_ranges);
 		ImGui::SFML::UpdateFontTexture();
 
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation.ttf", 14.f);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 14.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 14.0f, &config, icon_ranges);
+		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 14.0f, &config, icon_ranges);
+		ImGui::SFML::UpdateFontTexture();
+
 		m_RenderTexture = std::make_shared<sf::RenderTexture>();
 		m_ProjectManager = std::make_unique<ProjectManager>();
 		m_RenderContext = std::make_shared<RenderContext>();
@@ -4652,10 +4658,11 @@ namespace  nero
 				viewport = nullptr;
 
 				ImGui::BeginChild("game_world", ImVec2(0.f, game_world_window_height), true);
-
 				ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize()*1.5);
 				ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-				if(ImGui::TreeNode(std::string("[Level] " + m_GameLevelBuilder->getLevelName()).c_str()))
+
+				ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[3]);
+				if(ImGui::TreeNode(std::string(ICON_FA_FOLDER_OPEN " " + m_GameLevelBuilder->getLevelName()).c_str()))
 				{
 					int			chunk_node_clicked		= -1;
 					static int	chunk_selection_mask	= (1 << m_GameLevelBuilder->getChunkTable().size());
@@ -4671,7 +4678,7 @@ namespace  nero
 							node_flags |= ImGuiTreeNodeFlags_Selected;
 						}
 
-						bool chunk_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_chunk, node_flags, std::string("[Chunk] " + worldChunk->getChunkName()).c_str(), loop_chunk);
+						bool chunk_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_chunk, node_flags, std::string(ICON_FA_FOLDER " " + worldChunk->getChunkName()).c_str(), loop_chunk);
 
 						if(worldChunk->getChunkId() == selectedWorldChunkId)
 						{
@@ -4703,7 +4710,7 @@ namespace  nero
 								}
 
 
-								bool layer_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_layer, node_flags, std::string("[Layer] " + objectLayer->getName()).c_str(), loop_layer);
+								bool layer_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_layer, node_flags, std::string(ICON_FA_FILE " " + objectLayer->getName()).c_str(), loop_layer);
 
 								if(objectLayer->getObjectId() == selectedObjectLayerId && worldChunk->getChunkId() == selectedWorldChunkId)
 								{
@@ -4745,7 +4752,7 @@ namespace  nero
 
 										std::string object_name = std::string(gameObject->getName());
 
-										ImGui::TreeNodeEx((void*)(intptr_t)loop_object, node_flags, object_name.c_str(), loop_object);
+										ImGui::TreeNodeEx((void*)(intptr_t)loop_object, node_flags, std::string(ICON_FA_CUBE " " + object_name).c_str(), loop_object);
 
 										if(gameObject->getObjectId() == selectedGameObjectId && objectLayer->getObjectId() == selectedObjectLayerId && worldChunk->getChunkId() == selectedWorldChunkId)
 										{
@@ -4828,6 +4835,7 @@ namespace  nero
 
 					ImGui::TreePop();
 				}
+				ImGui::PopFont();
 
 				ImGui::PopStyleVar();
 				ImGui::EndChild();
