@@ -533,8 +533,8 @@ namespace  nero
 			m_CanvasXAxis.setRotation(m_EditorCamera->getView().getRotation());
 			m_CanvasYAxis.setRotation(m_EditorCamera->getView().getRotation() + 90.f);
 
-			m_RenderTexture->draw(m_CanvasXAxis);
-			m_RenderTexture->draw(m_CanvasYAxis);
+			//m_RenderTexture->draw(m_CanvasXAxis);
+			//m_RenderTexture->draw(m_CanvasYAxis);
 
 
 			ImGui::Image(flipTexture(m_RenderTexture->getTexture()));
@@ -4646,7 +4646,7 @@ namespace  nero
 	{
 		ImGui::Begin(EditorConstant.WINDOW_EXPLORER.c_str());
 
-		if (ImGui::CollapsingHeader("Game World", m_AdvancedScene ? ImGuiTreeNodeFlags_DefaultOpen :ImGuiTreeNodeFlags_None))
+		if (ImGui::CollapsingHeader("Scene", m_AdvancedScene ? ImGuiTreeNodeFlags_DefaultOpen :ImGuiTreeNodeFlags_None))
 		{
 			if(m_GameLevelBuilder)
 			{
