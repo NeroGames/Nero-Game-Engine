@@ -28,7 +28,7 @@ namespace nero
 			enum class Shape	{Polygon, Circle, Chain, Line, None};
 
 		public: //ctr & dtr
-													Mesh(const Shape& shape = Shape::None);
+												   Mesh(const Shape& shape = Shape::None);
 												  ~Mesh();
 
 			void									setMeshId(const int& meshId);

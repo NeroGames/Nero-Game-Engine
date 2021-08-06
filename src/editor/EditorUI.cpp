@@ -4972,8 +4972,12 @@ namespace  nero
 					ImGui::SameLine(wording_width);
 					ImGui::SetNextItemWidth(input_width);
 					char* object_name = "";
+					//if(selectedObject)
+						//string::fillCharArray(object_name, sizeof(object_name), selectedObject->getName());
 					ImGui::InputText("##object_name", object_name, sizeof(object_name));
 					ImGui::Dummy(ImVec2(0.0f, 1.0f));
+					//if(selectedObject)
+						//selectedObject->setName(std::string(object_name));
 
 					ImGui::Text("Type");
 					ImGui::SameLine(wording_width);
@@ -5005,38 +5009,54 @@ namespace  nero
 					ImGui::Text(" x ");
 					ImGui::SameLine(wording_width + 30.f);
 					ImGui::SetNextItemWidth(input_width - 30.f);
-					static float positionx = 0.001f;
-					static float positiony = 0.001f;
-					ImGui::InputFloat("", &positionx, 0.01f, 1.0f, "%.3f");
+					float positionx = selectedObject ? selectedObject->getPosition().x : 0.00f;
+					float positiony = selectedObject ? selectedObject->getPosition().y : 0.00f;
+					ImGui::InputFloat("##position_x", &positionx, 1.f, 1.0f, "%.3f");
 					ImGui::Text("");
 					ImGui::SameLine(wording_width);
 					ImGui::Text(" y ");
 					ImGui::SameLine(wording_width + 30.f);
 					ImGui::SetNextItemWidth(input_width - 30.f);
-					ImGui::InputFloat("", &positiony, 0.01f, 1.0f, "%.3f");
+					ImGui::InputFloat("##position_y", &positiony, 1.f, 1.0f, "%.3f");
 					ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+					if(selectedObject)
+					{
+						selectedObject->setPosition(positionx, positiony);
+					}
 
 					ImGui::Text("Scale");
 					ImGui::SameLine(wording_width);
 					ImGui::Text(" x ");
 					ImGui::SameLine(wording_width + 30.f);
 					ImGui::SetNextItemWidth(input_width - 30.f);
-					static float scalex = 0.001f;
-					static float scaley = 0.001f;
-					ImGui::InputFloat("", &scalex, 0.01f, 1.0f, "%.3f");
+					float scalex = selectedObject ? selectedObject->getScale().x : 0.00f;
+					float scaley = selectedObject ? selectedObject->getScale().y : 0.00f;
+					ImGui::InputFloat("##scale_x", &scalex, 0.1f, 1.0f, "%.3f");
 					ImGui::Text("");
 					ImGui::SameLine(wording_width);
 					ImGui::Text(" y ");
 					ImGui::SameLine(wording_width + 30.f);
 					ImGui::SetNextItemWidth(input_width - 30.f);
-					ImGui::InputFloat("", &scaley, 0.01f, 1.0f, "%.3f");
+					ImGui::InputFloat("##scale_y", &scaley, 0.1f, 1.0f, "%.3f");
 					ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+					if(selectedObject)
+					{
+						selectedObject->setScale(scalex, scaley);
+					}
 
 					ImGui::Text("Rotation");
 					ImGui::SameLine(wording_width + 30.f);
 					ImGui::SetNextItemWidth(input_width - 30.f);
-					static float rotation = 0.001f;
-					ImGui::InputFloat("", &rotation, 0.01f, 1.0f, "%.3f");
+					float rotation = selectedObject ? selectedObject->getRotation() : 0.00f;
+					ImGui::InputFloat("", &rotation, 1.f, 1.0f, "%.3f");
+
+					if(selectedObject)
+					{
+						selectedObject->setRotation(rotation);
+					}
+
 
 					ImGui::EndChild();
 				}

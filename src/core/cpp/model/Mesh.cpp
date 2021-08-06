@@ -359,7 +359,7 @@ namespace nero
 			rotateMesh(rotation - m_Rotation);
 			m_Rotation = rotation;
 		}
-		else if(scale.x > m_Scale.x || scale.x < m_Scale.x)
+		else if(scale.x > m_Scale.x || scale.y < m_Scale.y)
 		{
 			scaleMesh(sf::Vector2f(scale.x/m_Scale.x, scale.y/m_Scale.y));
 			m_Scale = scale;
@@ -378,8 +378,6 @@ namespace nero
 
 	void Mesh::scaleMesh(const sf::Vector2f& factor)
 	{
-		float scale = factor.x;
-
 		if(m_MeshShape == Shape::Line)
 		{
 			sf::Vector2f pos1 = m_VertexTable.front().getPosition();
@@ -387,8 +385,8 @@ namespace nero
 
 			sf::Vector2f center = math::getLineCenter(pos1, pos2);
 
-			sf::Vector2f new_pos1 = sf::Vector2f((pos1.x-center.x)*scale + center.x, (pos1.y-center.y)*scale + center.y);
-			sf::Vector2f new_pos2 = sf::Vector2f((pos2.x-center.x)*scale + center.x, (pos2.y-center.y)*scale + center.y);
+			sf::Vector2f new_pos1 = sf::Vector2f((pos1.x-center.x)*factor.x + center.x, (pos1.y-center.y)*factor.y + center.y);
+			sf::Vector2f new_pos2 = sf::Vector2f((pos2.x-center.x)*factor.x + center.x, (pos2.y-center.y)*factor.y + center.y);
 
 			m_VertexTable.front().setPosition(new_pos1);
 			m_VertexTable.back().setPosition(new_pos2);
@@ -397,7 +395,7 @@ namespace nero
 		{
 			sf::Vector2f center = m_VertexTable.front().getPosition();
 			sf::Vector2f pos = m_VertexTable.back().getPosition();
-			sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale + center.x, (pos.y-center.y)*scale + center.y);
+			sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*factor.x + center.x, (pos.y-center.y)*factor.y + center.y);
 			m_VertexTable.back().setPosition(new_pos);
 		}
 		else
@@ -408,7 +406,7 @@ namespace nero
 			for(auto it = m_VertexTable.begin(); it != m_VertexTable.end(); it++)
 			{
 				sf::Vector2f pos = it->getPosition();
-				sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale + center.x, (pos.y-center.y)*scale + center.y);
+				sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*factor.x + center.x, (pos.y-center.y)*factor.y + center.y);
 
 				it->setPosition(new_pos);
 			}

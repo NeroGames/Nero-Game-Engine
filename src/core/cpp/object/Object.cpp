@@ -43,22 +43,22 @@ namespace nero
 		return m_Id;
 	}
 
-    void Object::setName(const sf::String& name)
+	void Object::setName(const std::string& name)
     {
         m_Name = name;
     }
 
-    const sf::String& Object::getName() const
+	const std::string& Object::getName() const
     {
         return m_Name;
     }
 
-    void Object::setCategory(const sf::String& category)
+	void Object::setCategory(const std::string& category)
     {
         m_Category = category;
     }
 
-    const sf::String& Object::getCategory() const
+	const std::string& Object::getCategory() const
     {
         return m_Category;
     }

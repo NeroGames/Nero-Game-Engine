@@ -37,9 +37,9 @@ namespace nero
                                             Object();
 
             void                            setId(const int& id);
-            void                            setName(const sf::String& name);
+			void                            setName(const std::string& name);
             void                            setSecondType(const Type& type);
-            void                            setCategory(const sf::String& category);
+			void                            setCategory(const std::string& category);
 
             void                            setIsVisible(bool flag);
             void                            setIsUpdateable(bool flag);
@@ -49,8 +49,8 @@ namespace nero
 
 			const int&                      getId()             const;
 			const int&                      getObjectId()       const;
-			const sf::String&               getName()           const;
-            const sf::String&               getCategory()       const;
+			const std::string&              getName()           const;
+			const std::string&              getCategory()       const;
             const Type&                     getFirstType()      const;
             const Type&                     getSecondType()     const;
 			std::string						getTypeString(const Type& type) const;
@@ -109,8 +109,8 @@ namespace nero
             Object*                         m_Parent;
 
             int                             m_Id;
-            sf::String                      m_Name;
-            sf::String                      m_Category;
+			std::string	                    m_Name;
+			std::string	                    m_Category;
             Type                            m_FirstType;
             Type                            m_SecondType;
 
