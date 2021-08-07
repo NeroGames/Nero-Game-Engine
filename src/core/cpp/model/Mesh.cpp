@@ -349,20 +349,20 @@ namespace nero
 
 	void Mesh::updateMesh(const sf::Vector2f& position, const sf::Vector2f& scale, const float& rotation)
 	{
-		if(position != m_Position)
+		if(scale != m_Scale)
 		{
-			moveMesh(position - m_Position);
-			m_Position = position;
+			scaleMesh(sf::Vector2f(scale.x/m_Scale.x, scale.y/m_Scale.y));
+			m_Scale = scale;
 		}
 		else if(rotation  > m_Rotation || rotation < m_Rotation)
 		{
 			rotateMesh(rotation - m_Rotation);
 			m_Rotation = rotation;
 		}
-		else if(scale.x > m_Scale.x || scale.y < m_Scale.y)
+		else if(position != m_Position)
 		{
-			scaleMesh(sf::Vector2f(scale.x/m_Scale.x, scale.y/m_Scale.y));
-			m_Scale = scale;
+			moveMesh(position - m_Position);
+			m_Position = position;
 		}
 	}
 

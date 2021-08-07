@@ -29,6 +29,8 @@ namespace nero
         ,m_ObjectCount(0)
 		,m_RenderContext(nullptr)
 		,m_LightManager(nullptr)
+		,m_RightSelection(false)
+		,m_ClickedObject(false)
     {
 		////m_MeshEditor = MeshEditor::Ptr(new MeshEditor());
 
@@ -301,14 +303,22 @@ namespace nero
 
         if(mouse.button == sf::Mouse::Left && isPressed && m_SelectedLayer && m_SelectedLayer->isVisible())
         {
-            m_SelectedObject = findObject(m_SelectedLayer, world_pos);
+			auto selectedObject = findObject(m_SelectedLayer, world_pos);
 
-			if(m_SelectedObject && keyboard::ALT())
+			if(selectedObject && keyboard::ALT())
             {
-                deleteObject(m_SelectedObject);
+				deleteObject(selectedObject);
             }
 
 			m_LastMousePosition = world_pos;
+
+			m_ClickedObject = selectedObject ? true : false;
+
+			if(selectedObject)
+			{
+				m_SelectedObject = selectedObject;
+				m_RightSelection = false;
+			}
         }
 
         if (mouse.button == sf::Mouse::Right && isPressed && m_SelectedLayer && m_SelectedLayer->isVisible())
@@ -316,7 +326,10 @@ namespace nero
 			auto founded = findObject(m_SelectedLayer, world_pos);
 
 			if(founded)
+			{
 				m_SelectedObject = founded;
+				m_RightSelection = true;
+			}
 
             if(m_SelectedObject)
                 m_UpdateUI();
@@ -324,8 +337,11 @@ namespace nero
 
 		if (mouse.button == sf::Mouse::Left && !isPressed && m_SelectedLayer && m_SelectedObject)
         {
-			m_SelectedObject = nullptr;
-            m_UpdateUndo();
+			if(!m_RightSelection)
+			{
+				m_SelectedObject = nullptr;
+				m_UpdateUndo();
+			}
         }
     }
 
@@ -335,24 +351,28 @@ namespace nero
 
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && m_SelectedLayer && m_SelectedLayer->isVisible() && m_SelectedObject)
         {
-            sf::Vector2f diff = world_pos - m_LastMousePosition;
+			if(m_ClickedObject)
+			{
+				sf::Vector2f diff = world_pos - m_LastMousePosition;
 
-			if(!keyboard::CTRL_SHIFT_ALT())
-                m_SelectedObject->move(diff);
+				if(!keyboard::CTRL_SHIFT_ALT())
+					m_SelectedObject->move(diff);
 
-            else if(keyboard::SHIFT() && diff.y >  0.f)
-                m_SelectedObject->rotate(m_RotationSpeed*2.f);
+				else if(keyboard::SHIFT() && diff.y >  0.f)
+					m_SelectedObject->rotate(m_RotationSpeed*2.f);
 
-            else if(keyboard::SHIFT() && diff.y <  0.f)
-                m_SelectedObject->rotate(-m_RotationSpeed*2.f);
+				else if(keyboard::SHIFT() && diff.y <  0.f)
+					m_SelectedObject->rotate(-m_RotationSpeed*2.f);
 
-            else if(keyboard::CTRL() && diff.y < 0.f)
-                m_SelectedObject->scale(sf::Vector2f(1.f+m_ZoomingRatio, 1.f+m_ZoomingRatio));
+				else if(keyboard::CTRL() && diff.y < 0.f)
+					m_SelectedObject->scale(sf::Vector2f(1.f+m_ZoomingRatio, 1.f+m_ZoomingRatio));
 
-            else if(keyboard::CTRL() && diff.y > 0.f)
-                m_SelectedObject->scale(sf::Vector2f(1.f-m_ZoomingRatio, 1.f-m_ZoomingRatio));
+				else if(keyboard::CTRL() && diff.y > 0.f)
+					m_SelectedObject->scale(sf::Vector2f(1.f-m_ZoomingRatio, 1.f-m_ZoomingRatio));
 
-            m_LastMousePosition = world_pos;
+				m_LastMousePosition = world_pos;
+
+			}
         }
     }
 

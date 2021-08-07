@@ -176,6 +176,8 @@ namespace nero
 			RenderTexturePtr				m_RenderTexture;
 			RenderContext::Ptr				m_RenderContext;
 			LightManagerPtr					m_LightManager;
+			bool							m_RightSelection;
+			bool							m_ClickedObject;
 
 
 
