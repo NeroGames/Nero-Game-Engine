@@ -251,20 +251,6 @@ namespace  nero
 			m_WorldBuilder->handleEvent(event);
 		}
 
-		//Demo
-		/*if(m_GameProject)
-		{
-			try
-			{
-				m_GameProject->handleEvent(event);
-			}
-			catch (std::exception e)
-			{
-				m_GameProject->destroyScene();
-			}
-		}*/
-
-
 		switch(event.type)
 		{
 			case sf::Event::Closed:
@@ -310,20 +296,6 @@ namespace  nero
 		{
 			m_WorldBuilder->update(timeStep);
 		}
-
-		//Demo
-		/*if(m_GameProject)
-		{
-			try
-			{
-				m_GameProject->update(timeStep);
-			}
-			catch (std::exception e)
-			{
-				m_GameProject->destroyScene();
-			}
-
-		}*/
     }
 
     void EditorInterface::render()
@@ -4650,9 +4622,6 @@ namespace  nero
 		{
 			if(m_GameLevelBuilder)
 			{
-				//auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
-
-
 				ImGuiViewport* viewport = ImGui::GetMainViewport();
 				float game_world_window_height = viewport->Size.y * 0.25f;
 				viewport = nullptr;
@@ -4673,7 +4642,7 @@ namespace  nero
 					{
 						ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
-						if (chunk_selection_mask & (1 << loop_chunk))
+						if(chunk_selection_mask & (1 << loop_chunk))
 						{
 							node_flags |= ImGuiTreeNodeFlags_Selected;
 						}
@@ -4697,7 +4666,6 @@ namespace  nero
 						{
 							//display chunk layer here
 							int			layer_node_clicked		= -1;
-							static int	layer_selection_mask	= (1 << worldChunk->getWorldBuilder()->getLayerTable().size());
 							int			selectedObjectLayerId	= m_WorldBuilder->getSelectedLayer()->getObjectId();
 
 							int loop_layer = 0;
@@ -4705,11 +4673,10 @@ namespace  nero
 							{
 								ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
-								if ((layer_selection_mask & (1 << loop_layer)) && (chunk_selection_mask & (1 << loop_chunk)))
+								if (objectLayer->getObjectId() == selectedObjectLayerId)
 								{
 									node_flags |= ImGuiTreeNodeFlags_Selected;
 								}
-
 
 								ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 								bool layer_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_layer, node_flags, std::string(ICON_FA_FILE " " + objectLayer->getName()).c_str(), loop_layer);
@@ -4733,7 +4700,6 @@ namespace  nero
 								if (layer_node_open)
 								{
 									int			object_node_clicked		= -1;
-									static int	object_selection_mask	= (1 << objectLayer->getChildCount());
 									int			selectedGameObjectId	= -1;
 
 									if(worldChunk->getWorldBuilder()->getSelectedObject())
@@ -4747,7 +4713,7 @@ namespace  nero
 										ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_None;
 										node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 
-										if ((object_selection_mask & (1 << loop_object)) && (layer_selection_mask & (1 << loop_layer)) && chunk_selection_mask & (1 << loop_chunk))
+										if(gameObject->getObjectId() == selectedGameObjectId)
 										{
 											node_flags |= ImGuiTreeNodeFlags_Selected;
 										}
@@ -4781,38 +4747,10 @@ namespace  nero
 										loop_object++;
 									}
 
-									if (object_node_clicked != -1)
-									{
-										object_selection_mask = (1 << object_node_clicked);
-
-										//f (ImGui::GetIO().KeyCtrl)
-										//{
-											//object_selection_mask ^= (1 << object_node_clicked);
-										//}
-										//else
-										//{
-											//object_selection_mask = (1 << object_node_clicked);
-										//}//
-									}
-
 									ImGui::TreePop();
 								}
 
 								loop_layer++;
-							}
-
-							if (layer_node_clicked != -1)
-							{
-								layer_selection_mask = (1 << layer_node_clicked);
-
-								//if (ImGui::GetIO().KeyCtrl)
-								//{
-									//layer_selection_mask ^= (1 << layer_node_clicked);
-								//}
-								//else
-								//{
-									//layer_selection_mask = (1 << layer_node_clicked);
-								//}
 							}
 
 							ImGui::TreePop();
@@ -4967,22 +4905,26 @@ namespace  nero
 					float wording_width = 70.f;
 					float input_width = ImGui::GetWindowContentRegionWidth() - 70.f;
 
-
 					ImGui::Text("Name");
 					ImGui::SameLine(wording_width);
 					ImGui::SetNextItemWidth(input_width);
-					char* object_name = "";
-					//if(selectedObject)
-						//string::fillCharArray(object_name, sizeof(object_name), selectedObject->getName());
-					ImGui::InputText("##object_name", object_name, sizeof(object_name));
+					char object_name[100];
+					string::fillCharArray(object_name, sizeof(object_name), selectedObject ? selectedObject->getName() : "");
+					std::string input_id = selectedObject ? std::string("##object_name") + toString(selectedObject->getObjectId()) : std::string("##object_name");
+					ImGui::InputText(input_id.c_str(), object_name, sizeof(object_name));
+					if(selectedObject && ImGui::IsItemEdited())
+					{
+						selectedObject->setName(std::string(object_name));
+					}
 					ImGui::Dummy(ImVec2(0.0f, 1.0f));
-					//if(selectedObject)
-						//selectedObject->setName(std::string(object_name));
+
+
 
 					ImGui::Text("Type");
 					ImGui::SameLine(wording_width);
 					ImGui::SetNextItemWidth(input_width);
-					char* object_type = "";
+					char object_type[100];
+					string::fillCharArray(object_type, sizeof(object_type), selectedObject ? selectedObject->getTypeString() : "");
 					ImGui::InputText("##object_type", object_type, sizeof(object_type), ImGuiInputTextFlags_ReadOnly);
 					ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
@@ -5010,17 +4952,18 @@ namespace  nero
 					ImGui::SameLine(wording_width + 30.f);
 					ImGui::SetNextItemWidth(input_width - 30.f);
 					float positionx = selectedObject ? selectedObject->getPosition().x : 0.00f;
-					float positiony = selectedObject ? selectedObject->getPosition().y : 0.00f;
 					ImGui::InputFloat("##position_x", &positionx, 1.f, 1.0f, "%.3f");
+					bool posxchanged = ImGui::IsItemEdited();
 					ImGui::Text("");
 					ImGui::SameLine(wording_width);
 					ImGui::Text(" y ");
 					ImGui::SameLine(wording_width + 30.f);
 					ImGui::SetNextItemWidth(input_width - 30.f);
+					float positiony = selectedObject ? selectedObject->getPosition().y : 0.00f;
 					ImGui::InputFloat("##position_y", &positiony, 1.f, 1.0f, "%.3f");
 					ImGui::Dummy(ImVec2(0.0f, 1.0f));
-
-					if(selectedObject)
+					bool posychanged = ImGui::IsItemEdited();
+					if(selectedObject && (posxchanged || posychanged))
 					{
 						selectedObject->setPosition(positionx, positiony);
 					}
@@ -5033,15 +4976,17 @@ namespace  nero
 					float scalex = selectedObject ? selectedObject->getScale().x : 0.00f;
 					float scaley = selectedObject ? selectedObject->getScale().y : 0.00f;
 					ImGui::InputFloat("##scale_x", &scalex, 0.1f, 1.0f, "%.3f");
+					bool scalexchanged = ImGui::IsItemEdited();
 					ImGui::Text("");
 					ImGui::SameLine(wording_width);
 					ImGui::Text(" y ");
 					ImGui::SameLine(wording_width + 30.f);
 					ImGui::SetNextItemWidth(input_width - 30.f);
 					ImGui::InputFloat("##scale_y", &scaley, 0.1f, 1.0f, "%.3f");
+					bool scaleychanged = ImGui::IsItemEdited();
 					ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
-					if(selectedObject)
+					if(selectedObject && (scalexchanged || scaleychanged))
 					{
 						selectedObject->setScale(scalex, scaley);
 					}
@@ -5051,12 +4996,10 @@ namespace  nero
 					ImGui::SetNextItemWidth(input_width - 30.f);
 					float rotation = selectedObject ? selectedObject->getRotation() : 0.00f;
 					ImGui::InputFloat("", &rotation, 1.f, 1.0f, "%.3f");
-
-					if(selectedObject)
+					if(selectedObject && ImGui::IsItemEdited())
 					{
 						selectedObject->setRotation(rotation);
 					}
-
 
 					ImGui::EndChild();
 				}

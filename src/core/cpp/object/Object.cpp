@@ -361,6 +361,55 @@ namespace nero
 		}
 	}
 
+
+	std::string Object::getTypeString() const
+	{
+		switch (getSecondType())
+		{
+			case Sprite_Object:
+				return "Sprite Object";
+
+			case Mesh_Object:
+				return "Mesh Object";
+
+			case Physic_Object:
+				return "Physic Object";
+
+			case Meshed_Object:
+				return "Meshed Object";
+
+			case Solid_Object:
+				return "Solid Object";
+
+			case Layer_Object:
+				return "Layer Object";
+
+			case Animation_Object:
+				return "Animation Object";
+
+			case Animation_Meshed_Object:
+				return "Meshed Animation Object";
+
+			case Animation_Solid_Object:
+				return "Solid Animation Object";
+
+			case Text_Object:
+				return "Text Object";
+
+			case UI_Object:
+				return "UI Object";
+
+			case Button_Object:
+				return "Button Object";
+
+			case Light_Object:
+				return "Light Object";
+
+			default:
+				return "No Type";
+		}
+	}
+
 	Object* Object::getParent() const
 	{
 		return m_Parent;

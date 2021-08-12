@@ -54,6 +54,8 @@ namespace nero
             const Type&                     getFirstType()      const;
             const Type&                     getSecondType()     const;
 			std::string						getTypeString(const Type& type) const;
+			std::string						getTypeString() const;
+
 
             bool                            isVisible()         const;
             bool                            isUpdateable()      const;
