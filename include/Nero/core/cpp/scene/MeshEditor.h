@@ -16,7 +16,7 @@ namespace nero
 {
     class MeshEditor
     {
-		/*public:
+		public:
             typedef std::shared_ptr<MeshEditor> Ptr;
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
             typedef sf::RectangleShape          Vertex;
@@ -27,7 +27,6 @@ namespace nero
             virtual                ~MeshEditor();
 
             void                    handleEvent(const sf::Event& event);
-            void                    render();
 
             void                    addMesh(Mesh* mesh);
             void                    deleteMesh(const int& id);
@@ -58,7 +57,7 @@ namespace nero
             sf::Vector2f                                        m_LastMousePosition;
             std::function<void()>                               m_UpdateUndo;
             std::function<void(const std::string&, int)>        m_UpdateLog;
-			std::function<void(const std::string&, bool, int)>  m_UpdateLogIf;*/
+			std::function<void(const std::string&, bool, int)>  m_UpdateLogIf;
     };
 }
 #endif // MESHEDITOR_H

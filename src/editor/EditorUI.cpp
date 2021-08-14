@@ -246,9 +246,13 @@ namespace  nero
 			m_EditorCamera->handleEvent(event);
 		}
 
-		if(m_WorldBuilder && mouseOnCanvas())
+		if(m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT && m_WorldBuilder && mouseOnCanvas())
 		{
 			m_WorldBuilder->handleEvent(event);
+		}
+		else if(m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::MESH && m_WorldBuilder && mouseOnCanvas())
+		{
+			m_WorldBuilder->getMeshEditor()->handleEvent(event);
 		}
 
 		switch(event.type)
@@ -292,7 +296,7 @@ namespace  nero
 	{
 		m_EditorCamera->update(timeStep);
 
-		if(m_WorldBuilder)
+		if(m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT && m_WorldBuilder)
 		{
 			m_WorldBuilder->update(timeStep);
 		}
@@ -585,7 +589,17 @@ namespace  nero
 	{
 		switch (editorMode)
 		{
-			case EditorMode::WORLD_BUILDER:		return "World Builder";		break;
+			case EditorMode::WORLD_BUILDER:
+			{
+				if(m_BuilderMode ==  BuilderMode::OBJECT)
+				{
+					return "World Builder - Object";
+				}
+				else if(m_BuilderMode ==  BuilderMode::MESH)
+				{
+					return "World Builder - Mesh";
+				}
+			}break;
 			case EditorMode::SCREEN_BUILDER:	return "Screen Builder";	break;
 			case EditorMode::OBJECT_BUILDER:	return "Object Builder";	break;
 			case EditorMode::PLAY_GAME:			return "Play Game";			break;
@@ -3876,9 +3890,19 @@ namespace  nero
 				ImGui::Text("Choose Scene Mode");
 				ImGui::Separator();
 
-				static int e = 0;
+				int e = 0;
+				if(m_BuilderMode == BuilderMode::OBJECT) e = 0;
+				else if(m_BuilderMode == BuilderMode::MESH) e = 1;
 				ImGui::RadioButton("Object", &e, 0);
+				if(ImGui::IsItemEdited())
+				{
+					m_BuilderMode = BuilderMode::OBJECT;
+				}
 				ImGui::RadioButton("Mesh", &e, 1);
+				if(ImGui::IsItemEdited())
+				{
+					m_BuilderMode = BuilderMode::MESH;
+				}
 				ImGui::RadioButton("Play", &e, 2);
 
 

@@ -34,10 +34,10 @@ namespace nero
 				break;
 		}
 
-		if(m_MeshShape != Shape::None)
+		/*if(m_MeshShape != Shape::None)
 		{
 			setOrigin(getGlobalBounds().width / 2.f, getGlobalBounds().height / 2.f);
-		}
+		}*/
 	}
 
 	Mesh::~Mesh()
@@ -99,7 +99,7 @@ namespace nero
 		updateMesh();
 	}
 
-	void Mesh::addVertex(const sf::Vector2f &position)
+	void Mesh::addVertex(const sf::Vector2f &position, const int& index)
 	{
 		sf::RectangleShape vertex;
 
@@ -107,7 +107,14 @@ namespace nero
 		vertex.setSize(sf::Vector2f(m_VertexSize, m_VertexSize));
 		vertex.setPosition(position);
 
-		m_VertexTable.push_back(vertex);
+		if(index < 0)
+		{
+			m_VertexTable.push_back(vertex);
+		}
+		else
+		{
+			m_VertexTable.insert(m_VertexTable.begin() + index, vertex);
+		}
 	}
 
 	void Mesh::addLine(const sf::Vector2f &point1, const sf::Vector2f &point2)
@@ -442,6 +449,16 @@ namespace nero
 		}
 
 		updateMesh();
+	}
+
+	void Mesh::deleteVertex(const int& index)
+	{
+		m_VertexTable.erase(m_VertexTable.begin() + index);
+	}
+
+	void Mesh::setColor(const sf::Color& color)
+	{
+		m_Color = color;
 	}
 }
 

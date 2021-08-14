@@ -32,7 +32,7 @@ namespace nero
 		,m_RightSelection(false)
 		,m_ClickedObject(false)
     {
-		////m_MeshEditor = MeshEditor::Ptr(new MeshEditor());
+		m_MeshEditor = MeshEditor::Ptr(new MeshEditor());
 
         m_SelectionRect.setFillColor(sf::Color::Transparent);
         m_SelectionRect.setOutlineColor(sf::Color::Green);
@@ -759,7 +759,7 @@ namespace nero
         {
             MeshObject::Ptr mesh_object = MeshObject::Cast(object);
 			mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
-			//m_MeshEditor->addMesh(mesh_object->getMesh());
+			m_MeshEditor->addMesh(mesh_object->getMesh());
         }
 
         else if(object->getSecondType() == Object::Meshed_Object || object->getSecondType() == Object::Animation_Meshed_Object)
@@ -775,7 +775,7 @@ namespace nero
             object->setIsUpdateable(true);
             object->addChild(child_object);
 
-			//m_MeshEditor->addMesh(mesh_object->getMesh());
+			m_MeshEditor->addMesh(mesh_object->getMesh());
         }
 
         m_SelectedObject = object;
@@ -841,10 +841,10 @@ namespace nero
        return m_LayerTable;
     }
 
-	/*MeshEditor::Ptr WorldBuilder::getMeshEditor()
+	MeshEditor::Ptr WorldBuilder::getMeshEditor()
     {
-		return  //m_MeshEditor;
-	}*/
+		return  m_MeshEditor;
+	}
 
 	bool WorldBuilder::addObject(Object::Type type, const sf::String& label, sf::Vector2f position)
     {
@@ -902,7 +902,7 @@ namespace nero
 					sf::FloatRect bound = mesh_object->getGlobalBounds();
 					mesh_object->setOrigin(bound.width/2.f, bound.height/2.f);
 
-					//m_MeshEditor->addMesh(mesh_object->getMesh());
+					m_MeshEditor->addMesh(mesh_object->getMesh());
 
                     object = mesh_object;
                 }
@@ -910,7 +910,7 @@ namespace nero
                 {
 					//m_UpdateLog("changing Object [" + m_SelectedObject->getName() + "] Mesh Type to [" + label + "]", nero::Info);
 
-					//m_MeshEditor->deleteMesh(m_SelectedObject->getFirstChild()->getId());
+					m_MeshEditor->deleteMesh(m_SelectedObject->getFirstChild()->getId());
                     m_SelectedObject->removeFirstChild();
 
                     Mesh mesh;
@@ -931,7 +931,7 @@ namespace nero
                     mesh_object->setName(m_SelectedObject->getName());
                     mesh_object->setCategory(m_SelectedObject->getCategory());
 
-					//m_MeshEditor->addMesh(mesh_object->getMesh());
+					m_MeshEditor->addMesh(mesh_object->getMesh());
 
                     m_SelectedObject->addChild(mesh_object);
 
@@ -981,7 +981,7 @@ namespace nero
                 mesh_object->setSecondType(Object::Mesh_Object);
                 mesh_object->setIsSelectable(false);
 
-				//m_MeshEditor->addMesh(mesh_object->getMesh());
+				m_MeshEditor->addMesh(mesh_object->getMesh());
                 sprite_object->addChild(mesh_object);
 
                 //update one time
@@ -1073,7 +1073,7 @@ namespace nero
                 mesh_object->setSecondType(Object::Mesh_Object);
                 mesh_object->setIsSelectable(false);
 
-				//m_MeshEditor->addMesh(mesh_object->getMesh());
+				m_MeshEditor->addMesh(mesh_object->getMesh());
                 animation_object->addChild(mesh_object);
 
                 //update one time
@@ -1182,12 +1182,12 @@ namespace nero
 
         if(object->getFirstType() == Object::Mesh_Object)
         {
-			//m_MeshEditor->deleteMesh(object->getId());
+			m_MeshEditor->deleteMesh(object->getId());
         }
 
         else if(object->getSecondType() == Object::Meshed_Object)
         {
-			//m_MeshEditor->deleteMesh(object->getFirstChild()->getId());
+			m_MeshEditor->deleteMesh(object->getFirstChild()->getId());
         }
 
         m_SelectedLayer->removeChild(object);
@@ -1867,7 +1867,7 @@ namespace nero
         nero_log("loading scene");
 
         m_LayerTable.clear();
-		//m_MeshEditor->destroyAllMesh();
+		m_MeshEditor->destroyAllMesh();
         m_SelectedObject = nullptr;
 
         m_LayerCount    = scene["layer_count"];
@@ -2253,14 +2253,14 @@ namespace nero
 	{
 		m_RenderContext = renderContext;
 
-		//m_MeshEditor->setRenderContext(renderContext);
+		m_MeshEditor->setRenderContext(renderContext);
 	}
 
 	void WorldBuilder::setRenderTexture(const RenderTexturePtr& renderTexture)
 	{
 		m_RenderTexture = renderTexture;
 
-		//m_MeshEditor->setRenderTexture(renderTexture);
+		m_MeshEditor->setRenderTexture(renderTexture);
 	}
 
 	void WorldBuilder::setResourceManager(const ResourceManager::Ptr& resourceManager)

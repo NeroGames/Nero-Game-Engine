@@ -21,7 +21,7 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	struct Mesh : public sf::Transformable, public sf::Drawable
+	struct Mesh : public sf::Drawable
 	{
 		public: //utility
 			enum class Type	{Static, Dynamic, Kinematic};
@@ -45,7 +45,7 @@ namespace nero
 			void									createDefaultCircle();
 			void									createDefaultLine();
 			//mesh
-			void									addVertex(const sf::Vector2f& position);
+			void									addVertex(const sf::Vector2f& position, const int& index = -1);
 			void									addLine(const sf::Vector2f &point1, const sf::Vector2f &point2);
 			void									addPolygon(const std::vector<sf::Vector2f>& pointTable);
 			void									updateMesh(const bool& shape = true, const bool& color = true);
@@ -53,12 +53,16 @@ namespace nero
 			sf::Color								getColor();
 			void									validate(const sf::Vector2f& point1, const sf::Vector2f& point2);
 			std::vector<sf::Vector2f>				getVertexPosition() const;
+			void									deleteVertex(const int& index);
 			//
 			void									moveMesh(const sf::Vector2f& offset);
 			void									scaleMesh(const sf::Vector2f& factor);
 			void									rotateMesh(const float& angle);
+			void									setColor(const sf::Color& color);
+
 
 		private:
+			friend class							MeshEditor;
 			int										m_MeshId;
 			Shape									m_MeshShape;
 			Type									m_MeshType;
@@ -77,6 +81,8 @@ namespace nero
 			sf::Vector2f							m_Position;
 			sf::Vector2f							m_Scale;
 			float									m_Rotation;
+			//
+			sf::Color								m_Color;
 	};
 }
 
