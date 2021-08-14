@@ -759,7 +759,7 @@ namespace nero
         {
             MeshObject::Ptr mesh_object = MeshObject::Cast(object);
 			mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
-			m_MeshEditor->addMesh(mesh_object->getMesh());
+			m_MeshEditor->addMesh(mesh_object);
         }
 
         else if(object->getSecondType() == Object::Meshed_Object || object->getSecondType() == Object::Animation_Meshed_Object)
@@ -775,7 +775,7 @@ namespace nero
             object->setIsUpdateable(true);
             object->addChild(child_object);
 
-			m_MeshEditor->addMesh(mesh_object->getMesh());
+			m_MeshEditor->addMesh(mesh_object);
         }
 
         m_SelectedObject = object;
@@ -902,7 +902,7 @@ namespace nero
 					sf::FloatRect bound = mesh_object->getGlobalBounds();
 					mesh_object->setOrigin(bound.width/2.f, bound.height/2.f);
 
-					m_MeshEditor->addMesh(mesh_object->getMesh());
+					m_MeshEditor->addMesh(mesh_object);
 
                     object = mesh_object;
                 }
@@ -931,7 +931,7 @@ namespace nero
                     mesh_object->setName(m_SelectedObject->getName());
                     mesh_object->setCategory(m_SelectedObject->getCategory());
 
-					m_MeshEditor->addMesh(mesh_object->getMesh());
+					m_MeshEditor->addMesh(mesh_object);
 
                     m_SelectedObject->addChild(mesh_object);
 
@@ -981,7 +981,7 @@ namespace nero
                 mesh_object->setSecondType(Object::Mesh_Object);
                 mesh_object->setIsSelectable(false);
 
-				m_MeshEditor->addMesh(mesh_object->getMesh());
+				m_MeshEditor->addMesh(mesh_object);
                 sprite_object->addChild(mesh_object);
 
                 //update one time
@@ -1073,7 +1073,7 @@ namespace nero
                 mesh_object->setSecondType(Object::Mesh_Object);
                 mesh_object->setIsSelectable(false);
 
-				m_MeshEditor->addMesh(mesh_object->getMesh());
+				m_MeshEditor->addMesh(mesh_object);
                 animation_object->addChild(mesh_object);
 
                 //update one time
@@ -1771,7 +1771,7 @@ namespace nero
         mesh_object->setIsSelectable(json["is_selectable"]);
         mesh_object->setIsSelected(json["is_selected"]);
 
-		//m_MeshEditor->addMesh(mesh_object->getMesh());
+		//m_MeshEditor->addMesh(mesh_object);
 
 		return mesh_object;*/
 

@@ -6,7 +6,7 @@
 #define MESHEDITOR_H
 ///////////////////////////HEADERS//////////////////////////
 //NERO
-#include <Nero/core/cpp/model/Mesh.h>
+#include <Nero/core/cpp/object/MeshObject.h>
 #include <Nero/core/cpp/scene/SceneUtility.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 //STD
@@ -20,7 +20,7 @@ namespace nero
             typedef std::shared_ptr<MeshEditor> Ptr;
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
             typedef sf::RectangleShape          Vertex;
-            typedef std::vector<Mesh*>          MeshTab;
+			typedef std::vector<MeshObject::Ptr>          MeshTab;
 
 
 									MeshEditor();
@@ -28,7 +28,7 @@ namespace nero
 
             void                    handleEvent(const sf::Event& event);
 
-            void                    addMesh(Mesh* mesh);
+			void                    addMesh(MeshObject::Ptr mesh);
             void                    deleteMesh(const int& id);
             void                    destroyAllMesh();
             MeshTab&                getMeshTab();
@@ -45,11 +45,11 @@ namespace nero
             void                    handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
             void                    rotateMesh(Mesh* mesh, float speed = 0.1f);
             void                    scaleMesh(Mesh* mesh, float scale = 0.1f);
-            void                    deselectMesh(Mesh* mesh);
+			void                    deselectMesh(MeshObject::Ptr mesh);
 
         private:
             MeshTab                                             m_MeshTab;
-            Mesh*                                               m_SelectedMesh;
+			MeshObject::Ptr                                     m_SelectedMesh;
             std::vector<sf::RectangleShape*>                    m_SelectedVertexTab;
             int                                                 m_MeshCount;
 			RenderTexturePtr                                    m_RenderTexture;
