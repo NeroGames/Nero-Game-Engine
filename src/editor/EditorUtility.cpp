@@ -5,6 +5,7 @@
 ///////////////////////////HEADERS///////////////////////////
 #include <Nero/editor/EditorUtility.h>
 #include <Nero/core/cpp/utility/File.h>
+#include <unistd.h>
 /////////////////////////////////////////////////////////////
 
 namespace nero
@@ -198,6 +199,8 @@ namespace nero
 		{
 			AppLauncher::texturePackerProcessId = cmd::launchApplication(AppLauncher::TEXTURE_PACKER);
 
+			usleep(100);
+
 			cmd::showApplication("TexturePacker", AppLauncher::texturePackerProcessId);
 		}
 	}
@@ -212,6 +215,8 @@ namespace nero
 		{
 			std::string profiler = AppLauncher::NERO_GAME_HOME + "/Tools/Profiler/profiler_gui.exe";
 			AppLauncher::profilerProcessId = cmd::launchApplication(profiler);
+
+			usleep(100);
 
 			cmd::showApplication("EasyProfiler", AppLauncher::profilerProcessId);
 		}

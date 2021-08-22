@@ -11,6 +11,7 @@
 //Cpp
 #include <iostream>
 #include <sstream>
+#include <unistd.h>
 #ifdef NERO_OS_WINDOW
 #include <shellapi.h>
 #endif
@@ -80,7 +81,7 @@ namespace nero
 			}
 			else
 			{
-				process.m_ExitCode = NO_EXIT_CODE;
+				process.m_ExitCode = 0;//NO_EXIT_CODE;
 			}
 
 
@@ -195,13 +196,22 @@ namespace nero
 			std::string windowmode	= file::escapeSpace(file::getWindowsPath(NERO_GAME_HOME + "/Tools/Script/windowmode.bat"));
 			std::string sendkeys	= file::escapeSpace(file::getWindowsPath(NERO_GAME_HOME + "/Tools/Script/sendkeys.bat"));
 
-			std::string cmd1 = windowmode + " -pid " + proccessId + " -mode restore";
-			std::string cmd2 = sendkeys + " " + name + "  \"\"";
+			//call Tools/Script/windowMode.bat -title "EasyProfiler" -mode maximized
 
-			//cmd::runCommand(windowmode, {"-pid", proccessId, "-mode", "restore"});
-			//cmd::runCommand(sendkeys, {" ", name, "\"\""});
+			//std::string cmd1 = windowmode + " -pid " + proccessId + " -mode restore";
+			std::string cmd1 = "call " + windowmode + " -title " + name + " -mode maximized";
+			std::string cmd2 = "call " + sendkeys + " " + name + "  \"\"";
+
+			//cmd::runCommand("call", {windowmode, "-pid", proccessId, "-mode", "restore"}, false);
+			//usleep(100);
+			//cmd::runCommand("call", {sendkeys, " ", name, "\"\""}, false);
+
+			//WinExec(cmd1.c_str(), SW_HIDE);
+			//usleep(100);
+			//WinExec(cmd2.c_str(), SW_HIDE);
 
 			system(cmd1.c_str());
+			usleep(100);
 			system(cmd2.c_str());
 		}
 
