@@ -1,5 +1,5 @@
 # Cmake version
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.0)
 
 # Enable c++11
 set (CMAKE_CXX_STANDARD 11)
@@ -19,7 +19,7 @@ project (Nero)
 
 #set(NERO_MAJOR_VERSION 1)
 #set(NERO_MINOR_VERSION 0)
-#set(NERO_REVISION_VERSION 6)
+#set(NERO_REVISION_VERSION 7)
 
 #set(NERO_BUILD_TYPE	Release CACHE STRING "Choose the build type (Debug / Release)")
 set(NERO_BUILD_SHARED_LIB ON CACHE BOOL "Build shared or static library")

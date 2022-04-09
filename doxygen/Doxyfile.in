@@ -38,7 +38,7 @@ PROJECT_NAME           = "Nero Game Engine"
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 1.0.6
+PROJECT_NUMBER         = v1.0.7
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -51,7 +51,7 @@ PROJECT_BRIEF          = "Advanced 2D Game Engine Designed to be Simple and Intu
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
 # the logo to the output directory.
 
-PROJECT_LOGO           =
+PROJECT_LOGO           = ../icon.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is
@@ -158,7 +158,7 @@ INLINE_INHERITED_MEMB  = NO
 # shortest path that makes the file name unique will be used
 # The default value is: YES.
 
-FULL_PATH_NAMES        = YES
+FULL_PATH_NAMES        = NO
 
 # The STRIP_FROM_PATH tag can be used to strip a user-defined part of the path.
 # Stripping is only done if one of the specified strings matches the left-hand
@@ -1526,7 +1526,7 @@ ECLIPSE_DOC_ID         = org.doxygen.Project
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-DISABLE_INDEX          = NO
+DISABLE_INDEX          = YES
 
 # The GENERATE_TREEVIEW tag is used to specify whether a tree-like index
 # structure should be generated to display hierarchical information. If the tag
@@ -1543,7 +1543,18 @@ DISABLE_INDEX          = NO
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-GENERATE_TREEVIEW      = NO
+GENERATE_TREEVIEW      = YES
+
+# When both GENERATE_TREEVIEW and DISABLE_INDEX are set to YES, then the FULL_SIDEBAR 
+# option determines if the side bar is limited to only the treeview area (value NO) or 
+# if it should extend to the full height of the window (value YES). Setting this to YES 
+# gives a layout similar to https://docs.readthedocs.io with more room for contents, 
+# but less room for the project logo, title, and description.
+# If either GENERATE_TREEVIEW or DISABLE_INDEX is set to NO, this option has no effect.
+# The default value is: NO.
+# This tag requires that the tag GENERATE_HTML is set to YES. 
+
+FULL_SIDEBAR = YES
 
 # The ENUM_VALUES_PER_LINE tag can be used to set the number of enum values that
 # doxygen will group on one line in the generated HTML documentation.

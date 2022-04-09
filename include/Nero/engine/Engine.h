@@ -25,8 +25,6 @@ namespace nero
         - The frame rate computation
 
         The nero::Engine class is a abstract class. It is mean to be inherited by more specialized class
-
-        \todo Rename nero::Engine to nero::CoreEngine
     */
     class Engine
     {
