@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2021 Sanou A. K. Landry
+// Copyright (c) 2016-2022 sk-landry
 ////////////////////////////////////////////////////////////
 #ifndef SANSATION_FONT_H_INCLUDED
 #define SANSATION_FONT_H_INCLUDED

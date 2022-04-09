@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2021 Sanou A. K. Landry
+// Copyright (c) 2016-2022 sk-landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //STD
@@ -3114,11 +3114,11 @@ namespace nero
     void DevEngineUI::onAccessLearningButton()
     {
         #ifdef _WIN32
-            updateLog("openning browser at : https://nero-game.com/learn");
-            ShellExecute(NULL, "open", "https://nero-game.com/learn", NULL, NULL, SW_SHOWNORMAL);
+            updateLog("openning browser at : https://nero-games.com/learn");
+            ShellExecute(NULL, "open", "https://nero-games.com/learn", NULL, NULL, SW_SHOWNORMAL);
         #else
-            updateLog("openning browser at : https://nero-game.com/learn");
-            system("https://nero-game.com/learn");
+            updateLog("openning browser at : https://nero-games.com/learn");
+            system("https://nero-games.com/learn");
         #endif // _WIN32
     }
 
@@ -3126,11 +3126,11 @@ namespace nero
     void DevEngineUI::onAccessForumButton()
     {
         #ifdef _WIN32
-            updateLog("openning browser at : https://nero-game.com/forum/index.php");
-            ShellExecute(NULL, "open", "https://nero-game.com/forum/index.php", NULL, NULL, SW_SHOWNORMAL);
+            updateLog("openning browser at : https://nero-games.com/forum/index.php");
+            ShellExecute(NULL, "open", "https://nero-games.com/forum/index.php", NULL, NULL, SW_SHOWNORMAL);
         #else
-            updateLog("openning browser at : https://nero-game.com/forum/index.php");
-            system("https://nero-game.com/forum/index.php");
+            updateLog("openning browser at : https://nero-games.com/forum/index.php");
+            system("https://nero-games.com/forum/index.php");
         #endif // _WIN32
     }
 
@@ -3138,11 +3138,11 @@ namespace nero
     void DevEngineUI::onAccessSnippetButton()
     {
         #ifdef _WIN32
-            updateLog("openning browser at : https://nero-game.com/snippet");
-            ShellExecute(NULL, "open", "https://nero-game.com/snippet", NULL, NULL, SW_SHOWNORMAL);
+            updateLog("openning browser at : https://nero-games.com/snippet");
+            ShellExecute(NULL, "open", "https://nero-games.com/snippet", NULL, NULL, SW_SHOWNORMAL);
         #else
-            updateLog("openning browser at : https://nero-game.com/snippet");
-            system("https://nero-game.com/snippet");
+            updateLog("openning browser at : https://nero-games.com/snippet");
+            system("https://nero-games.com/snippet");
         #endif // _WIN32
     }
 
@@ -3150,11 +3150,11 @@ namespace nero
     void DevEngineUI::onAccessAPIButton()
     {
         #ifdef _WIN32
-            updateLog("openning browser at : https://nero-game.com/learn/engine-v1/cpp-api/");
-            ShellExecute(NULL, "open", "https://nero-game.com/learn/engine-v1/cpp-api/", NULL, NULL, SW_SHOWNORMAL);
+            updateLog("openning browser at : https://nero-games.com/learn/engine-v1/cpp-api/");
+            ShellExecute(NULL, "open", "https://nero-games.com/learn/engine-v1/cpp-api/", NULL, NULL, SW_SHOWNORMAL);
         #else
-            updateLog("openning browser at : https://nero-game.com/learn/engine-v1/cpp-api/");
-            system("https://nero-game.com/learn/engine-v1/cpp-api/");
+            updateLog("openning browser at : https://nero-games.com/learn/engine-v1/cpp-api/");
+            system("https://nero-games.com/learn/engine-v1/cpp-api/");
         #endif // _WIN32
     }
 

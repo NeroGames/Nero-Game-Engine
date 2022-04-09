@@ -1,3 +1,6 @@
+# Prerequisites
+*.d
+
 # Compiled Object files
 *.slo
 *.lo
@@ -27,3 +30,10 @@
 *.exe
 *.out
 *.app
+*.save
+
+# Window
+*Thumbs.db
+
+# Nero
+log/*
