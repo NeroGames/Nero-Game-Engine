@@ -1,3 +1,9 @@
+#### Release 1.0.7 [Engine Update]
+	- [Bug Fix]
+		- fix website url
+	- [Other]
+		- update copyright 2022
+
 #### Release 1.0.6 [Engine Update]
 	- [Bug Fix]
 		- fix crash when changing mode (object to mesh) in screen_view

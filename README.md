@@ -6,7 +6,7 @@
 
 <div align="center"><a href="https://github.com/NeroGames/Nero-Game-Engine/tree/master" style="font-family: &quot;Autour One&quot;, Sans-serif;font-size: 20px;fill: #54595F;color: #54595F;background-color: #FFFFFF;border-style: solid;border-width: 6px 2px 6px 2px;box-shadow: 9px 10px 14px 0px rgba(0,0,0,0.5);padding: 14px 90px 14px 90px;">Find New Engine Here -- Nero Game Engine II </a> </div>
 
-## Nero Game Engine r1.0.6
+## Nero Game Engine r1.0.7
 
 The Nero Game Engine is an Advanced SFML Game Engine built around Box2D. Its design follows two rules : Simplicity and Intuitiveness. <br> 
 SFML (Simple and Fast Multimedia Library) is a cross-platform library designed to ease the development of games and multimedia applications.  Box2D is a 2D physics engine. It can simulate the behavior of rigid bodies in a world affected by gravity. <br>
