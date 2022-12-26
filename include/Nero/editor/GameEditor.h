@@ -2,8 +2,8 @@
 // Nero Game Engine
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
-#ifndef ENGINEEDITOR_H
-#define ENGINEEDITOR_H
+#ifndef GAMEEDITOR_H
+#define GAMEEDITOR_H
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/core/cpp/engine/CoreEngine.h>
@@ -16,11 +16,11 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	class EngineEditor : public CoreEngine
+	class GameEditor : public CoreEngine
     {
         public:
-									EngineEditor();
-			virtual                ~EngineEditor() override;
+									GameEditor();
+			virtual                ~GameEditor() override;
 			void					destroy();
 
 		private:
@@ -65,4 +65,4 @@ namespace nero
 	};
 }
 
-#endif // ENGINEEDITOR_H
+#endif // GAMEEDITOR_H

@@ -90,7 +90,7 @@ namespace nero
 
 		private:
 			//////////////main attributes
-			friend class									EngineEditor;
+			friend class									GameEditor;
 			sf::RenderWindow&								m_RenderWindow;
 			float											m_FrameRate;
 			float											m_FrameTime;

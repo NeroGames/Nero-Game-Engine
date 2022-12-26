@@ -15,7 +15,8 @@
 ////////////////////////////////////////////////////////////
 namespace  nero
 {
-	EngineEditor::EngineEditor() : CoreEngine(false)
+	GameEditor::GameEditor() :
+		 CoreEngine(false)
 		,m_EditorStarted(false)
 	{
 		//initialize logging
@@ -34,12 +35,12 @@ namespace  nero
 		backgroundStartup();
     }
 
-	EngineEditor::~EngineEditor()
+	GameEditor::~GameEditor()
     {
 		destroy();
     }
 
-	void EngineEditor::destroy()
+	void GameEditor::destroy()
 	{
 		m_EditorTextureHolder->clear();
 		m_EditorFontHolder->clear();
@@ -57,7 +58,7 @@ namespace  nero
 		ImGui::SFML::Shutdown();
 	}
 
-	void EngineEditor::handleEvent()
+	void GameEditor::handleEvent()
 	{
         sf::Event event;
 		while(m_RenderWindow.pollEvent(event))
@@ -75,7 +76,7 @@ namespace  nero
         }
     }
 
-	void EngineEditor::update(const sf::Time& timeStep)
+	void GameEditor::update(const sf::Time& timeStep)
 	{
 		if(!m_EditorStarted)
         {
@@ -90,7 +91,7 @@ namespace  nero
         }
     }
 
-	void EngineEditor::render()
+	void GameEditor::render()
 	{
 		if(!m_EditorStarted)
         {
@@ -108,7 +109,7 @@ namespace  nero
         }
     }
 
-	void EngineEditor::initLogging()
+	void GameEditor::initLogging()
 	{
 		//initialize the engine logger
 		logging::Logger::init();
@@ -125,7 +126,7 @@ namespace  nero
 		nero_log("Engine Editor is starting ..");
 	}
 
-	void EngineEditor::initSetting()
+	void GameEditor::initSetting()
 	{
 		nero_log("loading startup setting ..");
 
@@ -152,7 +153,7 @@ namespace  nero
 		nero_log("load startup setting completed")
 	}
 
-	void EngineEditor::createRenderWindow()
+	void GameEditor::createRenderWindow()
     {
 		nero_log("creating render window ..");
 
@@ -172,7 +173,7 @@ namespace  nero
 		nero_log("render window creation completed");
 	}
 
-	void EngineEditor::createLoadingScreen()
+	void GameEditor::createLoadingScreen()
     {
 		nero_log("creating loading screen ..");
 
@@ -191,13 +192,13 @@ namespace  nero
 		nero_log("loading screen creation completed");
     }
 
-	void EngineEditor::backgroundStartup()
+	void GameEditor::backgroundStartup()
 	{
 		nero_log("launching background startup ..");
-		m_StartupFuture = std::async(std::launch::async, &EngineEditor::startEngine, this, std::ref(m_EditorStarted), m_LoadingScreen->getDuration());
+		m_StartupFuture = std::async(std::launch::async, &GameEditor::startEngine, this, std::ref(m_EditorStarted), m_LoadingScreen->getDuration());
 	}
 
-	int EngineEditor::startEngine(bool& engineStarted, const int duration)
+	int GameEditor::startEngine(bool& engineStarted, const int duration)
 	{
 		nero_log("running background startup .");
 
@@ -238,7 +239,7 @@ namespace  nero
         return 0;
     }
 
-	void EngineEditor::buildDirectory()
+	void GameEditor::buildDirectory()
 	{
 		nero_log("building editor directory");
 
@@ -274,7 +275,7 @@ namespace  nero
 				file::createDirectory(file::getPath({"resource", "starterpack", "cppscript"}));
 	}
 
-	void EngineEditor::loadSetting()
+	void GameEditor::loadSetting()
 	{
 		nero_log("loading editor settings");
 
@@ -297,7 +298,7 @@ namespace  nero
 		m_EditorSetting->loadSetting(file::getPath({"setting", "startup"}));
 	}
 
-	void EngineEditor::checkRecentProject()
+	void GameEditor::checkRecentProject()
 	{
 		if(!file::fileExist(file::getPath({"setting", "recent_project"}, StringPool.EXT_JSON)))
 		{
@@ -321,7 +322,7 @@ namespace  nero
 		file::saveFile(file::getPath({"setting", "recent_project"}, StringPool.EXT_JSON), recent_project.dump(3), true);
 	}
 
-	void EngineEditor::checkWorkspace()
+	void GameEditor::checkWorkspace()
 	{
 		if(!file::fileExist(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON)))
 		{
@@ -345,7 +346,7 @@ namespace  nero
 		file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON), workspace_setting.dump(3), true);
 	}
 
-	void EngineEditor::checkEnvironmentVariable()
+	void GameEditor::checkEnvironmentVariable()
 	{
 		/*#if defined(NERO_OS_WINDOW) && !defined(NERO_GAME_DEVMODE)
 			nero_log("configuring nero game home environment variable");
@@ -400,7 +401,7 @@ namespace  nero
 		env_4	= nullptr;
 	}
 
-	void EngineEditor::loadEditorResource()
+	void GameEditor::loadEditorResource()
 	{
 		nero_log("loading editor resource");
 
@@ -414,12 +415,12 @@ namespace  nero
 		m_EditorFontHolder->loadDirectory("resource/editor/font");
 	}
 
-	void EngineEditor::createCamera()
+	void GameEditor::createCamera()
 	{
 		m_EditorCamera = std::make_shared<AdvancedCamera>();
 	}
 
-	void EngineEditor::createEditorInterface()
+	void GameEditor::createEditorInterface()
 	{
 		nero_log("creating editor interface");
 
@@ -442,7 +443,7 @@ namespace  nero
 		m_Interface->init();
 	}
 
-	void EngineEditor::openLastProject()
+	void GameEditor::openLastProject()
 	{
 		if(m_EditorSetting->getSetting("startup").getBool("open_last_project"))
 		{
