@@ -134,7 +134,7 @@ set_target_properties(RenderEngine PROPERTIES OUTPUT_NAME "Render Engine")
 
 # Nero Game Editor (Desktop)
 #----------------------------------------------------------------------------------#
-# Engine Editor Source Files
+# Game Editor Source Files
 file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/Nero/editor/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/editor/*"

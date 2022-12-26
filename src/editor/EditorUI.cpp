@@ -460,35 +460,6 @@ namespace  nero
 			ImGui::SetCursorPosX(start);
 			ImGui::Text(m_MouseInformation.c_str());
 
-			if(m_AdvancedScene)
-			{
-				ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 95.f);
-
-				if(m_EditorMode == EditorMode::WORLD_BUILDER)
-				{
-					if(ImGui::Button("New Level", ImVec2(100.f, 0.f)))
-					{
-						ImGui::OpenPopup("Create Game Level");
-					}
-				}
-				else if(m_EditorMode == EditorMode::SCREEN_BUILDER)
-				{
-					if(ImGui::Button("New Screen", ImVec2(100.f, 0.f)))
-					{
-						ImGui::OpenPopup("Create Game Screen");
-					}
-				}
-				else if(m_EditorMode == EditorMode::OBJECT_BUILDER)
-				{
-					if(ImGui::Button("New Object", ImVec2(100.f, 0.f)))
-					{
-
-					}
-				}
-			}
-
-
-
 			prepareRenderTexture();
 
 			if(m_WorldBuilder)
@@ -516,10 +487,6 @@ namespace  nero
 			ImGui::Image(flipTexture(m_RenderTexture->getTexture()));
 
 			showCanvasMenu();
-
-			showNewGameLevelPopup();
-			showNewGameScreenPopup();
-
 
         ImGui::End();
     }
@@ -1544,6 +1511,12 @@ namespace  nero
 			//show about engine
 			showAboutEngineWindow();
 
+			//show new game level popup
+			showNewGameLevelPopup();
+
+			//show new game screen popup
+			showNewGameScreenPopup();
+
 
 		ImGui::EndChild();
 		ImGui::PopStyleVar();
@@ -1613,12 +1586,43 @@ namespace  nero
 	void EditorInterface::showToolbarRight(bool scrollToolbar)
 	{
 		float rightOffset = 95.f;
+
 		if(m_GameProject)
-			rightOffset += 45.f * 3.f + 8.f * 3.f + 90.f + 3.f;
+		{
+			rightOffset += 45.f * 3.f + 8.f * 3.f + 90.f + 3.f + 140.f + 3.f + 10.f;
+		}
+
 		ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - rightOffset);
 
 		if(m_GameProject)
 		{
+			if(m_AdvancedScene)
+			{
+				if(m_EditorMode == EditorMode::WORLD_BUILDER)
+				{
+					if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Level", ImVec2(140.f, 28.f)))
+					{
+						ImGui::OpenPopup("Create Game Level");
+					}
+				}
+				else if(m_EditorMode == EditorMode::SCREEN_BUILDER)
+				{
+					if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Screen", ImVec2(140.f, 28.f)))
+					{
+						ImGui::OpenPopup("Create Game Screen");
+					}
+				}
+				else if(m_EditorMode == EditorMode::OBJECT_BUILDER)
+				{
+					if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Object", ImVec2(140.f, 28.f)))
+					{
+
+					}
+				}
+			}
+
+			ImGui::SameLine();
+
 			if(ImGui::Button(ICON_FA_CODE, ImVec2(90.f, 28.f)))
 			{
 				ImGui::OpenPopup(EditorConstant.WINDOW_SCRIPT_WIZARD.c_str());

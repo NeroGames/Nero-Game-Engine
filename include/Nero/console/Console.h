@@ -2,8 +2,8 @@
 // Nero Game Engine
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
-#ifndef COMMANDLINE_H
-#define COMMANDLINE_H
+#ifndef CONSOLE_H
+#define CONSOLE_H
 ///////////////////////////HEADERS//////////////////////////
 //Cli11
 #include <CLI11/CLI11.hpp>
@@ -31,4 +31,4 @@ namespace nero
 	};
 }
 
-#endif // COMMANDLINE_H
+#endif // CONSOLE_H

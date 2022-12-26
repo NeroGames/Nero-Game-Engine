@@ -22,7 +22,7 @@ namespace nero
 		//Window
 			//toolbar
 		const std::string WINDOW_TOOLBAR				= "Toolbar";
-		const float		  WINDOW_TOOLBAR_MIN_WIDTH		= 1000.f;
+		const float		  WINDOW_TOOLBAR_MIN_WIDTH		= 1400.f;
 			//upper left
 		const std::string WINDOW_UTILITY				= "Utility";
 		const std::string WINDOW_MUSIC					= "Music";

@@ -193,7 +193,7 @@ namespace nero
 	{
 		if(cmd::processRunning(AppLauncher::texturePackerProcessId))
 		{
-			cmd::showApplication("TexturePacker", AppLauncher::texturePackerProcessId);
+			cmd::showApplication("TexturePacker");//, AppLauncher::texturePackerProcessId);
 		}
 		else
 		{
@@ -201,7 +201,7 @@ namespace nero
 
 			usleep(100);
 
-			cmd::showApplication("TexturePacker", AppLauncher::texturePackerProcessId);
+			cmd::showApplication("TexturePacker");//, AppLauncher::texturePackerProcessId);
 		}
 	}
 
@@ -209,7 +209,7 @@ namespace nero
 	{
 		if(cmd::processRunning(AppLauncher::profilerProcessId))
 		{
-			cmd::showApplication("EasyProfiler", AppLauncher::profilerProcessId);
+			cmd::showApplication("EasyProfiler");//, AppLauncher::profilerProcessId);
 		}
 		else
 		{
@@ -218,7 +218,7 @@ namespace nero
 
 			usleep(100);
 
-			cmd::showApplication("EasyProfiler", AppLauncher::profilerProcessId);
+			cmd::showApplication("EasyProfiler");//, AppLauncher::profilerProcessId);
 		}
 	}
 

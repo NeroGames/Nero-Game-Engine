@@ -345,12 +345,17 @@ namespace nero
 		}
 		else
 		{
-			std::string cmd =  "START \"\" " + file::escapeSpace(file::getWindowsPath(m_EngineSetting->getSetting("environment").getString("qt_creator")));
-			cmd += " " + file::escapeSpace(m_ProjectSetting->getString("cmake_file"));
 
+			std::string qt_creator = file::escapeSpace(file::getWindowsPath(m_EngineSetting->getSetting("environment").getString("qt_creator")));
+			std::string cmake_file = file::escapeSpace(m_ProjectSetting->getString("cmake_file"));
+
+			std::string cmd =  "START /B \"\" " + qt_creator +  " " + cmake_file;
 			system(cmd.c_str());
 
 			m_EditorProcessId = cmd::findProcessId("qtcreator");
+
+			usleep(100);
+			cmd::showApplication(m_ProjectSetting->getString("project_name"));
 		}
 	}
 
@@ -360,7 +365,7 @@ namespace nero
 		{
 			if(cmd::processRunning(m_EditorProcessId))
 			{
-				cmd::showApplication("devenv", m_EditorProcessId);
+				cmd::showApplication("devenv");//, m_EditorProcessId);
 			}
 			else
 			{

@@ -13,6 +13,7 @@
 #include <Poco/StreamCopier.h>
 //Cpp
 #include <fstream>
+#include <unistd.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -52,7 +53,7 @@ namespace nero
 		std::string						findProcessId(const std::string& application);
 		bool							processRunning(const std::string& processId);
 		void							setEnvironmnentVariable(const std::string& name, const std::string& value);
-		void							showApplication(const std::string& name, const std::string& proccessId);
+		void							showApplication(const std::string& name);
 
 	}
 }

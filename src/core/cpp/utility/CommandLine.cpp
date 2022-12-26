@@ -189,14 +189,12 @@ namespace nero
 			#endif
 		}
 
-		void showApplication(const std::string& name, const std::string& proccessId)
+		void showApplication(const std::string& name)
 		{
 			std::string NERO_GAME_HOME = getenv("NERO_GAME_HOME") ? std::string(getenv("NERO_GAME_HOME")) : StringPool.BLANK;
 
 			std::string windowmode	= file::escapeSpace(file::getWindowsPath(NERO_GAME_HOME + "/Tools/Script/windowmode.bat"));
 			std::string sendkeys	= file::escapeSpace(file::getWindowsPath(NERO_GAME_HOME + "/Tools/Script/sendkeys.bat"));
-
-			//call Tools/Script/windowMode.bat -title "EasyProfiler" -mode maximized
 
 			//std::string cmd1 = windowmode + " -pid " + proccessId + " -mode restore";
 			std::string cmd1 = "call " + windowmode + " -title " + name + " -mode maximized";
