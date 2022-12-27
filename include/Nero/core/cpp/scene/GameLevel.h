@@ -21,7 +21,8 @@ namespace nero
 {
 	class GameLevel
 	{
-		public: //utility
+        public:
+            //utility
 			typedef std::shared_ptr<GameLevel> Ptr;
 
 			class Context

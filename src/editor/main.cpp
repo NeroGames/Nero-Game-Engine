@@ -21,5 +21,8 @@ int main()
 	// Launch Editor
 	editor.run();
 
+	// Stop Profiler
+	profiler::stopListen();
+
 	return 0;
 }

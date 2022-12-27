@@ -72,6 +72,7 @@ namespace nero
 		//common character
 		const std::string BLANK				= "";
 		const std::string SPACE				= " ";
+        const std::string DOT               = ".";
 		const std::string NEW_LINE			= "\n";
 		const std::string UNDERSCORE		= "_";
 		const std::string SLASH				= "/";

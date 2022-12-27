@@ -16,13 +16,18 @@ namespace nero
 {
 	const struct
     {
+        // Engine name
+        const std::string       ENGINE_NAME             = "Nero Game Engine";
+        const std::string       ENGINE_COPYRIGHT        = "Copyright (C) Nero Games. All rights reserved";
+        const std::string       ENGINE_WEBSITE          = "https://nero-games.com/";
+        const std::string       LEARN_MORE_MESSAGE      = "Lean more at" + StringPool.SPACE + ENGINE_WEBSITE;
         //engine version
 		const int				ENGINE_VERSION_MAJOR	= 2;
 		const int				ENGINE_VERSION_MINOR	= 0;
 		const int				ENGINE_VERSION_PATCH	= 0;
-		const std::string		ENGINE_VERSION			= toString(ENGINE_VERSION_MAJOR) + "." + toString(ENGINE_VERSION_MINOR)  + "." + toString(ENGINE_VERSION_PATCH);
+        const std::string		ENGINE_VERSION			= toString(ENGINE_VERSION_MAJOR) + StringPool.DOT + toString(ENGINE_VERSION_MINOR)  + StringPool.DOT + toString(ENGINE_VERSION_PATCH);
         //engine window
-		const std::string		ENGINE_WINDOW_TITLE		= "Nero Game Engine";
+        const std::string		ENGINE_WINDOW_TITLE		= ENGINE_NAME + StringPool.SPACE + ENGINE_VERSION;
 		const unsigned int		ENGINE_WINDOW_WIDTH		= 800;
 		const unsigned int		ENGINE_WINDOW_HEIGHT	= 600;
         //time step

@@ -10,19 +10,10 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	const struct EditorSetting
-	{
-		EditorSetting()
-		{
-			//window setting
-			windowSetting["width"]			= 1245;
-			windowSetting["height"]			= 700;
-			windowSetting["position_x"]		= 20;
-			windowSetting["position_y"]		= 20;
-			windowSetting["icon_file"]		= "icon.png";
-		}
-
-		nlohmann::json windowSetting;
+    const struct
+    {
+        const nlohmann::json windowSetting = {{"width", 1245}, {"height", 700}, {"position_x", 20}, {"position_y", 20}, {"icon_file", "icon.png"}};
+        const nlohmann::json resourceSetting = {};
 
 	} EditorSetting ;
 

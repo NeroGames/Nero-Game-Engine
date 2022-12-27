@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2020 Sanou A. K. Landry
+// Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Poco
@@ -24,7 +24,7 @@
 ////////////////////////////////////////////////////////////
 namespace  nero
 {
-    EditorInterface::EditorInterface(sf::RenderWindow& window):
+    EditorUI::EditorUI(sf::RenderWindow& window):
 		 m_RenderWindow(window)
 		,m_InterfaceFirstDraw(true)
 		,m_SelectedScriptTypeIndex(0)
@@ -56,18 +56,18 @@ namespace  nero
 		//empty
 	}
 
-    EditorInterface::~EditorInterface()
+    EditorUI::~EditorUI()
     {
 	   destroy();
     }
 
-	void EditorInterface::destroy()
+    void EditorUI::destroy()
 	{
 		nero_log("destroying engine interface ...");
 		ax::NodeEditor::DestroyEditor(g_Context);
 	}
 
-	void EditorInterface::init()
+    void EditorUI::init()
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -198,7 +198,7 @@ namespace  nero
 		m_EnvironmentSetup.clearInput();
 	}
 
-	void EditorInterface::closeEditor()
+    void EditorUI::closeEditor()
 	{
 		nero_log("closing the editor ...");
 
@@ -239,7 +239,7 @@ namespace  nero
 		m_RenderWindow.close();
 	}
 
-    void EditorInterface::handleEvent(const sf::Event& event)
+    void EditorUI::handleEvent(const sf::Event& event)
     {
 		if(mouseOnCanvas())
 		{
@@ -292,7 +292,7 @@ namespace  nero
         ImGui::SFML::ProcessEvent(event);
     }
 
-    void EditorInterface::update(const sf::Time& timeStep)
+    void EditorUI::update(const sf::Time& timeStep)
 	{
 		m_EditorCamera->update(timeStep);
 
@@ -302,7 +302,7 @@ namespace  nero
 		}
     }
 
-    void EditorInterface::render()
+    void EditorUI::render()
     {
 		EASY_FUNCTION(profiler::colors::Red);
 
@@ -368,7 +368,7 @@ namespace  nero
 		ImGui::SFML::Render(m_RenderWindow);
 	}
 
-	void EditorInterface::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
+    void EditorUI::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
 	{
 		if(isPressed)
 		{
@@ -377,48 +377,48 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::updateFrameRate(const float& frameRate, const float& frameTime)
+    void EditorUI::updateFrameRate(const float& frameRate, const float& frameTime)
 	{
 		m_FrameRate = frameRate;
 		m_FrameTime = frameTime;
 	}
 
-	void EditorInterface::setEditorSetting(Setting::Ptr setting)
+    void EditorUI::setEditorSetting(Setting::Ptr setting)
 	{
 		m_EditorSetting = setting;
 	}
 
-	void EditorInterface::setEditorCamera(const AdvancedCamera::Ptr& camera)
+    void EditorUI::setEditorCamera(const AdvancedCamera::Ptr& camera)
 	{
 		m_EditorCamera = camera;
 	}
 
-	void EditorInterface::setEditorTextureHolder(TextureHolder::Ptr textureHolder)
+    void EditorUI::setEditorTextureHolder(TextureHolder::Ptr textureHolder)
 	{
 		m_EditorTextureHolder = textureHolder;
 	}
 
-	void EditorInterface::setEditorSoundHolder(SoundHolder::Ptr soundHolder)
+    void EditorUI::setEditorSoundHolder(SoundHolder::Ptr soundHolder)
 	{
 		m_EditorSoundHolder = soundHolder;
 	}
 
-	void EditorInterface::setEditorFontHolder(FontHolder::Ptr fontHolder)
+    void EditorUI::setEditorFontHolder(FontHolder::Ptr fontHolder)
 	{
 		m_EditorFontHolder = fontHolder;
 	}
 
-	void EditorInterface::setCallbackWindowTitle(std::function<void (const std::string&)> callback)
+    void EditorUI::setCallbackWindowTitle(std::function<void (const std::string&)> callback)
 	{
 		m_UpdateWindowTile = callback;
 	}
 
-	void EditorInterface::updateWindowTitle(const std::string& title)
+    void EditorUI::updateWindowTitle(const std::string& title)
 	{
 		 m_UpdateWindowTile(title);
 	}
 
-	void EditorInterface::switchBuilderMode()
+    void EditorUI::switchBuilderMode()
 	{
 		if(m_EditorMode == EditorMode::WORLD_BUILDER)
 		{
@@ -438,7 +438,7 @@ namespace  nero
 		}
 	}
 
-    void EditorInterface::showSceneWindow()
+    void EditorUI::showSceneWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_GAME_SCENE.c_str());
 
@@ -491,7 +491,7 @@ namespace  nero
         ImGui::End();
     }
 
-	void EditorInterface::showCanvasMenu()
+    void EditorUI::showCanvasMenu()
 	{
 		if (ImGui::BeginPopupCanvasWindow())
 		{
@@ -552,7 +552,7 @@ namespace  nero
 
 	}
 
-	std::string EditorInterface::getString(const EditorMode& editorMode)
+    std::string EditorUI::getString(const EditorMode& editorMode)
 	{
 		switch (editorMode)
 		{
@@ -576,7 +576,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::renderGameModeInfo()
+    void EditorUI::renderGameModeInfo()
 	{
 		std::string gameMode = getString(m_EditorMode);
 		std::string frameRate = toString(m_FrameRate) + " fps";
@@ -599,7 +599,7 @@ namespace  nero
 		m_RenderTexture->draw(m_GameBuilderInfo);
 	}
 
-	void EditorInterface::renderCamera()
+    void EditorUI::renderCamera()
 	{
 		m_CameraXAxis.setRotation(m_EditorCamera->getView().getRotation());
 		m_CameraYAxis.setRotation(m_EditorCamera->getView().getRotation() + 90.f);
@@ -610,7 +610,7 @@ namespace  nero
 
 
 
-	void EditorInterface::buildRenderContext()
+    void EditorUI::buildRenderContext()
 	{
 		sf::Vector2f window_position    = ImGui::GetWindowPos();
 		sf::Vector2f window_size        = ImGui::GetWindowSize();
@@ -639,7 +639,7 @@ namespace  nero
 		*m_RenderContext = renderContext;
 	}
 
-	void EditorInterface::prepareRenderTexture()
+    void EditorUI::prepareRenderTexture()
 	{
 		if(m_RenderTexture->getSize().x != m_RenderContext->canvas_size.x ||
 		   m_RenderTexture->getSize().y != m_RenderContext->canvas_size.y)
@@ -663,7 +663,7 @@ namespace  nero
 		m_RenderTexture->setView(m_EditorCamera->getView());
 	}
 
-	bool EditorInterface::mouseOnCanvas()
+    bool EditorUI::mouseOnCanvas()
 	{
 		sf::Rect<float> canvas(m_RenderContext->canvas_position.x, m_RenderContext->canvas_position.y, m_RenderContext->canvas_size.x, m_RenderContext->canvas_size.y);
 
@@ -672,14 +672,14 @@ namespace  nero
 		return canvas.contains(mousePosition.x, mousePosition.y);
 	}
 
-	void EditorInterface::showGameSettingWindow()
+    void EditorUI::showGameSettingWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_GAME_SETTING.c_str());
 
 		ImGui::End();
 	}
 
-	void EditorInterface::showVisualScriptWindow()
+    void EditorUI::showVisualScriptWindow()
     {
 		ImGui::Begin(EditorConstant.WINDOW_VISUAL_SCRIPT.c_str());
 
@@ -706,7 +706,7 @@ namespace  nero
         ImGui::End();
     }
 
-    void EditorInterface::showGameProjectWindow()
+    void EditorUI::showGameProjectWindow()
     {
 		ImGui::Begin(EditorConstant.WINDOW_GAME_PROJECT.c_str());
 
@@ -716,7 +716,7 @@ namespace  nero
 
 
 	//1- create workspace
-    void EditorInterface::createDockSpace()
+    void EditorUI::createDockSpace()
 	{
 		//tranfer viewport state to dockspace window
         ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -776,7 +776,7 @@ namespace  nero
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_RESOURCE_BROWSER.c_str(),	rightDockspaceID);
 					//bottom
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LOGGING.c_str(),				bottomDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_RESOURCE.c_str(),			bottomDockspaceID);
+                ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_RESOURCE.c_str(),			bottomDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_CONSOLE.c_str(),				bottomDockspaceID);
 				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LEVEL.c_str(),				bottomDockspaceID);
 					//center
@@ -839,7 +839,7 @@ namespace  nero
     }
 
 	//2- create menu bar
-	void EditorInterface::showEditorMenuBar()
+    void EditorUI::showEditorMenuBar()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
@@ -1019,7 +1019,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showConfigurationWindow()
+    void EditorUI::showConfigurationWindow()
 	{
 		//welcome the user
 		//configure the code editor
@@ -1092,7 +1092,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showConfigurationWelcome()
+    void EditorUI::showConfigurationWelcome()
 	{
 		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 		ImGui::Text("Welcome To The Configuration Wizard");
@@ -1143,7 +1143,7 @@ namespace  nero
 		m_EnvironmentSetup.readyNext = true;
 	}
 
-	void EditorInterface::showConfigurationFinish()
+    void EditorUI::showConfigurationFinish()
 	{
 		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 		ImGui::Text("Configuration Completed");
@@ -1161,7 +1161,7 @@ namespace  nero
 		m_EnvironmentSetup.readyNext = true;
 	}
 
-	void EditorInterface::showConfigurationEditor()
+    void EditorUI::showConfigurationEditor()
 	{
 		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 		ImGui::Text("Configure a Code Editor");
@@ -1331,7 +1331,7 @@ namespace  nero
 										|| std::string(m_EnvironmentSetup.visualStudioPath) != StringPool.BLANK;
 	}
 
-	void EditorInterface::showConfigurationTexturePacker()
+    void EditorUI::showConfigurationTexturePacker()
 	{
 		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 		ImGui::Text("Configure Texture Packer");
@@ -1419,7 +1419,7 @@ namespace  nero
 		m_EnvironmentSetup.readyNext =	std::string(m_EnvironmentSetup.texturePackerPath) != StringPool.BLANK;
 	}
 
-	void EditorInterface::showConfigurationWorksapce()
+    void EditorUI::showConfigurationWorksapce()
 	{
 		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 		ImGui::Text("Create or Import Workspace");
@@ -1467,7 +1467,7 @@ namespace  nero
 	}
 
 	//3-  show toolbar
-	void EditorInterface::showToolbarWindow()
+    void EditorUI::showToolbarWindow()
 	{
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration;
 
@@ -1511,11 +1511,11 @@ namespace  nero
 			//show about engine
 			showAboutEngineWindow();
 
-			//show new game level popup
-			showNewGameLevelPopup();
+            //show new game level popup
+            showNewGameLevelPopup();
 
-			//show new game screen popup
-			showNewGameScreenPopup();
+            //show new game screen popup
+            showNewGameScreenPopup();
 
 
 		ImGui::EndChild();
@@ -1531,7 +1531,7 @@ namespace  nero
 		ImGui::PopStyleVar();
 	}
 
-	void EditorInterface::showToolbarLeft(bool scrollToolbar)
+    void EditorUI::showToolbarLeft(bool scrollToolbar)
 	{
 		ImGui::SameLine();
 
@@ -1552,7 +1552,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showToolbarWorldButton()
+    void EditorUI::showToolbarWorldButton()
 	{
 		if(ImGui::Button(ICON_FA_GLOBE_AFRICA " World", ImVec2(105.f, 28.f)))
 		{
@@ -1563,7 +1563,7 @@ namespace  nero
 		ImGui::SameLine();
 	}
 
-	void EditorInterface::showToolbarScreenButton()
+    void EditorUI::showToolbarScreenButton()
 	{
 		if(ImGui::Button(ICON_FA_SQUARE " Screen", ImVec2(105.f, 28.f)))
 		{
@@ -1574,7 +1574,7 @@ namespace  nero
 		ImGui::SameLine();
 	}
 
-	void EditorInterface::showToolbarFactoryButton()
+    void EditorUI::showToolbarFactoryButton()
 	{
 		if(ImGui::Button(ICON_FA_WAREHOUSE " Factory", ImVec2(105.f, 28.f)))
 		{
@@ -1583,45 +1583,45 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showToolbarRight(bool scrollToolbar)
+    void EditorUI::showToolbarRight(bool scrollToolbar)
 	{
 		float rightOffset = 95.f;
 
-		if(m_GameProject)
-		{
-			rightOffset += 45.f * 3.f + 8.f * 3.f + 90.f + 3.f + 140.f + 3.f + 10.f;
-		}
+        if(m_GameProject)
+        {
+            rightOffset += 45.f * 3.f + 8.f * 3.f + 90.f + 3.f + 140.f + 3.f + 10.f;
+        }
 
 		ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - rightOffset);
 
 		if(m_GameProject)
 		{
-			if(m_AdvancedScene)
-			{
-				if(m_EditorMode == EditorMode::WORLD_BUILDER)
-				{
-					if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Level", ImVec2(140.f, 28.f)))
-					{
-						ImGui::OpenPopup("Create Game Level");
-					}
-				}
-				else if(m_EditorMode == EditorMode::SCREEN_BUILDER)
-				{
-					if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Screen", ImVec2(140.f, 28.f)))
-					{
-						ImGui::OpenPopup("Create Game Screen");
-					}
-				}
-				else if(m_EditorMode == EditorMode::OBJECT_BUILDER)
-				{
-					if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Object", ImVec2(140.f, 28.f)))
-					{
+            if(m_AdvancedScene)
+            {
+                if(m_EditorMode == EditorMode::WORLD_BUILDER)
+                {
+                    if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Level", ImVec2(140.f, 28.f)))
+                    {
+                        ImGui::OpenPopup("Create Game Level");
+                    }
+                }
+                else if(m_EditorMode == EditorMode::SCREEN_BUILDER)
+                {
+                    if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Screen", ImVec2(140.f, 28.f)))
+                    {
+                        ImGui::OpenPopup("Create Game Screen");
+                    }
+                }
+                else if(m_EditorMode == EditorMode::OBJECT_BUILDER)
+                {
+                    if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Object", ImVec2(140.f, 28.f)))
+                    {
 
-					}
-				}
-			}
+                    }
+                }
+            }
 
-			ImGui::SameLine();
+            ImGui::SameLine();
 
 			if(ImGui::Button(ICON_FA_CODE, ImVec2(90.f, 28.f)))
 			{
@@ -1663,7 +1663,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showToolbarMiddle(bool scrollToolbar)
+    void EditorUI::showToolbarMiddle(bool scrollToolbar)
 	{
 		if(m_GameProject)
 		{
@@ -1730,7 +1730,7 @@ namespace  nero
 
 
 
-	void EditorInterface::showToolbarScrollLeft()
+    void EditorUI::showToolbarScrollLeft()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
 		ImGui::BeginChild("##toolbarscrollleft", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
@@ -1754,7 +1754,7 @@ namespace  nero
 
 	}
 
-	void EditorInterface::showToolbarScrollRight()
+    void EditorUI::showToolbarScrollRight()
 	{
 		ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 32.f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
@@ -1777,7 +1777,7 @@ namespace  nero
 		ImGui::EndChild();
 	}
 
-	void EditorInterface::handleMenuBarFileAction()
+    void EditorUI::handleMenuBarFileAction()
 	{
 		if(m_MenuBarInput.newProject)
 		{
@@ -1805,7 +1805,7 @@ namespace  nero
 	}
 
 	//4- project manager
-    void EditorInterface::showProjectManagerWindow()
+    void EditorUI::showProjectManagerWindow()
     {
         //Window flags
 		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
@@ -1885,7 +1885,7 @@ namespace  nero
         }
     }
 
-	void EditorInterface::showScriptCreationWindow()
+    void EditorUI::showScriptCreationWindow()
 	{
 		//Window flags
 		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
@@ -2130,7 +2130,7 @@ namespace  nero
 
 	}
 
-	void EditorInterface::showAboutEngineWindow()
+    void EditorUI::showAboutEngineWindow()
 	{
 		//Window flags
 		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
@@ -2164,7 +2164,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::createScriptObject(const Parameter& parameter)
+    void EditorUI::createScriptObject(const Parameter& parameter)
 	{
 		if(m_GameProject)
 		{
@@ -2173,7 +2173,7 @@ namespace  nero
 	}
 
 
-	void EditorInterface::showRecentProjectWindow()
+    void EditorUI::showRecentProjectWindow()
 	{
 		ImGui::Text("Open a recent project and continuous where you left");
 		ImGui::Separator();
@@ -2242,7 +2242,7 @@ namespace  nero
 		popToolbarStyle();
 	}
 
-    void EditorInterface::showCreateProjectWindow()
+    void EditorUI::showCreateProjectWindow()
 	{
         //Window flags
 		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal |
@@ -2591,7 +2591,7 @@ namespace  nero
 		ImGui::EndChild();
     }
 
-	void EditorInterface::showOpenProjectWindow()
+    void EditorUI::showOpenProjectWindow()
     {
 		float wording_width = 200.f;
 		float input_width	= ImGui::GetWindowContentRegionWidth() - 150.f;
@@ -2682,7 +2682,7 @@ namespace  nero
          ImGui::EndChild();
     }
 
-	void EditorInterface::selectFile(std::function<void(std::string)> callback)
+    void EditorUI::selectFile(std::function<void(std::string)> callback)
 	{
 		nfdchar_t *outPath = nullptr;
 		nfdresult_t result = NFD_OpenDialog(nullptr, nullptr, &outPath);
@@ -2703,7 +2703,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::selectFile(std::function<void(std::vector<std::string>)> callback)
+    void EditorUI::selectFile(std::function<void(std::vector<std::string>)> callback)
 	{
 		nfdpathset_t pathSet;
 		nfdresult_t result = NFD_OpenDialogMultiple( nullptr, nullptr, &pathSet);
@@ -2734,7 +2734,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::selectDirectory(std::function<void(std::string)> callback)
+    void EditorUI::selectDirectory(std::function<void(std::string)> callback)
 	{
 		nfdchar_t *outPath = nullptr;
 		nfdresult_t result = NFD_PickFolder(nullptr, &outPath);
@@ -2756,19 +2756,19 @@ namespace  nero
 	}
 
 	//////////////Workspace
-	void EditorInterface::createWorkspace(const Parameter& parameter)
+    void EditorUI::createWorkspace(const Parameter& parameter)
 	{
 		m_ProjectManager->createWorkspace(parameter);
 		m_ProjectInput.update(m_ProjectManager->getWorkspaceTable());
 	}
 
-	void EditorInterface::importWorkspace(const std::string& directory)
+    void EditorUI::importWorkspace(const std::string& directory)
 	{
 		m_ProjectManager->importWorkspace(directory);
 		m_ProjectInput.update(m_ProjectManager->getWorkspaceTable());
 	}
 
-	void EditorInterface::showCreateWorkspace()
+    void EditorUI::showCreateWorkspace()
 	{
 		float wording_width = 150.f;
 		float input_width   = ImGui::GetWindowContentRegionWidth() - wording_width;
@@ -2944,7 +2944,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showImportWorkspace()
+    void EditorUI::showImportWorkspace()
 	{
 		float wording_width = 150.f;
 		float input_width   = ImGui::GetWindowContentRegionWidth() - wording_width;
@@ -3042,7 +3042,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showWorkspaceList()
+    void EditorUI::showWorkspaceList()
 	{
 		float wording_width = 150.f;
 		float input_width   = ImGui::GetWindowContentRegionWidth() - wording_width;
@@ -3089,7 +3089,7 @@ namespace  nero
 		ImGui::EndChild();
 	}
 
-    void EditorInterface::showWorkspaceWindow()
+    void EditorUI::showWorkspaceWindow()
     {
 
 		showCreateWorkspace();
@@ -3108,14 +3108,14 @@ namespace  nero
 	}
 
 
-	void EditorInterface::createProject(const Parameter& parameter)
+    void EditorUI::createProject(const Parameter& parameter)
 	{
 		nero_log("on create project in background");
 		std::string taskName = EditorConstant.TASK_CREATE_PROJECT + toString(m_CountCreateProject++);
 		BTManager::startTask(&ProjectManager::createProject, m_ProjectManager.get(), parameter, taskName);
 	}
 
-	void EditorInterface::openProject(const std::string& projectDirectory)
+    void EditorUI::openProject(const std::string& projectDirectory)
     {
 		//close currently open project
 		if(m_GameProject)
@@ -3133,7 +3133,7 @@ namespace  nero
 		updateWindowTitle(m_GameProject->getProjectName());
     }
 
-	void EditorInterface::closeProject()
+    void EditorUI::closeProject()
 	{
 		m_ResourceManager	= nullptr;
 		m_AdvancedScene		= nullptr;
@@ -3147,7 +3147,7 @@ namespace  nero
 		updateWindowTitle(EngineConstant.ENGINE_WINDOW_TITLE);
 	}
 
-	void EditorInterface::playScene()
+    void EditorUI::playScene()
 	{
 		if(m_AdvancedScene && m_EditorMode != EditorMode::PLAY_GAME)
 		{
@@ -3163,7 +3163,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::pauseScene()
+    void EditorUI::pauseScene()
 	{
 		/*if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
 		{
@@ -3173,7 +3173,7 @@ namespace  nero
 		}*/
 	}
 
-	void EditorInterface::stepScene()
+    void EditorUI::stepScene()
 	{
 
 		/*if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
@@ -3185,7 +3185,7 @@ namespace  nero
 		}*/
 	}
 
-	void EditorInterface::resetScene()
+    void EditorUI::resetScene()
 	{
 		/*if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
 		{
@@ -3193,12 +3193,12 @@ namespace  nero
 		}*/
 	}
 
-	void EditorInterface::renderScene()
+    void EditorUI::renderScene()
 	{
 
 	}
 
-	void EditorInterface::compileProject()
+    void EditorUI::compileProject()
 	{
 		if(m_GameProject)
 		{
@@ -3206,7 +3206,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::editProject()
+    void EditorUI::editProject()
 	{
 		if(m_GameProject)
 		{
@@ -3215,7 +3215,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::reloadProject()
+    void EditorUI::reloadProject()
 	{
 
 		if(m_GameProject)
@@ -3229,7 +3229,7 @@ namespace  nero
 
 
 
-	sf::Sprite EditorInterface::flipTexture(const sf::Texture& texture)
+    sf::Sprite EditorUI::flipTexture(const sf::Texture& texture)
 	{
 		sf::Vector2u size = texture.getSize();
 		sf::Sprite sprite(texture, sf::IntRect(0, size.y, size.x, -size.y));
@@ -3237,7 +3237,7 @@ namespace  nero
 		return sprite;
 	}
 
-	void EditorInterface::showLoggingWindow()
+    void EditorUI::showLoggingWindow()
 	{
 		// Actually call in the regular Log helper (which will Begin() into the same window as we just did)
 		std::string log = nero::logging::Logger::getString();
@@ -3250,12 +3250,12 @@ namespace  nero
 		m_LoggerApplication.Draw(EditorConstant.WINDOW_LOGGING.c_str());
 	}
 
-	void EditorInterface::showConsoleWindow()
+    void EditorUI::showConsoleWindow()
 	{
 		m_ConsoleApplication.Draw(EditorConstant.WINDOW_CONSOLE.c_str(), nullptr);
 	}
 
-	ImVec4 EditorInterface::getLoggingColor(logging::LEVEL level)
+    ImVec4 EditorUI::getLoggingColor(logging::LEVEL level)
 	{
 		switch (level)
 		{
@@ -3304,7 +3304,7 @@ namespace  nero
 
 	}
 
-	void EditorInterface::showResourceWindow()
+    void EditorUI::showResourceWindow()
 	{
 		ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
 		ImGui::Begin("Resource", nullptr, flags);
@@ -3446,11 +3446,9 @@ namespace  nero
 		ImGui::End();
 	}
 
-	void EditorInterface::showResourceBrowserWindow()
+    void EditorUI::showResourceBrowserWindow()
 	{
-		if(!m_ResourceManager) { return;}
-
-		//project manager window
+        //project manager window
 		if(m_ResourceBrowserType != ResourceType::None)
 		{
 			ImGui::Begin("Resource Browser", nullptr, ImGuiWindowFlags());
@@ -3546,7 +3544,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::saveResourceFile(ResourceType type, const std::vector<std::string> loadedFileTable)
+    void EditorUI::saveResourceFile(ResourceType type, const std::vector<std::string> loadedFileTable)
 	{
 		switch (m_ResourceBrowserType)
 		{
@@ -3620,7 +3618,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showMeshResource()
+    void EditorUI::showMeshResource()
 	{
 		int resource_count		= 3;
 		int count				= 0;
@@ -3658,7 +3656,7 @@ namespace  nero
 		}
 	}
 
-	sf::Vector2f EditorInterface::getAddObjectPosition()
+    sf::Vector2f EditorUI::getAddObjectPosition()
 	{
 		//sf::Vector2f screen_pos    = sf::Vector2f(mouse.x - m_RenderContext->canvas_position.x, mouse.y - m_RenderContext->canvas_position.y);
 		//sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(screen_pos.x, screen_pos.y), m_RenderTexture->getView());
@@ -3669,7 +3667,7 @@ namespace  nero
 		return world_pos;
 	}
 
-	void EditorInterface::showSpriteResource()
+    void EditorUI::showSpriteResource()
 	{
 		auto& spriteTable = m_ResourceManager->getTextureHolder()->getSpriteTable();
 		int sprite_count = spriteTable.size();
@@ -3727,7 +3725,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showLightmapResource()
+    void EditorUI::showLightmapResource()
 	{
 		auto& spriteTable = m_ResourceManager->getLightmapHolder()->getSpriteTable();
 		int sprite_count = spriteTable.size();
@@ -3787,7 +3785,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showAnimationResource()
+    void EditorUI::showAnimationResource()
 	{
 		auto& animationTable = m_ResourceManager->getAnimationHolder()->getAnimationTable();
 		int animationCount = animationTable.size();
@@ -3840,7 +3838,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showFontResource()
+    void EditorUI::showFontResource()
 	{
 		auto& fontTable = m_ResourceManager->getFontHolder()->getFontTable();
 		int count = fontTable.size();
@@ -3858,7 +3856,7 @@ namespace  nero
 
 	}
 
-	sf::Texture& EditorInterface::getFontTexture(const std::string& fontName)
+    sf::Texture& EditorUI::getFontTexture(const std::string& fontName)
 	{
 		std::string file_name = file::getPath({"resource/editor/texture", fontName}, StringPool.EXT_PNG);
 
@@ -3884,7 +3882,7 @@ namespace  nero
 		return m_EditorTextureHolder->getTexture(fontName);
 	}
 
-	void EditorInterface::showUtilityWindow()
+    void EditorUI::showUtilityWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_UTILITY.c_str());
 
@@ -3976,7 +3974,7 @@ namespace  nero
 		ImGui::End();
 	}
 
-	void EditorInterface::onSaveProject()
+    void EditorUI::onSaveProject()
 	{
 		if(m_GameProject)
 		{
@@ -3996,7 +3994,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::onLoadProject()
+    void EditorUI::onLoadProject()
 	{
 		if(m_GameProject)
 		{
@@ -4015,7 +4013,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::autoSaveProject()
+    void EditorUI::autoSaveProject()
 	{
 		/*if(m_GameProject && m_AutoSaveClock.getElapsedTime() > sf::seconds(m_EditorSetting->getSetting("editor").getUInt("auto_save_interval")))
 		{
@@ -4024,7 +4022,7 @@ namespace  nero
 		}*/
 	}
 
-	void EditorInterface::showGameScreenWindow()
+    void EditorUI::showGameScreenWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_SCREEN.c_str());
 
@@ -4084,14 +4082,14 @@ namespace  nero
 		ImGui::End();
 	}
 
-	void EditorInterface::removeGameScreen()
+    void EditorUI::removeGameScreen()
 	{
 
 	}
 
 
 
-	void EditorInterface::showObjectLayerWindow()
+    void EditorUI::showObjectLayerWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_LAYER.c_str());
 
@@ -4168,7 +4166,7 @@ namespace  nero
 		ImGui::End();
 	}
 
-	std::tuple<ImVec4, ImVec4> EditorInterface::getLayerColor(Object::Type type)
+    std::tuple<ImVec4, ImVec4> EditorUI::getLayerColor(Object::Type type)
 	{
 		switch(type)
 		{
@@ -4186,7 +4184,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::addObjectLayer()
+    void EditorUI::addObjectLayer()
 	{
 		if(m_WorldBuilder)
 		{
@@ -4194,7 +4192,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::removeObjectLayer()
+    void EditorUI::removeObjectLayer()
 	{
 		if(m_AdvancedScene)
 		{
@@ -4202,7 +4200,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showGameLevelWindow()
+    void EditorUI::showGameLevelWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_LEVEL.c_str());
 
@@ -4287,7 +4285,7 @@ namespace  nero
 		ImGui::End();
 	};
 
-	void EditorInterface::openGameLevel()
+    void EditorUI::openGameLevel()
 	{
 		if(m_SelectedGameLevel == StringPool.BLANK)
 			return;
@@ -4301,7 +4299,7 @@ namespace  nero
 		m_OpenedGameLevel			= m_SelectedGameLevel;
 	}
 
-	void EditorInterface::closeGameLevel()
+    void EditorUI::closeGameLevel()
 	{
 		m_OpenedGameLevel	= StringPool.BLANK;
 		m_GameLevelBuilder	= nullptr;
@@ -4309,7 +4307,7 @@ namespace  nero
 		m_AdvancedScene->closeSelectedLevel();
 	}
 
-	void EditorInterface::showNewGameLevelPopup()
+    void EditorUI::showNewGameLevelPopup()
 	{
 		//Window flags
 		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
@@ -4394,7 +4392,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::createGameLevel(const Parameter& parameter)
+    void EditorUI::createGameLevel(const Parameter& parameter)
 	{
 		if(m_AdvancedScene)
 		{
@@ -4407,7 +4405,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::createGameScreen(const Parameter& parameter)
+    void EditorUI::createGameScreen(const Parameter& parameter)
 	{
 		if(m_AdvancedScene)
 		{
@@ -4415,7 +4413,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showNewGameScreenPopup()
+    void EditorUI::showNewGameScreenPopup()
 	{
 		//Window flags
 		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
@@ -4486,7 +4484,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::removeGameLevel()
+    void EditorUI::removeGameLevel()
 	{
 		if(m_AdvancedScene)
 		{
@@ -4494,7 +4492,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::editGameLevel()
+    void EditorUI::editGameLevel()
 	{
 		if(m_AdvancedScene)
 		{
@@ -4502,7 +4500,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showWorldChunckWindow()
+    void EditorUI::showWorldChunckWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_CHUNCK.c_str());
 
@@ -4578,7 +4576,7 @@ namespace  nero
 		ImGui::End();
 	}
 
-	void EditorInterface::addWorldChunk()
+    void EditorUI::addWorldChunk()
 	{
 		if(m_GameLevelBuilder && m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT)
 		{
@@ -4587,7 +4585,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::removeWorldChunk()
+    void EditorUI::removeWorldChunk()
 	{
 		if(m_AdvancedScene)
 		{
@@ -4595,7 +4593,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showToggleButton(bool toggle, const std::string& label, std::function<void()> callback)
+    void EditorUI::showToggleButton(bool toggle, const std::string& label, std::function<void()> callback)
 	{
 		if(toggle)
 		{
@@ -4617,7 +4615,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::interfaceFirstDraw()
+    void EditorUI::interfaceFirstDraw()
 	{
 		if(m_InterfaceFirstDraw)
 		{
@@ -4634,7 +4632,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showHelpWindow()
+    void EditorUI::showHelpWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_HELP.c_str());
 
@@ -4642,7 +4640,7 @@ namespace  nero
 	}
 
 
-	void EditorInterface::showExplorerWindow()
+    void EditorUI::showExplorerWindow()
 	{
 		ImGui::Begin(EditorConstant.WINDOW_EXPLORER.c_str());
 
@@ -5120,7 +5118,7 @@ namespace  nero
 		ImGui::End();
 	}
 
-	std::vector<Object::Ptr> EditorInterface::getComponentTable(Object::Ptr root)
+    std::vector<Object::Ptr> EditorUI::getComponentTable(Object::Ptr root)
 	{
 		std::vector<Object::Ptr> result;
 
@@ -5129,7 +5127,7 @@ namespace  nero
 		return result;
 	}
 
-	void EditorInterface::getComponentTable(Object::Ptr object, std::vector<Object::Ptr>& result)
+    void EditorUI::getComponentTable(Object::Ptr object, std::vector<Object::Ptr>& result)
 	{
 
 		if(object != nullptr)
@@ -5144,7 +5142,7 @@ namespace  nero
 		}
 	}
 
-	void EditorInterface::showBackgroundTaskWindow()
+    void EditorUI::showBackgroundTaskWindow()
 	{
 		if(!m_GameProject)
 		{
@@ -5187,12 +5185,12 @@ namespace  nero
 	}
 
 
-	void EditorInterface::clearScriptWizardInput()
+    void EditorUI::clearScriptWizardInput()
 	{
 		string::fillCharArray(m_InputClassName,			sizeof(m_InputClassName),		StringPool.BLANK);
 	}
 
-	void EditorInterface::registerSignalHandler()
+    void EditorUI::registerSignalHandler()
 	{
 		signal(SIGABRT, handleSignalAbnormalTermination);
 		signal(SIGFPE, handleSignalArithmeticError);
@@ -5202,32 +5200,32 @@ namespace  nero
 		signal(SIGTERM, handleSignalTerminsationRequest);
 	}
 
-	void EditorInterface::handleSignalAbnormalTermination(int signal)
+    void EditorUI::handleSignalAbnormalTermination(int signal)
 	{
 
 	}
 
-	void EditorInterface::handleSignalArithmeticError(int signal)
+    void EditorUI::handleSignalArithmeticError(int signal)
 	{
 
 	}
 
-	void EditorInterface::handleSignalIllegalInstruction(int signal)
+    void EditorUI::handleSignalIllegalInstruction(int signal)
 	{
 
 	}
 
-	void EditorInterface::handleSignalInteractiveAttention(int signal)
+    void EditorUI::handleSignalInteractiveAttention(int signal)
 	{
 
 	}
 
-	void EditorInterface::handleSignalInvalidStorageAccess(int signal)
+    void EditorUI::handleSignalInvalidStorageAccess(int signal)
 	{
 
 	}
 
-	void EditorInterface::handleSignalTerminsationRequest(int signal)
+    void EditorUI::handleSignalTerminsationRequest(int signal)
 	{
 
 	}

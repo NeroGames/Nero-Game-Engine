@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2021 Sanou A. K. Landry
+// Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
-#ifndef EDITORINTERFACE_H
-#define EDITORINTERFACE_H
+#ifndef EDITORUI_H
+#define EDITORUI_H
 ///////////////////////////HEADERS//////////////////////////
 //Poco
 #include <Poco/Logger.h>
@@ -46,16 +46,16 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorInterface
+    class EditorUI
     {
 
         public:
-            typedef std::unique_ptr<EditorInterface> Ptr;
+            typedef std::unique_ptr<EditorUI> Ptr;
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 
 		public:
-											EditorInterface(sf::RenderWindow& window);
-										   ~EditorInterface();
+                                            EditorUI(sf::RenderWindow& window);
+                                           ~EditorUI();
 			void							destroy();
 
         private:
@@ -90,7 +90,7 @@ namespace nero
 
 		private:
 			//////////////main attributes
-			friend class									GameEditor;
+            friend class									GameEditor;
 			sf::RenderWindow&								m_RenderWindow;
 			float											m_FrameRate;
 			float											m_FrameTime;
@@ -105,7 +105,7 @@ namespace nero
 			ProjectManager::Ptr								m_ProjectManager;
 			GameProject::Ptr								m_GameProject;
 			AdvancedScene::Ptr								m_AdvancedScene;
-			LevelBuilder::Ptr							m_GameLevelBuilder;
+            LevelBuilder::Ptr                               m_GameLevelBuilder;
 			WorldBuilder::Ptr								m_WorldBuilder;
 			ResourceManager::Ptr							m_ResourceManager;
 			ResourceManager::Ptr							m_EditorResourceManager;
@@ -322,4 +322,4 @@ namespace nero
 
 }
 
-#endif // EDITORINTERFACE_H
+#endif // EDITORUI_H
