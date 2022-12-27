@@ -44,7 +44,7 @@ namespace nero
 
 		private:
 			//level
-			LevelBuilder::Ptr								m_SelectedLevel;
+            LevelBuilder::Ptr								m_LevelBuilder;
 			std::vector<std::string>						m_RegisteredLevelTable;
 			//screen
 			ScreenBuilder::Ptr								m_SelectedScreen;

@@ -25,9 +25,9 @@ namespace nero
             //utility
 			typedef std::shared_ptr<GameLevel> Ptr;
 
-			class Context
+            struct Context
 			{
-
+                Setting::Ptr setting;
 			};
 
 		public:
@@ -68,11 +68,14 @@ namespace nero
 			virtual void								onCollisionContactEnd(Collision collision);
 			virtual void								onCollisionPreSolveContact(Collision collision);
 			virtual void								onCollisionPostSolveContact(Collision collision);
+            //
+            ResourceManager::Ptr                        getResourceManager() const;
+            Setting::Ptr                                getSetting() const;
 
 		private:
-			Setting::Ptr								m_LevelSetting;
 			std::shared_ptr<sf::RenderTexture>			m_RenderTexture;
-			ResourceManager								m_ResourceManager;
+            Setting::Ptr								m_LevelSetting;
+            ResourceManager::Ptr						m_ResourceManager;
 			PhysicalWorld::Ptr							m_PhysicalWorld;
 			LightEngine::Ptr							m_LightEngine;
 	};

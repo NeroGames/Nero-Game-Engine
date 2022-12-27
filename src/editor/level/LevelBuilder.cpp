@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2021 Sanou A. K. Landry
+// Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Nero
@@ -8,16 +8,17 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	LevelBuilder::LevelBuilder():
-		 m_RenderContext(nullptr)
+    LevelBuilder::LevelBuilder(GameLevel::Context context):
+         m_GameLevel(std::make_shared<GameLevel>(context))
+        ,m_LevelSetting(m_GameLevel->getSetting())
+        ,m_RenderContext(nullptr)
 		,m_RenderTexture(nullptr)
-		,m_LevelSetting(std::make_shared<Setting>())
 		,m_EditorSetting(nullptr)
-		,m_ResourceManager(nullptr)
 		,m_SelectedChunk(nullptr)
 		,m_ChunkTable()
 		,m_ChunkCount(0)
-		,m_Opened(false)
+        ,m_Opened(false)
+
 	{
 
 	}
@@ -29,13 +30,12 @@ namespace nero
 
 	void LevelBuilder::loadResource()
 	{
-		m_ResourceManager = std::make_shared<ResourceManager>(m_EditorSetting->getSetting("resource"));
-		m_ResourceManager->loadDirectory(m_LevelSetting->getString("resource_directory"));
+        m_GameLevel->getResourceManager()->loadDirectory(m_GameLevel->getSetting()->getString("resource_directory"));
 	}
 
 	ResourceManager::Ptr LevelBuilder::getResourceManager()
 	{
-		return m_ResourceManager;
+        return m_GameLevel->getResourceManager();
 	}
 
 	void LevelBuilder::setEditorSetting(const Setting::Ptr &setting)
@@ -43,20 +43,20 @@ namespace nero
 		m_EditorSetting = setting;
 	}
 
-	Setting::Ptr LevelBuilder::getLevelSetting()
-	{
-		return m_LevelSetting;
-	}
-
 	std::string LevelBuilder::getLevelName()
 	{
-		return m_LevelSetting->getString("level_name");
+        return m_GameLevel->getSetting()->getString("level_name");
 	}
 
 	std::string LevelBuilder::getResourceFoler()
 	{
-		return m_LevelSetting->getString("resource_directory");
+        return m_GameLevel->getSetting()->getString("resource_directory");
 	}
+
+    Setting::Ptr LevelBuilder::getLevelSetting()
+    {
+        return m_GameLevel->getSetting();
+    }
 
 	ChunkBuilder::Ptr LevelBuilder::addChunk()
 	{
@@ -71,7 +71,7 @@ namespace nero
 		WorldBuilder::Ptr worldBuilder = chunkBuilder->getWorldBuilder();
 		worldBuilder->setRenderContext(m_RenderContext);
 		worldBuilder->setRenderTexture(m_RenderTexture);
-		worldBuilder->setResourceManager(m_ResourceManager);
+        worldBuilder->setResourceManager(m_GameLevel->getResourceManager());
 		worldBuilder->init();
 
 		//register
@@ -159,7 +159,7 @@ namespace nero
 
 		worldBuilder->setRenderContext(m_RenderContext);
 		worldBuilder->setRenderTexture(m_RenderTexture);
-		worldBuilder->setResourceManager(m_ResourceManager);
+        worldBuilder->setResourceManager(m_GameLevel->getResourceManager());
 
 		chunkBuilder->loadChunk(file::loadJson(fileName, true));
 

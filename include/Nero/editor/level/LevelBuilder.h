@@ -6,8 +6,7 @@
 #define LEVELBUILDER_H
 ///////////////////////////HEADERS//////////////////////////
 //Nero
-#include <Nero/core/cpp/engine/Setting.h>
-#include <Nero/core/cpp/resource/ResourceManager.h>
+#include <Nero/core/cpp/scene/GameLevel.h>
 #include <Nero/editor/level/ChunkBuilder.h>
 //Std
 #include <memory>
@@ -20,7 +19,7 @@ namespace nero
 			typedef std::shared_ptr<LevelBuilder> Ptr;
 
 		public:
-												LevelBuilder();
+                                                LevelBuilder(GameLevel::Context context);
 											   ~LevelBuilder();
 
 			void								loadResource();
@@ -45,18 +44,17 @@ namespace nero
 			bool								isOpened() const;
 
 		private:
+            // Game Level
+            GameLevel::Ptr                      m_GameLevel;
+            Setting::Ptr                        m_LevelSetting;
 			//render
 			RenderContext::Ptr					m_RenderContext;
 			std::shared_ptr<sf::RenderTexture>	m_RenderTexture;
-			//setting
-			Setting::Ptr						m_LevelSetting;
-			Setting::Ptr						m_EditorSetting;
-			//resource
-			ResourceManager::Ptr				m_ResourceManager;
+            Setting::Ptr						m_EditorSetting;
 			//chunk
-			ChunkBuilder::Ptr					m_SelectedChunk;
-			std::vector<ChunkBuilder::Ptr>		m_ChunkTable;
-			int									m_ChunkCount;
+            ChunkBuilder::Ptr					m_SelectedChunk;
+            std::vector<ChunkBuilder::Ptr>		m_ChunkTable;
+            int									m_ChunkCount;
 			//
 			bool								m_Opened;
 	};

@@ -13,6 +13,7 @@
 #include <json/json.hpp>
 //Cpp
 #include <map>
+#include <string>
 #include <vector>
 #include <memory>
 #include <functional>
@@ -86,9 +87,9 @@ namespace nero
 		const char*                 projectType;
 		const char*                 codeEditor;
 		const char*					workspace;
-		int                         projectTypeIndex;
-		int                         codeEditorIndex;
-		int                         workspaceIndex;
+        int                         projectTypeIndex    = 0;
+        int                         codeEditorIndex     = 0;
+        int                         workspaceIndex      = 0;
 
 		bool						startupPack;
 		std::string                 lastCreatedProject;
@@ -105,6 +106,9 @@ namespace nero
 			string::fillCharArray(company,				sizeof(company),			StringPool.BLANK);
 			string::fillCharArray(projectNamespace,		sizeof(projectNamespace),	StringPool.BLANK);
 			string::fillCharArray(description,			sizeof(description),		StringPool.BLANK);
+            projectTypeIndex = 0;
+            codeEditorIndex = 0;
+            workspaceIndex = 0;
 
 			startupPack = true;
 		}

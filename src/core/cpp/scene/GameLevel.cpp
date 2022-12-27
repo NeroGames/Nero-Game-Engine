@@ -8,14 +8,15 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	GameLevel::GameLevel(GameLevel::Context context)
+    GameLevel::GameLevel(GameLevel::Context context):
+         m_LevelSetting(context.setting)
+        ,m_ResourceManager(std::make_shared<ResourceManager>(context.setting->getSetting("resource")))
 	{
-
-	}
+    }
 
 	GameLevel::~GameLevel()
 	{
-
+        destroy();
 	}
 
 	void GameLevel::init()
@@ -147,4 +148,14 @@ namespace nero
 	{
 
 	}
+
+    ResourceManager::Ptr GameLevel::getResourceManager() const
+    {
+        return m_ResourceManager;
+    }
+
+    Setting::Ptr GameLevel::getSetting() const
+    {
+        return m_LevelSetting;
+    }
 }

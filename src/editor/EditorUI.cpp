@@ -3448,100 +3448,99 @@ namespace  nero
 
     void EditorUI::showResourceBrowserWindow()
 	{
-        //project manager window
-		if(m_ResourceBrowserType != ResourceType::None)
-		{
-			ImGui::Begin("Resource Browser", nullptr, ImGuiWindowFlags());
+        if(!m_ResourceManager || m_ResourceBrowserType == ResourceType::None)
+            return;
 
-				if(m_GameProject &&
-				   (m_ResourceBrowserType == ResourceType::Texture	|| m_ResourceBrowserType == ResourceType::Animation ||
-				   m_ResourceBrowserType == ResourceType::Sound		|| m_ResourceBrowserType == ResourceType::Music		||
-				   m_ResourceBrowserType == ResourceType::Font		|| m_ResourceBrowserType == ResourceType::Particle	||
-				   m_ResourceBrowserType == ResourceType::Lightmap))
-				{
+        ImGui::Begin("Resource Browser", nullptr, ImGuiWindowFlags());
 
-
-					if(ImGui::Button("Import File##import_resource", ImVec2(100.f, 0.f)))
-					{
-						nfdpathset_t pathSet;
-						nfdresult_t result = NFD_OpenDialogMultiple( nullptr, nullptr, &pathSet);
-
-						if ( result == NFD_OKAY )
-						{
-							std::vector<std::string> fileTable;
-
-							size_t i;
-							for ( i = 0; i < NFD_PathSet_GetCount(&pathSet); ++i )
-							{
-								nfdchar_t *path = NFD_PathSet_GetPath(&pathSet, i);
-
-								fileTable.push_back(toString(path));
-							}
-
-							const std::vector<std::string> loadedFileTable = m_ResourceManager->loadFile(m_ResourceBrowserType, fileTable);
-
-							if(!loadedFileTable.empty())
-							{
-								saveResourceFile(m_ResourceBrowserType, loadedFileTable);
-							}
-
-							NFD_PathSet_Free(&pathSet);
-						}
-						else if ( result == NFD_CANCEL ) {
-							//puts("User pressed cancel.");
-						}
-						else {
-							//printf("Error: %s\n", NFD_GetError() );
-						}
-
-					}
-				}
-
-				ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 100.f);
+            if(m_GameProject &&
+               (m_ResourceBrowserType == ResourceType::Texture	|| m_ResourceBrowserType == ResourceType::Animation ||
+               m_ResourceBrowserType == ResourceType::Sound		|| m_ResourceBrowserType == ResourceType::Music		||
+               m_ResourceBrowserType == ResourceType::Font		|| m_ResourceBrowserType == ResourceType::Particle	||
+               m_ResourceBrowserType == ResourceType::Lightmap))
+            {
 
 
-				if(ImGui::Button("Close##close_sprite_resource", ImVec2(100.f, 0.f)))
-				{
-					m_ResourceBrowserType = ResourceType::None;
-				}
+                if(ImGui::Button("Import File##import_resource", ImVec2(100.f, 0.f)))
+                {
+                    nfdpathset_t pathSet;
+                    nfdresult_t result = NFD_OpenDialogMultiple( nullptr, nullptr, &pathSet);
 
-				ImGui::Separator();
+                    if ( result == NFD_OKAY )
+                    {
+                        std::vector<std::string> fileTable;
 
-				ImGui::BeginChild("browser");
+                        size_t i;
+                        for ( i = 0; i < NFD_PathSet_GetCount(&pathSet); ++i )
+                        {
+                            nfdchar_t *path = NFD_PathSet_GetPath(&pathSet, i);
 
-					switch (m_ResourceBrowserType)
-					{
-						case ResourceType::Texture:
-						{
-							showSpriteResource();
-						}break;
+                            fileTable.push_back(toString(path));
+                        }
 
-						case ResourceType::Animation:
-						{
-							showAnimationResource();
-						}break;
+                        const std::vector<std::string> loadedFileTable = m_ResourceManager->loadFile(m_ResourceBrowserType, fileTable);
 
-						case ResourceType::Mesh:
-						{
-							showMeshResource();
-						}break;
+                        if(!loadedFileTable.empty())
+                        {
+                            saveResourceFile(m_ResourceBrowserType, loadedFileTable);
+                        }
 
-						case ResourceType::Font:
-						{
-							showFontResource();
-						}break;
+                        NFD_PathSet_Free(&pathSet);
+                    }
+                    else if ( result == NFD_CANCEL ) {
+                        //puts("User pressed cancel.");
+                    }
+                    else {
+                        //printf("Error: %s\n", NFD_GetError() );
+                    }
 
-						case ResourceType::Lightmap:
-						{
-							showLightmapResource();
-						}break;
+                }
+            }
 
-					}
+            ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 100.f);
 
-				ImGui::EndChild();
 
-			ImGui::End();
-		}
+            if(ImGui::Button("Close##close_sprite_resource", ImVec2(100.f, 0.f)))
+            {
+                m_ResourceBrowserType = ResourceType::None;
+            }
+
+            ImGui::Separator();
+
+            ImGui::BeginChild("browser");
+
+                switch (m_ResourceBrowserType)
+                {
+                    case ResourceType::Texture:
+                    {
+                        showSpriteResource();
+                    }break;
+
+                    case ResourceType::Animation:
+                    {
+                        showAnimationResource();
+                    }break;
+
+                    case ResourceType::Mesh:
+                    {
+                        showMeshResource();
+                    }break;
+
+                    case ResourceType::Font:
+                    {
+                        showFontResource();
+                    }break;
+
+                    case ResourceType::Lightmap:
+                    {
+                        showLightmapResource();
+                    }break;
+
+                }
+
+            ImGui::EndChild();
+
+        ImGui::End();
 	}
 
     void EditorUI::saveResourceFile(ResourceType type, const std::vector<std::string> loadedFileTable)
@@ -4280,18 +4279,22 @@ namespace  nero
 
 			ImGui::EndChild();
 
-			//showNewGameLevelPopup();
-
 		ImGui::End();
 	};
 
     void EditorUI::openGameLevel()
 	{
+        // No game level is selected
 		if(m_SelectedGameLevel == StringPool.BLANK)
-			return;
+        {
+            return;
+        }
 
+        // Selected game level is already open
 		if(m_GameLevelBuilder && m_GameLevelBuilder->getLevelName() == m_SelectedGameLevel)
-			return;
+        {
+            return;
+        }
 
 		m_GameLevelBuilder			= m_AdvancedScene->openLevel(m_SelectedGameLevel);
 		m_ResourceManager			= m_GameLevelBuilder->getResourceManager();
@@ -4309,52 +4312,51 @@ namespace  nero
 
     void EditorUI::showNewGameLevelPopup()
 	{
-		//Window flags
-		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
+        // Window flags
+        ImGuiWindowFlags windowFlags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
 										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
-		//Winsow size
-		ImVec2 winsow_size = ImVec2(400.f, 200.f);
-		ImGui::SetNextWindowSize(winsow_size);
+        // Window size
+        ImVec2 winsowSize = ImVec2(400.f, 180.f);
+        ImGui::SetNextWindowSize(winsowSize);
 
-		//Begin window
-		if(ImGui::BeginPopupModal("Create Game Level", nullptr, window_flags))
+        // Begin window
+        // TODO replace all string (popup title and wording) with constants
+        if(ImGui::BeginPopupModal("Create Game Level", nullptr, windowFlags))
 		{
-			float wording_width = 130.f;
-			float input_width = ImGui::GetWindowContentRegionWidth() * 0.8f;
+            float wordingWidth  = 130.f;
+            float inputWidth    = ImGui::GetWindowContentRegionWidth() * 0.8f;
 
 			ImGui::Text("Level Name");
-			ImGui::SameLine(wording_width);
-			//ImGui::SetNextItemWidth(input_width - 30.f);
+            ImGui::SameLine(wordingWidth);
 			ImGui::InputText("##new_level_name", m_NewGameLevelInput.name, sizeof(m_NewGameLevelInput.name));
 			ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
 			ImGui::Text("Enable Physics");
-			ImGui::SameLine(wording_width);
+            ImGui::SameLine(wordingWidth);
 			ImGui::Checkbox("##new_level_physics", &m_NewGameLevelInput.enablePhysics);
 			ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
 			ImGui::Text("Enable Light");
-			ImGui::SameLine(wording_width);
+            ImGui::SameLine(wordingWidth);
 			ImGui::Checkbox("##new_level_light", &m_NewGameLevelInput.enableLight);
 			ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
 			ImGui::Text("Template");
-			ImGui::SameLine(wording_width);
+            ImGui::SameLine(wordingWidth);
 			const char* items[] = { "None"};
 			static int item_current = 0;
 			ImGui::Combo("combo", &item_current, items, IM_ARRAYSIZE(items));
 			ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
-			ImGui::SetCursorPosY(winsow_size.y - 50.f);
+            ImGui::SetCursorPosY(winsowSize.y - 30.f);
 
-			if (ImGui::Button("Close##clow_new_level", ImVec2(100, 0)))
+            ImGui::SetCursorPosX(50.f);
+            if(ImGui::Button("Close##clow_new_level", ImVec2(100, 0)))
 			{
 				ImGui::CloseCurrentPopup();
 			}
 
-			ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 95.f);
-
-			//ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 102.f);
+            ImGui::SameLine(50.f + 100.f + 100.f);
 			bool onCreate = ImGui::Button("Create", ImVec2(100, 0));
 			ImGui::Dummy(ImVec2(0.0f, 4.0f));
 
@@ -4372,6 +4374,7 @@ namespace  nero
 					parameter.setString("level_name", string::trim(std::string(m_NewGameLevelInput.name)));
 					parameter.setBool("enable_physics", m_NewGameLevelInput.enablePhysics);
 					parameter.setBool("enable_light", m_NewGameLevelInput.enableLight);
+                    // TODO capture template input
 					parameter.setString("template", "None");
 
 					createGameLevel(parameter);
@@ -4380,29 +4383,24 @@ namespace  nero
 				}
 			}
 
-			/*ImGui::Separator();
-			ImGui::Dummy(ImVec2(0.0f, 4.0f));
-			ImGui::SetCursorPosX(winsow_size.x/2.f - 50.f);
-			if (ImGui::Button("Close##clow_new_level", ImVec2(100, 0)))
-			{
-				ImGui::CloseCurrentPopup();
-			}*/
-
 			ImGui::EndPopup();
 		}
 	}
 
     void EditorUI::createGameLevel(const Parameter& parameter)
 	{
-		if(m_AdvancedScene)
-		{
-			//create
-			m_AdvancedScene->createLevel(parameter);
-			m_SelectedGameLevel = parameter.getString("level_name");
+        // Advanced Scene not available
+        if(!m_AdvancedScene)
+            return;
 
-			//open
-			openGameLevel();
-		}
+        // Create new Game Level
+        m_AdvancedScene->createLevel(parameter);
+        // TODO retrieve the level name from the Advanced Scene
+        m_SelectedGameLevel = parameter.getString("level_name");
+
+        // Open create Game Level
+        openGameLevel();
+
 	}
 
     void EditorUI::createGameScreen(const Parameter& parameter)

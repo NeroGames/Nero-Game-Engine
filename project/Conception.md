@@ -4,21 +4,14 @@
 ## Engine Installation
 
 ### Download and Install the Nero Game Engine 2.0
-### Download and Install Qt Creator 
+### Download and Install a code Editor Qt Creator or Visual Studio (2019 or up)
 ### Download and Install Cmake
 ### Download and Install Git
-### Download and Install GitKraken
-### Donwload and Install Android Studio (optional)
-### Download and Install Android SDK
-### Donwload and Install Android NDK
-### Check Program Paths
+### Download and Install Fork
 
 ## Nero Game Engine Installation Package
 ### C++ Compiler
-### Android NDK
-### Android SDK
 ### Nero Engine Library
-### Other Library and Source
 
 ## Project Workspace
 

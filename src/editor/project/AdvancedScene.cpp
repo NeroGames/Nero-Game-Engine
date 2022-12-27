@@ -10,7 +10,7 @@
 namespace nero
 {
 	AdvancedScene::AdvancedScene():
-		 m_SelectedLevel(nullptr)
+         m_LevelBuilder(nullptr)
 		,m_RegisteredLevelTable()
 		,m_SelectedScreen(nullptr)
 		,m_EditorSetting(nullptr)
@@ -30,95 +30,113 @@ namespace nero
 
 	void AdvancedScene::createLevel(const Parameter& parameter)
 	{
-		//generate paratemers
-		std::string level_name		= string::trim(parameter.getString("level_name"));
-		std::string level_id		= string::formatString(level_name, string::Format::COMPACT_LOWER);
-		std::string class_name		= string::formatString(level_name, string::Format::CAMEL_CASE_UPPER) + "GameLevel";
-		std::string header_gard		= string::formatString(level_name, string::Format::COMPACT_UPPER) + "_H";
+        // Generate paratemers
+        std::string levelName		= string::trim(parameter.getString("level_name"));
+        std::string levelID         = string::formatString(levelName, string::Format::COMPACT_LOWER);
+        std::string className		= string::formatString(levelName, string::Format::CAMEL_CASE_UPPER) + "GameLevel";
+        std::string headerGard		= string::formatString(levelName, string::Format::COMPACT_UPPER) + "_H";
 
 		//generate source file
 			//paremeter
-		std::string header			= file::loadText("template/cpp_project/CppGameLevel.h");
-		std::string source			= file::loadText("template/cpp_project/CppGameLevel.cpp");
+        std::string headerFile			= file::loadText("template/cpp_project/CppGameLevel.h");
+        std::string sourceFile			= file::loadText("template/cpp_project/CppGameLevel.cpp");
 			//file 1 : header
-		boost::algorithm::replace_all(header, "::GameLevelClass::",		class_name);
-		boost::algorithm::replace_all(header, "::HeaderGard::",			header_gard);
-		boost::algorithm::replace_all(header, "::Namespace::",			m_ProjectSetting->getString("project_namespace"));
-		boost::algorithm::replace_all(header, "::ProjectName::",		m_ProjectSetting->getString("project_name"));
-		boost::algorithm::replace_all(header, "::ProjectLead::",		m_ProjectSetting->getString("project_lead"));
-		boost::algorithm::replace_all(header, "::CoyprightDate::",		toString(datetime::getCurrentDateTime().date().year()));
+        boost::algorithm::replace_all(headerFile, "::GameLevelClass::",		className);
+        boost::algorithm::replace_all(headerFile, "::HeaderGard::",			headerGard);
+        boost::algorithm::replace_all(headerFile, "::Namespace::",			m_ProjectSetting->getString("project_namespace"));
+        boost::algorithm::replace_all(headerFile, "::ProjectName::",		m_ProjectSetting->getString("project_name"));
+        boost::algorithm::replace_all(headerFile, "::ProjectLead::",		m_ProjectSetting->getString("project_lead"));
+        boost::algorithm::replace_all(headerFile, "::CoyprightDate::",		toString(datetime::getCurrentDateTime().date().year()));
 			//file 2 : source
-		boost::algorithm::replace_all(source, "::GameLevelClass::",		class_name);
-		boost::algorithm::replace_all(source, "::Namespace::",			m_ProjectSetting->getString("project_namespace"));
-		boost::algorithm::replace_all(source, "::ProjectName::",		m_ProjectSetting->getString("project_name"));
-		boost::algorithm::replace_all(source, "::ProjectLead::",		m_ProjectSetting->getString("project_lead"));
-		boost::algorithm::replace_all(source, "::CoyprightDate::",		toString(datetime::getCurrentDateTime().date().year()));
+        boost::algorithm::replace_all(sourceFile, "::GameLevelClass::",		className);
+        boost::algorithm::replace_all(sourceFile, "::Namespace::",			m_ProjectSetting->getString("project_namespace"));
+        boost::algorithm::replace_all(sourceFile, "::ProjectName::",		m_ProjectSetting->getString("project_name"));
+        boost::algorithm::replace_all(sourceFile, "::ProjectLead::",		m_ProjectSetting->getString("project_lead"));
+        boost::algorithm::replace_all(sourceFile, "::CoyprightDate::",		toString(datetime::getCurrentDateTime().date().year()));
 			//save file
-		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"),"cpp", "level", class_name}, StringPool.EXT_H), header);
-		file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"), "cpp", "level", class_name}, StringPool.EXT_CPP), source);
+        file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"),"cpp", "level", className}, StringPool.EXT_H), headerFile);
+        file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"), "cpp", "level", className}, StringPool.EXT_CPP), sourceFile);
 
 		//generate level directory
 			//directory
-		std::string level_directory = file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "level", boost::algorithm::to_lower_copy(level_name)});
-		file::createDirectory(level_directory);
-		file::createDirectory(file::getPath({level_directory, "chunk"}));
-		file::createDirectory(file::getPath({level_directory, "resource"}));
-		ResourceManager::buildDirectory(file::getPath({level_directory, "resource"}));
-			//document
+        std::string levelDirectory = file::getPath({m_ProjectSetting->getString("project_directory"),
+                                                    "Scene",
+                                                    "level",
+                                                    boost::algorithm::to_lower_copy(levelName)});
+        file::createDirectory(levelDirectory);
+        file::createDirectory(file::getPath({levelDirectory, "chunk"}));
+        file::createDirectory(file::getPath({levelDirectory, "resource"}));
+        ResourceManager::buildDirectory(file::getPath({levelDirectory, "resource"}));
+            //level document
 		Parameter document;
 		document.setString("creation_date", datetime::formatDateTime(datetime::getCurrentDateTime()));
-		document.setString("level_name", level_name);
-		document.setString("level_id", level_id);
+        document.setString("level_name", levelName);
+        document.setString("level_id", levelID);
 		document.setString("template", parameter.getString("template"));
-		file::saveFile(file::getPath({level_directory, "level"}, StringPool.EXT_NERO), document.toString());
+        file::saveFile(file::getPath({levelDirectory, "level"}, StringPool.EXT_NERO), document.toString());
 			//setting
 		Setting setting;
-		setting.setString("level_name", level_name);
-		setting.setString("level_id", level_id);
+        setting.setString("level_name", levelName);
+        setting.setString("level_id", levelID);
 		setting.setBool("enable_physics", parameter.getBool("enable_physics"));
 		setting.setBool("enable_light",  parameter.getBool("enable_light"));
 		setting.setInt("chunk_count", 0);
 		setting.setBool("opened", false);
-		setting.setString("level_directory",  level_directory);
-		setting.setString("resource_directory",  file::getPath({level_directory, "resource"}));
-		setting.setString("chunk_directory",  file::getPath({level_directory, "chunk"}));
-		file::saveFile(file::getPath({level_directory, "setting"}, StringPool.EXT_NERO), setting.toString());
+        setting.setString("level_directory",  levelDirectory);
+        setting.setString("resource_directory",  file::getPath({levelDirectory, "resource"}));
+        setting.setString("chunk_directory",  file::getPath({levelDirectory, "chunk"}));
+        setting.setSetting("resource", m_EditorSetting->getSetting("resource"));
+        file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO), setting.toString());
 
-		registerLevel(level_name);
+        registerLevel(levelName);
 	}
 
 	LevelBuilder::Ptr AdvancedScene::openLevel(const std::string& levelName)
 	{
-		if(levelName == StringPool.BLANK) return nullptr;
+        if(levelName == StringPool.BLANK)
+        {
+            return nullptr;
+        }
 
-		if(m_SelectedLevel)
+        if(m_LevelBuilder)
 		{
 			closeSelectedLevel();
 		}
 
-		std::string level_directory = file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "level", boost::algorithm::to_lower_copy(levelName)});
+        // Build level directory
+        std::string levelDirectory = file::getPath({m_ProjectSetting->getString("project_directory"),
+                                                    "Scene",
+                                                    "level",
+                                                    boost::algorithm::to_lower_copy(levelName)});
 
-		//create level builder
-		m_SelectedLevel = std::make_shared<LevelBuilder>();
-		m_SelectedLevel->setEditorSetting(m_EditorSetting);
-		m_SelectedLevel->getLevelSetting()->loadSetting(file::getPath({level_directory, "setting"}, StringPool.EXT_NERO), true, true);
-		m_SelectedLevel->setRenderContext(m_RenderContext);
-		m_SelectedLevel->setRenderTexture(m_RenderTexture);
-		m_SelectedLevel->loadResource();
+        // Load level setting
+        Setting::Ptr levelSetting = std::make_shared<Setting>();
+        levelSetting->loadSetting(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO), true, true);
 
-		if(file::directoryEmpty(file::getPath({level_directory, "chunk"})))
+        // Create Level Context
+        GameLevel::Context levelContext;
+        levelContext.setting = levelSetting;
+
+        // Create a new Level Builder
+        m_LevelBuilder = std::make_shared<LevelBuilder>(levelContext);
+        m_LevelBuilder->setEditorSetting(m_EditorSetting);
+        m_LevelBuilder->setRenderContext(m_RenderContext);
+        m_LevelBuilder->setRenderTexture(m_RenderTexture);
+        m_LevelBuilder->loadResource();
+
+        if(file::directoryEmpty(file::getPath({levelDirectory, "chunk"})))
 		{
-			auto worldChunk = m_SelectedLevel->addChunk();
-			m_SelectedLevel->setSelectedChunk(worldChunk);
+            auto worldChunk = m_LevelBuilder->addChunk();
+            m_LevelBuilder->setSelectedChunk(worldChunk);
 
-			m_SelectedLevel->saveGameLevel();
+            m_LevelBuilder->saveGameLevel();
 		}
 		else
 		{
-			m_SelectedLevel->loadGameLevel();
+            m_LevelBuilder->loadGameLevel();
 		}
 
-		return m_SelectedLevel;
+        return m_LevelBuilder;
 	}
 
 	void AdvancedScene::closeSelectedLevel()
