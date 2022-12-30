@@ -21,7 +21,7 @@ namespace nero
             virtual void            render() override;
 
         private:
-            void                    renderToolbar();
+            void                    renderToolbarContent();
 
         private:
             ImGuiWindow*            m_ToolbarContentWindow;

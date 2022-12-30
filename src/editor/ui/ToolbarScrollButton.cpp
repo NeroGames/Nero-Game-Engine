@@ -14,7 +14,7 @@ namespace  nero
                                              const Direction& direction):
         UIComponent(editorContext)
         ,m_Direction(direction)
-        ,m_ToolbarContentWindow(std::move(toolbarContentWindow))
+        ,m_ToolbarContentWindow(toolbarContentWindow)
     {
 
     }

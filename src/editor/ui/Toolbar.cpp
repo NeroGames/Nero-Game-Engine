@@ -46,7 +46,8 @@ namespace  nero
         // Scrool left button
         if(showScrollButton)
         {
-            m_ScrollButtonRight.render();
+            m_ScrollButtonLeft.render();
+            ImGui::SameLine(32.f);
         }
 
         // Begin toolbar content window
@@ -63,7 +64,7 @@ namespace  nero
         }
 
         // Render toolbar
-        renderToolbar();
+        renderToolbarContent();
 
         // End toolbar content window
         ImGui::EndChild();
@@ -80,7 +81,7 @@ namespace  nero
         ImGui::PopStyleVar();
     }
 
-    void Toolbar::renderToolbar()
+    void Toolbar::renderToolbarContent()
     {
 
     }

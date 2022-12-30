@@ -52,6 +52,7 @@ namespace  nero
 		,m_EnvironmentSetup()
 		,m_SelectedGameLevel(StringPool.BLANK)
 		,m_OpenedGameLevel(StringPool.BLANK)
+        ,m_Toolbar(UIComponent::EditorContext())
     {
 		//empty
 	}
@@ -312,8 +313,9 @@ namespace  nero
 		createDockSpace();
 
 		//central dockspcace
-			//display toolbar
-		showToolbarWindow();
+            //display toolbar
+        //m_Toolbar.render();
+        showToolbarWindow();
 			//viewport
 		showSceneWindow();
 			//game project

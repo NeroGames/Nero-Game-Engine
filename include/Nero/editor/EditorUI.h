@@ -7,12 +7,8 @@
 ///////////////////////////HEADERS//////////////////////////
 //Poco
 #include <Poco/Logger.h>
-//IMGUI
-#include <imgui/imgui.h>
-#include <imgui/imgui-SFML.h>
-#include <imgui/imgui.h>
-#include <imgui/imgui_internal.h>
 //Nero
+#include <Nero/editor/ui/Toolbar.h>
 #include <Nero/editor/project/ProjectManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>
@@ -109,7 +105,8 @@ namespace nero
 			WorldBuilder::Ptr								m_WorldBuilder;
 			ResourceManager::Ptr							m_ResourceManager;
 			ResourceManager::Ptr							m_EditorResourceManager;
-
+        private:
+            Toolbar                                         m_Toolbar;
 		private:
 			//////////////docksapce
 			ImGuiID											m_DockspaceID;
