@@ -252,8 +252,6 @@ namespace  nero
         file::createDirectory(file::getPath({"resource", "startup", "sound"}));
         file::createDirectory(file::getPath({"resource", "startup", "music"}));
         file::createDirectory(file::getPath({"resource", "startup", "font"}));
-        file::createDirectory(file::getPath({"resource", "startup", "texture"}));
-        file::createDirectory(file::getPath({"resource", "startup", "sound"}));
         file::createDirectory(file::getPath({"resource", "startup", "language"}));
         // Resource/Starterpack
         file::createDirectory(file::getPath({"resource", "starterpack"}));
