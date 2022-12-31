@@ -6,7 +6,7 @@
 #define EDITORCONTEXT_H
 ///////////////////////////HEADERS//////////////////////////
 //Nero
-#include <Nero/editor/ui/EditorProxy.h>
+#include <Nero/editor/EditorProxy.h>
 #include <Nero/editor/EditorUtility.h>
 #include <Nero/editor/project/ProjectManager.h>
 // Std

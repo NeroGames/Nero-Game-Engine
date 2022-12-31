@@ -11,7 +11,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 //Nero
-#include <Nero/editor/ui/EditorContext.h>
+#include <Nero/editor/EditorContext.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
