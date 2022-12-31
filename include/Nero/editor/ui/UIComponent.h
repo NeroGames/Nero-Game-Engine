@@ -10,26 +10,22 @@
 #include <imgui/imgui-SFML.h>
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
+//Nero
+#include <Nero/editor/ui/EditorContext.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
     class UIComponent
     {
         public:
-            struct EditorContext
-            {
-
-            };
-
-        public:
-                                    UIComponent(EditorContext editorContext);
+                                    UIComponent(EditorContext::Ptr editorContext);
             virtual                ~UIComponent();
 
             virtual void 			destroy()   = 0;
             virtual void            render()    = 0;
 
         protected:
-            EditorContext           m_EditorContext;
+            EditorContext::Ptr      m_EditorContext;
 	};
 }
 

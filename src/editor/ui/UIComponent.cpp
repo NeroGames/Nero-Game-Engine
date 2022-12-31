@@ -8,8 +8,8 @@
 ////////////////////////////////////////////////////////////
 namespace  nero
 {
-    UIComponent::UIComponent(UIComponent::EditorContext editorContext):
-        m_EditorContext(editorContext)
+    UIComponent::UIComponent(EditorContext::Ptr editorContext):
+        m_EditorContext(std::move(editorContext))
     {
 
     }

@@ -106,6 +106,7 @@ namespace nero
 			ResourceManager::Ptr							m_ResourceManager;
 			ResourceManager::Ptr							m_EditorResourceManager;
         private:
+            EditorContext::Ptr                              m_EditorContext;
             Toolbar                                         m_Toolbar;
 		private:
 			//////////////docksapce

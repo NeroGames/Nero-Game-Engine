@@ -16,7 +16,7 @@ namespace nero
             enum class Direction {Left, Right, None};
 
         public:
-                                    ToolbarScrollButton(UIComponent::EditorContext editorContext,
+                                    ToolbarScrollButton(EditorContext::Ptr editorContext,
                                                         ImGuiWindow* toolbarContentWindow,
                                                         const Direction& direction = Direction::None);
             virtual                ~ToolbarScrollButton() override;

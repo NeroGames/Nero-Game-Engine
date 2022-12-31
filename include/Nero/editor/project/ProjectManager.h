@@ -55,6 +55,7 @@ namespace  nero
 			void									deleteProject();
 			void									compileProject(const std::string& projectDirectory, BackgroundTask::Ptr backgroundTask);
 			GameProject::Ptr						openProject(const std::string& projectDirectory);
+            GameProject::Ptr						getGameProject();
 				//utiliy
 			bool									projectExist(const std::string& projectName, const std::string& workspaceName);
 			const std::vector<nlohmann::json>		getWorkspaceProjectTable(const std::string& workpsace);

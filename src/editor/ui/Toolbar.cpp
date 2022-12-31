@@ -7,10 +7,11 @@
 #include <Nero/editor/ui/Toolbar.h>
 #include <Nero/editor/ui/ToolbarScrollButton.h>
 #include <Nero/editor/EditorConstant.h>
+#include <Nero/editor/EditorUtility.h>
 ////////////////////////////////////////////////////////////
 namespace  nero
 {
-    Toolbar::Toolbar(UIComponent::EditorContext editorContext):
+    Toolbar::Toolbar(EditorContext::Ptr editorContext):
         UIComponent(editorContext)
         ,m_ToolbarContentWindow(nullptr)
         ,m_ScrollButtonLeft(editorContext,
@@ -19,6 +20,7 @@ namespace  nero
         ,m_ScrollButtonRight(editorContext,
                              m_ToolbarContentWindow,
                              ToolbarScrollButton::Direction::Right)
+        ,m_ToolbarButtonGroup(editorContext)
     {
 
     }
@@ -83,6 +85,20 @@ namespace  nero
 
     void Toolbar::renderToolbarContent()
     {
+        // Button
+        pushToolbarStyle();
+        m_ToolbarButtonGroup.render();
+        popToolbarStyle();
 
+        // Popup
+        renderToolbarPopupGroup();
+    }
+
+    void Toolbar::renderToolbarPopupGroup()
+    {
+        //m_ProjectManagerPopup.render();
+        //m_NewGameLevelPopup.render();
+        //m_NewGameScreenPopup.render();
+        //m_NewGameScriptPopup.render();
     }
 }

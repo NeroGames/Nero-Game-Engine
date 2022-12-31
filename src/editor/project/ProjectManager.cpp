@@ -533,6 +533,11 @@ namespace nero
         return m_GameProject;
      }
 
+    GameProject::Ptr ProjectManager::getGameProject()
+    {
+        return m_GameProject;
+    }
+
 	 void ProjectManager::closeProject()
 	 {
 		m_GameProject->close();

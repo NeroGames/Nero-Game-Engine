@@ -8,13 +8,14 @@
 //Nero
 #include <Nero/editor/ui/UIComponent.h>
 #include <Nero/editor/ui/ToolbarScrollButton.h>
+#include <Nero/editor/ui/ToolbarButtonGroup.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
     class Toolbar : public UIComponent
     {
         public:
-                                    Toolbar(UIComponent::EditorContext editorContext);
+                                    Toolbar(EditorContext::Ptr editorContext);
             virtual                ~Toolbar() override;
 
             virtual void 			destroy() override;
@@ -22,11 +23,14 @@ namespace nero
 
         private:
             void                    renderToolbarContent();
+            void                    renderToolbarButtonGroup();
+            void                    renderToolbarPopupGroup();
 
         private:
             ImGuiWindow*            m_ToolbarContentWindow;
             ToolbarScrollButton     m_ScrollButtonLeft;
             ToolbarScrollButton     m_ScrollButtonRight;
+            ToolbarButtonGroup      m_ToolbarButtonGroup;
 	};
 }
 #endif // TOOLBAR_H
