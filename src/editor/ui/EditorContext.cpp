@@ -9,9 +9,11 @@
 namespace  nero
 {
     EditorContext::EditorContext(ProjectManager::Ptr projectManager,
+                                 TextureHolder::Ptr textureHolder,
                                  const EditorMode& editorMode,
                                  const BuilderMode& builderMode):
          m_ProjectManager(projectManager)
+        ,m_TextureHolder(textureHolder)
         ,m_EditorMode(editorMode)
         ,m_BuilderMode(builderMode)
     {
@@ -31,6 +33,11 @@ namespace  nero
         }
 
         return nullptr;
+    }
+
+    TextureHolder::Ptr EditorContext::getTextureHolder() const
+    {
+        return m_TextureHolder;
     }
 
     EditorMode EditorContext::getEditorMode() const

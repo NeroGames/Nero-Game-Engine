@@ -12,7 +12,7 @@
 namespace  nero
 {
     ToolbarButtonGroup::ToolbarButtonGroup(EditorContext::Ptr editorContext):
-        UIComponent(std::move(editorContext))
+        UIComponent(editorContext)
     {
 
     }
@@ -36,7 +36,7 @@ namespace  nero
 
     void ToolbarButtonGroup::renderLeftButtonGroup()
     {
-        if(m_EditorContext->getGameProject())
+        if(!m_EditorContext->getGameProject())
             return;
 
         if(m_EditorContext->getEditorMode() == EditorMode::WORLD_BUILDER)
@@ -88,7 +88,7 @@ namespace  nero
 
     void ToolbarButtonGroup::renderMiddleButtonGroup()
     {
-        if(m_EditorContext->getGameProject())
+        if(!m_EditorContext->getGameProject())
             return;
 
         float offSet = ImGui::GetWindowContentRegionWidth();

@@ -4,17 +4,28 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Nero
-#include <Nero/editor/ui/UIComponent.h>
+#include <Nero/editor/ui/NewGameLevelPopup.h>
 ////////////////////////////////////////////////////////////
 namespace  nero
 {
-    UIComponent::UIComponent(EditorContext::Ptr editorContext):
-        m_EditorContext(editorContext)
+    NewGameLevelPopup::NewGameLevelPopup(EditorContext::Ptr editorContext):
+        UIComponent(editorContext)
+
     {
 
     }
 
-    UIComponent::~UIComponent()
+    NewGameLevelPopup::~NewGameLevelPopup()
+    {
+        destroy();
+    }
+
+    void NewGameLevelPopup::destroy()
+    {
+
+    }
+
+    void NewGameLevelPopup::render()
     {
 
     }

@@ -285,7 +285,7 @@ namespace  nero
             file::fileExist(file::getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, StringPool.EXT_INI)));
 
 
-        nero_log("--> Loading startup settings");
+        nero_log("--> Loading startup settings")
 		checkWorkspace();
 		m_EditorSetting->loadSetting(file::getPath({"setting", "startup"}));
 	}
@@ -410,12 +410,12 @@ namespace  nero
 	{
         nero_log("-> Creating editor interface")
 
-        m_Interface = EditorUI::Ptr(new EditorUI(m_RenderWindow));
+        m_Interface = EditorUI::Ptr(new EditorUI(m_RenderWindow,
+                                                 m_EditorTextureHolder));
 
 		//let the interface access to the editor setting
 		m_Interface->setEditorSetting(m_EditorSetting);
 
-		m_Interface->setEditorTextureHolder(m_EditorTextureHolder);
 		m_Interface->setEditorSoundHolder(m_EditorSoundHolder);
 		m_Interface->setEditorFontHolder(m_EditorFontHolder);
 		m_Interface->setEditorCamera(m_EditorCamera);

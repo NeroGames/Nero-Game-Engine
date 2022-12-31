@@ -24,7 +24,8 @@
 ////////////////////////////////////////////////////////////
 namespace  nero
 {
-    EditorUI::EditorUI(sf::RenderWindow& window):
+    EditorUI::EditorUI(sf::RenderWindow& window,
+                       TextureHolder::Ptr textureHolder):
 		 m_RenderWindow(window)
 		,m_InterfaceFirstDraw(true)
 		,m_SelectedScriptTypeIndex(0)
@@ -52,10 +53,11 @@ namespace  nero
 		,m_EnvironmentSetup()
 		,m_SelectedGameLevel(StringPool.BLANK)
 		,m_OpenedGameLevel(StringPool.BLANK)
-        ,m_EditorContext(std::make_shared<EditorContext>(m_ProjectManager))
+        ,m_EditorTextureHolder(textureHolder)
+        ,m_EditorContext(std::make_shared<EditorContext>(m_ProjectManager, m_EditorTextureHolder))
         ,m_Toolbar(m_EditorContext)
     {
-		//empty
+        //empty
 	}
 
     EditorUI::~EditorUI()
@@ -114,7 +116,7 @@ namespace  nero
 
 		g_Context = ax::NodeEditor::CreateEditor();
 
-		m_ProjectManagerTabBarSwitch.registerTabTable(
+        m_ProjectManagerTabBarSwitch.registerTab(
 		{
 			EditorConstant.TAB_RECENT_PROJECT,
 			EditorConstant.TAB_CREATE_PROJECT,
@@ -122,7 +124,7 @@ namespace  nero
 			EditorConstant.TAB_WORKSPACE
 		});
 
-		m_BottomDockspaceTabBarSwitch.registerTabTable(
+        m_BottomDockspaceTabBarSwitch.registerTab(
 		{
 			EditorConstant.WINDOW_RESOURCE,
 			EditorConstant.WINDOW_LOGGING,
@@ -1866,7 +1868,7 @@ namespace  nero
                         ImGui::EndTabItem();
 					}
 
-					m_ProjectManagerTabBarSwitch.resetSwith();
+                    m_ProjectManagerTabBarSwitch.reset();
 
                     ImGui::EndTabBar();
                 }

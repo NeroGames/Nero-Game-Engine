@@ -50,7 +50,8 @@ namespace nero
 			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 
 		public:
-                                            EditorUI(sf::RenderWindow& window);
+                                            EditorUI(sf::RenderWindow& window,
+                                                     TextureHolder::Ptr textureHolder);
                                            ~EditorUI();
 			void							destroy();
 
@@ -234,8 +235,8 @@ namespace nero
 			void											removeGameScreen();
 			int												m_InputSelectedGameScreenId;
 			//Tabs
-			TabBarSwitch									m_ProjectManagerTabBarSwitch;
-			TabBarSwitch									m_BottomDockspaceTabBarSwitch;
+            TabSelectionHandler								m_ProjectManagerTabBarSwitch;
+            TabSelectionHandler								m_BottomDockspaceTabBarSwitch;
 			//Banner
 			//show view
 			//

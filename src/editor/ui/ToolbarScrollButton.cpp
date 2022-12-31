@@ -12,7 +12,7 @@ namespace  nero
     ToolbarScrollButton::ToolbarScrollButton(EditorContext::Ptr editorContext,
                                              ImGuiWindow* toolbarContentWindow,
                                              const Direction& direction):
-        UIComponent(std::move(editorContext))
+        UIComponent(editorContext)
         ,m_Direction(direction)
         ,m_ToolbarContentWindow(toolbarContentWindow)
     {

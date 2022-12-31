@@ -9,6 +9,8 @@
 #include <Nero/editor/ui/UIComponent.h>
 #include <Nero/editor/ui/ToolbarScrollButton.h>
 #include <Nero/editor/ui/ToolbarButtonGroup.h>
+#include <Nero/editor/ui/ProjectManagerPopup.h>
+#include <Nero/editor/ui/NewGameLevelPopup.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -31,6 +33,8 @@ namespace nero
             ToolbarScrollButton     m_ScrollButtonLeft;
             ToolbarScrollButton     m_ScrollButtonRight;
             ToolbarButtonGroup      m_ToolbarButtonGroup;
+            ProjectManagerPopup     m_ProjectManagerPopup;
+            NewGameLevelPopup       m_NewGameLevelPopup;
 	};
 }
 #endif // TOOLBAR_H

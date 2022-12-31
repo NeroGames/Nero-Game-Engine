@@ -21,16 +21,19 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	class TabBarSwitch
+    class TabSelectionHandler
 	{
+        public:
+            using Ptr = std::shared_ptr<TabSelectionHandler>;
+
 		public:
-			void					selectTab(const std::string& tabName);
-			void					registerTabTable(const std::vector<std::string>& tabNameTable);
-			ImGuiTabItemFlags		getTabStatus(const std::string& tabName);
-			void					resetSwith();
+            void                            selectTab(const std::string& tabName);
+            void                            registerTab(const std::vector<std::string>& tabNameTable);
+            ImGuiTabItemFlags               getTabStatus(const std::string& tabName);
+            void                            reset();
 
 		private:
-			std::map<std::string, bool> m_SwitchMap;
+            std::map<std::string, bool>     m_TabMap;
 	};
 
 	sf::Vector2f formatSize(sf::Vector2f original, float size);

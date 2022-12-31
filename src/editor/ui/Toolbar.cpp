@@ -21,6 +21,8 @@ namespace  nero
                              m_ToolbarContentWindow,
                              ToolbarScrollButton::Direction::Right)
         ,m_ToolbarButtonGroup(editorContext)
+        ,m_ProjectManagerPopup(editorContext)
+        ,m_NewGameLevelPopup(editorContext)
     {
 
     }
@@ -57,12 +59,24 @@ namespace  nero
         if(showScrollButton)
         {
             ImGui::SetNextWindowContentWidth(EditorConstant.WINDOW_TOOLBAR_MIN_WIDTH);
-            ImGui::BeginChild("##toolbarwindowcontent", ImVec2(toolbarContentWindowWidth -67.f, 0.f), false, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoScrollbar |ImGuiWindowFlags_ScrollToolbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysUseWindowPadding);
+            ImGui::BeginChild("##toolbarwindowcontent",
+                              ImVec2(toolbarContentWindowWidth -67.f, 0.f),
+                              false,
+                              ImGuiWindowFlags_HorizontalScrollbar |
+                              ImGuiWindowFlags_NoScrollbar |
+                              ImGuiWindowFlags_ScrollToolbar |
+                              ImGuiWindowFlags_NoResize |
+                              ImGuiWindowFlags_AlwaysUseWindowPadding);
             m_ToolbarContentWindow = ImGui::GetCurrentWindow();
         }
         else
         {
-            ImGui::BeginChild("##toolbarwindowcontent", ImVec2(), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_AlwaysUseWindowPadding);
+            ImGui::BeginChild("##toolbarwindowcontent",
+                              ImVec2(),
+                              false,
+                              ImGuiWindowFlags_NoScrollbar |
+                              ImGuiWindowFlags_NoScrollWithMouse |
+                              ImGuiWindowFlags_AlwaysUseWindowPadding);
         }
 
         // Render toolbar
@@ -96,8 +110,9 @@ namespace  nero
 
     void Toolbar::renderToolbarPopupGroup()
     {
-        //m_ProjectManagerPopup.render();
-        //m_NewGameLevelPopup.render();
+        m_ProjectManagerPopup.render();
+        m_NewGameLevelPopup.render();
+        // TODO
         //m_NewGameScreenPopup.render();
         //m_NewGameScriptPopup.render();
     }

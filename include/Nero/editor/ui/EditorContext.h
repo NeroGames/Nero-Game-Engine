@@ -20,6 +20,7 @@ namespace nero
 
         public:
                                     EditorContext(ProjectManager::Ptr projectManager,
+                                                  TextureHolder::Ptr textureHolder,
                                                   const EditorMode& editorMode = EditorMode::WORLD_BUILDER,
                                                   const BuilderMode& builderMode = BuilderMode::OBJECT);
             virtual                ~EditorContext();
@@ -28,12 +29,14 @@ namespace nero
             GameProject::Ptr        getGameProject();
             EditorMode              getEditorMode()     const;
             BuilderMode             getBuilderMode()    const;
+            TextureHolder::Ptr      getTextureHolder()  const;
             //Setter
             void                    setEditorMode(const EditorMode& editorMode);
             void                    setBuilderMode(const BuilderMode& builderMode);
 
         private:
             ProjectManager::Ptr     m_ProjectManager;
+            TextureHolder::Ptr      m_TextureHolder;
             EditorMode              m_EditorMode;
             BuilderMode             m_BuilderMode;
 	};

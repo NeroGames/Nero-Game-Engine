@@ -10,7 +10,7 @@
 
 namespace nero
 {
-	void TabBarSwitch::registerTabTable(const std::vector<std::string>& tabNameTable)
+    void TabSelectionHandler::registerTab(const std::vector<std::string>& tabNameTable)
 	{
 		if(tabNameTable.size() <= 0)
 		{
@@ -19,23 +19,23 @@ namespace nero
 
 		for(const std::string& tab : tabNameTable)
 		{
-			m_SwitchMap[tab] = false;
+            m_TabMap[tab] = false;
 		}
 
 		//select the first tab
-		m_SwitchMap[tabNameTable.front()] = true;
+        m_TabMap[tabNameTable.front()] = true;
 	}
 
-	void TabBarSwitch::selectTab(const std::string& tabName)
+    void TabSelectionHandler::selectTab(const std::string& tabName)
 	{
-		resetSwith();
+        reset();
 
-		m_SwitchMap[tabName] = true;
+        m_TabMap[tabName] = true;
 	}
 
-	ImGuiTabItemFlags TabBarSwitch::getTabStatus(const std::string& tabName)
+    ImGuiTabItemFlags TabSelectionHandler::getTabStatus(const std::string& tabName)
 	{
-		if(m_SwitchMap[tabName])
+        if(m_TabMap[tabName])
 		{
 			return ImGuiTabItemFlags_SetSelected;
 		}
@@ -43,9 +43,9 @@ namespace nero
 		return ImGuiTabItemFlags_None;
 	}
 
-	void TabBarSwitch::resetSwith()
+    void TabSelectionHandler::reset()
 	{
-		for(auto it = m_SwitchMap.begin(); it != m_SwitchMap.end(); it++)
+        for(auto it = m_TabMap.begin(); it != m_TabMap.end(); it++)
 		{
 			it->second = false;
 		}
