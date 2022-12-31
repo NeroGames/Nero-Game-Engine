@@ -508,7 +508,7 @@ namespace nero
 		setting->setString("project_directory", projectDirectory);
 		setting->setString("workspace_directory", file::getParentDirectory(projectDirectory, 2));
 
-		m_GameProject = GameProject::Ptr(new GameProject());
+        m_GameProject = std::make_shared<GameProject>();
 		m_GameProject->setEngineSetting(m_EditorSetting);
 		m_GameProject->init(setting);
 

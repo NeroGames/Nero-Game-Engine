@@ -6,8 +6,9 @@
 #define EDITORCONTEXT_H
 ///////////////////////////HEADERS//////////////////////////
 //Nero
-#include <Nero/editor/project/ProjectManager.h>
+#include <Nero/editor/ui/EditorProxy.h>
 #include <Nero/editor/EditorUtility.h>
+#include <Nero/editor/project/ProjectManager.h>
 // Std
 #include <memory>
 ////////////////////////////////////////////////////////////
@@ -19,24 +20,31 @@ namespace nero
             using Ptr = std::shared_ptr<EditorContext>;
 
         public:
-                                    EditorContext(ProjectManager::Ptr projectManager,
+                                    EditorContext(EditorProxy::Ptr editorProxy,
+                                                  ProjectManager::Ptr projectManager,
                                                   TextureHolder::Ptr textureHolder,
+                                                  Setting::Ptr editorSetting,
                                                   const EditorMode& editorMode = EditorMode::WORLD_BUILDER,
                                                   const BuilderMode& builderMode = BuilderMode::OBJECT);
             virtual                ~EditorContext();
 
             // Getter
-            GameProject::Ptr        getGameProject();
+            EditorProxy::Ptr        getEditorProxy()    const;
+            ProjectManager::Ptr     getProjectManager() const;
+            GameProject::Ptr        getGameProject()    const;
             EditorMode              getEditorMode()     const;
             BuilderMode             getBuilderMode()    const;
             TextureHolder::Ptr      getTextureHolder()  const;
-            //Setter
+            Setting::Ptr            getEditorSetting()  const;
+            // Setter
             void                    setEditorMode(const EditorMode& editorMode);
             void                    setBuilderMode(const BuilderMode& builderMode);
 
         private:
+            EditorProxy::Ptr        m_EditorProxy;
             ProjectManager::Ptr     m_ProjectManager;
             TextureHolder::Ptr      m_TextureHolder;
+            Setting::Ptr            m_EditorSetting;
             EditorMode              m_EditorMode;
             BuilderMode             m_BuilderMode;
 	};

@@ -60,10 +60,39 @@ namespace  nero
         ,m_EditorTextureHolder(textureHolder)
         ,m_EditorFontHolder(fontHolder)
         ,m_EditorSoundHolder(soundHolder)
-        ,m_EditorContext(std::make_shared<EditorContext>(m_ProjectManager, m_EditorTextureHolder))
+        ,m_EditorProxy(std::make_shared<EditorProxy>())
+        ,m_RenderTexture(std::make_shared<sf::RenderTexture>())
+        ,m_ProjectManager(std::make_unique<ProjectManager>())
+        ,m_RenderContext(std::make_shared<RenderContext>())
+        ,m_EditorContext(std::make_shared<EditorContext>(m_EditorProxy,
+                                                         m_ProjectManager,
+                                                         m_EditorTextureHolder,
+                                                         m_EditorSetting))
         ,m_Toolbar(m_EditorContext)
     {
-        //empty
+        // Open Project
+        m_EditorProxy->m_OpenProjectCallback = [this](const std::string& projectDirectory)
+        {
+            //open new project
+            if(m_ProjectManager)
+            {
+                m_GameProject		= m_ProjectManager->openProject(projectDirectory);
+                m_AdvancedScene		= m_GameProject->getAdvancedScene();
+                m_AdvancedScene->setRenderTexture(m_RenderTexture);
+                m_AdvancedScene->setRenderContext(m_RenderContext);
+
+                //update editor window title
+                updateWindowTitle(m_GameProject->getProjectName());
+            }
+        };
+
+        // CreateProject
+        m_EditorProxy->m_CreateProjectCallback = [this](const Parameter& projectParameter, const unsigned int& projectCount)
+        {
+            nero_log("on create project in background")
+            std::string taskName = EditorConstant.TASK_CREATE_PROJECT + toString(projectCount);
+            BTManager::startTask(&ProjectManager::createProject, m_ProjectManager.get(), projectParameter, taskName);
+        };
 	}
 
     EditorUI::~EditorUI()
@@ -115,10 +144,6 @@ namespace  nero
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 14.0f, &config, icon_ranges);
 		io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 14.0f, &config, icon_ranges);
 		ImGui::SFML::UpdateFontTexture();
-
-		m_RenderTexture = std::make_shared<sf::RenderTexture>();
-		m_ProjectManager = std::make_unique<ProjectManager>();
-		m_RenderContext = std::make_shared<RenderContext>();
 
 		g_Context = ax::NodeEditor::CreateEditor();
 
@@ -304,7 +329,7 @@ namespace  nero
 
     void EditorUI::update(const sf::Time& timeStep)
 	{
-		m_EditorCamera->update(timeStep);
+        m_EditorCamera->update(timeStep);
 
 		if(m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT && m_WorldBuilder)
 		{

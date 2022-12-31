@@ -11,8 +11,10 @@ namespace  nero
 {
     ProjectManagerPopup::ProjectManagerPopup(EditorContext::Ptr editorContext):
          UIComponent(editorContext)
+        ,m_TabSelectionHandler(std::make_shared<TabSelectionHandler>())
+        ,m_RecentProjectTab(editorContext, m_TabSelectionHandler)
+        ,m_NewProjectTab(editorContext, m_TabSelectionHandler)
     {
-        m_TabSelectionHandler = std::make_shared<TabSelectionHandler>();
         m_TabSelectionHandler->registerTab(
         {
             EditorConstant.TAB_RECENT_PROJECT,
@@ -72,14 +74,14 @@ namespace  nero
 
                     if (ImGui::BeginTabItem(EditorConstant.TAB_RECENT_PROJECT.c_str(), nullptr, m_TabSelectionHandler->getTabStatus(EditorConstant.TAB_RECENT_PROJECT)))
                     {
-                        //renderRecentProject();
+                        m_RecentProjectTab.render();
 
                         ImGui::EndTabItem();
                     }
 
                     if (ImGui::BeginTabItem(EditorConstant.TAB_CREATE_PROJECT.c_str(), nullptr, m_TabSelectionHandler->getTabStatus(EditorConstant.TAB_CREATE_PROJECT)))
                     {
-                        //renderCreateProject();
+                        m_NewProjectTab.render();
 
                         ImGui::EndTabItem();
                     }

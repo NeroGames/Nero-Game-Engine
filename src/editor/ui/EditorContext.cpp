@@ -8,12 +8,16 @@
 ////////////////////////////////////////////////////////////
 namespace  nero
 {
-    EditorContext::EditorContext(ProjectManager::Ptr projectManager,
+    EditorContext::EditorContext(EditorProxy::Ptr editorProxy,
+                                 ProjectManager::Ptr projectManager,
                                  TextureHolder::Ptr textureHolder,
+                                 Setting::Ptr editorSetting,
                                  const EditorMode& editorMode,
                                  const BuilderMode& builderMode):
-         m_ProjectManager(projectManager)
+         m_EditorProxy(editorProxy)
+        ,m_ProjectManager(projectManager)
         ,m_TextureHolder(textureHolder)
+        ,m_EditorSetting(editorSetting)
         ,m_EditorMode(editorMode)
         ,m_BuilderMode(builderMode)
     {
@@ -25,7 +29,17 @@ namespace  nero
 
     }
 
-    GameProject::Ptr EditorContext::getGameProject()
+    EditorProxy::Ptr EditorContext::getEditorProxy() const
+    {
+        return m_EditorProxy;
+    }
+
+    ProjectManager::Ptr EditorContext::getProjectManager() const
+    {
+        return m_ProjectManager;
+    }
+
+    GameProject::Ptr EditorContext::getGameProject() const
     {
         if(m_ProjectManager)
         {
@@ -38,6 +52,11 @@ namespace  nero
     TextureHolder::Ptr EditorContext::getTextureHolder() const
     {
         return m_TextureHolder;
+    }
+
+    Setting::Ptr EditorContext::getEditorSetting() const
+    {
+        return m_EditorSetting;
     }
 
     EditorMode EditorContext::getEditorMode() const
