@@ -53,7 +53,7 @@ namespace nero
 			//loading screen
             LoadingScreen::Ptr      m_LoadingScreen;
             //editor interface
-            EditorUI::Ptr           m_Interface;
+            EditorUI::Ptr           m_EditorUI;
 			//advanced camera
 			AdvancedCamera::Ptr     m_EditorCamera;
 			//editor settings

@@ -51,7 +51,11 @@ namespace nero
 
 		public:
                                             EditorUI(sf::RenderWindow& window,
-                                                     TextureHolder::Ptr textureHolder);
+                                                     AdvancedCamera::Ptr camera,
+                                                     TextureHolder::Ptr textureHolder,
+                                                     FontHolder::Ptr fontHolder,
+                                                     SoundHolder::Ptr soundHolder,
+                                                     Setting::Ptr setting);
                                            ~EditorUI();
 			void							destroy();
 
@@ -67,11 +71,6 @@ namespace nero
 			//retrieve frame rate from core engine
 			void							updateFrameRate(const float& frameRate, const float& frameTime);
 			//let editor provide some objects
-			void							setEditorSetting(Setting::Ptr setting);
-			void							setEditorCamera(const AdvancedCamera::Ptr& camera);
-			void							setEditorTextureHolder(TextureHolder::Ptr textureHolder);
-			void							setEditorSoundHolder(SoundHolder::Ptr soundHolder);
-			void							setEditorFontHolder(FontHolder::Ptr soundHolder);
 			void							setCallbackWindowTitle(std::function<void (const std::string&)> callback);
 			void							updateWindowTitle(const std::string& title);
 			//close the editor

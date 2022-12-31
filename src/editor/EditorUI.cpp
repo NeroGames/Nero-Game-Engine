@@ -25,7 +25,11 @@
 namespace  nero
 {
     EditorUI::EditorUI(sf::RenderWindow& window,
-                       TextureHolder::Ptr textureHolder):
+                       AdvancedCamera::Ptr camera,
+                       TextureHolder::Ptr textureHolder,
+                       FontHolder::Ptr fontHolder,
+                       SoundHolder::Ptr soundHolder,
+                       Setting::Ptr setting):
 		 m_RenderWindow(window)
 		,m_InterfaceFirstDraw(true)
 		,m_SelectedScriptTypeIndex(0)
@@ -37,11 +41,11 @@ namespace  nero
 		,m_SetupDockspaceLayout(true)
 		,m_ProjectManagerTabBarSwitch()
 		,m_BottomDockspaceTabBarSwitch()
-		,m_EditorSetting(nullptr)
+        ,m_EditorSetting(setting)
 		,m_ResourceBrowserType(ResourceType::None)
 		,m_EditorMode(EditorMode::WORLD_BUILDER)
 		,m_BuilderMode(BuilderMode::OBJECT)
-		,m_EditorCamera(nullptr)
+        ,m_EditorCamera(camera)
 		,m_SelectedChunkNode(StringPool.BLANK)
 		,m_InputSelectedChunkId(-1)
 		,m_InputSelectedObjectLayerId(-1)
@@ -54,6 +58,8 @@ namespace  nero
 		,m_SelectedGameLevel(StringPool.BLANK)
 		,m_OpenedGameLevel(StringPool.BLANK)
         ,m_EditorTextureHolder(textureHolder)
+        ,m_EditorFontHolder(fontHolder)
+        ,m_EditorSoundHolder(soundHolder)
         ,m_EditorContext(std::make_shared<EditorContext>(m_ProjectManager, m_EditorTextureHolder))
         ,m_Toolbar(m_EditorContext)
     {
@@ -386,31 +392,6 @@ namespace  nero
 	{
 		m_FrameRate = frameRate;
 		m_FrameTime = frameTime;
-	}
-
-    void EditorUI::setEditorSetting(Setting::Ptr setting)
-	{
-		m_EditorSetting = setting;
-	}
-
-    void EditorUI::setEditorCamera(const AdvancedCamera::Ptr& camera)
-	{
-		m_EditorCamera = camera;
-	}
-
-    void EditorUI::setEditorTextureHolder(TextureHolder::Ptr textureHolder)
-	{
-		m_EditorTextureHolder = textureHolder;
-	}
-
-    void EditorUI::setEditorSoundHolder(SoundHolder::Ptr soundHolder)
-	{
-		m_EditorSoundHolder = soundHolder;
-	}
-
-    void EditorUI::setEditorFontHolder(FontHolder::Ptr fontHolder)
-	{
-		m_EditorFontHolder = fontHolder;
 	}
 
     void EditorUI::setCallbackWindowTitle(std::function<void (const std::string&)> callback)

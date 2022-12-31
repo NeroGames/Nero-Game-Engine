@@ -51,8 +51,8 @@ namespace  nero
 		m_EditorFontHolder		= nullptr;
 		m_EditorSoundHolder		= nullptr;
 		m_EditorSetting			= nullptr;
-		m_EditorCamera		= nullptr;
-		m_Interface				= nullptr;
+        m_EditorCamera          = nullptr;
+        m_EditorUI				= nullptr;
 
 		ImGui::SFML::Shutdown();
 	}
@@ -70,7 +70,7 @@ namespace  nero
             else
             {
 				//editor interface event
-                m_Interface->handleEvent(event);
+                m_EditorUI->handleEvent(event);
             }
         }
     }
@@ -85,8 +85,8 @@ namespace  nero
         else
         {
 			//update interface
-            m_Interface->update(timeStep);
-            m_Interface->updateFrameRate(getFrameRate(), getFrameTime());
+            m_EditorUI->update(timeStep);
+            m_EditorUI->updateFrameRate(getFrameRate(), getFrameTime());
         }
     }
 
@@ -103,7 +103,7 @@ namespace  nero
         {
 			//render interface
 			m_RenderWindow.clear(EngineConstant.COLOR_CANVAS);
-                m_Interface->render();
+                m_EditorUI->render();
 			m_RenderWindow.display();
         }
     }
@@ -410,23 +410,20 @@ namespace  nero
 	{
         nero_log("-> Creating editor interface")
 
-        m_Interface = EditorUI::Ptr(new EditorUI(m_RenderWindow,
-                                                 m_EditorTextureHolder));
+        m_EditorUI = std::make_unique<EditorUI>(m_RenderWindow,
+                                                m_EditorCamera,
+                                                m_EditorTextureHolder,
+                                                m_EditorFontHolder,
+                                                m_EditorSoundHolder,
+                                                m_EditorSetting);
 
-		//let the interface access to the editor setting
-		m_Interface->setEditorSetting(m_EditorSetting);
-
-		m_Interface->setEditorSoundHolder(m_EditorSoundHolder);
-		m_Interface->setEditorFontHolder(m_EditorFontHolder);
-		m_Interface->setEditorCamera(m_EditorCamera);
-
-		//set callback, allow interface to change window title
-		m_Interface->setCallbackWindowTitle([this](const std::string& title)
+        // Set callback, allow interface to change window title
+        m_EditorUI->setCallbackWindowTitle([this](const std::string& title)
 		{
-			setWindowTitle("Nero Game Engine - " +  title);
+            setWindowTitle(EngineConstant.ENGINE_NAME + " - " +  title);
 		});
 
-		m_Interface->init();
+        m_EditorUI->init();
 	}
 
 	void GameEditor::openLastProject()
@@ -442,7 +439,7 @@ namespace  nero
 				std::string project_directory = recent_project.back()["project_directory"];
 
 				//open project
-				m_Interface->m_ProjectManager->openProject(project_directory);
+                m_EditorUI->m_ProjectManager->openProject(project_directory);
 			}
 			else
 			{
