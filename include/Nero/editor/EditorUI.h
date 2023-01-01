@@ -127,18 +127,8 @@ namespace nero
 			MenuBarInput									m_MenuBarInput;
 			void											showEditorMenuBar();
 			void											showAboutEngineWindow();
-			//////////////Tool Bar
-			ImGuiWindow*									mToolbarWindow;
-			void											showToolbarWindow();
-			void											showToolbarScrollLeft();
-			void											showToolbarScrollRight();
-			void											showToolbarLeft(bool scrollToolbar);
-			void											showToolbarMiddle(bool scrollToolbar);
-			void											showToolbarRight(bool scrollToolbar);
-			void											handleMenuBarFileAction();
-			void											showToolbarWorldButton();
-			void											showToolbarScreenButton();
-			void											showToolbarFactoryButton();
+            //////////////TopMenu
+            void											handleMenuBarFileAction();
 			//////////////Workspace
 			WorkspaceInput									m_WorkspaceInput;
 			void											createWorkspace(const Parameter& parameter);
@@ -148,18 +138,10 @@ namespace nero
 			void											showImportWorkspace();
 			void											showWorkspaceList();
 			//////////////Project
-			ProjectInput									m_ProjectInput;
-			int												m_CountCreateProject;
-			void											createProject(const Parameter& parameter);
-			void											openProject(const std::string& projectDirectory);
 			void											compileProject();
 			void											editProject();
 			void											reloadProject();
 			void											closeProject();
-			void											showProjectManagerWindow();
-			void											showCreateProjectWindow();
-			void											showOpenProjectWindow();
-			void											showRecentProjectWindow();
 			NewGameLevelInput								m_NewGameLevelInput;
 			NewGameLevelInput								m_NewGameScreenInput;
 			void											createGameLevel(const Parameter& parameter);
