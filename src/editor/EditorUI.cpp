@@ -93,6 +93,11 @@ namespace  nero
             std::string taskName = EditorConstant.TASK_CREATE_PROJECT + toString(projectCount);
             BTManager::startTask(&ProjectManager::createProject, m_ProjectManager.get(), projectParameter, taskName);
         };
+
+        m_EditorProxy->m_CreateWorkspaceCallback = [this](const Parameter& workspaceParameter)
+        {
+            m_ProjectManager->createWorkspace(workspaceParameter);
+        };
 	}
 
     EditorUI::~EditorUI()

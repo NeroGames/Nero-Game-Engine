@@ -23,4 +23,10 @@ namespace  nero
     {
         m_CreateProjectCallback(projectParameter, projectCount);
     }
+
+    void EditorProxy::createWorkspace(const Parameter&  workspaceParameter) const
+    {
+        m_CreateWorkspaceCallback(workspaceParameter);
+    }
+
 }

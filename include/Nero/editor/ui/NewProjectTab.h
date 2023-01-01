@@ -26,7 +26,7 @@ namespace nero
             void                    updateInput(const nlohmann::json workspaceTable);
 
         private:
-            struct NewProjectInput
+            struct ProjectInput
             {
                 char                        name[100];
                 char                        projectLead[100];
@@ -51,7 +51,7 @@ namespace nero
 
         private:
             TabSelectionHandler::Ptr    m_TabSelectionHandler;
-            NewProjectInput             m_Input;
+            ProjectInput                m_Input;
             unsigned int                m_NewProjectCount;
 	};
 }

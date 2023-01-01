@@ -14,6 +14,8 @@ namespace  nero
         ,m_TabSelectionHandler(std::make_shared<TabSelectionHandler>())
         ,m_RecentProjectTab(editorContext, m_TabSelectionHandler)
         ,m_NewProjectTab(editorContext, m_TabSelectionHandler)
+        ,m_OpenProjectTab(editorContext, m_TabSelectionHandler)
+        ,m_WorkspaceTab(editorContext, m_TabSelectionHandler)
     {
         m_TabSelectionHandler->registerTab(
         {
@@ -88,14 +90,14 @@ namespace  nero
 
                     if (ImGui::BeginTabItem(EditorConstant.TAB_OPEN_PROJECT.c_str(), nullptr, m_TabSelectionHandler->getTabStatus(EditorConstant.TAB_OPEN_PROJECT)))
                     {
-                        //renderOpenProject();
+                        m_OpenProjectTab.render();
 
                         ImGui::EndTabItem();
                     }
 
                     if (ImGui::BeginTabItem(EditorConstant.TAB_WORKSPACE.c_str(), nullptr, m_TabSelectionHandler->getTabStatus(EditorConstant.TAB_WORKSPACE)))
                     {
-                        //renderWorkspace();
+                       m_WorkspaceTab.render();
 
                         ImGui::EndTabItem();
                     }
@@ -104,8 +106,6 @@ namespace  nero
 
                     ImGui::EndTabBar();
                 }
-
-                //
 
             ImGui::EndChild();
 

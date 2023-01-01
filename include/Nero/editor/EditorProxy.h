@@ -24,11 +24,13 @@ namespace nero
             void                    openProject(const std::string&  projectDirectory) const;
             void                    createProject(const Parameter&  projectParameter,
                                                   const unsigned int& projectCount) const;
+            void                    createWorkspace(const Parameter&  workspaceParameter) const;
 
         private:
             friend class                                                    EditorUI;
             std::function<void(const std::string&)>                         m_OpenProjectCallback;
             std::function<void(const Parameter&, const unsigned int&)>      m_CreateProjectCallback;
+            std::function<void(const Parameter&)>                           m_CreateWorkspaceCallback;
 	};
 }
 

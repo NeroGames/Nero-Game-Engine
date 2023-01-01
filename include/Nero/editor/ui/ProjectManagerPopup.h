@@ -9,6 +9,8 @@
 #include <Nero/editor/ui/UIComponent.h>
 #include <Nero/editor/ui/RecentProjectTab.h>
 #include <Nero/editor/ui/NewProjectTab.h>
+#include <Nero/editor/ui/OpenProjectTab.h>
+#include <Nero/editor/ui/WorkspaceTab.h>
 #include <Nero/editor/EditorUtility.h>
 ////////////////////////////////////////////////////////////
 namespace nero
@@ -28,6 +30,8 @@ namespace nero
             TabSelectionHandler::Ptr    m_TabSelectionHandler;
             RecentProjectTab            m_RecentProjectTab;
             NewProjectTab               m_NewProjectTab;
+            OpenProjectTab              m_OpenProjectTab;
+            WorkspaceTab                m_WorkspaceTab;
 
 	};
 }

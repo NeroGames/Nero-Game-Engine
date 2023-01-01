@@ -211,6 +211,13 @@ namespace nero
 		char                        parent[100];
 		char                        prototype[100]; //template
 	};
+
+    namespace file
+    {
+        void selectDirectory(std::function<void(std::string)> callback);
+        void selectFile(std::function<void(std::string)> callback);
+        void selectFile(std::function<void(std::vector<std::string>)> callback);
+    }
 }
 
 

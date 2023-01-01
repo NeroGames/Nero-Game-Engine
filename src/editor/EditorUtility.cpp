@@ -3,8 +3,12 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
+//Nero
 #include <Nero/editor/EditorUtility.h>
 #include <Nero/core/cpp/utility/File.h>
+//File Diaglog
+#include <nativefiledialog/include/nfd.h>
+//Std
 #include <unistd.h>
 /////////////////////////////////////////////////////////////
 
@@ -274,4 +278,80 @@ namespace nero
 	{
 		return setupCodeEditor || setupTexturePacker;
 	}
+
+    namespace file
+    {
+        void selectDirectory(std::function<void(std::string)> callback)
+        {
+            nfdchar_t *outPath = nullptr;
+            nfdresult_t result = NFD_PickFolder(nullptr, &outPath);
+
+            if (result == NFD_OKAY)
+            {
+                callback(std::string(outPath));
+
+                free(outPath);
+            }
+            else if (result == NFD_CANCEL)
+            {
+                nero_log("select directory canceled");
+            }
+            else
+            {
+               nero_log("failed to select directory : " + nero_s(NFD_GetError()));
+            }
+        }
+
+        void selectFile(std::function<void(std::string)> callback)
+        {
+            nfdchar_t *outPath = nullptr;
+            nfdresult_t result = NFD_OpenDialog(nullptr, nullptr, &outPath);
+
+            if (result == NFD_OKAY)
+            {
+                callback(std::string(outPath));
+
+                free(outPath);
+            }
+            else if (result == NFD_CANCEL)
+            {
+                nero_log("select file canceled");
+            }
+            else
+            {
+               nero_log("failed to select file : " + nero_s(NFD_GetError()));
+            }
+        }
+
+        void selectFile(std::function<void(std::vector<std::string>)> callback)
+        {
+            nfdpathset_t pathSet;
+            nfdresult_t result = NFD_OpenDialogMultiple( nullptr, nullptr, &pathSet);
+
+            if (result == NFD_OKAY)
+            {
+                std::vector<std::string> fileTable;
+
+                size_t i;
+                for ( i = 0; i < NFD_PathSet_GetCount(&pathSet); ++i )
+                {
+                    nfdchar_t *path = NFD_PathSet_GetPath(&pathSet, i);
+
+                    fileTable.push_back(toString(path));
+                }
+
+                callback(fileTable);
+
+                NFD_PathSet_Free(&pathSet);
+            }
+            else if (result == NFD_CANCEL)
+            {
+                nero_log("select files canceled");
+            }
+            else
+            {
+                nero_log("failed to select files : " + nero_s(NFD_GetError()));
+            }
+        }
+    }
 }
