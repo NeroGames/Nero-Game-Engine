@@ -26,7 +26,7 @@ namespace  nero
 
     void NewProjectTab::destroy()
     {
-
+        clearInput();
     }
 
     void NewProjectTab::render()

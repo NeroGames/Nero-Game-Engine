@@ -98,6 +98,11 @@ namespace  nero
         {
             m_ProjectManager->createWorkspace(workspaceParameter);
         };
+
+        m_EditorProxy->m_ImportWorkspaceCallback = [this](const std::string& workspaceDirectory)
+        {
+            m_ProjectManager->importWorkspace(workspaceDirectory);
+        };
 	}
 
     EditorUI::~EditorUI()

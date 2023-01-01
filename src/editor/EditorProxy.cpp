@@ -29,4 +29,8 @@ namespace  nero
         m_CreateWorkspaceCallback(workspaceParameter);
     }
 
+    void EditorProxy::importWorkspace(const std::string& workspaceDirectory) const
+    {
+       m_ImportWorkspaceCallback(workspaceDirectory);
+    }
 }
