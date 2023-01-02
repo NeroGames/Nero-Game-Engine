@@ -80,61 +80,6 @@ namespace nero
 		}
 	};
 
-	struct ProjectInput
-	{
-		char                        name[100];
-		char                        projectLead[100];
-		char                        company[100];
-		char                        projectNamespace[11];
-		char                        description[512];
-		const char*                 projectType;
-		const char*                 codeEditor;
-		const char*					workspace;
-        int                         projectTypeIndex    = 0;
-        int                         codeEditorIndex     = 0;
-        int                         workspaceIndex      = 0;
-
-		bool						startupPack;
-		std::string                 lastCreatedProject;
-
-		std::string errorMessage	= StringPool.BLANK;
-		std::string redirectLink	= StringPool.BLANK;
-		bool error					= true;
-
-
-		void clear()
-		{
-			string::fillCharArray(name,					sizeof(name),				StringPool.BLANK);
-			string::fillCharArray(projectLead,			sizeof(projectLead),		StringPool.BLANK);
-			string::fillCharArray(company,				sizeof(company),			StringPool.BLANK);
-			string::fillCharArray(projectNamespace,		sizeof(projectNamespace),	StringPool.BLANK);
-			string::fillCharArray(description,			sizeof(description),		StringPool.BLANK);
-            projectTypeIndex = 0;
-            codeEditorIndex = 0;
-            workspaceIndex = 0;
-
-			startupPack = true;
-		}
-
-		void update(const nlohmann::json workspaceTable)
-		{
-			if(!workspaceTable.empty())
-			{
-				auto workspace = workspaceTable.front();
-
-				string::fillCharArray(company,				sizeof(company),			workspace["company_name"].get<std::string>());
-				string::fillCharArray(projectLead,			sizeof(projectLead),		workspace["project_lead"].get<std::string>());
-				string::fillCharArray(projectNamespace,		sizeof(projectNamespace),	workspace["project_namespace"].get<std::string>());
-
-				workspaceIndex = 0;
-			}
-			else
-			{
-				clear();
-			}
-		}
-	};
-
 	struct MenuBarInput
 	{
 		bool newProject				= false;

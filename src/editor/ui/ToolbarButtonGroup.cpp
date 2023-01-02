@@ -6,7 +6,7 @@
 //Nero
 #include <Nero/editor/ui/ToolbarButtonGroup.h>
 #include <Nero/editor/EditorConstant.h>
-// Iconfont
+//Iconfont
 #include <iconfont/IconsFontAwesome5.h>
 ////////////////////////////////////////////////////////////
 namespace  nero

@@ -264,7 +264,7 @@ namespace nero
 	bool EnvironmentSetup::hasPrevious()
 	{
 		return currentView >= 1;
-	}
+    }
 
 	void EnvironmentSetup::previousView()
 	{
@@ -274,7 +274,7 @@ namespace nero
 		}
 	}
 
-	bool EnvironmentSetup::restart()
+    bool EnvironmentSetup::restart()
 	{
 		return setupCodeEditor || setupTexturePacker;
 	}

@@ -9,6 +9,8 @@
 #include <Poco/Logger.h>
 //Nero
 #include <Nero/editor/ui/Toolbar.h>
+#include <Nero/editor/EditorSetup.h>
+#include <Nero/editor/ui/EditorSetupPopup.h>
 #include <Nero/editor/project/ProjectManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>
@@ -108,7 +110,9 @@ namespace nero
         private:
             EditorProxy::Ptr                                m_EditorProxy;
             EditorContext::Ptr                              m_EditorContext;
+            EditorSetup::Ptr                                m_EditorSetup;
             Toolbar                                         m_Toolbar;
+            EditorSetupPopup                                m_EditorSetupPopup;
 		private:
 			//////////////docksapce
 			ImGuiID											m_DockspaceID;
@@ -168,7 +172,9 @@ namespace nero
 			void											showResourceWindow();
 			void											showLoggingWindow();
 			//utility
-			void											showToggleButton(bool toggle, const std::string& label, std::function<void()> callback);
+            void											showToggleButton(bool toggle,
+                                                                             const std::string& label,
+                                                                             std::function<void()> callback);
 			//Docksapce
 			bool											setup_dock = false;
 			ImGuiID											actionBarId;

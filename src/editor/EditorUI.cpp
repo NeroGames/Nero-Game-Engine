@@ -67,7 +67,9 @@ namespace  nero
                                                          m_ProjectManager,
                                                          m_EditorTextureHolder,
                                                          m_EditorSetting))
+        ,m_EditorSetup(std::make_shared<EditorSetup>(m_EditorContext))
         ,m_Toolbar(m_EditorContext)
+        ,m_EditorSetupPopup(m_EditorContext, m_EditorSetup)
     {
         // Open Project
         m_EditorProxy->m_OpenProjectCallback = [this](const std::string& projectDirectory)
@@ -399,11 +401,15 @@ namespace  nero
 		showBackgroundTaskWindow();
 
 		//show
-		if(m_EnvironmentSetup.configure())
+        /*if(m_EnvironmentSetup.configure())
 		{
 			showConfigurationWindow();
-		}
+        }*/
 
+        if(m_EditorSetup->initiateSetup())
+        {
+            m_EditorSetupPopup.render();
+        }
 
 		//commit
 		ImGui::SFML::Render(m_RenderWindow);
