@@ -8,7 +8,7 @@
 //Poco
 #include <Poco/Logger.h>
 //Nero
-#include <Nero/editor/ui/Toolbar.h>
+#include <Nero/editor/ui/EditorToolbar.h>
 #include <Nero/editor/EditorSetup.h>
 #include <Nero/editor/ui/EditorSetupPopup.h>
 #include <Nero/editor/project/ProjectManager.h>
@@ -109,7 +109,7 @@ namespace nero
             EditorProxy::Ptr                                m_EditorProxy;
             EditorContext::Ptr                              m_EditorContext;
             EditorSetup::Ptr                                m_EditorSetup;
-            Toolbar                                         m_Toolbar;
+            EditorToolbar                                   m_EditorToolbar;
             EditorSetupPopup                                m_EditorSetupPopup;
 		private:
 			//////////////docksapce

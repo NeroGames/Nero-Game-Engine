@@ -67,7 +67,7 @@ namespace  nero
                                                          m_EditorTextureHolder,
                                                          m_EditorSetting))
         ,m_EditorSetup(std::make_shared<EditorSetup>(m_EditorContext))
-        ,m_Toolbar(m_EditorContext)
+        ,m_EditorToolbar(m_EditorContext)
         ,m_EditorSetupPopup(m_EditorContext, m_EditorSetup)
     {
         // Open Project
@@ -327,7 +327,7 @@ namespace  nero
 
 		//central dockspcace
             //display toolbar
-        m_Toolbar.render();
+        m_EditorToolbar.render();
             //viewport
 		showSceneWindow();
 			//game project
@@ -792,7 +792,7 @@ namespace  nero
 				rightDockNode		= nullptr;
 				bottomDockNode		= nullptr;
 
-				nero_log(nero_sv(toolbarDockspaceID));
+                nero_log(nero_sv(toolbarDockspaceID))
 
 				//update and save dockspace setting
 				m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").setUInt("id", toolbarDockspaceID);

@@ -2,8 +2,8 @@
 // Nero Game Engine
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
-#ifndef TOOLBAR_H
-#define TOOLBAR_H
+#ifndef EDITORTOOLBAR_H
+#define EDITORTOOLBAR_H
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/editor/ui/UIComponent.h>
@@ -14,11 +14,11 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class Toolbar : public UIComponent
+    class EditorToolbar : public UIComponent
     {
         public:
-                                    Toolbar(EditorContext::Ptr editorContext);
-            virtual                ~Toolbar() override;
+                                    EditorToolbar(EditorContext::Ptr editorContext);
+            virtual                ~EditorToolbar() override;
 
             virtual void 			destroy() override;
             virtual void            render() override;
@@ -37,4 +37,4 @@ namespace nero
             NewGameLevelPopup       m_NewGameLevelPopup;
 	};
 }
-#endif // TOOLBAR_H
+#endif // EDITORTOOLBAR_H

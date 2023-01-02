@@ -4,14 +4,14 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Nero
-#include <Nero/editor/ui/Toolbar.h>
+#include <Nero/editor/ui/EditorToolbar.h>
 #include <Nero/editor/ui/ToolbarScrollButton.h>
 #include <Nero/editor/EditorConstant.h>
 #include <Nero/editor/EditorUtility.h>
 ////////////////////////////////////////////////////////////
 namespace  nero
 {
-    Toolbar::Toolbar(EditorContext::Ptr editorContext):
+    EditorToolbar::EditorToolbar(EditorContext::Ptr editorContext):
         UIComponent(editorContext)
         ,m_ToolbarContentWindow(nullptr)
         ,m_ScrollButtonLeft(editorContext,
@@ -27,17 +27,17 @@ namespace  nero
 
     }
 
-    Toolbar::~Toolbar()
+    EditorToolbar::~EditorToolbar()
+    {
+        destroy();
+    }
+
+    void EditorToolbar::destroy()
     {
 
     }
 
-    void Toolbar::destroy()
-    {
-
-    }
-
-    void Toolbar::render()
+    void EditorToolbar::render()
     {
         // Begin toolbar window
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2());
@@ -97,7 +97,7 @@ namespace  nero
         ImGui::PopStyleVar();
     }
 
-    void Toolbar::renderToolbarContent()
+    void EditorToolbar::renderToolbarContent()
     {
         // Button
         pushToolbarStyle();
@@ -108,7 +108,7 @@ namespace  nero
         renderToolbarPopupGroup();
     }
 
-    void Toolbar::renderToolbarPopupGroup()
+    void EditorToolbar::renderToolbarPopupGroup()
     {
         m_ProjectManagerPopup.render();
         m_NewGameLevelPopup.render();
