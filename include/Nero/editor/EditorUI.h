@@ -8,6 +8,7 @@
 //Poco
 #include <Poco/Logger.h>
 //Nero
+#include <Nero/editor/ui/EditorDockspace.h>
 #include <Nero/editor/ui/EditorToolbar.h>
 #include <Nero/editor/EditorSetup.h>
 #include <Nero/editor/ui/EditorSetupPopup.h>
@@ -109,21 +110,14 @@ namespace nero
             EditorProxy::Ptr                                m_EditorProxy;
             EditorContext::Ptr                              m_EditorContext;
             EditorSetup::Ptr                                m_EditorSetup;
+            EditorDockspace                                 m_EditorDockspace;
             EditorToolbar                                   m_EditorToolbar;
             EditorSetupPopup                                m_EditorSetupPopup;
 		private:
 			//////////////docksapce
-			ImGuiID											m_DockspaceID;
-			bool											m_BuildDockspaceLayout;
-			bool											m_SetupDockspaceLayout;
-			void											createDockSpace();
 			void											interfaceFirstDraw();
 			//////////////main menu bar
-			MenuBarInput									m_MenuBarInput;
-			void											showEditorMenuBar();
-			void											showAboutEngineWindow();
-            //////////////TopMenu
-            void											handleMenuBarFileAction();
+            void											showAboutEngineWindow();
 			//////////////Project
 			void											compileProject();
 			void											editProject();
@@ -158,13 +152,6 @@ namespace nero
             void											showToggleButton(bool toggle,
                                                                              const std::string& label,
                                                                              std::function<void()> callback);
-			//Docksapce
-			bool											setup_dock = false;
-			ImGuiID											actionBarId;
-			ImGuiID											dock_id_right;
-			ImGuiID											dock_id_upper_left;
-			ImGuiID											dock_id_left_bottom;
-			bool											show_project_window = false;
             //project creation
 			LoggerApplication								m_LoggerApplication;
 			bool											m_InterfaceFirstDraw;
@@ -206,7 +193,6 @@ namespace nero
 			void											removeGameScreen();
 			int												m_InputSelectedGameScreenId;
 			//Tabs
-            TabSelectionHandler								m_ProjectManagerTabBarSwitch;
             TabSelectionHandler								m_BottomDockspaceTabBarSwitch;
 			//Banner
 			//show view

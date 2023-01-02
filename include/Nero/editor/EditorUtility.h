@@ -52,14 +52,6 @@ namespace nero
 		JOINT
 	};
 
-	struct MenuBarInput
-	{
-		bool newProject				= false;
-		bool openProject			= false;
-		bool newWorkspace			= false;
-		bool aboutEngine			= false;
-	};
-
 	struct AppLauncher
 	{
 		//let the Interface only access

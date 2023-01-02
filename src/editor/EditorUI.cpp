@@ -37,9 +37,6 @@ namespace  nero
 		,m_SelectedGameScreenIndex(0)
 		,m_AdvancedScene(nullptr)
 		,g_Context(nullptr)
-		,m_BuildDockspaceLayout(true)
-		,m_SetupDockspaceLayout(true)
-		,m_ProjectManagerTabBarSwitch()
 		,m_BottomDockspaceTabBarSwitch()
         ,m_EditorSetting(setting)
 		,m_ResourceBrowserType(ResourceType::None)
@@ -67,6 +64,7 @@ namespace  nero
                                                          m_EditorTextureHolder,
                                                          m_EditorSetting))
         ,m_EditorSetup(std::make_shared<EditorSetup>(m_EditorContext))
+        ,m_EditorDockspace(m_EditorContext)
         ,m_EditorToolbar(m_EditorContext)
         ,m_EditorSetupPopup(m_EditorContext, m_EditorSetup)
     {
@@ -157,14 +155,6 @@ namespace  nero
 
 		g_Context = ax::NodeEditor::CreateEditor();
 
-        m_ProjectManagerTabBarSwitch.registerTab(
-		{
-			EditorConstant.TAB_RECENT_PROJECT,
-			EditorConstant.TAB_CREATE_PROJECT,
-			EditorConstant.TAB_OPEN_PROJECT,
-			EditorConstant.TAB_WORKSPACE
-		});
-
         m_BottomDockspaceTabBarSwitch.registerTab(
 		{
 			EditorConstant.WINDOW_RESOURCE,
@@ -204,8 +194,6 @@ namespace  nero
 		//clear workspace input
 		clearScriptWizardInput();
 
-
-		//
 		m_ProjectManager->setSetting(m_EditorSetting);
 
 		//register signal handler
@@ -322,11 +310,9 @@ namespace  nero
 
         ImGui::SFML::Update(m_RenderWindow, EngineConstant.TIME_PER_FRAME);
 
-		//create editor dockspace & display menubar
-		createDockSpace();
+        m_EditorDockspace.render();
 
-		//central dockspcace
-            //display toolbar
+        // Central dockspcace
         m_EditorToolbar.render();
             //viewport
 		showSceneWindow();
@@ -340,6 +326,8 @@ namespace  nero
 		showResourceWindow();
 			//imgui demo
 		ImGui::ShowDemoWindow();
+
+        showAboutEngineWindow();
 
 		//left dockspace
 			//upper left
@@ -699,339 +687,6 @@ namespace  nero
 
         ImGui::End();
     }
-
-
-
-	//1- create workspace
-    void EditorUI::createDockSpace()
-	{
-		//tranfer viewport state to dockspace window
-        ImGuiViewport* viewport = ImGui::GetMainViewport();
-        ImGui::SetNextWindowPos(viewport->Pos);
-        ImGui::SetNextWindowSize(viewport->Size);
-        ImGui::SetNextWindowViewport(viewport->ID);
-
-		//create dockspace window style
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
-										ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-										ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-		//add style
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-
-		ImGui::Begin(EditorConstant.WINDOW_EDITOR_DOCKSPACE.c_str(), nullptr, window_flags);
-
-			//remove style
-			ImGui::PopStyleVar(3);
-
-			//save dockspace id
-			m_DockspaceID = ImGui::GetID(EditorConstant.ID_DOCKSPACE.c_str());
-
-			//create the dockspace from current window
-			ImGui::DockSpace(m_DockspaceID, ImVec2(viewport->Size.x, viewport->Size.y - 20.f), ImGuiDockNodeFlags_None);
-
-			//clean pointer
-			viewport = nullptr;
-
-			//build dockspace layout : this is done only once, when the editor is launched the first time
-			//if(m_EditorSetting->getSetting("dockspace").getBool("build_layout") && !file::fileExist(file::getPath({"setting", EditorConstant.FILE_IMGUI_SETTING}, StringPool.EXT_INI)))
-			if(m_EditorSetting->getSetting("dockspace").getBool("build_layout") && !m_EditorSetting->getSetting("dockspace").getBool("imgui_setting_exist"))
-			{
-				//split main dockspace in six
-				ImGuiID upperLeftDockspaceID	= ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Left,	0.20f, nullptr, &m_DockspaceID);
-				ImGui::DockBuilderGetNode(upperLeftDockspaceID)->SizeRef.x = m_EditorSetting->getSetting("dockspace").getSetting("upper_left_dock").getFloat("width");
-				ImGuiID lowerLeftDockspaceID	= ImGui::DockBuilderSplitNode(upperLeftDockspaceID,	ImGuiDir_Down,	0.20f, nullptr, &upperLeftDockspaceID);
-				ImGuiID rightDockspaceID        = ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Right, 0.20f, nullptr, &m_DockspaceID);
-				ImGuiID toolbarDockspaceID		= ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Up,	0.20f, nullptr, &m_DockspaceID);
-				ImGuiID bottomDockspaceID       = ImGui::DockBuilderSplitNode(m_DockspaceID,		ImGuiDir_Down,	0.20f, nullptr, &m_DockspaceID);
-				ImGuiID centralDockspaceID		= ImGui::DockBuilderGetCentralNode(m_DockspaceID)->ID;
-
-				//lay windows
-					//tool bar
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_TOOLBAR.c_str(),				toolbarDockspaceID);
-					//upper left
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_UTILITY.c_str(),				upperLeftDockspaceID);
-				//ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_SCREEN.c_str(),				upperLeftDockspaceID);
-					//lower left
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_CHUNCK.c_str(),				lowerLeftDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LAYER.c_str(),				lowerLeftDockspaceID);
-					//right
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_EXPLORER.c_str(),			rightDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_HELP.c_str(),				rightDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_RESOURCE_BROWSER.c_str(),	rightDockspaceID);
-					//bottom
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LOGGING.c_str(),				bottomDockspaceID);
-                ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_RESOURCE.c_str(),			bottomDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_CONSOLE.c_str(),				bottomDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_LEVEL.c_str(),				bottomDockspaceID);
-					//center
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_GAME_SCENE.c_str(),			centralDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_GAME_PROJECT.c_str(),		centralDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_GAME_SETTING.c_str(),		centralDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_VISUAL_SCRIPT.c_str(),		centralDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_FACTORY.c_str(),				centralDockspaceID);
-				ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_IMGUI_DEMO.c_str(),			centralDockspaceID);
-
-				//commit dockspace
-				ImGui::DockBuilderFinish(m_DockspaceID);
-
-				//lower left dockspace
-				ImGuiDockNode* lowerLeftDockNode	= ImGui::DockBuilderGetNode(lowerLeftDockspaceID);
-				lowerLeftDockNode->SizeRef.y = m_EditorSetting->getSetting("dockspace").getSetting("lower_left_dock").getFloat("height");
-				//right dockspace
-				ImGuiDockNode* rightDockNode		= ImGui::DockBuilderGetNode(rightDockspaceID);
-				rightDockNode->SizeRef.x = m_EditorSetting->getSetting("dockspace").getSetting("right_dock").getFloat("width");
-				//bottom dockspace
-				ImGuiDockNode* bottomDockNode		= ImGui::DockBuilderGetNode(bottomDockspaceID);
-				bottomDockNode->SizeRef.y = m_EditorSetting->getSetting("dockspace").getSetting("bottom_dock").getFloat("height");
-
-				//clean pointer
-				lowerLeftDockNode	= nullptr;
-				rightDockNode		= nullptr;
-				bottomDockNode		= nullptr;
-
-                nero_log(nero_sv(toolbarDockspaceID))
-
-				//update and save dockspace setting
-				m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").setUInt("id", toolbarDockspaceID);
-				m_EditorSetting->getSetting("dockspace").setBool("build_layout", false);
-
-				file::saveFile(file::getPath({"setting", "dockspace"}, StringPool.EXT_JSON), m_EditorSetting->getSetting("dockspace").toString(), true);
-			}
-
-			if(m_SetupDockspaceLayout)
-			{
-				//toolbar
-				ImGuiID toolbarDockspaceID			= m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").getUInt("id");
-				ImGuiDockNode* toolbarDockNode		= ImGui::DockBuilderGetNode(toolbarDockspaceID);
-				toolbarDockNode->SizeRef.y			= m_EditorSetting->getSetting("dockspace").getSetting("toolbar_dock").getFloat("height");
-				toolbarDockNode->LocalFlags			= ImGuiDockNodeFlags_AutoHideTabBar | ImGuiDockNodeFlags_NoSplit |
-													  ImGuiDockNodeFlags_NoResize | ImGuiDockNodeFlags_SingleDock;
-				//clean pointer
-				toolbarDockNode		= nullptr;
-
-				m_SetupDockspaceLayout = false;
-			}
-
-			if (ImGui::BeginMenuBar())
-			{
-				showEditorMenuBar();
-
-				ImGui::EndMenuBar();
-			}
-
-		ImGui::End(); //end dockspace window
-    }
-
-	//2- create menu bar
-    void EditorUI::showEditorMenuBar()
-	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if(ImGui::MenuItem("New Project", nullptr, false))
-			{
-				m_MenuBarInput.newProject = true;
-			}
-
-			if(ImGui::MenuItem("Open Project", nullptr, false))
-			{
-				m_MenuBarInput.openProject = true;
-			}
-
-			if(ImGui::MenuItem("Save Project", nullptr, false, m_GameProject != nullptr))
-			{
-				//saveProject();
-			}
-
-			if(ImGui::MenuItem("Close Project", nullptr, false, m_GameProject != nullptr))
-			{
-				closeProject();
-			}
-
-			ImGui::Separator();
-
-			if(ImGui::MenuItem("New Workspace", nullptr, false))
-			{
-				m_MenuBarInput.newWorkspace = true;
-			}
-
-			if(ImGui::MenuItem("Import Workspace", nullptr, false))
-			{
-				m_MenuBarInput.newWorkspace = true;
-			}
-
-			ImGui::Separator();
-
-			auto recentProjectTable =  file::loadJson(file::getPath({"setting", "recent_project"}));
-
-			if (ImGui::BeginMenu("Recent Projects",!recentProjectTable.empty()))
-			{
-
-				int count_project = recentProjectTable.size() > 10 ? 10 : recentProjectTable.size();
-
-				for (int i = count_project - 1; i >=0 ; i--)
-				{
-					auto project = recentProjectTable[i];
-
-					if(ImGui::MenuItem(project["project_name"].get<std::string>().c_str(), nullptr, false))
-					{
-                        //openProject(project["project_directory"].get<std::string>());
-					}
-				}
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::Separator();
-
-			if(ImGui::MenuItem("Exit", nullptr, false))
-			{
-				closeEditor();
-			}
-
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Edit", m_GameProject != nullptr))
-		{
-			if(ImGui::MenuItem("Undo", nullptr, nullptr))
-			{
-
-			}
-
-			if(ImGui::MenuItem("Redo", nullptr, nullptr))
-			{
-
-			}
-
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Build", m_GameProject != nullptr))
-		{
-			if(ImGui::MenuItem("Clean", nullptr, nullptr))
-			{
-
-			}
-
-			if(ImGui::MenuItem("Run Cmake", nullptr, nullptr))
-			{
-
-			}
-
-			if(ImGui::MenuItem("Compile", nullptr, nullptr))
-			{
-
-			}
-
-			if(ImGui::MenuItem("Reload", nullptr, nullptr))
-			{
-
-			}
-
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Views", false))
-		{
-			const char* names[] = { "Logging", "Quick Helps", "Mackerel", "Pollock", "Tilefish" };
-			static bool toggles[] = { true, false, false, false, false };
-			for (int i = 0; i < IM_ARRAYSIZE(names); i++)
-				ImGui::MenuItem(names[i], "", &toggles[i]);
-
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Settings", false))
-		{
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Tools"))
-		{
-			if(ImGui::MenuItem("Profiler", "Ctrl+Alt+P", nullptr))
-			{
-				AppLauncher::launchProfiler();
-			}
-
-			if(ImGui::MenuItem("Texture Packer", "Ctrl+Alt+T", nullptr))
-			{
-				AppLauncher::launchTexturePacker();
-			}
-
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Help"))
-		{
-			if(ImGui::MenuItem("Learn", "Alt+L", nullptr))
-			{
-				cmd::launchBrowser("https://nero-games.com/learn");
-			}
-
-			if(ImGui::MenuItem("Snippet", "Alt+S", nullptr))
-			{
-				cmd::launchBrowser("https://nero-games.com/snippet");
-			}
-
-			if(ImGui::MenuItem("Forum", "Alt+F", nullptr))
-			{
-				cmd::launchBrowser("https://nero-games.com/forum/index.php");
-			}
-
-			if(ImGui::MenuItem("Engine API", "Alt+A", nullptr))
-			{
-				cmd::launchBrowser("https://nero-games.com/engine-v2/api");
-			}
-
-			if(ImGui::MenuItem("Website", "Alt+W", nullptr))
-			{
-				cmd::launchBrowser("https://nero-games.com");
-			}
-
-			ImGui::Separator();
-
-			if(ImGui::MenuItem("About Nero Game Engine", nullptr, nullptr))
-			{
-				m_MenuBarInput.aboutEngine = true;
-			}
-
-			if(ImGui::MenuItem("Check for Updates", nullptr, nullptr, false))
-			{
-
-			}
-
-			ImGui::EndMenu();
-		}
-	}
-
-    void EditorUI::handleMenuBarFileAction()
-	{
-		if(m_MenuBarInput.newProject)
-		{
-			m_MenuBarInput.newProject = false;
-			ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_CREATE_PROJECT);
-		}
-		else if(m_MenuBarInput.openProject)
-		{
-			m_MenuBarInput.openProject = false;
-			ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_OPEN_PROJECT);
-		}
-		else if(m_MenuBarInput.newWorkspace)
-		{
-			m_MenuBarInput.newWorkspace		= false;
-			ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-			m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_WORKSPACE);
-		}
-		else if(m_MenuBarInput.aboutEngine)
-		{
-			m_MenuBarInput.aboutEngine = false;
-			ImGui::OpenPopup(EditorConstant.WINDOW_ABOUT_ENGINE.c_str());
-		}
-	}
 
     void EditorUI::showScriptCreationWindow()
 	{
