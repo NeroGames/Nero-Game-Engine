@@ -97,8 +97,6 @@ namespace nero
 			SoundHolder::Ptr								m_EditorSoundHolder;
 			FontHolder::Ptr									m_EditorFontHolder;
 			std::function<void (const std::string&)>		m_UpdateWindowTile;
-			//environment
-			EnvironmentSetup								m_EnvironmentSetup;
 			//game project
 			ProjectManager::Ptr								m_ProjectManager;
 			GameProject::Ptr								m_GameProject;
@@ -120,27 +118,12 @@ namespace nero
 			bool											m_SetupDockspaceLayout;
 			void											createDockSpace();
 			void											interfaceFirstDraw();
-			//////////////starter window
-			void											showConfigurationWindow();
-			void											showConfigurationWelcome();
-			void											showConfigurationFinish();
-			void											showConfigurationEditor();
-			void											showConfigurationTexturePacker();
-			void											showConfigurationWorksapce();
 			//////////////main menu bar
 			MenuBarInput									m_MenuBarInput;
 			void											showEditorMenuBar();
 			void											showAboutEngineWindow();
             //////////////TopMenu
             void											handleMenuBarFileAction();
-			//////////////Workspace
-			WorkspaceInput									m_WorkspaceInput;
-			void											createWorkspace(const Parameter& parameter);
-			void											importWorkspace(const std::string& directory);
-			void											showWorkspaceWindow();
-			void											showCreateWorkspace();
-			void											showImportWorkspace();
-			void											showWorkspaceList();
 			//////////////Project
 			void											compileProject();
 			void											editProject();
@@ -272,10 +255,6 @@ namespace nero
 			RenderContext::Ptr								m_RenderContext;
 			//
 			std::string										getString(const EditorMode& editorMode);
-			//
-			void											selectDirectory(std::function<void(std::string)> callback);
-			void											selectFile(std::function<void(std::string)> callback);
-			void											selectFile(std::function<void(std::vector<std::string>)> callback);
 			//
 			void											clearScriptWizardInput();
 			void											showMeshResource();

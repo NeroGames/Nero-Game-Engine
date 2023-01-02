@@ -36,8 +36,6 @@ namespace nero
             std::map<std::string, bool>     m_TabMap;
 	};
 
-	sf::Vector2f formatSize(sf::Vector2f original, float size);
-
 	enum class EditorMode
 	{
 		WORLD_BUILDER,
@@ -54,32 +52,6 @@ namespace nero
 		JOINT
 	};
 
-	struct WorkspaceInput
-	{
-		//create
-		char                        location[256];
-		char                        name[100];
-		char                        company[100];
-		char                        projectLead[100];
-		char                        projectNamespace[11];
-		//import
-		char						locationImport[256];
-
-		std::string errorMessage	= StringPool.BLANK;
-		std::string redirectLink	= StringPool.BLANK;
-		bool error					= true;
-
-		void clear()
-		{
-			string::fillCharArray(location,			sizeof(location),			StringPool.BLANK);
-			string::fillCharArray(name,				sizeof(name),				StringPool.BLANK);
-			string::fillCharArray(projectLead,		sizeof(projectLead),		StringPool.BLANK);
-			string::fillCharArray(company,			sizeof(company),			StringPool.BLANK);
-			string::fillCharArray(projectNamespace,	sizeof(projectNamespace),	StringPool.BLANK);
-			string::fillCharArray(locationImport,	sizeof(locationImport),		StringPool.BLANK);
-		}
-	};
-
 	struct MenuBarInput
 	{
 		bool newProject				= false;
@@ -87,13 +59,6 @@ namespace nero
 		bool newWorkspace			= false;
 		bool aboutEngine			= false;
 	};
-
-	void			popToolbarStyle();
-	void			pushToolbarStyle(bool selected = false);
-	void			pushGameLevelStyle(bool selected = false, bool opened = false);
-	void			popGameLevelStyle();
-	void			popResourceStyle(bool selected = false);
-	void			pushResourceStyle(bool selected = false);
 
 	struct AppLauncher
 	{
@@ -112,36 +77,6 @@ namespace nero
 		static void				launchProfiler();
 	};
 
-	struct EnvironmentSetup
-	{
-		bool setupCodeEditor					= false;
-		bool setupTexturePacker					= false;
-		bool setupWorkspace						= false;
-		bool readyNext							= false;
-
-		bool selectQtCreator					= true;
-		bool selectVisualStudio					= false;
-
-		bool createWorkspace					= true;
-		bool importWorkspace					= false;
-
-		char qtCreatorPath[256];
-		char visualStudioPath[256];
-		char texturePackerPath[256];
-
-		bool									configure();
-		bool									restart();
-		std::vector<std::function<void()>>		viewTable;
-		unsigned int							currentView = 0;
-		void									showView();
-		void									nextView();
-		bool									finish();
-		bool									finishNext();
-		void									clearInput();
-		bool									hasPrevious();
-		void									previousView();
-	};
-
 	struct NewGameLevelInput
 	{
 		char                        name[100];
@@ -156,6 +91,14 @@ namespace nero
 		char                        parent[100];
 		char                        prototype[100]; //template
 	};
+
+    sf::Vector2f    formatSize(sf::Vector2f original, float size);
+    void			popToolbarStyle();
+    void			pushToolbarStyle(bool selected = false);
+    void			pushGameLevelStyle(bool selected = false, bool opened = false);
+    void			popGameLevelStyle();
+    void			popResourceStyle(bool selected = false);
+    void			pushResourceStyle(bool selected = false);
 
     namespace file
     {

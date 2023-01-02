@@ -14,6 +14,14 @@
 
 namespace nero
 {
+
+    std::string AppLauncher::qtCreatorProcessId		= StringPool.BLANK;
+    std::string AppLauncher::visaulStudioProcessId	= StringPool.BLANK;
+    std::string AppLauncher::profilerProcessId		= StringPool.BLANK;
+    std::string AppLauncher::texturePackerProcessId	= StringPool.BLANK;
+    std::string AppLauncher::NERO_GAME_HOME			= getenv("NERO_GAME_HOME") ? std::string(getenv("NERO_GAME_HOME")) : StringPool.BLANK;
+    std::string AppLauncher::TEXTURE_PACKER			= getenv("NERO_GAME_TP") ? std::string(getenv("NERO_GAME_TP")) : StringPool.BLANK;
+
     void TabSelectionHandler::registerTab(const std::vector<std::string>& tabNameTable)
 	{
 		if(tabNameTable.size() <= 0)
@@ -185,14 +193,6 @@ namespace nero
 		ImGui::PopFont();
 	}
 
-
-	std::string AppLauncher::qtCreatorProcessId		= StringPool.BLANK;
-	std::string AppLauncher::visaulStudioProcessId	= StringPool.BLANK;
-	std::string AppLauncher::profilerProcessId		= StringPool.BLANK;
-	std::string AppLauncher::texturePackerProcessId	= StringPool.BLANK;
-	std::string AppLauncher::NERO_GAME_HOME			= getenv("NERO_GAME_HOME") ? std::string(getenv("NERO_GAME_HOME")) : StringPool.BLANK;
-	std::string AppLauncher::TEXTURE_PACKER			= getenv("NERO_GAME_TP") ? std::string(getenv("NERO_GAME_TP")) : StringPool.BLANK;
-
 	void AppLauncher::launchTexturePacker()
 	{
 		if(cmd::processRunning(AppLauncher::texturePackerProcessId))
@@ -224,59 +224,6 @@ namespace nero
 
 			cmd::showApplication("EasyProfiler");//, AppLauncher::profilerProcessId);
 		}
-	}
-
-	bool EnvironmentSetup::configure()
-	{
-		return setupCodeEditor || setupTexturePacker || setupWorkspace;
-	}
-
-	void EnvironmentSetup::showView()
-	{
-		viewTable.at(currentView)();
-	}
-
-	void EnvironmentSetup::nextView()
-	{
-		if(currentView < viewTable.size() - 1)
-		{
-			currentView += 1;
-		}
-	}
-
-	bool EnvironmentSetup::finish()
-	{
-		return currentView == (viewTable.size() - 1);
-	}
-
-	bool EnvironmentSetup::finishNext()
-	{
-		return currentView == (viewTable.size() - 2);
-	}
-
-	void EnvironmentSetup::clearInput()
-	{
-		string::fillCharArray(qtCreatorPath,	 sizeof(qtCreatorPath),		StringPool.BLANK);
-		string::fillCharArray(visualStudioPath,	 sizeof(visualStudioPath),	StringPool.BLANK);
-		string::fillCharArray(texturePackerPath, sizeof(texturePackerPath),	StringPool.BLANK);
-	}
-
-	bool EnvironmentSetup::hasPrevious()
-	{
-		return currentView >= 1;
-    }
-
-	void EnvironmentSetup::previousView()
-	{
-		if(currentView > 0)
-		{
-			currentView -= 1;
-		}
-	}
-
-    bool EnvironmentSetup::restart()
-	{
-		return setupCodeEditor || setupTexturePacker;
 	}
 
     namespace file
