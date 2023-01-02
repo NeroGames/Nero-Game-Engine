@@ -6,6 +6,10 @@
 //Nero
 #include <Nero/editor/ui/EditorSetupPopup.h>
 #include <Nero/editor/ui/EditorSetupWelcomeView.h>
+#include <Nero/editor/ui/EditorSetupCodeEditorView.h>
+#include <Nero/editor/ui/EditorSetupFinishView.h>
+#include <Nero/editor/ui/EditorSetupTexturePackerView.h>
+#include <Nero/editor/ui/EditorSetupWorkspaceView.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
 namespace  nero
@@ -19,23 +23,28 @@ namespace  nero
         // Register welcome view
         m_ViewTable.push_back(std::make_shared<EditorSetupWelcomeView>(editorContext, m_EditorSetup));
 
+        // Register code editor view
         if(m_EditorSetup->setupCodeEditor())
         {
-            //registerView(EditorSetupCodeEditorView(editorContext, m_EditorSetup));
+            m_ViewTable.push_back(std::make_shared<EditorSetupCodeEditorView>(editorContext, m_EditorSetup));
         }
 
+        // Register texture packer view
         if(m_EditorSetup->setupTexturePacker())
         {
-            //registerView(EditorSetupTexturePackerView(editorContext, m_EditorSetup));
+            m_ViewTable.push_back(std::make_shared<EditorSetupTexturePackerView>(editorContext, m_EditorSetup));
         }
 
+        // Register workspace view
         if(m_EditorSetup->setupWorkspace())
         {
-            //registerView(EditorSetupWorkspaceView(editorContext, m_EditorSetup));
+            m_ViewTable.push_back(std::make_shared<EditorSetupWorkspaceView>(editorContext, m_EditorSetup));
         }
 
-        //registerView(EditorSetupWelcomeView(editorContext, m_EditorSetup));
+        // Register finish view
+        m_ViewTable.push_back(std::make_shared<EditorSetupFinishView>(editorContext, m_EditorSetup));
 
+        // Update current view
         m_CurrentView = m_ViewTable.at(m_CurrentViewIndex);
     }
 
