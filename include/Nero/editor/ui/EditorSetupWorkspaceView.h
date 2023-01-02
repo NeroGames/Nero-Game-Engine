@@ -7,6 +7,8 @@
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/editor/ui/UIComponent.h>
+#include <Nero/editor/ui/NewWorkspaceView.h>
+#include <Nero/editor/ui/ImportWorkspaceView.h>
 #include <Nero/editor/EditorSetup.h>
 ////////////////////////////////////////////////////////////
 namespace nero
@@ -21,7 +23,19 @@ namespace nero
             virtual void            render() override;
 
         private:
+            void                    clearInput();
+
+        private:
+            struct WorkspaceInput
+            {
+                bool importWorkspace;
+            };
+
+        private:
             EditorSetup::Ptr        m_EditorSetup;
+            WorkspaceInput          m_Input;
+            NewWorkspaceView        m_NewWorkspaceView;
+            ImportWorkspaceView     m_ImportWorkspaceView;
 	};
 }
 #endif // EDITORSETUPWORKSPACEVIEW_H

@@ -22,7 +22,17 @@ namespace nero
             virtual void            render() override;
 
         private:
+            void                    clearInput();
+
+        private:
+            struct TexturePackerInput
+            {
+                char texturePackerPath[256];
+            };
+
+        private:
             EditorSetup::Ptr        m_EditorSetup;
+            TexturePackerInput      m_Input;
 	};
 }
 #endif // EDITORSETUPTEXTUREPACKERVIEW_H

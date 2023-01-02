@@ -22,7 +22,19 @@ namespace nero
             virtual void            render() override;
 
         private:
+            void                    clearInput();
+
+        private:
+            struct CodeEditorInput
+            {
+                bool selectQtCreator;
+                char qtCreatorPath[256];
+                char visualStudioPath[256];
+            };
+
+        private:
             EditorSetup::Ptr        m_EditorSetup;
+            CodeEditorInput         m_Input;
 	};
 }
 #endif // EDITORSETUPCODEEDITORVIEW_H
