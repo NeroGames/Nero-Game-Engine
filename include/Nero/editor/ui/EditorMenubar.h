@@ -7,6 +7,8 @@
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/editor/ui/UIComponent.h>
+#include <Nero/editor/ui/ProjectManagerPopup.h>
+#include <Nero/editor/ui/AboutEnginePopup.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -18,6 +20,26 @@ namespace nero
 
             virtual void 			destroy() override;
             virtual void            render() override;
+
+        private:
+            void                    clearInput();
+            void                    handleMenubarInput();
+
+        private:
+            struct MenubarInput
+            {
+                bool        newProject;
+                bool        openProject;
+                bool        newWorkspace;
+                bool        aboutEngine;
+            };
+
+        private:
+            ProjectManagerPopup         m_ProjectManagerPopup;
+            AboutEnginePopup            m_AboutEnginePopup;
+            TabSelectionHandler::Ptr    m_ProjectManagerPopupTabHandler;
+            MenubarInput                m_Input;
+
 	};
 }
 #endif // EDITORMENUBAR_H

@@ -116,8 +116,6 @@ namespace nero
 		private:
 			//////////////docksapce
 			void											interfaceFirstDraw();
-			//////////////main menu bar
-            void											showAboutEngineWindow();
 			//////////////Project
 			void											compileProject();
 			void											editProject();

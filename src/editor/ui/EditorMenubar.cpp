@@ -11,8 +11,11 @@ namespace  nero
 {
     EditorMenubar::EditorMenubar(EditorContext::Ptr editorContext):
          UIComponent(editorContext)
+        ,m_ProjectManagerPopup(editorContext)
+        ,m_AboutEnginePopup(editorContext)
+        ,m_ProjectManagerPopupTabHandler(m_ProjectManagerPopup.getTabSelectionHandler())
     {
-
+        clearInput();
     }
 
     EditorMenubar::~EditorMenubar()
@@ -35,13 +38,12 @@ namespace  nero
             {
                 if(ImGui::MenuItem("New Project", nullptr, false))
                 {
-                    // TODO manager tab focus
-                    ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+                    m_Input.newProject = true;
                 }
 
                 if(ImGui::MenuItem("Open Project", nullptr, false))
                 {
-                    ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+                    m_Input.openProject = true;
                 }
 
                 if(ImGui::MenuItem("Save Project", nullptr, false, gameProjectOpened))
@@ -58,12 +60,12 @@ namespace  nero
 
                 if(ImGui::MenuItem("New Workspace", nullptr, false))
                 {
-                    ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+                    m_Input.newWorkspace = true;
                 }
 
                 if(ImGui::MenuItem("Import Workspace", nullptr, false))
                 {
-                    ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+                    m_Input.newWorkspace = true;
                 }
 
                 ImGui::Separator();
@@ -198,7 +200,7 @@ namespace  nero
 
                 if(ImGui::MenuItem("About Nero Game Engine", nullptr, nullptr))
                 {
-                    ImGui::OpenPopup(EditorConstant.WINDOW_ABOUT_ENGINE.c_str());
+                   m_Input.aboutEngine = true;
                 }
 
                 if(ImGui::MenuItem("Check for Updates", nullptr, nullptr, false))
@@ -210,5 +212,45 @@ namespace  nero
             }
             ImGui::EndMenuBar();
         }
+
+       handleMenubarInput();
+    }
+
+    void EditorMenubar::clearInput()
+    {
+        m_Input.newProject = false;
+        m_Input.openProject = false;
+        m_Input.newWorkspace = false;
+        m_Input.aboutEngine = false;
+    }
+
+    void EditorMenubar::handleMenubarInput()
+    {
+        if(m_Input.newProject)
+        {
+            m_Input.newProject = false;
+            ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+            m_ProjectManagerPopupTabHandler->selectTab(EditorConstant.TAB_CREATE_PROJECT);
+        }
+        else if (m_Input.openProject)
+        {
+            m_Input.openProject = false;
+            ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+            m_ProjectManagerPopupTabHandler->selectTab(EditorConstant.TAB_OPEN_PROJECT);
+        }
+        else if(m_Input.newWorkspace)
+        {
+            m_Input.newWorkspace= false;
+            ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
+             m_ProjectManagerPopupTabHandler->selectTab(EditorConstant.TAB_WORKSPACE);
+        }
+        else if(m_Input.aboutEngine)
+        {
+            m_Input.aboutEngine = false;
+            ImGui::OpenPopup(EditorConstant.WINDOW_ABOUT_ENGINE.c_str());
+        }
+
+        m_ProjectManagerPopup.render();
+        m_AboutEnginePopup.render();
     }
 }
