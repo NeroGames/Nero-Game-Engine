@@ -19,7 +19,7 @@ namespace nero
         // Engine name
         const std::string       ENGINE_NAME             = "Nero Game Engine";
         const std::string       ENGINE_COPYRIGHT        = "Copyright (C) Nero Games. All rights reserved";
-        const std::string       ENGINE_WEBSITE          = "https://nero-games.com/";
+        const std::string       ENGINE_WEBSITE          = "https://nero-games.com";
         const std::string       LEARN_MORE_MESSAGE      = "Lean more at" + StringPool.SPACE + ENGINE_WEBSITE;
         //engine version
 		const int				ENGINE_VERSION_MAJOR	= 2;

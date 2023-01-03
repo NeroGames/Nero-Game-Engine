@@ -30,77 +30,51 @@ namespace  nero
                        FontHolder::Ptr fontHolder,
                        SoundHolder::Ptr soundHolder,
                        Setting::Ptr setting):
-		 m_RenderWindow(window)
-		,m_InterfaceFirstDraw(true)
-		,m_SelectedScriptTypeIndex(0)
-		,m_SelectedGameLevelIndex(0)
-		,m_SelectedGameScreenIndex(0)
-		,m_AdvancedScene(nullptr)
-		,g_Context(nullptr)
-		,m_BottomDockspaceTabBarSwitch()
-        ,m_EditorSetting(setting)
-		,m_ResourceBrowserType(ResourceType::None)
-		,m_EditorMode(EditorMode::WORLD_BUILDER)
-		,m_BuilderMode(BuilderMode::OBJECT)
+        // Constructor paramater
+         m_RenderWindow(window)
         ,m_EditorCamera(camera)
-		,m_SelectedChunkNode(StringPool.BLANK)
-		,m_InputSelectedChunkId(-1)
-		,m_InputSelectedObjectLayerId(-1)
-		,m_InputSelectedGameLevelId(-1)
-		,m_InputSelectedGameScreenId(-1)
-		,m_MouseInformation("Mouse Position")
-		,m_ConsoleApplication()
-		,m_SelectedGameLevel(StringPool.BLANK)
-		,m_OpenedGameLevel(StringPool.BLANK)
         ,m_EditorTextureHolder(textureHolder)
         ,m_EditorFontHolder(fontHolder)
         ,m_EditorSoundHolder(soundHolder)
-        ,m_EditorProxy(std::make_shared<EditorProxy>())
-        ,m_RenderTexture(std::make_shared<sf::RenderTexture>())
+        ,m_EditorSetting(setting)
+        // Main paramater
         ,m_ProjectManager(std::make_unique<ProjectManager>())
-        ,m_RenderContext(std::make_shared<RenderContext>())
-        ,m_EditorContext(std::make_shared<EditorContext>(m_EditorProxy,
-                                                         m_ProjectManager,
-                                                         m_EditorTextureHolder,
-                                                         m_EditorSetting))
+        ,m_EditorProxy(std::make_shared<EditorProxy>())
+        ,m_EditorContext(std::make_shared<EditorContext>(
+            m_EditorProxy,
+            m_ProjectManager,
+            m_EditorTextureHolder,
+            m_EditorSetting))
         ,m_EditorSetup(std::make_shared<EditorSetup>(m_EditorContext))
+        // User Interface
         ,m_EditorDockspace(m_EditorContext)
         ,m_EditorToolbar(m_EditorContext)
         ,m_EditorSetupPopup(m_EditorContext, m_EditorSetup)
+        //
+        ,m_InterfaceFirstDraw(true)
+        ,m_SelectedScriptTypeIndex(0)
+        ,m_SelectedGameLevelIndex(0)
+        ,m_SelectedGameScreenIndex(0)
+        ,m_AdvancedScene(nullptr)
+        ,g_Context(nullptr)
+        ,m_BottomDockspaceTabBarSwitch()
+        ,m_ResourceBrowserType(ResourceType::None)
+        ,m_EditorMode(EditorMode::WORLD_BUILDER)
+        ,m_BuilderMode(BuilderMode::OBJECT)
+        ,m_SelectedChunkNode(StringPool.BLANK)
+        ,m_InputSelectedChunkId(-1)
+        ,m_InputSelectedObjectLayerId(-1)
+        ,m_InputSelectedGameLevelId(-1)
+        ,m_InputSelectedGameScreenId(-1)
+        ,m_MouseInformation("Mouse Position")
+        ,m_ConsoleApplication()
+        ,m_SelectedGameLevel(StringPool.BLANK)
+        ,m_OpenedGameLevel(StringPool.BLANK)
+
+        ,m_RenderTexture(std::make_shared<sf::RenderTexture>())
+        ,m_RenderContext(std::make_shared<RenderContext>())
     {
-        // Open Project
-        m_EditorProxy->m_OpenProjectCallback = [this](const std::string& projectDirectory)
-        {
-            //open new project
-            if(m_ProjectManager)
-            {
-                m_GameProject		= m_ProjectManager->openProject(projectDirectory);
-                m_AdvancedScene		= m_GameProject->getAdvancedScene();
-                m_AdvancedScene->setRenderTexture(m_RenderTexture);
-                m_AdvancedScene->setRenderContext(m_RenderContext);
-
-                //update editor window title
-                updateWindowTitle(m_GameProject->getProjectName());
-            }
-        };
-
-        // CreateProject
-        m_EditorProxy->m_CreateProjectCallback = [this](const Parameter& projectParameter, const unsigned int& projectCount)
-        {
-            nero_log("on create project in background")
-            std::string taskName = EditorConstant.TASK_CREATE_PROJECT + toString(projectCount);
-            BTManager::startTask(&ProjectManager::createProject, m_ProjectManager.get(), projectParameter, taskName);
-        };
-
-        m_EditorProxy->m_CreateWorkspaceCallback = [this](const Parameter& workspaceParameter)
-        {
-            m_ProjectManager->createWorkspace(workspaceParameter);
-        };
-
-        m_EditorProxy->m_ImportWorkspaceCallback = [this](const std::string& workspaceDirectory)
-        {
-            m_ProjectManager->importWorkspace(workspaceDirectory);
-        };
+        setupEditorProxy();
 	}
 
     EditorUI::~EditorUI()
@@ -200,47 +174,6 @@ namespace  nero
 		registerSignalHandler();
 	}
 
-    void EditorUI::closeEditor()
-	{
-		nero_log("closing the editor ...");
-
-		nero_log("saving window settings");
-		std::string file = file::getPath({"setting", "window"}, StringPool.EXT_JSON);
-
-		Setting window_setting = m_EditorSetting->getSetting("window");
-
-		sf::Vector2u windowSize		= m_RenderWindow.getSize();
-		sf::Vector2i windowPosition = m_RenderWindow.getPosition();
-
-		if(windowPosition.x < -8)
-		{
-			windowPosition.x = -8;
-		}
-
-		if(windowPosition.y < 0)
-		{
-			windowPosition.y = 0;
-		}
-
-		window_setting.setUInt("width",  windowSize.x);
-		window_setting.setUInt("height",  windowSize.y);
-		window_setting.setInt("position_x",  windowPosition.x);
-		window_setting.setInt("position_y",  windowPosition.y);
-
-		file::saveFile(file, window_setting.toJson().dump(3), true);
-
-		if(m_GameProject)
-		{
-			nero_log("closing project")
-			closeProject();
-		}
-
-		nero_log("---------------------------------------------------------------------");
-		nero_log("Engine Editor closed");
-
-		m_RenderWindow.close();
-	}
-
     void EditorUI::handleEvent(const sf::Event& event)
     {
 		if(mouseOnCanvas())
@@ -260,7 +193,7 @@ namespace  nero
 		switch(event.type)
 		{
 			case sf::Event::Closed:
-				closeEditor();
+                m_EditorProxy->closeEditor();
 				break;
 
 			//Keyboard
@@ -270,24 +203,6 @@ namespace  nero
 			case sf::Event::KeyReleased:
 				handleKeyboardInput(event.key.code, false);
 				break;
-
-			//Mouse movements event
-			/*case sf::Event::MouseMoved:
-				handleMouseMoveInput(event.mouseMove);
-				break;
-
-			//Mouse wheel event
-			case sf::Event::MouseWheelScrolled:
-				handleMouseWheelInput(event.mouseWheelScroll);
-				break;
-
-			//Mouse button event
-			case sf::Event::MouseButtonPressed:
-				handleMouseButtonInput(event.mouseButton, true);
-				break;
-			case sf::Event::MouseButtonReleased:
-				handleMouseButtonInput(event.mouseButton, false);
-				break;*/
 		}
 
 
@@ -306,7 +221,7 @@ namespace  nero
 
     void EditorUI::render()
     {
-		EASY_FUNCTION(profiler::colors::Red);
+        EASY_FUNCTION(profiler::colors::Red)
 
         ImGui::SFML::Update(m_RenderWindow, EngineConstant.TIME_PER_FRAME);
 
@@ -376,20 +291,15 @@ namespace  nero
 	}
 
     void EditorUI::updateFrameRate(const float& frameRate, const float& frameTime)
-	{
-		m_FrameRate = frameRate;
-		m_FrameTime = frameTime;
-	}
+    {
+        m_FrameRate = frameRate;
+        m_FrameTime = frameTime;
+    }
 
-    void EditorUI::setCallbackWindowTitle(std::function<void (const std::string&)> callback)
-	{
-		m_UpdateWindowTile = callback;
-	}
-
-    void EditorUI::updateWindowTitle(const std::string& title)
-	{
-		 m_UpdateWindowTile(title);
-	}
+    void EditorUI::setUpdateWindowTitleCallback(std::function<void (const std::string&)> callback)
+    {
+        m_UpdateWindowTitleCallback = callback;
+    }
 
     void EditorUI::switchBuilderMode()
 	{
@@ -939,20 +849,6 @@ namespace  nero
 		}
 	}
 
-    void EditorUI::closeProject()
-	{
-		m_ResourceManager	= nullptr;
-		m_AdvancedScene		= nullptr;
-		m_GameProject		= nullptr;
-		m_GameLevelBuilder	= nullptr;
-		m_WorldBuilder		= nullptr;
-		m_ProjectManager->closeProject();
-
-
-		//update editor window title
-		updateWindowTitle(EngineConstant.ENGINE_WINDOW_TITLE);
-	}
-
     void EditorUI::playScene()
 	{
 		if(m_AdvancedScene && m_EditorMode != EditorMode::PLAY_GAME)
@@ -1358,12 +1254,12 @@ namespace  nero
 				//copy texture file and json helper
 				for(std::string file : loadedFileTable)
 				{
-					file::copyFile(file, file::getPath({m_GameLevelBuilder->getResourceFoler(), "texture", file::getFileName(file, true)}));
+                    file::copyFile(file, file::getPath({m_LevelBuilder->getResourceFoler(), "texture", file::getFileName(file, true)}));
 
 					std::string jsonHelper  = file::replaceExtension(file, "json");
 					if(file::fileExist(jsonHelper))
 					{
-						file::copyFile(file, file::getPath({m_GameLevelBuilder->getResourceFoler(), "texture", file::getFileName(jsonHelper, true)}));
+                        file::copyFile(file, file::getPath({m_LevelBuilder->getResourceFoler(), "texture", file::getFileName(jsonHelper, true)}));
 					}
 				}
 
@@ -1787,8 +1683,8 @@ namespace  nero
 			{
 				case EditorMode::WORLD_BUILDER:
 				{
-					if(m_GameLevelBuilder)
-						m_GameLevelBuilder->saveGameLevel();
+                    if(m_LevelBuilder)
+                        m_LevelBuilder->saveGameLevel();
 				}break;
 
 				case EditorMode::SCREEN_BUILDER:
@@ -2097,21 +1993,21 @@ namespace  nero
         }
 
         // Selected game level is already open
-		if(m_GameLevelBuilder && m_GameLevelBuilder->getLevelName() == m_SelectedGameLevel)
+        if(m_LevelBuilder && m_LevelBuilder->getLevelName() == m_SelectedGameLevel)
         {
             return;
         }
 
-		m_GameLevelBuilder			= m_AdvancedScene->openLevel(m_SelectedGameLevel);
-		m_ResourceManager			= m_GameLevelBuilder->getResourceManager();
-		m_WorldBuilder				= m_GameLevelBuilder->getSelectedChunk()->getWorldBuilder();
+        m_LevelBuilder			= m_AdvancedScene->openLevel(m_SelectedGameLevel);
+        m_ResourceManager			= m_LevelBuilder->getResourceManager();
+        m_WorldBuilder				= m_LevelBuilder->getSelectedChunk()->getWorldBuilder();
 		m_OpenedGameLevel			= m_SelectedGameLevel;
 	}
 
     void EditorUI::closeGameLevel()
 	{
 		m_OpenedGameLevel	= StringPool.BLANK;
-		m_GameLevelBuilder	= nullptr;
+        m_LevelBuilder	= nullptr;
 		m_ResourceManager	= nullptr;
 		m_AdvancedScene->closeSelectedLevel();
 	}
@@ -2335,11 +2231,11 @@ namespace  nero
 			ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
 			ImGui::BeginChild("##manage_world_chunk", ImVec2(), true);
 
-				if(m_GameLevelBuilder)
+                if(m_LevelBuilder)
 				{
-					auto& chunkTable = m_GameLevelBuilder->getChunkTable();
+                    auto& chunkTable = m_LevelBuilder->getChunkTable();
 
-					auto selectedChunk		= m_GameLevelBuilder->getSelectedChunk();
+                    auto selectedChunk		= m_LevelBuilder->getSelectedChunk();
 					m_InputSelectedChunkId	= selectedChunk ? selectedChunk->getChunkId() : -1;
 
 					for(const auto& worldChunk : chunkTable)
@@ -2349,7 +2245,7 @@ namespace  nero
 
 						if(ImGui::IsItemClicked())
 						{
-							m_GameLevelBuilder->setSelectedChunk(worldChunk);
+                            m_LevelBuilder->setSelectedChunk(worldChunk);
 							m_WorldBuilder = worldChunk->getWorldBuilder();
 						}
 
@@ -2382,9 +2278,9 @@ namespace  nero
 
     void EditorUI::addWorldChunk()
 	{
-		if(m_GameLevelBuilder && m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT)
+        if(m_LevelBuilder && m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT)
 		{
-			auto worldChunk = m_GameLevelBuilder->addChunk();
+            auto worldChunk = m_LevelBuilder->addChunk();
 			m_WorldBuilder  = worldChunk->getWorldBuilder();
 		}
 	}
@@ -2450,7 +2346,7 @@ namespace  nero
 
 		if (ImGui::CollapsingHeader("Scene", m_AdvancedScene ? ImGuiTreeNodeFlags_DefaultOpen :ImGuiTreeNodeFlags_None))
 		{
-			if(m_GameLevelBuilder)
+            if(m_LevelBuilder)
 			{
 				ImGuiViewport* viewport = ImGui::GetMainViewport();
 				float game_world_window_height = viewport->Size.y * 0.25f;
@@ -2461,14 +2357,14 @@ namespace  nero
 				ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 
 				ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[3]);
-				if(ImGui::TreeNode(std::string(ICON_FA_FOLDER_OPEN " " + m_GameLevelBuilder->getLevelName()).c_str()))
+                if(ImGui::TreeNode(std::string(ICON_FA_FOLDER_OPEN " " + m_LevelBuilder->getLevelName()).c_str()))
 				{
 					int			chunk_node_clicked		= -1;
-					static int	chunk_selection_mask	= (1 << m_GameLevelBuilder->getChunkTable().size());
-					int			selectedWorldChunkId	= m_GameLevelBuilder->getSelectedChunk()->getChunkId();
+                    static int	chunk_selection_mask	= (1 << m_LevelBuilder->getChunkTable().size());
+                    int			selectedWorldChunkId	= m_LevelBuilder->getSelectedChunk()->getChunkId();
 
 					int loop_chunk = 0;
-					for(const auto& worldChunk : m_GameLevelBuilder->getChunkTable())
+                    for(const auto& worldChunk : m_LevelBuilder->getChunkTable())
 					{
 						ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
@@ -2487,7 +2383,7 @@ namespace  nero
 						if (ImGui::IsItemClicked())
 						{
 							chunk_node_clicked = loop_chunk;
-							m_GameLevelBuilder->setSelectedChunk(worldChunk);
+                            m_LevelBuilder->setSelectedChunk(worldChunk);
 							m_WorldBuilder = worldChunk->getWorldBuilder();
 							selectedWorldChunkId = worldChunk->getChunkId();
 						}
@@ -2520,7 +2416,7 @@ namespace  nero
 								{
 									layer_node_clicked = loop_layer;
 									chunk_node_clicked = loop_chunk;
-									m_GameLevelBuilder->setSelectedChunk(worldChunk);
+                                    m_LevelBuilder->setSelectedChunk(worldChunk);
 									m_WorldBuilder = worldChunk->getWorldBuilder();
 									worldChunk->getWorldBuilder()->setSelectedLayer(objectLayer);
 									selectedWorldChunkId = worldChunk->getChunkId();
@@ -2564,7 +2460,7 @@ namespace  nero
 											layer_node_clicked	= loop_layer;
 											chunk_node_clicked	= loop_chunk;
 
-											m_GameLevelBuilder->setSelectedChunk(worldChunk);
+                                            m_LevelBuilder->setSelectedChunk(worldChunk);
 											m_WorldBuilder = worldChunk->getWorldBuilder();
 											m_WorldBuilder->setSelectedLayer(objectLayer);
 											m_WorldBuilder->setSelectedObject(gameObject);
@@ -2997,40 +2893,131 @@ namespace  nero
     void EditorUI::registerSignalHandler()
 	{
 		signal(SIGABRT, handleSignalAbnormalTermination);
-		signal(SIGFPE, handleSignalArithmeticError);
-		signal(SIGILL, handleSignalIllegalInstruction);
-		signal(SIGINT, handleSignalInteractiveAttention);
+        signal(SIGFPE,  handleSignalArithmeticError);
+        signal(SIGILL,  handleSignalIllegalInstruction);
+        signal(SIGINT,  handleSignalInteractiveAttention);
 		signal(SIGSEGV, handleSignalInvalidStorageAccess);
 		signal(SIGTERM, handleSignalTerminsationRequest);
 	}
 
     void EditorUI::handleSignalAbnormalTermination(int signal)
 	{
-
+        //TODO
 	}
 
     void EditorUI::handleSignalArithmeticError(int signal)
 	{
-
+        //TODO
 	}
 
     void EditorUI::handleSignalIllegalInstruction(int signal)
 	{
-
+        //TODO
 	}
 
     void EditorUI::handleSignalInteractiveAttention(int signal)
 	{
-
+        //TODO
 	}
 
     void EditorUI::handleSignalInvalidStorageAccess(int signal)
 	{
-
+        //TODO
 	}
 
     void EditorUI::handleSignalTerminsationRequest(int signal)
 	{
-
+        //TODO
 	}
+
+    void EditorUI::setupEditorProxy()
+    {
+        // Open project
+        m_EditorProxy->m_OpenProjectCallback = [this](const std::string& projectDirectory)
+        {
+            //open new project
+            if(m_ProjectManager)
+            {
+                m_GameProject		= m_ProjectManager->openProject(projectDirectory);
+                m_AdvancedScene		= m_GameProject->getAdvancedScene();
+                m_AdvancedScene->setRenderTexture(m_RenderTexture);
+                m_AdvancedScene->setRenderContext(m_RenderContext);
+
+                //update editor window title
+                m_UpdateWindowTitleCallback(m_GameProject->getProjectName());
+            }
+        };
+
+        // Create project
+        m_EditorProxy->m_CreateProjectCallback = [this](const Parameter& projectParameter, const unsigned int& projectCount)
+        {
+            nero_log("on create project in background")
+            std::string taskName = EditorConstant.TASK_CREATE_PROJECT + toString(projectCount);
+            BTManager::startTask(&ProjectManager::createProject, m_ProjectManager.get(), projectParameter, taskName);
+        };
+
+        m_EditorProxy->m_SaveProjectCallback = [this]()
+        {
+          //TODO
+        };
+
+        // Close project
+        m_EditorProxy->m_CloseProjectCallback = [this]()
+        {
+            m_ResourceManager	= nullptr;
+            m_AdvancedScene		= nullptr;
+            m_GameProject		= nullptr;
+            m_LevelBuilder	= nullptr;
+            m_WorldBuilder		= nullptr;
+            m_ProjectManager->closeProject();
+
+            //update editor window title
+            m_UpdateWindowTitleCallback(EngineConstant.ENGINE_WINDOW_TITLE);
+        };
+
+        // Create workspace
+        m_EditorProxy->m_CreateWorkspaceCallback = [this](const Parameter& workspaceParameter)
+        {
+            m_ProjectManager->createWorkspace(workspaceParameter);
+        };
+
+        // Import workspace
+        m_EditorProxy->m_ImportWorkspaceCallback = [this](const std::string& workspaceDirectory)
+        {
+            m_ProjectManager->importWorkspace(workspaceDirectory);
+        };
+
+        // Close editor
+        m_EditorProxy->m_CloseEditorCallback = [this]()
+        {
+            nero_log("Closing the Editor")
+
+            nero_log("-> Saving window settings")
+            std::string windowSettingFile   = file::getPath({"setting", "window"}, StringPool.EXT_JSON);
+            Setting windowSetting           = m_EditorSetting->getSetting("window");
+            sf::Vector2u windowSize         = m_RenderWindow.getSize();
+            sf::Vector2i windowPosition     = m_RenderWindow.getPosition();
+
+            if(windowPosition.x < -8) {windowPosition.x = -8;}
+            if(windowPosition.y < 0) {windowPosition.y = 0;}
+
+            windowSetting.setUInt("width",  windowSize.x);
+            windowSetting.setUInt("height",  windowSize.y);
+            windowSetting.setInt("position_x",  windowPosition.x);
+            windowSetting.setInt("position_y",  windowPosition.y);
+
+            file::saveFile(windowSettingFile, windowSetting.toJson().dump(3), true);
+
+            if(m_GameProject)
+            {
+                nero_log("-> Closing project")
+                m_EditorProxy->closeProject();
+            }
+
+            nero_log("---")
+            nero_log("Editor closed")
+
+            m_RenderWindow.close();
+        };
+    }
 }

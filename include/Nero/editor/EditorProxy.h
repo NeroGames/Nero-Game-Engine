@@ -21,18 +21,31 @@ namespace nero
         public:
                                     EditorProxy();
 
+            // Game Project
             void                    openProject(const std::string& projectDirectory)        const;
             void                    createProject(const Parameter& projectParameter,
                                                   const unsigned int& projectCount)         const;
+            void                    saveProject()                                           const;
+            void                    closeProject()                                          const;
+            // Workspace
             void                    createWorkspace(const Parameter&  workspaceParameter)   const;
             void                    importWorkspace(const std::string& workspaceDirectory)  const;
+            // Editor
+            void                    closeEditor()                                           const;
 
         private:
             friend class                                                    EditorUI;
+            // Game Project
             std::function<void(const std::string&)>                         m_OpenProjectCallback;
             std::function<void(const Parameter&, const unsigned int&)>      m_CreateProjectCallback;
+            std::function<void()>                                           m_SaveProjectCallback;
+            std::function<void()>                                           m_CloseProjectCallback;
+            // Workspace
             std::function<void(const Parameter&)>                           m_CreateWorkspaceCallback;
             std::function<void(const std::string&)>                         m_ImportWorkspaceCallback;
+            // Editor
+            std::function<void()>                                           m_CloseEditorCallback;
+
 	};
 }
 

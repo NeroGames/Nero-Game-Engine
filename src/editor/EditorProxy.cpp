@@ -33,4 +33,19 @@ namespace  nero
     {
        m_ImportWorkspaceCallback(workspaceDirectory);
     }
+
+    void EditorProxy::saveProject() const
+    {
+        m_SaveProjectCallback();
+    }
+
+    void EditorProxy::closeProject() const
+    {
+        m_CloseProjectCallback();
+    }
+
+    void EditorProxy::closeEditor() const
+    {
+        m_CloseEditorCallback();
+    }
 }

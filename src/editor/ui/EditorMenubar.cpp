@@ -5,6 +5,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/editor/ui/EditorMenubar.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
 namespace  nero
@@ -48,12 +49,12 @@ namespace  nero
 
                 if(ImGui::MenuItem("Save Project", nullptr, false, gameProjectOpened))
                 {
-                    //saveProject();
+                    m_EditorContext->getEditorProxy()->saveProject();
                 }
 
                 if(ImGui::MenuItem("Close Project", nullptr, false, gameProjectOpened))
                 {
-                    //closeProject();
+                    m_EditorContext->getEditorProxy()->closeProject();
                 }
 
                 ImGui::Separator();
@@ -72,12 +73,12 @@ namespace  nero
 
                 auto recentProjectTable =  file::loadJson(file::getPath({"setting", "recent_project"}));
 
-                if (ImGui::BeginMenu("Recent Projects",!recentProjectTable.empty()))
+                if (ImGui::BeginMenu("Recent Projects", !recentProjectTable.empty()))
                 {
 
-                    int count_project = recentProjectTable.size() > 10 ? 10 : recentProjectTable.size();
+                    const int projectCount = recentProjectTable.size() > 10 ? 10 : recentProjectTable.size();
 
-                    for (int i = count_project - 1; i >=0 ; i--)
+                    for (int i = projectCount - 1; i >=0 ; i--)
                     {
                         auto project = recentProjectTable[i];
 
@@ -94,7 +95,7 @@ namespace  nero
 
                 if(ImGui::MenuItem("Exit", nullptr, false))
                 {
-                    //closeEditor();
+                   m_EditorContext->getEditorProxy()->closeEditor();
                 }
 
                 ImGui::EndMenu();
@@ -104,12 +105,12 @@ namespace  nero
             {
                 if(ImGui::MenuItem("Undo", nullptr, nullptr))
                 {
-
+                    //TODO
                 }
 
                 if(ImGui::MenuItem("Redo", nullptr, nullptr))
                 {
-
+                    //TODO
                 }
 
                 ImGui::EndMenu();
@@ -118,27 +119,28 @@ namespace  nero
             {
                 if(ImGui::MenuItem("Clean", nullptr, nullptr))
                 {
-
+                    //TODO
                 }
 
                 if(ImGui::MenuItem("Run Cmake", nullptr, nullptr))
                 {
-
+                    //TODO
                 }
 
                 if(ImGui::MenuItem("Compile", nullptr, nullptr))
                 {
-
+                    //TODO
                 }
 
                 if(ImGui::MenuItem("Reload", nullptr, nullptr))
                 {
-
+                    //TODO
                 }
 
                 ImGui::EndMenu();
             }
 
+            //TODO
             if (ImGui::BeginMenu("Views", false))
             {
                 const char* names[] = { "Logging", "Quick Helps", "Mackerel", "Pollock", "Tilefish" };
@@ -151,6 +153,7 @@ namespace  nero
 
             if (ImGui::BeginMenu("Settings", false))
             {
+                //TODO
                 ImGui::EndMenu();
             }
 
@@ -173,27 +176,27 @@ namespace  nero
             {
                 if(ImGui::MenuItem("Learn", "Alt+L", nullptr))
                 {
-                    cmd::launchBrowser("https://nero-games.com/learn");
+                    cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/learn");
                 }
 
                 if(ImGui::MenuItem("Snippet", "Alt+S", nullptr))
                 {
-                    cmd::launchBrowser("https://nero-games.com/snippet");
+                    cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/snippet");
                 }
 
                 if(ImGui::MenuItem("Forum", "Alt+F", nullptr))
                 {
-                    cmd::launchBrowser("https://nero-games.com/forum/index.php");
+                    cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/forum/index.php");
                 }
 
                 if(ImGui::MenuItem("Engine API", "Alt+A", nullptr))
                 {
-                    cmd::launchBrowser("https://nero-games.com/engine-v2/api");
+                    cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/engine-v2/api");
                 }
 
                 if(ImGui::MenuItem("Website", "Alt+W", nullptr))
                 {
-                    cmd::launchBrowser("https://nero-games.com");
+                    cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE);
                 }
 
                 ImGui::Separator();

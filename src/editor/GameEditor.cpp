@@ -418,7 +418,7 @@ namespace  nero
                                                 m_EditorSetting);
 
         // Set callback, allow interface to change window title
-        m_EditorUI->setCallbackWindowTitle([this](const std::string& title)
+        m_EditorUI->setUpdateWindowTitleCallback([this](const std::string& title)
 		{
             setWindowTitle(EngineConstant.ENGINE_NAME + " - " +  title);
 		});

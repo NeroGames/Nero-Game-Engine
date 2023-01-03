@@ -63,23 +63,21 @@ namespace nero
 			void							destroy();
 
         private:
-			//initialization
+            // Initialization
 			void							init();
-			//game loop
+            // Game loop
 			void							handleEvent(const sf::Event& event);
 			void							update(const sf::Time& timeStep);
 			void							render();
-			//input
+            // Input
 			void							handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
-			//retrieve frame rate from core engine
-			void							updateFrameRate(const float& frameRate, const float& frameTime);
-			//let editor provide some objects
-			void							setCallbackWindowTitle(std::function<void (const std::string&)> callback);
-			void							updateWindowTitle(const std::string& title);
-			//close the editor
-			void							closeEditor();
-			//signal handling
-			void							registerSignalHandler();
+            // Core Engine callback
+            void							updateFrameRate(const float& frameRate, const float& frameTime);
+            void							setUpdateWindowTitleCallback(std::function<void (const std::string&)> callback);
+            // Editor proxy
+            void                            setupEditorProxy();
+            //signal handling
+            void							registerSignalHandler();
 			static void						handleSignalAbnormalTermination(int signal);
 			static void						handleSignalArithmeticError(int signal);
 			static void						handleSignalIllegalInstruction(int signal);
@@ -90,37 +88,40 @@ namespace nero
 		private:
 			//////////////main attributes
             friend class									GameEditor;
+            // Constructor paramater
 			sf::RenderWindow&								m_RenderWindow;
-			float											m_FrameRate;
-			float											m_FrameTime;
-			Setting::Ptr									m_EditorSetting;
+            AdvancedCamera::Ptr								m_EditorCamera;
 			TextureHolder::Ptr								m_EditorTextureHolder;
-			SoundHolder::Ptr								m_EditorSoundHolder;
 			FontHolder::Ptr									m_EditorFontHolder;
-			std::function<void (const std::string&)>		m_UpdateWindowTile;
-			//game project
-			ProjectManager::Ptr								m_ProjectManager;
-			GameProject::Ptr								m_GameProject;
-			AdvancedScene::Ptr								m_AdvancedScene;
-            LevelBuilder::Ptr                               m_GameLevelBuilder;
-			WorldBuilder::Ptr								m_WorldBuilder;
-			ResourceManager::Ptr							m_ResourceManager;
-			ResourceManager::Ptr							m_EditorResourceManager;
-        private:
+            SoundHolder::Ptr								m_EditorSoundHolder;
+            Setting::Ptr									m_EditorSetting;
+            // Main paramater
+            ProjectManager::Ptr								m_ProjectManager;
             EditorProxy::Ptr                                m_EditorProxy;
             EditorContext::Ptr                              m_EditorContext;
             EditorSetup::Ptr                                m_EditorSetup;
+            // UI
             EditorDockspace                                 m_EditorDockspace;
             EditorToolbar                                   m_EditorToolbar;
             EditorSetupPopup                                m_EditorSetupPopup;
+            // Core Engine callback
+            float											m_FrameRate;
+            float											m_FrameTime;
+            std::function<void (const std::string&)>		m_UpdateWindowTitleCallback;
+			//game project
+			GameProject::Ptr								m_GameProject;
+			AdvancedScene::Ptr								m_AdvancedScene;
+            LevelBuilder::Ptr                               m_LevelBuilder;
+			WorldBuilder::Ptr								m_WorldBuilder;
+			ResourceManager::Ptr							m_ResourceManager;
 		private:
-			//////////////docksapce
-			void											interfaceFirstDraw();
+            //////////////docksapce
+            bool											m_InterfaceFirstDraw;
+            void											interfaceFirstDraw();
 			//////////////Project
 			void											compileProject();
 			void											editProject();
 			void											reloadProject();
-			void											closeProject();
 			NewGameLevelInput								m_NewGameLevelInput;
 			NewGameLevelInput								m_NewGameScreenInput;
 			void											createGameLevel(const Parameter& parameter);
@@ -152,8 +153,7 @@ namespace nero
                                                                              std::function<void()> callback);
             //project creation
 			LoggerApplication								m_LoggerApplication;
-			bool											m_InterfaceFirstDraw;
-			ImGuiIO											baseio;
+            ImGuiIO											baseio;
 			std::stringstream								buffer;
 			std::streambuf*									old;
             //
@@ -228,7 +228,6 @@ namespace nero
 			sf::RectangleShape								m_CanvasXAxis;
 			sf::RectangleShape								m_CanvasYAxis;
 			//
-			AdvancedCamera::Ptr								m_EditorCamera;
 			//
 			void renderCamera();
 			sf::View										m_CanvasFrontView;
