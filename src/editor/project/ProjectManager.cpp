@@ -107,11 +107,11 @@ namespace nero
 
 	bool ProjectManager::workspaceExist(const std::string& workspaceName)
 	{
-		std::string workspace_id = string::formatString(workspaceName);
+        std::string workspaceID = string::formatString(workspaceName);
 
 		for(auto workspace : getWorkspaceTable())
 		{
-		   if(workspace["workspace_id"].get<std::string>() == workspace_id)
+           if(workspace["workspace_id"].get<std::string>() == workspaceID)
 		   {
 			   return true;
 		   }

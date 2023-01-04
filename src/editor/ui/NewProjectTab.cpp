@@ -31,6 +31,16 @@ namespace  nero
 
     void NewProjectTab::render()
     {
+        // Udpate Input using workspace data
+        const auto workspaceTable = m_EditorContext->getProjectManager()->getWorkspaceTable();
+        if(!workspaceTable.empty() &&
+           m_Input.projectNamespace == StringPool.BLANK &&
+           m_Input.projectLead == StringPool.BLANK &&
+           m_Input.company == StringPool.BLANK)
+        {
+            updateInput(workspaceTable);
+        }
+
         //Window flags
         ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking |
                                        ImGuiWindowFlags_Modal |

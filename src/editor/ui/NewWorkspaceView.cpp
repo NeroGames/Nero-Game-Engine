@@ -108,7 +108,7 @@ namespace  nero
             //workpspace already exist
             else if(m_EditorContext->getProjectManager()->workspaceExist(m_Input.name))
             {
-                m_Input.errorMessage   = "A Workspace with the same Id already exist, Please choose another Name";
+                m_Input.errorMessage   = "A Workspace with the same ID already exist, Please choose another Workspace Name";
                 m_Input.redirectLink = "https://nero-games.com/learn/engine-v2/create-workspace#workspace_name";
             }
             //workpspace company name blank

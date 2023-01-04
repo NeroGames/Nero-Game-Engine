@@ -21,6 +21,7 @@ namespace nero
 
         private:
             void                    clearInput();
+            bool                    workspaceDocumentValid(const std::string&  workspaceDirectory);
 
         private:
             struct WorkspaceInput

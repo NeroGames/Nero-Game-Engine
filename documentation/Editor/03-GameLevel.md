@@ -20,9 +20,3 @@ Game Levels are a subpart of a Game Project. A Game Project need to be Opened be
 ## Delete Game Level
 
 ## Load Game Level Resource
-
-## Manipulate World Chunk
-
-## Manipulate Object Layer
-
-## Manipulate Game Object

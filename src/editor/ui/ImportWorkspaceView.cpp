@@ -50,7 +50,7 @@ namespace  nero
         }
 
         ImGui::SameLine(wordingWidth + inputWidth - 60.f);
-        bool onImport				= ImGui::Button("Import##import_workspace", ImVec2(60.f, 0));
+        bool onImport = ImGui::Button("Import##import_workspace", ImVec2(60.f, 0));
 
         if(onImport)
         {
@@ -77,6 +77,10 @@ namespace  nero
             else if(!file::fileExist(file::getPath({std::string(m_Input.locationImport), ".workspace"})))
             {
                 m_Input.errorMessage = "The selected directory is not a valid Workspace";
+            }
+            else if(!workspaceDocumentValid(std::string(m_Input.locationImport)))
+            {
+                 m_Input.errorMessage = "Invalid workspace document";
             }
             else
             {
@@ -130,5 +134,23 @@ namespace  nero
     void ImportWorkspaceView::clearInput()
     {
         string::fillCharArray(m_Input.locationImport,	sizeof(m_Input.locationImport),		StringPool.BLANK);
+    }
+
+    bool ImportWorkspaceView::workspaceDocumentValid(const std::string &workspaceDirectory)
+    {
+        auto document       = file::loadJson(file::getPath({workspaceDirectory, ".workspace"}), true);
+        const std::string projectNamespace = document["project_namespace"].get<std::string>();
+
+        bool documentValid =
+            // Check document type
+            document["document_type"].get<std::string>() == "nero_game_workspace" &&
+            // Check engine version
+            document["engine_version"].get<std::string>() == "2.0.0" &&
+            // Check workspace name
+            document["workspace_name"].get<std::string>() == file::getFileName(workspaceDirectory) &&
+            // Check namespace
+            projectNamespace != StringPool.BLANK && string::matchPattern(std::string(projectNamespace), StringPool.REGEX_NAMESPACE);
+
+        return documentValid;
     }
 }
