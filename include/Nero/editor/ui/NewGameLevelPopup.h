@@ -25,10 +25,13 @@ namespace nero
         private:
             struct GameLevelInput
             {
-                char name[100];
-                bool enablePhysics;
-                bool enableLight;
-                char prototype[100];
+                char            name[100];
+                bool            enablePhysics;
+                bool            enableLight;
+                char            prototype[100];
+                std::string     errorMessage;
+                std::string     redirectLink;
+                bool            error;
             };
 
         private:

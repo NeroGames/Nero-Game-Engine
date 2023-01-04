@@ -23,7 +23,7 @@ namespace  nero
 
     void NewWorkspaceView::destroy()
     {
-
+        clearInput();
     }
 
     void NewWorkspaceView::render()
@@ -209,5 +209,8 @@ namespace  nero
         string::fillCharArray(m_Input.projectLead,		sizeof(m_Input.projectLead),		StringPool.BLANK);
         string::fillCharArray(m_Input.company,			sizeof(m_Input.company),			StringPool.BLANK);
         string::fillCharArray(m_Input.projectNamespace,	sizeof(m_Input.projectNamespace),	StringPool.BLANK);
+        m_Input.errorMessage = StringPool.BLANK;
+        m_Input.redirectLink = StringPool.BLANK;
+        m_Input.error = true;
     }
 }

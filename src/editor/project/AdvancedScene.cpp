@@ -30,7 +30,7 @@ namespace nero
 
     std::string AdvancedScene::createLevel(const Parameter& parameter)
 	{
-        // Generate paratemers
+        // Generate parameters
         std::string levelName		= string::trim(parameter.getString("level_name"));
         std::string levelID         = string::formatString(levelName, string::Format::COMPACT_LOWER);
         std::string className		= string::formatString(levelName, string::Format::CAMEL_CASE_UPPER) + "GameLevel";
@@ -82,9 +82,6 @@ namespace nero
 		setting.setBool("enable_light",  parameter.getBool("enable_light"));
 		setting.setInt("chunk_count", 0);
 		setting.setBool("opened", false);
-        setting.setString("level_directory",  levelDirectory);
-        setting.setString("resource_directory",  file::getPath({levelDirectory, "resource"}));
-        setting.setString("chunk_directory",  file::getPath({levelDirectory, "chunk"}));
         setting.setSetting("resource", m_EditorSetting->getSetting("resource"));
         file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO), setting.toString());
 
@@ -117,7 +114,8 @@ namespace nero
 
         // Create Level Context
         GameLevel::Context levelContext;
-        levelContext.setting = levelSetting;
+        levelContext.levelSetting = levelSetting;
+        levelContext.levelDirectory = levelDirectory;
 
         // Create a new Level Builder
         m_LevelBuilder = std::make_shared<LevelBuilder>(levelContext);

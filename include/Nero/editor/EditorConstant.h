@@ -62,7 +62,6 @@ namespace nero
 		const std::string WINDOW_ABOUT_ENGINE			= "About Nero Game Engine";
 
 		//Window and View
-
 		const std::string TAB_CREATE_PROJECT				= "Create Project";
 		const std::string TAB_OPEN_PROJECT					= "Open Project";
 		const std::string TAB_RECENT_PROJECT				= "Recent Project";
@@ -71,6 +70,7 @@ namespace nero
 		const std::string MODAL_ERROR_IMPORTING_WORKSPACE	= "Error Importing Workspace";
 		const std::string MODAL_ERROR_CREATING_PROJECT		= "Error Creating Project";
 		const std::string MODAL_WAITING_PROJECT_CREATION	= "Waiting Project Creation";
+        const std::string MODAL_ERROR_CREATING_LEVEL        = "Error Creating Game Level";
 
 		//Texture
 		const std::string TEXTURE_PROJECT_BUTTON			= "project_button";

@@ -30,7 +30,7 @@ namespace nero
 
 	void LevelBuilder::loadResource()
 	{
-        m_GameLevel->getResourceManager()->loadDirectory(m_GameLevel->getSetting()->getString("resource_directory"));
+        m_GameLevel->getResourceManager()->loadDirectory(file::getPath({m_GameLevel->getLevelDirectory(), "resource"}));
 	}
 
 	ResourceManager::Ptr LevelBuilder::getResourceManager()
@@ -50,7 +50,7 @@ namespace nero
 
 	std::string LevelBuilder::getResourceFoler()
 	{
-        return m_GameLevel->getSetting()->getString("resource_directory");
+        return file::getPath({m_GameLevel->getLevelDirectory(), "resource"});
 	}
 
     Setting::Ptr LevelBuilder::getLevelSetting()
@@ -123,7 +123,7 @@ namespace nero
 
 			//save chunk
 			file::saveFile(
-				file::getPath({m_LevelSetting->getString("chunk_directory"), chunk->getChunkName()}, StringPool.EXT_NERO),
+                file::getPath({m_GameLevel->getLevelDirectory(), "chunk", chunk->getChunkName()}, StringPool.EXT_NERO),
 				chunk->saveChunk().dump(3), true);
 		}
 
@@ -132,13 +132,13 @@ namespace nero
 		m_LevelSetting->setBool("opened", m_Opened);
 
 		file::saveFile(
-			file::getPath({m_LevelSetting->getString("level_directory"), "setting"}, StringPool.EXT_NERO),
+            file::getPath({m_GameLevel->getLevelDirectory(), "setting"}, StringPool.EXT_NERO),
 			m_LevelSetting->toString(), true);
 	}
 
 	void LevelBuilder::loadGameLevel()
 	{
-		std::experimental::filesystem::path chunkDirectory(m_LevelSetting->getString("chunk_directory"));
+        std::experimental::filesystem::path chunkDirectory(file::getPath({m_GameLevel->getLevelDirectory(), "chunk"}));
 
 		std::experimental::filesystem::directory_iterator it{chunkDirectory};
 		while(it != std::experimental::filesystem::directory_iterator{})

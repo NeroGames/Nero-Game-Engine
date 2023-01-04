@@ -9,8 +9,8 @@
 namespace nero
 {
     GameLevel::GameLevel(GameLevel::Context context):
-         m_LevelSetting(context.setting)
-        ,m_ResourceManager(std::make_shared<ResourceManager>(context.setting->getSetting("resource")))
+         m_LevelContext(context)
+        ,m_ResourceManager(std::make_shared<ResourceManager>(m_LevelContext.levelSetting->getSetting("resource")))
 	{
     }
 
@@ -156,6 +156,11 @@ namespace nero
 
     Setting::Ptr GameLevel::getSetting() const
     {
-        return m_LevelSetting;
+        return m_LevelContext.levelSetting;
+    }
+
+    std::string GameLevel::getLevelDirectory() const
+    {
+        return m_LevelContext.levelDirectory;
     }
 }

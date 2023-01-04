@@ -26,15 +26,14 @@ namespace nero
             struct WorkspaceInput
             {
                 //create
-                char                        location[256];
-                char                        name[100];
-                char                        company[100];
-                char                        projectLead[100];
-                char                        projectNamespace[11];
-
-                std::string errorMessage	= StringPool.BLANK;
-                std::string redirectLink	= StringPool.BLANK;
-                bool error					= true;
+                char            location[256];
+                char            name[100];
+                char            company[100];
+                char            projectLead[100];
+                char            projectNamespace[11];
+                std::string     errorMessage;
+                std::string     redirectLink;
+                bool            error;
             };
 
         private:

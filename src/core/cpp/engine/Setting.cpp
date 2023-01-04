@@ -200,7 +200,7 @@ namespace nero
 	void Setting::setSetting(const std::string& name, const Setting& setting)
 	{
 		nlohmann::json local = nlohmann::json::object();
-		local[name] = *(setting.m_SettingHolder);
+        local[name] = setting.getCurrentSetting();
 
 		updateSetting(local);
 	}

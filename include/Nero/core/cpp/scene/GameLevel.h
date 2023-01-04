@@ -27,7 +27,8 @@ namespace nero
 
             struct Context
 			{
-                Setting::Ptr setting;
+                Setting::Ptr    levelSetting;
+                std::string     levelDirectory;
 			};
 
 		public:
@@ -71,10 +72,11 @@ namespace nero
             //
             ResourceManager::Ptr                        getResourceManager() const;
             Setting::Ptr                                getSetting() const;
+            std::string                                 getLevelDirectory() const;
 
 		private:
 			std::shared_ptr<sf::RenderTexture>			m_RenderTexture;
-            Setting::Ptr								m_LevelSetting;
+            Context                                     m_LevelContext;
             ResourceManager::Ptr						m_ResourceManager;
 			PhysicalWorld::Ptr							m_PhysicalWorld;
 			LightEngine::Ptr							m_LightEngine;
