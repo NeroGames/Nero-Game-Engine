@@ -90,11 +90,11 @@ namespace nero
         return levelName;
 	}
 
-	LevelBuilder::Ptr AdvancedScene::openLevel(const std::string& levelName)
+    void AdvancedScene::openLevel(const std::string& levelName)
 	{
         if(levelName == StringPool.BLANK)
         {
-            return nullptr;
+            return;
         }
 
         if(m_LevelBuilder)
@@ -135,8 +135,6 @@ namespace nero
 		{
             m_LevelBuilder->loadGameLevel();
 		}
-
-        return m_LevelBuilder;
 	}
 
 	void AdvancedScene::closeSelectedLevel()
@@ -204,4 +202,10 @@ namespace nero
 	{
 		m_RenderTexture = renderTexture;
 	}
+
+    LevelBuilder::Ptr AdvancedScene::getLevelBuilder() const
+    {
+        return m_LevelBuilder;
+    }
+
 }

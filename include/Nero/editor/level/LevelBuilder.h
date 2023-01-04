@@ -42,6 +42,7 @@ namespace nero
 			//
 			void								setOpened(const bool& opened);
 			bool								isOpened() const;
+            std::string                         getResourceDirectory() const;
 
 		private:
             // Game Level

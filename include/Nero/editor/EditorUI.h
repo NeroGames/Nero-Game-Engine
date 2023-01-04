@@ -13,6 +13,7 @@
 #include <Nero/editor/EditorSetup.h>
 #include <Nero/editor/ui/EditorSetupPopup.h>
 #include <Nero/editor/ui/ResourceSelectionWindow.h>
+#include <Nero/editor/ui/ResourceBrowserWindow.h>
 #include <Nero/editor/project/ProjectManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>
@@ -106,16 +107,11 @@ namespace nero
             EditorToolbar                                   m_EditorToolbar;
             EditorSetupPopup                                m_EditorSetupPopup;
             ResourceSelectionWindow                         m_ResourceSelectionWindow;
+            ResourceBrowserWindow                           m_ResourceBrowserWindow;
             // Core Engine callback
             float											m_FrameRate;
             float											m_FrameTime;
             std::function<void (const std::string&)>		m_UpdateWindowTitleCallback;
-			//game project
-			GameProject::Ptr								m_GameProject;
-			AdvancedScene::Ptr								m_AdvancedScene;
-            LevelBuilder::Ptr                               m_LevelBuilder;
-			WorldBuilder::Ptr								m_WorldBuilder;
-			ResourceManager::Ptr							m_ResourceManager;
 		private:
             //////////////docksapce
             bool											m_InterfaceFirstDraw;
@@ -138,7 +134,6 @@ namespace nero
 			void											showGameScreenWindow();
 				//right
 			void											showExplorerWindow();
-			void											showResourceBrowserWindow();
 			void											showHelpWindow();
 				//bottom
             void											showLoggingWindow();
@@ -203,17 +198,10 @@ namespace nero
 			//
 			ax::NodeEditor::EditorContext*					g_Context;
 			//
-			void											showSpriteResource();
-			void											showAnimationResource();
-			void											showFontResource();
-			void											showLightmapResource();
-			//
 			sf::Texture&									getFontTexture(const std::string& fontName);
 			std::map<std::string, sf::Texture>				m_FontTextureMap;
 			//
 			RenderTexturePtr								m_RenderTexture;
-			EditorMode										m_EditorMode;
-			BuilderMode										m_BuilderMode;
 			//
 			sf::RectangleShape								m_CameraXAxis;
 			sf::RectangleShape								m_CameraYAxis;
@@ -221,7 +209,7 @@ namespace nero
 			sf::RectangleShape								m_CanvasYAxis;
 			//
 			//
-			void renderCamera();
+            void                                            renderCamera();
 			sf::View										m_CanvasFrontView;
 			sf::Text										m_GameModeInfo;
 			sf::Text										m_GameBuilderInfo;
@@ -232,14 +220,12 @@ namespace nero
 			std::string										getString(const EditorMode& editorMode);
 			//
 			void											clearScriptWizardInput();
-			void											showMeshResource();
 			sf::Vector2f									getAddObjectPosition();
 			//
 			void											switchBuilderMode();
 			void											showCanvasMenu();
 			//
 			std::string										m_SelectedChunkNode;
-			void											saveResourceFile(ResourceType type, const std::vector<std::string> loadedFileTable);
 			//
 			void											onSaveProject();
 			void											onLoadProject();

@@ -51,16 +51,14 @@ namespace  nero
         ,m_EditorToolbar(m_EditorContext)
         ,m_EditorSetupPopup(m_EditorContext, m_EditorSetup)
         ,m_ResourceSelectionWindow(m_EditorContext)
+        ,m_ResourceBrowserWindow(m_EditorContext)
         //
         ,m_InterfaceFirstDraw(true)
         ,m_SelectedScriptTypeIndex(0)
         ,m_SelectedGameLevelIndex(0)
         ,m_SelectedGameScreenIndex(0)
-        ,m_AdvancedScene(nullptr)
         ,g_Context(nullptr)
         ,m_BottomDockspaceTabBarSwitch()
-        ,m_EditorMode(EditorMode::WORLD_BUILDER)
-        ,m_BuilderMode(BuilderMode::OBJECT)
         ,m_SelectedChunkNode(StringPool.BLANK)
         ,m_InputSelectedChunkId(-1)
         ,m_InputSelectedObjectLayerId(-1)
@@ -178,14 +176,24 @@ namespace  nero
 			m_EditorCamera->handleEvent(event);
 		}
 
-		if(m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT && m_WorldBuilder && mouseOnCanvas())
-		{
-			m_WorldBuilder->handleEvent(event);
-		}
-		else if(m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::MESH && m_WorldBuilder && mouseOnCanvas())
-		{
-			m_WorldBuilder->getMeshEditor()->handleEvent(event);
-		}
+        const auto editorMode   = m_EditorContext->getEditorMode();
+        const auto builderMode  = m_EditorContext->getBuilderMode();
+        auto levelBuilder       = m_EditorContext->getLevelBuilder();
+
+        if(levelBuilder)
+        {
+            auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
+
+            if(worldBuilder && editorMode == EditorMode::WORLD_BUILDER && builderMode == BuilderMode::OBJECT && mouseOnCanvas())
+            {
+                worldBuilder->handleEvent(event);
+            }
+            else if(worldBuilder && editorMode == EditorMode::WORLD_BUILDER && builderMode == BuilderMode::MESH && mouseOnCanvas())
+            {
+                worldBuilder->getMeshEditor()->handleEvent(event);
+            }
+        }
+
 
 		switch(event.type)
 		{
@@ -210,14 +218,26 @@ namespace  nero
 	{
         m_EditorCamera->update(timeStep);
 
-		if(m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT && m_WorldBuilder)
-		{
-			m_WorldBuilder->update(timeStep);
-		}
+        const auto editorMode   = m_EditorContext->getEditorMode();
+        const auto builderMode  = m_EditorContext->getBuilderMode();
+
+        auto levelBuilder       = m_EditorContext->getLevelBuilder();
+
+        if(levelBuilder)
+        {
+            auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
+
+            if(editorMode == EditorMode::WORLD_BUILDER && builderMode == BuilderMode::OBJECT && worldBuilder)
+            {
+                worldBuilder->update(timeStep);
+            }
+        }
     }
 
     void EditorUI::render()
     {
+        const auto editorMode   = m_EditorContext->getEditorMode();
+
         EASY_FUNCTION(profiler::colors::Red)
 
         ImGui::SFML::Update(m_RenderWindow, EngineConstant.TIME_PER_FRAME);
@@ -242,23 +262,23 @@ namespace  nero
 		//left dockspace
 			//upper left
 		showUtilityWindow();
-		/*if(m_EditorMode == EditorMode::SCREEN_BUILDER)
+        /*if(editorMode == EditorMode::SCREEN_BUILDER)
 			showGameScreenWindow();*/
 
 			//lower left
 		showObjectLayerWindow();
-		if(m_EditorMode == EditorMode::WORLD_BUILDER)
+        if(editorMode == EditorMode::WORLD_BUILDER)
 			showWorldChunckWindow();
 
 		//right dockspace
 		showExplorerWindow();
 		showHelpWindow();
-		showResourceBrowserWindow();
+        m_ResourceBrowserWindow.render();
 
 		//bottom dockspacer
 		showLoggingWindow();
 		showConsoleWindow();
-		if(m_AdvancedScene && m_EditorMode == EditorMode::WORLD_BUILDER)
+        if(m_EditorContext->getAdvancedScene() && editorMode == EditorMode::WORLD_BUILDER)
 		{
 			showGameLevelWindow();
 		}
@@ -300,21 +320,24 @@ namespace  nero
 
     void EditorUI::switchBuilderMode()
 	{
-		if(m_EditorMode == EditorMode::WORLD_BUILDER)
+        const auto editorMode   = m_EditorContext->getEditorMode();
+        const auto builderMode  = m_EditorContext->getBuilderMode();
+
+        if(editorMode == EditorMode::WORLD_BUILDER)
 		{
-			if(m_BuilderMode == BuilderMode::OBJECT && !keyboard::CTRL_SHIFT_ALT())
+            if(builderMode == BuilderMode::OBJECT && !keyboard::CTRL_SHIFT_ALT())
 			{
-				m_BuilderMode = BuilderMode::MESH;
+                m_EditorContext->setBuilderMode(BuilderMode::MESH);
 			}
-			else if(m_BuilderMode != BuilderMode::OBJECT && !keyboard::CTRL_SHIFT_ALT())
+            else if(builderMode != BuilderMode::OBJECT && !keyboard::CTRL_SHIFT_ALT())
 			{
-				m_BuilderMode = BuilderMode::OBJECT;
+                m_EditorContext->setBuilderMode(BuilderMode::OBJECT);
 			}
 		}
-		else if(m_EditorMode == EditorMode::PLAY_GAME && !keyboard::CTRL_SHIFT_ALT())
+        else if(editorMode == EditorMode::PLAY_GAME && !keyboard::CTRL_SHIFT_ALT())
 		{
-			m_EditorMode = EditorMode::WORLD_BUILDER;
-			m_BuilderMode = BuilderMode::OBJECT;
+            m_EditorContext->setEditorMode(EditorMode::WORLD_BUILDER);
+            m_EditorContext->setBuilderMode(BuilderMode::OBJECT);
 		}
 	}
 
@@ -342,10 +365,17 @@ namespace  nero
 
 			prepareRenderTexture();
 
-			if(m_WorldBuilder)
-			{
-				m_WorldBuilder->render();
-			}
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
+
+            if(levelBuilder)
+            {
+                auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
+
+                if(worldBuilder)
+                {
+                    worldBuilder->render();
+                }
+            }
 
 			//Render on Front Screen
 			m_RenderTexture->setView(m_RenderTexture->getDefaultView());
@@ -381,17 +411,17 @@ namespace  nero
 
 				if (ImGui::MenuItem("World Builder"))
 				{
-					m_EditorMode = EditorMode::WORLD_BUILDER;
+                    m_EditorContext->setEditorMode(EditorMode::WORLD_BUILDER);
 				}
 
 				if (ImGui::MenuItem("Screen Builder"))
 				{
-				m_EditorMode = EditorMode::SCREEN_BUILDER;
+                    m_EditorContext->setEditorMode(EditorMode::SCREEN_BUILDER);
 				}
 
 				if (ImGui::MenuItem("Object Builder"))
 				{
-					m_EditorMode = EditorMode::OBJECT_BUILDER;
+                    m_EditorContext->setEditorMode(EditorMode::OBJECT_BUILDER);
 				}
 
 				ImGui::EndMenu();
@@ -438,11 +468,13 @@ namespace  nero
 		{
 			case EditorMode::WORLD_BUILDER:
 			{
-				if(m_BuilderMode ==  BuilderMode::OBJECT)
+                const auto builderMode = m_EditorContext->getBuilderMode();
+
+                if(builderMode ==  BuilderMode::OBJECT)
 				{
 					return "World Builder - Object";
 				}
-				else if(m_BuilderMode ==  BuilderMode::MESH)
+                else if(builderMode ==  BuilderMode::MESH)
 				{
 					return "World Builder - Mesh";
 				}
@@ -458,7 +490,7 @@ namespace  nero
 
     void EditorUI::renderGameModeInfo()
 	{
-		std::string gameMode = getString(m_EditorMode);
+        std::string gameMode = getString(m_EditorContext->getEditorMode());
 		std::string frameRate = toString(m_FrameRate) + " fps";
 		std::string frameTime = toString(m_FrameTime * 1000.f) + " ms";
 
@@ -530,7 +562,7 @@ namespace  nero
 
 		sf::Color clearColor = sf::Color::Black;
 
-		if(m_EditorMode == EditorMode::PLAY_GAME)
+        if(m_EditorContext->getEditorMode() == EditorMode::PLAY_GAME)
 		{
 			/*if(m_AdvancedScene && m_AdvancedScene->getSelectedGameLevel()->levelSetting->getBool("enable_lighting"))
 			{
@@ -840,20 +872,22 @@ namespace  nero
 
     void EditorUI::createScriptObject(const Parameter& parameter)
 	{
-		if(m_GameProject)
+        auto gameProject = m_EditorContext->getGameProject();
+
+        if(gameProject)
 		{
-			m_GameProject->createScriptObject(parameter);
+            gameProject->createScriptObject(parameter);
 		}
 	}
 
     void EditorUI::playScene()
 	{
-		if(m_AdvancedScene && m_EditorMode != EditorMode::PLAY_GAME)
+        if(m_EditorContext->getAdvancedScene() && m_EditorContext->getEditorMode() != EditorMode::PLAY_GAME)
 		{
 			try
 			{
 				//m_AdvancedScene->playScene();
-				m_EditorMode = EditorMode::PLAY_GAME;
+                m_EditorContext->setEditorMode(EditorMode::PLAY_GAME);
 			}
 			catch(std::exception const& e)
 			{
@@ -864,7 +898,7 @@ namespace  nero
 
     void EditorUI::pauseScene()
 	{
-		/*if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
+        /*if(m_AdvancedScene && editorMode == EditorMode::PLAY_GAME)
 		{
 			auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
 
@@ -875,7 +909,7 @@ namespace  nero
     void EditorUI::stepScene()
 	{
 
-		/*if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
+        /*if(m_AdvancedScene && editorMode == EditorMode::PLAY_GAME)
 		{
 			auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
 
@@ -886,7 +920,7 @@ namespace  nero
 
     void EditorUI::resetScene()
 	{
-		/*if(m_AdvancedScene && m_EditorMode == EditorMode::PLAY_GAME)
+        /*if(m_AdvancedScene && editorMode == EditorMode::PLAY_GAME)
 		{
 			m_AdvancedScene->playScene();
 		}*/
@@ -899,30 +933,33 @@ namespace  nero
 
     void EditorUI::compileProject()
 	{
-		if(m_GameProject)
+        auto gameProject = m_EditorContext->getGameProject();
+
+        if(gameProject)
 		{
-			BTManager::startTask(&GameProject::compileProject, m_GameProject.get());
+            BTManager::startTask(&GameProject::compileProject, gameProject.get());
 		}
 	}
 
     void EditorUI::editProject()
 	{
-		if(m_GameProject)
-		{
-			m_GameProject->openEditor();
+        auto gameProject = m_EditorContext->getGameProject();
 
+        if(gameProject)
+		{
+            gameProject->openEditor();
 		}
 	}
 
     void EditorUI::reloadProject()
 	{
+        auto gameProject = m_EditorContext->getGameProject();
 
-		if(m_GameProject)
+        if(gameProject)
 		{
 			nero_log("reloading project ...");
 
-			//m_GameProject->loadLibrary();
-
+            //gameProject->loadLibrary();
 		}
 	}
 
@@ -1003,195 +1040,6 @@ namespace  nero
 
 	}
 
-    void EditorUI::showResourceBrowserWindow()
-	{
-        const auto selectedResourceType = m_EditorContext->getSelectedResourceType();
-
-        if(!m_ResourceManager || selectedResourceType == ResourceType::None)
-            return;
-
-        ImGui::Begin("Resource Browser", nullptr, ImGuiWindowFlags());
-
-            if(m_GameProject &&
-               (selectedResourceType == ResourceType::Texture	|| selectedResourceType == ResourceType::Animation ||
-               selectedResourceType == ResourceType::Sound		|| selectedResourceType == ResourceType::Music		||
-               selectedResourceType == ResourceType::Font		|| selectedResourceType == ResourceType::Particle	||
-               selectedResourceType == ResourceType::Lightmap))
-            {
-
-
-                if(ImGui::Button("Import File##import_resource", ImVec2(100.f, 0.f)))
-                {
-                    file::selectFile([this, selectedResourceType](std::vector<std::string> fileTable)
-                    {
-                        const auto loadedFileTable = m_ResourceManager->loadFile(selectedResourceType, fileTable);
-
-                        if(!loadedFileTable.empty())
-                        {
-                            saveResourceFile(selectedResourceType, loadedFileTable);
-                        }
-                    });
-                }
-            }
-
-            ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 100.f);
-
-
-            if(ImGui::Button("Close##close_sprite_resource", ImVec2(100.f, 0.f)))
-            {
-                m_EditorContext->setSelectedResourceType(ResourceType::None);
-            }
-
-            ImGui::Separator();
-
-            ImGui::BeginChild("browser");
-
-                switch (selectedResourceType)
-                {
-                    case ResourceType::Texture:
-                    {
-                        showSpriteResource();
-                    }break;
-
-                    case ResourceType::Animation:
-                    {
-                        showAnimationResource();
-                    }break;
-
-                    case ResourceType::Mesh:
-                    {
-                        showMeshResource();
-                    }break;
-
-                    case ResourceType::Font:
-                    {
-                        showFontResource();
-                    }break;
-
-                    case ResourceType::Lightmap:
-                    {
-                        showLightmapResource();
-                    }break;
-
-                }
-
-            ImGui::EndChild();
-
-        ImGui::End();
-	}
-
-    void EditorUI::saveResourceFile(ResourceType resourceType, const std::vector<std::string> loadedFileTable)
-	{
-        switch (resourceType)
-		{
-			case ResourceType::Texture:
-			{
-				//copy texture file and json helper
-				for(std::string file : loadedFileTable)
-				{
-                    file::copyFile(file, file::getPath({m_LevelBuilder->getResourceFoler(), "texture", file::getFileName(file, true)}));
-
-					std::string jsonHelper  = file::replaceExtension(file, "json");
-					if(file::fileExist(jsonHelper))
-					{
-                        file::copyFile(file, file::getPath({m_LevelBuilder->getResourceFoler(), "texture", file::getFileName(jsonHelper, true)}));
-					}
-				}
-
-			}break;
-
-			case ResourceType::Animation:
-			{
-				//copy texture file and json helper
-				for(std::string file : loadedFileTable)
-				{
-					file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "animation", file::getFileName(file, true)}));
-
-					std::string jsonHelper  = file::replaceExtension(file, "json");
-					if(file::fileExist(jsonHelper))
-					{
-						file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "animation", file::getFileName(jsonHelper, true)}));
-					}
-				}
-
-			}break;
-
-			case ResourceType::Font:
-			{
-				for(std::string file : loadedFileTable)
-				{
-					file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "font", file::getFileName(file, true)}));
-				}
-
-			}break;
-
-			case ResourceType::Sound:
-			{
-				for(std::string file : loadedFileTable)
-				{
-					file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "sound", file::getFileName(file, true)}));
-				}
-
-			}break;
-
-			case ResourceType::Music:
-			{
-				for(std::string file : loadedFileTable)
-				{
-					file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "music", file::getFileName(file, true)}));
-				}
-
-			}break;
-
-			case ResourceType::Lightmap:
-			{
-				for(std::string file : loadedFileTable)
-				{
-					file::copyFile(file, file::getPath({m_GameProject->getResourceFoler(), "lightmap", file::getFileName(file, true)}));
-				}
-
-			}break;
-		}
-	}
-
-    void EditorUI::showMeshResource()
-	{
-		int resource_count		= 3;
-		int count				= 0;
-		ImGuiStyle& style		= ImGui::GetStyle();
-		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
-		auto printSameLine = [&count, &resource_count, &style, &window_visible_x2]()
-		{
-			float last_button_x2 = ImGui::GetItemRectMax().x;
-			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + 100.f;
-			if (count++ + 1 < resource_count && next_button_x2 < window_visible_x2)
-				ImGui::SameLine();
-		};
-
-		if(ImGui::Button("Polygon", ImVec2(100.f, 100.f)))
-		{
-			if(m_WorldBuilder && m_BuilderMode == BuilderMode::OBJECT)
-				m_WorldBuilder->addObject(Object::Mesh_Object, "Polygon", getAddObjectPosition());
-		}
-
-		printSameLine();
-
-		if(ImGui::Button("Circle", ImVec2(100.f, 100.f)))
-		{
-			if(m_WorldBuilder && m_BuilderMode == BuilderMode::OBJECT)
-				m_WorldBuilder->addObject(Object::Mesh_Object, "Circle", getAddObjectPosition());
-		}
-
-		printSameLine();
-
-		if(ImGui::Button("Line", ImVec2(100.f, 100.f)))
-		{
-			if(m_WorldBuilder && m_BuilderMode == BuilderMode::OBJECT)
-				m_WorldBuilder->addObject(Object::Mesh_Object, "Line", getAddObjectPosition());
-		}
-	}
-
     sf::Vector2f EditorUI::getAddObjectPosition()
 	{
 		//sf::Vector2f screen_pos    = sf::Vector2f(mouse.x - m_RenderContext->canvas_position.x, mouse.y - m_RenderContext->canvas_position.y);
@@ -1201,195 +1049,6 @@ namespace  nero
 		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(screen_pos.x, screen_pos.y), m_RenderTexture->getView());
 
 		return world_pos;
-	}
-
-    void EditorUI::showSpriteResource()
-	{
-		auto& spriteTable = m_ResourceManager->getTextureHolder()->getSpriteTable();
-		int sprite_count = spriteTable.size();
-		ImGuiStyle& style = ImGui::GetStyle();
-		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
-		for (int n = 0; n < sprite_count; n++)
-		{
-			sf::Vector2u boo = m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]).getSize();
-			sf::Vector2u zoo = boo;
-			if(n < sprite_count-1)
-			{
-				zoo = m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n+1]).getSize();
-			}
-
-
-
-			sf::Vector2f sprite_size(boo.x, boo.y);
-			sprite_size = formatSize(sprite_size, 250);
-
-			sf::Vector2f next_sprite_size(zoo.x, zoo.y);
-			next_sprite_size = formatSize(next_sprite_size, 250);
-
-
-			ImVec2 button_size(sprite_size.x, sprite_size.y);
-
-
-			if(ImGui::ImageButton(m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]), button_size))
-			{
-				if(m_WorldBuilder && m_BuilderMode == BuilderMode::OBJECT)
-					m_WorldBuilder->addObject(Object::Sprite_Object, spriteTable[n], getAddObjectPosition());
-			}
-
-			if (ImGui::BeginPopupContextItem())
-			{
-				if (ImGui::Button("Delete"))
-				{
-					ImGui::CloseCurrentPopup();
-				}
-
-				/*if (ImGui::Button("Close"))
-					ImGui::CloseCurrentPopup();*/
-				ImGui::EndPopup();
-			}
-
-			if(ImGui::IsItemHovered())
-			{
-				//nero_log("hover animation button");
-			}
-
-			float last_button_x2 = ImGui::GetItemRectMax().x;
-			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + next_sprite_size.x;
-			if (n + 1 < sprite_count && next_button_x2 < window_visible_x2)
-				ImGui::SameLine();
-		}
-	}
-
-    void EditorUI::showLightmapResource()
-	{
-		auto& spriteTable = m_ResourceManager->getLightmapHolder()->getSpriteTable();
-		int sprite_count = spriteTable.size();
-		ImGuiStyle& style = ImGui::GetStyle();
-		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
-		for (int n = 0; n < sprite_count; n++)
-		{
-			sf::Vector2u boo = m_ResourceManager->getLightmapHolder()->getSpriteTexture(spriteTable[n]).getSize();
-			sf::Vector2u zoo = boo;
-			if(n < sprite_count-1)
-			{
-				zoo = m_ResourceManager->getLightmapHolder()->getSpriteTexture(spriteTable[n+1]).getSize();
-			}
-
-
-
-			sf::Vector2f sprite_size(boo.x, boo.y);
-			sprite_size = formatSize(sprite_size, 250);
-
-			sf::Vector2f next_sprite_size(zoo.x, zoo.y);
-			next_sprite_size = formatSize(next_sprite_size, 250);
-
-
-			ImVec2 button_size(sprite_size.x, sprite_size.y);
-
-
-			if(ImGui::ImageButton(m_ResourceManager->getLightmapHolder()->getSpriteTexture(spriteTable[n]), button_size))
-			{
-				if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-				{
-					//m_AdvancedScene->addObject(Object::Light_Object, spriteTable[n], getAddObjectPosition(), m_EditorMode);
-				}
-			}
-
-			if (ImGui::BeginPopupContextItem())
-			{
-				if (ImGui::Button("Delete"))
-				{
-					ImGui::CloseCurrentPopup();
-				}
-
-				/*if (ImGui::Button("Close"))
-					ImGui::CloseCurrentPopup();*/
-				ImGui::EndPopup();
-			}
-
-			if(ImGui::IsItemHovered())
-			{
-				//nero_log("hover animation button");
-			}
-
-			float last_button_x2 = ImGui::GetItemRectMax().x;
-			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + next_sprite_size.x;
-			if (n + 1 < sprite_count && next_button_x2 < window_visible_x2)
-				ImGui::SameLine();
-		}
-	}
-
-    void EditorUI::showAnimationResource()
-	{
-		auto& animationTable = m_ResourceManager->getAnimationHolder()->getAnimationTable();
-		int animationCount = animationTable.size();
-
-		ImGuiStyle& style = ImGui::GetStyle();
-		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
-		for (int n = 0; n < animationCount; n++)
-		{
-			sf::Texture& texture = m_ResourceManager->getAnimationHolder()->getTexture(animationTable[n]);
-			sf::IntRect bound = m_ResourceManager->getAnimationHolder()->getAnimationBound(animationTable[n]);
-
-			sf::Vector2u boo = sf::Vector2u(bound.width, bound.height);
-			sf::Vector2u zoo = boo;
-			if(n < animationCount-1)
-			{
-				sf::IntRect bound2 = m_ResourceManager->getAnimationHolder()->getAnimationBound(animationTable[n+1]);
-
-				zoo = sf::Vector2u(bound2.width, bound2.height);
-			}
-
-			sf::Vector2f sprite_size(boo.x, boo.y);
-			sprite_size = formatSize(sprite_size, 250);
-
-			sf::Vector2f next_sprite_size(zoo.x, zoo.y);
-			next_sprite_size = formatSize(next_sprite_size, 250);
-
-
-			ImVec2 button_size(sprite_size.x, sprite_size.y);
-
-			sf::Sprite sprite(texture, bound);
-			sprite.scale(2.f, 2.f);
-
-			if(ImGui::ImageButton(sprite, button_size))
-			{
-				/*if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-					m_AdvancedScene->addObject(Object::Animation_Object, animationTable[n], getAddObjectPosition(), m_EditorMode);*/
-			}
-
-			if(ImGui::IsItemHovered())
-			{
-				//nero_log("hover animation button");
-			}
-
-
-			float last_button_x2 = ImGui::GetItemRectMax().x;
-			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + next_sprite_size.x;
-			if (n + 1 < animationCount && next_button_x2 < window_visible_x2)
-				ImGui::SameLine();
-		}
-	}
-
-    void EditorUI::showFontResource()
-	{
-		auto& fontTable = m_ResourceManager->getFontHolder()->getFontTable();
-		int count = fontTable.size();
-
-		for (int i = 0; i < count; i++)
-		{
-			if(ImGui::ImageButton(getFontTexture(fontTable.at(i))))
-			{
-				if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-				{
-					//m_AdvancedScene->addObject(Object::Animation_Object, animationTable[n], getAddObjectPosition(), m_EditorMode);
-				}
-			}
-		}
-
 	}
 
     sf::Texture& EditorUI::getFontTexture(const std::string& fontName)
@@ -1402,7 +1061,7 @@ namespace  nero
 			renderTexture.create(300.f, 100.f);
 			renderTexture.clear(sf::Color::White);
 			sf::Text text;
-			text.setFont(m_ResourceManager->getFontHolder()->getFont(fontName));
+            text.setFont(m_EditorContext->getCurrentResourceManager()->getFontHolder()->getFont(fontName));
 			text.setString(fontName);
 			text.setOrigin(text.getGlobalBounds().width/2.f, text.getGlobalBounds().height/2.f);
 			text.setFillColor(sf::Color::Black);
@@ -1428,18 +1087,20 @@ namespace  nero
 				ImGui::Text("Choose Scene Mode");
 				ImGui::Separator();
 
+                const auto builderMode = m_EditorContext->getBuilderMode();
+
 				int e = 0;
-				if(m_BuilderMode == BuilderMode::OBJECT) e = 0;
-				else if(m_BuilderMode == BuilderMode::MESH) e = 1;
+                if(builderMode == BuilderMode::OBJECT) e = 0;
+                else if(builderMode == BuilderMode::MESH) e = 1;
 				ImGui::RadioButton("Object", &e, 0);
 				if(ImGui::IsItemEdited())
 				{
-					m_BuilderMode = BuilderMode::OBJECT;
+                    m_EditorContext->setBuilderMode(BuilderMode::OBJECT);
 				}
 				ImGui::RadioButton("Mesh", &e, 1);
 				if(ImGui::IsItemEdited())
 				{
-					m_BuilderMode = BuilderMode::MESH;
+                    m_EditorContext->setBuilderMode(BuilderMode::MESH);
 				}
 				ImGui::RadioButton("Play", &e, 2);
 
@@ -1512,42 +1173,55 @@ namespace  nero
 
     void EditorUI::onSaveProject()
 	{
-		if(m_GameProject)
-		{
-			switch (m_EditorMode)
-			{
-				case EditorMode::WORLD_BUILDER:
-				{
-                    if(m_LevelBuilder)
-                        m_LevelBuilder->saveGameLevel();
-				}break;
+        auto gameProject = m_EditorContext->getGameProject();
 
-				case EditorMode::SCREEN_BUILDER:
-				{
-					//m_GameProject->saveGameScreen();
-				}break;
-			}
-		}
+        if(!gameProject)
+            return;
+
+        switch (m_EditorContext->getEditorMode())
+        {
+            case EditorMode::WORLD_BUILDER:
+            {
+                auto levelBuilder = m_EditorContext->getLevelBuilder();
+
+                if(levelBuilder)
+                {
+                    levelBuilder->saveGameLevel();
+                }
+            }break;
+
+            case EditorMode::SCREEN_BUILDER:
+            {
+                //m_GameProject->saveGameScreen();
+            }break;
+        }
 	}
 
     void EditorUI::onLoadProject()
 	{
-		if(m_GameProject)
-		{
-			switch (m_EditorMode)
-			{
-				case EditorMode::WORLD_BUILDER:
-				{
-					//m_GameProject->loadGameLevel();
-				}break;
+        auto gameProject = m_EditorContext->getGameProject();
 
-				case EditorMode::SCREEN_BUILDER:
-				{
-					//m_GameProject->loadGameScreen();
-				}break;
-			}
-		}
-	}
+        if(!gameProject)
+            return;
+
+
+        switch (m_EditorContext->getEditorMode())
+        {
+            case EditorMode::WORLD_BUILDER:
+            {
+                //m_GameProject->loadGameLevel();
+            }break;
+
+            case EditorMode::SCREEN_BUILDER:
+            {
+                //m_GameProject->loadGameScreen();
+            }break;
+            case EditorMode::OBJECT_BUILDER:
+            case EditorMode::PLAY_GAME:
+            case EditorMode::RENDER_GAME:
+                break;
+        }
+    }
 
     void EditorUI::autoSaveProject()
 	{
@@ -1655,18 +1329,24 @@ namespace  nero
 
 			ImGui::BeginChild("##manage_object_layer", ImVec2(), true);
 
-				if(m_WorldBuilder)
-				{
-					m_InputSelectedObjectLayerId = m_WorldBuilder->getSelectedLayer()->getObjectId();
+            auto levelBuilder       = m_EditorContext->getLevelBuilder();
 
-					for(const auto& objectLayer : m_WorldBuilder->getLayerTable())
+            if(levelBuilder)
+            {
+                auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
+
+                if(worldBuilder)
+				{
+                    m_InputSelectedObjectLayerId = worldBuilder->getSelectedLayer()->getObjectId();
+
+                    for(const auto& objectLayer : worldBuilder->getLayerTable())
 					{
 						std::string itemId = "##select_layer" + toString(objectLayer->getObjectId());
 						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedObjectLayerId, objectLayer->getObjectId());
 
 						if(ImGui::IsItemClicked())
 						{
-							m_WorldBuilder->setSelectedLayer(objectLayer);
+                            worldBuilder->setSelectedLayer(objectLayer);
 						}
 
 						ImGui::SameLine();
@@ -1695,8 +1375,8 @@ namespace  nero
 
 						ImGui::PopStyleColor(2);
 					}
-				}
-
+                }
+            }
 			ImGui::EndChild();
 
 		ImGui::End();
@@ -1722,18 +1402,24 @@ namespace  nero
 
     void EditorUI::addObjectLayer()
 	{
-		if(m_WorldBuilder)
-		{
-			m_WorldBuilder->addLayer();
-		}
+        auto levelBuilder       = m_EditorContext->getLevelBuilder();
+
+        if(!levelBuilder)
+            return;
+
+        levelBuilder->getSelectedChunk()->getWorldBuilder()->addLayer();
 	}
 
     void EditorUI::removeObjectLayer()
 	{
-		if(m_AdvancedScene)
-		{
-			m_WorldBuilder->deleteLayer(m_WorldBuilder->getSelectedLayer()->getObjectId());
-		}
+        auto levelBuilder       = m_EditorContext->getLevelBuilder();
+
+        if(!levelBuilder)
+            return;
+
+        auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
+
+        worldBuilder->deleteLayer(worldBuilder->getSelectedLayer()->getObjectId());
 	}
 
     void EditorUI::showGameLevelWindow()
@@ -1780,7 +1466,7 @@ namespace  nero
 
 			ImGui::BeginChild("##show_game_level", ImVec2(), true);
 
-				auto levelNameTable = m_AdvancedScene->getRegisteredLevelTable();
+                auto levelNameTable = m_EditorContext->getAdvancedScene()->getRegisteredLevelTable();
 				ImGuiStyle& style = ImGui::GetStyle();
 				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionWidth();
 
@@ -1823,18 +1509,23 @@ namespace  nero
 
     void EditorUI::closeGameLevel()
 	{
+        auto advancedScene = m_EditorContext->getAdvancedScene();
+
+        if(!advancedScene)
+            return;
+
         m_EditorContext->setOpenedGameLevelName(StringPool.BLANK);
-        m_LevelBuilder	= nullptr;
-		m_ResourceManager	= nullptr;
-		m_AdvancedScene->closeSelectedLevel();
+        advancedScene->closeSelectedLevel();
 	}
 
     void EditorUI::createGameScreen(const Parameter& parameter)
 	{
-		if(m_AdvancedScene)
-		{
-			m_AdvancedScene->createScreen(parameter);
-		}
+        auto advancedScene = m_EditorContext->getAdvancedScene();
+
+        if(!advancedScene)
+            return;
+
+        advancedScene->createScreen(parameter);
 	}
 
     void EditorUI::showNewGameScreenPopup()
@@ -1910,18 +1601,12 @@ namespace  nero
 
     void EditorUI::removeGameLevel()
 	{
-		if(m_AdvancedScene)
-		{
-
-		}
+        //TODO
 	}
 
     void EditorUI::editGameLevel()
 	{
-		if(m_AdvancedScene)
-		{
-
-		}
+        //TODO
 	}
 
     void EditorUI::showWorldChunckWindow()
@@ -1955,11 +1640,13 @@ namespace  nero
 			ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
 			ImGui::BeginChild("##manage_world_chunk", ImVec2(), true);
 
-                if(m_LevelBuilder)
-				{
-                    auto& chunkTable = m_LevelBuilder->getChunkTable();
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
 
-                    auto selectedChunk		= m_LevelBuilder->getSelectedChunk();
+                if(levelBuilder)
+				{
+                    auto& chunkTable = levelBuilder->getChunkTable();
+
+                    auto selectedChunk		= levelBuilder->getSelectedChunk();
 					m_InputSelectedChunkId	= selectedChunk ? selectedChunk->getChunkId() : -1;
 
 					for(const auto& worldChunk : chunkTable)
@@ -1969,8 +1656,7 @@ namespace  nero
 
 						if(ImGui::IsItemClicked())
 						{
-                            m_LevelBuilder->setSelectedChunk(worldChunk);
-							m_WorldBuilder = worldChunk->getWorldBuilder();
+                            levelBuilder->setSelectedChunk(worldChunk);
 						}
 
 						ImGui::SameLine();
@@ -2002,19 +1688,19 @@ namespace  nero
 
     void EditorUI::addWorldChunk()
 	{
-        if(m_LevelBuilder && m_EditorMode == EditorMode::WORLD_BUILDER && m_BuilderMode == BuilderMode::OBJECT)
+        auto levelBuilder = m_EditorContext->getLevelBuilder();
+
+        if(levelBuilder &&
+           m_EditorContext->getEditorMode() == EditorMode::WORLD_BUILDER &&
+           m_EditorContext->getBuilderMode() == BuilderMode::OBJECT)
 		{
-            auto worldChunk = m_LevelBuilder->addChunk();
-			m_WorldBuilder  = worldChunk->getWorldBuilder();
+            auto worldChunk = levelBuilder->addChunk();
 		}
 	}
 
     void EditorUI::removeWorldChunk()
 	{
-		if(m_AdvancedScene)
-		{
-			//m_AdvancedScene->removeWorldChunk();
-		}
+
 	}
 
     void EditorUI::showToggleButton(bool toggle, const std::string& label, std::function<void()> callback)
@@ -2068,9 +1754,11 @@ namespace  nero
 	{
 		ImGui::Begin(EditorConstant.WINDOW_EXPLORER.c_str());
 
-		if (ImGui::CollapsingHeader("Scene", m_AdvancedScene ? ImGuiTreeNodeFlags_DefaultOpen :ImGuiTreeNodeFlags_None))
+        if (ImGui::CollapsingHeader("Scene", m_EditorContext->getAdvancedScene() ? ImGuiTreeNodeFlags_DefaultOpen :ImGuiTreeNodeFlags_None))
 		{
-            if(m_LevelBuilder)
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
+
+            if(levelBuilder)
 			{
 				ImGuiViewport* viewport = ImGui::GetMainViewport();
 				float game_world_window_height = viewport->Size.y * 0.25f;
@@ -2081,14 +1769,14 @@ namespace  nero
 				ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 
 				ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[3]);
-                if(ImGui::TreeNode(std::string(ICON_FA_FOLDER_OPEN " " + m_LevelBuilder->getLevelName()).c_str()))
+                if(ImGui::TreeNode(std::string(ICON_FA_FOLDER_OPEN " " + levelBuilder->getLevelName()).c_str()))
 				{
 					int			chunk_node_clicked		= -1;
-                    static int	chunk_selection_mask	= (1 << m_LevelBuilder->getChunkTable().size());
-                    int			selectedWorldChunkId	= m_LevelBuilder->getSelectedChunk()->getChunkId();
+                    static int	chunk_selection_mask	= (1 << levelBuilder->getChunkTable().size());
+                    int			selectedWorldChunkId	= levelBuilder->getSelectedChunk()->getChunkId();
 
 					int loop_chunk = 0;
-                    for(const auto& worldChunk : m_LevelBuilder->getChunkTable())
+                    for(const auto& worldChunk : levelBuilder->getChunkTable())
 					{
 						ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
@@ -2107,8 +1795,7 @@ namespace  nero
 						if (ImGui::IsItemClicked())
 						{
 							chunk_node_clicked = loop_chunk;
-                            m_LevelBuilder->setSelectedChunk(worldChunk);
-							m_WorldBuilder = worldChunk->getWorldBuilder();
+                            levelBuilder->setSelectedChunk(worldChunk);
 							selectedWorldChunkId = worldChunk->getChunkId();
 						}
 
@@ -2116,7 +1803,7 @@ namespace  nero
 						{
 							//display chunk layer here
 							int			layer_node_clicked		= -1;
-							int			selectedObjectLayerId	= m_WorldBuilder->getSelectedLayer()->getObjectId();
+                            int			selectedObjectLayerId	= worldChunk->getWorldBuilder()->getSelectedLayer()->getObjectId();
 
 							int loop_layer = 0;
 							for(const auto& objectLayer : worldChunk->getWorldBuilder()->getLayerTable())
@@ -2140,8 +1827,7 @@ namespace  nero
 								{
 									layer_node_clicked = loop_layer;
 									chunk_node_clicked = loop_chunk;
-                                    m_LevelBuilder->setSelectedChunk(worldChunk);
-									m_WorldBuilder = worldChunk->getWorldBuilder();
+                                    levelBuilder->setSelectedChunk(worldChunk);
 									worldChunk->getWorldBuilder()->setSelectedLayer(objectLayer);
 									selectedWorldChunkId = worldChunk->getChunkId();
 									selectedObjectLayerId = objectLayer->getObjectId();
@@ -2184,10 +1870,10 @@ namespace  nero
 											layer_node_clicked	= loop_layer;
 											chunk_node_clicked	= loop_chunk;
 
-                                            m_LevelBuilder->setSelectedChunk(worldChunk);
-											m_WorldBuilder = worldChunk->getWorldBuilder();
-											m_WorldBuilder->setSelectedLayer(objectLayer);
-											m_WorldBuilder->setSelectedObject(gameObject);
+                                            levelBuilder->setSelectedChunk(worldChunk);
+                                            auto worldBuilder = worldChunk->getWorldBuilder();
+                                            worldBuilder->setSelectedLayer(objectLayer);
+                                            worldBuilder->setSelectedObject(gameObject);
 
 											selectedWorldChunkId	= worldChunk->getChunkId();
 											selectedObjectLayerId	= objectLayer->getObjectId();
@@ -2234,7 +1920,9 @@ namespace  nero
 
 		if (ImGui::CollapsingHeader("Game Level"))
 		{
-			if(m_AdvancedScene)
+            auto advancedScene = m_EditorContext->getAdvancedScene();
+
+            if(advancedScene)
 			{
 				/*ImGuiViewport* viewport = ImGui::GetMainViewport();
 				float window_height = viewport->Size.y * 0.25f;
@@ -2332,11 +2020,15 @@ namespace  nero
 
 		}
 
+        auto levelBuilder = m_EditorContext->getLevelBuilder();
+        WorldBuilder::Ptr worldBuilder = nullptr;
 
+        if(levelBuilder)
+            worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
 
-		if(m_WorldBuilder)
+        if(worldBuilder)
 		{
-			Object::Ptr selectedObject = m_WorldBuilder->getSelectedObject();
+            Object::Ptr selectedObject = worldBuilder->getSelectedObject();
 
 			ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.000f, 0.000f, 0.000f, 0.675f));
 
@@ -2568,10 +2260,8 @@ namespace  nero
 
     void EditorUI::showBackgroundTaskWindow()
 	{
-		if(!m_GameProject)
-		{
-			return;
-		}
+        if(!m_EditorContext->getGameProject())
+            return;
 
 		// FIXME-VIEWPORT: Select a default viewport
 		const float DISTANCE = 10.0f;
@@ -2662,13 +2352,13 @@ namespace  nero
             //open new project
             if(m_ProjectManager)
             {
-                m_GameProject		= m_ProjectManager->openProject(projectDirectory);
-                m_AdvancedScene		= m_GameProject->getAdvancedScene();
-                m_AdvancedScene->setRenderTexture(m_RenderTexture);
-                m_AdvancedScene->setRenderContext(m_RenderContext);
+                m_ProjectManager->openProject(projectDirectory);
+                auto advancedScene		= m_EditorContext->getAdvancedScene();
+                advancedScene->setRenderTexture(m_RenderTexture);
+                advancedScene->setRenderContext(m_RenderContext);
 
                 //update editor window title
-                m_UpdateWindowTitleCallback(m_GameProject->getProjectName());
+                m_UpdateWindowTitleCallback(m_EditorContext->getGameProject()->getProjectName());
             }
         };
 
@@ -2688,11 +2378,6 @@ namespace  nero
         // Close project
         m_EditorProxy->m_CloseProjectCallback = [this]()
         {
-            m_ResourceManager	= nullptr;
-            m_AdvancedScene		= nullptr;
-            m_GameProject		= nullptr;
-            m_LevelBuilder	= nullptr;
-            m_WorldBuilder		= nullptr;
             m_ProjectManager->closeProject();
 
             //update editor window title
@@ -2732,7 +2417,7 @@ namespace  nero
 
             file::saveFile(windowSettingFile, windowSetting.toJson().dump(3), true);
 
-            if(m_GameProject)
+            if(m_EditorContext->getGameProject())
             {
                 nero_log("-> Closing project")
                 m_EditorProxy->closeProject();
@@ -2747,12 +2432,14 @@ namespace  nero
         // Create workspace
         m_EditorProxy->m_CreateGameLevelCallback = [this](const Parameter& levelParameter)
         {
+            auto advancedScene = m_EditorContext->getAdvancedScene();
+
             // Advanced Scene not available
-            if(!m_AdvancedScene)
+            if(!advancedScene)
                 return;
 
             // Create new Game Level
-            const std::string levelName = m_AdvancedScene->createLevel(levelParameter);
+            const std::string levelName = advancedScene->createLevel(levelParameter);
 
             if(levelName != StringPool.BLANK)
             {
@@ -2764,15 +2451,20 @@ namespace  nero
 
         m_EditorProxy->m_OpenGameLevelCallback = [this](const std::string levelName)
         {
+            auto advancedScene = m_EditorContext->getAdvancedScene();
+
+            // Advanced Scene not available
+            if(!advancedScene)
+                return;
+
             // Selected game level is already open
-            if(m_LevelBuilder && m_LevelBuilder->getLevelName() == levelName)
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
+
+            if(levelBuilder && levelBuilder->getLevelName() == levelName)
             {
                 return;
             }
-
-            m_LevelBuilder      = m_AdvancedScene->openLevel(levelName);
-            m_ResourceManager   = m_LevelBuilder->getResourceManager();
-            m_WorldBuilder      = m_LevelBuilder->getSelectedChunk()->getWorldBuilder();
+            advancedScene->openLevel(levelName);
             m_EditorContext->setOpenedGameLevelName(levelName);
         };
     }

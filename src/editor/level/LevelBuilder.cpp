@@ -180,5 +180,10 @@ namespace nero
 	{
 		return m_Opened;
 	}
+
+    std::string LevelBuilder::getResourceDirectory() const
+    {
+        return file::getPath({m_GameLevel->getLevelDirectory(), "resource"});
+    }
 }
 

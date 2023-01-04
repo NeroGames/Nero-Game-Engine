@@ -33,6 +33,8 @@ namespace nero
             EditorProxy::Ptr        getEditorProxy()            const;
             ProjectManager::Ptr     getProjectManager()         const;
             GameProject::Ptr        getGameProject()            const;
+            AdvancedScene::Ptr      getAdvancedScene()          const;
+            LevelBuilder::Ptr       getLevelBuilder()           const;
             EditorMode              getEditorMode()             const;
             BuilderMode             getBuilderMode()            const;
             TextureHolder::Ptr      getTextureHolder()          const;
@@ -40,6 +42,7 @@ namespace nero
             std::string             getSelectedGameLevelName()  const;
             std::string             getOpengedGameLevelName()   const;
             ResourceType            getSelectedResourceType()   const;
+            ResourceManager::Ptr    getCurrentResourceManager() const;
             // Setter
             void                    setEditorMode(const EditorMode& editorMode);
             void                    setBuilderMode(const BuilderMode& builderMode);

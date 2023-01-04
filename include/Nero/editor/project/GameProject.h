@@ -65,7 +65,6 @@ namespace nero
 
 			const std::string					getResourceFoler() const;
 
-
 		private:
 			BackgroundTask&						createBackgroundTask(const std::string& name, const std::string& category);
 

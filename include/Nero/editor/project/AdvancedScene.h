@@ -27,7 +27,7 @@ namespace nero
 			void											init();
 			//level
             std::string										createLevel(const Parameter& parameter);
-			LevelBuilder::Ptr								openLevel(const std::string& levelName);
+            void                                            openLevel(const std::string& levelName);
 			void											closeSelectedLevel();
 			void											removeLevel(const std::string& levelName);
 			void											registerLevel(const std::string& levelName);
@@ -41,6 +41,7 @@ namespace nero
 			//render
 			void											setRenderContext(const RenderContext::Ptr& renderContext);
 			void											setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
+            LevelBuilder::Ptr                               getLevelBuilder() const;
 
 		private:
 			//level

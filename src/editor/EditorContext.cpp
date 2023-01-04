@@ -44,12 +44,30 @@ namespace  nero
 
     GameProject::Ptr EditorContext::getGameProject() const
     {
-        if(m_ProjectManager)
-        {
-            return m_ProjectManager->getGameProject();
-        }
+        if(!m_ProjectManager)
+            return nullptr;
 
-        return nullptr;
+       return m_ProjectManager->getGameProject();
+    }
+
+    AdvancedScene::Ptr EditorContext::getAdvancedScene() const
+    {
+        GameProject::Ptr gameProject = getGameProject();
+
+        if(!gameProject)
+            return nullptr;
+
+        return gameProject->getAdvancedScene();
+    }
+
+    LevelBuilder::Ptr EditorContext::getLevelBuilder() const
+    {
+        AdvancedScene::Ptr advancedScene = getAdvancedScene();
+
+        if(!advancedScene)
+            return nullptr;
+
+        return advancedScene->getLevelBuilder();
     }
 
     TextureHolder::Ptr EditorContext::getTextureHolder() const
@@ -110,5 +128,26 @@ namespace  nero
     void EditorContext::setSelectedResourceType(const ResourceType& resourceType)
     {
         m_SelectedResourceType = resourceType;
+    }
+
+    ResourceManager::Ptr EditorContext::getCurrentResourceManager() const
+    {
+        switch (m_EditorMode)
+        {
+            case EditorMode::WORLD_BUILDER:
+            {
+                auto levelBuilder = getLevelBuilder();
+
+                if(!levelBuilder)
+                    return nullptr;
+
+                return levelBuilder->getResourceManager();
+            }
+            default:
+            {
+                // TODO
+                return nullptr;
+            }
+        }
     }
 }
