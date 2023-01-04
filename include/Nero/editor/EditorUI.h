@@ -12,6 +12,7 @@
 #include <Nero/editor/ui/EditorToolbar.h>
 #include <Nero/editor/EditorSetup.h>
 #include <Nero/editor/ui/EditorSetupPopup.h>
+#include <Nero/editor/ui/ResourceSelectionWindow.h>
 #include <Nero/editor/project/ProjectManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>
@@ -104,6 +105,7 @@ namespace nero
             EditorDockspace                                 m_EditorDockspace;
             EditorToolbar                                   m_EditorToolbar;
             EditorSetupPopup                                m_EditorSetupPopup;
+            ResourceSelectionWindow                         m_ResourceSelectionWindow;
             // Core Engine callback
             float											m_FrameRate;
             float											m_FrameTime;
@@ -139,8 +141,7 @@ namespace nero
 			void											showResourceBrowserWindow();
 			void											showHelpWindow();
 				//bottom
-			void											showResourceWindow();
-			void											showLoggingWindow();
+            void											showLoggingWindow();
 			//utility
             void											showToggleButton(bool toggle,
                                                                              const std::string& label,
@@ -201,8 +202,6 @@ namespace nero
 			bool											mouseOnCanvas();
 			//
 			ax::NodeEditor::EditorContext*					g_Context;
-			//
-			ResourceType									m_ResourceBrowserType;
 			//
 			void											showSpriteResource();
 			void											showAnimationResource();

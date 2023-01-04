@@ -22,6 +22,7 @@ namespace  nero
         ,m_BuilderMode(builderMode)
         ,m_SelectedGameLevelName(StringPool.BLANK)
         ,m_OpenedGameLevelName(StringPool.BLANK)
+        ,m_SelectedResourceType(ResourceType::None)
     {
 
     }
@@ -81,6 +82,11 @@ namespace  nero
         return m_OpenedGameLevelName;
     }
 
+    ResourceType EditorContext::getSelectedResourceType() const
+    {
+        return m_SelectedResourceType;
+    }
+
     void EditorContext::setEditorMode(const EditorMode& editorMode)
     {
         m_EditorMode = editorMode;
@@ -99,5 +105,10 @@ namespace  nero
     void EditorContext::setOpenedGameLevelName(const std::string& levelName)
     {
         m_OpenedGameLevelName = levelName;
+    }
+
+    void EditorContext::setSelectedResourceType(const ResourceType& resourceType)
+    {
+        m_SelectedResourceType = resourceType;
     }
 }

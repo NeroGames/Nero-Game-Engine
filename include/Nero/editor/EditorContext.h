@@ -6,6 +6,7 @@
 #define EDITORCONTEXT_H
 ///////////////////////////HEADERS//////////////////////////
 //Nero
+#include <Nero/core/cpp/resource/ResourceUtility.h>
 #include <Nero/editor/EditorProxy.h>
 #include <Nero/editor/EditorUtility.h>
 #include <Nero/editor/project/ProjectManager.h>
@@ -38,11 +39,13 @@ namespace nero
             Setting::Ptr            getEditorSetting()          const;
             std::string             getSelectedGameLevelName()  const;
             std::string             getOpengedGameLevelName()   const;
+            ResourceType            getSelectedResourceType()   const;
             // Setter
             void                    setEditorMode(const EditorMode& editorMode);
             void                    setBuilderMode(const BuilderMode& builderMode);
             void                    setSelectedGameLevelName(const std::string& levelName);
             void                    setOpenedGameLevelName(const std::string& levelName);
+            void                    setSelectedResourceType(const ResourceType& resourceType);
 
         private:
             EditorProxy::Ptr        m_EditorProxy;
@@ -51,9 +54,12 @@ namespace nero
             Setting::Ptr            m_EditorSetting;
             EditorMode              m_EditorMode;
             BuilderMode             m_BuilderMode;
-            //Game Level
+            // Game Level
             std::string             m_SelectedGameLevelName;
             std::string             m_OpenedGameLevelName;
+            // Resource
+            ResourceType            m_SelectedResourceType;
+
 	};
 }
 

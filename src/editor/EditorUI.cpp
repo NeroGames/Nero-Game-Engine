@@ -50,6 +50,7 @@ namespace  nero
         ,m_EditorDockspace(m_EditorContext)
         ,m_EditorToolbar(m_EditorContext)
         ,m_EditorSetupPopup(m_EditorContext, m_EditorSetup)
+        ,m_ResourceSelectionWindow(m_EditorContext)
         //
         ,m_InterfaceFirstDraw(true)
         ,m_SelectedScriptTypeIndex(0)
@@ -58,7 +59,6 @@ namespace  nero
         ,m_AdvancedScene(nullptr)
         ,g_Context(nullptr)
         ,m_BottomDockspaceTabBarSwitch()
-        ,m_ResourceBrowserType(ResourceType::None)
         ,m_EditorMode(EditorMode::WORLD_BUILDER)
         ,m_BuilderMode(BuilderMode::OBJECT)
         ,m_SelectedChunkNode(StringPool.BLANK)
@@ -235,7 +235,7 @@ namespace  nero
 			//visual script
 		showVisualScriptWindow();
 			//resource manager
-		showResourceWindow();
+        m_ResourceSelectionWindow.render();
 			//imgui demo
 		ImGui::ShowDemoWindow();
 
@@ -1003,196 +1003,34 @@ namespace  nero
 
 	}
 
-    void EditorUI::showResourceWindow()
-	{
-		ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
-		ImGui::Begin("Resource", nullptr, flags);
-		bool selected = false;
-
-		int resource_count		= 9;
-		int count				= 0;
-		ImGuiStyle& style		= ImGui::GetStyle();
-		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
-		auto printSameLine = [&count, &resource_count, &style, &window_visible_x2]()
-		{
-			float last_button_x2 = ImGui::GetItemRectMax().x;
-			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + 100.f;
-			if (count++ + 1 < resource_count && next_button_x2 < window_visible_x2)
-				ImGui::SameLine();
-		};
-
-
-		selected = m_ResourceBrowserType == ResourceType::Texture;
-		pushResourceStyle(selected);
-		if(ImGui::Button("Sprite##open_sprite_resource", ImVec2(100.f, 100.f)))
-		{
-			m_ResourceBrowserType = ResourceType::Texture;
-		}
-		popResourceStyle(selected);
-
-
-		printSameLine();
-
-		selected = m_ResourceBrowserType == ResourceType::Animation;
-		pushResourceStyle(selected);
-		if(ImGui::Button("Animation##open_sprite_resource", ImVec2(100.f, 100.f)))
-		{
-			m_ResourceBrowserType = ResourceType::Animation;
-		}
-		popResourceStyle(selected);
-
-		printSameLine();
-
-
-		selected = m_ResourceBrowserType == ResourceType::Mesh;
-		pushResourceStyle(selected);
-		if(ImGui::Button("Mesh##open_sprite_resource", ImVec2(100.f, 100.f)))
-		{
-			m_ResourceBrowserType = ResourceType::Mesh;
-		}
-		popResourceStyle(selected);
-
-
-		printSameLine();
-
-		/*if(ImGui::Button("Shape##open_shape_resource", ImVec2(100.f, 100.f)))
-		{
-			m_ResourceBrowserType = ResourceType::Shape;
-		}
-
-		printSameLine();
-
-		if(ImGui::Button("Particle##open_shape_resource", ImVec2(100.f, 100.f)))
-		{
-			m_ResourceBrowserType = ResourceType::Particle;
-		}
-
-		printSameLine();*/
-
-		selected = m_ResourceBrowserType == ResourceType::Font;
-		pushResourceStyle(selected);
-		if(ImGui::Button("Font##open_shape_resource", ImVec2(100.f, 100.f)))
-		{
-			m_ResourceBrowserType = ResourceType::Font;
-		}
-		popResourceStyle(selected);
-
-
-		printSameLine();
-
-		/*if(ImGui::Button("Composite##open_shape_resource", ImVec2(100.f, 100.f)))
-		{
-			m_ResourceBrowserType = ResourceType::Composite;
-		}
-
-		printSameLine();*/
-
-		if(ImGui::Button("Sound##open_shape_resource", ImVec2(100.f, 100.f)))
-		{
-			m_ResourceBrowserType = ResourceType::Sound;
-		}
-
-		printSameLine();
-
-		if(ImGui::Button("Music##open_shape_resource", ImVec2(100.f, 100.f)))
-		{
-			m_ResourceBrowserType = ResourceType::Music;
-		}
-
-		printSameLine();
-
-		/*if(ImGui::Button("Script##open_script_object_resource", ImVec2(100.f, 100.f)))
-		{
-
-		}
-
-		printSameLine();*/
-
-		if(ImGui::Button("Light##open_shape_resource", ImVec2(100.f, 100.f)))
-		{
-			m_ResourceBrowserType = ResourceType::Lightmap;
-		}
-
-		printSameLine();
-
-		if(ImGui::Button("Spawner##spawn_object", ImVec2(100.f, 100.f)))
-		{
-
-		}
-
-		printSameLine();
-
-		if(ImGui::Button("Factory##open_factory_resource", ImVec2(100.f, 100.f)))
-		{
-
-		}
-
-		printSameLine();
-
-		if(ImGui::Button("CPP Script##open_script_resource", ImVec2(100.f, 100.f)))
-		{
-
-		}
-
-		printSameLine();
-
-		if(ImGui::Button("Empty Object##add_empty_object", ImVec2(100.f, 100.f)))
-		{
-
-		}
-
-		ImGui::End();
-	}
-
     void EditorUI::showResourceBrowserWindow()
 	{
-        if(!m_ResourceManager || m_ResourceBrowserType == ResourceType::None)
+        const auto selectedResourceType = m_EditorContext->getSelectedResourceType();
+
+        if(!m_ResourceManager || selectedResourceType == ResourceType::None)
             return;
 
         ImGui::Begin("Resource Browser", nullptr, ImGuiWindowFlags());
 
             if(m_GameProject &&
-               (m_ResourceBrowserType == ResourceType::Texture	|| m_ResourceBrowserType == ResourceType::Animation ||
-               m_ResourceBrowserType == ResourceType::Sound		|| m_ResourceBrowserType == ResourceType::Music		||
-               m_ResourceBrowserType == ResourceType::Font		|| m_ResourceBrowserType == ResourceType::Particle	||
-               m_ResourceBrowserType == ResourceType::Lightmap))
+               (selectedResourceType == ResourceType::Texture	|| selectedResourceType == ResourceType::Animation ||
+               selectedResourceType == ResourceType::Sound		|| selectedResourceType == ResourceType::Music		||
+               selectedResourceType == ResourceType::Font		|| selectedResourceType == ResourceType::Particle	||
+               selectedResourceType == ResourceType::Lightmap))
             {
 
 
                 if(ImGui::Button("Import File##import_resource", ImVec2(100.f, 0.f)))
                 {
-                    nfdpathset_t pathSet;
-                    nfdresult_t result = NFD_OpenDialogMultiple( nullptr, nullptr, &pathSet);
-
-                    if ( result == NFD_OKAY )
+                    file::selectFile([this, selectedResourceType](std::vector<std::string> fileTable)
                     {
-                        std::vector<std::string> fileTable;
-
-                        size_t i;
-                        for ( i = 0; i < NFD_PathSet_GetCount(&pathSet); ++i )
-                        {
-                            nfdchar_t *path = NFD_PathSet_GetPath(&pathSet, i);
-
-                            fileTable.push_back(toString(path));
-                        }
-
-                        const std::vector<std::string> loadedFileTable = m_ResourceManager->loadFile(m_ResourceBrowserType, fileTable);
+                        const auto loadedFileTable = m_ResourceManager->loadFile(selectedResourceType, fileTable);
 
                         if(!loadedFileTable.empty())
                         {
-                            saveResourceFile(m_ResourceBrowserType, loadedFileTable);
+                            saveResourceFile(selectedResourceType, loadedFileTable);
                         }
-
-                        NFD_PathSet_Free(&pathSet);
-                    }
-                    else if ( result == NFD_CANCEL ) {
-                        //puts("User pressed cancel.");
-                    }
-                    else {
-                        //printf("Error: %s\n", NFD_GetError() );
-                    }
-
+                    });
                 }
             }
 
@@ -1201,14 +1039,14 @@ namespace  nero
 
             if(ImGui::Button("Close##close_sprite_resource", ImVec2(100.f, 0.f)))
             {
-                m_ResourceBrowserType = ResourceType::None;
+                m_EditorContext->setSelectedResourceType(ResourceType::None);
             }
 
             ImGui::Separator();
 
             ImGui::BeginChild("browser");
 
-                switch (m_ResourceBrowserType)
+                switch (selectedResourceType)
                 {
                     case ResourceType::Texture:
                     {
@@ -1242,9 +1080,9 @@ namespace  nero
         ImGui::End();
 	}
 
-    void EditorUI::saveResourceFile(ResourceType type, const std::vector<std::string> loadedFileTable)
+    void EditorUI::saveResourceFile(ResourceType resourceType, const std::vector<std::string> loadedFileTable)
 	{
-		switch (m_ResourceBrowserType)
+        switch (resourceType)
 		{
 			case ResourceType::Texture:
 			{
