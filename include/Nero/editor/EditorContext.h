@@ -29,16 +29,20 @@ namespace nero
             virtual                ~EditorContext();
 
             // Getter
-            EditorProxy::Ptr        getEditorProxy()    const;
-            ProjectManager::Ptr     getProjectManager() const;
-            GameProject::Ptr        getGameProject()    const;
-            EditorMode              getEditorMode()     const;
-            BuilderMode             getBuilderMode()    const;
-            TextureHolder::Ptr      getTextureHolder()  const;
-            Setting::Ptr            getEditorSetting()  const;
+            EditorProxy::Ptr        getEditorProxy()            const;
+            ProjectManager::Ptr     getProjectManager()         const;
+            GameProject::Ptr        getGameProject()            const;
+            EditorMode              getEditorMode()             const;
+            BuilderMode             getBuilderMode()            const;
+            TextureHolder::Ptr      getTextureHolder()          const;
+            Setting::Ptr            getEditorSetting()          const;
+            std::string             getSelectedGameLevelName()  const;
+            std::string             getOpengedGameLevelName()   const;
             // Setter
             void                    setEditorMode(const EditorMode& editorMode);
             void                    setBuilderMode(const BuilderMode& builderMode);
+            void                    setSelectedGameLevelName(const std::string& levelName);
+            void                    setOpenedGameLevelName(const std::string& levelName);
 
         private:
             EditorProxy::Ptr        m_EditorProxy;
@@ -47,6 +51,9 @@ namespace nero
             Setting::Ptr            m_EditorSetting;
             EditorMode              m_EditorMode;
             BuilderMode             m_BuilderMode;
+            //Game Level
+            std::string             m_SelectedGameLevelName;
+            std::string             m_OpenedGameLevelName;
 	};
 }
 

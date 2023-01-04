@@ -18,6 +18,21 @@ namespace nero
 
             virtual void 			destroy() override;
             virtual void            render() override;
+
+        private:
+            void                    clearInput();
+
+        private:
+            struct GameLevelInput
+            {
+                char name[100];
+                bool enablePhysics;
+                bool enableLight;
+                char prototype[100];
+            };
+
+        private:
+            GameLevelInput          m_Input;
 	};
 }
 #endif // NEWGAMELEVELPOPUP_H

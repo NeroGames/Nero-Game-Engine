@@ -26,7 +26,7 @@ namespace nero
 
 			void											init();
 			//level
-			void											createLevel(const Parameter& parameter);
+            std::string										createLevel(const Parameter& parameter);
 			LevelBuilder::Ptr								openLevel(const std::string& levelName);
 			void											closeSelectedLevel();
 			void											removeLevel(const std::string& levelName);

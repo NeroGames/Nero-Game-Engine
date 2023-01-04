@@ -20,6 +20,8 @@ namespace  nero
         ,m_EditorSetting(editorSetting)
         ,m_EditorMode(editorMode)
         ,m_BuilderMode(builderMode)
+        ,m_SelectedGameLevelName(StringPool.BLANK)
+        ,m_OpenedGameLevelName(StringPool.BLANK)
     {
 
     }
@@ -69,6 +71,16 @@ namespace  nero
         return m_BuilderMode;
     }
 
+    std::string EditorContext::getSelectedGameLevelName()  const
+    {
+        return m_SelectedGameLevelName;
+    }
+
+    std::string EditorContext::getOpengedGameLevelName()  const
+    {
+        return m_OpenedGameLevelName;
+    }
+
     void EditorContext::setEditorMode(const EditorMode& editorMode)
     {
         m_EditorMode = editorMode;
@@ -77,5 +89,15 @@ namespace  nero
     void EditorContext::setBuilderMode(const BuilderMode& builderMode)
     {
         m_BuilderMode = builderMode;
+    }
+
+    void EditorContext::setSelectedGameLevelName(const std::string& levelName)
+    {
+        m_SelectedGameLevelName = levelName;
+    }
+
+    void EditorContext::setOpenedGameLevelName(const std::string& levelName)
+    {
+        m_OpenedGameLevelName = levelName;
     }
 }

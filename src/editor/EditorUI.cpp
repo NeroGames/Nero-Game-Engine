@@ -68,9 +68,6 @@ namespace  nero
         ,m_InputSelectedGameScreenId(-1)
         ,m_MouseInformation("Mouse Position")
         ,m_ConsoleApplication()
-        ,m_SelectedGameLevel(StringPool.BLANK)
-        ,m_OpenedGameLevel(StringPool.BLANK)
-
         ,m_RenderTexture(std::make_shared<sf::RenderTexture>())
         ,m_RenderContext(std::make_shared<RenderContext>())
     {
@@ -468,7 +465,7 @@ namespace  nero
 		std::string info = gameMode + "  |  " + frameRate + "  |  " + frameTime;
 
 		m_GameModeInfo.setString(info);
-		m_GameBuilderInfo.setString(m_OpenedGameLevel);
+        m_GameBuilderInfo.setString(m_EditorContext->getOpengedGameLevelName());
 
 		sf::Vector2f position;
 		position.x = m_RenderTexture->getSize().x - m_GameModeInfo.getLocalBounds().width - 20.f;
@@ -807,7 +804,7 @@ namespace  nero
 
 						if(std::string(m_SelectedScriptType) == "Game Level Script")
 						{
-							parameter.setString("level_name", std::string(m_SelectedGameLevel));
+                            parameter.setString("level_name", m_EditorContext->getSelectedGameLevelName());
 						}
 						else if(std::string(m_SelectedScriptType) == "Game Screen Script")
 						{
@@ -1908,7 +1905,7 @@ namespace  nero
 			ImVec2 button_size = ImVec2(100.f, 0.f);
 			if(ImGui::Button("Open##open_game_level", button_size))
 			{
-				openGameLevel();
+                m_EditorProxy->openGameLevel(m_EditorContext->getSelectedGameLevelName());
 			}
 
 			ImGui::SameLine();
@@ -1969,10 +1966,11 @@ namespace  nero
 				{
 					ImVec2 button_size(200.f, 75.f);
 
-					pushGameLevelStyle(m_SelectedGameLevel == name, m_OpenedGameLevel == name);
+                    pushGameLevelStyle(m_EditorContext->getSelectedGameLevelName() == name,
+                                       m_EditorContext->getOpengedGameLevelName() == name);
 					if(ImGui::Button(name.c_str(), button_size))
 					{
-						m_SelectedGameLevel = name;
+                        m_EditorContext->setSelectedGameLevelName(name);
 					}
 					popGameLevelStyle();
 
@@ -1984,125 +1982,13 @@ namespace  nero
 		ImGui::End();
 	};
 
-    void EditorUI::openGameLevel()
-	{
-        // No game level is selected
-		if(m_SelectedGameLevel == StringPool.BLANK)
-        {
-            return;
-        }
-
-        // Selected game level is already open
-        if(m_LevelBuilder && m_LevelBuilder->getLevelName() == m_SelectedGameLevel)
-        {
-            return;
-        }
-
-        m_LevelBuilder			= m_AdvancedScene->openLevel(m_SelectedGameLevel);
-        m_ResourceManager			= m_LevelBuilder->getResourceManager();
-        m_WorldBuilder				= m_LevelBuilder->getSelectedChunk()->getWorldBuilder();
-		m_OpenedGameLevel			= m_SelectedGameLevel;
-	}
 
     void EditorUI::closeGameLevel()
 	{
-		m_OpenedGameLevel	= StringPool.BLANK;
+        m_EditorContext->setOpenedGameLevelName(StringPool.BLANK);
         m_LevelBuilder	= nullptr;
 		m_ResourceManager	= nullptr;
 		m_AdvancedScene->closeSelectedLevel();
-	}
-
-    void EditorUI::showNewGameLevelPopup()
-	{
-        // Window flags
-        ImGuiWindowFlags windowFlags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
-										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
-        // Window size
-        ImVec2 winsowSize = ImVec2(400.f, 180.f);
-        ImGui::SetNextWindowSize(winsowSize);
-
-        // Begin window
-        // TODO replace all string (popup title and wording) with constants
-        if(ImGui::BeginPopupModal("Create Game Level", nullptr, windowFlags))
-		{
-            float wordingWidth  = 130.f;
-            float inputWidth    = ImGui::GetWindowContentRegionWidth() * 0.8f;
-
-			ImGui::Text("Level Name");
-            ImGui::SameLine(wordingWidth);
-			ImGui::InputText("##new_level_name", m_NewGameLevelInput.name, sizeof(m_NewGameLevelInput.name));
-			ImGui::Dummy(ImVec2(0.0f, 1.0f));
-
-			ImGui::Text("Enable Physics");
-            ImGui::SameLine(wordingWidth);
-			ImGui::Checkbox("##new_level_physics", &m_NewGameLevelInput.enablePhysics);
-			ImGui::Dummy(ImVec2(0.0f, 1.0f));
-
-			ImGui::Text("Enable Light");
-            ImGui::SameLine(wordingWidth);
-			ImGui::Checkbox("##new_level_light", &m_NewGameLevelInput.enableLight);
-			ImGui::Dummy(ImVec2(0.0f, 1.0f));
-
-			ImGui::Text("Template");
-            ImGui::SameLine(wordingWidth);
-			const char* items[] = { "None"};
-			static int item_current = 0;
-			ImGui::Combo("combo", &item_current, items, IM_ARRAYSIZE(items));
-			ImGui::Dummy(ImVec2(0.0f, 1.0f));
-
-            ImGui::SetCursorPosY(winsowSize.y - 30.f);
-
-            ImGui::SetCursorPosX(50.f);
-            if(ImGui::Button("Close##clow_new_level", ImVec2(100, 0)))
-			{
-				ImGui::CloseCurrentPopup();
-			}
-
-            ImGui::SameLine(50.f + 100.f + 100.f);
-			bool onCreate = ImGui::Button("Create", ImVec2(100, 0));
-			ImGui::Dummy(ImVec2(0.0f, 4.0f));
-
-			bool error = false;
-
-			if(onCreate)
-			{
-				if(error)
-				{
-
-				}
-				else
-				{
-					Parameter parameter;
-					parameter.setString("level_name", string::trim(std::string(m_NewGameLevelInput.name)));
-					parameter.setBool("enable_physics", m_NewGameLevelInput.enablePhysics);
-					parameter.setBool("enable_light", m_NewGameLevelInput.enableLight);
-                    // TODO capture template input
-					parameter.setString("template", "None");
-
-					createGameLevel(parameter);
-
-					ImGui::CloseCurrentPopup();
-				}
-			}
-
-			ImGui::EndPopup();
-		}
-	}
-
-    void EditorUI::createGameLevel(const Parameter& parameter)
-	{
-        // Advanced Scene not available
-        if(!m_AdvancedScene)
-            return;
-
-        // Create new Game Level
-        m_AdvancedScene->createLevel(parameter);
-        // TODO retrieve the level name from the Advanced Scene
-        m_SelectedGameLevel = parameter.getString("level_name");
-
-        // Open create Game Level
-        openGameLevel();
-
 	}
 
     void EditorUI::createGameScreen(const Parameter& parameter)
@@ -2116,7 +2002,7 @@ namespace  nero
     void EditorUI::showNewGameScreenPopup()
 	{
 		//Window flags
-		ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
+        /*ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
 										  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
 		//Winsow size
 		ImVec2 winsow_size = ImVec2(400.f, 200.f);
@@ -2181,7 +2067,7 @@ namespace  nero
 			}
 
 			ImGui::EndPopup();
-		}
+        }*/
 	}
 
     void EditorUI::removeGameLevel()
@@ -3018,6 +2904,38 @@ namespace  nero
             nero_log("Editor closed")
 
             m_RenderWindow.close();
+        };
+
+        // Create workspace
+        m_EditorProxy->m_CreateGameLevelCallback = [this](const Parameter& levelParameter)
+        {
+            // Advanced Scene not available
+            if(!m_AdvancedScene)
+                return;
+
+            // Create new Game Level
+            const std::string levelName = m_AdvancedScene->createLevel(levelParameter);
+
+            if(levelName != StringPool.BLANK)
+            {
+                m_EditorContext->setSelectedGameLevelName(levelName);
+                m_EditorProxy->openGameLevel(levelName);
+            }
+
+        };
+
+        m_EditorProxy->m_OpenGameLevelCallback = [this](const std::string levelName)
+        {
+            // Selected game level is already open
+            if(m_LevelBuilder && m_LevelBuilder->getLevelName() == levelName)
+            {
+                return;
+            }
+
+            m_LevelBuilder      = m_AdvancedScene->openLevel(levelName);
+            m_ResourceManager   = m_LevelBuilder->getResourceManager();
+            m_WorldBuilder      = m_LevelBuilder->getSelectedChunk()->getWorldBuilder();
+            m_EditorContext->setOpenedGameLevelName(levelName);
         };
     }
 }

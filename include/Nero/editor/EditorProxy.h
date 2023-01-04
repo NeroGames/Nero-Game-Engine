@@ -32,6 +32,9 @@ namespace nero
             void                    importWorkspace(const std::string& workspaceDirectory)  const;
             // Editor
             void                    closeEditor()                                           const;
+            // Game Level
+            void                    createGameLevel(const Parameter&  levelParameter)       const;
+            void                    openGameLevel(const std::string levelName)              const;
 
         private:
             friend class                                                    EditorUI;
@@ -45,7 +48,9 @@ namespace nero
             std::function<void(const std::string&)>                         m_ImportWorkspaceCallback;
             // Editor
             std::function<void()>                                           m_CloseEditorCallback;
-
+            // Game Level
+            std::function<void(const Parameter&)>                           m_CreateGameLevelCallback;
+            std::function<void(const std::string&)>                         m_OpenGameLevelCallback;
 	};
 }
 

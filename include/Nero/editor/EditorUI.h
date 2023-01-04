@@ -122,14 +122,8 @@ namespace nero
 			void											compileProject();
 			void											editProject();
 			void											reloadProject();
-			NewGameLevelInput								m_NewGameLevelInput;
-			NewGameLevelInput								m_NewGameScreenInput;
-			void											createGameLevel(const Parameter& parameter);
 			void											createGameScreen(const Parameter& parameter);
-			void											openGameLevel();
 			void											closeGameLevel();
-			std::string										m_SelectedGameLevel;
-			std::string										m_OpenedGameLevel;
             //
 			sf::Sprite										flipTexture(const sf::Texture& texture);
 			//editor view
@@ -184,7 +178,6 @@ namespace nero
 			//
 			void											removeGameLevel();
 			void											editGameLevel();
-			void											showNewGameLevelPopup();
 			void											showNewGameScreenPopup();
 			int												m_InputSelectedGameLevelId;
 			//

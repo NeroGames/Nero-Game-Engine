@@ -28,7 +28,7 @@ namespace nero
 		m_RegisteredLevelTable = sceneSetting.getStringTable("level_table");
 	}
 
-	void AdvancedScene::createLevel(const Parameter& parameter)
+    std::string AdvancedScene::createLevel(const Parameter& parameter)
 	{
         // Generate paratemers
         std::string levelName		= string::trim(parameter.getString("level_name"));
@@ -89,6 +89,8 @@ namespace nero
         file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO), setting.toString());
 
         registerLevel(levelName);
+
+        return levelName;
 	}
 
 	LevelBuilder::Ptr AdvancedScene::openLevel(const std::string& levelName)

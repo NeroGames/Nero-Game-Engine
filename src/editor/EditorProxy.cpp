@@ -48,4 +48,14 @@ namespace  nero
     {
         m_CloseEditorCallback();
     }
+
+    void EditorProxy::createGameLevel(const Parameter&  levelParameter) const
+    {
+        m_CreateGameLevelCallback(levelParameter);
+    }
+
+    void EditorProxy::openGameLevel(const std::string levelName) const
+    {
+        m_OpenGameLevelCallback(levelName);
+    }
 }

@@ -69,14 +69,6 @@ namespace nero
 		static void				launchProfiler();
 	};
 
-	struct NewGameLevelInput
-	{
-		char                        name[100];
-		bool						enablePhysics;
-		bool						enableLight;
-		char                        prototype[100]; //template
-	};
-
 	struct NewGameScrenInput
 	{
 		char                        name[100];
