@@ -12,12 +12,16 @@ namespace  nero
                                  ProjectManager::Ptr projectManager,
                                  TextureHolder::Ptr textureHolder,
                                  Setting::Ptr editorSetting,
+                                 RenderTexturePtr renderTexture,
+                                 RenderContext::Ptr renderContext,
                                  const EditorMode& editorMode,
-                                 const BuilderMode& builderMode):
-         m_EditorProxy(editorProxy)
+                                 const BuilderMode& builderMode)
+        :m_EditorProxy(editorProxy)
         ,m_ProjectManager(projectManager)
         ,m_TextureHolder(textureHolder)
         ,m_EditorSetting(editorSetting)
+        ,m_RenderTexture(renderTexture)
+        ,m_RenderContext(renderContext)
         ,m_EditorMode(editorMode)
         ,m_BuilderMode(builderMode)
         ,m_SelectedGameLevelName(StringPool.BLANK)
@@ -105,6 +109,13 @@ namespace  nero
         return m_SelectedResourceType;
     }
 
+    sf::Vector2f EditorContext::getNewGameObjectPosition() const
+    {
+        sf::Vector2f screenPosition = sf::Vector2f(m_RenderContext->canvasSize.x / 2.f, 150.f);
+        return m_RenderTexture->mapPixelToCoords(sf::Vector2i(screenPosition.x, screenPosition.y),
+                                                 m_RenderTexture->getView());
+    }
+
     void EditorContext::setEditorMode(const EditorMode& editorMode)
     {
         m_EditorMode = editorMode;
@@ -150,4 +161,4 @@ namespace  nero
             }
         }
     }
-}
+ }

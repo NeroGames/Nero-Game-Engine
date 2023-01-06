@@ -19,30 +19,34 @@ namespace nero
     {
         public:
             using Ptr = std::shared_ptr<EditorContext>;
+            using RenderTexturePtr = std::shared_ptr<sf::RenderTexture>;
 
         public:
                                     EditorContext(EditorProxy::Ptr editorProxy,
                                                   ProjectManager::Ptr projectManager,
                                                   TextureHolder::Ptr textureHolder,
                                                   Setting::Ptr editorSetting,
+                                                  RenderTexturePtr renderTexture,
+                                                  RenderContext::Ptr renderContext,
                                                   const EditorMode& editorMode = EditorMode::WORLD_BUILDER,
                                                   const BuilderMode& builderMode = BuilderMode::OBJECT);
             virtual                ~EditorContext();
 
             // Getter
-            EditorProxy::Ptr        getEditorProxy()            const;
-            ProjectManager::Ptr     getProjectManager()         const;
-            GameProject::Ptr        getGameProject()            const;
-            AdvancedScene::Ptr      getAdvancedScene()          const;
-            LevelBuilder::Ptr       getLevelBuilder()           const;
-            EditorMode              getEditorMode()             const;
-            BuilderMode             getBuilderMode()            const;
-            TextureHolder::Ptr      getTextureHolder()          const;
-            Setting::Ptr            getEditorSetting()          const;
-            std::string             getSelectedGameLevelName()  const;
-            std::string             getOpengedGameLevelName()   const;
-            ResourceType            getSelectedResourceType()   const;
-            ResourceManager::Ptr    getCurrentResourceManager() const;
+            EditorProxy::Ptr        getEditorProxy()                const;
+            ProjectManager::Ptr     getProjectManager()             const;
+            GameProject::Ptr        getGameProject()                const;
+            AdvancedScene::Ptr      getAdvancedScene()              const;
+            LevelBuilder::Ptr       getLevelBuilder()               const;
+            EditorMode              getEditorMode()                 const;
+            BuilderMode             getBuilderMode()                const;
+            TextureHolder::Ptr      getTextureHolder()              const;
+            Setting::Ptr            getEditorSetting()              const;
+            std::string             getSelectedGameLevelName()      const;
+            std::string             getOpengedGameLevelName()       const;
+            ResourceType            getSelectedResourceType()       const;
+            ResourceManager::Ptr    getCurrentResourceManager()     const;
+            sf::Vector2f            getNewGameObjectPosition()      const;
             // Setter
             void                    setEditorMode(const EditorMode& editorMode);
             void                    setBuilderMode(const BuilderMode& builderMode);
@@ -55,6 +59,8 @@ namespace nero
             ProjectManager::Ptr     m_ProjectManager;
             TextureHolder::Ptr      m_TextureHolder;
             Setting::Ptr            m_EditorSetting;
+            RenderTexturePtr        m_RenderTexture;
+            RenderContext::Ptr      m_RenderContext;
             EditorMode              m_EditorMode;
             BuilderMode             m_BuilderMode;
             // Game Level
@@ -62,7 +68,6 @@ namespace nero
             std::string             m_OpenedGameLevelName;
             // Resource
             ResourceType            m_SelectedResourceType;
-
 	};
 }
 

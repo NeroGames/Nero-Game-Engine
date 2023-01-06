@@ -63,7 +63,7 @@ namespace nero
 		}
 	}
 
-	sf::Vector2f formatSize(sf::Vector2f original, float size)
+    sf::Vector2f formatTexturetSize(sf::Vector2f original, float size)
 	{
 		if(original.x > size)
 		{

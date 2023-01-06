@@ -100,6 +100,8 @@ namespace nero
             // Main paramater
             ProjectManager::Ptr								m_ProjectManager;
             EditorProxy::Ptr                                m_EditorProxy;
+            RenderTexturePtr								m_RenderTexture;
+            RenderContext::Ptr								m_RenderContext;
             EditorContext::Ptr                              m_EditorContext;
             EditorSetup::Ptr                                m_EditorSetup;
             // UI
@@ -201,7 +203,6 @@ namespace nero
 			sf::Texture&									getFontTexture(const std::string& fontName);
 			std::map<std::string, sf::Texture>				m_FontTextureMap;
 			//
-			RenderTexturePtr								m_RenderTexture;
 			//
 			sf::RectangleShape								m_CameraXAxis;
 			sf::RectangleShape								m_CameraYAxis;
@@ -215,12 +216,10 @@ namespace nero
 			sf::Text										m_GameBuilderInfo;
 			//
 			void											renderGameModeInfo();
-			RenderContext::Ptr								m_RenderContext;
 			//
 			std::string										getString(const EditorMode& editorMode);
 			//
 			void											clearScriptWizardInput();
-			sf::Vector2f									getAddObjectPosition();
 			//
 			void											switchBuilderMode();
 			void											showCanvasMenu();

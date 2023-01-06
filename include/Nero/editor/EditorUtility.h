@@ -76,7 +76,7 @@ namespace nero
 		char                        prototype[100]; //template
 	};
 
-    sf::Vector2f    formatSize(sf::Vector2f original, float size);
+    sf::Vector2f    formatTexturetSize(sf::Vector2f original, float size);
     void			popToolbarStyle();
     void			pushToolbarStyle(bool selected = false);
     void			pushGameLevelStyle(bool selected = false, bool opened = false);
@@ -91,6 +91,4 @@ namespace nero
         void selectFile(std::function<void(std::vector<std::string>)> callback);
     }
 }
-
-
 #endif // EDITORINTERFACEUTILITY_H

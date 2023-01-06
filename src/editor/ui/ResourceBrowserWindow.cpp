@@ -9,8 +9,9 @@
 ////////////////////////////////////////////////////////////
 namespace  nero
 {
-    ResourceBrowserWindow::ResourceBrowserWindow(EditorContext::Ptr editorContext):
-         UIComponent(editorContext)
+    ResourceBrowserWindow::ResourceBrowserWindow(EditorContext::Ptr editorContext)
+        :UIComponent(editorContext)
+        ,m_ResourceBrowserSpriteView(editorContext)
     {
 
     }
@@ -73,7 +74,7 @@ namespace  nero
                 {
                     case ResourceType::Texture:
                     {
-                        //showSpriteResource();
+                        m_ResourceBrowserSpriteView.render();
                     }break;
 
                     case ResourceType::Animation:
@@ -96,6 +97,13 @@ namespace  nero
                         //showLightmapResource();
                     }break;
 
+                    case ResourceType::None:
+                    case ResourceType::Sound:
+                    case ResourceType::Music:
+                    case ResourceType::Shape:
+                    case ResourceType::Particle:
+                    case ResourceType::Composite:
+                        break;
                 }
 
             ImGui::EndChild();
@@ -223,65 +231,6 @@ namespace  nero
         {
             if(m_WorldBuilder && m_BuilderMode == BuilderMode::OBJECT)
                 m_WorldBuilder->addObject(Object::Mesh_Object, "Line", getAddObjectPosition());
-        }
-    }
-
-
-    void ResourceBrowserWindow::showSpriteResource()
-    {
-        auto& spriteTable = m_ResourceManager->getTextureHolder()->getSpriteTable();
-        int sprite_count = spriteTable.size();
-        ImGuiStyle& style = ImGui::GetStyle();
-        float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
-        for (int n = 0; n < sprite_count; n++)
-        {
-            sf::Vector2u boo = m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]).getSize();
-            sf::Vector2u zoo = boo;
-            if(n < sprite_count-1)
-            {
-                zoo = m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n+1]).getSize();
-            }
-
-
-
-            sf::Vector2f sprite_size(boo.x, boo.y);
-            sprite_size = formatSize(sprite_size, 250);
-
-            sf::Vector2f next_sprite_size(zoo.x, zoo.y);
-            next_sprite_size = formatSize(next_sprite_size, 250);
-
-
-            ImVec2 button_size(sprite_size.x, sprite_size.y);
-
-
-            if(ImGui::ImageButton(m_ResourceManager->getTextureHolder()->getSpriteTexture(spriteTable[n]), button_size))
-            {
-                if(m_WorldBuilder && m_BuilderMode == BuilderMode::OBJECT)
-                    m_WorldBuilder->addObject(Object::Sprite_Object, spriteTable[n], getAddObjectPosition());
-            }
-
-            if (ImGui::BeginPopupContextItem())
-            {
-                if (ImGui::Button("Delete"))
-                {
-                    ImGui::CloseCurrentPopup();
-                }
-
-                //if (ImGui::Button("Close"))
-                    //ImGui::CloseCurrentPopup();
-                ImGui::EndPopup();
-            }
-
-            if(ImGui::IsItemHovered())
-            {
-                //nero_log("hover animation button");
-            }
-
-            float last_button_x2 = ImGui::GetItemRectMax().x;
-            float next_button_x2 = last_button_x2 + style.ItemSpacing.x + next_sprite_size.x;
-            if (n + 1 < sprite_count && next_button_x2 < window_visible_x2)
-                ImGui::SameLine();
         }
     }
 

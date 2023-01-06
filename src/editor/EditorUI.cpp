@@ -29,9 +29,9 @@ namespace  nero
                        TextureHolder::Ptr textureHolder,
                        FontHolder::Ptr fontHolder,
                        SoundHolder::Ptr soundHolder,
-                       Setting::Ptr setting):
+                       Setting::Ptr setting)
         // Constructor paramater
-         m_RenderWindow(window)
+        :m_RenderWindow(window)
         ,m_EditorCamera(camera)
         ,m_EditorTextureHolder(textureHolder)
         ,m_EditorFontHolder(fontHolder)
@@ -40,11 +40,15 @@ namespace  nero
         // Main paramater
         ,m_ProjectManager(std::make_unique<ProjectManager>())
         ,m_EditorProxy(std::make_shared<EditorProxy>())
+        ,m_RenderTexture(std::make_shared<sf::RenderTexture>())
+        ,m_RenderContext(std::make_shared<RenderContext>())
         ,m_EditorContext(std::make_shared<EditorContext>(
-            m_EditorProxy,
-            m_ProjectManager,
-            m_EditorTextureHolder,
-            m_EditorSetting))
+             m_EditorProxy
+            ,m_ProjectManager
+            ,m_EditorTextureHolder
+            ,m_EditorSetting
+            ,m_RenderTexture
+            ,m_RenderContext))
         ,m_EditorSetup(std::make_shared<EditorSetup>(m_EditorContext))
         // User Interface
         ,m_EditorDockspace(m_EditorContext)
@@ -66,8 +70,6 @@ namespace  nero
         ,m_InputSelectedGameScreenId(-1)
         ,m_MouseInformation("Mouse Position")
         ,m_ConsoleApplication()
-        ,m_RenderTexture(std::make_shared<sf::RenderTexture>())
-        ,m_RenderContext(std::make_shared<RenderContext>())
     {
         setupEditorProxy();
 	}
@@ -347,9 +349,9 @@ namespace  nero
 
 			buildRenderContext();
 
-			sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
+            sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y), m_RenderTexture->getView());
 
-			std::string canvas_pos_string = "Canvas x = " + toString(m_RenderContext->mouse_position.x) + " y = " + toString(m_RenderContext->mouse_position.y);
+            std::string canvas_pos_string = "Canvas x = " + toString(m_RenderContext->mousePosition.x) + " y = " + toString(m_RenderContext->mousePosition.y);
 			std::string wrold_pos_string = "World x = " + toString(world_pos.x) + " y = "  + toString(world_pos.y);
 			std::string camera_pos_string = "Camera x = " + toString(m_EditorCamera->getPosition().x) + " y = "  + toString(m_EditorCamera->getPosition().y);
 
@@ -533,19 +535,19 @@ namespace  nero
 		window_size.y -= 23.f;
 
 		RenderContext renderContext;
-		renderContext.canvas_position   = sf::Vector2f(window_position.x + window_padding.x, window_position.y + title_bar_height + window_padding.y + 22.f);
-		renderContext.canvas_size       = sf::Vector2f(window_size.x - window_padding.x * 2, window_size.y - title_bar_height - window_padding.y * 2);
-		renderContext.mouse_position    = sf::Vector2f(mouse_position.x - renderContext.canvas_position.x, mouse_position.y - renderContext.canvas_position.y);
+        renderContext.canvasPosition   = sf::Vector2f(window_position.x + window_padding.x, window_position.y + title_bar_height + window_padding.y + 22.f);
+        renderContext.canvasSize       = sf::Vector2f(window_size.x - window_padding.x * 2, window_size.y - title_bar_height - window_padding.y * 2);
+        renderContext.mousePosition    = sf::Vector2f(mouse_position.x - renderContext.canvasPosition.x, mouse_position.y - renderContext.canvasPosition.y);
 		renderContext.focus             = ImGui::IsWindowFocused();
 
-		if(renderContext.canvas_size.x < 100.f)
+        if(renderContext.canvasSize.x < 100.f)
 		{
-			renderContext.canvas_size.x = 100.f;
+            renderContext.canvasSize.x = 100.f;
 		}
 
-		if(renderContext.canvas_size.y < 100.f)
+        if(renderContext.canvasSize.y < 100.f)
 		{
-			renderContext.canvas_size.y = 100.f;
+            renderContext.canvasSize.y = 100.f;
 		}
 
 		*m_RenderContext = renderContext;
@@ -553,11 +555,11 @@ namespace  nero
 
     void EditorUI::prepareRenderTexture()
 	{
-		if(m_RenderTexture->getSize().x != m_RenderContext->canvas_size.x ||
-		   m_RenderTexture->getSize().y != m_RenderContext->canvas_size.y)
+        if(m_RenderTexture->getSize().x != m_RenderContext->canvasSize.x ||
+           m_RenderTexture->getSize().y != m_RenderContext->canvasSize.y)
 		{
-			m_RenderTexture->create(m_RenderContext->canvas_size.x, m_RenderContext->canvas_size.y);
-			m_EditorCamera->updateView(sf::Vector2f(m_RenderContext->canvas_size.x, m_RenderContext->canvas_size.y));
+            m_RenderTexture->create(m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y);
+            m_EditorCamera->updateView(sf::Vector2f(m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y));
 		}
 
 		sf::Color clearColor = sf::Color::Black;
@@ -577,7 +579,7 @@ namespace  nero
 
     bool EditorUI::mouseOnCanvas()
 	{
-		sf::Rect<float> canvas(m_RenderContext->canvas_position.x, m_RenderContext->canvas_position.y, m_RenderContext->canvas_size.x, m_RenderContext->canvas_size.y);
+        sf::Rect<float> canvas(m_RenderContext->canvasPosition.x, m_RenderContext->canvasPosition.y, m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y);
 
 		sf::Vector2i mousePosition = ImGui::GetMousePos();
 
@@ -1038,17 +1040,6 @@ namespace  nero
 			return ImGui::GetStyle().Colors[ImGuiCol_Text];
 		}
 
-	}
-
-    sf::Vector2f EditorUI::getAddObjectPosition()
-	{
-		//sf::Vector2f screen_pos    = sf::Vector2f(mouse.x - m_RenderContext->canvas_position.x, mouse.y - m_RenderContext->canvas_position.y);
-		//sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(screen_pos.x, screen_pos.y), m_RenderTexture->getView());
-
-		sf::Vector2f screen_pos     = sf::Vector2f(m_RenderContext->canvas_size.x / 2.f, 150.f);
-		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(screen_pos.x, screen_pos.y), m_RenderTexture->getView());
-
-		return world_pos;
 	}
 
     sf::Texture& EditorUI::getFontTexture(const std::string& fontName)

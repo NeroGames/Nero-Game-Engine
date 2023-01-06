@@ -128,9 +128,9 @@ namespace nero
 	{
 		typedef std::shared_ptr<RenderContext> Ptr;
 
-		sf::Vector2f	canvas_position;
-		sf::Vector2f	canvas_size;
-		sf::Vector2f	mouse_position;
+        sf::Vector2f	canvasPosition;
+        sf::Vector2f	canvasSize;
+        sf::Vector2f	mousePosition;
 		bool			focus;
 	};
 }

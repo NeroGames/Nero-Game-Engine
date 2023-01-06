@@ -181,7 +181,7 @@ namespace nero
     void MeshEditor::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
     {
 		//Get the mouse position in the world
-		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
+        sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y), m_RenderTexture->getView());
 
         //Handle pressing left click
         //Left click is use mostly to drag things
@@ -553,7 +553,7 @@ namespace nero
 
     void  MeshEditor::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
     {
-		sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mouse_position.x, m_RenderContext->mouse_position.y), m_RenderTexture->getView());
+        sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y), m_RenderTexture->getView());
 
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {

@@ -7,6 +7,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/editor/ui/UIComponent.h>
+#include <Nero/editor/ui/ResourceBrowserSpriteView.h>
 #include <Nero/core/cpp/resource/ResourceUtility.h>
 ////////////////////////////////////////////////////////////
 namespace nero
@@ -23,12 +24,9 @@ namespace nero
         private:
             void                    saveResourceFile(const ResourceType& resourceType,
                                                      const std::vector<std::string> loadedFileTable);
-            //TODO remove
-            //void                    showSpriteResource();
-            //void                    showAnimationResource();
-            //void                    showMeshResource();
-            //void                    showFontResource();
-            //void                    showLightmapResource();
+
+        private:
+            ResourceBrowserSpriteView   m_ResourceBrowserSpriteView;
 	};
 }
 #endif // RESOURCEBROWSERWINDOW_H
