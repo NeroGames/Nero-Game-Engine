@@ -12,6 +12,8 @@ namespace  nero
     ResourceBrowserWindow::ResourceBrowserWindow(EditorContext::Ptr editorContext)
         :UIComponent(editorContext)
         ,m_ResourceBrowserSpriteView(editorContext)
+        ,m_ResourceBrowserMeshView(editorContext)
+        ,m_ResourceBrowserLightmapView(editorContext)
     {
 
     }
@@ -29,87 +31,77 @@ namespace  nero
     void ResourceBrowserWindow::render()
     {
         const auto selectedResourceType = m_EditorContext->getSelectedResourceType();
-        auto resourceManager = m_EditorContext->getCurrentResourceManager();
+        auto resourceManager            = m_EditorContext->getCurrentResourceManager();
 
         if(!resourceManager || selectedResourceType == ResourceType::None)
             return;
 
         ImGui::Begin("Resource Browser", nullptr, ImGuiWindowFlags());
-
-            if(m_EditorContext->getGameProject() &&
-               (selectedResourceType == ResourceType::Texture	|| selectedResourceType == ResourceType::Animation ||
-               selectedResourceType == ResourceType::Sound		|| selectedResourceType == ResourceType::Music		||
-               selectedResourceType == ResourceType::Font		|| selectedResourceType == ResourceType::Particle	||
-               selectedResourceType == ResourceType::Lightmap))
+        if(m_EditorContext->getGameProject() && loadableResource(selectedResourceType))
+        {
+            if(ImGui::Button("Import File##import_resource", ImVec2(100.f, 0.f)))
             {
-
-
-                if(ImGui::Button("Import File##import_resource", ImVec2(100.f, 0.f)))
+                file::selectFile([this, selectedResourceType, resourceManager](std::vector<std::string> fileTable)
                 {
-                    file::selectFile([this, selectedResourceType, resourceManager](std::vector<std::string> fileTable)
-                    {
-                        const auto loadedFileTable = resourceManager->loadFile(selectedResourceType, fileTable);
+                    const auto loadedFileTable = resourceManager->loadFile(selectedResourceType, fileTable);
 
-                        if(!loadedFileTable.empty())
-                        {
-                            saveResourceFile(selectedResourceType, loadedFileTable);
-                        }
-                    });
-                }
+                    if(!loadedFileTable.empty())
+                    {
+                        saveResourceFile(selectedResourceType, loadedFileTable);
+                    }
+                });
+            }
+        }
+
+        ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 100.f);
+
+        if(ImGui::Button("Close##close_sprite_resource", ImVec2(100.f, 0.f)))
+        {
+            m_EditorContext->setSelectedResourceType(ResourceType::None);
+        }
+
+        ImGui::Separator();
+
+        ImGui::BeginChild("browser");
+
+            switch (selectedResourceType)
+            {
+                case ResourceType::Texture:
+                {
+                    m_ResourceBrowserSpriteView.render();
+                }break;
+
+                case ResourceType::Animation:
+                {
+                    //showAnimationResource();
+                }break;
+
+                case ResourceType::Mesh:
+                {
+                    m_ResourceBrowserMeshView.render();
+                }break;
+
+                case ResourceType::Font:
+                {
+                    //showFontResource();
+                }break;
+
+                case ResourceType::Lightmap:
+                {
+                    m_ResourceBrowserLightmapView.render();
+                }break;
+
+                case ResourceType::None:
+                case ResourceType::Sound:
+                case ResourceType::Music:
+                case ResourceType::Shape:
+                case ResourceType::Particle:
+                case ResourceType::Composite:
+                    break;
             }
 
-            ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 100.f);
-
-
-            if(ImGui::Button("Close##close_sprite_resource", ImVec2(100.f, 0.f)))
-            {
-                m_EditorContext->setSelectedResourceType(ResourceType::None);
-            }
-
-            ImGui::Separator();
-
-            ImGui::BeginChild("browser");
-
-                switch (selectedResourceType)
-                {
-                    case ResourceType::Texture:
-                    {
-                        m_ResourceBrowserSpriteView.render();
-                    }break;
-
-                    case ResourceType::Animation:
-                    {
-                        //showAnimationResource();
-                    }break;
-
-                    case ResourceType::Mesh:
-                    {
-                        //showMeshResource();
-                    }break;
-
-                    case ResourceType::Font:
-                    {
-                        //showFontResource();
-                    }break;
-
-                    case ResourceType::Lightmap:
-                    {
-                        //showLightmapResource();
-                    }break;
-
-                    case ResourceType::None:
-                    case ResourceType::Sound:
-                    case ResourceType::Music:
-                    case ResourceType::Shape:
-                    case ResourceType::Particle:
-                    case ResourceType::Composite:
-                        break;
-                }
-
-            ImGui::EndChild();
-
+        ImGui::EndChild();
         ImGui::End();
-
     }
 
     void ResourceBrowserWindow::saveResourceFile(const ResourceType& resourceType, const std::vector<std::string> loadedFileTable)
@@ -363,4 +355,15 @@ namespace  nero
             }
         }
     }*/
+
+    bool ResourceBrowserWindow::loadableResource(const ResourceType& resourceType)
+    {
+        return  resourceType == ResourceType::Texture   ||
+                resourceType == ResourceType::Animation ||
+                resourceType == ResourceType::Lightmap  ||
+                resourceType == ResourceType::Font      ||
+                resourceType == ResourceType::Sound     ||
+                resourceType == ResourceType::Music     ||
+                resourceType == ResourceType::Particle;
+    }
 }

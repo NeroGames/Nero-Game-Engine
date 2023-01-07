@@ -8,6 +8,8 @@
 //Nero
 #include <Nero/editor/ui/UIComponent.h>
 #include <Nero/editor/ui/ResourceBrowserSpriteView.h>
+#include <Nero/editor/ui/ResourceBrowserMeshView.h>
+#include <Nero/editor/ui/ResourceBrowserLightmapView.h>
 #include <Nero/core/cpp/resource/ResourceUtility.h>
 ////////////////////////////////////////////////////////////
 namespace nero
@@ -24,9 +26,12 @@ namespace nero
         private:
             void                    saveResourceFile(const ResourceType& resourceType,
                                                      const std::vector<std::string> loadedFileTable);
+            bool                    loadableResource(const ResourceType& resourceType);
 
         private:
-            ResourceBrowserSpriteView   m_ResourceBrowserSpriteView;
-	};
+            ResourceBrowserSpriteView       m_ResourceBrowserSpriteView;
+            ResourceBrowserMeshView         m_ResourceBrowserMeshView;
+            ResourceBrowserLightmapView     m_ResourceBrowserLightmapView;
+    };
 }
 #endif // RESOURCEBROWSERWINDOW_H

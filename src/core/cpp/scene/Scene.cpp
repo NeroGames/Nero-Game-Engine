@@ -614,7 +614,11 @@ namespace nero
 	{
 		//create light manager
 		m_LightManager = std::make_shared<ltbl::LightSystem>(false);
-		m_LightManager->create({-1000.f, -1000.f, (float)m_SceneContext.renderTexture->getSize().x, (float)m_SceneContext.renderTexture->getSize().y }, m_SceneContext.renderTexture->getSize());
+        m_LightManager->create ({-1000.f,
+                                 -1000.f,
+                                 (float)m_SceneContext.renderTexture->getSize().x,
+                                 (float)m_SceneContext.renderTexture->getSize().y },
+                                 m_SceneContext.renderTexture->getSize());
 
 		m_LightManager->setAmbientColor(sf::Color(0, 12, 24));
 
