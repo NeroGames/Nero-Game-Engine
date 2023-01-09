@@ -7,7 +7,7 @@
 ///////////////////////////HEADERS//////////////////////////
 //Nero
 #include <Nero/editor/EditorContext.h>
-#include <Nero/editor/ui/UIComponent.h>
+#include <Nero/editor/view/UIComponent.h>
 //Std
 #include <functional>
 #include <vector>

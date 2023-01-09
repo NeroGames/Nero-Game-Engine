@@ -8,12 +8,12 @@
 //Poco
 #include <Poco/Logger.h>
 //Nero
-#include <Nero/editor/ui/EditorDockspace.h>
-#include <Nero/editor/ui/EditorToolbar.h>
+#include <Nero/editor/view/EditorDockspace.h>
+#include <Nero/editor/view/EditorToolbar.h>
 #include <Nero/editor/EditorSetup.h>
-#include <Nero/editor/ui/EditorSetupPopup.h>
-#include <Nero/editor/ui/ResourceSelectionWindow.h>
-#include <Nero/editor/ui/ResourceBrowserWindow.h>
+#include <Nero/editor/view/EditorSetupPopup.h>
+#include <Nero/editor/view/ResourceSelectionWindow.h>
+#include <Nero/editor/view/ResourceBrowserWindow.h>
 #include <Nero/editor/project/ProjectManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>

@@ -408,7 +408,7 @@ namespace nero
 		backgroundTask->addMessage("Configuring Project ...");
 		cmd::Process configProcess	=  cmd::runCommand(cmake, {"-G", "MinGW Makefiles", "-S", sourcePath, "-B", buildPath,
 															   "-D", "CMAKE_CXX_COMPILER=" + file::getPath(gxx), "-D", "CMAKE_C_COMPILER="	+ file::getPath(gcc),
-																"-D", "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32)});
+                                                               "-D", "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32)});
 		backgroundTask->setErrorCode(configProcess.getExistCode());
 		nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
 

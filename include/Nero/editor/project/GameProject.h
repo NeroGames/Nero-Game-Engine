@@ -56,7 +56,6 @@ namespace nero
 			void								setRenderContext(const RenderContext::Ptr& renderContext);
 			void								setEngineSetting(const Setting::Ptr& setting);
 			void								close();
-			//AdvancedScene::GameLevelPtr			loadGameLevel(const nlohmann::json& level);
 			std::string							getProjectName() const;
 			std::vector<BackgroundTask>&		getBackgroundTaskTable();
 			void								createScriptObject(const Parameter& parameter);
