@@ -56,15 +56,14 @@ namespace  nero
 
         printSameLine();
 
-        /*selected = selectedResourceType == ResourceType::Animation;
+        selected = selectedResourceType == ResourceType::Animation;
         pushResourceStyle(selected);
         if(ImGui::Button("Animation##browse_animation_resource", ImVec2(100.f, 100.f)))
         {
             m_EditorContext->setSelectedResourceType(ResourceType::Animation);
         }
         popResourceStyle(selected);
-        printSameLine();*/
-
+        printSameLine();
 
         selected = selectedResourceType == ResourceType::Mesh;
         pushResourceStyle(selected);
@@ -83,89 +82,18 @@ namespace  nero
             m_EditorContext->setSelectedResourceType(ResourceType::Lightmap);
         }
         popResourceStyle(selected);
-
-        /*printSameLine();
-
-        if(ImGui::Button("Shape##open_shape_resource", ImVec2(100.f, 100.f)))
-        {
-            m_ResourceBrowserType = ResourceType::Shape;
-        }
-
-        printSameLine();
-
-        if(ImGui::Button("Particle##open_shape_resource", ImVec2(100.f, 100.f)))
-        {
-            m_ResourceBrowserType = ResourceType::Particle;
-        }
-
         printSameLine();
 
         selected = selectedResourceType == ResourceType::Font;
         pushResourceStyle(selected);
-        if(ImGui::Button("Font##open_shape_resource", ImVec2(100.f, 100.f)))
+        if(ImGui::Button("Font##browse_font_resource", ImVec2(100.f, 100.f)))
         {
             m_EditorContext->setSelectedResourceType(ResourceType::Font);
         }
         popResourceStyle(selected);
 
-
-        printSameLine();
-
-        if(ImGui::Button("Composite##open_shape_resource", ImVec2(100.f, 100.f)))
-        {
-            m_ResourceBrowserType = ResourceType::Composite;
-        }
-
-        printSameLine();
-
-        if(ImGui::Button("Sound##open_shape_resource", ImVec2(100.f, 100.f)))
-        {
-            m_EditorContext->setSelectedResourceType(ResourceType::Sound);
-        }
-
-        printSameLine();
-
-        if(ImGui::Button("Music##open_shape_resource", ImVec2(100.f, 100.f)))
-        {
-            m_EditorContext->setSelectedResourceType(ResourceType::Music);
-        }
-
-        printSameLine();
-
-        if(ImGui::Button("Script##open_script_object_resource", ImVec2(100.f, 100.f)))
-        {
-
-        }
-
-        printSameLine();
-
-
-
-        if(ImGui::Button("Spawner##spawn_object", ImVec2(100.f, 100.f)))
-        {
-
-        }
-
-        printSameLine();
-
-        if(ImGui::Button("Factory##open_factory_resource", ImVec2(100.f, 100.f)))
-        {
-
-        }
-
-        printSameLine();
-
-        if(ImGui::Button("CPP Script##open_script_resource", ImVec2(100.f, 100.f)))
-        {
-
-        }
-
-        printSameLine();
-
-        if(ImGui::Button("Empty Object##add_empty_object", ImVec2(100.f, 100.f)))
-        {
-
-        }*/
+        //TODO
+        // Shape, Particle, Composite, Sound, Music, LuaScript, Spawner, Factory, CPPScript, EmptyObject
 
         ImGui::End();
     }

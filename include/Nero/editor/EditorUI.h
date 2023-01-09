@@ -200,10 +200,6 @@ namespace nero
 			//
 			ax::NodeEditor::EditorContext*					g_Context;
 			//
-			sf::Texture&									getFontTexture(const std::string& fontName);
-			std::map<std::string, sf::Texture>				m_FontTextureMap;
-			//
-			//
 			sf::RectangleShape								m_CameraXAxis;
 			sf::RectangleShape								m_CameraYAxis;
 			sf::RectangleShape								m_CanvasXAxis;

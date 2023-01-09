@@ -69,7 +69,7 @@ namespace nero
 	void ResourceManager::loadDirectory(const std::string& directory)
 	{
 		m_TextureHolder->loadDirectory(file::getPath({directory, "texture"}));
-		m_AnimationHolder->loadDirectory(file::getPath({directory, "animation"}));
+        m_AnimationHolder->loadDirectory(file::getPath({directory, "animation"}));
 		m_FontHolder->loadDirectory(file::getPath({directory, "font"}));
 		m_SoundHolder->loadDirectory(file::getPath({directory, "sound"}));
 		m_MusicHolder->loadDirectory(file::getPath({directory, "music"}));

@@ -62,7 +62,10 @@ namespace nero
 		std::string			replaceExtension(const std::string& filename, const std::string& extension);
 		std::string			getParentDirectory(const std::string& directory, const int& level = 1);
 		//remove file
-		bool				copyFile(const std::string& source, const std::string& destination);
+        bool				copyFile(const std::string& source,
+                                     const std::string& destination,
+                                     const std::ios::openmode& readMode = std::ios::binary,
+                                     const std::ios::openmode& writeMode = std::ios::binary);
 	}
 }
 #endif // FILE_H

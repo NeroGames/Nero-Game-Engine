@@ -4,48 +4,52 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 //Nero
-#include <Nero/editor/view/ResourceBrowserSpriteView.h>
+#include <Nero/editor/view/ResourceBrowserAnimationView.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
 namespace  nero
 {
-    ResourceBrowserSpriteView::ResourceBrowserSpriteView(EditorContext::Ptr editorContext):
+    ResourceBrowserAnimationView::ResourceBrowserAnimationView(EditorContext::Ptr editorContext):
          UIComponent(editorContext)
     {
 
     }
 
-    ResourceBrowserSpriteView::~ResourceBrowserSpriteView()
+    ResourceBrowserAnimationView::~ResourceBrowserAnimationView()
     {
         destroy();
     }
 
-    void ResourceBrowserSpriteView::destroy()
+    void ResourceBrowserAnimationView::destroy()
     {
 
     }
 
-    void ResourceBrowserSpriteView::render()
+    void ResourceBrowserAnimationView::render()
     {
         auto resourceManager = m_EditorContext->getCurrentResourceManager();
 
         if(!resourceManager)
             return;
 
-        auto textureHolder = resourceManager->getTextureHolder();
+        auto animationHolder = resourceManager->getAnimationHolder();
 
-        auto& spriteTable       = textureHolder->getSpriteTable();
-        int spriteCount         = spriteTable.size();
-        float xWindowVisible    = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+        auto& animationTable        = animationHolder->getAnimationTable();
+        unsigned int animationCount = animationTable.size();
+        float xWindowVisible        = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-        for (int i = 0; i < spriteCount; i++)
+        for (unsigned int i = 0; i < animationCount; i++)
         {
-            sf::Vector2u textureSize     = textureHolder->getSpriteTexture(spriteTable[i]).getSize();
-            sf::Vector2u nextTextureSize = textureSize;
+            sf::Texture& texture            = animationHolder->getTexture(animationTable[i]);
+            sf::IntRect bound               = animationHolder->getAnimationBound(animationTable[i]);
+            sf::Vector2u textureSize        = sf::Vector2u(bound.width, bound.height);
+            sf::Vector2u nextTextureSize    = textureSize;
 
-            if(i < spriteCount-1)
+            if(i < animationCount - 1)
             {
-                nextTextureSize = textureHolder->getSpriteTexture(spriteTable[i+1]).getSize();
+                sf::IntRect nextBound = animationHolder->getAnimationBound(animationTable[i+1]);
+
+                nextTextureSize = sf::Vector2u(nextBound.width, nextBound.height);
             }
 
             sf::Vector2f spriteSize(textureSize.x, textureSize.y);
@@ -54,7 +58,10 @@ namespace  nero
             sf::Vector2f nextSpriteSize(nextTextureSize.x, nextTextureSize.y);
             nextSpriteSize = formatTexturetSize(nextSpriteSize, 250);
 
-            if(ImGui::ImageButton(textureHolder->getSpriteTexture(spriteTable[i]), ImVec2(spriteSize.x, spriteSize.y)))
+            sf::Sprite animationSprite(texture, bound);
+            animationSprite.scale(2.f, 2.f);
+
+            if(ImGui::ImageButton(animationSprite, ImVec2(spriteSize.x, spriteSize.y)))
             {
                 if(m_EditorContext->getBuilderMode() == BuilderMode::OBJECT)
                 {
@@ -62,8 +69,8 @@ namespace  nero
                                                        ->getSelectedChunk()
                                                        ->getWorldBuilder();
 
-                    worldBuilder->addObject(Object::Sprite_Object,
-                                            spriteTable[i],
+                    worldBuilder->addObject(Object::Animation_Object,
+                                            animationTable[i],
                                             m_EditorContext->getNewGameObjectPosition());
                 }
             }
@@ -87,7 +94,7 @@ namespace  nero
             float xLastButton = ImGui::GetItemRectMax().x;
             float xNextButton = xLastButton + ImGui::GetStyle().ItemSpacing.x + nextSpriteSize.x;
 
-            if (i + 1 < spriteCount && xNextButton < xWindowVisible)
+            if (i + 1 < animationCount && xNextButton < xWindowVisible)
                 ImGui::SameLine();
         }
     }

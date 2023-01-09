@@ -12,7 +12,9 @@ namespace  nero
     ResourceBrowserWindow::ResourceBrowserWindow(EditorContext::Ptr editorContext)
         :UIComponent(editorContext)
         ,m_ResourceBrowserSpriteView(editorContext)
+        ,m_ResourceBrowserAnimationView(editorContext)
         ,m_ResourceBrowserMeshView(editorContext)
+        ,m_ResourceBrowserFontView(editorContext)
         ,m_ResourceBrowserLightmapView(editorContext)
     {
 
@@ -73,7 +75,7 @@ namespace  nero
 
                 case ResourceType::Animation:
                 {
-                    //showAnimationResource();
+                    m_ResourceBrowserAnimationView.render();
                 }break;
 
                 case ResourceType::Mesh:
@@ -83,7 +85,7 @@ namespace  nero
 
                 case ResourceType::Font:
                 {
-                    //showFontResource();
+                    m_ResourceBrowserFontView.render();
                 }break;
 
                 case ResourceType::Lightmap:
@@ -121,7 +123,8 @@ namespace  nero
                     std::string jsonHelper  = file::replaceExtension(file, "json");
                     if(file::fileExist(jsonHelper))
                     {
-                        file::copyFile(file, file::getPath({resourceFolder, "texture", file::getFileName(jsonHelper, true)}));
+                        file::saveFile(file::getPath({resourceFolder, "texture", file::getFileName(jsonHelper, true)}),
+                                       file::loadJson(jsonHelper, true).dump(3));
                     }
                 }
 
@@ -137,7 +140,9 @@ namespace  nero
                     std::string jsonHelper  = file::replaceExtension(file, "json");
                     if(file::fileExist(jsonHelper))
                     {
-                        file::copyFile(file, file::getPath({resourceFolder, "animation", file::getFileName(jsonHelper, true)}));
+
+                        file::saveFile(file::getPath({resourceFolder, "animation", file::getFileName(jsonHelper, true)}),
+                                       file::loadJson(jsonHelper, true).dump(3));
                     }
                 }
 
@@ -186,77 +191,6 @@ namespace  nero
                 break;
         }
     }
-
-
-    /*void ResourceBrowserWindow::showAnimationResource()
-    {
-        auto& animationTable = m_ResourceManager->getAnimationHolder()->getAnimationTable();
-        int animationCount = animationTable.size();
-
-        ImGuiStyle& style = ImGui::GetStyle();
-        float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
-        for (int n = 0; n < animationCount; n++)
-        {
-            sf::Texture& texture = m_ResourceManager->getAnimationHolder()->getTexture(animationTable[n]);
-            sf::IntRect bound = m_ResourceManager->getAnimationHolder()->getAnimationBound(animationTable[n]);
-
-            sf::Vector2u boo = sf::Vector2u(bound.width, bound.height);
-            sf::Vector2u zoo = boo;
-            if(n < animationCount-1)
-            {
-                sf::IntRect bound2 = m_ResourceManager->getAnimationHolder()->getAnimationBound(animationTable[n+1]);
-
-                zoo = sf::Vector2u(bound2.width, bound2.height);
-            }
-
-            sf::Vector2f sprite_size(boo.x, boo.y);
-            sprite_size = formatSize(sprite_size, 250);
-
-            sf::Vector2f next_sprite_size(zoo.x, zoo.y);
-            next_sprite_size = formatSize(next_sprite_size, 250);
-
-
-            ImVec2 button_size(sprite_size.x, sprite_size.y);
-
-            sf::Sprite sprite(texture, bound);
-            sprite.scale(2.f, 2.f);
-
-            if(ImGui::ImageButton(sprite, button_size))
-            {
-                //if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-                    //m_AdvancedScene->addObject(Object::Animation_Object, animationTable[n], getAddObjectPosition(), m_EditorMode);
-            }
-
-            if(ImGui::IsItemHovered())
-            {
-                //nero_log("hover animation button");
-            }
-
-
-            float last_button_x2 = ImGui::GetItemRectMax().x;
-            float next_button_x2 = last_button_x2 + style.ItemSpacing.x + next_sprite_size.x;
-            if (n + 1 < animationCount && next_button_x2 < window_visible_x2)
-                ImGui::SameLine();
-        }
-    }
-
-    void ResourceBrowserWindow::showFontResource()
-    {
-        auto& fontTable = m_ResourceManager->getFontHolder()->getFontTable();
-        int count = fontTable.size();
-
-        for (int i = 0; i < count; i++)
-        {
-            if(ImGui::ImageButton(getFontTexture(fontTable.at(i))))
-            {
-                if(m_AdvancedScene && m_BuilderMode == BuilderMode::OBJECT)
-                {
-                    //m_AdvancedScene->addObject(Object::Animation_Object, animationTable[n], getAddObjectPosition(), m_EditorMode);
-                }
-            }
-        }
-    }*/
 
     bool ResourceBrowserWindow::loadableResource(const ResourceType& resourceType)
     {

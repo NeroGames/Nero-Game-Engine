@@ -321,12 +321,12 @@ namespace nero
 			return path.filename().stem().string();
 		}
 
-		bool copyFile(const std::string& source, const std::string& destination)
+        bool copyFile(const std::string& source, const std::string& destination,
+                      const std::ios::openmode& readMode, const std::ios::openmode& writeMode)
 		{
-			std::ifstream  sourceStream(source, std::ios::binary);
-			std::ofstream  destinationStream(destination,   std::ios::binary);
-
-			destinationStream << sourceStream.rdbuf();
+            std::ifstream  sourceStream(source, readMode);
+            std::ofstream  destinationStream(destination, writeMode);
+            destinationStream << sourceStream.rdbuf();
 		}
 
 		bool directoryEmpty(const std::string& name)

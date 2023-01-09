@@ -185,5 +185,16 @@ namespace nero
     {
         return file::getPath({m_GameLevel->getLevelDirectory(), "resource"});
     }
+
+    void LevelBuilder::render() const
+    {
+        for(const auto& worldChunk : m_ChunkTable)
+        {
+            if(worldChunk->isVisible())
+            {
+                worldChunk->getWorldBuilder()->render();
+            }
+        }
+    }
 }
 

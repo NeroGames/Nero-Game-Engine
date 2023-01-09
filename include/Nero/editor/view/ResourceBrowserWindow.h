@@ -10,6 +10,8 @@
 #include <Nero/editor/view/ResourceBrowserSpriteView.h>
 #include <Nero/editor/view/ResourceBrowserMeshView.h>
 #include <Nero/editor/view/ResourceBrowserLightmapView.h>
+#include <Nero/editor/view/ResourceBrowserAnimationView.h>
+#include <Nero/editor/view/ResourceBrowserFontView.h>
 #include <Nero/core/cpp/resource/ResourceUtility.h>
 ////////////////////////////////////////////////////////////
 namespace nero
@@ -30,7 +32,9 @@ namespace nero
 
         private:
             ResourceBrowserSpriteView       m_ResourceBrowserSpriteView;
+            ResourceBrowserAnimationView    m_ResourceBrowserAnimationView;
             ResourceBrowserMeshView         m_ResourceBrowserMeshView;
+            ResourceBrowserFontView         m_ResourceBrowserFontView;
             ResourceBrowserLightmapView     m_ResourceBrowserLightmapView;
     };
 }

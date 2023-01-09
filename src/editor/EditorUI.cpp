@@ -349,16 +349,16 @@ namespace  nero
 
 			buildRenderContext();
 
-            sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y), m_RenderTexture->getView());
-
-            std::string canvas_pos_string = "Canvas x = " + toString(m_RenderContext->mousePosition.x) + " y = " + toString(m_RenderContext->mousePosition.y);
-			std::string wrold_pos_string = "World x = " + toString(world_pos.x) + " y = "  + toString(world_pos.y);
-			std::string camera_pos_string = "Camera x = " + toString(m_EditorCamera->getPosition().x) + " y = "  + toString(m_EditorCamera->getPosition().y);
-
 			ImGui::SameLine();
 
-			if(mouseOnCanvas())
+            if(mouseOnCanvas() &&  ImGui::IsWindowFocused())
 			{
+                sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y), m_RenderTexture->getView());
+
+                std::string canvas_pos_string = "Canvas x = " + toString(m_RenderContext->mousePosition.x) + " y = " + toString(m_RenderContext->mousePosition.y);
+                std::string wrold_pos_string = "World x = " + toString(world_pos.x) + " y = "  + toString(world_pos.y);
+                std::string camera_pos_string = "Camera x = " + toString(m_EditorCamera->getPosition().x) + " y = "  + toString(m_EditorCamera->getPosition().y);
+
 				m_MouseInformation = canvas_pos_string + " | " + wrold_pos_string + " | " + camera_pos_string;
 			}
 			float start = (ImGui::GetWindowContentRegionWidth() - ImGui::CalcTextSize(m_MouseInformation.c_str()).x)/2.f;
@@ -368,15 +368,9 @@ namespace  nero
 			prepareRenderTexture();
 
             auto levelBuilder = m_EditorContext->getLevelBuilder();
-
             if(levelBuilder)
             {
-                auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
-
-                if(worldBuilder)
-                {
-                    worldBuilder->render();
-                }
+                levelBuilder->render();
             }
 
 			//Render on Front Screen
@@ -1040,32 +1034,6 @@ namespace  nero
 			return ImGui::GetStyle().Colors[ImGuiCol_Text];
 		}
 
-	}
-
-    sf::Texture& EditorUI::getFontTexture(const std::string& fontName)
-	{
-		std::string file_name = file::getPath({"resource/editor/texture", fontName}, StringPool.EXT_PNG);
-
-		if(!file::fileExist(file_name))
-		{
-			sf::RenderTexture renderTexture;
-			renderTexture.create(300.f, 100.f);
-			renderTexture.clear(sf::Color::White);
-			sf::Text text;
-            text.setFont(m_EditorContext->getCurrentResourceManager()->getFontHolder()->getFont(fontName));
-			text.setString(fontName);
-			text.setOrigin(text.getGlobalBounds().width/2.f, text.getGlobalBounds().height/2.f);
-			text.setFillColor(sf::Color::Black);
-			text.setPosition(150.f, 50.f);
-			text.setScale(1.f, -1.f);
-			renderTexture.draw(text);
-
-			renderTexture.getTexture().copyToImage().saveToFile(file_name);
-
-			m_EditorTextureHolder->loadFile(file_name);
-		}
-
-		return m_EditorTextureHolder->getTexture(fontName);
 	}
 
     void EditorUI::showUtilityWindow()
@@ -2094,8 +2062,9 @@ namespace  nero
 					ImGui::SetNextItemWidth(input_width - 30.f);
 					float positiony = selectedObject ? selectedObject->getPosition().y : 0.00f;
 					ImGui::InputFloat("##position_y", &positiony, 1.f, 1.0f, "%.3f");
-					ImGui::Dummy(ImVec2(0.0f, 1.0f));
-					bool posychanged = ImGui::IsItemEdited();
+                    bool posychanged = ImGui::IsItemEdited();
+                    ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
 					if(selectedObject && (posxchanged || posychanged))
 					{
 						selectedObject->setPosition(positionx, positiony);

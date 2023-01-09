@@ -32,7 +32,7 @@ namespace nero
 
 	bool AnimationHolder::loadFile(const std::string& file)
 	{
-		std::experimental::filesystem::path filePath(file);
+        std::experimental::filesystem::path filePath(file);
 
 		//Load the Texture
 		std::unique_ptr<sf::Texture> texture = std::make_unique<sf::Texture>();

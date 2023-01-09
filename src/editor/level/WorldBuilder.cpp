@@ -1088,7 +1088,7 @@ namespace nero
 				//m_UpdateLog("adding Text Object with Text [" + label + "]", nero::Info);
 
                 sf::Text text;
-				text.setFont(m_ResourceManager->getFontHolder()->getDefaultFont());
+                text.setFont(m_ResourceManager->getFontHolder()->getFont(label));
                 text.setString(label);
                 text.setCharacterSize(20.f);
                 text.setOrigin(text.getLocalBounds().width/2.f, text.getLocalBounds().height/2.f);
