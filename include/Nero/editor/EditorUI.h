@@ -14,6 +14,7 @@
 #include <Nero/editor/view/EditorSetupPopup.h>
 #include <Nero/editor/view/ResourceSelectionWindow.h>
 #include <Nero/editor/view/ResourceBrowserWindow.h>
+#include <Nero/editor/view/SceneExplorerWindow.h>
 #include <Nero/editor/project/ProjectManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>
@@ -110,6 +111,7 @@ namespace nero
             EditorSetupPopup                                m_EditorSetupPopup;
             ResourceSelectionWindow                         m_ResourceSelectionWindow;
             ResourceBrowserWindow                           m_ResourceBrowserWindow;
+            SceneExplorerWindow                             m_SceneExplorerWindow;
             // Core Engine callback
             float											m_FrameRate;
             float											m_FrameTime;
@@ -135,7 +137,6 @@ namespace nero
 			void											showObjectLayerWindow();
 			void											showGameScreenWindow();
 				//right
-			void											showExplorerWindow();
 			void											showHelpWindow();
 				//bottom
             void											showLoggingWindow();
@@ -181,7 +182,7 @@ namespace nero
 			void											removeGameScreen();
 			int												m_InputSelectedGameScreenId;
 			//Tabs
-            TabSelectionHandler								m_BottomDockspaceTabBarSwitc
+            TabSelectionHandler								m_BottomDockspaceTabBarSwitch;
 			void											showScriptCreationWindow();
             //function
 			void											playScene();
@@ -231,11 +232,7 @@ namespace nero
 			ImVec4											getLoggingColor(logging::LEVEL level);
 			std::string										m_MouseInformation;
 			ConsoleApplication								m_ConsoleApplication;
-			void											showConsoleWindow();
-
-			std::vector<Object::Ptr>						getComponentTable(Object::Ptr root);
-			void											getComponentTable(Object::Ptr object, std::vector<Object::Ptr>& result);
-
+            void											showConsoleWindow();
 	};
 
 }
