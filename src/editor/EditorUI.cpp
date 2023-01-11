@@ -60,6 +60,8 @@ namespace  nero
         ,m_EngineHelpWindow(m_EditorContext)
         ,m_EditorUtilityWindow(m_EditorContext)
         ,m_WorldChunkWindow(m_EditorContext)
+        ,m_ObjectLayerWindow(m_EditorContext)
+        ,m_GameLevelWindow(m_EditorContext)
         //
         ,m_InterfaceFirstDraw(true)
         ,m_SelectedScriptTypeIndex(0)
@@ -67,9 +69,6 @@ namespace  nero
         ,m_SelectedGameScreenIndex(0)
         ,g_Context(nullptr)
         ,m_BottomDockspaceTabBarSwitch()
-        ,m_SelectedChunkNode(StringPool.BLANK)
-        ,m_InputSelectedObjectLayerId(-1)
-        ,m_InputSelectedGameLevelId(-1)
         ,m_InputSelectedGameScreenId(-1)
         ,m_MouseInformation("Mouse Position")
         ,m_ConsoleApplication()
@@ -271,7 +270,7 @@ namespace  nero
 			showGameScreenWindow();*/
 
 			//lower left
-		showObjectLayerWindow();
+        m_ObjectLayerWindow.render();
         if(editorMode == EditorMode::WORLD_BUILDER)
             m_WorldChunkWindow.render();
 
@@ -285,7 +284,7 @@ namespace  nero
 		showConsoleWindow();
         if(m_EditorContext->getAdvancedScene() && editorMode == EditorMode::WORLD_BUILDER)
 		{
-			showGameLevelWindow();
+            m_GameLevelWindow.render();
 		}
 
 		//init
@@ -1160,232 +1159,6 @@ namespace  nero
 		ImGui::End();
 	}
 
-    void EditorUI::removeGameScreen()
-	{
-
-	}
-
-
-
-    void EditorUI::showObjectLayerWindow()
-	{
-		ImGui::Begin(EditorConstant.WINDOW_LAYER.c_str());
-
-			ImGui::Text("Manage Object Layers");
-			ImGui::Separator();
-			ImGui::Dummy(ImVec2(0.f, 2.f));
-
-			float width = 90.f;
-
-			ImGui::Dummy(ImVec2(0.f, 2.f));
-
-			ImVec2 button_size = ImVec2(width, 0.f);
-
-			if(ImGui::Button("Add##add_object_layer", button_size))
-			{
-				addObjectLayer();
-			}
-
-			ImGui::SameLine();
-
-			if(ImGui::Button("Remove##remove_object_layer", button_size))
-			{
-				removeObjectLayer();
-			}
-
-			ImGui::Dummy(ImVec2(0.f, 5.f));
-
-			ImGui::BeginChild("##manage_object_layer", ImVec2(), true);
-
-            auto levelBuilder       = m_EditorContext->getLevelBuilder();
-
-            if(levelBuilder)
-            {
-                auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
-
-                if(worldBuilder)
-				{
-                    m_InputSelectedObjectLayerId = worldBuilder->getSelectedLayer()->getObjectId();
-
-                    for(const auto& objectLayer : worldBuilder->getLayerTable())
-					{
-						std::string itemId = "##select_layer" + toString(objectLayer->getObjectId());
-						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedObjectLayerId, objectLayer->getObjectId());
-
-						if(ImGui::IsItemClicked())
-						{
-                            worldBuilder->setSelectedLayer(objectLayer);
-						}
-
-						ImGui::SameLine();
-
-						itemId = "##layer_visible" + toString(objectLayer->getObjectId());
-						ImGui::Checkbox(itemId.c_str(), &objectLayer->getVisibility());
-
-						ImGui::SameLine();
-
-
-						auto color = getLayerColor(objectLayer->getSecondType());
-
-						ImGui::PushStyleColor(ImGuiCol_FrameBg,			std::get<0>(color));
-						ImGui::PushStyleColor(ImGuiCol_TextSelectedBg,	std::get<1>(color));
-
-						char layer_name[100];
-						string::fillCharArray(layer_name, sizeof(layer_name), objectLayer->getName());
-						ImGui::SetNextItemWidth(118.f);
-						itemId = "##layer_name" + toString(objectLayer->getObjectId());
-						ImGui::InputText(itemId.c_str(), layer_name, sizeof(layer_name));
-
-						if(ImGui::IsItemEdited())
-						{
-							objectLayer->setName(std::string(layer_name));
-						}
-
-						ImGui::PopStyleColor(2);
-					}
-                }
-            }
-			ImGui::EndChild();
-
-		ImGui::End();
-	}
-
-    std::tuple<ImVec4, ImVec4> EditorUI::getLayerColor(Object::Type type)
-	{
-		switch(type)
-		{
-			case Object::Sprite_Object:
-				return {
-							ImVec4(0.3f, 0.6f, 0.5f, 0.5f),
-							ImVec4(0.3f, 0.6f, 0.5f, 1.f),
-						} ;
-
-			default:
-				return {
-							ImGui::GetStyle().Colors[ImGuiCol_FrameBg],
-							ImGui::GetStyle().Colors[ImGuiCol_TextSelectedBg]
-						};
-		}
-	}
-
-    void EditorUI::addObjectLayer()
-	{
-        auto levelBuilder       = m_EditorContext->getLevelBuilder();
-
-        if(!levelBuilder)
-            return;
-
-        levelBuilder->getSelectedChunk()->getWorldBuilder()->addLayer();
-	}
-
-    void EditorUI::removeObjectLayer()
-	{
-        auto levelBuilder       = m_EditorContext->getLevelBuilder();
-
-        if(!levelBuilder)
-            return;
-
-        auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
-
-        worldBuilder->deleteLayer(worldBuilder->getSelectedLayer()->getObjectId());
-	}
-
-    void EditorUI::showGameLevelWindow()
-	{
-		ImGui::Begin(EditorConstant.WINDOW_LEVEL.c_str());
-
-			ImVec2 button_size = ImVec2(100.f, 0.f);
-			if(ImGui::Button("Open##open_game_level", button_size))
-			{
-                m_EditorProxy->openGameLevel(m_EditorContext->getSelectedGameLevelName());
-			}
-
-			ImGui::SameLine();
-
-			if(ImGui::Button("Edit##edit_game_level", button_size))
-			{
-
-			}
-
-			ImGui::SameLine();
-
-			if(ImGui::Button("Copy##copy_game_level", button_size))
-			{
-
-			}
-
-			ImGui::SameLine();
-
-
-			if(ImGui::Button("Close##close_game_level", button_size))
-			{
-				closeGameLevel();
-			}
-
-
-			ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 93.f);
-
-			if(ImGui::Button("Delete##delete_game_level", button_size))
-			{
-
-			}
-
-			ImGui::Dummy(ImVec2(0.f, 2.f));
-
-			ImGui::BeginChild("##show_game_level", ImVec2(), true);
-
-                auto levelNameTable = m_EditorContext->getAdvancedScene()->getRegisteredLevelTable();
-				ImGuiStyle& style = ImGui::GetStyle();
-				float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionWidth();
-
-				int level_count		= levelNameTable.size();
-				int count			= 0;
-				auto printSameLine	= [&count, &level_count, &style, &window_visible_x2]()
-				{
-					float last_button_x2 = ImGui::GetItemRectMax().x;
-					float next_button_x2 = last_button_x2 + style.ItemSpacing.x + 100.f;
-					if (count++ + 1 < level_count && next_button_x2 < window_visible_x2)
-					{
-						ImGui::SameLine();
-					}
-					else
-					{
-						ImGui::Dummy(ImVec2(0.0f, 4.0f));
-					}
-				};
-
-				for (const std::string& name :  levelNameTable)
-				{
-					ImVec2 button_size(200.f, 75.f);
-
-                    pushGameLevelStyle(m_EditorContext->getSelectedGameLevelName() == name,
-                                       m_EditorContext->getOpengedGameLevelName() == name);
-					if(ImGui::Button(name.c_str(), button_size))
-					{
-                        m_EditorContext->setSelectedGameLevelName(name);
-					}
-					popGameLevelStyle();
-
-					printSameLine();
-				}
-
-			ImGui::EndChild();
-
-		ImGui::End();
-	};
-
-
-    void EditorUI::closeGameLevel()
-	{
-        auto advancedScene = m_EditorContext->getAdvancedScene();
-
-        if(!advancedScene)
-            return;
-
-        m_EditorContext->setOpenedGameLevelName(StringPool.BLANK);
-        advancedScene->closeSelectedLevel();
-	}
-
     void EditorUI::createGameScreen(const Parameter& parameter)
 	{
         auto advancedScene = m_EditorContext->getAdvancedScene();
@@ -1465,16 +1238,6 @@ namespace  nero
 
 			ImGui::EndPopup();
         }*/
-	}
-
-    void EditorUI::removeGameLevel()
-	{
-        //TODO
-	}
-
-    void EditorUI::editGameLevel()
-	{
-        //TODO
 	}
 
     void EditorUI::interfaceFirstDraw()

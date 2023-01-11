@@ -18,6 +18,14 @@ namespace nero
 
             virtual void 			destroy() override;
             virtual void            render() override;
-	};
+
+        private:
+            std::tuple<ImVec4, ImVec4>  getLayerColor(Object::Type type);
+
+        private:
+            int                         m_SelectedObjectLayerId;
+
+
+    };
 }
 #endif // OBJECTLAYERWINDOW_H

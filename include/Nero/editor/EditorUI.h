@@ -18,6 +18,8 @@
 #include <Nero/editor/view/EngineHelpWindow.h>
 #include <Nero/editor/view/EditorUtilityWindow.h>
 #include <Nero/editor/view/WorldChunkWindow.h>
+#include <Nero/editor/view/ObjectLayerWindow.h>
+#include <Nero/editor/view/GameLevelWindow.h>
 #include <Nero/editor/project/ProjectManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>
@@ -118,6 +120,8 @@ namespace nero
             EngineHelpWindow                                m_EngineHelpWindow;
             EditorUtilityWindow                             m_EditorUtilityWindow;
             WorldChunkWindow                                m_WorldChunkWindow;
+            ObjectLayerWindow                               m_ObjectLayerWindow;
+            GameLevelWindow                                 m_GameLevelWindow;
             // Core Engine callback
             float											m_FrameRate;
             float											m_FrameTime;
@@ -131,14 +135,9 @@ namespace nero
 			void											editProject();
 			void											reloadProject();
 			void											createGameScreen(const Parameter& parameter);
-			void											closeGameLevel();
             //
 			sf::Sprite										flipTexture(const sf::Texture& texture);
 			//editor view
-				//upper left
-			void											showGameLevelWindow();
-				//bottom left
-			void											showObjectLayerWindow();
 			void											showGameScreenWindow();
 				//bottom
             void											showLoggingWindow();
@@ -168,17 +167,9 @@ namespace nero
 			int												m_SelectedGameLevelIndex;
 			const char*										m_SelectedGameScreen;
 			int												m_SelectedGameScreenIndex;
-			//Object Layer
-			void											addObjectLayer();
-			void											removeObjectLayer();
-			int												m_InputSelectedObjectLayerId;
 			//
-			void											removeGameLevel();
-			void											editGameLevel();
 			void											showNewGameScreenPopup();
-			int												m_InputSelectedGameLevelId;
-			//
-			void											removeGameScreen();
+            //
 			int												m_InputSelectedGameScreenId;
 			//Tabs
             TabSelectionHandler								m_BottomDockspaceTabBarSwitch;
@@ -216,13 +207,10 @@ namespace nero
 			void											switchBuilderMode();
 			void											showCanvasMenu();
 			//
-			std::string										m_SelectedChunkNode;
-			//
 			void											onSaveProject();
 			void											onLoadProject();
 			void											autoSaveProject();
 			sf::Clock										m_AutoSaveClock;
-			std::tuple<ImVec4, ImVec4>						getLayerColor(Object::Type type);
 			//
 			ImVec4											ambient_light;
 			//
