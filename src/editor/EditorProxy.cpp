@@ -44,6 +44,11 @@ namespace  nero
         m_CloseProjectCallback();
     }
 
+    void EditorProxy::loadProject() const
+    {
+        //TODO
+    }
+
     void EditorProxy::closeEditor() const
     {
         m_CloseEditorCallback();

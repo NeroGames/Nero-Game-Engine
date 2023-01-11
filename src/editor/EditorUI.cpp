@@ -57,6 +57,9 @@ namespace  nero
         ,m_ResourceSelectionWindow(m_EditorContext)
         ,m_ResourceBrowserWindow(m_EditorContext)
         ,m_SceneExplorerWindow(m_EditorContext)
+        ,m_EngineHelpWindow(m_EditorContext)
+        ,m_EditorUtilityWindow(m_EditorContext)
+        ,m_WorldChunkWindow(m_EditorContext)
         //
         ,m_InterfaceFirstDraw(true)
         ,m_SelectedScriptTypeIndex(0)
@@ -65,7 +68,6 @@ namespace  nero
         ,g_Context(nullptr)
         ,m_BottomDockspaceTabBarSwitch()
         ,m_SelectedChunkNode(StringPool.BLANK)
-        ,m_InputSelectedChunkId(-1)
         ,m_InputSelectedObjectLayerId(-1)
         ,m_InputSelectedGameLevelId(-1)
         ,m_InputSelectedGameScreenId(-1)
@@ -264,18 +266,18 @@ namespace  nero
 
 		//left dockspace
 			//upper left
-		showUtilityWindow();
+        m_EditorUtilityWindow.render();
         /*if(editorMode == EditorMode::SCREEN_BUILDER)
 			showGameScreenWindow();*/
 
 			//lower left
 		showObjectLayerWindow();
         if(editorMode == EditorMode::WORLD_BUILDER)
-			showWorldChunckWindow();
+            m_WorldChunkWindow.render();
 
 		//right dockspace
         m_SceneExplorerWindow.render();
-		showHelpWindow();
+        m_EngineHelpWindow.render();
         m_ResourceBrowserWindow.render();
 
 		//bottom dockspacer
@@ -460,30 +462,30 @@ namespace  nero
 	}
 
     std::string EditorUI::getString(const EditorMode& editorMode)
-	{
-		switch (editorMode)
-		{
-			case EditorMode::WORLD_BUILDER:
-			{
+    {
+        switch (editorMode)
+        {
+            case EditorMode::WORLD_BUILDER:
+            {
                 const auto builderMode = m_EditorContext->getBuilderMode();
 
                 if(builderMode ==  BuilderMode::OBJECT)
-				{
-					return "World Builder - Object";
-				}
+                {
+                    return "World Builder - Object";
+                }
                 else if(builderMode ==  BuilderMode::MESH)
-				{
-					return "World Builder - Mesh";
-				}
-			}break;
-			case EditorMode::SCREEN_BUILDER:	return "Screen Builder";	break;
-			case EditorMode::OBJECT_BUILDER:	return "Object Builder";	break;
-			case EditorMode::PLAY_GAME:			return "Play Game";			break;
-			case EditorMode::RENDER_GAME:		return "Render Game";		break;
+                {
+                    return "World Builder - Mesh";
+                }
+            }break;
+            case EditorMode::SCREEN_BUILDER:	return "Screen Builder";	break;
+            case EditorMode::OBJECT_BUILDER:	return "Object Builder";	break;
+            case EditorMode::PLAY_GAME:			return "Play Game";			break;
+            case EditorMode::RENDER_GAME:		return "Render Game";		break;
 
-			default: return StringPool.BLANK; break;
-		}
-	}
+            default: return StringPool.BLANK; break;
+        }
+    }
 
     void EditorUI::renderGameModeInfo()
 	{
@@ -1037,100 +1039,6 @@ namespace  nero
 
 	}
 
-    void EditorUI::showUtilityWindow()
-	{
-		ImGui::Begin(EditorConstant.WINDOW_UTILITY.c_str());
-
-			ImVec2 size = ImGui::GetWindowSize();
-
-			ImGui::BeginChild("scene_mode", ImVec2(0.f, 105.f), true);
-				ImGui::Text("Choose Scene Mode");
-				ImGui::Separator();
-
-                const auto builderMode = m_EditorContext->getBuilderMode();
-
-				int e = 0;
-                if(builderMode == BuilderMode::OBJECT) e = 0;
-                else if(builderMode == BuilderMode::MESH) e = 1;
-				ImGui::RadioButton("Object", &e, 0);
-				if(ImGui::IsItemEdited())
-				{
-                    m_EditorContext->setBuilderMode(BuilderMode::OBJECT);
-				}
-				ImGui::RadioButton("Mesh", &e, 1);
-				if(ImGui::IsItemEdited())
-				{
-                    m_EditorContext->setBuilderMode(BuilderMode::MESH);
-				}
-				ImGui::RadioButton("Play", &e, 2);
-
-
-			ImGui::EndChild();
-
-
-			ImGui::BeginChild("save_load", ImVec2(0.f, 85.f), true);
-				ImGui::Text("Save & Load");
-				ImGui::Separator();
-
-				ImGui::Dummy(ImVec2(0.f, 2.f));
-
-				static bool auto_save = false;
-				ImGui::Checkbox("Auto save", &auto_save);
-
-				ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth()-8.f)/2.f, 0.f);
-
-				 if(ImGui::Button("Save", button_size))
-				 {
-					onSaveProject();
-				 }
-
-				ImGui::SameLine();
-
-				 if(ImGui::Button("Load", button_size))
-				 {
-					onLoadProject();
-				 }
-
-			ImGui::EndChild();
-
-
-
-			ImGui::BeginChild("access_button", ImVec2(0.f, 90.f), true);
-				ImGui::Text("Access Website");
-				ImGui::Separator();
-
-				ImGui::Dummy(ImVec2(0.f, 2.f));
-
-				 if(ImGui::Button("Learn", button_size))
-				 {
-					cmd::launchBrowser("https://nero-games.com/learn/engine-v2");
-				 }
-
-				ImGui::SameLine();
-
-				 if(ImGui::Button("Forum", button_size))
-				 {
-					 cmd::launchBrowser("https://nero-games.com/forum");
-				 }
-
-
-				 if(ImGui::Button("Snippet", button_size))
-				 {
-					 cmd::launchBrowser("https://nero-games.com/snippet/engine-v2");
-				 }
-
-				 ImGui::SameLine();
-
-				 if(ImGui::Button("API", button_size))
-				 {
-					 cmd::launchBrowser("https://nero-games.com/learn/engine-v2/api");
-				 }
-
-			ImGui::EndChild();
-
-		ImGui::End();
-	}
-
     void EditorUI::onSaveProject()
 	{
         auto gameProject = m_EditorContext->getGameProject();
@@ -1569,95 +1477,6 @@ namespace  nero
         //TODO
 	}
 
-    void EditorUI::showWorldChunckWindow()
-	{
-		ImGui::Begin(EditorConstant.WINDOW_CHUNCK.c_str());
-
-			ImGui::Text("Manage World Chuncks");
-			ImGui::Separator();
-			ImGui::Dummy(ImVec2(0.f, 2.f));
-
-			float width = 90.f;
-
-			ImGui::Dummy(ImVec2(0.f, 2.f));
-
-			ImVec2 button_size = ImVec2(width, 0.f);
-
-			if(ImGui::Button("Add##add_world_chunk", button_size))
-			{
-				addWorldChunk();
-			}
-
-			ImGui::SameLine();
-
-			if(ImGui::Button("Remove##remove_world_chunk", button_size))
-			{
-                //removeWorldChunk();
-			}
-
-			ImGui::Dummy(ImVec2(0.f, 5.f));
-
-			ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
-			ImGui::BeginChild("##manage_world_chunk", ImVec2(), true);
-
-            auto levelBuilder = m_EditorContext->getLevelBuilder();
-
-                if(levelBuilder)
-				{
-                    auto& chunkTable = levelBuilder->getChunkTable();
-
-                    auto selectedChunk		= levelBuilder->getSelectedChunk();
-					m_InputSelectedChunkId	= selectedChunk ? selectedChunk->getChunkId() : -1;
-
-					for(const auto& worldChunk : chunkTable)
-					{
-						std::string itemId = "##select_chunk" + toString(worldChunk->getChunkId());
-						ImGui::RadioButton(itemId.c_str(), &m_InputSelectedChunkId, worldChunk->getChunkId());
-
-						if(ImGui::IsItemClicked())
-						{
-                            levelBuilder->setSelectedChunk(worldChunk);
-						}
-
-						ImGui::SameLine();
-
-						itemId = "##visible_chunk" + toString(worldChunk->getChunkId());
-						bool visible = worldChunk->isVisible();
-						ImGui::Checkbox(itemId.c_str(), &visible);
-						worldChunk->setVisible(visible);
-
-						ImGui::SameLine();
-
-						char chunk_name[100];
-						string::fillCharArray(chunk_name, sizeof(chunk_name), worldChunk->getChunkName());
-						ImGui::SetNextItemWidth(118.f);
-						itemId = "##chunk_name" + toString(worldChunk->getChunkId());
-						ImGui::InputText(itemId.c_str(), chunk_name, sizeof(chunk_name));
-
-						if(ImGui::IsItemEdited())
-						{
-							worldChunk->setChunkName(std::string(chunk_name));
-						}
-					}
-				}
-
-			ImGui::EndChild();
-
-		ImGui::End();
-	}
-
-    void EditorUI::addWorldChunk()
-	{
-        auto levelBuilder = m_EditorContext->getLevelBuilder();
-
-        if(levelBuilder &&
-           m_EditorContext->getEditorMode() == EditorMode::WORLD_BUILDER &&
-           m_EditorContext->getBuilderMode() == BuilderMode::OBJECT)
-		{
-            auto worldChunk = levelBuilder->addChunk();
-		}
-	}
-
     void EditorUI::interfaceFirstDraw()
 	{
 		if(m_InterfaceFirstDraw)
@@ -1674,14 +1493,6 @@ namespace  nero
 			m_InterfaceFirstDraw = false;
 		}
 	}
-
-    void EditorUI::showHelpWindow()
-	{
-		ImGui::Begin(EditorConstant.WINDOW_HELP.c_str());
-
-		ImGui::End();
-	}
-
 
     void EditorUI::showBackgroundTaskWindow()
 	{

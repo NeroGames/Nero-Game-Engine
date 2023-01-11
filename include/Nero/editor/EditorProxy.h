@@ -27,6 +27,7 @@ namespace nero
                                                   const unsigned int& projectCount)         const;
             void                    saveProject()                                           const;
             void                    closeProject()                                          const;
+            void                    loadProject()                                           const;
             // Workspace
             void                    createWorkspace(const Parameter&  workspaceParameter)   const;
             void                    importWorkspace(const std::string& workspaceDirectory)  const;

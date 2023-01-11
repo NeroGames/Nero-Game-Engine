@@ -15,6 +15,9 @@
 #include <Nero/editor/view/ResourceSelectionWindow.h>
 #include <Nero/editor/view/ResourceBrowserWindow.h>
 #include <Nero/editor/view/SceneExplorerWindow.h>
+#include <Nero/editor/view/EngineHelpWindow.h>
+#include <Nero/editor/view/EditorUtilityWindow.h>
+#include <Nero/editor/view/WorldChunkWindow.h>
 #include <Nero/editor/project/ProjectManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>
@@ -112,6 +115,9 @@ namespace nero
             ResourceSelectionWindow                         m_ResourceSelectionWindow;
             ResourceBrowserWindow                           m_ResourceBrowserWindow;
             SceneExplorerWindow                             m_SceneExplorerWindow;
+            EngineHelpWindow                                m_EngineHelpWindow;
+            EditorUtilityWindow                             m_EditorUtilityWindow;
+            WorldChunkWindow                                m_WorldChunkWindow;
             // Core Engine callback
             float											m_FrameRate;
             float											m_FrameTime;
@@ -130,14 +136,10 @@ namespace nero
 			sf::Sprite										flipTexture(const sf::Texture& texture);
 			//editor view
 				//upper left
-			void											showUtilityWindow();
 			void											showGameLevelWindow();
-			void											showWorldChunckWindow();
 				//bottom left
 			void											showObjectLayerWindow();
 			void											showGameScreenWindow();
-				//right
-			void											showHelpWindow();
 				//bottom
             void											showLoggingWindow();
 			//utility
@@ -166,9 +168,6 @@ namespace nero
 			int												m_SelectedGameLevelIndex;
 			const char*										m_SelectedGameScreen;
 			int												m_SelectedGameScreenIndex;
-			//World chunk
-			void											addWorldChunk();
-			int												m_InputSelectedChunkId;
 			//Object Layer
 			void											addObjectLayer();
 			void											removeObjectLayer();
