@@ -62,6 +62,8 @@ namespace  nero
         ,m_WorldChunkWindow(m_EditorContext)
         ,m_ObjectLayerWindow(m_EditorContext)
         ,m_GameLevelWindow(m_EditorContext)
+        ,m_ConsoleWindow(m_EditorContext)
+        ,m_LoggerWindow(m_EditorContext)
         //
         ,m_InterfaceFirstDraw(true)
         ,m_SelectedScriptTypeIndex(0)
@@ -71,7 +73,6 @@ namespace  nero
         ,m_BottomDockspaceTabBarSwitch()
         ,m_InputSelectedGameScreenId(-1)
         ,m_MouseInformation("Mouse Position")
-        ,m_ConsoleApplication()
     {
         setupEditorProxy();
 	}
@@ -280,8 +281,9 @@ namespace  nero
         m_ResourceBrowserWindow.render();
 
 		//bottom dockspacer
-		showLoggingWindow();
-		showConsoleWindow();
+        m_LoggerWindow.render();
+        m_ConsoleWindow.render();
+
         if(m_EditorContext->getAdvancedScene() && editorMode == EditorMode::WORLD_BUILDER)
 		{
             m_GameLevelWindow.render();
@@ -969,73 +971,6 @@ namespace  nero
 		sf::Sprite sprite(texture, sf::IntRect(0, size.y, size.x, -size.y));
 
 		return sprite;
-	}
-
-    void EditorUI::showLoggingWindow()
-	{
-		// Actually call in the regular Log helper (which will Begin() into the same window as we just did)
-		std::string log = nero::logging::Logger::getString();
-		if(log != StringPool.BLANK)
-		{
-			m_LoggerApplication.AddLog(log);
-			nero::logging::Logger::clearStringStream();
-		}
-
-		m_LoggerApplication.Draw(EditorConstant.WINDOW_LOGGING.c_str());
-	}
-
-    void EditorUI::showConsoleWindow()
-	{
-		m_ConsoleApplication.Draw(EditorConstant.WINDOW_CONSOLE.c_str(), nullptr);
-	}
-
-    ImVec4 EditorUI::getLoggingColor(logging::LEVEL level)
-	{
-		switch (level)
-		{
-			case logging::LOG_INFO:
-			{
-				return ImVec4();
-			}break;
-
-			case logging::LOG_DEBUG:
-			{
-				return ImVec4();
-			}break;
-
-			case logging::LOG_TRACE:
-			{
-				return ImVec4();
-			}break;
-
-			case logging::LOG_WARNING:
-			{
-				return ImVec4();
-			}break;
-
-			case logging::LOG_ERROR:
-			{
-				return ImVec4();
-			}break;
-
-			case logging::LOG_NOTICE:
-			{
-				return ImVec4();
-			}break;
-
-			case logging::LOG_CRITICAL:
-			{
-				return ImVec4();
-			}break;
-
-			case logging::LOG_FATAL:
-			{
-				return ImVec4();
-			}break;
-
-			return ImGui::GetStyle().Colors[ImGuiCol_Text];
-		}
-
 	}
 
     void EditorUI::onSaveProject()

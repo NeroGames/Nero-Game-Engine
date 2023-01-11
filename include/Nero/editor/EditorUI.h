@@ -20,18 +20,18 @@
 #include <Nero/editor/view/WorldChunkWindow.h>
 #include <Nero/editor/view/ObjectLayerWindow.h>
 #include <Nero/editor/view/GameLevelWindow.h>
+#include <Nero/editor/view/ConsoleWindow.h>
+#include <Nero/editor/view/LoggerWindow.h>
 #include <Nero/editor/project/ProjectManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/core/lua/scene/LuaScene.h>
 #include <Nero/editor/project/GameProject.h>
-#include <Nero/editor/LoggerUI.h>
 #include <Nero/core/cpp/utility/String.h>
 #include <Nero/editor/project/AdvancedScene.h>
 #include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/editor/EditorCamera.h>
 #include <Nero/editor/EditorUtility.h>
-#include <Nero/editor/ConsoleUI.h>
 #include <Nero/editor/level/LevelBuilder.h>
 #include <Nero/editor/screen/ScreenBuilder.h>
 #include <Nero/editor/level/WorldBuilder.h>
@@ -122,6 +122,8 @@ namespace nero
             WorldChunkWindow                                m_WorldChunkWindow;
             ObjectLayerWindow                               m_ObjectLayerWindow;
             GameLevelWindow                                 m_GameLevelWindow;
+            ConsoleWindow                                   m_ConsoleWindow;
+            LoggerWindow                                    m_LoggerWindow;
             // Core Engine callback
             float											m_FrameRate;
             float											m_FrameTime;
@@ -139,14 +141,11 @@ namespace nero
 			sf::Sprite										flipTexture(const sf::Texture& texture);
 			//editor view
 			void											showGameScreenWindow();
-				//bottom
-            void											showLoggingWindow();
 			//utility
             void											showToggleButton(bool toggle,
                                                                              const std::string& label,
                                                                              std::function<void()> callback);
             //project creation
-			LoggerApplication								m_LoggerApplication;
             ImGuiIO											baseio;
 			std::stringstream								buffer;
 			std::streambuf*									old;
@@ -218,8 +217,6 @@ namespace nero
 			//
 			ImVec4											getLoggingColor(logging::LEVEL level);
 			std::string										m_MouseInformation;
-			ConsoleApplication								m_ConsoleApplication;
-            void											showConsoleWindow();
 	};
 
 }
