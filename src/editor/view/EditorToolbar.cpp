@@ -12,17 +12,17 @@
 namespace  nero
 {
     EditorToolbar::EditorToolbar(EditorContext::Ptr editorContext):
-        UIComponent(editorContext)
+        UIComponent(std::move(editorContext))
         ,m_ToolbarContentWindow(nullptr)
-        ,m_ScrollButtonLeft(editorContext,
+        ,m_ScrollButtonLeft(m_EditorContext,
                             m_ToolbarContentWindow,
                             ToolbarScrollButton::Direction::Left)
-        ,m_ScrollButtonRight(editorContext,
+        ,m_ScrollButtonRight(m_EditorContext,
                              m_ToolbarContentWindow,
                              ToolbarScrollButton::Direction::Right)
-        ,m_ToolbarButtonGroup(editorContext)
-        ,m_ProjectManagerPopup(editorContext)
-        ,m_NewGameLevelPopup(editorContext)
+        ,m_ToolbarButtonGroup(m_EditorContext)
+        ,m_ProjectManagerPopup(m_EditorContext)
+        ,m_NewGameLevelPopup(m_EditorContext)
     {
 
     }

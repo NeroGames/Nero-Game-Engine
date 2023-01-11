@@ -10,12 +10,12 @@
 namespace  nero
 {
     ResourceBrowserWindow::ResourceBrowserWindow(EditorContext::Ptr editorContext)
-        :UIComponent(editorContext)
-        ,m_ResourceBrowserSpriteView(editorContext)
-        ,m_ResourceBrowserAnimationView(editorContext)
-        ,m_ResourceBrowserMeshView(editorContext)
-        ,m_ResourceBrowserFontView(editorContext)
-        ,m_ResourceBrowserLightmapView(editorContext)
+        :UIComponent(std::move(editorContext))
+        ,m_ResourceBrowserSpriteView(m_EditorContext)
+        ,m_ResourceBrowserAnimationView(m_EditorContext)
+        ,m_ResourceBrowserMeshView(m_EditorContext)
+        ,m_ResourceBrowserFontView(m_EditorContext)
+        ,m_ResourceBrowserLightmapView(m_EditorContext)
     {
 
     }

@@ -10,7 +10,7 @@
 namespace  nero
 {
     WorkspaceListView::WorkspaceListView(EditorContext::Ptr editorContext):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
     {
 
     }

@@ -14,7 +14,7 @@ namespace  nero
 {
     EditorSetupCodeEditorView::EditorSetupCodeEditorView(EditorContext::Ptr editorContext,
                                                          EditorSetup::Ptr editorSetup):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
         ,m_EditorSetup(editorSetup)
     {
         clearInput();

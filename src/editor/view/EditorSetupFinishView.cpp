@@ -12,7 +12,7 @@ namespace  nero
 {
     EditorSetupFinishView::EditorSetupFinishView(EditorContext::Ptr editorContext,
                                                  EditorSetup::Ptr editorSetup):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
         ,m_EditorSetup(editorSetup)
     {
 

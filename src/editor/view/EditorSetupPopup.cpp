@@ -15,34 +15,34 @@
 namespace  nero
 {
     EditorSetupPopup::EditorSetupPopup(EditorContext::Ptr editorContext, EditorSetup::Ptr editorSetup):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
         ,m_EditorSetup(editorSetup)
         ,m_CurrentViewIndex(0)
     {
 
         // Register welcome view
-        m_ViewTable.push_back(std::make_shared<EditorSetupWelcomeView>(editorContext, m_EditorSetup));
+        m_ViewTable.push_back(std::make_shared<EditorSetupWelcomeView>(m_EditorContext, m_EditorSetup));
 
         // Register code editor view
         if(m_EditorSetup->setupCodeEditor())
         {
-            m_ViewTable.push_back(std::make_shared<EditorSetupCodeEditorView>(editorContext, m_EditorSetup));
+            m_ViewTable.push_back(std::make_shared<EditorSetupCodeEditorView>(m_EditorContext, m_EditorSetup));
         }
 
         // Register texture packer view
         if(m_EditorSetup->setupTexturePacker())
         {
-            m_ViewTable.push_back(std::make_shared<EditorSetupTexturePackerView>(editorContext, m_EditorSetup));
+            m_ViewTable.push_back(std::make_shared<EditorSetupTexturePackerView>(m_EditorContext, m_EditorSetup));
         }
 
         // Register workspace view
         if(m_EditorSetup->setupWorkspace())
         {
-            m_ViewTable.push_back(std::make_shared<EditorSetupWorkspaceView>(editorContext, m_EditorSetup));
+            m_ViewTable.push_back(std::make_shared<EditorSetupWorkspaceView>(m_EditorContext, m_EditorSetup));
         }
 
         // Register finish view
-        m_ViewTable.push_back(std::make_shared<EditorSetupFinishView>(editorContext, m_EditorSetup));
+        m_ViewTable.push_back(std::make_shared<EditorSetupFinishView>(m_EditorContext, m_EditorSetup));
 
         // Update current view
         m_CurrentView = m_ViewTable.at(m_CurrentViewIndex);

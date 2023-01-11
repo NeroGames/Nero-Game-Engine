@@ -12,7 +12,7 @@ namespace  nero
 {
     EditorSetupWelcomeView::EditorSetupWelcomeView(EditorContext::Ptr editorContext,
                                                    EditorSetup::Ptr editorSetup):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
         ,m_EditorSetup(editorSetup)
     {
 

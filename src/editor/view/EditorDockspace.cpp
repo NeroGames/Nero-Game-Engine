@@ -10,9 +10,9 @@
 namespace  nero
 {
     EditorDockspace::EditorDockspace(EditorContext::Ptr editorContext):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
         ,m_SetupDockspaceLayout(true)
-        ,m_EditorMenubar(editorContext)
+        ,m_EditorMenubar(m_EditorContext)
     {
 
     }

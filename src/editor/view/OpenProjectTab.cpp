@@ -11,7 +11,7 @@ namespace  nero
 {
     OpenProjectTab::OpenProjectTab(EditorContext::Ptr editorContext,
                                    TabSelectionHandler::Ptr tabSelectionHandler):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
         ,m_TabSelectionHandler(tabSelectionHandler)
     {
 

@@ -167,7 +167,6 @@ namespace nero
 			int												m_SelectedGameScreenIndex;
 			//World chunk
 			void											addWorldChunk();
-			void											removeWorldChunk();
 			int												m_InputSelectedChunkId;
 			//Object Layer
 			void											addObjectLayer();
@@ -182,10 +181,7 @@ namespace nero
 			void											removeGameScreen();
 			int												m_InputSelectedGameScreenId;
 			//Tabs
-            TabSelectionHandler								m_BottomDockspaceTabBarSwitch;
-			//Banner
-			//show view
-			//
+            TabSelectionHandler								m_BottomDockspaceTabBarSwitc
 			void											showScriptCreationWindow();
             //function
 			void											playScene();

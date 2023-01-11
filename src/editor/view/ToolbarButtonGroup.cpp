@@ -12,7 +12,7 @@
 namespace  nero
 {
     ToolbarButtonGroup::ToolbarButtonGroup(EditorContext::Ptr editorContext):
-        UIComponent(editorContext)
+        UIComponent(std::move(editorContext))
     {
 
     }

@@ -10,7 +10,7 @@
 namespace  nero
 {
     AboutEnginePopup::AboutEnginePopup(EditorContext::Ptr editorContext):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
     {
 
     }

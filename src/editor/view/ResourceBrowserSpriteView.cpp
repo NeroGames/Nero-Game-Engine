@@ -10,7 +10,7 @@
 namespace  nero
 {
     ResourceBrowserSpriteView::ResourceBrowserSpriteView(EditorContext::Ptr editorContext):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
     {
 
     }

@@ -9,7 +9,7 @@
 namespace  nero
 {
     UIComponent::UIComponent(EditorContext::Ptr editorContext):
-        m_EditorContext(editorContext)
+        m_EditorContext(std::move(editorContext))
     {
 
     }

@@ -1591,7 +1591,7 @@ namespace  nero
 
 			if(ImGui::Button("Remove##remove_world_chunk", button_size))
 			{
-				removeWorldChunk();
+                //removeWorldChunk();
 			}
 
 			ImGui::Dummy(ImVec2(0.f, 5.f));
@@ -1654,33 +1654,6 @@ namespace  nero
            m_EditorContext->getBuilderMode() == BuilderMode::OBJECT)
 		{
             auto worldChunk = levelBuilder->addChunk();
-		}
-	}
-
-    void EditorUI::removeWorldChunk()
-	{
-
-	}
-
-    void EditorUI::showToggleButton(bool toggle, const std::string& label, std::function<void()> callback)
-	{
-		if(toggle)
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.f);
-			ImGui::PushStyleColor(ImGuiCol_Border, ImGui::GetStyle().Colors[ImGuiCol_TabActive]);
-			if(ImGui::Button(label.c_str()))
-			{
-				callback();
-			}
-			ImGui::PopStyleColor();
-			ImGui::PopStyleVar();
-		}
-		else
-		{
-			if(ImGui::Button(label.c_str()))
-			{
-				callback();
-			}
 		}
 	}
 

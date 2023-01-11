@@ -12,7 +12,7 @@ namespace  nero
 {
     NewProjectTab::NewProjectTab(EditorContext::Ptr editorContext,
                                        TabSelectionHandler::Ptr tabSelectionHandler):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
         ,m_TabSelectionHandler(tabSelectionHandler)
         ,m_NewProjectCount(0)
     {

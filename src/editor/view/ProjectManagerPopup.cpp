@@ -10,12 +10,12 @@
 namespace  nero
 {
     ProjectManagerPopup::ProjectManagerPopup(EditorContext::Ptr editorContext):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
         ,m_TabSelectionHandler(std::make_shared<TabSelectionHandler>())
-        ,m_RecentProjectTab(editorContext, m_TabSelectionHandler)
-        ,m_NewProjectTab(editorContext, m_TabSelectionHandler)
-        ,m_OpenProjectTab(editorContext, m_TabSelectionHandler)
-        ,m_WorkspaceTab(editorContext, m_TabSelectionHandler)
+        ,m_RecentProjectTab(m_EditorContext, m_TabSelectionHandler)
+        ,m_NewProjectTab(m_EditorContext, m_TabSelectionHandler)
+        ,m_OpenProjectTab(m_EditorContext, m_TabSelectionHandler)
+        ,m_WorkspaceTab(m_EditorContext, m_TabSelectionHandler)
     {
         m_TabSelectionHandler->registerTab(
         {

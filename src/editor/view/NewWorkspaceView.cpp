@@ -11,7 +11,7 @@
 namespace  nero
 {
     NewWorkspaceView::NewWorkspaceView(EditorContext::Ptr editorContext):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
     {
         clearInput();
     }

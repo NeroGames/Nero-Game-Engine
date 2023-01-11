@@ -10,7 +10,7 @@
 namespace  nero
 {
     ResourceSelectionWindow::ResourceSelectionWindow(EditorContext::Ptr editorContext):
-         UIComponent(editorContext)
+         UIComponent(std::move(editorContext))
     {
 
     }

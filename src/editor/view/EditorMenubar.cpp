@@ -11,9 +11,9 @@
 namespace  nero
 {
     EditorMenubar::EditorMenubar(EditorContext::Ptr editorContext):
-         UIComponent(editorContext)
-        ,m_ProjectManagerPopup(editorContext)
-        ,m_AboutEnginePopup(editorContext)
+         UIComponent(std::move(editorContext))
+        ,m_ProjectManagerPopup(m_EditorContext)
+        ,m_AboutEnginePopup(m_EditorContext)
         ,m_ProjectManagerPopupTabHandler(m_ProjectManagerPopup.getTabSelectionHandler())
     {
         clearInput();

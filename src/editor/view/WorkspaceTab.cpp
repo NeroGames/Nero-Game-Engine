@@ -11,11 +11,11 @@ namespace  nero
 {
     WorkspaceTab::WorkspaceTab(EditorContext::Ptr editorContext,
                                TabSelectionHandler::Ptr tabSelectionHandler):
-         UIComponent(editorContext)
-        ,m_TabSelectionHandler(tabSelectionHandler)
-        ,m_NewWorkspaceView(editorContext)
-        ,m_ImportWorkspaceView(editorContext)
-        ,m_WorkspaceListView(editorContext)
+         UIComponent(std::move(editorContext))
+        ,m_TabSelectionHandler(std::move(tabSelectionHandler))
+        ,m_NewWorkspaceView(m_EditorContext)
+        ,m_ImportWorkspaceView(m_EditorContext)
+        ,m_WorkspaceListView(m_EditorContext)
     {
 
     }

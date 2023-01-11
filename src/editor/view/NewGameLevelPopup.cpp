@@ -10,7 +10,7 @@
 namespace  nero
 {
     NewGameLevelPopup::NewGameLevelPopup(EditorContext::Ptr editorContext):
-        UIComponent(editorContext)
+        UIComponent(std::move(editorContext))
 
     {
         clearInput();
