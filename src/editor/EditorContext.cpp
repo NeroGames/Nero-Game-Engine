@@ -11,22 +11,28 @@ namespace  nero
     EditorContext::EditorContext(EditorProxy::Ptr editorProxy,
                                  ProjectManager::Ptr projectManager,
                                  TextureHolder::Ptr textureHolder,
+                                 FontHolder::Ptr fontHolder,
                                  Setting::Ptr editorSetting,
                                  RenderTexturePtr renderTexture,
                                  RenderContext::Ptr renderContext,
+                                 AdvancedCamera::Ptr editorCamara,
                                  const EditorMode& editorMode,
                                  const BuilderMode& builderMode)
         :m_EditorProxy(editorProxy)
         ,m_ProjectManager(projectManager)
         ,m_TextureHolder(textureHolder)
+        ,m_FontHolder(fontHolder)
         ,m_EditorSetting(editorSetting)
         ,m_RenderTexture(renderTexture)
         ,m_RenderContext(renderContext)
+        ,m_EditorCamera(editorCamara)
         ,m_EditorMode(editorMode)
         ,m_BuilderMode(builderMode)
         ,m_SelectedGameLevelName(StringPool.BLANK)
         ,m_OpenedGameLevelName(StringPool.BLANK)
         ,m_SelectedResourceType(ResourceType::None)
+        ,m_FrameRate(0.f)
+        ,m_FrameTime(0.f)
     {
 
     }
@@ -51,7 +57,7 @@ namespace  nero
         if(!m_ProjectManager)
             return nullptr;
 
-       return m_ProjectManager->getGameProject();
+        return m_ProjectManager->getGameProject();
     }
 
     AdvancedScene::Ptr EditorContext::getAdvancedScene() const
@@ -77,6 +83,11 @@ namespace  nero
     TextureHolder::Ptr EditorContext::getTextureHolder() const
     {
         return m_TextureHolder;
+    }
+
+    FontHolder::Ptr EditorContext::getFontHolder() const
+    {
+        return m_FontHolder;
     }
 
     Setting::Ptr EditorContext::getEditorSetting() const
@@ -161,4 +172,39 @@ namespace  nero
             }
         }
     }
- }
+
+    EditorContext::RenderTexturePtr EditorContext::getRenderTexture() const
+    {
+        return m_RenderTexture;
+    }
+
+    RenderContext::Ptr EditorContext::getRenderContext() const
+    {
+        return m_RenderContext;
+    }
+
+    AdvancedCamera::Ptr EditorContext::getEditorCamera() const
+    {
+        return m_EditorCamera;
+    }
+
+    float EditorContext::getFrameRate() const
+    {
+        return m_FrameRate;
+    }
+
+    float EditorContext::getFrameTime() const
+    {
+        return m_FrameTime;
+    }
+
+    void EditorContext::setFrameRate(const float& frameRate)
+    {
+        m_FrameRate = frameRate;
+    }
+
+    void EditorContext::setFrameTime(const float& frameTime)
+    {
+        m_FrameTime = frameTime;
+    }
+}

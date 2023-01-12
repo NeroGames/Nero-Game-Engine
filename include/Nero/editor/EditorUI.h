@@ -22,6 +22,8 @@
 #include <Nero/editor/view/GameLevelWindow.h>
 #include <Nero/editor/view/ConsoleWindow.h>
 #include <Nero/editor/view/LoggerWindow.h>
+#include <Nero/editor/view/RenderCanvasWindow.h>
+
 #include <Nero/editor/project/ProjectManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>
@@ -124,10 +126,10 @@ namespace nero
             GameLevelWindow                                 m_GameLevelWindow;
             ConsoleWindow                                   m_ConsoleWindow;
             LoggerWindow                                    m_LoggerWindow;
+            RenderCanvasWindow                              m_RenderCanvasWindow;
             // Core Engine callback
-            float											m_FrameRate;
-            float											m_FrameTime;
             std::function<void (const std::string&)>		m_UpdateWindowTitleCallback;
+            bool                                            mouseOnCanvas();
 		private:
             //////////////docksapce
             bool											m_InterfaceFirstDraw;
@@ -138,7 +140,6 @@ namespace nero
 			void											reloadProject();
 			void											createGameScreen(const Parameter& parameter);
             //
-			sf::Sprite										flipTexture(const sf::Texture& texture);
 			//editor view
 			void											showGameScreenWindow();
 			//utility
@@ -153,7 +154,6 @@ namespace nero
 			void											showGameProjectWindow();
 			void											showGameSettingWindow();
 			void											showVisualScriptWindow();
-			void											showSceneWindow();
 			void											showBackgroundTaskWindow();
             ////////////////////////Project and Workspace////////////////////////
             //General
@@ -179,44 +179,17 @@ namespace nero
 			void											stepScene();
 			void											resetScene();
 			void											renderScene();
-			//
-			void											buildRenderContext();
-			void											prepareRenderTexture();
-			bool											mouseOnCanvas();
-			//
 			ax::NodeEditor::EditorContext*					g_Context;
-			//
-			sf::RectangleShape								m_CameraXAxis;
-			sf::RectangleShape								m_CameraYAxis;
-			sf::RectangleShape								m_CanvasXAxis;
-			sf::RectangleShape								m_CanvasYAxis;
-			//
-			//
-            void                                            renderCamera();
-			sf::View										m_CanvasFrontView;
-			sf::Text										m_GameModeInfo;
-			sf::Text										m_GameBuilderInfo;
-			//
-			void											renderGameModeInfo();
-			//
 			std::string										getString(const EditorMode& editorMode);
-			//
 			void											clearScriptWizardInput();
-			//
 			void											switchBuilderMode();
-			void											showCanvasMenu();
-			//
 			void											onSaveProject();
 			void											onLoadProject();
 			void											autoSaveProject();
 			sf::Clock										m_AutoSaveClock;
-			//
 			ImVec4											ambient_light;
-			//
 			void											createScriptObject(const Parameter& parameter);
-			//
-			ImVec4											getLoggingColor(logging::LEVEL level);
-			std::string										m_MouseInformation;
+            ImVec4											getLoggingColor(logging::LEVEL level);
 	};
 
 }
