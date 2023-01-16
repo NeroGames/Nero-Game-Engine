@@ -95,11 +95,6 @@ namespace nero
 		file::saveFile(file::getPath({directory, ".workspace"}), parameter.toString());
 	}
 
-	void ProjectManager::deleteWorksapce(const std::string &directory)
-	{
-		//TODO delete workspace
-	}
-
 	const nlohmann::json ProjectManager::getWorkspaceTable() const
 	{
 		return file::loadJson(file::getPath({"setting", "workspace"}));
@@ -134,7 +129,7 @@ namespace nero
 		return result;
 	}
 
-	const nlohmann::json ProjectManager::findWorkspace(const std::string& name) const
+    const nlohmann::json ProjectManager::findWorkspace(const std::string& workspaceName) const
 	{
 		auto workspaceTable =  file::loadJson(file::getPath({"setting", "workspace"}));
 
@@ -142,7 +137,7 @@ namespace nero
 
 		for(auto workspace : workspaceTable)
 		{
-			if(workspace["workspace_name"] == name)
+            if(workspace["workspace_name"] == workspaceName)
 			{
 				result = workspace;
 				break;
@@ -154,7 +149,7 @@ namespace nero
 
 	void ProjectManager::createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
 	{
-		nero_log("creating project : " + parameter.getString("project_name"));
+        nero_log("Creating project - " + parameter.getString("project_name"));
 
 		std::string projectType = parameter.getString("project_type");
 
@@ -185,14 +180,13 @@ namespace nero
 
 	void ProjectManager::createCppProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
 	{
-		nero_log("creating a new cpp project");
+        nero_log("Creating a new CPP Project");
 
 		//step 1-1 : Create directory struture
-		backgroundTask->setStatus(1);
-		backgroundTask->addMessage("generating project directory ...");
+        backgroundTask->nextStep();
+        backgroundTask->addMessage("Generating Project Directory");
 
 		std::string project_name = parameter.getString("project_name");
-
 		std::string workspaceDirectory	= findWorkspace(parameter.getString("workspace_name"))["workspace_directory"].get<std::string>();
 		std::string projectDirectory	= file::getPath({workspaceDirectory, "Project", parameter.getString("project_name")});
 
@@ -232,8 +226,8 @@ namespace nero
 		file::saveFile(file::getPath({projectDirectory, ".project"}), document.toString());
 
 		//Step 2 : generate project source
-		backgroundTask->setStatus(2);
-		backgroundTask->addMessage("generating project files ...");
+        backgroundTask->nextStep();
+        backgroundTask->addMessage("Generating Project Files");
 
 		//Step 2 : Generate file
 		std::string cmake_template			= file::loadText("template/cpp_project/CMakeLists.txt");
@@ -303,21 +297,16 @@ namespace nero
 		file::saveFile(file::getPath({projectDirectory, "Scene", "scene"}, StringPool.EXT_NERO), scene_setting.toString());
 
 		//Step 3 : compile the project
-		backgroundTask->setStatus(3);
-		backgroundTask->addMessage("compiling project ...");
-
 		compileProject(projectDirectory, backgroundTask);
 
 		/*if(backgroundTask->getErrorCode() != 0)
 		{
-			backgroundTask->setStatus(-1);
 			backgroundTask->addMessage("Failed to create project");
 			return;
 		}*/
 
 		//compplet
-		backgroundTask->setStatus(4);
-		backgroundTask->addMessage("project creation completed");
+        backgroundTask->nextStep();
 		backgroundTask->setCompleted(true);
 	}
 
@@ -383,38 +372,10 @@ namespace nero
         return result;
     }
 
-
-
 	void ProjectManager::compileProject(const std::string& projectDirectory, BackgroundTask::Ptr backgroundTask)
 	{
-		Parameter parameter;
-		parameter.loadJson(file::loadJson(file::getPath({projectDirectory, ".project"}), true));
-		//remote
-		std::string sourcePath  = file::getPath({projectDirectory, "Source", parameter.getString("project_name")});
-		std::string buildPath   = file::getPath({projectDirectory, "Build"});
-
-		std::string nero_game_home	= m_EditorSetting->getSetting("environment").getString("nero_game_home");
-
-		std::string mingw32			= nero_game_home + "/Compiler/bin/mingw32-make.exe";
-		std::string gxx				= nero_game_home + "/Compiler/bin/g++.exe";
-		std::string gcc				= nero_game_home + "/Compiler/bin/gcc.exe";
-		std::string cmake			= nero_game_home + "/Tools/Cmake/bin/cmake.exe";
-
-		backgroundTask->addMessage("  -> (1/3) cleaning project");
-		cmd::Process cleanProcess	=  cmd::runCommand(mingw32, {"-C", buildPath, "-k", "clean"});
-		nero_log("clean project exit code = " + toString(cleanProcess.getExistCode()));
-
-		backgroundTask->addMessage("  -> (2/3) configuring project");
-		cmd::Process configProcess	=  cmd::runCommand(cmake, {"-G", "MinGW Makefiles", "-S", sourcePath, "-B", buildPath,
-															   "-D", "CMAKE_CXX_COMPILER=" + file::getPath(gxx), "-D", "CMAKE_C_COMPILER="	+ file::getPath(gcc),
-																"-D", "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32)});
-		nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
-
-		backgroundTask->addMessage("  -> (3/3) building project");
-		cmd::Process buildProcess	=  cmd::runCommand(mingw32, {"-C", buildPath});
-		nero_log("build project exit code = " + toString(buildProcess.getExistCode()));
+        GameProject::compileProject(projectDirectory, backgroundTask);
 	}
-
 
 	std::string ProjectManager::formatSceneClassName(std::vector<std::string> wordTable)
 	{

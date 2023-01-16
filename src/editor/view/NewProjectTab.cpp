@@ -362,13 +362,13 @@ namespace  nero
                 if(createProjectTask)
                 {
                     BTManager::pauseTask(taskName, 1);
-                    std::string message = createProjectTask->printMessage();
+                    std::string message = createProjectTask->getMessage();
 
                     ImGui::TextWrapped("%s", message.c_str());
 
                     ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-                    if(createProjectTask->getStatus() == 4)
+                    if(createProjectTask->completed())
                     {
                         ImGui::SetCursorPosY(200.f - 40.f);
                         ImGui::SetCursorPosX(50.f);

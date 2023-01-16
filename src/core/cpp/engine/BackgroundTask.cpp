@@ -1,90 +1,86 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2021 Sanou A. K. Landry
+// Copyright (c) 2016-2023 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
+///////////////////////////HEADERS//////////////////////////
 #include <Nero/core/cpp/engine/BackgroundTask.h>
 #include <Nero/core/cpp/utility/String.h>
-#include <Nero/core/cpp/utility/Logging.h>
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
-	BackgroundTask::BackgroundTask(const std::string& name, const std::string& category):
-		m_Name(name)
-	   ,m_Category(category)
-	   ,m_Status(0)
-	   ,m_ErrorCode()
-	   ,m_Completed(false)
-	   ,m_Failed(false)
-	   ,m_MessageTable()
-	   ,m_Message(StringPool.BLANK)
-	{
+    BackgroundTask::BackgroundTask(const std::string& name, const std::string& category)
+        :m_Name(name)
+        ,m_Category(category)
+        ,m_Step(0)
+        ,m_ErrorCode()
+        ,m_Completed(false)
+        ,m_Failed(false)
+        ,m_Message(StringPool.BLANK)
+    {
+        //Empty
+    }
 
-	}
+    std::string BackgroundTask::getName() const
+    {
+        return m_Name;
+    }
 
-	std::string BackgroundTask::getName()
-	{
-		return m_Name;
-	}
+    std::string BackgroundTask::getCategory() const
+    {
+        return m_Category;
+    }
 
-	std::string BackgroundTask::getCategory()
-	{
-		return m_Category;
-	}
+    void BackgroundTask::nextStep()
+    {
+        if(!m_Completed && !m_Failed)
+        {
+            m_Step++;
+        }
+    }
 
-	int BackgroundTask::getStatus()
-	{
-		return m_Status;
-	}
+    int BackgroundTask::getStep() const
+    {
+        return m_Step;
+    }
 
-	void BackgroundTask::setStatus(int status)
-	{
-		m_Status = status;
-	}
+    void BackgroundTask::setErrorCode(const int error)
+    {
+        m_ErrorCode = error;
+    }
 
-	void BackgroundTask::addMessage(const std::string& message)
-	{
-		nero_log(message);
-		m_Message += message + StringPool.NEW_LINE;
-		//m_MessageTable.push_back(message);
-	}
+    int BackgroundTask::getErrorCode() const
+    {
+        return m_ErrorCode;
+    }
 
-	bool BackgroundTask::isCompleted()
-	{
-		return m_Completed;
-	}
+    void BackgroundTask::setCompleted(const bool completed)
+    {
+        m_Completed = completed;
+    }
 
-	bool BackgroundTask::isFailed()
-	{
-		return m_Failed;
-	}
+    bool BackgroundTask::completed() const
+    {
+        return m_Completed;
+    }
 
-	std::string BackgroundTask::printMessage()
-	{
-		/*std::string result = StringPool.BLANK;
+    void BackgroundTask::setFailed(const bool failed)
+    {
+        m_Failed = failed;
+    }
 
-		for (const std::string& message : m_MessageTable)
-		{
-			result += message + StringPool.NEW_LINE;
-		}*/
+    bool BackgroundTask::failed() const
+    {
+        return m_Failed;
+    }
 
-		return  m_Message;
-	}
+    void BackgroundTask::addMessage(const std::string& message)
+    {
+        m_Message += message + StringPool.NEW_LINE;
+    }
 
-	void BackgroundTask::setErrorCode(int error)
-	{
-		m_ErrorCode = error;
-	}
-
-	int BackgroundTask::getErrorCode()
-	{
-		return m_ErrorCode;
-	}
-
-
-	void BackgroundTask::setCompleted(bool completed)
-	{
-		m_Completed = completed;
-	}
-
+    std::string BackgroundTask::getMessage() const
+    {
+        return  m_Message;
+    }
 }
 

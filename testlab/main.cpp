@@ -2,7 +2,7 @@
 
 int main()
 {
-	pocoProcess();
+    pocoProcess();
 
-	return 0;
+    return 0;
 }

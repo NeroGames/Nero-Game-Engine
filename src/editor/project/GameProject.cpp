@@ -386,40 +386,52 @@ namespace nero
 		}
 	}
 
-	void GameProject::compileProject(const BackgroundTask::Ptr backgroundTask)
+    void GameProject::compileProject(const std::string &projectDirectory, const BackgroundTask::Ptr backgroundTask)
 	{
-		std::string sourcePath  = m_ProjectSetting->getString("source_directory");
-		std::string buildPath   = m_ProjectSetting->getString("build_directory");
+        Parameter parameter;
+        parameter.loadJson(file::loadJson(file::getPath({projectDirectory, ".project"}), true));
+        const std::string projectName = parameter.getString("project_name");
+        const std::string sourcePath  = file::getPath({projectDirectory, "Source", projectName});
+        const std::string buildPath   = file::getPath({projectDirectory, "Build"});
 
-		std::string nero_game_home	= m_EngineSetting->getSetting("environment").getString("nero_game_home");
+        char* home = getenv("NERO_GAME_HOME");
+        const std::string NERO_GAME_HOME = home ? std::string(home) : StringPool.BLANK;
 
-		std::string mingw32			= nero_game_home + "/Compiler/bin/mingw32-make.exe";
-		std::string gxx				= nero_game_home + "/Compiler/bin/g++.exe";
-		std::string gcc				= nero_game_home + "/Compiler/bin/gcc.exe";
-		std::string cmake			= nero_game_home + "/Tools/Cmake/bin/cmake.exe";
+        if(NERO_GAME_HOME == StringPool.BLANK)
+        {
+            //TODO error, stop compilation process
+        }
 
-		backgroundTask->setStatus(1);
-		backgroundTask->addMessage("Cleaning Project ...");
+        const std::string mingw32 = NERO_GAME_HOME + "/Compiler/bin/mingw32-make.exe";
+        const std::string gxx     = NERO_GAME_HOME + "/Compiler/bin/g++.exe";
+        const std::string gcc     = NERO_GAME_HOME + "/Compiler/bin/gcc.exe";
+        const std::string cmake   = NERO_GAME_HOME + "/Tools/Cmake/bin/cmake.exe";
+
+        backgroundTask->addMessage("Compiling Project - " + projectName);
+        nero_log("compiling project " + projectName);
+
+        backgroundTask->nextStep();
+        backgroundTask->addMessage("Step 1/3 - Cleaning Project");
 		cmd::Process cleanProcess	=  cmd::runCommand(mingw32, {"-C", buildPath, "-k", "clean"});
 		backgroundTask->setErrorCode(cleanProcess.getExistCode());
 		nero_log("clean project exit code = " + toString(cleanProcess.getExistCode()));
 
-		backgroundTask->setStatus(2);
-		backgroundTask->addMessage("Configuring Project ...");
+        backgroundTask->nextStep();
+        backgroundTask->addMessage("Step 2/3 - Configuring Project");
 		cmd::Process configProcess	=  cmd::runCommand(cmake, {"-G", "MinGW Makefiles", "-S", sourcePath, "-B", buildPath,
 															   "-D", "CMAKE_CXX_COMPILER=" + file::getPath(gxx), "-D", "CMAKE_C_COMPILER="	+ file::getPath(gcc),
                                                                "-D", "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32)});
 		backgroundTask->setErrorCode(configProcess.getExistCode());
 		nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
 
-		backgroundTask->setStatus(3);
-		backgroundTask->addMessage("Building Project ...");
+        backgroundTask->nextStep();
+        backgroundTask->addMessage("Step 2/3 - Building Project");
 		cmd::Process buildProcess	=  cmd::runCommand(mingw32, {"-C", buildPath});
 		backgroundTask->setErrorCode(buildProcess.getExistCode());
 		nero_log("build project exit code = " + toString(buildProcess.getExistCode()));
 
-		backgroundTask->setStatus(4);
-		backgroundTask->addMessage("Compilation Completed !!");
+        backgroundTask->nextStep();
+        backgroundTask->addMessage("Finished Compiling Project - " + projectName);
 
 		std::this_thread::sleep_for(std::chrono::seconds(2));
 

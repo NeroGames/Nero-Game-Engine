@@ -680,12 +680,12 @@ namespace  nero
 
     void EditorUI::compileProject()
 	{
-        auto gameProject = m_EditorContext->getGameProject();
+        /*auto gameProject = m_EditorContext->getGameProject();
 
         if(gameProject)
 		{
             BTManager::startTask(&GameProject::compileProject, gameProject.get());
-		}
+        }*/
 	}
 
     void EditorUI::editProject()
@@ -937,7 +937,6 @@ namespace  nero
 		// FIXME-VIEWPORT: Select a default viewport
 		const float DISTANCE = 10.0f;
 		static int corner = 3;
-		ImGuiIO& io = ImGui::GetIO();
 		if (corner != -1)
 		{
 			ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -957,10 +956,9 @@ namespace  nero
 
 			for(BackgroundTask::Ptr task : taskTable)
 			{
-				//BTManager::pauseTask(task->getName(), std::chrono::milliseconds(1));
-				if(!task->isCompleted())
+                if(!task->completed())
 				{					
-					ImGui::Text(task->printMessage().c_str());
+                    ImGui::Text(task->getMessage().c_str());
 				}
 			}
 		}

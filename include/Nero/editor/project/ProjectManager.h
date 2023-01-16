@@ -35,16 +35,14 @@ namespace  nero
 													ProjectManager();
 												   ~ProjectManager();
 			//workspace
-				//main
+                //main
 			void									createWorkspace(const Parameter& parameter);
-			void									deleteWorksapce(const std::string& directory);
 			void									importWorkspace(const std::string& directory);
-				//utility
+                //utility
 			const nlohmann::json					getWorkspaceTable() const;
-			bool									workspaceExist(const std::string& workspaceName);
 			const std::vector<std::string>			getWorkspaceNameTable() const;
-			const nlohmann::json					findWorkspace(const std::string& name) const;
-
+            const nlohmann::json					findWorkspace(const std::string& workspaceName) const;
+            bool									workspaceExist(const std::string& workspaceName);
 			//game project
 				//main
 			void									createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);

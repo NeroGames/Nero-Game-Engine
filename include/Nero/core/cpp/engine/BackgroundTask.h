@@ -1,48 +1,50 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2021 Sanou A. K. Landry
+// Copyright (c) 2016-2023 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 #ifndef BACKGROUNDTASK_H
 #define BACKGROUNDTASK_H
-
+///////////////////////////HEADERS//////////////////////////
+//CPP
 #include <string>
 #include <vector>
 #include <memory>
-
+////////////////////////////////////////////////////////////
 namespace nero
 {
-	class BackgroundTask
-	{
-		public:
-			typedef std::shared_ptr<BackgroundTask>    Ptr;
+    class BackgroundTask
+    {
+        public:
+            using Ptr = std::shared_ptr<BackgroundTask>;
 
-		public:
-										BackgroundTask(const std::string& name, const std::string& category);
+        public:
+            BackgroundTask(const std::string& name, const std::string& category);
 
-			std::string					getName();
-			std::string					getCategory();
-			int							getStatus();
-			void						setStatus(int status);
-			void						setErrorCode(int error);
-			void						addMessage(const std::string& message);
-			bool						isCompleted();
-			bool						isFailed();
-			void						setCompleted(bool completed);
-			std::string					printMessage();
-			int							getErrorCode();
+            //Setter
+            void						nextStep();
+            void						setErrorCode(const int error);
+            void						setCompleted(const bool completed);
+            void                        setFailed(const bool failed);
+            void						addMessage(const std::string& message);
+            //Getter
+            std::string					getName()       const;
+            std::string					getCategory()   const;
+            int							getStep()       const;
+            int							getErrorCode()  const;
+            bool						completed()     const;
+            bool						failed()        const;
+            std::string					getMessage()    const;
 
-
-		private:
-			friend class				BackgroundTaskManager;
-			std::string					m_Name;
-			std::string					m_Category;
-			int							m_Status;
-			int							m_ErrorCode;
-			bool						m_Completed;
-			bool						m_Failed;
-			std::vector<std::string>	m_MessageTable;
-			std::string					m_Message;
-	};
+        private:
+            friend class				BackgroundTaskManager;
+            std::string					m_Name;
+            std::string					m_Category;
+            int							m_Step;
+            int							m_ErrorCode;
+            bool						m_Completed;
+            bool						m_Failed;
+            std::string					m_Message;
+    };
 }
 
 

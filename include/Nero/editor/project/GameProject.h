@@ -25,9 +25,9 @@ namespace nero
     {
         public:
             typedef std::shared_ptr<GameProject> Ptr;
-			typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
+            typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 
-			typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
+            typedef Scene::Ptr (CreateCppSceneFn)(Scene::Context);
 			//typedef LuaScene::Ptr (CreateLuaSceneFn)(Scene::Context);
 
         public:
@@ -42,7 +42,6 @@ namespace nero
 			void								loadGameScreen();
 			//void								loadLibrary();
 			void								openEditor();
-			void								compileProject(const BackgroundTask::Ptr backgroundTask);
 			void								render();
 			void								destroyScene();
 			void								handleEvent(const sf::Event& event);
@@ -63,6 +62,9 @@ namespace nero
 			void								loadResource(const Parameter& parameter);
 
 			const std::string					getResourceFoler() const;
+            //static
+            static void                         compileProject(const std::string& projectDirectory,
+                                                               const BackgroundTask::Ptr backgroundTask);
 
 		private:
 			BackgroundTask&						createBackgroundTask(const std::string& name, const std::string& category);
