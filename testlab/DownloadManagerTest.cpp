@@ -1,9 +1,7 @@
 #include <gtest/gtest.h>
-
 #include <Nero/core/cpp/engine/DownloadManager.h>
 #include <SFML/System/Clock.hpp>
 #include <iostream>
-
 
 namespace
 {
@@ -18,9 +16,8 @@ TEST(DownloadManager, DownloadFile)
 
   while (progress->m_Downloading)
   {
-         std::this_thread::sleep_for(std::chrono::seconds(1));
-
-          std::cout << nero_s(progress->getPercentage()) << "\r" << std::flush;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cout << nero_s(progress->getPercentage()) << "\r" << std::flush;
   }
 }
 

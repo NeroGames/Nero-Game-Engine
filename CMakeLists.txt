@@ -205,9 +205,11 @@ endif (DOXYGEN_FOUND)
 #----------------------------------------------------------------------------------#
 # Test Lab Source Files
 file(GLOB_RECURSE TEST_LABORATORY_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/testlab/*")
+    "${CMAKE_CURRENT_SOURCE_DIR}/testlab/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/library/imgui/*")
+
 # Dependencies
-set(TEST_LABORATORY_DEP nerogame-core ${NERO_GAME_CORE_DEP} ${GTEST})
+set(TEST_LABORATORY_DEP nerogame-core ${NERO_GAME_CORE_DEP} ${GTEST} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${LIBGIT2_LIBS})
 # Build Test Laboratory
 add_executable(TestLab ${TEST_LABORATORY_SOURCES})
 target_link_libraries(TestLab ${TEST_LABORATORY_DEP})
