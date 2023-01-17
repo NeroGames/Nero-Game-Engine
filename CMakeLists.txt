@@ -52,7 +52,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CXX_STANDARD 17)
 set(CMAKE_REQUIRED_FLAGS -std=c++1z)
 # Remove Console
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
+#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
 # Compile Option
 add_definitions(-lstdc++fs)
 add_definitions(-DBOOST_ALL_NO_LIB)
@@ -93,6 +93,8 @@ set(EASY_PROFILER "-leasy_profiler.dll")
 # POCO
 set(POCO_DEP "-liphlpapi -lcrypto -lssl -lexpat -lzlibstatic -lws2_32")
 set(POCO "-lPocoRedis -lPocoPDF -lPocoCppParser -lPocoZip -lPocoDataSQLite -lPocoData -lPocoNetSSL -lPocoCrypto -lPocoNet -lPocoUtil -lPocoJSON -lPocoXML -lPocoEncodings -lPocoFoundation ${POCO_DEP}")
+# GTest
+set(GTEST "-lgtest.dll -lgtest_main.dll -lgmock.dll -lgmock_main.dll")
 
 # Nero Game Core Library
 #----------------------------------------------------------------------------------#
@@ -205,7 +207,7 @@ endif (DOXYGEN_FOUND)
 file(GLOB_RECURSE TEST_LABORATORY_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/testlab/*")
 # Dependencies
-set(TEST_LABORATORY_DEP nerogame-core ${NERO_GAME_CORE_DEP})
+set(TEST_LABORATORY_DEP nerogame-core ${NERO_GAME_CORE_DEP} ${GTEST})
 # Build Test Laboratory
 add_executable(TestLab ${TEST_LABORATORY_SOURCES})
 target_link_libraries(TestLab ${TEST_LABORATORY_DEP})
