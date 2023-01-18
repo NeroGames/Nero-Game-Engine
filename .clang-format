@@ -7,25 +7,26 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 NamespaceIndentation: All
 
+SortIncludes: false
+
 # Configure each individual brace in BraceWrapping
 BreakBeforeBraces: Custom
 # Control of individual brace wrapping cases
-BraceWrapping: {
-    AfterClass: 'false'
-    AfterControlStatement: 'true'
-    AfterEnum : 'true'
-    AfterFunction : 'true'
-    AfterNamespace : 'true'
-    AfterStruct : 'true'
-    AfterUnion : 'true'
-    BeforeCatch : 'true'
-    BeforeElse : 'true'
-    IndentBraces : 'false'
-    AfterExternBlock : 'true'
-    SplitEmptyFunction : 'false'
-    SplitEmptyRecord : 'false'
-    SplitEmptyNamespace : 'true'
-}
+BraceWrapping:
+    AfterClass: false
+    AfterControlStatement: true
+    AfterEnum : true
+    AfterFunction : true
+    AfterNamespace : true
+    AfterStruct : true
+    AfterUnion : true
+    BeforeCatch : true
+    BeforeElse : true
+    IndentBraces : false
+    AfterExternBlock : true
+    SplitEmptyFunction : false
+    SplitEmptyRecord : false
+    SplitEmptyNamespace : true
 
 BreakConstructorInitializers: BeforeComma
 BreakBeforeTernaryOperators: true
@@ -39,3 +40,16 @@ AlignConsecutiveDeclarations:
   Enabled: true
   AcrossEmptyLines: true
   AcrossComments: true
+  AlignCompound: true
+  PadOperators: true
+
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllArgumentsOnNextLine: false
+BinPackParameters: false
+ColumnLimit: 0
+AllowShortBlocksOnASingleLine: Never
