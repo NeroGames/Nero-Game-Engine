@@ -5,7 +5,7 @@
 #ifndef RESOURCEBROWSERWINDOW_H
 #define RESOURCEBROWSERWINDOW_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 #include <Nero/editor/view/ResourceBrowserSpriteView.h>
 #include <Nero/editor/view/ResourceBrowserMeshView.h>
@@ -16,26 +16,25 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceBrowserWindow : public UIComponent
-    {
-        public:
-                                    ResourceBrowserWindow(EditorContext::Ptr editorContext);
-            virtual                ~ResourceBrowserWindow() override;
+    class ResourceBrowserWindow : public UIComponent {
+      public:
+        ResourceBrowserWindow(EditorContext::Ptr editorContext);
+        virtual ~ResourceBrowserWindow() override;
 
-            virtual void 			destroy() override;
-            virtual void            render() override;
+        virtual void destroy() override;
+        virtual void render() override;
 
-        private:
-            void                    saveResourceFile(const ResourceType& resourceType,
-                                                     const std::vector<std::string> loadedFileTable);
-            bool                    loadableResource(const ResourceType& resourceType);
+      private:
+        void saveResourceFile(const ResourceType&            resourceType,
+                              const std::vector<std::string> loadedFileTable);
+        bool loadableResource(const ResourceType& resourceType);
 
-        private:
-            ResourceBrowserSpriteView       m_ResourceBrowserSpriteView;
-            ResourceBrowserAnimationView    m_ResourceBrowserAnimationView;
-            ResourceBrowserMeshView         m_ResourceBrowserMeshView;
-            ResourceBrowserFontView         m_ResourceBrowserFontView;
-            ResourceBrowserLightmapView     m_ResourceBrowserLightmapView;
+      private:
+        ResourceBrowserSpriteView    m_ResourceBrowserSpriteView;
+        ResourceBrowserAnimationView m_ResourceBrowserAnimationView;
+        ResourceBrowserMeshView      m_ResourceBrowserMeshView;
+        ResourceBrowserFontView      m_ResourceBrowserFontView;
+        ResourceBrowserLightmapView  m_ResourceBrowserLightmapView;
     };
-}
+} // namespace nero
 #endif // RESOURCEBROWSERWINDOW_H

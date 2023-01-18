@@ -2,5 +2,4 @@
 
 GameScreen::GameScreen()
 {
-
 }

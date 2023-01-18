@@ -3,27 +3,27 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/Collision.h>
 #include <Nero/core/cpp/utility/Utility.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    Collision::Collision(b2Contact* contact, const b2Manifold* oldManifold, const b2ContactImpulse*  contactImpulse):
-         m_Contact(contact)
-        ,m_OldManifold(oldManifold)
-        ,m_ContactImpulse(contactImpulse)
-        ,m_ObjectA(nullptr)
-        ,m_ObjectB(nullptr)
-        ,m_WorldManifold(new b2WorldManifold())
+    Collision::Collision(b2Contact* contact, const b2Manifold* oldManifold, const b2ContactImpulse* contactImpulse)
+        : m_Contact(contact)
+        , m_OldManifold(oldManifold)
+        , m_ContactImpulse(contactImpulse)
+        , m_ObjectA(nullptr)
+        , m_ObjectB(nullptr)
+        , m_WorldManifold(new b2WorldManifold())
     {
         m_Contact->GetWorldManifold(m_WorldManifold);
     }
 
     Collision::~Collision()
     {
-		//empty
+        // empty
     }
 
     void Collision::setObjectA(PhysicObject::Ptr objectA)
@@ -68,7 +68,7 @@ namespace nero
 
     void Collision::resetRestitution()
     {
-         m_Contact->ResetRestitution();
+        m_Contact->ResetRestitution();
     }
 
     void Collision::setEnabled(bool flag)
@@ -93,12 +93,12 @@ namespace nero
 
     sf::Vector2f Collision::getLocalNormal()
     {
-		return graphics::b2_to_sf(m_Contact->GetManifold()->localNormal, EngineConstant.SCALE);
+        return graphics::b2_to_sf(m_Contact->GetManifold()->localNormal, EngineConstant.SCALE);
     }
 
     sf::Vector2f Collision::getLocalPoint()
     {
-		return graphics::b2_to_sf(m_Contact->GetManifold()->localPoint, EngineConstant.SCALE);
+        return graphics::b2_to_sf(m_Contact->GetManifold()->localPoint, EngineConstant.SCALE);
     }
 
     int Collision::getPointCount()
@@ -119,7 +119,7 @@ namespace nero
     sf::Vector2f Collision::getOldLocalNormal()
     {
         if(m_OldManifold)
-			return graphics::b2_to_sf(m_OldManifold->localNormal, EngineConstant.SCALE);
+            return graphics::b2_to_sf(m_OldManifold->localNormal, EngineConstant.SCALE);
 
         return getLocalNormal();
     }
@@ -127,7 +127,7 @@ namespace nero
     sf::Vector2f Collision::getOldLocalPoint()
     {
         if(m_OldManifold)
-			return graphics::b2_to_sf(m_OldManifold->localPoint, EngineConstant.SCALE);
+            return graphics::b2_to_sf(m_OldManifold->localPoint, EngineConstant.SCALE);
 
         return getLocalPoint();
     }
@@ -170,7 +170,7 @@ namespace nero
 
         if(m_ContactImpulse)
         {
-            for(int i=0; i<getImpulseCount(); i++)
+            for(int i = 0; i < getImpulseCount(); i++)
                 normalTab.push_back(m_ContactImpulse->normalImpulses[i]);
         }
 
@@ -183,7 +183,7 @@ namespace nero
 
         if(m_ContactImpulse)
         {
-            for(int i=0; i<getImpulseCount(); i++)
+            for(int i = 0; i < getImpulseCount(); i++)
                 tangentTab.push_back(m_ContactImpulse->tangentImpulses[i]);
         }
 
@@ -192,24 +192,24 @@ namespace nero
 
     sf::Vector2f Collision::getNormal()
     {
-		return graphics::b2_to_sf(m_WorldManifold->normal, EngineConstant.SCALE);
+        return graphics::b2_to_sf(m_WorldManifold->normal, EngineConstant.SCALE);
     }
 
     std::vector<sf::Vector2f> Collision::getPoints()
     {
-		math::VectorTable vectorTable ;
+        math::VectorTable vectorTable;
 
-        for(int i=0; i<getPointCount(); i++)
-				vectorTable.push_back(graphics::b2_to_sf(m_WorldManifold->points[i], EngineConstant.SCALE));
+        for(int i = 0; i < getPointCount(); i++)
+            vectorTable.push_back(graphics::b2_to_sf(m_WorldManifold->points[i], EngineConstant.SCALE));
 
-		return vectorTable;
+        return vectorTable;
     }
 
     std::vector<float> Collision::getSeparations()
     {
         std::vector<float> separations;
 
-        for(int i=0; i<getPointCount(); i++)
+        for(int i = 0; i < getPointCount(); i++)
             separations.push_back(m_WorldManifold->separations[i]);
 
         return separations;
@@ -227,46 +227,46 @@ namespace nero
 
     bool Collision::isCollising(sf::String catA)
     {
-        return  getObjectA()->getCategory() == catA ||
-                getObjectB()->getCategory() == catA;
+        return getObjectA()->getCategory() == catA ||
+               getObjectB()->getCategory() == catA;
     }
 
     bool Collision::isCollising(sf::String catA, sf::String catB)
     {
-        if(!getObjectA() || !getObjectB()) return false;
+        if(!getObjectA() || !getObjectB())
+            return false;
 
-        return  (   getObjectA()->getCategory() == catA &&
-                    getObjectB()->getCategory() == catB   ) ||
-                (   getObjectA()->getCategory() == catB &&
-                    getObjectB()->getCategory() == catA   );
+        return (getObjectA()->getCategory() == catA &&
+                getObjectB()->getCategory() == catB) ||
+               (getObjectA()->getCategory() == catB &&
+                getObjectB()->getCategory() == catA);
     }
 
     bool Collision::isObjectCollising(sf::String nameA)
     {
-        return  getObjectA()->getName() == nameA ||
-                getObjectB()->getName() == nameA;
+        return getObjectA()->getName() == nameA ||
+               getObjectB()->getName() == nameA;
     }
 
     bool Collision::isObjectCollising(sf::String nameA, sf::String nameB)
     {
-        return  (   getObjectA()->getName() == nameA &&
-                    getObjectB()->getName() == nameB   ) ||
-                (   getObjectA()->getName() == nameB &&
-                    getObjectB()->getName() == nameA   );
+        return (getObjectA()->getName() == nameA &&
+                getObjectB()->getName() == nameB) ||
+               (getObjectA()->getName() == nameB &&
+                getObjectB()->getName() == nameA);
     }
 
     PhysicObject::Ptr Collision::getObject(sf::String indicator)
     {
         if(getObjectA()->getCategory() == indicator)
             return getObjectA();
-        else if (getObjectB()->getCategory() == indicator)
+        else if(getObjectB()->getCategory() == indicator)
             return getObjectB();
         else if(getObjectA()->getName() == indicator)
             return getObjectA();
-        else if (getObjectB()->getName() == indicator)
+        else if(getObjectB()->getName() == indicator)
             return getObjectB();
 
         return nullptr;
     }
-}
-
+} // namespace nero

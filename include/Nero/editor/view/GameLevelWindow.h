@@ -5,19 +5,18 @@
 #ifndef GAMELEVELWINDOW_H
 #define GAMELEVELWINDOW_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class GameLevelWindow : public UIComponent
-    {
-        public:
-                                    GameLevelWindow(EditorContext::Ptr editorContext);
-            virtual                ~GameLevelWindow() override;
+    class GameLevelWindow : public UIComponent {
+      public:
+        GameLevelWindow(EditorContext::Ptr editorContext);
+        virtual ~GameLevelWindow() override;
 
-            virtual void 			destroy() override;
-            virtual void            render() override;
-	};
-}
+        virtual void destroy() override;
+        virtual void render() override;
+    };
+} // namespace nero
 #endif // GAMELEVELWINDOW_H

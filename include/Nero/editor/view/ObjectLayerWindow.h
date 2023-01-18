@@ -5,27 +5,24 @@
 #ifndef OBJECTLAYERWINDOW_H
 #define OBJECTLAYERWINDOW_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ObjectLayerWindow : public UIComponent
-    {
-        public:
-                                    ObjectLayerWindow(EditorContext::Ptr editorContext);
-            virtual                ~ObjectLayerWindow() override;
+    class ObjectLayerWindow : public UIComponent {
+      public:
+        ObjectLayerWindow(EditorContext::Ptr editorContext);
+        virtual ~ObjectLayerWindow() override;
 
-            virtual void 			destroy() override;
-            virtual void            render() override;
+        virtual void destroy() override;
+        virtual void render() override;
 
-        private:
-            std::tuple<ImVec4, ImVec4>  getLayerColor(Object::Type type);
+      private:
+        std::tuple<ImVec4, ImVec4> getLayerColor(Object::Type type);
 
-        private:
-            int                         m_SelectedObjectLayerId;
-
-
+      private:
+        int m_SelectedObjectLayerId;
     };
-}
+} // namespace nero
 #endif // OBJECTLAYERWINDOW_H

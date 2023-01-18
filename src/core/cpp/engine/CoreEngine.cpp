@@ -3,130 +3,130 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/engine/CoreEngine.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-	CoreEngine::CoreEngine(bool createWindow):
-         m_ElapsedTime()
-        ,m_FrameCount(0)
-        ,m_FramePerSecond(0.f)
-        ,m_TimePerFrame(0.f)
+    CoreEngine::CoreEngine(bool createWindow)
+        : m_ElapsedTime()
+        , m_FrameCount(0)
+        , m_FramePerSecond(0.f)
+        , m_TimePerFrame(0.f)
     {
-        //create render window
-		if(createWindow)
-		{
-			createEngineWindow();
-		}
+        // create render window
+        if(createWindow)
+        {
+            createEngineWindow();
+        }
     }
 
     void CoreEngine::createEngineWindow()
     {
-		m_RenderWindow.create(sf::VideoMode(EngineConstant.ENGINE_WINDOW_WIDTH, EngineConstant.ENGINE_WINDOW_HEIGHT), EngineConstant.ENGINE_WINDOW_TITLE, sf::Style::Default);
+        m_RenderWindow.create(sf::VideoMode(EngineConstant.ENGINE_WINDOW_WIDTH, EngineConstant.ENGINE_WINDOW_HEIGHT), EngineConstant.ENGINE_WINDOW_TITLE, sf::Style::Default);
     }
 
     CoreEngine::~CoreEngine()
     {
-        //Empty
+        // Empty
     }
 
     void CoreEngine::run()
     {
-        //Start a clock
+        // Start a clock
         sf::Clock clock;
-        sf::Time timeSinceLastUpdate = sf::Time::Zero;
+        sf::Time  timeSinceLastUpdate = sf::Time::Zero;
 
-		while(m_RenderWindow.isOpen())
+        while(m_RenderWindow.isOpen())
         {
-			EASY_BLOCK("Game Loop");
+            EASY_BLOCK("Game Loop");
 
-			//Accumulate the time elapsed at each loop
-			sf::Time elapsedTime = clock.restart();
-			timeSinceLastUpdate += elapsedTime;
+            // Accumulate the time elapsed at each loop
+            sf::Time elapsedTime = clock.restart();
+            timeSinceLastUpdate += elapsedTime;
 
-            //When the time comes over the value of "TIME_PER_FRAME" do --> 1 --> 2 then do --> 2 --> 3
-			//TIME_PER_FRAME is constant with a value of 1/60 second (the game is update 60 time per second)
-			while(timeSinceLastUpdate > EngineConstant.TIME_PER_FRAME)
-			{
-				EASY_VALUE("TIME_SINCE_LAST_UPDATE", timeSinceLastUpdate.asMilliseconds());
+            // When the time comes over the value of "TIME_PER_FRAME" do --> 1 --> 2 then do --> 2 --> 3
+            // TIME_PER_FRAME is constant with a value of 1/60 second (the game is update 60 time per second)
+            while(timeSinceLastUpdate > EngineConstant.TIME_PER_FRAME)
+            {
+                EASY_VALUE("TIME_SINCE_LAST_UPDATE", timeSinceLastUpdate.asMilliseconds());
 
-                //retrieve 1/60 second in the accumulated time
+                // retrieve 1/60 second in the accumulated time
                 timeSinceLastUpdate -= EngineConstant.TIME_PER_FRAME;
 
-				//1... handle user inputs
-				EASY_BLOCK("Handle Event");
-				handleEvent();
-				EASY_END_BLOCK
+                // 1... handle user inputs
+                EASY_BLOCK("Handle Event");
+                handleEvent();
+                EASY_END_BLOCK
 
-                //2... update the game
-				EASY_BLOCK("Update Game");
-				update(EngineConstant.TIME_PER_FRAME);
-				EASY_END_BLOCK;
-			}
+                // 2... update the game
+                EASY_BLOCK("Update Game");
+                update(EngineConstant.TIME_PER_FRAME);
+                EASY_END_BLOCK;
+            }
 
-			//3... render the game
-			EASY_BLOCK("Render Game");
-			render();
-			EASY_END_BLOCK; //render
+            // 3... render the game
+            EASY_BLOCK("Render Game");
+            render();
+            EASY_END_BLOCK; // render
 
-			//4... Compute Frame rate
-			computeFrameRate(elapsedTime);
+            // 4... Compute Frame rate
+            computeFrameRate(elapsedTime);
 
-			EASY_END_BLOCK; //game loop
+            EASY_END_BLOCK; // game loop
         }
     }
 
     void CoreEngine::computeFrameRate(sf::Time timeStep)
     {
-		EASY_FUNCTION(profiler::colors::Mint);
+        EASY_FUNCTION(profiler::colors::Mint);
 
-        //Accumulate data for on 1 second
-        m_ElapsedTime       += timeStep;
-        m_FrameCount        += 1;
+        // Accumulate data for on 1 second
+        m_ElapsedTime += timeStep;
+        m_FrameCount += 1;
 
-        //Then compute the frame rate
+        // Then compute the frame rate
         if(m_ElapsedTime >= sf::seconds(1.0f))
         {
-            m_FramePerSecond    = m_FrameCount;
-            m_TimePerFrame      = m_ElapsedTime.asSeconds() / m_FrameCount;
+            m_FramePerSecond = m_FrameCount;
+            m_TimePerFrame   = m_ElapsedTime.asSeconds() / m_FrameCount;
 
-            m_ElapsedTime      -= sf::seconds(1.0f);
-            m_FrameCount        = 0;
+            m_ElapsedTime -= sf::seconds(1.0f);
+            m_FrameCount = 0;
         }
     }
 
     std::string CoreEngine::getWindowTitle() const
     {
-		return m_WindowTitle;
+        return m_WindowTitle;
     }
 
     void CoreEngine::setWindowTitle(const std::string& title)
     {
         m_WindowTitle = title;
 
-		m_RenderWindow.setTitle(m_WindowTitle);
+        m_RenderWindow.setTitle(m_WindowTitle);
     }
 
-	unsigned int CoreEngine::getWindowWidth() const
+    unsigned int CoreEngine::getWindowWidth() const
     {
-		return m_RenderWindow.getSize().x;
+        return m_RenderWindow.getSize().x;
     }
 
-	unsigned int CoreEngine::getWindowHeight() const
+    unsigned int CoreEngine::getWindowHeight() const
     {
-		return m_RenderWindow.getSize().y;
+        return m_RenderWindow.getSize().y;
     }
 
-	sf::Vector2f CoreEngine::getWindowSize() const
-	{
-		return sf::Vector2f(m_RenderWindow.getSize().x, m_RenderWindow.getSize().y);
-	}
+    sf::Vector2f CoreEngine::getWindowSize() const
+    {
+        return sf::Vector2f(m_RenderWindow.getSize().x, m_RenderWindow.getSize().y);
+    }
 
-	sf::Vector2f CoreEngine::getWindowPosition() const
-	{
-		return sf::Vector2f(m_RenderWindow.getPosition() .x, m_RenderWindow.getPosition().y);
-	}
+    sf::Vector2f CoreEngine::getWindowPosition() const
+    {
+        return sf::Vector2f(m_RenderWindow.getPosition().x, m_RenderWindow.getPosition().y);
+    }
 
     float CoreEngine::getFrameRate() const
     {
@@ -138,19 +138,16 @@ namespace  nero
         return m_TimePerFrame;
     }
 
-
     void CoreEngine::quitEngine()
     {
-		m_RenderWindow.close();
+        m_RenderWindow.close();
     }
 
-	void CoreEngine::setWindowIcon(const std::string& icon)
+    void CoreEngine::setWindowIcon(const std::string& icon)
     {
-        if (m_WindowIcon.loadFromFile(icon))
+        if(m_WindowIcon.loadFromFile(icon))
         {
-			m_RenderWindow.setIcon(m_WindowIcon.getSize().x, m_WindowIcon.getSize().y, m_WindowIcon.getPixelsPtr());
+            m_RenderWindow.setIcon(m_WindowIcon.getSize().x, m_WindowIcon.getSize().y, m_WindowIcon.getPixelsPtr());
         }
     }
-}
-
-
+} // namespace nero

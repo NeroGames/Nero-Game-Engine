@@ -3,35 +3,34 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/EditorProxy.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
     EditorProxy::EditorProxy()
     {
-
     }
 
-    void EditorProxy::openProject(const std::string&  projectDirectory) const
+    void EditorProxy::openProject(const std::string& projectDirectory) const
     {
         m_OpenProjectCallback(projectDirectory);
     }
 
-    void EditorProxy::createProject(const Parameter&  projectParameter,
+    void EditorProxy::createProject(const Parameter&    projectParameter,
                                     const unsigned int& projectCount) const
     {
         m_CreateProjectCallback(projectParameter, projectCount);
     }
 
-    void EditorProxy::createWorkspace(const Parameter&  workspaceParameter) const
+    void EditorProxy::createWorkspace(const Parameter& workspaceParameter) const
     {
         m_CreateWorkspaceCallback(workspaceParameter);
     }
 
     void EditorProxy::importWorkspace(const std::string& workspaceDirectory) const
     {
-       m_ImportWorkspaceCallback(workspaceDirectory);
+        m_ImportWorkspaceCallback(workspaceDirectory);
     }
 
     void EditorProxy::saveProject() const
@@ -46,7 +45,7 @@ namespace  nero
 
     void EditorProxy::loadProject() const
     {
-        //TODO
+        // TODO
     }
 
     void EditorProxy::closeEditor() const
@@ -54,7 +53,7 @@ namespace  nero
         m_CloseEditorCallback();
     }
 
-    void EditorProxy::createGameLevel(const Parameter&  levelParameter) const
+    void EditorProxy::createGameLevel(const Parameter& levelParameter) const
     {
         m_CreateGameLevelCallback(levelParameter);
     }
@@ -63,4 +62,4 @@ namespace  nero
     {
         m_OpenGameLevelCallback(levelName);
     }
-}
+} // namespace nero

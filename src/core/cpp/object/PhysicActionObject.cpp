@@ -3,17 +3,16 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/object/PhysicActionObject.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    PhysicActionObject::PhysicActionObject():
-        m_PhysicObject(nullptr)
-        ,m_ActionTable()
-		,m_TimeStep(EngineConstant.TIME_PER_FRAME)
+    PhysicActionObject::PhysicActionObject()
+        : m_PhysicObject(nullptr)
+        , m_ActionTable()
+        , m_TimeStep(EngineConstant.TIME_PER_FRAME)
     {
-
     }
 
     void PhysicActionObject::setObject(Object::Ptr object)
@@ -31,7 +30,7 @@ namespace nero
         m_ActionTable[name]->call(m_PhysicObject, m_TimeStep);
     }
 
-    PhysicObject::Ptr  PhysicActionObject::getObject()
+    PhysicObject::Ptr PhysicActionObject::getObject()
     {
         return m_PhysicObject;
     }
@@ -40,6 +39,4 @@ namespace nero
     {
         m_TimeStep = time_step;
     }
-}
-
-
+} // namespace nero

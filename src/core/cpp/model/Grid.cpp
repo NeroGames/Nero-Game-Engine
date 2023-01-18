@@ -3,19 +3,19 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/Grid.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    Grid::Grid():
-         m_TileSize(sf::Vector2i(50, 50))
-        ,m_TileCount(sf::Vector2i(16, 12))
-        ,m_Position(sf::Vector2i(0, 0))
-        ,m_Thickness(2.f)
-        ,m_Color(sf::Color(255, 255, 255, 70))
+    Grid::Grid()
+        : m_TileSize(sf::Vector2i(50, 50))
+        , m_TileCount(sf::Vector2i(16, 12))
+        , m_Position(sf::Vector2i(0, 0))
+        , m_Thickness(2.f)
+        , m_Color(sf::Color(255, 255, 255, 70))
     {
-       initialize();
+        initialize();
     }
 
     void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -27,29 +27,28 @@ namespace nero
 
         for(auto& line : m_VerticalLineTable)
             target.draw(line, states);
-
     }
 
     void Grid::initialize()
     {
-        //create horizontal line
-        for(int i= 0; i <= m_TileCount.y; i++)
+        // create horizontal line
+        for(int i = 0; i <= m_TileCount.y; i++)
         {
             sf::RectangleShape line;
-            line.setSize(sf::Vector2f(m_TileSize.x*m_TileCount.x, m_Thickness));
+            line.setSize(sf::Vector2f(m_TileSize.x * m_TileCount.x, m_Thickness));
             line.setFillColor(m_Color);
-            line.setPosition(sf::Vector2f(0, i*m_TileSize.y));
+            line.setPosition(sf::Vector2f(0, i * m_TileSize.y));
 
             m_HorizontalLineTable.push_back(line);
         }
 
-        //create vertical line
-        for(int i=0; i <= m_TileCount.x; i++)
+        // create vertical line
+        for(int i = 0; i <= m_TileCount.x; i++)
         {
             sf::RectangleShape line;
-            line.setSize(sf::Vector2f(m_Thickness, m_TileSize.y*m_TileCount.y));
+            line.setSize(sf::Vector2f(m_Thickness, m_TileSize.y * m_TileCount.y));
             line.setFillColor(m_Color);
-            line.setPosition(sf::Vector2f(i*m_TileSize.x, 0));
+            line.setPosition(sf::Vector2f(i * m_TileSize.x, 0));
 
             m_VerticalLineTable.push_back(line);
         }
@@ -76,15 +75,15 @@ namespace nero
     {
         sf::Vector2f center;
 
-        center.x = m_HorizontalLineTable.at(0).getPosition().x + m_HorizontalLineTable.at(0).getSize().x/2.f;
-        center.y = m_VerticalLineTable.at(0).getPosition().y + m_VerticalLineTable.at(0).getSize().y/2.f;
+        center.x = m_HorizontalLineTable.at(0).getPosition().x + m_HorizontalLineTable.at(0).getSize().x / 2.f;
+        center.y = m_VerticalLineTable.at(0).getPosition().y + m_VerticalLineTable.at(0).getSize().y / 2.f;
 
         return center;
     }
 
     void Grid::update(const sf::Vector2i& tileSize, const sf::Vector2i& tileCount)
     {
-        m_TileSize = tileSize;
+        m_TileSize  = tileSize;
         m_TileCount = tileCount;
 
         m_HorizontalLineTable.clear();
@@ -125,21 +124,21 @@ namespace nero
 
     nlohmann::json Grid::toJson()
     {
-         nlohmann::json json;
+        nlohmann::json json;
 
-		json["tile_size"]   = graphics::vectorToJson<sf::Vector2i>(m_TileSize);
-		json["tile_count"]  = graphics::vectorToJson<sf::Vector2i>(m_TileCount);
-		json["position"]    = graphics::vectorToJson<sf::Vector2i>(m_Position);
-		json["color"]       = graphics::colorToJson(m_Color);
+        json["tile_size"]  = graphics::vectorToJson<sf::Vector2i>(m_TileSize);
+        json["tile_count"] = graphics::vectorToJson<sf::Vector2i>(m_TileCount);
+        json["position"]   = graphics::vectorToJson<sf::Vector2i>(m_Position);
+        json["color"]      = graphics::colorToJson(m_Color);
 
         return json;
     }
 
     void Grid::fromJson(nlohmann::json json)
     {
-		m_TileSize  = graphics::vectorFromJson<sf::Vector2i>(json["tile_size"]);
-		m_TileCount = graphics::vectorFromJson<sf::Vector2i>(json["tile_count"]);
-		m_Position  = graphics::vectorFromJson<sf::Vector2i>(json["position"]);
-		m_Color     = graphics::colorFromJson(json["color"]);
+        m_TileSize  = graphics::vectorFromJson<sf::Vector2i>(json["tile_size"]);
+        m_TileCount = graphics::vectorFromJson<sf::Vector2i>(json["tile_count"]);
+        m_Position  = graphics::vectorFromJson<sf::Vector2i>(json["position"]);
+        m_Color     = graphics::colorFromJson(json["color"]);
     }
-}
+} // namespace nero

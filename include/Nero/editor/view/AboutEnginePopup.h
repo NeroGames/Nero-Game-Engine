@@ -5,19 +5,18 @@
 #ifndef ABOUTENGINEPOPUP_H
 #define ABOUTENGINEPOPUP_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class AboutEnginePopup : public UIComponent
-    {
-        public:
-                                    AboutEnginePopup(EditorContext::Ptr editorContext);
-            virtual                ~AboutEnginePopup() override;
+    class AboutEnginePopup : public UIComponent {
+      public:
+        AboutEnginePopup(EditorContext::Ptr editorContext);
+        virtual ~AboutEnginePopup() override;
 
-            virtual void 			destroy() override;
-            virtual void            render() override;
-	};
-}
+        virtual void destroy() override;
+        virtual void render() override;
+    };
+} // namespace nero
 #endif // ABOUTENGINEPOPUP_H

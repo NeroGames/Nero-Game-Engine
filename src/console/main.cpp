@@ -3,16 +3,16 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/console/Console.h>
 ////////////////////////////////////////////////////////////
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-	nero::CommandLine commandLine;
+    nero::CommandLine commandLine;
 
-	CLI11_PARSE(commandLine, argc, argv);
+    CLI11_PARSE(commandLine, argc, argv);
 
-	commandLine.handleCommand();
+    commandLine.handleCommand();
 
-	return 0;
+    return 0;
 }

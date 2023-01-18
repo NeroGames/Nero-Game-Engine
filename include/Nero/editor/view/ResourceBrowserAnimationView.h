@@ -5,19 +5,18 @@
 #ifndef RESOURCEBROWSERANIMATIONVIEW_H
 #define RESOURCEBROWSERANIMATIONVIEW_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceBrowserAnimationView : public UIComponent
-    {
-        public:
-                                    ResourceBrowserAnimationView(EditorContext::Ptr editorContext);
-            virtual                ~ResourceBrowserAnimationView() override;
+    class ResourceBrowserAnimationView : public UIComponent {
+      public:
+        ResourceBrowserAnimationView(EditorContext::Ptr editorContext);
+        virtual ~ResourceBrowserAnimationView() override;
 
-            virtual void 			destroy() override;
-            virtual void            render() override;
-	};
-}
+        virtual void destroy() override;
+        virtual void render() override;
+    };
+} // namespace nero
 #endif // RESOURCEBROWSERANIMATIONVIEW_H

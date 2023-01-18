@@ -5,9 +5,9 @@
 #ifndef SPRITEOBJECT_H
 #define SPRITEOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/object/Object.h>
-//SFML
+// SFML
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/String.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
@@ -15,37 +15,36 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class SpriteObject : public Object
-    {
-        public:
-            typedef std::shared_ptr<SpriteObject>   Ptr;
-            static Ptr                              Cast(Object::Ptr object);
+    class SpriteObject : public Object {
+      public:
+        typedef std::shared_ptr<SpriteObject> Ptr;
+        static Ptr                            Cast(Object::Ptr object);
 
-        public:
-                                            SpriteObject();
+      public:
+        SpriteObject();
 
-            void                            setSprite(const sf::Sprite& sprite);
-            const sf::Sprite&               getSprite()                     const;
-            virtual sf::FloatRect           getGlobalBounds()               const;
+        void                     setSprite(const sf::Sprite& sprite);
+        const sf::Sprite&        getSprite() const;
+        virtual sf::FloatRect    getGlobalBounds() const;
 
-            void                            setTextureName(const sf::String& texture);
-			std::string                     getTextureName()                const;
+        void                     setTextureName(const sf::String& texture);
+        std::string              getTextureName() const;
 
-            virtual void                    setColor(const sf::Color& color);
-            virtual const sf::Color&        getColor()                      const;
+        virtual void             setColor(const sf::Color& color);
+        virtual const sf::Color& getColor() const;
 
-            virtual Object::Ptr             clone(sf::Vector2f& position)   const;
-            virtual Object::Ptr             clone()                         const;
+        virtual Object::Ptr      clone(sf::Vector2f& position) const;
+        virtual Object::Ptr      clone() const;
 
-            virtual nlohmann::json          toJson()                        const;
+        virtual nlohmann::json   toJson() const;
 
-        private:
-            virtual void	                drawObject(sf::RenderTarget& target, sf::RenderStates states) const;
+      private:
+        virtual void drawObject(sf::RenderTarget& target, sf::RenderStates states) const;
 
-        private:
-            sf::Sprite                      m_Sprite;
-            sf::String                      m_TextureName;
-            sf::Vector2f                    m_ParentLastPosition;
+      private:
+        sf::Sprite   m_Sprite;
+        sf::String   m_TextureName;
+        sf::Vector2f m_ParentLastPosition;
     };
-}
+} // namespace nero
 #endif // SPRITEOBJECT_H

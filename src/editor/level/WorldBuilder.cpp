@@ -3,120 +3,119 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/editor/level/WorldBuilder.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
-//STD
+// STD
 #include <fstream>
 #include <string>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	WorldBuilder::WorldBuilder():
-        //Main
-		 m_PhysicWorld(nullptr)
-        ,m_PhysicObjectManager()
-        ,m_SelectionRect()
-        ,m_LastMousePosition(0.f, 0.f)
-        //Speed
-        ,m_PanningSpeed(1.f)
-        ,m_RotationSpeed(0.5f)
-		,m_ZoomingRatio(0.1f)
-        //Object
-        ,m_SelectedLayer(nullptr)
-        ,m_SelectedObject(nullptr)
-        ,m_LayerCount(0)
-        ,m_ObjectCount(0)
-		,m_RenderContext(nullptr)
-		,m_LightManager(nullptr)
-		,m_RightSelection(false)
-		,m_ClickedObject(false)
+    WorldBuilder::WorldBuilder()
+        : // Main
+        m_PhysicWorld(nullptr)
+        , m_PhysicObjectManager()
+        , m_SelectionRect()
+        , m_LastMousePosition(0.f, 0.f)
+        // Speed
+        , m_PanningSpeed(1.f)
+        , m_RotationSpeed(0.5f)
+        , m_ZoomingRatio(0.1f)
+        // Object
+        , m_SelectedLayer(nullptr)
+        , m_SelectedObject(nullptr)
+        , m_LayerCount(0)
+        , m_ObjectCount(0)
+        , m_RenderContext(nullptr)
+        , m_LightManager(nullptr)
+        , m_RightSelection(false)
+        , m_ClickedObject(false)
     {
-		m_MeshEditor = MeshEditor::Ptr(new MeshEditor());
+        m_MeshEditor = MeshEditor::Ptr(new MeshEditor());
 
         m_SelectionRect.setFillColor(sf::Color::Transparent);
         m_SelectionRect.setOutlineColor(sf::Color::Green);
         m_SelectionRect.setOutlineThickness(-3.f);
 
-        m_UpdateUI      = [](){};
-        m_UpdateUndo    = [](){};
-        m_UpdateLog     = [](const std::string&, int){};
-        m_UpdateLogIf   = [](const std::string&, bool, int){};
+        m_UpdateUI    = []() {};
+        m_UpdateUndo  = []() {};
+        m_UpdateLog   = [](const std::string&, int) {};
+        m_UpdateLogIf = [](const std::string&, bool, int) {};
     }
 
-	void WorldBuilder::init()
-	{
-		auto layer = addLayer();
-		selectLayer(layer->getObjectId());
-	}
+    void WorldBuilder::init()
+    {
+        auto layer = addLayer();
+        selectLayer(layer->getObjectId());
+    }
 
-	void WorldBuilder::handleEvent(const sf::Event& event)
+    void WorldBuilder::handleEvent(const sf::Event& event)
     {
         switch(event.type)
         {
-            //Keyboard
-            case sf::Event::KeyPressed:
-                handleKeyboardInput(event.key.code, true);
-                break;
-            case sf::Event::KeyReleased:
-                handleKeyboardInput(event.key.code, false);
-                break;
+        // Keyboard
+        case sf::Event::KeyPressed:
+            handleKeyboardInput(event.key.code, true);
+            break;
+        case sf::Event::KeyReleased:
+            handleKeyboardInput(event.key.code, false);
+            break;
 
-            //Mouse_button
-            case sf::Event::MouseButtonPressed:
-                handleMouseButtonsInput(event.mouseButton, true);
-                break;
-            case sf::Event::MouseButtonReleased:
-                handleMouseButtonsInput(event.mouseButton, false);
-                break;
+        // Mouse_button
+        case sf::Event::MouseButtonPressed:
+            handleMouseButtonsInput(event.mouseButton, true);
+            break;
+        case sf::Event::MouseButtonReleased:
+            handleMouseButtonsInput(event.mouseButton, false);
+            break;
 
-            //Mouse_Mouvement
-            case sf::Event::MouseMoved:
-                handleMouseMoveInput(event.mouseMove);
-                break;
+        // Mouse_Mouvement
+        case sf::Event::MouseMoved:
+            handleMouseMoveInput(event.mouseMove);
+            break;
         }
     }
 
-	void WorldBuilder::update(const sf::Time& timeStep)
+    void WorldBuilder::update(const sf::Time& timeStep)
     {
         float32 b2TimeStep = m_SceneSetting.hz > 0.0f ? 1.0f / m_SceneSetting.hz : float32(0.0f);
 
         if(b2TimeStep > 0.f)
         {
-			b2TimeStep = (b2TimeStep * timeStep.asSeconds())/EngineConstant.TIME_PER_FRAME.asSeconds();
+            b2TimeStep = (b2TimeStep * timeStep.asSeconds()) / EngineConstant.TIME_PER_FRAME.asSeconds();
         }
 
         if(m_SelectedObject)
         {
-            m_SelectionRect.setPosition(m_SelectedObject->getGlobalBounds().left,  m_SelectedObject->getGlobalBounds().top);
-            m_SelectionRect.setSize(sf::Vector2f(m_SelectedObject->getGlobalBounds().width,  m_SelectedObject->getGlobalBounds().height));
+            m_SelectionRect.setPosition(m_SelectedObject->getGlobalBounds().left, m_SelectedObject->getGlobalBounds().top);
+            m_SelectionRect.setSize(sf::Vector2f(m_SelectedObject->getGlobalBounds().width, m_SelectedObject->getGlobalBounds().height));
         }
         else
             m_SelectionRect.setSize(sf::Vector2f(0.f, 0.f));
-
 
         if(m_SelectedLayer)
             m_SelectedLayer->update(sf::seconds(b2TimeStep));
     }
 
-	void WorldBuilder::render()
+    void WorldBuilder::render()
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
             if((*it)->isVisible())
             {
-				m_RenderTexture->draw(*(*it));
-				m_RenderTexture->draw(m_SelectionRect);
+                m_RenderTexture->draw(*(*it));
+                m_RenderTexture->draw(m_SelectionRect);
             }
         }
     }
 
-	void WorldBuilder::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
+    void WorldBuilder::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
     {
-        //Object
+        // Object
         if(isPressed && m_SelectedLayer && m_SelectedObject)
         {
-            //Move
+            // Move
             if(key == sf::Keyboard::Numpad8 && keyboard::CTRL())
                 m_SelectedObject->move(sf::Vector2f(0.f, -m_PanningSpeed));
 
@@ -129,7 +128,7 @@ namespace nero
             if(key == sf::Keyboard::Numpad6 && keyboard::CTRL())
                 m_SelectedObject->move(sf::Vector2f(m_PanningSpeed, 0.f));
 
-            //Rotate
+            // Rotate
             if(key == sf::Keyboard::Numpad7 && keyboard::CTRL())
                 m_SelectedObject->rotate(-m_RotationSpeed);
 
@@ -142,69 +141,69 @@ namespace nero
             else if(key == sf::Keyboard::Multiply && keyboard::CTRL())
                 m_SelectedObject->rotate(0.1f);
 
-            //Zoom
+            // Zoom
             if(key == sf::Keyboard::Add && keyboard::CTRL())
-                m_SelectedObject->scale(sf::Vector2f(1.f+m_ZoomingRatio, 1.f+m_ZoomingRatio));
+                m_SelectedObject->scale(sf::Vector2f(1.f + m_ZoomingRatio, 1.f + m_ZoomingRatio));
 
             else if(key == sf::Keyboard::Subtract && keyboard::CTRL())
-                m_SelectedObject->scale(sf::Vector2f(1.f-m_ZoomingRatio, 1.f-m_ZoomingRatio));
+                m_SelectedObject->scale(sf::Vector2f(1.f - m_ZoomingRatio, 1.f - m_ZoomingRatio));
 
-            //Flip
+            // Flip
             if(key == sf::Keyboard::Numpad1 && keyboard::CTRL())
                 m_SelectedObject->scale(sf::Vector2f(-1.f, 1.f));
 
             else if(key == sf::Keyboard::Numpad3 && keyboard::CTRL())
                 m_SelectedObject->scale(sf::Vector2f(1.f, -1.f));
 
-            //Unselected
-            if (key == sf::Keyboard::Escape)
+            // Unselected
+            if(key == sf::Keyboard::Escape)
                 m_SelectedObject = nullptr;
 
-            //Delete
+            // Delete
             if(key == sf::Keyboard::Delete)
                 deleteObject(m_SelectedObject);
 
-            //copy sprite
-			if(key == sf::Keyboard::Numpad8 && keyboard::ALT())
+            // copy sprite
+            if(key == sf::Keyboard::Numpad8 && keyboard::ALT())
                 copyObject(Up);
 
-			else if(key == sf::Keyboard::Numpad2 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad2 && keyboard::ALT())
                 copyObject(Down);
 
-			else if(key == sf::Keyboard::Numpad4 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad4 && keyboard::ALT())
                 copyObject(Left);
 
-			else if(key == sf::Keyboard::Numpad6 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad6 && keyboard::ALT())
                 copyObject(Right);
 
-			else if(key == sf::Keyboard::Numpad7 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad7 && keyboard::ALT())
                 copyObject(Up_Left);
 
-			else if(key == sf::Keyboard::Numpad9 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad9 && keyboard::ALT())
                 copyObject(Up_Right);
 
-			else if(key == sf::Keyboard::Numpad1 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad1 && keyboard::ALT())
                 copyObject(Down_Left);
 
-			else if(key == sf::Keyboard::Numpad3 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad3 && keyboard::ALT())
                 copyObject(Down_Right);
         }
 
-        //Layer
+        // Layer
         if(isPressed && m_SelectedLayer)
         {
             sf::Vector2f pos = sf::Vector2f(0.f, 0.f);
 
-			if(key == sf::Keyboard::Numpad8 && keyboard::CTRL_ALT())
+            if(key == sf::Keyboard::Numpad8 && keyboard::CTRL_ALT())
                 pos = sf::Vector2f(0.f, -5.f);
 
-			else if(key == sf::Keyboard::Numpad2 && keyboard::CTRL_ALT())
+            else if(key == sf::Keyboard::Numpad2 && keyboard::CTRL_ALT())
                 pos = sf::Vector2f(0.f, 5.f);
 
-			else if(key == sf::Keyboard::Numpad4 && keyboard::CTRL_ALT())
+            else if(key == sf::Keyboard::Numpad4 && keyboard::CTRL_ALT())
                 pos = sf::Vector2f(-5.f, 0.f);
 
-			else if(key == sf::Keyboard::Numpad6 && keyboard::CTRL_ALT())
+            else if(key == sf::Keyboard::Numpad6 && keyboard::CTRL_ALT())
                 pos = sf::Vector2f(5.f, 0.f);
 
             if(pos != sf::Vector2f(0.f, 0.f))
@@ -231,7 +230,7 @@ namespace nero
             if(key == sf::Keyboard::Numpad6 && keyboard::CTRL())
                 m_UpdateUndo();
 
-            //Rotate
+            // Rotate
             if(key == sf::Keyboard::Numpad7 && keyboard::CTRL())
                 m_UpdateUndo();
 
@@ -244,139 +243,138 @@ namespace nero
             else if(key == sf::Keyboard::Multiply && keyboard::CTRL())
                 m_UpdateUndo();
 
-            //Zoom
+            // Zoom
             if(key == sf::Keyboard::Add && keyboard::CTRL())
                 m_UpdateUndo();
 
             else if(key == sf::Keyboard::Subtract && keyboard::CTRL())
                 m_UpdateUndo();
 
-            //Flip
+            // Flip
             if(key == sf::Keyboard::Numpad1 && keyboard::CTRL())
                 m_UpdateUndo();
 
             else if(key == sf::Keyboard::Numpad3 && keyboard::CTRL())
                 m_UpdateUndo();
 
-            //copy sprite
-			if(key == sf::Keyboard::Numpad8 && keyboard::ALT())
+            // copy sprite
+            if(key == sf::Keyboard::Numpad8 && keyboard::ALT())
                 m_UpdateUndo();
 
-			else if(key == sf::Keyboard::Numpad2 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad2 && keyboard::ALT())
                 m_UpdateUndo();
 
-			else if(key == sf::Keyboard::Numpad4 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad4 && keyboard::ALT())
                 m_UpdateUndo();
 
-			else if(key == sf::Keyboard::Numpad6 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad6 && keyboard::ALT())
                 m_UpdateUndo();
 
-			else if(key == sf::Keyboard::Numpad7 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad7 && keyboard::ALT())
                 m_UpdateUndo();
 
-			else if(key == sf::Keyboard::Numpad9 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad9 && keyboard::ALT())
                 m_UpdateUndo();
 
-			else if(key == sf::Keyboard::Numpad1 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad1 && keyboard::ALT())
                 m_UpdateUndo();
 
-			else if(key == sf::Keyboard::Numpad3 && keyboard::ALT())
+            else if(key == sf::Keyboard::Numpad3 && keyboard::ALT())
                 m_UpdateUndo();
 
-			else  if(key == sf::Keyboard::Numpad8 && keyboard::CTRL_ALT())
+            else if(key == sf::Keyboard::Numpad8 && keyboard::CTRL_ALT())
                 m_UpdateUndo();
 
-			else if(key == sf::Keyboard::Numpad2 && keyboard::CTRL_ALT())
+            else if(key == sf::Keyboard::Numpad2 && keyboard::CTRL_ALT())
                 m_UpdateUndo();
 
-			else if(key == sf::Keyboard::Numpad4 && keyboard::CTRL_ALT())
+            else if(key == sf::Keyboard::Numpad4 && keyboard::CTRL_ALT())
                 m_UpdateUndo();
 
-			else if(key == sf::Keyboard::Numpad6 && keyboard::CTRL_ALT())
+            else if(key == sf::Keyboard::Numpad6 && keyboard::CTRL_ALT())
                 m_UpdateUndo();
         }
     }
 
-	void WorldBuilder::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
+    void WorldBuilder::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
     {
         sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y), m_RenderTexture->getView());
 
         if(mouse.button == sf::Mouse::Left && isPressed && m_SelectedLayer && m_SelectedLayer->isVisible())
         {
-			auto selectedObject = findObject(m_SelectedLayer, world_pos);
+            auto selectedObject = findObject(m_SelectedLayer, world_pos);
 
-			if(selectedObject && keyboard::ALT())
+            if(selectedObject && keyboard::ALT())
             {
-				deleteObject(selectedObject);
+                deleteObject(selectedObject);
             }
 
-			m_LastMousePosition = world_pos;
+            m_LastMousePosition = world_pos;
 
-			m_ClickedObject = selectedObject ? true : false;
+            m_ClickedObject     = selectedObject ? true : false;
 
-			if(selectedObject)
-			{
-				m_SelectedObject = selectedObject;
-				m_RightSelection = false;
-			}
+            if(selectedObject)
+            {
+                m_SelectedObject = selectedObject;
+                m_RightSelection = false;
+            }
         }
 
-        if (mouse.button == sf::Mouse::Right && isPressed && m_SelectedLayer && m_SelectedLayer->isVisible())
+        if(mouse.button == sf::Mouse::Right && isPressed && m_SelectedLayer && m_SelectedLayer->isVisible())
         {
-			auto founded = findObject(m_SelectedLayer, world_pos);
+            auto founded = findObject(m_SelectedLayer, world_pos);
 
-			if(founded)
-			{
-				m_SelectedObject = founded;
-				m_RightSelection = true;
-			}
+            if(founded)
+            {
+                m_SelectedObject = founded;
+                m_RightSelection = true;
+            }
 
             if(m_SelectedObject)
                 m_UpdateUI();
         }
 
-		if (mouse.button == sf::Mouse::Left && !isPressed && m_SelectedLayer && m_SelectedObject)
+        if(mouse.button == sf::Mouse::Left && !isPressed && m_SelectedLayer && m_SelectedObject)
         {
-			if(!m_RightSelection)
-			{
-				m_SelectedObject = nullptr;
-				m_UpdateUndo();
-			}
+            if(!m_RightSelection)
+            {
+                m_SelectedObject = nullptr;
+                m_UpdateUndo();
+            }
         }
     }
 
-	void  WorldBuilder::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
+    void WorldBuilder::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
     {
         sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y), m_RenderTexture->getView());
 
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && m_SelectedLayer && m_SelectedLayer->isVisible() && m_SelectedObject)
         {
-			if(m_ClickedObject)
-			{
-				sf::Vector2f diff = world_pos - m_LastMousePosition;
+            if(m_ClickedObject)
+            {
+                sf::Vector2f diff = world_pos - m_LastMousePosition;
 
-				if(!keyboard::CTRL_SHIFT_ALT())
-					m_SelectedObject->move(diff);
+                if(!keyboard::CTRL_SHIFT_ALT())
+                    m_SelectedObject->move(diff);
 
-				else if(keyboard::SHIFT() && diff.y >  0.f)
-					m_SelectedObject->rotate(m_RotationSpeed*2.f);
+                else if(keyboard::SHIFT() && diff.y > 0.f)
+                    m_SelectedObject->rotate(m_RotationSpeed * 2.f);
 
-				else if(keyboard::SHIFT() && diff.y <  0.f)
-					m_SelectedObject->rotate(-m_RotationSpeed*2.f);
+                else if(keyboard::SHIFT() && diff.y < 0.f)
+                    m_SelectedObject->rotate(-m_RotationSpeed * 2.f);
 
-				else if(keyboard::CTRL() && diff.y < 0.f)
-					m_SelectedObject->scale(sf::Vector2f(1.f+m_ZoomingRatio, 1.f+m_ZoomingRatio));
+                else if(keyboard::CTRL() && diff.y < 0.f)
+                    m_SelectedObject->scale(sf::Vector2f(1.f + m_ZoomingRatio, 1.f + m_ZoomingRatio));
 
-				else if(keyboard::CTRL() && diff.y > 0.f)
-					m_SelectedObject->scale(sf::Vector2f(1.f-m_ZoomingRatio, 1.f-m_ZoomingRatio));
+                else if(keyboard::CTRL() && diff.y > 0.f)
+                    m_SelectedObject->scale(sf::Vector2f(1.f - m_ZoomingRatio, 1.f - m_ZoomingRatio));
 
-				m_LastMousePosition = world_pos;
-
-			}
+                m_LastMousePosition = world_pos;
+            }
         }
     }
 
-	Object::Ptr WorldBuilder::findObject(Object::Ptr object, sf::Vector2f pos)
+    Object::Ptr WorldBuilder::findObject(Object::Ptr object, sf::Vector2f pos)
     {
         Object::Ptr result = nullptr;
         findObject(object, pos, result);
@@ -384,8 +382,7 @@ namespace nero
         return result;
     }
 
-
-	void WorldBuilder::findObject(Object::Ptr object, sf::Vector2f pos, Object::Ptr& result)
+    void WorldBuilder::findObject(Object::Ptr object, sf::Vector2f pos, Object::Ptr& result)
     {
         if(result != nullptr)
             return;
@@ -395,12 +392,12 @@ namespace nero
         else
         {
             auto childTab = object->getAllChild();
-            for (auto it = childTab->rbegin(); it != childTab->rend(); it++)
+            for(auto it = childTab->rbegin(); it != childTab->rend(); it++)
                 findObject(*it, pos, result);
         }
     }
 
-	Object::Ptr WorldBuilder::findObject(Object::Ptr object, sf::String name)
+    Object::Ptr WorldBuilder::findObject(Object::Ptr object, sf::String name)
     {
         Object::Ptr result = nullptr;
         findObject(object, name, result);
@@ -408,7 +405,7 @@ namespace nero
         return result;
     }
 
-	void WorldBuilder::findObject(Object::Ptr object, sf::String name, Object::Ptr& result)
+    void WorldBuilder::findObject(Object::Ptr object, sf::String name, Object::Ptr& result)
     {
         if(result != nullptr)
             return;
@@ -418,12 +415,12 @@ namespace nero
         else
         {
             auto childTab = object->getAllChild();
-            for (auto it = childTab->rbegin(); it != childTab->rend(); it++)
+            for(auto it = childTab->rbegin(); it != childTab->rend(); it++)
                 findObject(*it, name, result);
         }
     }
 
-	Object::Ptr WorldBuilder::findObject(Object::Ptr object, int id)
+    Object::Ptr WorldBuilder::findObject(Object::Ptr object, int id)
     {
         Object::Ptr result = nullptr;
         findObject(object, id, result);
@@ -431,7 +428,7 @@ namespace nero
         return result;
     }
 
-	void WorldBuilder::findObject(Object::Ptr object, int id, Object::Ptr& result)
+    void WorldBuilder::findObject(Object::Ptr object, int id, Object::Ptr& result)
     {
         if(result != nullptr)
             return;
@@ -441,16 +438,16 @@ namespace nero
         else
         {
             auto childTab = object->getAllChild();
-            for (auto it = childTab->rbegin(); it != childTab->rend(); it++)
+            for(auto it = childTab->rbegin(); it != childTab->rend(); it++)
                 findObject(*it, id, result);
         }
     }
 
-	const LayerObject::Ptr WorldBuilder::addLayer()
+    const LayerObject::Ptr WorldBuilder::addLayer()
     {
-        int index =  ++m_LayerCount;
+        int index = ++m_LayerCount;
 
-		//m_UpdateLog("adding new Layer [Layer " + toString(index) + "]", nero::Info);
+        // m_UpdateLog("adding new Layer [Layer " + toString(index) + "]", nero::Info);
 
         if(m_SelectedLayer)
             m_SelectedLayer->setIsSelected(false);
@@ -459,31 +456,31 @@ namespace nero
         Layer_object->setId(getNewId());
         Layer_object->setIsVisible(true);
         Layer_object->setIsSelected(true);
-		Layer_object->setName("Layer " + toString(index));
+        Layer_object->setName("Layer " + toString(index));
         Layer_object->setOrder(0);
 
         m_LayerTable.push_back(Layer_object);
 
-        m_SelectedLayer = Layer_object;
+        m_SelectedLayer  = Layer_object;
         m_SelectedObject = nullptr;
 
-		m_UpdateUndo();
+        m_UpdateUndo();
 
         return m_LayerTable.back();
     }
 
-	void WorldBuilder::deleteLayer(int id)
+    void WorldBuilder::deleteLayer(int id)
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
             if((*it)->getId() == id)
             {
-				//m_UpdateLog("removing Layer [" + (*it)->getName() + "]", nero::Info);
+                // m_UpdateLog("removing Layer [" + (*it)->getName() + "]", nero::Info);
 
                 if(it != m_LayerTable.begin())
-                    selectLayer((*(it-1))->getId());
+                    selectLayer((*(it - 1))->getId());
                 else if(it == m_LayerTable.begin() && m_LayerTable.size() != 1)
-                    selectLayer((*(it+1))->getId());
+                    selectLayer((*(it + 1))->getId());
 
                 m_LayerTable.erase(it);
 
@@ -494,16 +491,16 @@ namespace nero
         }
     }
 
-	void WorldBuilder::moveLayerDown(int id)
+    void WorldBuilder::moveLayerDown(int id)
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
             if((*it)->getId() == id && it != m_LayerTable.begin())
             {
-				//m_UpdateLog("moving Layer [" + (*it)->getName() + "] Down", nero::Info);
+                // m_UpdateLog("moving Layer [" + (*it)->getName() + "] Down", nero::Info);
 
-                std::iter_swap(it, it-1);
-                selectLayer((*(it-1))->getId());
+                std::iter_swap(it, it - 1);
+                selectLayer((*(it - 1))->getId());
 
                 m_UpdateUndo();
 
@@ -512,16 +509,16 @@ namespace nero
         }
     }
 
-	void WorldBuilder::moveLayerUp(int id)
+    void WorldBuilder::moveLayerUp(int id)
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
-            if((*it)->getId() == id && it != (m_LayerTable.end()-1))
+            if((*it)->getId() == id && it != (m_LayerTable.end() - 1))
             {
-				//m_UpdateLog("moving Layer [" + (*it)->getName() + "] Up", nero::Info);
+                // m_UpdateLog("moving Layer [" + (*it)->getName() + "] Up", nero::Info);
 
-                std::iter_swap(it, it+1);
-                selectLayer((*(it+1))->getId());
+                std::iter_swap(it, it + 1);
+                selectLayer((*(it + 1))->getId());
 
                 m_UpdateUndo();
 
@@ -530,24 +527,24 @@ namespace nero
         }
     }
 
-	bool WorldBuilder::mergeLayerUp(int id)
+    bool WorldBuilder::mergeLayerUp(int id)
     {
         nero_log("up up my layer");
 
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
-            if((*it)->getId() == id && it != (m_LayerTable.end()-1))
+            if((*it)->getId() == id && it != (m_LayerTable.end() - 1))
             {
-                if((*it)->getSecondType() == (*(it+1))->getSecondType())
+                if((*it)->getSecondType() == (*(it + 1))->getSecondType())
                 {
-					//m_UpdateLog("merging Layer Up : Merging [" + (*it)->getName() + "] into [" + (*(it+1))->getName() + "]", nero::Info);
+                    // m_UpdateLog("merging Layer Up : Merging [" + (*it)->getName() + "] into [" + (*(it+1))->getName() + "]", nero::Info);
 
                     auto childTable = (*it)->getAllChild();
 
                     for(auto child : *childTable)
-                        (*(it+1))->addChild(child);
+                        (*(it + 1))->addChild(child);
 
-                    selectLayer((*(it+1))->getId());
+                    selectLayer((*(it + 1))->getId());
 
                     m_LayerTable.erase(it);
 
@@ -563,22 +560,22 @@ namespace nero
         return false;
     }
 
-	bool WorldBuilder::mergeLayerDown(int id)
+    bool WorldBuilder::mergeLayerDown(int id)
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
             if((*it)->getId() == id && it != (m_LayerTable.begin()))
             {
-                if((*it)->getSecondType() == (*(it-1))->getSecondType())
+                if((*it)->getSecondType() == (*(it - 1))->getSecondType())
                 {
-					//m_UpdateLog("merging Layer Down : Merging [" + (*it)->getName() + "] into [" + (*(it-1))->getName() + "]", nero::Info);
+                    // m_UpdateLog("merging Layer Down : Merging [" + (*it)->getName() + "] into [" + (*(it-1))->getName() + "]", nero::Info);
 
                     auto childTable = (*it)->getAllChild();
 
                     for(auto child : *childTable)
-                        (*(it-1))->addChild(child);
+                        (*(it - 1))->addChild(child);
 
-                    selectLayer((*(it-1))->getId());
+                    selectLayer((*(it - 1))->getId());
 
                     m_LayerTable.erase(it);
 
@@ -594,13 +591,13 @@ namespace nero
         return false;
     }
 
-	void WorldBuilder::updateLayerVisibility(int id)
+    void WorldBuilder::updateLayerVisibility(int id)
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
             if((*it)->getId() == id)
             {
-				//(*it)->isVisible() ? m_UpdateLog("Hiding Layer [" + (*it)->getName() + "]", nero::Info) : m_UpdateLog("Showing Layer [" + (*it)->getName() + "]", nero::Info);
+                //(*it)->isVisible() ? m_UpdateLog("Hiding Layer [" + (*it)->getName() + "]", nero::Info) : m_UpdateLog("Showing Layer [" + (*it)->getName() + "]", nero::Info);
 
                 (*it)->setIsVisible(!(*it)->isVisible());
 
@@ -611,7 +608,7 @@ namespace nero
         }
     }
 
-	void WorldBuilder::updateLayerName(int id, sf::String name)
+    void WorldBuilder::updateLayerName(int id, sf::String name)
     {
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
@@ -626,8 +623,7 @@ namespace nero
         }
     }
 
-
-	void WorldBuilder::selectLayer(int id)
+    void WorldBuilder::selectLayer(int id)
     {
         m_SelectedLayer->setIsSelected(false);
         m_SelectedLayer = nullptr;
@@ -636,7 +632,7 @@ namespace nero
         {
             if((*it)->getId() == id)
             {
-				//m_UpdateLog("Selecting Layer [" + (*it)->getName() + "]", nero::Info);
+                // m_UpdateLog("Selecting Layer [" + (*it)->getName() + "]", nero::Info);
 
                 m_SelectedLayer = *it;
                 m_SelectedLayer->setIsSelected(true);
@@ -649,140 +645,139 @@ namespace nero
         }
     }
 
-	void WorldBuilder::setSelectedLayer(LayerObject::Ptr layerObject)
-	{
-		//unselect
-		m_SelectedLayer->setIsSelected(false);
-		m_SelectedLayer = nullptr;
+    void WorldBuilder::setSelectedLayer(LayerObject::Ptr layerObject)
+    {
+        // unselect
+        m_SelectedLayer->setIsSelected(false);
+        m_SelectedLayer = nullptr;
 
-		//select
-		m_SelectedLayer = layerObject;
-		m_SelectedLayer->setIsSelected(true);
-		m_SelectedObject = nullptr;
-	}
+        // select
+        m_SelectedLayer = layerObject;
+        m_SelectedLayer->setIsSelected(true);
+        m_SelectedObject = nullptr;
+    }
 
-	void WorldBuilder::setSelectedObject(Object::Ptr object)
-	{
-		m_SelectedObject = object;
-	}
+    void WorldBuilder::setSelectedObject(Object::Ptr object)
+    {
+        m_SelectedObject = object;
+    }
 
-
-	void WorldBuilder::copyObject(const Position& position)
+    void WorldBuilder::copyObject(const Position& position)
     {
         if(!m_SelectedLayer || !m_SelectedObject)
             return;
 
         sf::Vector2f pos;
-        std::string pos_string = "";
+        std::string  pos_string = "";
 
         switch(position)
         {
-            case Up:
-                pos = sf::Vector2f(0.f, -m_SelectionRect.getSize().y);
-                pos_string = "Up";
-                break;
-            case Down:
-                pos = sf::Vector2f(0.f, m_SelectionRect.getSize().y);
-                pos_string = "Down";
-                break;
-            case Left:
-                pos = sf::Vector2f(-m_SelectionRect.getSize().x, 0.f);
-                pos_string = "Left";
-                break;
-            case Right:
-                pos = sf::Vector2f(m_SelectionRect.getSize().x, 0.f);
-                pos_string = "Right";
-                break;
-            case Up_Left:
-                pos = sf::Vector2f(-m_SelectionRect.getSize().x, -m_SelectionRect.getSize().y);
-                pos_string = "Up_Left";
-                break;
-            case Up_Right:
-                pos = sf::Vector2f(m_SelectionRect.getSize().x, -m_SelectionRect.getSize().y);
-                pos_string = "Up_Right";
-                break;
-            case Down_Left:
-                pos = sf::Vector2f(-m_SelectionRect.getSize().x, m_SelectionRect.getSize().y);
-                pos_string = "Down_Left";
-                break;
-            case Down_Right:
-                pos = sf::Vector2f(m_SelectionRect.getSize().x, m_SelectionRect.getSize().y);
-                pos_string = "Down_Right";
-                break;
+        case Up:
+            pos        = sf::Vector2f(0.f, -m_SelectionRect.getSize().y);
+            pos_string = "Up";
+            break;
+        case Down:
+            pos        = sf::Vector2f(0.f, m_SelectionRect.getSize().y);
+            pos_string = "Down";
+            break;
+        case Left:
+            pos        = sf::Vector2f(-m_SelectionRect.getSize().x, 0.f);
+            pos_string = "Left";
+            break;
+        case Right:
+            pos        = sf::Vector2f(m_SelectionRect.getSize().x, 0.f);
+            pos_string = "Right";
+            break;
+        case Up_Left:
+            pos        = sf::Vector2f(-m_SelectionRect.getSize().x, -m_SelectionRect.getSize().y);
+            pos_string = "Up_Left";
+            break;
+        case Up_Right:
+            pos        = sf::Vector2f(m_SelectionRect.getSize().x, -m_SelectionRect.getSize().y);
+            pos_string = "Up_Right";
+            break;
+        case Down_Left:
+            pos        = sf::Vector2f(-m_SelectionRect.getSize().x, m_SelectionRect.getSize().y);
+            pos_string = "Down_Left";
+            break;
+        case Down_Right:
+            pos        = sf::Vector2f(m_SelectionRect.getSize().x, m_SelectionRect.getSize().y);
+            pos_string = "Down_Right";
+            break;
         }
 
-		//m_UpdateLog("copying Object [" + m_SelectedObject->getName() + "] " + pos_string, nero::Info);
+        // m_UpdateLog("copying Object [" + m_SelectedObject->getName() + "] " + pos_string, nero::Info);
 
         Object::Ptr object = m_SelectedObject->clone(pos);
         object->setId(getNewId());
 
-		std::string object_name = StringPool.BLANK;
+        std::string object_name = StringPool.BLANK;
 
-		switch(object->getSecondType())
-		{
-			case Object::Sprite_Object:
-				object_name = "sprite " + toString(object->getId());
-				break;
+        switch(object->getSecondType())
+        {
+        case Object::Sprite_Object:
+            object_name = "sprite " + toString(object->getId());
+            break;
 
-			case Object::Mesh_Object:
-				object_name = "mesh " + toString(object->getId());
-				break;
+        case Object::Mesh_Object:
+            object_name = "mesh " + toString(object->getId());
+            break;
 
-			case Object::Meshed_Object:
-				object_name = "meshed sprite " + toString(object->getId());
-				break;
+        case Object::Meshed_Object:
+            object_name = "meshed sprite " + toString(object->getId());
+            break;
 
-			case Object::Animation_Object:
-				object_name = "animation " + toString(object->getId());
-				break;
+        case Object::Animation_Object:
+            object_name = "animation " + toString(object->getId());
+            break;
 
-			case Object::Animation_Meshed_Object:
-				object_name = "meshed animation " + toString(object->getId());
-				break;
+        case Object::Animation_Meshed_Object:
+            object_name = "meshed animation " + toString(object->getId());
+            break;
 
-			case Object::Text_Object:
-				object_name = "sprite " + toString(object->getId());
-				break;
+        case Object::Text_Object:
+            object_name = "sprite " + toString(object->getId());
+            break;
 
-			case Object::Button_Object:
-				object_name = "button " + toString(object->getId());
-				break;
+        case Object::Button_Object:
+            object_name = "button " + toString(object->getId());
+            break;
 
-			default:
-				object_name = "object " + toString(object->getId());
-				break;
-		}
+        default:
+            object_name = "object " + toString(object->getId());
+            break;
+        }
 
-		object->setName(object_name);
+        object->setName(object_name);
 
         if(object->getSecondType() == Object::Mesh_Object)
         {
             MeshObject::Ptr mesh_object = MeshObject::Cast(object);
-			mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
-			m_MeshEditor->addMesh(mesh_object);
+            mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
+            m_MeshEditor->addMesh(mesh_object);
         }
 
         else if(object->getSecondType() == Object::Meshed_Object || object->getSecondType() == Object::Animation_Meshed_Object)
         {
-            sf::Vector2f posf = -pos;
-            Object::Ptr child_object = m_SelectedObject->getFirstChild()->clone(posf);
+            sf::Vector2f posf         = -pos;
+            Object::Ptr  child_object = m_SelectedObject->getFirstChild()->clone(posf);
             child_object->setId(getNewId());
 
             MeshObject::Ptr mesh_object = MeshObject::Cast(child_object);
-			mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
+            mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
             mesh_object->setIsSelectable(false);
 
             object->setIsUpdateable(true);
             object->addChild(child_object);
 
-			m_MeshEditor->addMesh(mesh_object);
+            m_MeshEditor->addMesh(mesh_object);
         }
 
         m_SelectedObject = object;
         m_SelectedLayer->addChild(m_SelectedObject);
     }
 
-	void WorldBuilder::updateLayerColor(const sf::Color& color)
+    void WorldBuilder::updateLayerColor(const sf::Color& color)
     {
         if(m_SelectedLayer->getSecondType() == Object::Mesh_Object)
             return;
@@ -797,7 +792,7 @@ namespace nero
         }
     }
 
-	void WorldBuilder::updateAllLayerAlpha(int alpha)
+    void WorldBuilder::updateAllLayerAlpha(int alpha)
     {
 
         for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
@@ -809,359 +804,350 @@ namespace nero
                 for(auto it = children->begin(); it != children->end(); it++)
                 {
                     sf::Color color = (*it)->getColor();
-                    color.a = alpha;
+                    color.a         = alpha;
 
                     (*it)->setColor(color);
                 }
             }
         }
-
     }
 
-	void WorldBuilder::updateSpriteColor(const sf::Color& color)
+    void WorldBuilder::updateSpriteColor(const sf::Color& color)
     {
         if(m_SelectedObject != nullptr && (m_SelectedObject->getFirstType() == Object::Sprite_Object || m_SelectedObject->getFirstType() == Object::Animation_Object))
             m_SelectedObject->setColor(color);
     }
 
-	void WorldBuilder::updateTextColor(const sf::Color& color)
+    void WorldBuilder::updateTextColor(const sf::Color& color)
     {
         if(m_SelectedObject != nullptr && m_SelectedObject->getFirstType() == Object::Text_Object)
             TextObject::Cast(m_SelectedObject)->setColor(color);
     }
 
-	void WorldBuilder::updateOutlineTextColor(const sf::Color& color)
+    void WorldBuilder::updateOutlineTextColor(const sf::Color& color)
     {
         if(m_SelectedObject != nullptr && m_SelectedObject->getFirstType() == Object::Text_Object)
             TextObject::Cast(m_SelectedObject)->setOutlineColor(color);
     }
 
-	const LayerObject::Tab& WorldBuilder::getLayerTable() const
+    const LayerObject::Tab& WorldBuilder::getLayerTable() const
     {
-       return m_LayerTable;
+        return m_LayerTable;
     }
 
-	MeshEditor::Ptr WorldBuilder::getMeshEditor()
+    MeshEditor::Ptr WorldBuilder::getMeshEditor()
     {
-		return  m_MeshEditor;
-	}
+        return m_MeshEditor;
+    }
 
-	bool WorldBuilder::addObject(Object::Type type, const sf::String& label, sf::Vector2f position)
+    bool WorldBuilder::addObject(Object::Type type, const sf::String& label, sf::Vector2f position)
     {
         Object::Ptr object = nullptr;
 
         switch(type)
         {
-            case Object::Sprite_Object:
+        case Object::Sprite_Object: {
+            // m_UpdateLog("adding Sprite Object with Sprite [" + label + "]", nero::Info);
+
+            sf::Sprite  sprite;
+            sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound(label);
+            sprite.setTextureRect(rect);
+            sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture(label));
+            sprite.setOrigin(rect.width / 2.f, rect.height / 2.f);
+
+            SpriteObject::Ptr sprite_object(new SpriteObject());
+            sprite_object->setSprite(sprite);
+            sprite_object->setTextureName(label);
+            sprite_object->setSecondType(Object::Sprite_Object);
+            sprite_object->setPosition(position);
+            sprite_object->setId(getNewId());
+            std::string object_name = "sprite " + toString(sprite_object->getId());
+            sprite_object->setName(object_name);
+
+            object = sprite_object;
+        }
+        break;
+
+        case Object::Mesh_Object: {
+            if(!m_SelectedObject)
             {
-				//m_UpdateLog("adding Sprite Object with Sprite [" + label + "]", nero::Info);
+                // m_UpdateLog("adding Mesh Object of Type [" + label + "]", nero::Info);
 
-                sf::Sprite sprite;
-				sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound(label);
-                sprite.setTextureRect(rect);
-				sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture(label));
-                sprite.setOrigin(rect.width/2.f, rect.height/2.f);
+                Mesh mesh;
 
-                SpriteObject::Ptr sprite_object(new SpriteObject());
-                sprite_object->setSprite(sprite);
-                sprite_object->setTextureName(label);
-                sprite_object->setSecondType(Object::Sprite_Object);
-                sprite_object->setPosition(position);
-                sprite_object->setId(getNewId());
-				std::string object_name = "sprite " + toString(sprite_object->getId());
-				sprite_object->setName(object_name);
+                if(label == "Polygon")
+                    mesh = Mesh(Mesh::Shape::Polygon);
+                else if(label == "Circle")
+                    mesh = Mesh(Mesh::Shape::Circle);
+                else if(label == "Line")
+                    mesh = Mesh(Mesh::Shape::Line);
 
-                object = sprite_object;
+                mesh.setMeshId(getNewId());
 
-            }break;
-
-            case Object::Mesh_Object:
-            {
-                if(!m_SelectedObject)
-                {
-					//m_UpdateLog("adding Mesh Object of Type [" + label + "]", nero::Info);
-
-                    Mesh mesh;
-
-                    if(label == "Polygon")
-						mesh = Mesh(Mesh::Shape::Polygon);
-                    else if(label == "Circle")
-						mesh = Mesh(Mesh::Shape::Circle);
-                    else if(label == "Line")
-						mesh = Mesh(Mesh::Shape::Line);
-
-					mesh.setMeshId(getNewId());
-
-                    MeshObject::Ptr mesh_object(new MeshObject());
-					mesh_object->setId(mesh.getMeshId());
-					std::string object_name = "mesh " + toString(mesh.getMeshId());
-					mesh_object->setName(object_name);
-                    mesh_object->setMesh(mesh);
-                    mesh_object->setPosition(position);
-                    mesh_object->setSecondType(Object::Mesh_Object);
-					sf::FloatRect bound = mesh_object->getGlobalBounds();
-					mesh_object->setOrigin(bound.width/2.f, bound.height/2.f);
-
-					m_MeshEditor->addMesh(mesh_object);
-
-                    object = mesh_object;
-                }
-                else if(m_SelectedObject && (m_SelectedObject->getSecondType() == Object::Meshed_Object || m_SelectedObject->getSecondType() == Object::Animation_Meshed_Object))
-                {
-					//m_UpdateLog("changing Object [" + m_SelectedObject->getName() + "] Mesh Type to [" + label + "]", nero::Info);
-
-					m_MeshEditor->deleteMesh(m_SelectedObject->getFirstChild()->getId());
-                    m_SelectedObject->removeFirstChild();
-
-                    Mesh mesh;
-
-					if(label == "Polygon")
-						mesh = Mesh(Mesh::Shape::Polygon);
-					else if(label == "Circle")
-						mesh = Mesh(Mesh::Shape::Circle);
-					else if(label == "Line")
-						mesh = Mesh(Mesh::Shape::Line);
-
-					mesh.setMeshId(getNewId());
-                    std::shared_ptr<MeshObject> mesh_object(new MeshObject());
-					mesh_object->setId(mesh.getMeshId());
-                    mesh_object->setMesh(mesh);
-                    mesh_object->setIsSelectable(false);
-                    mesh_object->setSecondType(Object::Mesh_Object);
-                    mesh_object->setName(m_SelectedObject->getName());
-                    mesh_object->setCategory(m_SelectedObject->getCategory());
-
-					m_MeshEditor->addMesh(mesh_object);
-
-                    m_SelectedObject->addChild(mesh_object);
-
-					m_SelectedObject->update(EngineConstant.TIME_PER_FRAME);
-
-                    nero_log("change animation mesh");
-                    m_UpdateUndo();
-
-                    return false;
-                }
-                else
-                {
-                    return false;
-                }
-
-            }break;
-
-            case Object::Meshed_Object:
-            {
-				//m_UpdateLog("adding Meshed Sprite Object with Sprite [" + label + "]", nero::Info);
-
-                //Sprite Object
-                sf::Sprite sprite;
-				sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound(label);
-                sprite.setTextureRect(rect);
-				sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture(label));
-                sprite.setOrigin(rect.width/2.f, rect.height/2.f);
-
-                SpriteObject::Ptr sprite_object(new SpriteObject());
-                sprite_object->setSprite(sprite);
-                sprite_object->setTextureName(label);
-                sprite_object->setSecondType(Object::Meshed_Object);
-                sprite_object->setPosition(position);
-                sprite_object->setId(getNewId());
-				std::string object_name = "sprite " + toString(sprite_object->getId());
-				sprite_object->setName(object_name);
-				sprite_object->setIsUpdateable(true);
-
-                //Mesh Object
-				Mesh mesh = Mesh(Mesh::Shape::Polygon);
-				mesh.setMeshId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
-				mesh_object->setId(mesh.getMeshId());
-				object_name = "mesh " + toString(mesh.getMeshId());
-				mesh_object->setName(object_name);
+                mesh_object->setId(mesh.getMeshId());
+                std::string object_name = "mesh " + toString(mesh.getMeshId());
+                mesh_object->setName(object_name);
                 mesh_object->setMesh(mesh);
+                mesh_object->setPosition(position);
                 mesh_object->setSecondType(Object::Mesh_Object);
-                mesh_object->setIsSelectable(false);
+                sf::FloatRect bound = mesh_object->getGlobalBounds();
+                mesh_object->setOrigin(bound.width / 2.f, bound.height / 2.f);
 
-				m_MeshEditor->addMesh(mesh_object);
-                sprite_object->addChild(mesh_object);
+                m_MeshEditor->addMesh(mesh_object);
 
-                //update one time
-				sprite_object->update(EngineConstant.TIME_PER_FRAME);
-
-                object = sprite_object;
-
-            }break;
-
-            case Object::Animation_Object:
+                object = mesh_object;
+            }
+            else if(m_SelectedObject && (m_SelectedObject->getSecondType() == Object::Meshed_Object || m_SelectedObject->getSecondType() == Object::Animation_Meshed_Object))
             {
-				//m_UpdateLog("adding Animation Object with Animation [" + label + "]", nero::Info);
+                // m_UpdateLog("changing Object [" + m_SelectedObject->getName() + "] Mesh Type to [" + label + "]", nero::Info);
 
-                Animation animation;
-				auto sequenceMap = m_ResourceManager->getAnimationHolder()->getSequenceMap(label);
+                m_MeshEditor->deleteMesh(m_SelectedObject->getFirstChild()->getId());
+                m_SelectedObject->removeFirstChild();
 
-                for(auto it=sequenceMap.begin(); it!=sequenceMap.end(); it++)
-                {
-                    AnimationSequence sequence;
-                    sequence.setFrameTable(it->second);
+                Mesh mesh;
 
-                    animation.addSequence(it->first, sequence);
-                }
+                if(label == "Polygon")
+                    mesh = Mesh(Mesh::Shape::Polygon);
+                else if(label == "Circle")
+                    mesh = Mesh(Mesh::Shape::Circle);
+                else if(label == "Line")
+                    mesh = Mesh(Mesh::Shape::Line);
 
-                sf::Sprite sprite;
-				sf::IntRect rect = m_ResourceManager->getAnimationHolder()->getAnimationBound(label);
-                sprite.setTextureRect(rect);
-				sprite.setTexture(m_ResourceManager->getAnimationHolder()->getTexture(label));
-                sprite.setOrigin(rect.width/2.f, rect.height/2.f);
-
-                animation.setSprite(sprite);
-                animation.setTexture(label);
-				animation.setSequence(m_ResourceManager->getAnimationHolder()->getDefaultSequence(label));
-
-                AnimationObject::Ptr animation_object(new AnimationObject());
-                animation_object->setAnimation(animation);
-                animation_object->setSecondType(Object::Animation_Object);
-                animation_object->setPosition(position);
-                animation_object->setId(getNewId());
-				std::string object_name = "animation " + toString(animation_object->getId());
-				animation_object->setName(object_name);
-
-                object = animation_object;
-
-            }break;
-
-            case Object::Animation_Meshed_Object:
-            {
-				//m_UpdateLog("adding Meshed Animation Object with Animation [" + label + "]", nero::Info);
-
-                Animation animation;
-				auto sequenceMap = m_ResourceManager->getAnimationHolder()->getSequenceMap(label);
-
-                for(auto it=sequenceMap.begin(); it!=sequenceMap.end(); it++)
-                {
-                    AnimationSequence sequence;
-                    sequence.setFrameTable(it->second);
-
-                    animation.addSequence(it->first, sequence);
-                }
-
-                sf::Sprite sprite;
-				sf::IntRect rect = m_ResourceManager->getAnimationHolder()->getAnimationBound(label);
-                sprite.setTextureRect(rect);
-				sprite.setTexture(m_ResourceManager->getAnimationHolder()->getTexture(label));
-                sprite.setOrigin(rect.width/2.f, rect.height/2.f);
-
-                animation.setSprite(sprite);
-                animation.setTexture(label);
-				animation.setSequence(m_ResourceManager->getAnimationHolder()->getDefaultSequence(label));
-
-
-                AnimationObject::Ptr animation_object(new AnimationObject());
-                animation_object->setAnimation(animation);
-                animation_object->setSecondType(Object::Animation_Meshed_Object);
-                animation_object->setPosition(position);
-                animation_object->setId(getNewId());
-				std::string object_name = "animation " + toString(animation_object->getId());
-				animation_object->setName(object_name);
-
-                  //Mesh Object
-				Mesh mesh = Mesh(Mesh::Shape::Polygon);
-				mesh.setMeshId(getNewId());
-                MeshObject::Ptr mesh_object(new MeshObject());
-				mesh_object->setId(mesh.getMeshId());
-				object_name = "mesh " + toString(mesh.getMeshId());
-				mesh_object->setName(object_name);
+                mesh.setMeshId(getNewId());
+                std::shared_ptr<MeshObject> mesh_object(new MeshObject());
+                mesh_object->setId(mesh.getMeshId());
                 mesh_object->setMesh(mesh);
-                mesh_object->setSecondType(Object::Mesh_Object);
                 mesh_object->setIsSelectable(false);
+                mesh_object->setSecondType(Object::Mesh_Object);
+                mesh_object->setName(m_SelectedObject->getName());
+                mesh_object->setCategory(m_SelectedObject->getCategory());
 
-				m_MeshEditor->addMesh(mesh_object);
-                animation_object->addChild(mesh_object);
+                m_MeshEditor->addMesh(mesh_object);
 
-                //update one time
-				animation_object->update(EngineConstant.TIME_PER_FRAME);
+                m_SelectedObject->addChild(mesh_object);
 
-                object = animation_object;
+                m_SelectedObject->update(EngineConstant.TIME_PER_FRAME);
 
-            }break;
+                nero_log("change animation mesh");
+                m_UpdateUndo();
 
-            case Object::Text_Object:
+                return false;
+            }
+            else
             {
-				//m_UpdateLog("adding Text Object with Text [" + label + "]", nero::Info);
+                return false;
+            }
+        }
+        break;
 
-                sf::Text text;
-                text.setFont(m_ResourceManager->getFontHolder()->getFont(label));
-                text.setString(label);
-                text.setCharacterSize(20.f);
-                text.setOrigin(text.getLocalBounds().width/2.f, text.getLocalBounds().height/2.f);
+        case Object::Meshed_Object: {
+            // m_UpdateLog("adding Meshed Sprite Object with Sprite [" + label + "]", nero::Info);
 
-                TextObject::Ptr text_object(new TextObject());
-                text_object->setText(text);
-                text_object->setPosition(position);
-                text_object->setId(getNewId());
-				std::string object_name = "text " + toString(text_object->getId());
-				text_object->setName(object_name);
+            // Sprite Object
+            sf::Sprite  sprite;
+            sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound(label);
+            sprite.setTextureRect(rect);
+            sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture(label));
+            sprite.setOrigin(rect.width / 2.f, rect.height / 2.f);
 
-                object = text_object;
+            SpriteObject::Ptr sprite_object(new SpriteObject());
+            sprite_object->setSprite(sprite);
+            sprite_object->setTextureName(label);
+            sprite_object->setSecondType(Object::Meshed_Object);
+            sprite_object->setPosition(position);
+            sprite_object->setId(getNewId());
+            std::string object_name = "sprite " + toString(sprite_object->getId());
+            sprite_object->setName(object_name);
+            sprite_object->setIsUpdateable(true);
 
-            }break;
+            // Mesh Object
+            Mesh mesh = Mesh(Mesh::Shape::Polygon);
+            mesh.setMeshId(getNewId());
+            MeshObject::Ptr mesh_object(new MeshObject());
+            mesh_object->setId(mesh.getMeshId());
+            object_name = "mesh " + toString(mesh.getMeshId());
+            mesh_object->setName(object_name);
+            mesh_object->setMesh(mesh);
+            mesh_object->setSecondType(Object::Mesh_Object);
+            mesh_object->setIsSelectable(false);
 
-            case Object::Button_Object:
+            m_MeshEditor->addMesh(mesh_object);
+            sprite_object->addChild(mesh_object);
+
+            // update one time
+            sprite_object->update(EngineConstant.TIME_PER_FRAME);
+
+            object = sprite_object;
+        }
+        break;
+
+        case Object::Animation_Object: {
+            // m_UpdateLog("adding Animation Object with Animation [" + label + "]", nero::Info);
+
+            Animation animation;
+            auto      sequenceMap = m_ResourceManager->getAnimationHolder()->getSequenceMap(label);
+
+            for(auto it = sequenceMap.begin(); it != sequenceMap.end(); it++)
             {
-				//m_UpdateLog("adding Button Object with Sprite [" + label + "]", nero::Info);
+                AnimationSequence sequence;
+                sequence.setFrameTable(it->second);
 
-                sf::Sprite sprite;
-				sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound(label);
-                sprite.setTextureRect(rect);
-				sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture(label));
-                sprite.setOrigin(rect.width/2.f, rect.height/2.f);
+                animation.addSequence(it->first, sequence);
+            }
 
-                SpriteObject::Ptr sprite_object(new SpriteObject());
-                sprite_object->setSprite(sprite);
-                sprite_object->setTextureName(label);
-                sprite_object->setSecondType(Object::Button_Object);
-                sprite_object->setPosition(position);
-                sprite_object->setId(getNewId());
-				std::string object_name = "button " + toString(sprite_object->getId());
-				sprite_object->setName(object_name);
+            sf::Sprite  sprite;
+            sf::IntRect rect = m_ResourceManager->getAnimationHolder()->getAnimationBound(label);
+            sprite.setTextureRect(rect);
+            sprite.setTexture(m_ResourceManager->getAnimationHolder()->getTexture(label));
+            sprite.setOrigin(rect.width / 2.f, rect.height / 2.f);
 
-                sprite_object->setColor(sf::Color(255, 255, 255, 150));
+            animation.setSprite(sprite);
+            animation.setTexture(label);
+            animation.setSequence(m_ResourceManager->getAnimationHolder()->getDefaultSequence(label));
 
-                object = sprite_object;
+            AnimationObject::Ptr animation_object(new AnimationObject());
+            animation_object->setAnimation(animation);
+            animation_object->setSecondType(Object::Animation_Object);
+            animation_object->setPosition(position);
+            animation_object->setId(getNewId());
+            std::string object_name = "animation " + toString(animation_object->getId());
+            animation_object->setName(object_name);
 
-            }break;
+            object = animation_object;
+        }
+        break;
 
-			case Object::Light_Object:
-			{
-				LightObject::Ptr light_object = LightObject::Ptr(new LightObject());
-				light_object->setLightmap(label);
-				light_object->setColor(sf::Color::White);
-				light_object->setScale(3.f, 3.f);
-				light_object->setPosition(position);
+        case Object::Animation_Meshed_Object: {
+            // m_UpdateLog("adding Meshed Animation Object with Animation [" + label + "]", nero::Info);
 
-				sf::Sprite sprite;
-				sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound("point_light_64");
-				sprite.setTextureRect(rect);
-				sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture("point_light_64"));
-				sprite.setOrigin(rect.width/2.f, rect.height/2.f);
-				light_object->setSprite(sprite);
+            Animation animation;
+            auto      sequenceMap = m_ResourceManager->getAnimationHolder()->getSequenceMap(label);
 
-				object = light_object;
+            for(auto it = sequenceMap.begin(); it != sequenceMap.end(); it++)
+            {
+                AnimationSequence sequence;
+                sequence.setFrameTable(it->second);
 
-			}break;
+                animation.addSequence(it->first, sequence);
+            }
 
+            sf::Sprite  sprite;
+            sf::IntRect rect = m_ResourceManager->getAnimationHolder()->getAnimationBound(label);
+            sprite.setTextureRect(rect);
+            sprite.setTexture(m_ResourceManager->getAnimationHolder()->getTexture(label));
+            sprite.setOrigin(rect.width / 2.f, rect.height / 2.f);
+
+            animation.setSprite(sprite);
+            animation.setTexture(label);
+            animation.setSequence(m_ResourceManager->getAnimationHolder()->getDefaultSequence(label));
+
+            AnimationObject::Ptr animation_object(new AnimationObject());
+            animation_object->setAnimation(animation);
+            animation_object->setSecondType(Object::Animation_Meshed_Object);
+            animation_object->setPosition(position);
+            animation_object->setId(getNewId());
+            std::string object_name = "animation " + toString(animation_object->getId());
+            animation_object->setName(object_name);
+
+            // Mesh Object
+            Mesh mesh = Mesh(Mesh::Shape::Polygon);
+            mesh.setMeshId(getNewId());
+            MeshObject::Ptr mesh_object(new MeshObject());
+            mesh_object->setId(mesh.getMeshId());
+            object_name = "mesh " + toString(mesh.getMeshId());
+            mesh_object->setName(object_name);
+            mesh_object->setMesh(mesh);
+            mesh_object->setSecondType(Object::Mesh_Object);
+            mesh_object->setIsSelectable(false);
+
+            m_MeshEditor->addMesh(mesh_object);
+            animation_object->addChild(mesh_object);
+
+            // update one time
+            animation_object->update(EngineConstant.TIME_PER_FRAME);
+
+            object = animation_object;
+        }
+        break;
+
+        case Object::Text_Object: {
+            // m_UpdateLog("adding Text Object with Text [" + label + "]", nero::Info);
+
+            sf::Text text;
+            text.setFont(m_ResourceManager->getFontHolder()->getFont(label));
+            text.setString(label);
+            text.setCharacterSize(20.f);
+            text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
+
+            TextObject::Ptr text_object(new TextObject());
+            text_object->setText(text);
+            text_object->setPosition(position);
+            text_object->setId(getNewId());
+            std::string object_name = "text " + toString(text_object->getId());
+            text_object->setName(object_name);
+
+            object = text_object;
+        }
+        break;
+
+        case Object::Button_Object: {
+            // m_UpdateLog("adding Button Object with Sprite [" + label + "]", nero::Info);
+
+            sf::Sprite  sprite;
+            sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound(label);
+            sprite.setTextureRect(rect);
+            sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture(label));
+            sprite.setOrigin(rect.width / 2.f, rect.height / 2.f);
+
+            SpriteObject::Ptr sprite_object(new SpriteObject());
+            sprite_object->setSprite(sprite);
+            sprite_object->setTextureName(label);
+            sprite_object->setSecondType(Object::Button_Object);
+            sprite_object->setPosition(position);
+            sprite_object->setId(getNewId());
+            std::string object_name = "button " + toString(sprite_object->getId());
+            sprite_object->setName(object_name);
+
+            sprite_object->setColor(sf::Color(255, 255, 255, 150));
+
+            object = sprite_object;
+        }
+        break;
+
+        case Object::Light_Object: {
+            LightObject::Ptr light_object = LightObject::Ptr(new LightObject());
+            light_object->setLightmap(label);
+            light_object->setColor(sf::Color::White);
+            light_object->setScale(3.f, 3.f);
+            light_object->setPosition(position);
+
+            sf::Sprite  sprite;
+            sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound("point_light_64");
+            sprite.setTextureRect(rect);
+            sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture("point_light_64"));
+            sprite.setOrigin(rect.width / 2.f, rect.height / 2.f);
+            light_object->setSprite(sprite);
+
+            object = light_object;
+        }
+        break;
         }
 
         if(m_SelectedLayer->getSecondType() == type)
         {
             m_SelectedLayer->addChild(object);
-			if(type == Object::Mesh_Object) object->update(EngineConstant.TIME_PER_FRAME);
+            if(type == Object::Mesh_Object)
+                object->update(EngineConstant.TIME_PER_FRAME);
             m_UpdateUndo();
             return false;
         }
-        else if (m_SelectedLayer->getSecondType() == Object::None || m_SelectedLayer->isEmpty())
+        else if(m_SelectedLayer->getSecondType() == Object::None || m_SelectedLayer->isEmpty())
         {
             m_SelectedLayer->setSecondType(type);
             m_SelectedLayer->addChild(object);
-			if(type == Object::Mesh_Object) object->update(EngineConstant.TIME_PER_FRAME);
+            if(type == Object::Mesh_Object)
+                object->update(EngineConstant.TIME_PER_FRAME);
             m_UpdateUndo();
             return true;
         }
@@ -1170,24 +1156,25 @@ namespace nero
             addLayer();
             m_SelectedLayer->setSecondType(type);
             m_SelectedLayer->addChild(object);
-			if(type == Object::Mesh_Object) object->update(EngineConstant.TIME_PER_FRAME);
+            if(type == Object::Mesh_Object)
+                object->update(EngineConstant.TIME_PER_FRAME);
             m_UpdateUndo();
             return true;
         }
     }
 
-	void WorldBuilder::deleteObject(Object::Ptr object)
+    void WorldBuilder::deleteObject(Object::Ptr object)
     {
-		//m_UpdateLog("removing Object [" + object->getName() + "]", nero::Info);
+        // m_UpdateLog("removing Object [" + object->getName() + "]", nero::Info);
 
         if(object->getFirstType() == Object::Mesh_Object)
         {
-			m_MeshEditor->deleteMesh(object->getId());
+            m_MeshEditor->deleteMesh(object->getId());
         }
 
         else if(object->getSecondType() == Object::Meshed_Object)
         {
-			m_MeshEditor->deleteMesh(object->getFirstChild()->getId());
+            m_MeshEditor->deleteMesh(object->getFirstChild()->getId());
         }
 
         m_SelectedLayer->removeChild(object);
@@ -1197,7 +1184,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-	void WorldBuilder::setMeshType(const sf::String& label)
+    void WorldBuilder::setMeshType(const sf::String& label)
     {
         if(!m_SelectedObject)
             return;
@@ -1205,17 +1192,16 @@ namespace nero
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object && m_SelectedObject->getSecondType() != Object::Meshed_Object && m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-		//m_UpdateLog("changing Mesh Type to : " + toString(label) + " Mesh", nero::Info);
+        // m_UpdateLog("changing Mesh Type to : " + toString(label) + " Mesh", nero::Info);
 
         Mesh::Type type;
 
         if(label == "Static")
-			type = Mesh::Type::Static;
-        else if (label == "Kinematic")
-			type = Mesh::Type::Kinematic;
+            type = Mesh::Type::Static;
+        else if(label == "Kinematic")
+            type = Mesh::Type::Kinematic;
         else if(label == "Dynamic")
-			type = Mesh::Type::Dynamic;
-
+            type = Mesh::Type::Dynamic;
 
         MeshObject::Ptr mesh_object;
 
@@ -1229,7 +1215,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-	void WorldBuilder::setMeshFixedRotation(bool flag)
+    void WorldBuilder::setMeshFixedRotation(bool flag)
     {
         if(!m_SelectedObject)
             return;
@@ -1237,7 +1223,7 @@ namespace nero
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object && m_SelectedObject->getSecondType() != Object::Meshed_Object && m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-		// flag ?  m_UpdateLog("enabling fix rotation", nero::Info) :  //m_UpdateLog("disabling fix rotation", nero::Info);
+        // flag ?  m_UpdateLog("enabling fix rotation", nero::Info) :  //m_UpdateLog("disabling fix rotation", nero::Info);
 
         MeshObject::Ptr mesh_object;
 
@@ -1249,18 +1235,17 @@ namespace nero
         mesh_object->setMeshFixedRotation(flag);
 
         m_UpdateUndo();
-
     }
 
-	void WorldBuilder::setMeshSensor(bool flag)
+    void WorldBuilder::setMeshSensor(bool flag)
     {
-         if(!m_SelectedObject)
+        if(!m_SelectedObject)
             return;
 
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object && m_SelectedObject->getSecondType() != Object::Meshed_Object && m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-		// flag ?  m_UpdateLog("enabling sensor mode", nero::Info) :  //m_UpdateLog("disabling sensor mode", nero::Info);
+        // flag ?  m_UpdateLog("enabling sensor mode", nero::Info) :  //m_UpdateLog("disabling sensor mode", nero::Info);
 
         MeshObject::Ptr mesh_object;
 
@@ -1272,18 +1257,17 @@ namespace nero
         mesh_object->setMeshSensor(flag);
 
         m_UpdateUndo();
-
     }
 
-	void WorldBuilder::setMeshAllowSleep(bool flag)
+    void WorldBuilder::setMeshAllowSleep(bool flag)
     {
-       if(!m_SelectedObject)
+        if(!m_SelectedObject)
             return;
 
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object && m_SelectedObject->getSecondType() != Object::Meshed_Object && m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-		// flag ?  m_UpdateLog("enabling allow to sleeping", nero::Info) :  //m_UpdateLog("disabling allow to sleeping", nero::Info);
+        // flag ?  m_UpdateLog("enabling allow to sleeping", nero::Info) :  //m_UpdateLog("disabling allow to sleeping", nero::Info);
 
         MeshObject::Ptr mesh_object;
 
@@ -1297,7 +1281,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-	void WorldBuilder::setMeshDensity(float density)
+    void WorldBuilder::setMeshDensity(float density)
     {
         if(!m_SelectedObject)
             return;
@@ -1317,7 +1301,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-	void WorldBuilder::setMeshFriction(float friction)
+    void WorldBuilder::setMeshFriction(float friction)
     {
         if(!m_SelectedObject)
             return;
@@ -1337,7 +1321,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-	void WorldBuilder::setMeshRestitution(float restitution)
+    void WorldBuilder::setMeshRestitution(float restitution)
     {
         if(!m_SelectedObject)
             return;
@@ -1357,7 +1341,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-	void WorldBuilder::setMeshGravityScale(float gravityScale)
+    void WorldBuilder::setMeshGravityScale(float gravityScale)
     {
         if(!m_SelectedObject)
             return;
@@ -1377,244 +1361,244 @@ namespace nero
         m_UpdateUndo();
     }
 
-	void WorldBuilder::buildScene(Object::Ptr rootObject)
+    void WorldBuilder::buildScene(Object::Ptr rootObject)
     {
-		/*for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
+        /*for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
+{
+    if(!(*layer)->isVisible())
+        continue;
+
+    switch((*layer)->getSecondType())
+    {
+        case Object::Sprite_Object:
         {
-            if(!(*layer)->isVisible())
-                continue;
+            Object::Ptr layer_object = (*layer)->clone();
 
-            switch((*layer)->getSecondType())
+            auto children = (*layer)->getAllChild();
+
+            for(auto it = children->begin(); it != children->end(); it++)
             {
-                case Object::Sprite_Object:
-                {
-                    Object::Ptr layer_object = (*layer)->clone();
-
-                    auto children = (*layer)->getAllChild();
-
-                    for(auto it = children->begin(); it != children->end(); it++)
-                    {
-                        Object::Ptr sprite_object = (*it)->clone();
-                        layer_object->addChild(sprite_object);
-                    }
-
-                    rootObject->addChild(layer_object);
-
-                }break;
-
-                case Object::Mesh_Object:
-                {
-                    Object::Ptr layer_object = (*layer)->clone();
-                    layer_object->setSecondType(Object::Physic_Object);
-
-                    auto children = (*layer)->getAllChild();
-
-                    for(auto it = children->begin(); it != children->end(); it++)
-                    {
-                        //convert into MeshObject
-                        MeshObject::Ptr mesh_object = MeshObject::Cast(*it);
-
-						if(!mesh_object->getMesh()->isValid())
-							continue;
-
-                        PhysicObject::Ptr physic_object = m_PhysicObjectManager.createObject(mesh_object->getMesh());
-                        physic_object->setName(mesh_object->getName());
-                        physic_object->setCategory(mesh_object->getCategory());
-						physic_object->setId(mesh_object->getObjectId());
-                        physic_object->setUserData((void*)physic_object->getId());
-
-						if(m_LightManager && mesh_object->getMesh()->getType() == Mesh::Type::Static)
-						{
-							switch(mesh_object->getMesh()->getShape())
-							{
-								case Mesh::Circle_Mesh:
-								{
-									m_LightManager->createLightShape(mesh_object->getMesh()->getCircleShape());
-								}break;
-
-								case Mesh::Line_Mesh:
-								case Mesh::Chain_Mesh:
-								{
-
-									for(sf::RectangleShape shape : mesh_object->getMesh()->getLineTable())
-									{
-										m_LightManager->createLightShape(shape);
-									}
-
-								}break;
-
-								case Mesh::Shape::Polygon:
-								{
-
-									for(sf::ConvexShape shape : mesh_object->getMesh()->getPolygonTable())
-									{
-										m_LightManager->createLightShape(shape);
-									}
-
-								}break;
-							}
-
-						}
-
-                        layer_object->addChild(physic_object);
-                    }
-
-                    rootObject->addChild(layer_object);
-
-                }break;
-
-                case Object::Meshed_Object:
-                {
-                    Object::Ptr layer_object = (*layer)->clone();
-
-                    layer_object->setSecondType(Object::Solid_Object);
-
-                    auto children = (*layer)->getAllChild();
-
-                    for(auto it = children->begin(); it != children->end(); it++)
-                    {
-                        //convert into MeshObject
-                        MeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
-
-                        if(!mesh_object->getMesh()->isValid())
-                            break;
-
-                        PhysicObject::Ptr physic_object = m_PhysicObjectManager.createObject(mesh_object->getMesh());
-                        physic_object->setSecondType(Object::Solid_Object);
-                        physic_object->setName(mesh_object->getName());
-                        physic_object->setCategory(mesh_object->getCategory());
-						physic_object->setId(mesh_object->getObjectId());
-                        physic_object->setUserData((void*)physic_object->getId());
-
-                        Object::Ptr sprite_object = (*it)->clone();
-                        sprite_object->setSecondType(Object::Sprite_Object);
-                        sprite_object->setIsUpdateable(true);
-                        sprite_object->setPosition(sprite_object->getPosition()-mesh_object->getMesh()->getCenter());
-
-                        physic_object->addChild(sprite_object);
-
-                        layer_object->addChild(physic_object);
-                    }
-
-                    rootObject->addChild(layer_object);
-
-                }break;
-
-                case Object::Animation_Object:
-                {
-                    Object::Ptr layer_object = (*layer)->clone();
-
-                    auto children = (*layer)->getAllChild();
-
-                    for(auto it = children->begin(); it != children->end(); it++)
-                    {
-                        Object::Ptr animation_object = (*it)->clone();
-                        layer_object->addChild(animation_object);
-                    }
-
-                    rootObject->addChild(layer_object);
-
-                }break;
-
-                case Object::Animation_Meshed_Object:
-                {
-                    Object::Ptr layer_object = (*layer)->clone();
-
-                    layer_object->setSecondType(Object::Animation_Solid_Object);
-
-                    auto children = (*layer)->getAllChild();
-
-                    for(auto it = children->begin(); it != children->end(); it++)
-                    {
-                        //Convert into MeshObject
-                        MeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
-
-                        if(!mesh_object->getMesh()->isValid())
-                            break;
-
-                        PhysicObject::Ptr physic_object = m_PhysicObjectManager.createObject(mesh_object->getMesh());
-                        physic_object->setSecondType(Object::Animation_Solid_Object);
-                        physic_object->setName(mesh_object->getName());
-                        physic_object->setCategory(mesh_object->getCategory());
-						physic_object->setId(mesh_object->getObjectId());
-                        physic_object->setUserData((void*)physic_object->getId());
-
-
-                        Object::Ptr animation_object = (*it)->clone();
-                        animation_object->setSecondType(Object::Animation_Object);
-                        animation_object->setPosition(animation_object->getPosition()-mesh_object->getMesh()->getCenter());
-
-                        physic_object->addChild(animation_object);
-
-                        layer_object->addChild(physic_object);
-                    }
-
-                    rootObject->addChild(layer_object);
-
-                }break;
-
-                case Object::Text_Object:
-                {
-                    Object::Ptr layer_object = (*layer)->clone();
-
-                    auto children = (*layer)->getAllChild();
-
-                    for(auto it = children->begin(); it != children->end(); it++)
-                    {
-                        Object::Ptr text_object = (*it)->clone();
-                        layer_object->addChild(text_object);
-                    }
-
-                    rootObject->addChild(layer_object);
-
-                }break;
-
-				case Object::Light_Object:
-				{
-					if(m_LightManager)
-					{
-						Object::Ptr layer_object = (*layer)->clone();
-
-						auto children = (*layer)->getAllChild();
-
-						for(auto it = children->begin(); it != children->end(); it++)
-						{
-							Object::Ptr object = (*it)->clone();
-
-							LightObject::Ptr light_object = LightObject::Cast(object);
-							//create the light object
-							ltbl::LightPointEmission* point_light = m_LightManager->createLightPointEmission();
-							sf::Texture& light_map = m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
-							point_light->setOrigin(sf::Vector2f(light_map.getSize().x * 0.5f, light_map.getSize().y * 0.5f));
-							point_light->setTexture(light_map);
-							point_light->setScale(light_object->getScale());
-							point_light->setColor(light_object->getColor());
-							point_light->setPosition(light_object->getPosition());
-
-							light_object->setLight(point_light);
-
-							light_object->setCloneCallback([=]() -> ltbl::LightPointEmission*
-							{
-								ltbl::LightPointEmission* point_light = m_LightManager->createLightPointEmission();
-								sf::Texture& light_map = m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
-								point_light->setOrigin(sf::Vector2f(light_map.getSize().x * 0.5f, light_map.getSize().y * 0.5f));
-								point_light->setTexture(light_map);
-
-								return point_light;
-							});
-
-							layer_object->addChild(light_object);
-						}
-
-						rootObject->addChild(layer_object);
-					}
-
-				}break;
+                Object::Ptr sprite_object = (*it)->clone();
+                layer_object->addChild(sprite_object);
             }
-		}*/
+
+            rootObject->addChild(layer_object);
+
+        }break;
+
+        case Object::Mesh_Object:
+        {
+            Object::Ptr layer_object = (*layer)->clone();
+            layer_object->setSecondType(Object::Physic_Object);
+
+            auto children = (*layer)->getAllChild();
+
+            for(auto it = children->begin(); it != children->end(); it++)
+            {
+                //convert into MeshObject
+                MeshObject::Ptr mesh_object = MeshObject::Cast(*it);
+
+                                        if(!mesh_object->getMesh()->isValid())
+                                                continue;
+
+                PhysicObject::Ptr physic_object = m_PhysicObjectManager.createObject(mesh_object->getMesh());
+                physic_object->setName(mesh_object->getName());
+                physic_object->setCategory(mesh_object->getCategory());
+                                        physic_object->setId(mesh_object->getObjectId());
+                physic_object->setUserData((void*)physic_object->getId());
+
+                                        if(m_LightManager && mesh_object->getMesh()->getType() == Mesh::Type::Static)
+                                        {
+                                                switch(mesh_object->getMesh()->getShape())
+                                                {
+                                                        case Mesh::Circle_Mesh:
+                                                        {
+                                                                m_LightManager->createLightShape(mesh_object->getMesh()->getCircleShape());
+                                                        }break;
+
+                                                        case Mesh::Line_Mesh:
+                                                        case Mesh::Chain_Mesh:
+                                                        {
+
+                                                                for(sf::RectangleShape shape : mesh_object->getMesh()->getLineTable())
+                                                                {
+                                                                        m_LightManager->createLightShape(shape);
+                                                                }
+
+                                                        }break;
+
+                                                        case Mesh::Shape::Polygon:
+                                                        {
+
+                                                                for(sf::ConvexShape shape : mesh_object->getMesh()->getPolygonTable())
+                                                                {
+                                                                        m_LightManager->createLightShape(shape);
+                                                                }
+
+                                                        }break;
+                                                }
+
+                                        }
+
+                layer_object->addChild(physic_object);
+            }
+
+            rootObject->addChild(layer_object);
+
+        }break;
+
+        case Object::Meshed_Object:
+        {
+            Object::Ptr layer_object = (*layer)->clone();
+
+            layer_object->setSecondType(Object::Solid_Object);
+
+            auto children = (*layer)->getAllChild();
+
+            for(auto it = children->begin(); it != children->end(); it++)
+            {
+                //convert into MeshObject
+                MeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
+
+                if(!mesh_object->getMesh()->isValid())
+                    break;
+
+                PhysicObject::Ptr physic_object = m_PhysicObjectManager.createObject(mesh_object->getMesh());
+                physic_object->setSecondType(Object::Solid_Object);
+                physic_object->setName(mesh_object->getName());
+                physic_object->setCategory(mesh_object->getCategory());
+                                        physic_object->setId(mesh_object->getObjectId());
+                physic_object->setUserData((void*)physic_object->getId());
+
+                Object::Ptr sprite_object = (*it)->clone();
+                sprite_object->setSecondType(Object::Sprite_Object);
+                sprite_object->setIsUpdateable(true);
+                sprite_object->setPosition(sprite_object->getPosition()-mesh_object->getMesh()->getCenter());
+
+                physic_object->addChild(sprite_object);
+
+                layer_object->addChild(physic_object);
+            }
+
+            rootObject->addChild(layer_object);
+
+        }break;
+
+        case Object::Animation_Object:
+        {
+            Object::Ptr layer_object = (*layer)->clone();
+
+            auto children = (*layer)->getAllChild();
+
+            for(auto it = children->begin(); it != children->end(); it++)
+            {
+                Object::Ptr animation_object = (*it)->clone();
+                layer_object->addChild(animation_object);
+            }
+
+            rootObject->addChild(layer_object);
+
+        }break;
+
+        case Object::Animation_Meshed_Object:
+        {
+            Object::Ptr layer_object = (*layer)->clone();
+
+            layer_object->setSecondType(Object::Animation_Solid_Object);
+
+            auto children = (*layer)->getAllChild();
+
+            for(auto it = children->begin(); it != children->end(); it++)
+            {
+                //Convert into MeshObject
+                MeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
+
+                if(!mesh_object->getMesh()->isValid())
+                    break;
+
+                PhysicObject::Ptr physic_object = m_PhysicObjectManager.createObject(mesh_object->getMesh());
+                physic_object->setSecondType(Object::Animation_Solid_Object);
+                physic_object->setName(mesh_object->getName());
+                physic_object->setCategory(mesh_object->getCategory());
+                                        physic_object->setId(mesh_object->getObjectId());
+                physic_object->setUserData((void*)physic_object->getId());
+
+
+                Object::Ptr animation_object = (*it)->clone();
+                animation_object->setSecondType(Object::Animation_Object);
+                animation_object->setPosition(animation_object->getPosition()-mesh_object->getMesh()->getCenter());
+
+                physic_object->addChild(animation_object);
+
+                layer_object->addChild(physic_object);
+            }
+
+            rootObject->addChild(layer_object);
+
+        }break;
+
+        case Object::Text_Object:
+        {
+            Object::Ptr layer_object = (*layer)->clone();
+
+            auto children = (*layer)->getAllChild();
+
+            for(auto it = children->begin(); it != children->end(); it++)
+            {
+                Object::Ptr text_object = (*it)->clone();
+                layer_object->addChild(text_object);
+            }
+
+            rootObject->addChild(layer_object);
+
+        }break;
+
+                        case Object::Light_Object:
+                        {
+                                if(m_LightManager)
+                                {
+                                        Object::Ptr layer_object = (*layer)->clone();
+
+                                        auto children = (*layer)->getAllChild();
+
+                                        for(auto it = children->begin(); it != children->end(); it++)
+                                        {
+                                                Object::Ptr object = (*it)->clone();
+
+                                                LightObject::Ptr light_object = LightObject::Cast(object);
+                                                //create the light object
+                                                ltbl::LightPointEmission* point_light = m_LightManager->createLightPointEmission();
+                                                sf::Texture& light_map = m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
+                                                point_light->setOrigin(sf::Vector2f(light_map.getSize().x * 0.5f, light_map.getSize().y * 0.5f));
+                                                point_light->setTexture(light_map);
+                                                point_light->setScale(light_object->getScale());
+                                                point_light->setColor(light_object->getColor());
+                                                point_light->setPosition(light_object->getPosition());
+
+                                                light_object->setLight(point_light);
+
+                                                light_object->setCloneCallback([=]() -> ltbl::LightPointEmission*
+                                                {
+                                                        ltbl::LightPointEmission* point_light = m_LightManager->createLightPointEmission();
+                                                        sf::Texture& light_map = m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
+                                                        point_light->setOrigin(sf::Vector2f(light_map.getSize().x * 0.5f, light_map.getSize().y * 0.5f));
+                                                        point_light->setTexture(light_map);
+
+                                                        return point_light;
+                                                });
+
+                                                layer_object->addChild(light_object);
+                                        }
+
+                                        rootObject->addChild(layer_object);
+                                }
+
+                        }break;
+    }
+        }*/
     }
 
-	void WorldBuilder::destroyAllPhysicObject(Object::Ptr rootObject)
+    void WorldBuilder::destroyAllPhysicObject(Object::Ptr rootObject)
     {
         auto children = rootObject->getAllChild();
 
@@ -1633,36 +1617,35 @@ namespace nero
         }
     }
 
-
-	void WorldBuilder::setUpdateUI(std::function<void()>  fn)
+    void WorldBuilder::setUpdateUI(std::function<void()> fn)
     {
         m_UpdateUI = fn;
     }
 
-	void WorldBuilder::setUpdateUndo(std::function<void()>  fn)
+    void WorldBuilder::setUpdateUndo(std::function<void()> fn)
     {
         m_UpdateUndo = fn;
-		 //m_MeshEditor->setUpdateUndo(fn);
+        // m_MeshEditor->setUpdateUndo(fn);
     }
 
-	void WorldBuilder::setUpdateLog(std::function<void(const std::string&, int)>  fn)
+    void WorldBuilder::setUpdateLog(std::function<void(const std::string&, int)> fn)
     {
         m_UpdateLog = fn;
-		//m_MeshEditor->setUpdateLog(fn);
+        // m_MeshEditor->setUpdateLog(fn);
     }
 
-	void WorldBuilder::setUpdateLogIf(std::function<void(const std::string&, bool, int)>  fn)
+    void WorldBuilder::setUpdateLogIf(std::function<void(const std::string&, bool, int)> fn)
     {
         m_UpdateLogIf = fn;
-		//m_MeshEditor->setUpdateLogIf(fn);
+        // m_MeshEditor->setUpdateLogIf(fn);
     }
 
-	Object::Ptr WorldBuilder::getSelectedObject()
+    Object::Ptr WorldBuilder::getSelectedObject()
     {
         return m_SelectedObject;
     }
 
-	void WorldBuilder::setObjectName(const sf::String& name)
+    void WorldBuilder::setObjectName(const sf::String& name)
     {
         if(!m_SelectedObject)
             return;
@@ -1675,7 +1658,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-	void WorldBuilder::setObjectCategory(const sf::String& category)
+    void WorldBuilder::setObjectCategory(const sf::String& category)
     {
         if(!m_SelectedObject)
             return;
@@ -1688,17 +1671,17 @@ namespace nero
         m_UpdateUndo();
     }
 
-	SpriteObject::Ptr WorldBuilder::loadSprite(nlohmann::json& json)
+    SpriteObject::Ptr WorldBuilder::loadSprite(nlohmann::json& json)
     {
-        sf::Sprite sprite;
-		sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound(json["sprite"].get<std::string>());
+        sf::Sprite  sprite;
+        sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound(json["sprite"].get<std::string>());
         sprite.setTextureRect(rect);
-		sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture(json["sprite"].get<std::string>()));
-        sprite.setOrigin(rect.width/2.f, rect.height/2.f);
+        sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture(json["sprite"].get<std::string>()));
+        sprite.setOrigin(rect.width / 2.f, rect.height / 2.f);
 
         SpriteObject::Ptr sprite_object(new SpriteObject());
         sprite_object->setSprite(sprite);
-		sprite_object->setTextureName(toString(json["sprite"].get<std::string>()));
+        sprite_object->setTextureName(toString(json["sprite"].get<std::string>()));
         sprite_object->setPosition(json["position"]["x"], json["position"]["y"]);
         sprite_object->setRotation(json["rotation"]);
         sprite_object->setScale(json["scale"]["x"], json["scale"]["y"]);
@@ -1716,80 +1699,80 @@ namespace nero
         return sprite_object;
     }
 
-	MeshObject::Ptr WorldBuilder::loadMesh(nlohmann::json& json)
+    MeshObject::Ptr WorldBuilder::loadMesh(nlohmann::json& json)
     {
-		/*Mesh mesh = Mesh();
+        /*Mesh mesh = Mesh();
 
-        nlohmann::json mesh_json = json["mesh"];
-        //shape
-        if(mesh_json["shape"] == "polygon_mesh")
-			mesh.setShape(Mesh::Shape::Polygon);
-        else if(mesh_json["shape"] == "circle_mesh")
-            mesh.setShape(Mesh::Circle_Mesh);
-        else if(mesh_json["shape"] == "line_mesh")
-            mesh.setShape(Mesh::Line_Mesh);
-        else if(mesh_json["shape"] == "chain_mesh")
-            mesh.setShape(Mesh::Chain_Mesh);
+nlohmann::json mesh_json = json["mesh"];
+//shape
+if(mesh_json["shape"] == "polygon_mesh")
+                mesh.setShape(Mesh::Shape::Polygon);
+else if(mesh_json["shape"] == "circle_mesh")
+    mesh.setShape(Mesh::Circle_Mesh);
+else if(mesh_json["shape"] == "line_mesh")
+    mesh.setShape(Mesh::Line_Mesh);
+else if(mesh_json["shape"] == "chain_mesh")
+    mesh.setShape(Mesh::Chain_Mesh);
 
-        //type
-        if(mesh_json["type"] == "static_mesh")
-			mesh.setType(Mesh::Type::Static);
-        else if(mesh_json["type"] == "dynamic_mesh")
-			mesh.setType(Mesh::Type::Dynamic);
-        else if(mesh_json["type"] == "kinematic_mesh")
-			mesh.setType(Mesh::Type::Kinematic);
+//type
+if(mesh_json["type"] == "static_mesh")
+                mesh.setType(Mesh::Type::Static);
+else if(mesh_json["type"] == "dynamic_mesh")
+                mesh.setType(Mesh::Type::Dynamic);
+else if(mesh_json["type"] == "kinematic_mesh")
+                mesh.setType(Mesh::Type::Kinematic);
 
-        //properties
-        mesh.setFixedRotation(mesh_json["fixed_rotation"]);
-        mesh.setIsSensor(mesh_json["is_sensor"]);
-        mesh.setAllowSleep(mesh_json["allow_sleep"]);
-        mesh.setDensity(mesh_json["density"]);
-        mesh.setFriction(mesh_json["friction"]);
-        mesh.setRestitution(mesh_json["restitution"]);
-        mesh.setGravityScale(mesh_json["gravity_scale"]);
-        mesh.setIsValid(mesh_json["is_valid"]);
-		mesh.setMeshId(json["object_id"]);
+//properties
+mesh.setFixedRotation(mesh_json["fixed_rotation"]);
+mesh.setIsSensor(mesh_json["is_sensor"]);
+mesh.setAllowSleep(mesh_json["allow_sleep"]);
+mesh.setDensity(mesh_json["density"]);
+mesh.setFriction(mesh_json["friction"]);
+mesh.setRestitution(mesh_json["restitution"]);
+mesh.setGravityScale(mesh_json["gravity_scale"]);
+mesh.setIsValid(mesh_json["is_valid"]);
+        mesh.setMeshId(json["object_id"]);
 
-        //vertex
-        nlohmann::json vertex_table = mesh_json["vertex_table"];
+//vertex
+nlohmann::json vertex_table = mesh_json["vertex_table"];
 
-        for (auto& vertex : vertex_table)
-            mesh.addVertex(sf::Vector2f(vertex["x"], vertex["y"]));
+for (auto& vertex : vertex_table)
+    mesh.addVertex(sf::Vector2f(vertex["x"], vertex["y"]));
 
-        mesh.updateShape();
-        mesh.updateColor();
+mesh.updateShape();
+mesh.updateColor();
 
-        MeshObject::Ptr mesh_object(new MeshObject());
+MeshObject::Ptr mesh_object(new MeshObject());
 
-        mesh_object->setMesh(mesh);
-        mesh_object->setId(json["object_id"]);
-        mesh_object->setName(json["name"].get<std::string>());
-        mesh_object->setCategory(json["category"].get<std::string>());
-        mesh_object->setSecondType(Object::Mesh_Object);
-        mesh_object->setIsVisible(json["is_visible"]);
-        mesh_object->setIsUpdateable(json["is_updateable"]);
-        mesh_object->setIsSelectable(json["is_selectable"]);
-        mesh_object->setIsSelected(json["is_selected"]);
+mesh_object->setMesh(mesh);
+mesh_object->setId(json["object_id"]);
+mesh_object->setName(json["name"].get<std::string>());
+mesh_object->setCategory(json["category"].get<std::string>());
+mesh_object->setSecondType(Object::Mesh_Object);
+mesh_object->setIsVisible(json["is_visible"]);
+mesh_object->setIsUpdateable(json["is_updateable"]);
+mesh_object->setIsSelectable(json["is_selectable"]);
+mesh_object->setIsSelected(json["is_selected"]);
 
-		//m_MeshEditor->addMesh(mesh_object);
+        //m_MeshEditor->addMesh(mesh_object);
 
-		return mesh_object;*/
+        return mesh_object;*/
 
-		return nullptr;
+        return nullptr;
     }
 
-	TextObject::Ptr WorldBuilder::loadText(nlohmann::json& json)
+    TextObject::Ptr WorldBuilder::loadText(nlohmann::json& json)
     {
         nero_log("loading text");
 
         sf::Text text;
-		text.setFont(m_ResourceManager->getFontHolder()->getFont(json["font"].get<std::string>()));
+        text.setFont(m_ResourceManager->getFontHolder()->getFont(json["font"].get<std::string>()));
         text.setString(json["content"].get<std::string>());
         text.setCharacterSize(json["font_size"]);
-        //text.setLetterSpacing(json["letter_spacing"]);
-        //text.setLineSpacing(json["line_spacing"]);
+        // text.setLetterSpacing(json["letter_spacing"]);
+        // text.setLineSpacing(json["line_spacing"]);
         text.setOutlineThickness(json["outline_thickness"]);
-        text.setOrigin(text.getLocalBounds().width/2.f, text.getLocalBounds().height/2.f);
+        text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
 
         nero_log("loading text 1");
 
@@ -1825,15 +1808,14 @@ namespace nero
         return text_object;
     }
 
-
-	void WorldBuilder::updateLayerOrder()
+    void WorldBuilder::updateLayerOrder()
     {
         int i = 0;
         for(auto layer : m_LayerTable)
             layer->setOrder(i++);
     }
 
-	sf::Color WorldBuilder::getLayerColor()
+    sf::Color WorldBuilder::getLayerColor()
     {
         if(m_SelectedLayer && !m_SelectedLayer->isEmpty())
         {
@@ -1843,40 +1825,40 @@ namespace nero
         return sf::Color::White;
     }
 
-	nlohmann::json WorldBuilder::saveScene()
+    nlohmann::json WorldBuilder::saveScene()
     {
         std::vector<nlohmann::json> layer_table;
 
         for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
-		{
-			layer_table.push_back((*layer)->toJson());
-		}
+        {
+            layer_table.push_back((*layer)->toJson());
+        }
 
         nlohmann::json scene;
 
-        scene["layer_table"]    = layer_table;
-        scene["layer_count"]    = m_LayerCount;
-        scene["object_count"]   = m_ObjectCount;
-		scene["canvas_color"]   = graphics::colorToJson(m_CanvasColor);
+        scene["layer_table"]  = layer_table;
+        scene["layer_count"]  = m_LayerCount;
+        scene["object_count"] = m_ObjectCount;
+        scene["canvas_color"] = graphics::colorToJson(m_CanvasColor);
 
         return scene;
     }
 
-	void WorldBuilder::loadScene(nlohmann::json scene)
+    void WorldBuilder::loadScene(nlohmann::json scene)
     {
         nero_log("loading scene");
 
         m_LayerTable.clear();
-		m_MeshEditor->destroyAllMesh();
-        m_SelectedObject = nullptr;
+        m_MeshEditor->destroyAllMesh();
+        m_SelectedObject           = nullptr;
 
-        m_LayerCount    = scene["layer_count"];
-        m_ObjectCount   = scene["object_count"];
-		m_CanvasColor   = graphics::colorFromJson(scene["canvas_color"]);
+        m_LayerCount               = scene["layer_count"];
+        m_ObjectCount              = scene["object_count"];
+        m_CanvasColor              = graphics::colorFromJson(scene["canvas_color"]);
 
         nlohmann::json layer_table = scene["layer_table"];
 
-        for (auto& layer : layer_table)
+        for(auto& layer : layer_table)
         {
             Object::Type layer_type;
 
@@ -1897,7 +1879,6 @@ namespace nero
             else if(layer["type"] == "empty_layer")
                 layer_type = Object::None;
 
-
             LayerObject::Ptr layer_object(new LayerObject());
 
             layer_object->setId(layer["object_id"]);
@@ -1909,145 +1890,135 @@ namespace nero
             layer_object->setIsSelectable(layer["is_selectable"]);
             layer_object->setIsSelected(layer["is_selected"]);
 
-			//layer_object->setOrder(layer["order"]);
+            // layer_object->setOrder(layer["order"]);
 
             if(layer["is_selected"])
                 m_SelectedLayer = layer_object;
 
             switch(layer_type)
             {
-                case Object::Sprite_Object:
+            case Object::Sprite_Object: {
+                nlohmann::json sprite_table = layer["sprite_table"];
+
+                for(auto& sprite : sprite_table)
+                    layer_object->addChild(loadSprite(sprite));
+
+                m_LayerTable.push_back(layer_object);
+            }
+            break;
+
+            case Object::Mesh_Object: {
+                nlohmann::json mesh_table = layer["mesh_table"];
+
+                for(auto& mesh : mesh_table)
+                    layer_object->addChild(loadMesh(mesh));
+
+                m_LayerTable.push_back(layer_object);
+            }
+            break;
+
+            case Object::Meshed_Object: {
+                nlohmann::json meshed_table = layer["meshed_table"];
+
+                for(auto& meshed : meshed_table)
                 {
-                    nlohmann::json sprite_table = layer["sprite_table"];
+                    SpriteObject::Ptr sprite_object = loadSprite(meshed["sprite"]);
+                    MeshObject::Ptr   mesh_object   = loadMesh(meshed["mesh"]);
 
-                    for (auto& sprite : sprite_table)
-                        layer_object->addChild(loadSprite(sprite));
+                    sprite_object->setSecondType(Object::Meshed_Object);
+                    sprite_object->addChild(mesh_object);
 
-                    m_LayerTable.push_back(layer_object);
+                    layer_object->addChild(sprite_object);
+                }
 
-                } break;
+                m_LayerTable.push_back(layer_object);
+            }
+            break;
 
-                case Object::Mesh_Object:
+            case Object::Animation_Object: {
+                nlohmann::json animation_table = layer["animation_table"];
+
+                for(auto& animation : animation_table)
+                    layer_object->addChild(loadAnimation(animation));
+
+                m_LayerTable.push_back(layer_object);
+            }
+            break;
+
+            case Object::Animation_Meshed_Object: {
+                nlohmann::json meshed_table = layer["animation_meshed_table"];
+
+                for(auto& meshed : meshed_table)
                 {
-                    nlohmann::json mesh_table = layer["mesh_table"];
+                    AnimationObject::Ptr animation_object = loadAnimation(meshed["animation"]);
+                    MeshObject::Ptr      mesh_object      = loadMesh(meshed["mesh"]);
 
-                    for (auto& mesh : mesh_table)
-                        layer_object->addChild(loadMesh(mesh));
+                    animation_object->setSecondType(Object::Meshed_Object);
+                    animation_object->addChild(mesh_object);
 
-                    m_LayerTable.push_back(layer_object);
+                    layer_object->addChild(animation_object);
+                }
 
-                } break;
+                m_LayerTable.push_back(layer_object);
+            }
+            break;
 
-                case Object::Meshed_Object:
-                {
-                    nlohmann::json meshed_table = layer["meshed_table"];
+            case Object::Button_Object: {
+                nlohmann::json button_table = layer["button_table"];
 
-                    for (auto& meshed : meshed_table)
-                    {
-                        SpriteObject::Ptr   sprite_object   = loadSprite(meshed["sprite"]);
-                        MeshObject::Ptr     mesh_object     = loadMesh(meshed["mesh"]);
+                for(auto& sprite : button_table)
+                    layer_object->addChild(loadSprite(sprite));
 
-                        sprite_object->setSecondType(Object::Meshed_Object);
-                        sprite_object->addChild(mesh_object);
+                m_LayerTable.push_back(layer_object);
+            }
+            break;
 
-                        layer_object->addChild(sprite_object);
+            case Object::Text_Object: {
+                nlohmann::json text_table = layer["text_table"];
 
-                    }
+                for(auto& text : text_table)
+                    layer_object->addChild(loadText(text));
 
-                    m_LayerTable.push_back(layer_object);
+                m_LayerTable.push_back(layer_object);
+            }
+            break;
 
-                } break;
-
-                case Object::Animation_Object:
-                {
-                    nlohmann::json animation_table = layer["animation_table"];
-
-                    for (auto& animation : animation_table)
-                        layer_object->addChild(loadAnimation(animation));
-
-                    m_LayerTable.push_back(layer_object);
-
-                } break;
-
-                case Object::Animation_Meshed_Object:
-                {
-                    nlohmann::json meshed_table = layer["animation_meshed_table"];
-
-                    for (auto& meshed : meshed_table)
-                    {
-                        AnimationObject::Ptr      animation_object   = loadAnimation(meshed["animation"]);
-                        MeshObject::Ptr            mesh_object     = loadMesh(meshed["mesh"]);
-
-                        animation_object->setSecondType(Object::Meshed_Object);
-                        animation_object->addChild(mesh_object);
-
-                        layer_object->addChild(animation_object);
-
-                    }
-
-                    m_LayerTable.push_back(layer_object);
-
-                } break;
-
-                case Object::Button_Object:
-                {
-                    nlohmann::json button_table = layer["button_table"];
-
-                    for (auto& sprite : button_table)
-                        layer_object->addChild(loadSprite(sprite));
-
-                    m_LayerTable.push_back(layer_object);
-
-                } break;
-
-                case Object::Text_Object:
-                {
-                    nlohmann::json text_table = layer["text_table"];
-
-                    for (auto& text : text_table)
-                        layer_object->addChild(loadText(text));
-
-                    m_LayerTable.push_back(layer_object);
-
-                } break;
-
-                case Object::None:
-                {
-                    m_LayerTable.push_back(layer_object);
-
-                } break;
+            case Object::None: {
+                m_LayerTable.push_back(layer_object);
+            }
+            break;
             }
         }
     }
 
-	void WorldBuilder::setPhysicWorld(b2World* world)
+    void WorldBuilder::setPhysicWorld(b2World* world)
     {
         m_PhysicWorld = world;
-		//m_PhysicObjectManager.setWorld(world);
+        // m_PhysicObjectManager.setWorld(world);
     }
 
-	int WorldBuilder::getNewId()
+    int WorldBuilder::getNewId()
     {
         return m_ObjectCount++;
     }
 
-	AnimationObject::Ptr WorldBuilder::loadAnimation(nlohmann::json& json)
+    AnimationObject::Ptr WorldBuilder::loadAnimation(nlohmann::json& json)
     {
         nero_log("loading animation");
 
         AnimationObject::Ptr animation_object(new AnimationObject());
 
-        std::string label = json["animation"].get<std::string>();
+        std::string          label = json["animation"].get<std::string>();
 
-        Animation animation;
-		auto sequenceMap = m_ResourceManager->getAnimationHolder()->getSequenceMap(label);
-        auto sequenceJon = json["sequence_table"];
+        Animation            animation;
+        auto                 sequenceMap = m_ResourceManager->getAnimationHolder()->getSequenceMap(label);
+        auto                 sequenceJon = json["sequence_table"];
 
         nero_log("loading animation");
 
         nero_log(sequenceMap.size());
 
-        for(auto it=sequenceMap.begin(); it!=sequenceMap.end(); it++)
+        for(auto it = sequenceMap.begin(); it != sequenceMap.end(); it++)
         {
             AnimationSequence sequence;
             sequence.setFrameTable(it->second);
@@ -2057,16 +2028,15 @@ namespace nero
             animation.addSequence(it->first, sequence);
         }
 
-        sf::Sprite sprite;
-		sf::IntRect rect = m_ResourceManager->getAnimationHolder()->getAnimationBound(label);
+        sf::Sprite  sprite;
+        sf::IntRect rect = m_ResourceManager->getAnimationHolder()->getAnimationBound(label);
         sprite.setTextureRect(rect);
-		sprite.setTexture(m_ResourceManager->getAnimationHolder()->getTexture(label));
-        sprite.setOrigin(rect.width/2.f, rect.height/2.f);
-
+        sprite.setTexture(m_ResourceManager->getAnimationHolder()->getTexture(label));
+        sprite.setOrigin(rect.width / 2.f, rect.height / 2.f);
 
         animation.setSprite(sprite);
         animation.setTexture(label);
-		animation.setSequence(m_ResourceManager->getAnimationHolder()->getDefaultSequence(label));
+        animation.setSequence(m_ResourceManager->getAnimationHolder()->getDefaultSequence(label));
 
         animation_object->setAnimation(animation);
 
@@ -2087,20 +2057,20 @@ namespace nero
         return animation_object;
     }
 
-	void WorldBuilder::moveObjectUp()
+    void WorldBuilder::moveObjectUp()
     {
         if(!m_SelectedLayer || !m_SelectedObject)
             return;
 
-		//m_UpdateLog("moving Object [" + m_SelectedObject->getName() +  "] Up", nero::Info);
+        // m_UpdateLog("moving Object [" + m_SelectedObject->getName() +  "] Up", nero::Info);
 
         auto childTable = m_SelectedLayer->getAllChild();
 
         for(auto it = childTable->begin(); it != childTable->end(); it++)
         {
-            if((*it)->getId() == m_SelectedObject->getId() && it != (childTable->end()-1))
+            if((*it)->getId() == m_SelectedObject->getId() && it != (childTable->end() - 1))
             {
-                std::iter_swap(it, it+1);
+                std::iter_swap(it, it + 1);
                 m_UpdateUndo();
 
                 break;
@@ -2108,12 +2078,12 @@ namespace nero
         }
     }
 
-	void WorldBuilder::moveObjectDown()
+    void WorldBuilder::moveObjectDown()
     {
         if(!m_SelectedLayer || !m_SelectedObject)
             return;
 
-		//m_UpdateLog("moving Object [" + m_SelectedObject->getName() +  "] Down", nero::Info);
+        // m_UpdateLog("moving Object [" + m_SelectedObject->getName() +  "] Down", nero::Info);
 
         auto childTable = m_SelectedLayer->getAllChild();
 
@@ -2121,7 +2091,7 @@ namespace nero
         {
             if((*it)->getId() == m_SelectedObject->getId() && it != childTable->begin())
             {
-                std::iter_swap(it, it-1);
+                std::iter_swap(it, it - 1);
                 m_UpdateUndo();
 
                 break;
@@ -2129,7 +2099,7 @@ namespace nero
         }
     }
 
-	void WorldBuilder::buildUI(UIObject::Ptr rootObject)
+    void WorldBuilder::buildUI(UIObject::Ptr rootObject)
     {
         for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
         {
@@ -2138,37 +2108,36 @@ namespace nero
 
             switch((*layer)->getSecondType())
             {
-                case Object::Button_Object:
+            case Object::Button_Object: {
+                UIObject::Ptr layer_object = UIObject::Ptr(new UIObject());
+                layer_object->setName((*layer)->getName());
+                layer_object->setId(getNewId());
+
+                auto children = (*layer)->getAllChild();
+
+                for(auto it = children->begin(); it != children->end(); it++)
                 {
-                    UIObject::Ptr layer_object = UIObject::Ptr(new UIObject());
-                    layer_object->setName((*layer)->getName());
-                    layer_object->setId(getNewId());
+                    Object::Ptr       sprite_object = (*it)->clone();
 
-                    auto children = (*layer)->getAllChild();
+                    ButtonObject::Ptr button_object = ButtonObject::Ptr(new ButtonObject());
+                    button_object->setName(sprite_object->getName());
+                    button_object->setCategory(sprite_object->getCategory());
+                    sprite_object->setName("no_name");
+                    sprite_object->setCategory("no_category");
 
-                    for(auto it = children->begin(); it != children->end(); it++)
-                    {
-                        Object::Ptr sprite_object = (*it)->clone();
+                    button_object->addChild(sprite_object);
 
-                        ButtonObject::Ptr button_object = ButtonObject::Ptr(new ButtonObject());
-                        button_object->setName(sprite_object->getName());
-                        button_object->setCategory(sprite_object->getCategory());
-                        sprite_object->setName("no_name");
-                        sprite_object->setCategory("no_category");
+                    layer_object->addChild(button_object);
+                }
 
-                        button_object->addChild(sprite_object);
-
-                        layer_object->addChild(button_object);
-                    }
-
-                    rootObject->addChild(layer_object);
-
-                }break;
+                rootObject->addChild(layer_object);
+            }
+            break;
             }
         }
     }
 
-	void WorldBuilder::setTextContent(const sf::String& content)
+    void WorldBuilder::setTextContent(const sf::String& content)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
@@ -2176,29 +2145,29 @@ namespace nero
         }
     }
 
-	void WorldBuilder::setTextFont(const sf::String& font)
+    void WorldBuilder::setTextFont(const sf::String& font)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
-			//m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font to ["+ font +"]", nero::Info);
+            // m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font to ["+ font +"]", nero::Info);
 
             sf::Text& text = TextObject::Cast(m_SelectedObject)->getText();
-			text.setFont(m_ResourceManager->getFontHolder()->getFont(font));
+            text.setFont(m_ResourceManager->getFontHolder()->getFont(font));
             TextObject::Cast(m_SelectedObject)->setFont(font);
         }
     }
 
-	void WorldBuilder::setTextFontSize(float value)
+    void WorldBuilder::setTextFontSize(float value)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
-			//m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font size to "+ toString(value), nero::Info);
+            // m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font size to "+ toString(value), nero::Info);
 
             TextObject::Cast(m_SelectedObject)->setFontSize(value);
         }
     }
 
-	void WorldBuilder::setTextLetterSpacing(float value)
+    void WorldBuilder::setTextLetterSpacing(float value)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
@@ -2206,7 +2175,7 @@ namespace nero
         }
     }
 
-	void WorldBuilder::setTextLineSpacing(float value)
+    void WorldBuilder::setTextLineSpacing(float value)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
@@ -2214,68 +2183,68 @@ namespace nero
         }
     }
 
-	void WorldBuilder::setTextOutlineThickness(float value)
+    void WorldBuilder::setTextOutlineThickness(float value)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
-			//m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] outline thickness to "+ toString(value), nero::Info);
+            // m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] outline thickness to "+ toString(value), nero::Info);
 
             TextObject::Cast(m_SelectedObject)->setOutlineThickness(value);
         }
     }
 
-	void WorldBuilder::setTextStyle(bool bold, bool italic, bool underLined, bool strikeThrough)
+    void WorldBuilder::setTextStyle(bool bold, bool italic, bool underLined, bool strikeThrough)
     {
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
-			//m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font style", nero::Info);
+            // m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font style", nero::Info);
 
             TextObject::Cast(m_SelectedObject)->setStyle(bold, italic, underLined, strikeThrough);
         }
     }
 
-	const sf::Color& WorldBuilder::getCanvasColor() const
+    const sf::Color& WorldBuilder::getCanvasColor() const
     {
         return m_CanvasColor;
     }
 
-	void WorldBuilder::setCanvasColor(const sf::Color& color)
+    void WorldBuilder::setCanvasColor(const sf::Color& color)
     {
         m_CanvasColor = color;
     }
 
-	int WorldBuilder::getObjectCount()
+    int WorldBuilder::getObjectCount()
     {
         return m_ObjectCount;
     }
 
-	void WorldBuilder::setRenderContext(const RenderContext::Ptr& renderContext)
-	{
-		m_RenderContext = renderContext;
+    void WorldBuilder::setRenderContext(const RenderContext::Ptr& renderContext)
+    {
+        m_RenderContext = renderContext;
 
-		m_MeshEditor->setRenderContext(renderContext);
-	}
+        m_MeshEditor->setRenderContext(renderContext);
+    }
 
-	void WorldBuilder::setRenderTexture(const RenderTexturePtr& renderTexture)
-	{
-		m_RenderTexture = renderTexture;
+    void WorldBuilder::setRenderTexture(const RenderTexturePtr& renderTexture)
+    {
+        m_RenderTexture = renderTexture;
 
-		m_MeshEditor->setRenderTexture(renderTexture);
-	}
+        m_MeshEditor->setRenderTexture(renderTexture);
+    }
 
-	void WorldBuilder::setResourceManager(const ResourceManager::Ptr& resourceManager)
-	{
-		m_ResourceManager = resourceManager;
-	}
+    void WorldBuilder::setResourceManager(const ResourceManager::Ptr& resourceManager)
+    {
+        m_ResourceManager = resourceManager;
+    }
 
-	LayerObject::Ptr WorldBuilder::getSelectedLayer()
-	{
-		return m_SelectedLayer;
-	}
+    LayerObject::Ptr WorldBuilder::getSelectedLayer()
+    {
+        return m_SelectedLayer;
+    }
 
-	void WorldBuilder::setLightManager(const LightManagerPtr& lightManager)
-	{
-		m_LightManager = lightManager;
-	}
+    void WorldBuilder::setLightManager(const LightManagerPtr& lightManager)
+    {
+        m_LightManager = lightManager;
+    }
 
-}
+} // namespace nero

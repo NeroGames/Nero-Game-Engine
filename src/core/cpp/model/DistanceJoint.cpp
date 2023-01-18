@@ -3,15 +3,15 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/DistanceJoint.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
     ////////////////////////////////////////////////////////////
-    DistanceJoint::DistanceJoint():
-         PhysicJoint()
-        ,m_Joint(nullptr)
+    DistanceJoint::DistanceJoint()
+        : PhysicJoint()
+        , m_Joint(nullptr)
     {
         m_Type = PhysicJoint::Distance_Joint;
     }
@@ -19,7 +19,7 @@ namespace nero
     ////////////////////////////////////////////////////////////
     DistanceJoint::~DistanceJoint()
     {
-        //dtor
+        // dtor
     }
 
     ////////////////////////////////////////////////////////////
@@ -40,11 +40,11 @@ namespace nero
         if(joint->getType() != PhysicJoint::Distance_Joint)
             return nullptr;
 
-        return  std::static_pointer_cast<DistanceJoint>(joint);
+        return std::static_pointer_cast<DistanceJoint>(joint);
     }
 
     b2Joint* DistanceJoint::getGenericJoint()
     {
         return (b2Joint*)m_Joint;
     }
-}
+} // namespace nero

@@ -5,9 +5,9 @@
 #ifndef MESH_H
 #define MESH_H
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/utility/Utility.h>
-//SFML
+// SFML
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/ConvexShape.hpp>
@@ -16,75 +16,87 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
-//JSON
+// JSON
 #include <json/json.hpp>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	struct Mesh : public sf::Drawable
-	{
-		public: //utility
-			enum class Type	{Static, Dynamic, Kinematic};
-			enum class Shape	{Polygon, Circle, Chain, Line, None};
+    struct Mesh : public sf::Drawable
+    {
+      public: // utility
+        enum class Type
+        {
+            Static,
+            Dynamic,
+            Kinematic
+        };
+        enum class Shape
+        {
+            Polygon,
+            Circle,
+            Chain,
+            Line,
+            None
+        };
 
-		public: //ctr & dtr
-												   Mesh(const Shape& shape = Shape::None);
-												  ~Mesh();
+      public: // ctr & dtr
+        Mesh(const Shape& shape = Shape::None);
+        ~Mesh();
 
-			void									setMeshId(const int& meshId);
-			int										getMeshId()				const;
-			sf::FloatRect							getGlobalBounds()       const;
-			void									updateMesh(const sf::Vector2f& position,
-															   const sf::Vector2f& scale,
-															   const float& rotation);
-		private:
-			//draw
-			virtual void							draw(sf::RenderTarget& target, sf::RenderStates states) const;
-			//default
-			void									createDefaultPolygon();
-			void									createDefaultCircle();
-			void									createDefaultLine();
-			//mesh
-			void									addVertex(const sf::Vector2f& position, const int& index = -1);
-			void									addLine(const sf::Vector2f &point1, const sf::Vector2f &point2);
-			void									addPolygon(const std::vector<sf::Vector2f>& pointTable);
-			void									updateMesh(const bool& shape = true, const bool& color = true);
-			std::vector<sf::Vector2f>				generateRegularPolygon(const sf::Vector2f& position, const int& pointCount, const float& radius);
-			sf::Color								getColor();
-			void									validate(const sf::Vector2f& point1, const sf::Vector2f& point2);
-			std::vector<sf::Vector2f>				getVertexPosition() const;
-			void									deleteVertex(const int& index);
-			//
-			void									moveMesh(const sf::Vector2f& offset);
-			void									scaleMesh(const sf::Vector2f& factor);
-			void									rotateMesh(const float& angle);
-			void									setColor(const sf::Color& color);
+        void          setMeshId(const int& meshId);
+        int           getMeshId() const;
+        sf::FloatRect getGlobalBounds() const;
+        void          updateMesh(const sf::Vector2f& position,
+                                 const sf::Vector2f& scale,
+                                 const float&        rotation);
 
+      private:
+        // draw
+        virtual void              draw(sf::RenderTarget& target, sf::RenderStates states) const;
+        // default
+        void                      createDefaultPolygon();
+        void                      createDefaultCircle();
+        void                      createDefaultLine();
+        // mesh
+        void                      addVertex(const sf::Vector2f& position, const int& index = -1);
+        void                      addLine(const sf::Vector2f& point1, const sf::Vector2f& point2);
+        void                      addPolygon(const std::vector<sf::Vector2f>& pointTable);
+        void                      updateMesh(const bool& shape = true, const bool& color = true);
+        std::vector<sf::Vector2f> generateRegularPolygon(const sf::Vector2f& position, const int& pointCount, const float& radius);
+        sf::Color                 getColor();
+        void                      validate(const sf::Vector2f& point1, const sf::Vector2f& point2);
+        std::vector<sf::Vector2f> getVertexPosition() const;
+        void                      deleteVertex(const int& index);
+        //
+        void                      moveMesh(const sf::Vector2f& offset);
+        void                      scaleMesh(const sf::Vector2f& factor);
+        void                      rotateMesh(const float& angle);
+        void                      setColor(const sf::Color& color);
 
-		private:
-			friend class							MeshEditor;
-			int										m_MeshId;
-			Shape									m_MeshShape;
-			Type									m_MeshType;
-			sf::Vector2f							m_GravityCenter;
-			bool									m_Valid;
-			//
-			std::vector<sf::RectangleShape>			m_VertexTable;
-			std::vector<sf::RectangleShape>			m_LineTable;
-			std::vector<sf::ConvexShape>			m_PolygonTable;
-			sf::CircleShape*						m_CircleShape;
-			//constants
-			float									m_VertexSize         = 8.f;
-			int										m_ColorAlpha		 = 50.f;
-			float									m_MinVertexDistance  = 1.f;
-			//
-			sf::Vector2f							m_Position;
-			sf::Vector2f							m_Scale;
-			float									m_Rotation;
-			//
-			sf::Color								m_Color;
-	};
-}
+      private:
+        friend class MeshEditor;
+        int                             m_MeshId;
+        Shape                           m_MeshShape;
+        Type                            m_MeshType;
+        sf::Vector2f                    m_GravityCenter;
+        bool                            m_Valid;
+        //
+        std::vector<sf::RectangleShape> m_VertexTable;
+        std::vector<sf::RectangleShape> m_LineTable;
+        std::vector<sf::ConvexShape>    m_PolygonTable;
+        sf::CircleShape*                m_CircleShape;
+        // constants
+        float                           m_VertexSize        = 8.f;
+        int                             m_ColorAlpha        = 50.f;
+        float                           m_MinVertexDistance = 1.f;
+        //
+        sf::Vector2f                    m_Position;
+        sf::Vector2f                    m_Scale;
+        float                           m_Rotation;
+        //
+        sf::Color                       m_Color;
+    };
+} // namespace nero
 
 /*
 ////////////////////////////////////////////////////////////
@@ -101,7 +113,7 @@ namespace nero
             typedef std::vector<sf::RectangleShape>     LineTab;
             typedef std::vector<sf::ConvexShape>        PolygonTab;
             typedef std::vector<Mesh>                   Tab;
-			typedef std::vector<sf::Vector2f>			VectorTable;
+                        typedef std::vector<sf::Vector2f>			VectorTable;
 
 
             float                                       Vertex_Size             = 8.f;
@@ -109,7 +121,7 @@ namespace nero
             float                                       Min_Vertex_Distance     = 1.f;
 
         public: //Method
-										Mesh(Shape shape = None);
+                                                                                Mesh(Shape shape = None);
 
             void                        updateShape();
             void                        updateCircleShape();
@@ -117,7 +129,7 @@ namespace nero
             void                        updateLineShapeLoop();
             void                        updatePolygonShape();
             void                        updateColor();
-			void						update(const sf::Transform& transform);
+                        void						update(const sf::Transform& transform);
 
 
             void                        addVertex(sf::Vector2f point, const int& index);
@@ -132,7 +144,7 @@ namespace nero
             sf::Vector2f                getPosition()           const;
             float                       getRotation()           const;
             int                         getPointCount()         const;
-			VectorTable					getAllVertexPoint()     const;
+                        VectorTable					getAllVertexPoint()     const;
             sf::FloatRect               getGlobalBounds()       const;
             sf::Vector2f                getCenter()             const;
 
@@ -172,9 +184,9 @@ namespace nero
 
             sf::Vector2f                getSize();
 
-			std::vector<sf::RectangleShape>		getLineTable();
-			std::vector<sf::ConvexShape>		getPolygonTable();
-			sf::CircleShape						getCircleShape();
+                        std::vector<sf::RectangleShape>		getLineTable();
+                        std::vector<sf::ConvexShape>		getPolygonTable();
+                        sf::CircleShape						getCircleShape();
 
 
         private: //Method
@@ -213,7 +225,7 @@ namespace nero
             float                       m_Friction;
             float                       m_Restitution;
             float                       m_GravityScale;
-			mutable sf::RectangleShape              m_SelectionRect;
+                        mutable sf::RectangleShape              m_SelectionRect;
 
     };
 }*/

@@ -5,19 +5,18 @@
 #ifndef ENGINEHELPWINDOW_H
 #define ENGINEHELPWINDOW_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EngineHelpWindow : public UIComponent
-    {
-        public:
-                                    EngineHelpWindow(EditorContext::Ptr editorContext);
-            virtual                ~EngineHelpWindow() override;
+    class EngineHelpWindow : public UIComponent {
+      public:
+        EngineHelpWindow(EditorContext::Ptr editorContext);
+        virtual ~EngineHelpWindow() override;
 
-            virtual void 			destroy() override;
-            virtual void            render() override;
-	};
-}
+        virtual void destroy() override;
+        virtual void render() override;
+    };
+} // namespace nero
 #endif // ENGINEHELPWINDOW_H

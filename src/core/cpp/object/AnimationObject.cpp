@@ -3,7 +3,7 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/object/AnimationObject.h>
 ////////////////////////////////////////////////////////////
 namespace nero
@@ -34,7 +34,7 @@ namespace nero
         if(object->getFirstType() != Object::Animation_Object)
             return nullptr;
 
-        return  std::static_pointer_cast<AnimationObject>(object);
+        return std::static_pointer_cast<AnimationObject>(object);
     }
 
     Object::Ptr AnimationObject::clone(sf::Vector2f& position) const
@@ -69,21 +69,21 @@ namespace nero
     {
         nlohmann::json animationJson;
 
-        animationJson = Object::toJson();
+        animationJson              = Object::toJson();
 
-        animationJson["animation"]    = m_Animation.getTexture();
+        animationJson["animation"] = m_Animation.getTexture();
         animationJson["rotation"]  = getRotation();
         animationJson["position"]  = {{"x", getPosition().x}, {"y", getPosition().y}};
         animationJson["scale"]     = {{"x", getScale().x}, {"y", getScale().y}};
         animationJson["color"]     = {{"r", getColor().r}, {"g", getColor().g}, {"b", getColor().b}, {"a", getColor().a}};
 
         nlohmann::json sequenceTableJson;
-        const auto& sequenceMap = m_Animation.getSequenceMap();
-        for(auto it=sequenceMap.begin(); it!=sequenceMap.end(); it++)
+        const auto&    sequenceMap = m_Animation.getSequenceMap();
+        for(auto it = sequenceMap.begin(); it != sequenceMap.end(); it++)
         {
             nlohmann::json sequenceJson;
-            sequenceJson["frame_rate"] = it->second.getFrameRate();
-            sequenceJson["loop"] = it->second.getLoop();
+            sequenceJson["frame_rate"]   = it->second.getFrameRate();
+            sequenceJson["loop"]         = it->second.getLoop();
             sequenceTableJson[it->first] = sequenceJson;
         }
 
@@ -131,4 +131,4 @@ namespace nero
     {
         m_Animation.horizontalFlip();
     }
-}
+} // namespace nero

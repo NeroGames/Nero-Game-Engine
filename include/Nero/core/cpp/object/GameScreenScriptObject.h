@@ -5,16 +5,15 @@
 #ifndef GAMESCREENSCRIPTOBJECT_H
 #define GAMESCREENSCRIPTOBJECT_H
 ///////////////////////////HEADERS///////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/object/ScriptObject.h>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	class GameScreenScriptObject : public ScriptObject
-	{
-		public:
-			GameScreenScriptObject(ScriptObject::Context context);
-	};
-}
+    class GameScreenScriptObject : public ScriptObject {
+      public:
+        GameScreenScriptObject(ScriptObject::Context context);
+    };
+} // namespace nero
 
 #endif // GAMESCREENSCRIPTOBJECT_H

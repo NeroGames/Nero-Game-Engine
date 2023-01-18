@@ -3,19 +3,19 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/EditorSetupWorkspaceView.h>
-//Iconfont
+// Iconfont
 #include <iconfont/IconsFontAwesome5.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
     EditorSetupWorkspaceView::EditorSetupWorkspaceView(EditorContext::Ptr editorContext,
-                                                       EditorSetup::Ptr editorSetup):
-         UIComponent(std::move(editorContext))
-        ,m_EditorSetup(editorSetup)
-        ,m_NewWorkspaceView(m_EditorContext)
-        ,m_ImportWorkspaceView(m_EditorContext)
+                                                       EditorSetup::Ptr   editorSetup)
+        : UIComponent(std::move(editorContext))
+        , m_EditorSetup(editorSetup)
+        , m_NewWorkspaceView(m_EditorContext)
+        , m_ImportWorkspaceView(m_EditorContext)
     {
         clearInput();
     }
@@ -43,12 +43,12 @@ namespace  nero
 
         ImGui::Dummy(ImVec2(0.f, 20.f));
 
-        ImGui::SetCursorPosX((ImGui::GetWindowContentRegionWidth() - 550.f)/2.f);
+        ImGui::SetCursorPosX((ImGui::GetWindowContentRegionWidth() - 550.f) / 2.f);
 
         pushToolbarStyle(!m_Input.importWorkspace);
         if(ImGui::Button("Create", ImVec2(250.f, 50.f)))
         {
-           m_Input.importWorkspace = false;
+            m_Input.importWorkspace = false;
         }
         popToolbarStyle();
 
@@ -79,4 +79,4 @@ namespace  nero
     {
         m_Input.importWorkspace = false;
     }
-}
+} // namespace nero

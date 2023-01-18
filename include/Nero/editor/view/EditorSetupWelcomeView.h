@@ -5,23 +5,22 @@
 #ifndef EDITORSETUPWELCOMEVIEW_H
 #define EDITORSETUPWELCOMEVIEW_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 #include <Nero/editor/EditorSetup.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorSetupWelcomeView : public UIComponent
-    {
-        public:
-                                    EditorSetupWelcomeView(EditorContext::Ptr editorContext, EditorSetup::Ptr editorSetup);
-            virtual                ~EditorSetupWelcomeView() override;
+    class EditorSetupWelcomeView : public UIComponent {
+      public:
+        EditorSetupWelcomeView(EditorContext::Ptr editorContext, EditorSetup::Ptr editorSetup);
+        virtual ~EditorSetupWelcomeView() override;
 
-            virtual void 			destroy() override;
-            virtual void            render() override;
+        virtual void destroy() override;
+        virtual void render() override;
 
-        private:
-            EditorSetup::Ptr        m_EditorSetup;
-	};
-}
+      private:
+        EditorSetup::Ptr m_EditorSetup;
+    };
+} // namespace nero
 #endif // RECENTPROJECTTAB_H

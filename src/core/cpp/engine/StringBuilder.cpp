@@ -3,13 +3,12 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/engine/StringBuilder.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	StringBuilder::StringBuilder()
-	{
-
-	}
-}
+    StringBuilder::StringBuilder()
+    {
+    }
+} // namespace nero

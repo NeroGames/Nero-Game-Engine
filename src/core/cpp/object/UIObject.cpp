@@ -3,14 +3,14 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/object/UIObject.h>
 #include <Nero/core/cpp/utility/Utility.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    UIObject::UIObject():
-        Object()
+    UIObject::UIObject()
+        : Object()
     {
         setFirstType(Object::UI_Object);
         setSecondType(Object::UI_Object);
@@ -27,42 +27,42 @@ namespace nero
 
     void UIObject::handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
     {
-        //Empty
+        // Empty
     }
 
-    void  UIObject::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
+    void UIObject::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
     {
-        //Empty
+        // Empty
     }
 
     void UIObject::handleObjectEvent(const sf::Event& event)
     {
         switch(event.type)
         {
-            //Mouse Button
-            case sf::Event::MouseButtonPressed:
-                handleMouseButtonInput(event.mouseButton, true);
-                break;
-            case sf::Event::MouseButtonReleased:
-                handleMouseButtonInput(event.mouseButton, false);
-                break;
+        // Mouse Button
+        case sf::Event::MouseButtonPressed:
+            handleMouseButtonInput(event.mouseButton, true);
+            break;
+        case sf::Event::MouseButtonReleased:
+            handleMouseButtonInput(event.mouseButton, false);
+            break;
 
-            //Mouse move
-            case sf::Event::MouseMoved:
-                handleMouseMoveInput(event.mouseMove);
-                break;
+        // Mouse move
+        case sf::Event::MouseMoved:
+            handleMouseMoveInput(event.mouseMove);
+            break;
         }
     }
 
     void UIObject::handleAllChildEvent(const sf::Event& event)
     {
-         for(Object::Ptr child : m_ChildTab)
-         {
-             if(child->getFirstType() == Object::UI_Object)
-             {
-                 UIObject::Cast(child)->handleEvent(event);
-             }
-         }
+        for(Object::Ptr child : m_ChildTab)
+        {
+            if(child->getFirstType() == Object::UI_Object)
+            {
+                UIObject::Cast(child)->handleEvent(event);
+            }
+        }
     }
 
     UIObject::Ptr UIObject::Cast(Object::Ptr object)
@@ -70,6 +70,6 @@ namespace nero
         if(object->getFirstType() != Object::UI_Object)
             return nullptr;
 
-        return  std::static_pointer_cast<UIObject>(object);
+        return std::static_pointer_cast<UIObject>(object);
     }
-}
+} // namespace nero

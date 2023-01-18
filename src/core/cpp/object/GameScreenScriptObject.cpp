@@ -4,15 +4,14 @@
 /////////////////////////////////////////////////////////////
 
 ///////////////////////////HEADERS///////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/object/GameScreenScriptObject.h>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	GameScreenScriptObject::GameScreenScriptObject(ScriptObject::Context context):
-		ScriptObject (context)
-	{
+    GameScreenScriptObject::GameScreenScriptObject(ScriptObject::Context context)
+        : ScriptObject(context)
+    {
+    }
 
-	}
-
-}
+} // namespace nero

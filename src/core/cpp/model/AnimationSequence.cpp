@@ -3,22 +3,22 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/AnimationSequence.h>
 
-//EASYLOG
-//#include <easyloggingpp/easylogging++.h>
+// EASYLOG
+// #include <easyloggingpp/easylogging++.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
     ////////////////////////////////////////////////////////////
-    AnimationSequence::AnimationSequence():
-         m_FrameTable()
-        ,m_FrameRate(1.f/5.f)
-        ,m_CurrentFrame(0)
-        ,m_Loop(true)
+    AnimationSequence::AnimationSequence()
+        : m_FrameTable()
+        , m_FrameRate(1.f / 5.f)
+        , m_CurrentFrame(0)
+        , m_Loop(true)
     {
-        //Empty
+        // Empty
     }
 
     ////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    float   AnimationSequence::getFrameRate() const
+    float AnimationSequence::getFrameRate() const
     {
         return m_FrameRate;
     }
@@ -81,4 +81,4 @@ namespace nero
 
         return frame;
     }
-}
+} // namespace nero

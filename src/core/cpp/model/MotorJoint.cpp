@@ -3,21 +3,21 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/MotorJoint.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    MotorJoint::MotorJoint():
-         PhysicJoint()
-        ,m_Joint(nullptr)
+    MotorJoint::MotorJoint()
+        : PhysicJoint()
+        , m_Joint(nullptr)
     {
         m_Type = PhysicJoint::Motor_Joint;
     }
 
     MotorJoint::~MotorJoint()
     {
-        //dtor
+        // dtor
     }
 
     void MotorJoint::setJoint(b2MotorJoint* joint)
@@ -35,11 +35,11 @@ namespace nero
         if(joint->getType() != PhysicJoint::Motor_Joint)
             return nullptr;
 
-        return  std::static_pointer_cast<MotorJoint>(joint);
+        return std::static_pointer_cast<MotorJoint>(joint);
     }
 
     b2Joint* MotorJoint::getGenericJoint()
     {
         return (b2Joint*)m_Joint;
     }
-}
+} // namespace nero

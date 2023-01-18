@@ -3,16 +3,15 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/ResourceBrowserLightmapView.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    ResourceBrowserLightmapView::ResourceBrowserLightmapView(EditorContext::Ptr editorContext):
-         UIComponent(std::move(editorContext))
+    ResourceBrowserLightmapView::ResourceBrowserLightmapView(EditorContext::Ptr editorContext)
+        : UIComponent(std::move(editorContext))
     {
-
     }
 
     ResourceBrowserLightmapView::~ResourceBrowserLightmapView()
@@ -22,7 +21,6 @@ namespace  nero
 
     void ResourceBrowserLightmapView::destroy()
     {
-
     }
 
     void ResourceBrowserLightmapView::render()
@@ -32,20 +30,20 @@ namespace  nero
         if(!resourceManager)
             return;
 
-        auto lightmapHolder = resourceManager->getLightmapHolder();
+        auto  lightmapHolder = resourceManager->getLightmapHolder();
 
-        auto& spriteTable       = lightmapHolder->getSpriteTable();
-        int spriteCount         = spriteTable.size();
-        float xWindowVisible    = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+        auto& spriteTable    = lightmapHolder->getSpriteTable();
+        int   spriteCount    = spriteTable.size();
+        float xWindowVisible = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-        for (int i = 0; i < spriteCount; i++)
+        for(int i = 0; i < spriteCount; i++)
         {
             sf::Vector2u textureSize     = lightmapHolder->getSpriteTexture(spriteTable[i]).getSize();
             sf::Vector2u nextTextureSize = textureSize;
 
-            if(i < spriteCount-1)
+            if(i < spriteCount - 1)
             {
-                nextTextureSize = lightmapHolder->getSpriteTexture(spriteTable[i+1]).getSize();
+                nextTextureSize = lightmapHolder->getSpriteTexture(spriteTable[i + 1]).getSize();
             }
 
             sf::Vector2f spriteSize(textureSize.x, textureSize.y);
@@ -65,11 +63,11 @@ namespace  nero
                 }
             }
 
-            if (ImGui::BeginPopupContextItem())
+            if(ImGui::BeginPopupContextItem())
             {
-                if (ImGui::Button("Delete"))
+                if(ImGui::Button("Delete"))
                 {
-                    //TODO
+                    // TODO
                     ImGui::CloseCurrentPopup();
                 }
 
@@ -78,14 +76,14 @@ namespace  nero
 
             if(ImGui::IsItemHovered())
             {
-                //TODO
+                // TODO
             }
 
             float xLastButton = ImGui::GetItemRectMax().x;
             float xNextButton = xLastButton + ImGui::GetStyle().ItemSpacing.x + nextSpriteSize.x;
 
-            if (i + 1 < spriteCount && xNextButton < xWindowVisible)
+            if(i + 1 < spriteCount && xNextButton < xWindowVisible)
                 ImGui::SameLine();
         }
     }
-}
+} // namespace nero

@@ -5,31 +5,29 @@
 #ifndef SCRIPTOBJECT_H
 #define SCRIPTOBJECT_H
 ///////////////////////////HEADERS///////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/object/Object.h>
 /////////////////////////////////////////////////////////////
 
 namespace nero
 {
-	class ScriptObject : public Object
-	{
-		public: //utility
-			struct Context
-			{
+    class ScriptObject : public Object {
+      public: // utility
+        struct Context
+        {
+        };
 
-			};
+      public:
+        ScriptObject(Context context);
 
-		public:
-								ScriptObject(Context context);
+        void        setTargetObject(Object::Ptr target);
+        Object::Ptr getTargetObject();
 
-			void				setTargetObject(Object::Ptr	target);
-			Object::Ptr			getTargetObject();
+      private:
+        Context     m_ScriptContext;
+        Object::Ptr m_TargetObject;
+    };
 
-		private:
-			Context				m_ScriptContext;
-			Object::Ptr			m_TargetObject;
-	};
-
-}
+} // namespace nero
 
 #endif // SCRIPTOBJECT_H

@@ -3,20 +3,20 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/Animation.h>
 
-//EASYLOG
-//#include <easyloggingpp/easylogging++.h>
+// EASYLOG
+// #include <easyloggingpp/easylogging++.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
     ////////////////////////////////////////////////////////////
-    Animation::Animation():
-         m_ElapsedTime(sf::seconds(0.f))
-        ,m_pause(false)
+    Animation::Animation()
+        : m_ElapsedTime(sf::seconds(0.f))
+        , m_pause(false)
     {
-        //Empty
+        // Empty
     }
 
     ////////////////////////////////////////////////////////////
@@ -136,5 +136,5 @@ namespace nero
             m_ElapsedTime -= framerate;
         }
     }
-}
+} // namespace nero
 ////////////////////////////////////////////////////////////

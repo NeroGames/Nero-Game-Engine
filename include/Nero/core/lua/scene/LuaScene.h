@@ -9,23 +9,23 @@ namespace  nero
 {
     class LuaScene : public Scene
     {
-		public:
-			typedef std::shared_ptr<LuaScene> Ptr;
+                public:
+                        typedef std::shared_ptr<LuaScene> Ptr;
 
-		public:
-			LuaScene(Scene::Context context);
-			std::string getLuaSceneFile();
+                public:
+                        LuaScene(Scene::Context context);
+                        std::string getLuaSceneFile();
 
-			void initLuaScene();
-			void loadLuaScene();
+                        void initLuaScene();
+                        void loadLuaScene();
 
-		private:
-			void	bindLogging();
-			void	bindScene();
+                private:
+                        void	bindLogging();
+                        void	bindScene();
 
-		private:
-			sol::state		m_LuaState;
-			sol::table		m_NeroTable;
+                private:
+                        sol::state		m_LuaState;
+                        sol::table		m_NeroTable;
     };
 }
 

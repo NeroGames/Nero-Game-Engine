@@ -5,7 +5,7 @@
 #ifndef PROJECTMANAGER_H
 #define PROJECTMANAGER_H
 ///////////////////////////HEADERS///////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/utility/CommandLine.h>
 #include <Nero/editor/project/GameProject.h>
 #include <Nero/core/cpp/scene/Scene.h>
@@ -14,67 +14,64 @@
 #include <Nero/core/cpp/engine/BackgroundTask.h>
 #include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/editor/EditorCamera.h>
-//Json
+// Json
 #include <json/json.hpp>
-//Boost
+// Boost
 #include <boost/function.hpp>
-//Std
+// Std
 #include <memory>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    class ProjectManager
-    {
-        public:
-			//attribute
-			typedef std::shared_ptr<ProjectManager>			Ptr;
-			typedef std::shared_ptr<sf::RenderTexture>		RenderTexturePtr;
+    class ProjectManager {
+      public:
+        // attribute
+        typedef std::shared_ptr<ProjectManager>    Ptr;
+        typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 
-        public:
-			//ctr & dtr
-													ProjectManager();
-												   ~ProjectManager();
-			//workspace
-                //main
-			void									createWorkspace(const Parameter& parameter);
-			void									importWorkspace(const std::string& directory);
-                //utility
-			const nlohmann::json					getWorkspaceTable() const;
-			const std::vector<std::string>			getWorkspaceNameTable() const;
-            const nlohmann::json					findWorkspace(const std::string& workspaceName) const;
-            bool									workspaceExist(const std::string& workspaceName);
-			//game project
-				//main
-			void									createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-			void									createCppProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-			void									createLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-			void									createCppLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-			void									closeProject();
-			void									deleteProject();
-			void									compileProject(const std::string& projectDirectory, BackgroundTask::Ptr backgroundTask);
-			GameProject::Ptr						openProject(const std::string& projectDirectory);
-            GameProject::Ptr						getGameProject();
-				//utiliy
-			bool									projectExist(const std::string& projectName, const std::string& workspaceName);
-			const std::vector<nlohmann::json>		getWorkspaceProjectTable(const std::string& workpsace);
-			nlohmann::json							findProject(const std::string& workspace_name, const std::string& project_name);
-			void									updateRecentProject(const std::string& projectDirectory);
-			std::string								getProjectDirectory(const Parameter& parameter);
+      public:
+        // ctr & dtr
+        ProjectManager();
+        ~ProjectManager();
+        // workspace
+        // main
+        void                              createWorkspace(const Parameter& parameter);
+        void                              importWorkspace(const std::string& directory);
+        // utility
+        const nlohmann::json              getWorkspaceTable() const;
+        const std::vector<std::string>    getWorkspaceNameTable() const;
+        const nlohmann::json              findWorkspace(const std::string& workspaceName) const;
+        bool                              workspaceExist(const std::string& workspaceName);
+        // game project
+        // main
+        void                              createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+        void                              createCppProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+        void                              createLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+        void                              createCppLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+        void                              closeProject();
+        void                              deleteProject();
+        void                              compileProject(const std::string& projectDirectory, BackgroundTask::Ptr backgroundTask);
+        GameProject::Ptr                  openProject(const std::string& projectDirectory);
+        GameProject::Ptr                  getGameProject();
+        // utiliy
+        bool                              projectExist(const std::string& projectName, const std::string& workspaceName);
+        const std::vector<nlohmann::json> getWorkspaceProjectTable(const std::string& workpsace);
+        nlohmann::json                    findProject(const std::string& workspace_name, const std::string& project_name);
+        void                              updateRecentProject(const std::string& projectDirectory);
+        std::string                       getProjectDirectory(const Parameter& parameter);
 
+        // other
+        void                              setSetting(const Setting::Ptr& setting);
+        std::string                       getEngineDirectory() const;
+        std::string                       formatSceneClassName(std::vector<std::string> wordTable);
+        std::string                       formatHeaderGard(std::vector<std::string> wordTable);
+        std::string                       formatCmakeProjectName(std::vector<std::string> wordTable);
+        std::string                       formatCmakeProjectLibrary(std::vector<std::string> wordTable);
 
-			//other
-			void									setSetting(const Setting::Ptr& setting);
-			std::string								getEngineDirectory() const;
-			std::string								formatSceneClassName(std::vector<std::string> wordTable);
-			std::string								formatHeaderGard(std::vector<std::string> wordTable);
-			std::string								formatCmakeProjectName(std::vector<std::string> wordTable);
-			std::string								formatCmakeProjectLibrary(std::vector<std::string> wordTable);
-
-
-        private:
-			GameProject::Ptr						m_GameProject;
-			Setting::Ptr							m_EditorSetting;
+      private:
+        GameProject::Ptr m_GameProject;
+        Setting::Ptr     m_EditorSetting;
     };
-}
+} // namespace nero
 
 #endif // PROJECTMANAGER_H

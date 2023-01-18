@@ -3,21 +3,21 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/RevoluteJoint.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    RevoluteJoint::RevoluteJoint():
-         PhysicJoint()
-        ,m_Joint(nullptr)
+    RevoluteJoint::RevoluteJoint()
+        : PhysicJoint()
+        , m_Joint(nullptr)
     {
         m_Type = PhysicJoint::Revolute_Joint;
     }
 
     RevoluteJoint::~RevoluteJoint()
     {
-        //dtor
+        // dtor
     }
 
     void RevoluteJoint::setJoint(b2RevoluteJoint* joint)
@@ -35,11 +35,11 @@ namespace nero
         if(joint->getType() != PhysicJoint::Revolute_Joint)
             return nullptr;
 
-        return  std::static_pointer_cast<RevoluteJoint>(joint);
+        return std::static_pointer_cast<RevoluteJoint>(joint);
     }
 
     b2Joint* RevoluteJoint::getGenericJoint()
     {
         return (b2Joint*)m_Joint;
     }
-}
+} // namespace nero

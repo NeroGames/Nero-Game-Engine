@@ -5,41 +5,40 @@
 #ifndef STARTUPSCREEN_H
 #define STARTUPSCREEN_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/resource/ResourceManager.h>
-//SFML
+// SFML
 #include <SFML/Graphics/RenderWindow.hpp>
-//STD
+// STD
 #include <memory>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class StartupScreen
-    {
-        public:
-			typedef std::unique_ptr<StartupScreen> Ptr;
+    class StartupScreen {
+      public:
+        typedef std::unique_ptr<StartupScreen> Ptr;
 
-                                            StartupScreen();
-            virtual                        ~StartupScreen();
+        StartupScreen();
+        virtual ~StartupScreen();
 
-		public: //method to override
-            virtual void                    init()                                      = 0;
-			virtual void                    handleEvent(sf::Event& event)               = 0;
-            virtual void                    update(const sf::Time& timeStep)            = 0;
-            virtual void                    render()                                    = 0;
-			virtual const sf::Color         getCanvasColor()	const					= 0;
-			virtual  float					getDuration()		const					= 0;
+      public: // method to override
+        virtual void            init()                           = 0;
+        virtual void            handleEvent(sf::Event& event)    = 0;
+        virtual void            update(const sf::Time& timeStep) = 0;
+        virtual void            render()                         = 0;
+        virtual const sf::Color getCanvasColor() const           = 0;
+        virtual float           getDuration() const              = 0;
 
-		public:
-            void                            setRenderWindow(sf::RenderWindow* renderWindow);
-			void							setResourceManager(ResourceManager::Ptr resourceManager);
+      public:
+        void setRenderWindow(sf::RenderWindow* renderWindow);
+        void setResourceManager(ResourceManager::Ptr resourceManager);
 
-		private:
-			virtual void					destroy();
+      private:
+        virtual void destroy();
 
-        protected:
-             sf::RenderWindow*              m_RenderWindow;
-			 ResourceManager::Ptr			m_ResourceManager;
+      protected:
+        sf::RenderWindow*    m_RenderWindow;
+        ResourceManager::Ptr m_ResourceManager;
     };
-}
+} // namespace nero
 #endif // STARTUPSCREEN_H

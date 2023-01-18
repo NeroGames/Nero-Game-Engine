@@ -3,19 +3,18 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/EditorSetupWelcomeView.h>
-//Iconfont
+// Iconfont
 #include <iconfont/IconsFontAwesome5.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
     EditorSetupWelcomeView::EditorSetupWelcomeView(EditorContext::Ptr editorContext,
-                                                   EditorSetup::Ptr editorSetup):
-         UIComponent(std::move(editorContext))
-        ,m_EditorSetup(editorSetup)
+                                                   EditorSetup::Ptr   editorSetup)
+        : UIComponent(std::move(editorContext))
+        , m_EditorSetup(editorSetup)
     {
-
     }
 
     EditorSetupWelcomeView::~EditorSetupWelcomeView()
@@ -25,7 +24,6 @@ namespace  nero
 
     void EditorSetupWelcomeView::destroy()
     {
-
     }
 
     void EditorSetupWelcomeView::render()
@@ -53,7 +51,6 @@ namespace  nero
         {
             ImGui::Text(ICON_FA_CIRCLE "	Configure Texture Packer");
             ImGui::Dummy(ImVec2(0.f, 5.f));
-
         }
         if(m_EditorSetup->setupWorkspace())
         {
@@ -66,7 +63,8 @@ namespace  nero
         ImGui::Dummy(ImVec2(0.f, 15.f));
 
         ImGui::AlignTextToFramePadding();
-        ImGui::Text("You can learn more on the necessary configurations at "); ImGui::SameLine();
+        ImGui::Text("You can learn more on the necessary configurations at ");
+        ImGui::SameLine();
         if(ImGui::Button("Environment Configurations"))
         {
             cmd::launchBrowser("https://nero-games.com/learn/engine-v2/environment-configuration");
@@ -78,4 +76,4 @@ namespace  nero
 
         m_EditorSetup->setNextSetup(true);
     }
-}
+} // namespace nero

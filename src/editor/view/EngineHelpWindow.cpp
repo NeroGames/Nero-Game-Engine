@@ -3,16 +3,15 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/EngineHelpWindow.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    EngineHelpWindow::EngineHelpWindow(EditorContext::Ptr editorContext):
-        UIComponent(std::move(editorContext))
+    EngineHelpWindow::EngineHelpWindow(EditorContext::Ptr editorContext)
+        : UIComponent(std::move(editorContext))
     {
-
     }
 
     EngineHelpWindow::~EngineHelpWindow()
@@ -22,7 +21,6 @@ namespace  nero
 
     void EngineHelpWindow::destroy()
     {
-
     }
 
     void EngineHelpWindow::render()
@@ -31,4 +29,4 @@ namespace  nero
 
         ImGui::End();
     }
-}
+} // namespace nero

@@ -3,42 +3,42 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/camera/Camera.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	////////////////////////////////////////////////////////////
-	Camera::Camera(const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio):
-		 m_DefaultPosition(defaultPos)
-		,m_PanningSpeed(panSpeed)
-		,m_DefaultPanningSpeed(panSpeed)
-		,m_RotationSpeed(rotSpeed)
-		,m_ZoomingRatio(zRatio)
-		,m_DefaultZoom(0)
-		,m_Pan(0.f, 0.f)
-		,m_Rotation(0.f)
-		,m_DefaultRotation(0.f)
-		,m_Zoom(0)
-		,m_View()
-	{
-		m_View.setCenter(defaultPos);
-		m_View.setSize(sf::Vector2f(100.f, 100.f));
-	}
+    ////////////////////////////////////////////////////////////
+    Camera::Camera(const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio)
+        : m_DefaultPosition(defaultPos)
+        , m_PanningSpeed(panSpeed)
+        , m_DefaultPanningSpeed(panSpeed)
+        , m_RotationSpeed(rotSpeed)
+        , m_ZoomingRatio(zRatio)
+        , m_DefaultZoom(0)
+        , m_Pan(0.f, 0.f)
+        , m_Rotation(0.f)
+        , m_DefaultRotation(0.f)
+        , m_Zoom(0)
+        , m_View()
+    {
+        m_View.setCenter(defaultPos);
+        m_View.setSize(sf::Vector2f(100.f, 100.f));
+    }
 
     ////////////////////////////////////////////////////////////
-    Camera::Camera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio):
-         m_DefaultPosition(defaultPos)
-        ,m_PanningSpeed(panSpeed)
-        ,m_DefaultPanningSpeed(panSpeed)
-        ,m_RotationSpeed(rotSpeed)
-        ,m_ZoomingRatio(zRatio)
-        ,m_DefaultZoom(0)
-        ,m_Pan(0.f, 0.f)
-        ,m_Rotation(0.f)
-        ,m_DefaultRotation(0.f)
-        ,m_Zoom(0)
-        ,m_View()
+    Camera::Camera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio)
+        : m_DefaultPosition(defaultPos)
+        , m_PanningSpeed(panSpeed)
+        , m_DefaultPanningSpeed(panSpeed)
+        , m_RotationSpeed(rotSpeed)
+        , m_ZoomingRatio(zRatio)
+        , m_DefaultZoom(0)
+        , m_Pan(0.f, 0.f)
+        , m_Rotation(0.f)
+        , m_DefaultRotation(0.f)
+        , m_Zoom(0)
+        , m_View()
     {
         m_View.setCenter(defaultPos);
         m_View.setSize(sf::Vector2f(viewSize.x, viewSize.y));
@@ -47,7 +47,7 @@ namespace nero
     ////////////////////////////////////////////////////////////
     Camera::~Camera()
     {
-        //Empty
+        // Empty
     }
 
     ////////////////////////////////////////////////////////////
@@ -55,31 +55,31 @@ namespace nero
     {
         switch(event.type)
         {
-            //Keyboard events
-            case sf::Event::KeyPressed:
-                handleKeyboardInput(event.key.code, true);
-                break;
-            case sf::Event::KeyReleased:
-                handleKeyboardInput(event.key.code, false);
-                break;
+        // Keyboard events
+        case sf::Event::KeyPressed:
+            handleKeyboardInput(event.key.code, true);
+            break;
+        case sf::Event::KeyReleased:
+            handleKeyboardInput(event.key.code, false);
+            break;
 
-            //Mouse buttons events
-            case sf::Event::MouseButtonPressed:
-                handleMouseButtonsInput(event.mouseButton, true);
-                break;
-            case sf::Event::MouseButtonReleased:
-                handleMouseButtonsInput(event.mouseButton, false);
-                break;
+        // Mouse buttons events
+        case sf::Event::MouseButtonPressed:
+            handleMouseButtonsInput(event.mouseButton, true);
+            break;
+        case sf::Event::MouseButtonReleased:
+            handleMouseButtonsInput(event.mouseButton, false);
+            break;
 
-            //Mouse movements event
-            case sf::Event::MouseMoved:
-                handleMouseMoveInput(event.mouseMove);
-                break;
+        // Mouse movements event
+        case sf::Event::MouseMoved:
+            handleMouseMoveInput(event.mouseMove);
+            break;
 
-            //Mouse wheel
-            case sf::Event::MouseWheelScrolled:
-                handleMouseWheelInput(event.mouseWheelScroll);
-                break;
+        // Mouse wheel
+        case sf::Event::MouseWheelScrolled:
+            handleMouseWheelInput(event.mouseWheelScroll);
+            break;
         }
     }
 
@@ -97,31 +97,31 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void Camera::render()
     {
-        //Empty
+        // Empty
     }
 
     ////////////////////////////////////////////////////////////
     void Camera::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
     {
-        //Empty
+        // Empty
     }
 
     ////////////////////////////////////////////////////////////
     void Camera::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
     {
-        //Empty
+        // Empty
     }
 
     ////////////////////////////////////////////////////////////
     void Camera::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
     {
-        //Empty
+        // Empty
     }
 
     ////////////////////////////////////////////////////////////
     void Camera::handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse)
     {
-        //Empty
+        // Empty
     }
 
     ////////////////////////////////////////////////////////////
@@ -186,7 +186,7 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void Camera::zoomOut()
     {
-        m_View.zoom(1/m_ZoomingRatio);
+        m_View.zoom(1 / m_ZoomingRatio);
         m_Zoom--;
         m_PanningSpeed++;
     }
@@ -195,7 +195,7 @@ namespace nero
     void Camera::setZoom(const int& zoom)
     {
         if(m_Zoom > zoom)
-            m_View.zoom(1/std::pow(m_ZoomingRatio, (m_Zoom - zoom)));
+            m_View.zoom(1 / std::pow(m_ZoomingRatio, (m_Zoom - zoom)));
 
         if(m_Zoom < zoom)
             m_View.zoom(pow(m_ZoomingRatio, (zoom - m_Zoom)));
@@ -217,7 +217,7 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    void Camera::setDefaultPosition(const sf::Vector2f& pos , bool update)
+    void Camera::setDefaultPosition(const sf::Vector2f& pos, bool update)
     {
         m_DefaultPosition = pos;
 
@@ -285,9 +285,9 @@ namespace nero
         return m_View;
     }
 
-	void Camera::updateView(const sf::Vector2f& size)
-	{
-		m_View.setSize(size);
-	}
-}
+    void Camera::updateView(const sf::Vector2f& size)
+    {
+        m_View.setSize(size);
+    }
+} // namespace nero
 ////////////////////////////////////////////////////////////

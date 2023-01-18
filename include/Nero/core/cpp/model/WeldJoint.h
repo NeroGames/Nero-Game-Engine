@@ -5,28 +5,27 @@
 #ifndef WELDJOINT_H
 #define WELDJOINT_H
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/PhysicJoint.h>
-//BOX2D
+// BOX2D
 #include <Box2D/Dynamics/Joints/b2WeldJoint.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class WeldJoint : public PhysicJoint
-    {
-        public:
-            typedef std::shared_ptr<WeldJoint>      Ptr;
-            static  Ptr                             Cast(PhysicJoint::Ptr joint);
+    class WeldJoint : public PhysicJoint {
+      public:
+        typedef std::shared_ptr<WeldJoint> Ptr;
+        static Ptr                         Cast(PhysicJoint::Ptr joint);
 
-                                    WeldJoint();
-            virtual                ~WeldJoint();
+        WeldJoint();
+        virtual ~WeldJoint();
 
-            void                    setJoint(b2WeldJoint* joint);
-            b2WeldJoint*            getJoint() const;
-            virtual b2Joint*        getGenericJoint();
+        void             setJoint(b2WeldJoint* joint);
+        b2WeldJoint*     getJoint() const;
+        virtual b2Joint* getGenericJoint();
 
-        private:
-            b2WeldJoint*            m_Joint;
+      private:
+        b2WeldJoint* m_Joint;
     };
-}
+} // namespace nero
 #endif // WELDJOINT_H

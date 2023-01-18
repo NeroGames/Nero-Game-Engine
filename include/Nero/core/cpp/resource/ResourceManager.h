@@ -5,7 +5,7 @@
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/utility/String.h>
 #include <Nero/core/cpp/resource/FontHolder.h>
 #include <Nero/core/cpp/resource/SoundHolder.h>
@@ -18,54 +18,53 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	class ResourceManager
-    {
-		public: //utility
-			typedef std::shared_ptr<ResourceManager>    Ptr;
+    class ResourceManager {
+      public: // utility
+        typedef std::shared_ptr<ResourceManager> Ptr;
 
-		public:
-										ResourceManager();
-										ResourceManager(const Setting& setting);
-									   ~ResourceManager();
+      public:
+        ResourceManager();
+        ResourceManager(const Setting& setting);
+        ~ResourceManager();
 
-			void						setSetting(const Setting& setting);
+        void                           setSetting(const Setting& setting);
 
-			void										loadDirectory(const std::string& directory);
-			bool										loadFile(ResourceType type, const std::string& file);
-			const std::vector<std::string>				loadFile(ResourceType type, const std::vector<std::string> fileTable);
-			void										loadRequired(const nlohmann::json& requiredResource);
+        void                           loadDirectory(const std::string& directory);
+        bool                           loadFile(ResourceType type, const std::string& file);
+        const std::vector<std::string> loadFile(ResourceType type, const std::vector<std::string> fileTable);
+        void                           loadRequired(const nlohmann::json& requiredResource);
 
-			//void						loadDirectory();
-			//void						addDirectory(const Setting& setting, bool autoSelect = false);
-			//void						loadResource();
-			//void						reloadResource();
-			void						clearResource();
+        // void						loadDirectory();
+        // void						addDirectory(const Setting& setting, bool autoSelect = false);
+        // void						loadResource();
+        // void						reloadResource();
+        void                           clearResource();
 
-			void						destroy();
+        void                           destroy();
 
-			FontHolder::Ptr				getFontHolder();
-			SoundHolder::Ptr			getSoundHolder();
-			MusicHolder::Ptr			getMusicHolder();
-			ShaderHolder::Ptr			getShaderHolder();
-			ScriptHolder::Ptr			getLuaScriptHolder();
-			TextureHolder::Ptr			getTextureHolder();
-			AnimationHolder::Ptr		getAnimationHolder();
-			TextureHolder::Ptr			getLightmapHolder();
+        FontHolder::Ptr                getFontHolder();
+        SoundHolder::Ptr               getSoundHolder();
+        MusicHolder::Ptr               getMusicHolder();
+        ShaderHolder::Ptr              getShaderHolder();
+        ScriptHolder::Ptr              getLuaScriptHolder();
+        TextureHolder::Ptr             getTextureHolder();
+        AnimationHolder::Ptr           getAnimationHolder();
+        TextureHolder::Ptr             getLightmapHolder();
 
-		public:
-			static void					buildDirectory(const std::string& parentDirectory = StringPool.BLANK);
+      public:
+        static void buildDirectory(const std::string& parentDirectory = StringPool.BLANK);
 
-		private:
-			FontHolder::Ptr				m_FontHolder;
-			SoundHolder::Ptr			m_SoundHolder;
-			MusicHolder::Ptr			m_MusicHolder;
-			ShaderHolder::Ptr			m_ShaderHolder;
-			ScriptHolder::Ptr			m_LuaScriptHolder;
-			TextureHolder::Ptr			m_TextureHolder;
-			AnimationHolder::Ptr		m_AnimationHolder;
-			TextureHolder::Ptr			m_LightmapHolder;
+      private:
+        FontHolder::Ptr      m_FontHolder;
+        SoundHolder::Ptr     m_SoundHolder;
+        MusicHolder::Ptr     m_MusicHolder;
+        ShaderHolder::Ptr    m_ShaderHolder;
+        ScriptHolder::Ptr    m_LuaScriptHolder;
+        TextureHolder::Ptr   m_TextureHolder;
+        AnimationHolder::Ptr m_AnimationHolder;
+        TextureHolder::Ptr   m_LightmapHolder;
 
-			Setting						m_Setting;
+        Setting              m_Setting;
     };
-}
+} // namespace nero
 #endif // RESOURCEMANAGER_H

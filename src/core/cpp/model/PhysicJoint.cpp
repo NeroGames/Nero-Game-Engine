@@ -3,26 +3,26 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/PhysicJoint.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    PhysicJoint::PhysicJoint():
-         m_JointId(-1)
-        ,m_Name("joint")
-        ,m_ObjectAId(-1)
-        ,m_ObjectBId(-1)
-        ,m_ObjectAName("objectA")
-        ,m_ObjectBName("objectB")
-        ,m_Type(PhysicJoint::None)
+    PhysicJoint::PhysicJoint()
+        : m_JointId(-1)
+        , m_Name("joint")
+        , m_ObjectAId(-1)
+        , m_ObjectBId(-1)
+        , m_ObjectAName("objectA")
+        , m_ObjectBName("objectB")
+        , m_Type(PhysicJoint::None)
     {
-        //ctor
+        // ctor
     }
 
     PhysicJoint::~PhysicJoint()
     {
-        //dtor
+        // dtor
     }
 
     void PhysicJoint::setJointId(int jointId)
@@ -99,6 +99,4 @@ namespace nero
     {
         return nullptr;
     }
-}
-
-
+} // namespace nero

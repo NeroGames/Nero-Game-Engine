@@ -5,19 +5,18 @@
 #ifndef GAMESCREENBUILDER_H
 #define GAMESCREENBUILDER_H
 ///////////////////////////HEADERS//////////////////////////
-//STD
+// STD
 #include <memory>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	class ScreenBuilder
-	{
-		public:
-			typedef std::shared_ptr<ScreenBuilder> Ptr;
+    class ScreenBuilder {
+      public:
+        typedef std::shared_ptr<ScreenBuilder> Ptr;
 
-		public:
-			ScreenBuilder();
-	};
-}
+      public:
+        ScreenBuilder();
+    };
+} // namespace nero
 
 #endif // GAMESCREENBUILDER_H

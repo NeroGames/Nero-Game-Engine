@@ -3,17 +3,16 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/object/SpriteActionObject.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-   SpriteActionObject::SpriteActionObject():
-         m_SpriteObject(nullptr)
-        ,m_ActionTable()
-        ,m_TimeStep(EngineConstant.TIME_PER_FRAME)
+    SpriteActionObject::SpriteActionObject()
+        : m_SpriteObject(nullptr)
+        , m_ActionTable()
+        , m_TimeStep(EngineConstant.TIME_PER_FRAME)
     {
-
     }
 
     void SpriteActionObject::setObject(Object::Ptr object)
@@ -31,7 +30,7 @@ namespace nero
         m_ActionTable[name]->call(m_SpriteObject, m_TimeStep);
     }
 
-    SpriteObject::Ptr  SpriteActionObject::getObject()
+    SpriteObject::Ptr SpriteActionObject::getObject()
     {
         return m_SpriteObject;
     }
@@ -40,5 +39,4 @@ namespace nero
     {
         m_TimeStep = time_step;
     }
-}
-
+} // namespace nero

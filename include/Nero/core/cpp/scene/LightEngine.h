@@ -5,20 +5,19 @@
 #ifndef LIGHTENGINE_H
 #define LIGHTENGINE_H
 ///////////////////////////HEADERS///////////////////////////
-//STD
+// STD
 #include <memory>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	class LightEngine
-	{
-		public:
-			//type definiton
-			typedef std::shared_ptr	<LightEngine> Ptr;
+    class LightEngine {
+      public:
+        // type definiton
+        typedef std::shared_ptr<LightEngine> Ptr;
 
-		public:
-			LightEngine();
-	};
-}
+      public:
+        LightEngine();
+    };
+} // namespace nero
 
 #endif // LIGHTENGINE_H

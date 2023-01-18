@@ -3,16 +3,15 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/ResourceBrowserAnimationView.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    ResourceBrowserAnimationView::ResourceBrowserAnimationView(EditorContext::Ptr editorContext):
-         UIComponent(std::move(editorContext))
+    ResourceBrowserAnimationView::ResourceBrowserAnimationView(EditorContext::Ptr editorContext)
+        : UIComponent(std::move(editorContext))
     {
-
     }
 
     ResourceBrowserAnimationView::~ResourceBrowserAnimationView()
@@ -22,7 +21,6 @@ namespace  nero
 
     void ResourceBrowserAnimationView::destroy()
     {
-
     }
 
     void ResourceBrowserAnimationView::render()
@@ -32,24 +30,24 @@ namespace  nero
         if(!resourceManager)
             return;
 
-        auto animationHolder = resourceManager->getAnimationHolder();
+        auto         animationHolder = resourceManager->getAnimationHolder();
 
-        auto& animationTable        = animationHolder->getAnimationTable();
-        unsigned int animationCount = animationTable.size();
-        float xWindowVisible        = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+        auto&        animationTable  = animationHolder->getAnimationTable();
+        unsigned int animationCount  = animationTable.size();
+        float        xWindowVisible  = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-        for (unsigned int i = 0; i < animationCount; i++)
+        for(unsigned int i = 0; i < animationCount; i++)
         {
-            sf::Texture& texture            = animationHolder->getTexture(animationTable[i]);
-            sf::IntRect bound               = animationHolder->getAnimationBound(animationTable[i]);
-            sf::Vector2u textureSize        = sf::Vector2u(bound.width, bound.height);
-            sf::Vector2u nextTextureSize    = textureSize;
+            sf::Texture& texture         = animationHolder->getTexture(animationTable[i]);
+            sf::IntRect  bound           = animationHolder->getAnimationBound(animationTable[i]);
+            sf::Vector2u textureSize     = sf::Vector2u(bound.width, bound.height);
+            sf::Vector2u nextTextureSize = textureSize;
 
             if(i < animationCount - 1)
             {
-                sf::IntRect nextBound = animationHolder->getAnimationBound(animationTable[i+1]);
+                sf::IntRect nextBound = animationHolder->getAnimationBound(animationTable[i + 1]);
 
-                nextTextureSize = sf::Vector2u(nextBound.width, nextBound.height);
+                nextTextureSize       = sf::Vector2u(nextBound.width, nextBound.height);
             }
 
             sf::Vector2f spriteSize(textureSize.x, textureSize.y);
@@ -66,8 +64,8 @@ namespace  nero
                 if(m_EditorContext->getBuilderMode() == BuilderMode::OBJECT)
                 {
                     auto worldBuilder = m_EditorContext->getLevelBuilder()
-                                                       ->getSelectedChunk()
-                                                       ->getWorldBuilder();
+                                            ->getSelectedChunk()
+                                            ->getWorldBuilder();
 
                     worldBuilder->addObject(Object::Animation_Object,
                                             animationTable[i],
@@ -75,11 +73,11 @@ namespace  nero
                 }
             }
 
-            if (ImGui::BeginPopupContextItem())
+            if(ImGui::BeginPopupContextItem())
             {
-                if (ImGui::Button("Delete"))
+                if(ImGui::Button("Delete"))
                 {
-                    //TODO
+                    // TODO
                     ImGui::CloseCurrentPopup();
                 }
 
@@ -88,14 +86,14 @@ namespace  nero
 
             if(ImGui::IsItemHovered())
             {
-                //TODO
+                // TODO
             }
 
             float xLastButton = ImGui::GetItemRectMax().x;
             float xNextButton = xLastButton + ImGui::GetStyle().ItemSpacing.x + nextSpriteSize.x;
 
-            if (i + 1 < animationCount && xNextButton < xWindowVisible)
+            if(i + 1 < animationCount && xNextButton < xWindowVisible)
                 ImGui::SameLine();
         }
     }
-}
+} // namespace nero

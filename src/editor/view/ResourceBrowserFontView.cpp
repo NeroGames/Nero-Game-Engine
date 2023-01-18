@@ -3,16 +3,15 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/ResourceBrowserFontView.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    ResourceBrowserFontView::ResourceBrowserFontView(EditorContext::Ptr editorContext):
-         UIComponent(std::move(editorContext))
+    ResourceBrowserFontView::ResourceBrowserFontView(EditorContext::Ptr editorContext)
+        : UIComponent(std::move(editorContext))
     {
-
     }
 
     ResourceBrowserFontView::~ResourceBrowserFontView()
@@ -22,7 +21,6 @@ namespace  nero
 
     void ResourceBrowserFontView::destroy()
     {
-
     }
 
     void ResourceBrowserFontView::render()
@@ -32,19 +30,19 @@ namespace  nero
         if(!resourceManager)
             return;
 
-        auto fontHolder         = resourceManager->getFontHolder();
-        auto& fontTable         = fontHolder->getFontTable();
+        auto         fontHolder = resourceManager->getFontHolder();
+        auto&        fontTable  = fontHolder->getFontTable();
         unsigned int fontCount  = fontTable.size();
 
-        for (unsigned int i = 0; i < fontCount; i++)
+        for(unsigned int i = 0; i < fontCount; i++)
         {
             if(ImGui::ImageButton(getFontTexture(fontTable.at(i))))
             {
                 if(m_EditorContext->getBuilderMode() == BuilderMode::OBJECT)
                 {
                     auto worldBuilder = m_EditorContext->getLevelBuilder()
-                                                       ->getSelectedChunk()
-                                                       ->getWorldBuilder();
+                                            ->getSelectedChunk()
+                                            ->getWorldBuilder();
 
                     worldBuilder->addObject(Object::Text_Object,
                                             fontTable[i],
@@ -67,7 +65,7 @@ namespace  nero
             sf::Text text;
             text.setFont(m_EditorContext->getCurrentResourceManager()->getFontHolder()->getFont(fontName));
             text.setString(fontName);
-            text.setOrigin(text.getGlobalBounds().width/2.f, text.getGlobalBounds().height/2.f);
+            text.setOrigin(text.getGlobalBounds().width / 2.f, text.getGlobalBounds().height / 2.f);
             text.setFillColor(sf::Color::Black);
             text.setPosition(150.f, 50.f);
             text.setScale(1.f, -1.f);
@@ -82,4 +80,4 @@ namespace  nero
 
         return m_EditorContext->getTextureHolder()->getTexture(fontName);
     }
-}
+} // namespace nero

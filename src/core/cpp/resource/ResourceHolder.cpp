@@ -3,86 +3,84 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/resource/ResourceHolder.h>
 #include <Nero/core/cpp/utility/String.h>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	ResourceHolder::ResourceHolder():
-		 m_Setting()
-		,m_DirectoryTable()
-		,m_SelectedDirectory(StringPool.BLANK)
-	{
-		//empty
-	}
+    ResourceHolder::ResourceHolder()
+        : m_Setting()
+        , m_DirectoryTable()
+        , m_SelectedDirectory(StringPool.BLANK)
+    {
+        // empty
+    }
 
-	ResourceHolder::ResourceHolder(const Setting& setting):
-		m_Setting(setting)
-	   ,m_DirectoryTable()
-	   ,m_SelectedDirectory(StringPool.BLANK)
-	{
+    ResourceHolder::ResourceHolder(const Setting& setting)
+        : m_Setting(setting)
+        , m_DirectoryTable()
+        , m_SelectedDirectory(StringPool.BLANK)
+    {
+    }
 
-	}
+    ResourceHolder::~ResourceHolder()
+    {
+        // empty
+    }
 
+    void ResourceHolder::setSetting(const Setting& setting)
+    {
+        m_Setting = setting;
+    }
 
-	ResourceHolder::~ResourceHolder()
-	{
-		//empty
-	}
+    void ResourceHolder::addDirectory(const std::string& directory, bool autoSelect)
+    {
+        m_DirectoryTable.insert(directory);
 
-	void ResourceHolder::setSetting(const Setting& setting)
-	{
-		m_Setting = setting;
-	}
+        if(autoSelect)
+        {
+            selectDirectory(directory);
+        }
+    }
 
-	void ResourceHolder::addDirectory(const std::string& directory, bool autoSelect)
-	{
-		m_DirectoryTable.insert(directory);
+    void ResourceHolder::selectDirectory(const std::string& directory)
+    {
+        m_SelectedDirectory = directory;
+    }
 
-		if(autoSelect)
-		{
-			selectDirectory(directory);
-		}
-	}
+    const std::vector<std::string> ResourceHolder::loadFile(const std::vector<std::string> fileTable)
+    {
+        std::vector<std::string> loadedFileTable;
+        for(const std::string& file : fileTable)
+        {
+            if(loadFile(file))
+            {
+                loadedFileTable.push_back(file);
+            }
+        }
 
-	void ResourceHolder::selectDirectory(const std::string& directory)
-	{
-		m_SelectedDirectory = directory;
-	}
+        return loadedFileTable;
+    }
 
-	const std::vector<std::string> ResourceHolder::loadFile(const std::vector<std::string> fileTable)
-	{
-		std::vector<std::string> loadedFileTable;
-		for(const std::string& file : fileTable)
-		{
-			if(loadFile(file))
-			{
-				loadedFileTable.push_back(file);
-			}
-		}
+    void ResourceHolder::loadDirectory(const std::string& directory)
+    {
+        addDirectory(directory, true);
 
-		return loadedFileTable;
-	}
+        loadDirectory();
+    }
 
-	void ResourceHolder::loadDirectory(const std::string& directory)
-	{
-		addDirectory(directory, true);
+    void ResourceHolder::reloadDirectory(const std::string& directory)
+    {
+        selectDirectory(directory);
 
-		loadDirectory();
-	}
+        loadDirectory();
+    }
 
-	void ResourceHolder::reloadDirectory(const std::string& directory)
-	{
-		selectDirectory(directory);
-
-		loadDirectory();
-	}
-
-	void ResourceHolder::clear()
-	{
-		//setting does not nee to be cleared
-		m_DirectoryTable.clear();
-		m_SelectedDirectory = StringPool.BLANK;
-	}
-}
+    void ResourceHolder::clear()
+    {
+        // setting does not nee to be cleared
+        m_DirectoryTable.clear();
+        m_SelectedDirectory = StringPool.BLANK;
+    }
+} // namespace nero

@@ -3,16 +3,15 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/GameObjectPropertyView.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    GameObjectPropertyView::GameObjectPropertyView(EditorContext::Ptr editorContext):
-         UIComponent(std::move(editorContext))
+    GameObjectPropertyView::GameObjectPropertyView(EditorContext::Ptr editorContext)
+        : UIComponent(std::move(editorContext))
     {
-
     }
 
     GameObjectPropertyView::~GameObjectPropertyView()
@@ -22,12 +21,11 @@ namespace  nero
 
     void GameObjectPropertyView::destroy()
     {
-
     }
 
     void GameObjectPropertyView::render()
     {
-        auto levelBuilder = m_EditorContext->getLevelBuilder();
+        auto              levelBuilder = m_EditorContext->getLevelBuilder();
         WorldBuilder::Ptr worldBuilder = nullptr;
 
         if(levelBuilder)
@@ -39,20 +37,20 @@ namespace  nero
 
             ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.000f, 0.000f, 0.000f, 0.675f));
 
-            if (ImGui::CollapsingHeader("Game Object", ImGuiTreeNodeFlags_DefaultOpen))
+            if(ImGui::CollapsingHeader("Game Object", ImGuiTreeNodeFlags_DefaultOpen))
             {
                 ImGuiViewport* viewport = ImGui::GetMainViewport();
-                float height = viewport->Size.y * 0.50f;
-                viewport = nullptr;
+                float          height   = viewport->Size.y * 0.50f;
+                viewport                = nullptr;
                 ImGui::BeginChild("game_object", ImVec2(), true);
 
                 ImGui::SetCursorPosX(10.f);
-                if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen))
+                if(ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     ImGui::BeginChild("object_general", ImVec2(0.f, 110.f), true);
                     ImGui::Dummy(ImVec2(0.0f, 5.0f));
                     float wording_width = 70.f;
-                    float input_width = ImGui::GetWindowContentRegionWidth() - 70.f;
+                    float input_width   = ImGui::GetWindowContentRegionWidth() - 70.f;
 
                     ImGui::Text("Name");
                     ImGui::SameLine(wording_width);
@@ -66,8 +64,6 @@ namespace  nero
                         selectedObject->setName(std::string(object_name));
                     }
                     ImGui::Dummy(ImVec2(0.0f, 1.0f));
-
-
 
                     ImGui::Text("Type");
                     ImGui::SameLine(wording_width);
@@ -88,12 +84,12 @@ namespace  nero
                 }
 
                 ImGui::SetCursorPosX(10.f);
-                if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+                if(ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     ImGui::BeginChild("object_transfrom", ImVec2(0.f, 150.f), true);
                     ImGui::Dummy(ImVec2(0.0f, 5.0f));
                     float wording_width = 70.f;
-                    float input_width = ImGui::GetWindowContentRegionWidth() - 70.f;
+                    float input_width   = ImGui::GetWindowContentRegionWidth() - 70.f;
 
                     ImGui::Text("Position");
                     ImGui::SameLine(wording_width);
@@ -159,75 +155,73 @@ namespace  nero
                     std::vector<Object::Ptr> componentTable = getComponentTable(selectedObject);
                     for(Object::Ptr component : componentTable)
                     {
-                            switch(component->getFirstType())
+                        switch(component->getFirstType())
+                        {
+                        case Object::Sprite_Object: {
+                            ImGui::SetCursorPosX(10.f);
+                            if(ImGui::CollapsingHeader("Sprite", ImGuiTreeNodeFlags_DefaultOpen))
                             {
-                                case Object::Sprite_Object:
-                                {
-                                    ImGui::SetCursorPosX(10.f);
-                                    if (ImGui::CollapsingHeader("Sprite", ImGuiTreeNodeFlags_DefaultOpen))
-                                    {
-                                        ImGui::BeginChild("object_sprite", ImVec2(0.f, 70.f), true);
+                                ImGui::BeginChild("object_sprite", ImVec2(0.f, 70.f), true);
 
-                                        float wording_width = 70.f;
-                                        float input_width = ImGui::GetWindowContentRegionWidth() - 70.f;
+                                float             wording_width = 70.f;
+                                float             input_width   = ImGui::GetWindowContentRegionWidth() - 70.f;
 
-                                        SpriteObject::Ptr spriteObject = SpriteObject::Cast(component);
+                                SpriteObject::Ptr spriteObject  = SpriteObject::Cast(component);
 
-                                        ImGui::Text("Sprite");
-                                        ImGui::SameLine(wording_width);
-                                        ImGui::SetNextItemWidth(input_width);
-                                        char* object_sprite = "";
-                                        ImGui::InputText("##object_sprite", object_sprite, sizeof(object_sprite), ImGuiInputTextFlags_ReadOnly);
-                                        ImGui::Dummy(ImVec2(0.0f, 1.0f));
-                                        ImGui::Text("Texture");
-                                        ImGui::SameLine(wording_width);
-                                        ImGui::SetNextItemWidth(input_width);
-                                        char* sprite_texture = "";
-                                        ImGui::InputText("##sprite_texture", object_sprite, sizeof(sprite_texture), ImGuiInputTextFlags_ReadOnly);
-                                        ImGui::Dummy(ImVec2(0.0f, 1.0f));
+                                ImGui::Text("Sprite");
+                                ImGui::SameLine(wording_width);
+                                ImGui::SetNextItemWidth(input_width);
+                                char* object_sprite = "";
+                                ImGui::InputText("##object_sprite", object_sprite, sizeof(object_sprite), ImGuiInputTextFlags_ReadOnly);
+                                ImGui::Dummy(ImVec2(0.0f, 1.0f));
+                                ImGui::Text("Texture");
+                                ImGui::SameLine(wording_width);
+                                ImGui::SetNextItemWidth(input_width);
+                                char* sprite_texture = "";
+                                ImGui::InputText("##sprite_texture", object_sprite, sizeof(sprite_texture), ImGuiInputTextFlags_ReadOnly);
+                                ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
-                                        ImGui::EndChild();
-                                    }
-                                }break;
+                                ImGui::EndChild();
+                            }
+                        }
+                        break;
 
-                                case Object::Mesh_Object:
-                                {
-                                    if(ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
-                                    {
-                                        ImGui::BeginChild("mesh_object", ImVec2(0.f, 100.f), true);
+                        case Object::Mesh_Object: {
+                            if(ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+                            {
+                                ImGui::BeginChild("mesh_object", ImVec2(0.f, 100.f), true);
 
-                                        float wording_width = 70.f;
-                                        float input_width = ImGui::GetWindowContentRegionWidth() - 70.f;
-                                        MeshObject::Ptr meshObject = MeshObject::Cast(component);
+                                float           wording_width = 70.f;
+                                float           input_width   = ImGui::GetWindowContentRegionWidth() - 70.f;
+                                MeshObject::Ptr meshObject    = MeshObject::Cast(component);
 
-                                        ImGui::Text("Shape");
-                                        ImGui::SameLine(wording_width);
-                                        ImGui::SetNextItemWidth(input_width);
-                                        char* object_sprite = "";
-                                        ImGui::InputText("##mesh_shape", object_sprite, sizeof(object_sprite), ImGuiInputTextFlags_ReadOnly);
-                                        ImGui::Dummy(ImVec2(0.0f, 1.0f));
-                                        ImGui::Text("Type");
-                                        ImGui::SameLine(wording_width);
-                                        ImGui::SetNextItemWidth(input_width);
-                                        char* sprite_texture = "";
-                                        ImGui::InputText("##mesh_type", object_sprite, sizeof(sprite_texture), ImGuiInputTextFlags_ReadOnly);
-                                        ImGui::Dummy(ImVec2(0.0f, 1.0f));
+                                ImGui::Text("Shape");
+                                ImGui::SameLine(wording_width);
+                                ImGui::SetNextItemWidth(input_width);
+                                char* object_sprite = "";
+                                ImGui::InputText("##mesh_shape", object_sprite, sizeof(object_sprite), ImGuiInputTextFlags_ReadOnly);
+                                ImGui::Dummy(ImVec2(0.0f, 1.0f));
+                                ImGui::Text("Type");
+                                ImGui::SameLine(wording_width);
+                                ImGui::SetNextItemWidth(input_width);
+                                char* sprite_texture = "";
+                                ImGui::InputText("##mesh_type", object_sprite, sizeof(sprite_texture), ImGuiInputTextFlags_ReadOnly);
+                                ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
-                                        ImGui::EndChild();
-                                    }
-
-                                    if(ImGui::CollapsingHeader("Physics", ImGuiTreeNodeFlags_DefaultOpen))
-                                    {
-                                        ImGui::BeginChild("physics_data", ImVec2(0.f, 100.f), true);
-
-                                        MeshObject::Ptr meshObject = MeshObject::Cast(component);
-
-                                        ImGui::EndChild();
-                                    }
-                                }break;
-
+                                ImGui::EndChild();
                             }
 
+                            if(ImGui::CollapsingHeader("Physics", ImGuiTreeNodeFlags_DefaultOpen))
+                            {
+                                ImGui::BeginChild("physics_data", ImVec2(0.f, 100.f), true);
+
+                                MeshObject::Ptr meshObject = MeshObject::Cast(component);
+
+                                ImGui::EndChild();
+                            }
+                        }
+                        break;
+                        }
                     }
                 }
 
@@ -255,10 +249,10 @@ namespace  nero
         }
 
         auto childTab = object->getAllChild();
-        for (auto it = childTab->rbegin(); it != childTab->rend(); it++)
+        for(auto it = childTab->rbegin(); it != childTab->rend(); it++)
         {
             getComponentTable(*it, result);
         }
     }
 
-}
+} // namespace nero

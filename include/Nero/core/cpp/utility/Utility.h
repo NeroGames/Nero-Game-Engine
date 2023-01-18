@@ -5,7 +5,7 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/utility/Platform.h>
 #include <Nero/core/cpp/utility/String.h>
 #include <Nero/core/cpp/utility/Logging.h>

@@ -3,52 +3,50 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/editor/EditorCamera.h>
 #include <Nero/core/cpp/utility/Utility.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	////////////////////////////////////////////////////////////
-	AdvancedCamera::AdvancedCamera(const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio):
-		 Camera(defaultPos, panSpeed, rotSpeed, zRatio)
-		,m_IsPanningDown(false)
-		,m_IsPanningLeft(false)
-		,m_IsPanningRight(false)
-		,m_IsPanningUp(false)
-		,m_IsRotatingLeft(false)
-		,m_IsRotatingRight(false)
-		,m_IsZoomingIn(false)
-		,m_IsZoomingOut(false)
-	{
-
-	}
+    ////////////////////////////////////////////////////////////
+    AdvancedCamera::AdvancedCamera(const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio)
+        : Camera(defaultPos, panSpeed, rotSpeed, zRatio)
+        , m_IsPanningDown(false)
+        , m_IsPanningLeft(false)
+        , m_IsPanningRight(false)
+        , m_IsPanningUp(false)
+        , m_IsRotatingLeft(false)
+        , m_IsRotatingRight(false)
+        , m_IsZoomingIn(false)
+        , m_IsZoomingOut(false)
+    {
+    }
 
     ////////////////////////////////////////////////////////////
-	AdvancedCamera::AdvancedCamera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio):
-         Camera(viewSize, defaultPos, panSpeed, rotSpeed, zRatio)
-        ,m_IsPanningDown(false)
-        ,m_IsPanningLeft(false)
-        ,m_IsPanningRight(false)
-        ,m_IsPanningUp(false)
-        ,m_IsRotatingLeft(false)
-        ,m_IsRotatingRight(false)
-        ,m_IsZoomingIn(false)
-        ,m_IsZoomingOut(false)
+    AdvancedCamera::AdvancedCamera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio)
+        : Camera(viewSize, defaultPos, panSpeed, rotSpeed, zRatio)
+        , m_IsPanningDown(false)
+        , m_IsPanningLeft(false)
+        , m_IsPanningRight(false)
+        , m_IsPanningUp(false)
+        , m_IsRotatingLeft(false)
+        , m_IsRotatingRight(false)
+        , m_IsZoomingIn(false)
+        , m_IsZoomingOut(false)
     {
-
     }
 
     ////////////////////////////////////////////////////////////
     AdvancedCamera::~AdvancedCamera()
     {
-        //Empty
+        // Empty
     }
 
     ////////////////////////////////////////////////////////////
     void AdvancedCamera::update(const sf::Time& deltaTime)
     {
-        //panning
+        // panning
         if(m_IsPanningUp)
             panUp();
 
@@ -61,7 +59,7 @@ namespace nero
         if(m_IsPanningRight)
             panRight();
 
-        //Rotation
+        // Rotation
         if(m_IsRotatingLeft)
         {
             rotateLeft();
@@ -69,7 +67,7 @@ namespace nero
 
         if(m_IsRotatingRight)
         {
-           rotateRight();
+            rotateRight();
         }
 
         if(m_IsZoomingIn)
@@ -79,47 +77,47 @@ namespace nero
 
         if(m_IsZoomingOut)
         {
-           zoomOut();
+            zoomOut();
         }
 
-       Camera::update(deltaTime);
+        Camera::update(deltaTime);
     }
 
     ////////////////////////////////////////////////////////////
     void AdvancedCamera::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
     {
-        //Handle key pressing
+        // Handle key pressing
         if(isPressed)
         {
-            //panning
-			if(key == sf::Keyboard::Numpad8 && !keyboard::CTRL_SHIFT_ALT())
+            // panning
+            if(key == sf::Keyboard::Numpad8 && !keyboard::CTRL_SHIFT_ALT())
                 m_IsPanningUp = isPressed;
 
-			if(key == sf::Keyboard::Numpad2 && !keyboard::CTRL_SHIFT_ALT())
+            if(key == sf::Keyboard::Numpad2 && !keyboard::CTRL_SHIFT_ALT())
                 m_IsPanningDown = isPressed;
 
-			if(key == sf::Keyboard::Numpad4 && !keyboard::CTRL_SHIFT_ALT())
+            if(key == sf::Keyboard::Numpad4 && !keyboard::CTRL_SHIFT_ALT())
                 m_IsPanningLeft = isPressed;
 
-			if(key == sf::Keyboard::Numpad6 && !keyboard::CTRL_SHIFT_ALT())
+            if(key == sf::Keyboard::Numpad6 && !keyboard::CTRL_SHIFT_ALT())
                 m_IsPanningRight = isPressed;
 
-            //Roation
-			if(key == sf::Keyboard::Numpad7 && !keyboard::CTRL_SHIFT_ALT())
+            // Roation
+            if(key == sf::Keyboard::Numpad7 && !keyboard::CTRL_SHIFT_ALT())
                 m_IsRotatingLeft = isPressed;
 
-			else if(key == sf::Keyboard::Numpad9 && !keyboard::CTRL_SHIFT_ALT())
+            else if(key == sf::Keyboard::Numpad9 && !keyboard::CTRL_SHIFT_ALT())
                 m_IsRotatingRight = isPressed;
 
-            //Zooming
-			if(key == sf::Keyboard::Add && !keyboard::CTRL_SHIFT_ALT())
+            // Zooming
+            if(key == sf::Keyboard::Add && !keyboard::CTRL_SHIFT_ALT())
                 m_IsZoomingIn = isPressed;
 
-			else if(key == sf::Keyboard::Subtract && !keyboard::CTRL_SHIFT_ALT())
+            else if(key == sf::Keyboard::Subtract && !keyboard::CTRL_SHIFT_ALT())
                 m_IsZoomingOut = isPressed;
         }
 
-        else //Handle key realising
+        else // Handle key realising
         {
             if(key == sf::Keyboard::Numpad8)
                 m_IsPanningUp = isPressed;
@@ -133,27 +131,26 @@ namespace nero
             else if(key == sf::Keyboard::Numpad6)
                 m_IsPanningRight = isPressed;
 
-            //Roation
+            // Roation
             else if(key == sf::Keyboard::Numpad7)
                 m_IsRotatingLeft = isPressed;
 
             else if(key == sf::Keyboard::Numpad9)
                 m_IsRotatingRight = isPressed;
 
-            //Zooming
+            // Zooming
             else if(key == sf::Keyboard::Add)
                 m_IsZoomingIn = isPressed;
 
             else if(key == sf::Keyboard::Subtract)
                 m_IsZoomingOut = isPressed;
         }
-
     }
 
     ////////////////////////////////////////////////////////////
     void AdvancedCamera::handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse)
     {
-        if (mouse.wheel == sf::Mouse::VerticalWheel)
+        if(mouse.wheel == sf::Mouse::VerticalWheel)
         {
             if(!keyboard::CTRL_SHIFT_ALT())
             {
@@ -170,7 +167,7 @@ namespace nero
                     zoomOut();
                 }
             }
-			else if (keyboard::ALT())
+            else if(keyboard::ALT())
             {
                 if(mouse.delta > 0.f)
                 {
@@ -185,7 +182,7 @@ namespace nero
                     panDown();
                 }
             }
-			else if (keyboard::CTRL())
+            else if(keyboard::CTRL())
             {
                 if(mouse.delta > 0.f)
                 {
@@ -201,7 +198,7 @@ namespace nero
                 }
             }
 
-			 else if (keyboard::SHIFT())
+            else if(keyboard::SHIFT())
             {
                 if(mouse.delta > 0.f)
                 {
@@ -240,13 +237,13 @@ namespace nero
     ////////////////////////////////////////////////////////////
     void AdvancedCamera::cancelAction()
     {
-        m_IsPanningUp       = false;
-        m_IsPanningDown     = false;
-        m_IsPanningLeft     = false;
-        m_IsPanningRight    = false;
-        m_IsRotatingLeft    = false;
-        m_IsRotatingRight   = false;
-        m_IsZoomingIn       = false;
-        m_IsZoomingOut      = false;
+        m_IsPanningUp     = false;
+        m_IsPanningDown   = false;
+        m_IsPanningLeft   = false;
+        m_IsPanningRight  = false;
+        m_IsRotatingLeft  = false;
+        m_IsRotatingRight = false;
+        m_IsZoomingIn     = false;
+        m_IsZoomingOut    = false;
     }
-}
+} // namespace nero

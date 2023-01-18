@@ -5,27 +5,26 @@
 #ifndef UNDOMANAGER_H
 #define UNDOMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
-//JSON
+// JSON
 #include <json/json.hpp>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class UndoManager
-    {
-        public:
-            typedef std::shared_ptr<UndoManager> Ptr;
+    class UndoManager {
+      public:
+        typedef std::shared_ptr<UndoManager> Ptr;
 
-        public:
-            UndoManager();
+      public:
+        UndoManager();
 
-            void                    add(nlohmann::json scene);
-            nlohmann::json          undo();
-            nlohmann::json          redo();
+        void           add(nlohmann::json scene);
+        nlohmann::json undo();
+        nlohmann::json redo();
 
-        private:
-            std::vector<nlohmann::json>         m_UndoTab;
-            int                                 m_UndoState;
+      private:
+        std::vector<nlohmann::json> m_UndoTab;
+        int                         m_UndoState;
     };
 
-}
+} // namespace nero
 #endif // UNDOMANAGER_H

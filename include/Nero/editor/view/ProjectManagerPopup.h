@@ -5,7 +5,7 @@
 #ifndef PROJECTMANAGERPOPUP_H
 #define PROJECTMANAGERPOPUP_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 #include <Nero/editor/view/RecentProjectTab.h>
 #include <Nero/editor/view/NewProjectTab.h>
@@ -15,24 +15,22 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ProjectManagerPopup : public UIComponent
-    {
-        public:
-                                        ProjectManagerPopup(EditorContext::Ptr editorContext);
-            virtual                    ~ProjectManagerPopup() override;
+    class ProjectManagerPopup : public UIComponent {
+      public:
+        ProjectManagerPopup(EditorContext::Ptr editorContext);
+        virtual ~ProjectManagerPopup() override;
 
-            virtual void                destroy() override;
-            virtual void                render() override;
+        virtual void             destroy() override;
+        virtual void             render() override;
 
-            TabSelectionHandler::Ptr    getTabSelectionHandler() const;
+        TabSelectionHandler::Ptr getTabSelectionHandler() const;
 
-        private:
-            TabSelectionHandler::Ptr    m_TabSelectionHandler;
-            RecentProjectTab            m_RecentProjectTab;
-            NewProjectTab               m_NewProjectTab;
-            OpenProjectTab              m_OpenProjectTab;
-            WorkspaceTab                m_WorkspaceTab;
-
-	};
-}
+      private:
+        TabSelectionHandler::Ptr m_TabSelectionHandler;
+        RecentProjectTab         m_RecentProjectTab;
+        NewProjectTab            m_NewProjectTab;
+        OpenProjectTab           m_OpenProjectTab;
+        WorkspaceTab             m_WorkspaceTab;
+    };
+} // namespace nero
 #endif // PROJECTMANAGERPOPUP_H

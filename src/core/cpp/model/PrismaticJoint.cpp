@@ -3,21 +3,21 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/PrismaticJoint.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    PrismaticJoint::PrismaticJoint():
-         PhysicJoint()
-        ,m_Joint(nullptr)
+    PrismaticJoint::PrismaticJoint()
+        : PhysicJoint()
+        , m_Joint(nullptr)
     {
         m_Type = PhysicJoint::Prismatic_Joint;
     }
 
     PrismaticJoint::~PrismaticJoint()
     {
-        //dtor
+        // dtor
     }
 
     void PrismaticJoint::setJoint(b2PrismaticJoint* joint)
@@ -35,12 +35,11 @@ namespace nero
         if(joint->getType() != PhysicJoint::Prismatic_Joint)
             return nullptr;
 
-        return  std::static_pointer_cast<PrismaticJoint>(joint);
+        return std::static_pointer_cast<PrismaticJoint>(joint);
     }
 
     b2Joint* PrismaticJoint::getGenericJoint()
     {
         return (b2Joint*)m_Joint;
     }
-}
-
+} // namespace nero

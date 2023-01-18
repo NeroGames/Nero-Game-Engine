@@ -3,43 +3,41 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/EditorContext.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    EditorContext::EditorContext(EditorProxy::Ptr editorProxy,
+    EditorContext::EditorContext(EditorProxy::Ptr    editorProxy,
                                  ProjectManager::Ptr projectManager,
-                                 TextureHolder::Ptr textureHolder,
-                                 FontHolder::Ptr fontHolder,
-                                 Setting::Ptr editorSetting,
-                                 RenderTexturePtr renderTexture,
-                                 RenderContext::Ptr renderContext,
+                                 TextureHolder::Ptr  textureHolder,
+                                 FontHolder::Ptr     fontHolder,
+                                 Setting::Ptr        editorSetting,
+                                 RenderTexturePtr    renderTexture,
+                                 RenderContext::Ptr  renderContext,
                                  AdvancedCamera::Ptr editorCamara,
-                                 const EditorMode& editorMode,
-                                 const BuilderMode& builderMode)
-        :m_EditorProxy(editorProxy)
-        ,m_ProjectManager(projectManager)
-        ,m_TextureHolder(textureHolder)
-        ,m_FontHolder(fontHolder)
-        ,m_EditorSetting(editorSetting)
-        ,m_RenderTexture(renderTexture)
-        ,m_RenderContext(renderContext)
-        ,m_EditorCamera(editorCamara)
-        ,m_EditorMode(editorMode)
-        ,m_BuilderMode(builderMode)
-        ,m_SelectedGameLevelName(StringPool.BLANK)
-        ,m_OpenedGameLevelName(StringPool.BLANK)
-        ,m_SelectedResourceType(ResourceType::None)
-        ,m_FrameRate(0.f)
-        ,m_FrameTime(0.f)
+                                 const EditorMode&   editorMode,
+                                 const BuilderMode&  builderMode)
+        : m_EditorProxy(editorProxy)
+        , m_ProjectManager(projectManager)
+        , m_TextureHolder(textureHolder)
+        , m_FontHolder(fontHolder)
+        , m_EditorSetting(editorSetting)
+        , m_RenderTexture(renderTexture)
+        , m_RenderContext(renderContext)
+        , m_EditorCamera(editorCamara)
+        , m_EditorMode(editorMode)
+        , m_BuilderMode(builderMode)
+        , m_SelectedGameLevelName(StringPool.BLANK)
+        , m_OpenedGameLevelName(StringPool.BLANK)
+        , m_SelectedResourceType(ResourceType::None)
+        , m_FrameRate(0.f)
+        , m_FrameTime(0.f)
     {
-
     }
 
     EditorContext::~EditorContext()
     {
-
     }
 
     EditorProxy::Ptr EditorContext::getEditorProxy() const
@@ -105,12 +103,12 @@ namespace  nero
         return m_BuilderMode;
     }
 
-    std::string EditorContext::getSelectedGameLevelName()  const
+    std::string EditorContext::getSelectedGameLevelName() const
     {
         return m_SelectedGameLevelName;
     }
 
-    std::string EditorContext::getOpengedGameLevelName()  const
+    std::string EditorContext::getOpengedGameLevelName() const
     {
         return m_OpenedGameLevelName;
     }
@@ -154,22 +152,20 @@ namespace  nero
 
     ResourceManager::Ptr EditorContext::getCurrentResourceManager() const
     {
-        switch (m_EditorMode)
+        switch(m_EditorMode)
         {
-            case EditorMode::WORLD_BUILDER:
-            {
-                auto levelBuilder = getLevelBuilder();
+        case EditorMode::WORLD_BUILDER: {
+            auto levelBuilder = getLevelBuilder();
 
-                if(!levelBuilder)
-                    return nullptr;
-
-                return levelBuilder->getResourceManager();
-            }
-            default:
-            {
-                // TODO
+            if(!levelBuilder)
                 return nullptr;
-            }
+
+            return levelBuilder->getResourceManager();
+        }
+        default: {
+            // TODO
+            return nullptr;
+        }
         }
     }
 
@@ -207,4 +203,4 @@ namespace  nero
     {
         m_FrameTime = frameTime;
     }
-}
+} // namespace nero

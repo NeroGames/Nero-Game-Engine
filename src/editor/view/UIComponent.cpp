@@ -3,19 +3,17 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    UIComponent::UIComponent(EditorContext::Ptr editorContext):
-        m_EditorContext(std::move(editorContext))
+    UIComponent::UIComponent(EditorContext::Ptr editorContext)
+        : m_EditorContext(std::move(editorContext))
     {
-
     }
 
     UIComponent::~UIComponent()
     {
-
     }
-}
+} // namespace nero

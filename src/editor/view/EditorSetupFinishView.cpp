@@ -3,19 +3,18 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/EditorSetupFinishView.h>
-//Iconfont
+// Iconfont
 #include <iconfont/IconsFontAwesome5.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
     EditorSetupFinishView::EditorSetupFinishView(EditorContext::Ptr editorContext,
-                                                 EditorSetup::Ptr editorSetup):
-         UIComponent(std::move(editorContext))
-        ,m_EditorSetup(editorSetup)
+                                                 EditorSetup::Ptr   editorSetup)
+        : UIComponent(std::move(editorContext))
+        , m_EditorSetup(editorSetup)
     {
-
     }
 
     EditorSetupFinishView::~EditorSetupFinishView()
@@ -25,7 +24,6 @@ namespace  nero
 
     void EditorSetupFinishView::destroy()
     {
-
     }
 
     void EditorSetupFinishView::render()
@@ -45,4 +43,4 @@ namespace  nero
 
         m_EditorSetup->setNextSetup(true);
     }
-}
+} // namespace nero

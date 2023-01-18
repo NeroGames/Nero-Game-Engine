@@ -3,14 +3,12 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/screen/ScreenBuilder.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	ScreenBuilder::ScreenBuilder()
-	{
-
-	}
-}
-
+    ScreenBuilder::ScreenBuilder()
+    {
+    }
+} // namespace nero

@@ -5,58 +5,56 @@
 #ifndef TEXTUREHOLDER_H
 #define TEXTUREHOLDER_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/resource/ResourceHolder.h>
-//SFML
+// SFML
 #include <SFML/Graphics/Texture.hpp>
-//JSON
+// JSON
 #include <json/json.hpp>
-//STD
+// STD
 #include <memory>
 #include <vector>
 #include <map>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	class TextureHolder : public ResourceHolder
-    {
-		public: //utility
-			typedef std::shared_ptr<TextureHolder>    Ptr;
-			using	ResourceHolder::loadDirectory;
-			using	ResourceHolder::loadFile;
+    class TextureHolder : public ResourceHolder {
+      public: // utility
+        typedef std::shared_ptr<TextureHolder> Ptr;
+        using ResourceHolder::loadDirectory;
+        using ResourceHolder::loadFile;
 
-        public:
-                                                TextureHolder();
-												TextureHolder(const Setting& setting);
-			virtual							   ~TextureHolder() override;
+      public:
+        TextureHolder();
+        TextureHolder(const Setting& setting);
+        virtual ~TextureHolder() override;
 
-			virtual void						loadDirectory() override;
-			virtual bool						loadFile(const std::string& file) override;
-			virtual void						destroy() override;
-			virtual void						clear() override;
+        virtual void                    loadDirectory() override;
+        virtual bool                    loadFile(const std::string& file) override;
+        virtual void                    destroy() override;
+        virtual void                    clear() override;
 
-            sf::Texture&				        getTexture(std::string textureName);
-            const sf::Texture&			        getTexture(std::string textureName)         const;
-            const sf::Texture&			        getSpriteTexture(std::string spriteName)    const;
-            sf::IntRect                         getSpriteBound(std::string spriteName)      const;
-            const std::vector<std::string>&     getSpriteTable()                            const;
-            int                                 getSpriteCount()                            const;
-            void                                printSpriteTable()                          const;
+        sf::Texture&                    getTexture(std::string textureName);
+        const sf::Texture&              getTexture(std::string textureName) const;
+        const sf::Texture&              getSpriteTexture(std::string spriteName) const;
+        sf::IntRect                     getSpriteBound(std::string spriteName) const;
+        const std::vector<std::string>& getSpriteTable() const;
+        int                             getSpriteCount() const;
+        void                            printSpriteTable() const;
 
-			void								setResourceDirectory(const std::string& resourceDictory);
-			void								smoothAllTexture();
+        void                            setResourceDirectory(const std::string& resourceDictory);
+        void                            smoothAllTexture();
 
+      private:
+        bool addTexture(std::string textureId, std::unique_ptr<sf::Texture> texture);
+        void addSpriteBound(std::string textureId, std::string spriteId, sf::IntRect spriteRect);
+        void addSpriteBound(std::map<std::string, std::map<std::string, sf::IntRect>> spriteMap);
+        void addSprite(std::vector<std::string> spriteTable);
 
-        private:
-			bool                                addTexture(std::string textureId, std::unique_ptr<sf::Texture> texture);
-			void                                addSpriteBound(std::string textureId, std::string spriteId, sf::IntRect spriteRect);
-			void                                addSpriteBound(std::map<std::string, std::map<std::string, sf::IntRect>> spriteMap);
-			void								addSprite(std::vector<std::string> spriteTable);
-
-        private:
-            std::map<std::string, std::unique_ptr<sf::Texture>>	            m_TextureMap;
-            std::map<std::string, std::map<std::string, sf::IntRect>>       m_SpriteMap;
-            std::vector<std::string>                                        m_SpriteTable;
+      private:
+        std::map<std::string, std::unique_ptr<sf::Texture>>       m_TextureMap;
+        std::map<std::string, std::map<std::string, sf::IntRect>> m_SpriteMap;
+        std::vector<std::string>                                  m_SpriteTable;
     };
-}
+} // namespace nero
 #endif // TEXTUREHOLDER_H

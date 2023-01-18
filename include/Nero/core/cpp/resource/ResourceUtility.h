@@ -9,20 +9,20 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	enum class ResourceType
-	{
-		None,
-		Texture,
-		Animation,
-		Sound,
-		Music,
-		Font,
-		Mesh,
-		Lightmap,
-		Shape,
-		Particle,
-		Composite
-	};
+    enum class ResourceType
+    {
+        None,
+        Texture,
+        Animation,
+        Sound,
+        Music,
+        Font,
+        Mesh,
+        Lightmap,
+        Shape,
+        Particle,
+        Composite
+    };
 
 }
 

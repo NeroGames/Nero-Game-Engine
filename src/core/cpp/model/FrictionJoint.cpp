@@ -3,21 +3,21 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/FrictionJoint.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    FrictionJoint::FrictionJoint():
-         PhysicJoint()
-        ,m_Joint(nullptr)
+    FrictionJoint::FrictionJoint()
+        : PhysicJoint()
+        , m_Joint(nullptr)
     {
         m_Type = PhysicJoint::Friction_Joint;
     }
 
     FrictionJoint::~FrictionJoint()
     {
-        //dtor
+        // dtor
     }
 
     void FrictionJoint::setJoint(b2FrictionJoint* joint)
@@ -35,11 +35,11 @@ namespace nero
         if(joint->getType() != PhysicJoint::Friction_Joint)
             return nullptr;
 
-        return  std::static_pointer_cast<FrictionJoint>(joint);
+        return std::static_pointer_cast<FrictionJoint>(joint);
     }
 
     b2Joint* FrictionJoint::getGenericJoint()
     {
         return (b2Joint*)m_Joint;
     }
-}
+} // namespace nero

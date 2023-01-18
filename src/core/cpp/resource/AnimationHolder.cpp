@@ -3,7 +3,7 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/resource/AnimationHolder.h>
 #include <Nero/core/cpp/utility/Utility.h>
 #include <experimental/filesystem>
@@ -12,135 +12,131 @@ namespace nero
 {
     AnimationHolder::AnimationHolder()
     {
-
     }
 
-	AnimationHolder::AnimationHolder(const Setting& setting) : ResourceHolder (setting)
-	{
+    AnimationHolder::AnimationHolder(const Setting& setting)
+        : ResourceHolder(setting)
+    {
+    }
 
-	}
+    AnimationHolder::~AnimationHolder()
+    {
+        destroy();
+    }
 
-	AnimationHolder::~AnimationHolder()
-	{
-		destroy();
-	}
+    void AnimationHolder::destroy()
+    {
+    }
 
-	void AnimationHolder::destroy()
-	{
-
-	}
-
-	bool AnimationHolder::loadFile(const std::string& file)
-	{
+    bool AnimationHolder::loadFile(const std::string& file)
+    {
         std::experimental::filesystem::path filePath(file);
 
-		//Load the Texture
-		std::unique_ptr<sf::Texture> texture = std::make_unique<sf::Texture>();
+        // Load the Texture
+        std::unique_ptr<sf::Texture>        texture     = std::make_unique<sf::Texture>();
 
-		const std::string textureName = filePath.filename().stem().string();
+        const std::string                   textureName = filePath.filename().stem().string();
 
-		if (!texture->loadFromFile(filePath.string()))
-		{
-			nero_log("failed to load texture : " + textureName);
+        if(!texture->loadFromFile(filePath.string()))
+        {
+            nero_log("failed to load texture : " + textureName);
 
-			return false;
-		}
+            return false;
+        }
 
-		//Get the JSON helper file
-		std::string jsonHelper  = file::replaceExtension(filePath.string(), "json");
-		if (!file::fileExist(jsonHelper))
-		{
-			nero_log("failed to load animation resource");
-			nero_log("file not found : " + jsonHelper);
-			return false;
-		}
-
-		nlohmann::json helper = file::loadJson(jsonHelper, true);
-
-		if (helper.find("type") == helper.end()) //Texture packer animation
-		{
-			nlohmann::json frame_table = helper["frames"];
-
-			for (auto& frame : frame_table)
-			{
-				std::string frameName                   = file::removeFileExtension(frame["filename"].get<std::string>());
-				std::vector<std::string> splitResult    = string::splitString(frameName, '/');
-
-				std::string sequenceName    = splitResult[0];
-				frameName                   = splitResult[1];
-
-				int rectLeft                = frame["frame"]["x"];
-				int rectTop                 = frame["frame"]["y"];
-				int rectWidth               = frame["frame"]["w"];
-				int rectHeight              = frame["frame"]["h"];
-
-				sf::IntRect frameBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
-
-				if(m_SequenceMap.find(textureName) == m_SequenceMap.end())
-				{
-					m_SequenceMap[textureName][sequenceName] = std::vector<sf::IntRect>();
-				}
-
-				//nero_log("loaded : " + textureName + "-" + sequenceName + " " + _s(frameBound.width) + " " + _s(frameBound.height));
-				m_SequenceMap[textureName][sequenceName].push_back(frameBound);
-			}
-		}
-		else
-		{
-			return false;
-		}
-
-		m_AnimationTable.push_back(textureName);
-
-		return addTexture(textureName, std::move(texture));
-
-	}
-
-
-	void AnimationHolder::loadDirectory()
-    {
-		if(m_SelectedDirectory == StringPool.BLANK)
-		{
-			nero_log("failed to load directory");
-			return;
-		}
-
-		nero_log("Resource path : " + m_SelectedDirectory);
-
-		std::experimental::filesystem::path folderPath(m_SelectedDirectory);
-
-		if(!file::directoryExist(m_SelectedDirectory))
+        // Get the JSON helper file
+        std::string jsonHelper = file::replaceExtension(filePath.string(), "json");
+        if(!file::fileExist(jsonHelper))
         {
             nero_log("failed to load animation resource");
-			nero_log("folder not found : " + m_SelectedDirectory);
+            nero_log("file not found : " + jsonHelper);
+            return false;
+        }
+
+        nlohmann::json helper = file::loadJson(jsonHelper, true);
+
+        if(helper.find("type") == helper.end()) // Texture packer animation
+        {
+            nlohmann::json frame_table = helper["frames"];
+
+            for(auto& frame : frame_table)
+            {
+                std::string              frameName    = file::removeFileExtension(frame["filename"].get<std::string>());
+                std::vector<std::string> splitResult  = string::splitString(frameName, '/');
+
+                std::string              sequenceName = splitResult[0];
+                frameName                             = splitResult[1];
+
+                int         rectLeft                  = frame["frame"]["x"];
+                int         rectTop                   = frame["frame"]["y"];
+                int         rectWidth                 = frame["frame"]["w"];
+                int         rectHeight                = frame["frame"]["h"];
+
+                sf::IntRect frameBound                = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
+
+                if(m_SequenceMap.find(textureName) == m_SequenceMap.end())
+                {
+                    m_SequenceMap[textureName][sequenceName] = std::vector<sf::IntRect>();
+                }
+
+                // nero_log("loaded : " + textureName + "-" + sequenceName + " " + _s(frameBound.width) + " " + _s(frameBound.height));
+                m_SequenceMap[textureName][sequenceName].push_back(frameBound);
+            }
+        }
+        else
+        {
+            return false;
+        }
+
+        m_AnimationTable.push_back(textureName);
+
+        return addTexture(textureName, std::move(texture));
+    }
+
+    void AnimationHolder::loadDirectory()
+    {
+        if(m_SelectedDirectory == StringPool.BLANK)
+        {
+            nero_log("failed to load directory");
             return;
         }
 
-		std::experimental::filesystem::directory_iterator it{folderPath};
-		while(it != std::experimental::filesystem::directory_iterator{})
-		{
-			nero_log(it->path().string());
+        nero_log("Resource path : " + m_SelectedDirectory);
 
-			if(file::checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
+        std::experimental::filesystem::path folderPath(m_SelectedDirectory);
+
+        if(!file::directoryExist(m_SelectedDirectory))
+        {
+            nero_log("failed to load animation resource");
+            nero_log("folder not found : " + m_SelectedDirectory);
+            return;
+        }
+
+        std::experimental::filesystem::directory_iterator it{folderPath};
+        while(it != std::experimental::filesystem::directory_iterator{})
+        {
+            nero_log(it->path().string());
+
+            if(file::checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
             {
-				loadFile(it->path().string());
-			}
+                loadFile(it->path().string());
+            }
 
-			it++;
+            it++;
         }
     }
 
-	bool AnimationHolder::addTexture(std::string textureName, std::unique_ptr<sf::Texture> texture)
+    bool AnimationHolder::addTexture(std::string textureName, std::unique_ptr<sf::Texture> texture)
     {
         auto inserted = m_TextureMap.insert(std::make_pair(textureName, std::move(texture)));
 
         if(!inserted.second)
         {
             nero_log("failed to store texture " + textureName);
-			return false;
+            return false;
         }
 
-		return true;
+        return true;
     }
 
     const std::vector<std::string>& AnimationHolder::getAnimationTable() const
@@ -181,7 +177,7 @@ namespace nero
     std::string AnimationHolder::getDefaultSequence(std::string animationName) const
     {
         auto foundAnimation = m_SequenceMap.find(animationName);
-        auto foundSequence =  foundAnimation->second.find("idle");
+        auto foundSequence  = foundAnimation->second.find("idle");
 
         if(foundSequence != foundAnimation->second.end())
         {
@@ -193,14 +189,14 @@ namespace nero
         }
     }
 
-	void AnimationHolder::clear()
-	{
-		//clear parent
-		ResourceHolder::clear();
+    void AnimationHolder::clear()
+    {
+        // clear parent
+        ResourceHolder::clear();
 
-		//clear current
-		m_TextureMap.clear();
-		m_SequenceMap.clear();
-		m_AnimationTable.clear();
-	}
-}
+        // clear current
+        m_TextureMap.clear();
+        m_SequenceMap.clear();
+        m_AnimationTable.clear();
+    }
+} // namespace nero

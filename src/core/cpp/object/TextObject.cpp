@@ -3,23 +3,24 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/object/TextObject.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    TextObject::TextObject() : Object()
-        ,m_Text()
-        ,m_Font("Sansation")
-        ,m_Content("New Text")
-        ,m_FontSize(20.f)
-        ,m_LetterSpacing(2.f)
-        ,m_LineSpacing(2.f)
-        ,m_OutlineThickness(0.f)
-        ,m_IsBold(false)
-        ,m_IsItalic(false)
-        ,m_IsUnderlined(false)
-        ,m_IsStrikeThrough(false)
+    TextObject::TextObject()
+        : Object()
+        , m_Text()
+        , m_Font("Sansation")
+        , m_Content("New Text")
+        , m_FontSize(20.f)
+        , m_LetterSpacing(2.f)
+        , m_LineSpacing(2.f)
+        , m_OutlineThickness(0.f)
+        , m_IsBold(false)
+        , m_IsItalic(false)
+        , m_IsUnderlined(false)
+        , m_IsStrikeThrough(false)
     {
         setFirstType(Object::Text_Object);
         setSecondType(Object::Text_Object);
@@ -59,13 +60,13 @@ namespace nero
 
     void TextObject::setLetterSpacing(float value)
     {
-        //m_Text.setLetterSpacing(value);
+        // m_Text.setLetterSpacing(value);
         m_LetterSpacing = value;
     }
 
     void TextObject::setLineSpacing(float value)
     {
-        //m_Text.setLineSpacing(value);
+        // m_Text.setLineSpacing(value);
         m_LineSpacing = value;
     }
 
@@ -205,7 +206,7 @@ namespace nero
         if(object->getFirstType() != Object::Text_Object)
             return nullptr;
 
-        return  std::static_pointer_cast<TextObject>(object);
+        return std::static_pointer_cast<TextObject>(object);
     }
 
     Object::Ptr TextObject::clone(sf::Vector2f& position) const
@@ -244,26 +245,24 @@ namespace nero
     {
         nlohmann::json textJson;
 
-        textJson = Object::toJson();
+        textJson                            = Object::toJson();
 
-        textJson["rotation"]                    = getRotation();
-        textJson["position"]                    = {{"x", getPosition().x}, {"y", getPosition().y}};
-        textJson["scale"]                       = {{"x", getScale().x}, {"y", getScale().y}};
-        textJson["fill_color"]                  = {{"r", getColor().r}, {"g", getColor().g}, {"b", getColor().b}, {"a", getColor().a}};
-        textJson["outline_color"]               = {{"r", getOutlineColor().r}, {"g", getOutlineColor().g}, {"b", getOutlineColor().b}, {"a", getOutlineColor().a}};
-        textJson["font"]                        = m_Font;
-        textJson["content"]                     = m_Content;
-        textJson["font_size"]                   = m_FontSize;
-        textJson["letter_spacing"]              = m_LetterSpacing;
-        textJson["line_spacing"]                = m_LineSpacing;
-        textJson["outline_thickness"]           = m_OutlineThickness;
-        textJson["style"]["bold"]               = m_IsBold;
-        textJson["style"]["italic"]             = m_IsItalic;
-        textJson["style"]["underlined"]         = m_IsUnderlined;
-        textJson["style"]["strike_through"]     = m_IsStrikeThrough;
+        textJson["rotation"]                = getRotation();
+        textJson["position"]                = {{"x", getPosition().x}, {"y", getPosition().y}};
+        textJson["scale"]                   = {{"x", getScale().x}, {"y", getScale().y}};
+        textJson["fill_color"]              = {{"r", getColor().r}, {"g", getColor().g}, {"b", getColor().b}, {"a", getColor().a}};
+        textJson["outline_color"]           = {{"r", getOutlineColor().r}, {"g", getOutlineColor().g}, {"b", getOutlineColor().b}, {"a", getOutlineColor().a}};
+        textJson["font"]                    = m_Font;
+        textJson["content"]                 = m_Content;
+        textJson["font_size"]               = m_FontSize;
+        textJson["letter_spacing"]          = m_LetterSpacing;
+        textJson["line_spacing"]            = m_LineSpacing;
+        textJson["outline_thickness"]       = m_OutlineThickness;
+        textJson["style"]["bold"]           = m_IsBold;
+        textJson["style"]["italic"]         = m_IsItalic;
+        textJson["style"]["underlined"]     = m_IsUnderlined;
+        textJson["style"]["strike_through"] = m_IsStrikeThrough;
 
         return textJson;
     }
-}
-
-
+} // namespace nero

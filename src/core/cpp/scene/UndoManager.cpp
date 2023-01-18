@@ -3,24 +3,24 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/scene/UndoManager.h>
-//STD
+// STD
 #include <iostream>
 #include <algorithm>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    UndoManager::UndoManager():
-         m_UndoState(-1)
-        ,m_UndoTab()
+    UndoManager::UndoManager()
+        : m_UndoState(-1)
+        , m_UndoTab()
     {
-        //ctor
+        // ctor
     }
 
     void UndoManager::add(nlohmann::json undo)
     {
-        if(m_UndoState == m_UndoTab.size() - 1) //Last undo
+        if(m_UndoState == m_UndoTab.size() - 1) // Last undo
         {
             if(m_UndoTab.size() == 0)
             {
@@ -42,7 +42,6 @@ namespace nero
                 m_UndoState++;
             }
         }
-
     }
 
     nlohmann::json UndoManager::undo()
@@ -60,4 +59,4 @@ namespace nero
 
         return m_UndoTab[++m_UndoState];
     }
-}
+} // namespace nero

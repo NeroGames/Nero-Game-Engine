@@ -5,25 +5,24 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 ///////////////////////////HEADERS///////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/object/GenericObject.h>
-//STD
+// STD
 #include <memory>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class GameObject : public GenericObject
-    {
-        public: //Types Definiton
-            typedef std::shared_ptr<GameObject> Ptr;
+    class GameObject : public GenericObject {
+      public: // Types Definiton
+        typedef std::shared_ptr<GameObject> Ptr;
 
-        public: //Constructor
-                                                GameObject();
-            virtual                            ~GameObject();
+      public: // Constructor
+        GameObject();
+        virtual ~GameObject();
 
-            virtual void                        destroyObject();
+        virtual void destroyObject();
     };
 
-}
+} // namespace nero
 
 #endif // GAMEOBJECT_H

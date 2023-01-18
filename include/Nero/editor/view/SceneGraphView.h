@@ -5,19 +5,18 @@
 #ifndef SCENEGRAPHVIEW_H
 #define SCENEGRAPHVIEW_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class SceneGraphView : public UIComponent
-    {
-        public:
-                                    SceneGraphView(EditorContext::Ptr editorContext);
-            virtual                ~SceneGraphView() override;
+    class SceneGraphView : public UIComponent {
+      public:
+        SceneGraphView(EditorContext::Ptr editorContext);
+        virtual ~SceneGraphView() override;
 
-            virtual void 			destroy() override;
-            virtual void            render() override;
-	};
-}
+        virtual void destroy() override;
+        virtual void render() override;
+    };
+} // namespace nero
 #endif // SCENEGRAPHVIEW_H

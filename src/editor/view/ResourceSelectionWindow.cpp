@@ -3,16 +3,15 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/ResourceSelectionWindow.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    ResourceSelectionWindow::ResourceSelectionWindow(EditorContext::Ptr editorContext):
-         UIComponent(std::move(editorContext))
+    ResourceSelectionWindow::ResourceSelectionWindow(EditorContext::Ptr editorContext)
+        : UIComponent(std::move(editorContext))
     {
-
     }
 
     ResourceSelectionWindow::~ResourceSelectionWindow()
@@ -22,31 +21,29 @@ namespace  nero
 
     void ResourceSelectionWindow::destroy()
     {
-
     }
 
     void ResourceSelectionWindow::render()
     {
         ImGuiWindowFlags flags = ImGuiWindowFlags_HorizontalScrollbar;
         ImGui::Begin("Resource", nullptr, flags);
-        bool selected = false;
+        bool        selected       = false;
 
-        int resourceCount		= 3; // TODO
-        int count				= 0;
-        ImGuiStyle& style		= ImGui::GetStyle();
-        float xWindowVisible    = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+        int         resourceCount  = 3; // TODO
+        int         count          = 0;
+        ImGuiStyle& style          = ImGui::GetStyle();
+        float       xWindowVisible = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-        auto printSameLine = [&count, &resourceCount, &style, &xWindowVisible]()
-        {
-            float xLastButton   = ImGui::GetItemRectMax().x;
-            float xNextButton   = xLastButton + style.ItemSpacing.x + 100.f;
-            if (count++ + 1 < resourceCount && xNextButton < xWindowVisible)
+        auto        printSameLine  = [&count, &resourceCount, &style, &xWindowVisible]() {
+            float xLastButton = ImGui::GetItemRectMax().x;
+            float xNextButton = xLastButton + style.ItemSpacing.x + 100.f;
+            if(count++ + 1 < resourceCount && xNextButton < xWindowVisible)
                 ImGui::SameLine();
         };
 
         const auto selectedResourceType = m_EditorContext->getSelectedResourceType();
 
-        selected = selectedResourceType == ResourceType::Texture;
+        selected                        = selectedResourceType == ResourceType::Texture;
         pushResourceStyle(selected);
         if(ImGui::Button("Sprite##browse_sprite_resource", ImVec2(100.f, 100.f)))
         {
@@ -92,9 +89,9 @@ namespace  nero
         }
         popResourceStyle(selected);
 
-        //TODO
-        // Shape, Particle, Composite, Sound, Music, LuaScript, Spawner, Factory, CPPScript, EmptyObject
+        // TODO
+        //  Shape, Particle, Composite, Sound, Music, LuaScript, Spawner, Factory, CPPScript, EmptyObject
 
         ImGui::End();
     }
-}
+} // namespace nero

@@ -5,16 +5,15 @@
 #ifndef UPDATEMANAGER_H
 #define UPDATEMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
-//Poco
-//#include <memory>
-//Nero
+// Poco
+// #include <memory>
+// Nero
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	class UpdateManager
-	{
-		public:
-			UpdateManager();
-	};
-}
+    class UpdateManager {
+      public:
+        UpdateManager();
+    };
+} // namespace nero
 #endif // UPDATEMANAGER_H

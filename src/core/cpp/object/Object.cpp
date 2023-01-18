@@ -3,28 +3,28 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/object/Object.h>
-//STD
+// STD
 #include <algorithm>
 #include <cassert>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    Object::Object():
-         m_Id(-1)
-        ,m_Parent(nullptr)
-        ,m_Name("no_name")
-        ,m_Category("no_category")
-        ,m_IsVisible(true)
-        ,m_IsUpdateable(true)
-        ,m_IsSelectable(true)
-        ,m_IsSelected(false)
-        ,m_FirstType(Object::None)
-        ,m_SecondType(Object::None)
-        ,m_ChildTab()
+    Object::Object()
+        : m_Id(-1)
+        , m_Parent(nullptr)
+        , m_Name("no_name")
+        , m_Category("no_category")
+        , m_IsVisible(true)
+        , m_IsUpdateable(true)
+        , m_IsSelectable(true)
+        , m_IsSelected(false)
+        , m_FirstType(Object::None)
+        , m_SecondType(Object::None)
+        , m_ChildTab()
     {
-        //Empty
+        // Empty
     }
 
     void Object::setId(const int& id)
@@ -32,33 +32,33 @@ namespace nero
         m_Id = id;
     }
 
-	//TODO : remove
+    // TODO : remove
     const int& Object::getId() const
     {
         return m_Id;
     }
 
-	const int& Object::getObjectId() const
-	{
-		return m_Id;
-	}
+    const int& Object::getObjectId() const
+    {
+        return m_Id;
+    }
 
-	void Object::setName(const std::string& name)
+    void Object::setName(const std::string& name)
     {
         m_Name = name;
     }
 
-	const std::string& Object::getName() const
+    const std::string& Object::getName() const
     {
         return m_Name;
     }
 
-	void Object::setCategory(const std::string& category)
+    void Object::setCategory(const std::string& category)
     {
         m_Category = category;
     }
 
-	const std::string& Object::getCategory() const
+    const std::string& Object::getCategory() const
     {
         return m_Category;
     }
@@ -70,7 +70,7 @@ namespace nero
 
     const Object::Type& Object::getFirstType() const
     {
-        return  m_FirstType;
+        return m_FirstType;
     }
 
     void Object::setSecondType(const Type& type)
@@ -80,7 +80,7 @@ namespace nero
 
     const Object::Type& Object::getSecondType() const
     {
-        return  m_SecondType;
+        return m_SecondType;
     }
 
     void Object::setIsVisible(bool flag)
@@ -101,7 +101,7 @@ namespace nero
     bool Object::isVisible() const
     {
         return m_IsVisible;
-	}
+    }
 
     bool Object::isUpdateable() const
     {
@@ -154,11 +154,11 @@ namespace nero
 
     Object::Ptr Object::removeChild(const Object::Ptr& child)
     {
-        auto found = std::find_if(m_ChildTab.begin(), m_ChildTab.end(), [&] (Object::Ptr& p) { return p.get() == child.get(); });
+        auto found = std::find_if(m_ChildTab.begin(), m_ChildTab.end(), [&](Object::Ptr& p) { return p.get() == child.get(); });
         assert(found != m_ChildTab.end());
 
         Object::Ptr result = std::move(*found);
-        result->m_Parent = nullptr;
+        result->m_Parent   = nullptr;
         m_ChildTab.erase(found);
 
         return result;
@@ -169,8 +169,8 @@ namespace nero
         for(auto it = m_ChildTab.begin(); it != m_ChildTab.end();)
         {
             Object::Ptr result = std::move(*it);
-            result->m_Parent = nullptr;
-            it = m_ChildTab.erase(it);
+            result->m_Parent   = nullptr;
+            it                 = m_ChildTab.erase(it);
         }
     }
 
@@ -194,16 +194,16 @@ namespace nero
 
     Object::Ptr Object::getFirstChild() const
     {
-       return getChild(0);
+        return getChild(0);
     }
 
     Object::Ptr Object::removeChild(const int& index)
     {
-        auto it = m_ChildTab.begin() + index;
+        auto        it     = m_ChildTab.begin() + index;
 
         Object::Ptr result = std::move(*it);
-        result->m_Parent = nullptr;
-        it = m_ChildTab.erase(it);
+        result->m_Parent   = nullptr;
+        it                 = m_ChildTab.erase(it);
 
         return result;
     }
@@ -242,16 +242,16 @@ namespace nero
     {
         nlohmann::json objectJson;
 
-        objectJson["object_id"]         = getId();
-        objectJson["name"]              = getName();
-        objectJson["category"]          = getCategory();
-		objectJson["first_type"]        = getTypeString(getFirstType());
-		objectJson["second_type"]       = getTypeString(getSecondType());
-        objectJson["is_visible"]        = isVisible();
-        objectJson["is_updateable"]     = isUpdateable();
-        objectJson["is_selectable"]     = isSelectable();
-        objectJson["is_selected"]       = isSelected();
-        objectJson["child_count"]       = getChildCount();
+        objectJson["object_id"]     = getId();
+        objectJson["name"]          = getName();
+        objectJson["category"]      = getCategory();
+        objectJson["first_type"]    = getTypeString(getFirstType());
+        objectJson["second_type"]   = getTypeString(getSecondType());
+        objectJson["is_visible"]    = isVisible();
+        objectJson["is_updateable"] = isUpdateable();
+        objectJson["is_selectable"] = isSelectable();
+        objectJson["is_selected"]   = isSelected();
+        objectJson["child_count"]   = getChildCount();
 
         return objectJson;
     }
@@ -286,7 +286,7 @@ namespace nero
         if(!isVisible())
             return;
 
-        states.transform *= getTransform();         // Apply transform of current node
+        states.transform *= getTransform(); // Apply transform of current node
 
         drawObject(target, states);
         drawAllChild(target, states);
@@ -308,112 +308,110 @@ namespace nero
         return object;
     }
 
-    sf::Vector2f Object::getCenter()  const
+    sf::Vector2f Object::getCenter() const
     {
         return sf::Vector2f();
     }
 
-	std::string Object::getTypeString(const Object::Type& type) const
-	{
-		switch (type)
-		{
-			case Sprite_Object:
-				return "sprite_object";
+    std::string Object::getTypeString(const Object::Type& type) const
+    {
+        switch(type)
+        {
+        case Sprite_Object:
+            return "sprite_object";
 
-			case Mesh_Object:
-				return "mesh_object";
+        case Mesh_Object:
+            return "mesh_object";
 
-			case Physic_Object:
-				return "physic_object";
+        case Physic_Object:
+            return "physic_object";
 
-			case Meshed_Object:
-				return "meshed_object";
+        case Meshed_Object:
+            return "meshed_object";
 
-			case Solid_Object:
-				return "solid_object";
+        case Solid_Object:
+            return "solid_object";
 
-			case Layer_Object:
-				return "layer_object";
+        case Layer_Object:
+            return "layer_object";
 
-			case Animation_Object:
-				return "animation_object";
+        case Animation_Object:
+            return "animation_object";
 
-			case Animation_Meshed_Object:
-				return "animation_meshed_object";
+        case Animation_Meshed_Object:
+            return "animation_meshed_object";
 
-			case Animation_Solid_Object:
-				return "animation_solid_object";
+        case Animation_Solid_Object:
+            return "animation_solid_object";
 
-			case Text_Object:
-				return "text_object";
+        case Text_Object:
+            return "text_object";
 
-			case UI_Object:
-				return "ui_object";
+        case UI_Object:
+            return "ui_object";
 
-			case Button_Object:
-				return "button_object";
+        case Button_Object:
+            return "button_object";
 
-			case Light_Object:
-				return "light_object";
+        case Light_Object:
+            return "light_object";
 
-			default:
-				return "no_type";
-		}
-	}
+        default:
+            return "no_type";
+        }
+    }
 
+    std::string Object::getTypeString() const
+    {
+        switch(getSecondType())
+        {
+        case Sprite_Object:
+            return "Sprite Object";
 
-	std::string Object::getTypeString() const
-	{
-		switch (getSecondType())
-		{
-			case Sprite_Object:
-				return "Sprite Object";
+        case Mesh_Object:
+            return "Mesh Object";
 
-			case Mesh_Object:
-				return "Mesh Object";
+        case Physic_Object:
+            return "Physic Object";
 
-			case Physic_Object:
-				return "Physic Object";
+        case Meshed_Object:
+            return "Meshed Object";
 
-			case Meshed_Object:
-				return "Meshed Object";
+        case Solid_Object:
+            return "Solid Object";
 
-			case Solid_Object:
-				return "Solid Object";
+        case Layer_Object:
+            return "Layer Object";
 
-			case Layer_Object:
-				return "Layer Object";
+        case Animation_Object:
+            return "Animation Object";
 
-			case Animation_Object:
-				return "Animation Object";
+        case Animation_Meshed_Object:
+            return "Meshed Animation Object";
 
-			case Animation_Meshed_Object:
-				return "Meshed Animation Object";
+        case Animation_Solid_Object:
+            return "Solid Animation Object";
 
-			case Animation_Solid_Object:
-				return "Solid Animation Object";
+        case Text_Object:
+            return "Text Object";
 
-			case Text_Object:
-				return "Text Object";
+        case UI_Object:
+            return "UI Object";
 
-			case UI_Object:
-				return "UI Object";
+        case Button_Object:
+            return "Button Object";
 
-			case Button_Object:
-				return "Button Object";
+        case Light_Object:
+            return "Light Object";
 
-			case Light_Object:
-				return "Light Object";
+        default:
+            return "No Type";
+        }
+    }
 
-			default:
-				return "No Type";
-		}
-	}
+    Object* Object::getParent() const
+    {
+        return m_Parent;
+    }
 
-	Object* Object::getParent() const
-	{
-		return m_Parent;
-	}
-
-}
-
+} // namespace nero

@@ -3,18 +3,17 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/ToolbarButtonGroup.h>
 #include <Nero/editor/EditorConstant.h>
-//Iconfont
+// Iconfont
 #include <iconfont/IconsFontAwesome5.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    ToolbarButtonGroup::ToolbarButtonGroup(EditorContext::Ptr editorContext):
-        UIComponent(std::move(editorContext))
+    ToolbarButtonGroup::ToolbarButtonGroup(EditorContext::Ptr editorContext)
+        : UIComponent(std::move(editorContext))
     {
-
     }
 
     ToolbarButtonGroup::~ToolbarButtonGroup()
@@ -24,7 +23,6 @@ namespace  nero
 
     void ToolbarButtonGroup::destroy()
     {
-
     }
 
     void ToolbarButtonGroup::render()
@@ -92,62 +90,55 @@ namespace  nero
             return;
 
         float offSet = ImGui::GetWindowContentRegionWidth();
-        offSet = (offSet - (45 * 7.f + 8.f * 6.f + 32.f))/2.f;
+        offSet       = (offSet - (45 * 7.f + 8.f * 6.f + 32.f)) / 2.f;
 
         ImGui::SameLine(offSet);
 
-        //undo
+        // undo
         if(ImGui::Button(ICON_FA_UNDO_ALT, ImVec2(45.f, 28.f)))
         {
-
         }
 
         ImGui::SameLine(0.f, 24.f);
 
-        //play
+        // play
         if(ImGui::Button(ICON_FA_PLAY, ImVec2(45.f, 28.f)))
         {
-
         }
 
         ImGui::SameLine();
 
-        //pause
+        // pause
         if(ImGui::Button(ICON_FA_PAUSE, ImVec2(45.f, 28.f)))
         {
-
         }
 
         ImGui::SameLine();
 
-        //step
+        // step
         if(ImGui::Button(ICON_FA_STEP_FORWARD, ImVec2(45.f, 28.f)))
         {
-
         }
 
         ImGui::SameLine();
 
-        //reset
+        // reset
         if(ImGui::Button(ICON_FA_CIRCLE, ImVec2(45.f, 28.f)))
         {
-
         }
 
         ImGui::SameLine();
 
-        //render
+        // render
         if(ImGui::Button(ICON_FA_GAMEPAD, ImVec2(45.f, 28.f)))
         {
-
         }
 
         ImGui::SameLine(0.f, 24.f);
 
-        //redo
+        // redo
         if(ImGui::Button(ICON_FA_REDO_ALT, ImVec2(45.f, 28.f)))
         {
-
         }
     }
 
@@ -184,7 +175,6 @@ namespace  nero
                 {
                     if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Object", ImVec2(140.f, 28.f)))
                     {
-
                     }
                 }
             }
@@ -200,21 +190,21 @@ namespace  nero
 
             if(ImGui::Button(ICON_FA_EDIT, ImVec2(45.f, 28.f)))
             {
-                //editProject();
+                // editProject();
             }
 
             ImGui::SameLine();
 
             if(ImGui::Button(ICON_FA_COGS, ImVec2(45.f, 28.f)))
             {
-                //compileProject();
+                // compileProject();
             }
 
             ImGui::SameLine();
 
             if(ImGui::Button(ICON_FA_SYNC, ImVec2(45.f, 28.f)))
             {
-                //reloadProject();
+                // reloadProject();
             }
 
             ImGui::SameLine();
@@ -224,7 +214,7 @@ namespace  nero
         {
             ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
             // TODO
-            //m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_RECENT_PROJECT);
+            // m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_RECENT_PROJECT);
         }
     }
-}
+} // namespace nero

@@ -3,18 +3,17 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/SceneExplorerWindow.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
     SceneExplorerWindow::SceneExplorerWindow(EditorContext::Ptr editorContext)
-        :UIComponent(std::move(editorContext))
-        ,m_SceneGraphView(m_EditorContext)
-        ,m_GameObjectPropertyView(m_EditorContext)
+        : UIComponent(std::move(editorContext))
+        , m_SceneGraphView(m_EditorContext)
+        , m_GameObjectPropertyView(m_EditorContext)
     {
-
     }
 
     SceneExplorerWindow::~SceneExplorerWindow()
@@ -24,7 +23,6 @@ namespace  nero
 
     void SceneExplorerWindow::destroy()
     {
-
     }
 
     void SceneExplorerWindow::render()
@@ -37,4 +35,4 @@ namespace  nero
 
         ImGui::End();
     }
-}
+} // namespace nero

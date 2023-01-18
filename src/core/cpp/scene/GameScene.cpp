@@ -7,64 +7,55 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	GameScene::Context::Context(std::string sceneName, std::shared_ptr<sf::RenderTexture> renderTexture, Camera::Ptr camera, Setting::Ptr setting, EngineType engineType, PlatformType platformType):
-		 sceneName(sceneName)
-		,renderTexture(renderTexture)
-		,camera(camera)
-		,setting(setting)
-		,engineType(engineType)
-		,platformType(platformType)
-	{
+    GameScene::Context::Context(std::string sceneName, std::shared_ptr<sf::RenderTexture> renderTexture, Camera::Ptr camera, Setting::Ptr setting, EngineType engineType, PlatformType platformType)
+        : sceneName(sceneName)
+        , renderTexture(renderTexture)
+        , camera(camera)
+        , setting(setting)
+        , engineType(engineType)
+        , platformType(platformType)
+    {
+    }
 
-	}
+    GameScene::Context::Context()
+    {
+        // empty
+    }
 
-	GameScene::Context::Context()
-	{
-		//empty
-	}
+    GameScene::GameScene(GameScene::Context context)
+    {
+    }
 
-	GameScene::GameScene(GameScene::Context context)
-	{
+    GameScene::~GameScene()
+    {
+        destroy();
+    }
 
-	}
+    void GameScene::init()
+    {
+    }
 
-	GameScene::~GameScene()
-	{
-		destroy();
-	}
+    void GameScene::destroy()
+    {
+    }
 
-	void GameScene::init()
-	{
+    void GameScene::handleEvent(const sf::Event& event)
+    {
+    }
 
-	}
+    void GameScene::update(const sf::Time& timeStep)
+    {
+    }
 
-	void GameScene::destroy()
-	{
+    void GameScene::render()
+    {
+    }
 
-	}
+    void GameScene::renderShape()
+    {
+    }
 
-	void GameScene::handleEvent(const sf::Event& event)
-	{
-
-	}
-
-	void GameScene::update(const sf::Time& timeStep)
-	{
-
-	}
-
-	void GameScene::render()
-	{
-
-	}
-
-	void GameScene::renderShape()
-	{
-
-	}
-
-	void GameScene::renderFrontScreen()
-	{
-
-	}
-}
+    void GameScene::renderFrontScreen()
+    {
+    }
+} // namespace nero

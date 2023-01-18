@@ -3,21 +3,21 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/MouseJoint.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    MouseJoint::MouseJoint():
-         PhysicJoint()
-        ,m_Joint(nullptr)
+    MouseJoint::MouseJoint()
+        : PhysicJoint()
+        , m_Joint(nullptr)
     {
         m_Type = PhysicJoint::Mouse_Joint;
     }
 
     MouseJoint::~MouseJoint()
     {
-        //dtor
+        // dtor
     }
 
     void MouseJoint::setJoint(b2MouseJoint* joint)
@@ -35,11 +35,11 @@ namespace nero
         if(joint->getType() != PhysicJoint::Mouse_Joint)
             return nullptr;
 
-        return  std::static_pointer_cast<MouseJoint>(joint);
+        return std::static_pointer_cast<MouseJoint>(joint);
     }
 
     b2Joint* MouseJoint::getGenericJoint()
     {
         return (b2Joint*)m_Joint;
     }
-}
+} // namespace nero

@@ -3,20 +3,20 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/scene/SoundManager.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    SoundManager::SoundManager(MusicHolder& musicHolder, SoundHolder& soundHolder):
-         m_MusicHolder(musicHolder)
-        ,m_SoundHolder(soundHolder)
-        ,m_CurrentMusic("")
-        ,m_MusicVolume(50.f)
-        ,m_SoundVolume(50.f)
+    SoundManager::SoundManager(MusicHolder& musicHolder, SoundHolder& soundHolder)
+        : m_MusicHolder(musicHolder)
+        , m_SoundHolder(soundHolder)
+        , m_CurrentMusic("")
+        , m_MusicVolume(50.f)
+        , m_SoundVolume(50.f)
     {
 
-		for(int i=0; i < 20 /*MAX_SOUND_POOL*/; i++)
+        for(int i = 0; i < 20 /*MAX_SOUND_POOL*/; i++)
         {
             m_SoundPool.push_back(sf::Sound());
         }
@@ -24,7 +24,7 @@ namespace nero
 
     void SoundManager::playSound(std::string name)
     {
-        auto& sound =  getSound();
+        auto& sound = getSound();
         sound.setBuffer(m_SoundHolder.getSoundBuffer(name));
         sound.setVolume(m_SoundVolume);
         sound.setRelativeToListener(true);
@@ -80,7 +80,7 @@ namespace nero
     {
         for(auto& sound : m_SoundPool)
         {
-            if(sound.getStatus() !=  sf::SoundSource::Playing)
+            if(sound.getStatus() != sf::SoundSource::Playing)
                 return sound;
         }
 
@@ -99,15 +99,15 @@ namespace nero
         return m_MusicVolume;
     }
 
-     nlohmann::json SoundManager::toJson()
-     {
-         nlohmann::json json;
+    nlohmann::json SoundManager::toJson()
+    {
+        nlohmann::json json;
 
         json["sound_volume"] = m_SoundVolume;
         json["music_volume"] = m_MusicVolume;
 
         return json;
-     }
+    }
 
     void SoundManager::fromJson(nlohmann::json json)
     {
@@ -192,14 +192,13 @@ namespace nero
 
     void SoundManager::clampVolume(float& volume)
     {
-        if (volume < 0)
+        if(volume < 0)
         {
             volume = 0;
         }
-        else if (volume > 100)
+        else if(volume > 100)
         {
             volume = 100;
         }
     }
-}
-
+} // namespace nero

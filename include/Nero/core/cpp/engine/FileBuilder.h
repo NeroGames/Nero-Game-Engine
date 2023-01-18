@@ -5,15 +5,14 @@
 #ifndef FILEBUILDER_H
 #define FILEBUILDER_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
-//#include <Nero/core/cpp/engine/FileBuilder.h>
+// Nero
+// #include <Nero/core/cpp/engine/FileBuilder.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	class FileBuilder
-	{
-		public:
-			FileBuilder();
-	};
-}
+    class FileBuilder {
+      public:
+        FileBuilder();
+    };
+} // namespace nero
 #endif // FILEBUILDER_H

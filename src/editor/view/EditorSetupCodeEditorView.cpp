@@ -3,19 +3,19 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/engine/BackgroundTaskManager.h>
 #include <Nero/editor/view/EditorSetupCodeEditorView.h>
 #include <Nero/editor/EditorConstant.h>
-//Iconfont
+// Iconfont
 #include <iconfont/IconsFontAwesome5.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
     EditorSetupCodeEditorView::EditorSetupCodeEditorView(EditorContext::Ptr editorContext,
-                                                         EditorSetup::Ptr editorSetup):
-         UIComponent(std::move(editorContext))
-        ,m_EditorSetup(editorSetup)
+                                                         EditorSetup::Ptr   editorSetup)
+        : UIComponent(std::move(editorContext))
+        , m_EditorSetup(editorSetup)
     {
         clearInput();
     }
@@ -43,7 +43,7 @@ namespace  nero
 
         ImGui::Dummy(ImVec2(0.f, 20.f));
 
-        ImGui::SetCursorPosX((ImGui::GetWindowContentRegionWidth() - 550.f)/2.f);
+        ImGui::SetCursorPosX((ImGui::GetWindowContentRegionWidth() - 550.f) / 2.f);
 
         pushToolbarStyle(m_Input.selectQtCreator);
         if(ImGui::Button("QT Creator", ImVec2(250.f, 50.f)))
@@ -95,16 +95,14 @@ namespace  nero
             ImGui::SameLine(wording_width + input_width - 80.f);
             if(ImGui::Button("Browse##editor_path", ImVec2(60.f, 0)))
             {
-                file::selectFile([this](std::string outPath)
-                {
+                file::selectFile([this](std::string outPath) {
                     if(outPath.find("qtcreator.exe") != std::string::npos)
                     {
                         string::fillCharArray(m_Input.qtCreatorPath, sizeof(m_Input.qtCreatorPath), outPath);
 
                         putenv(std::string("NERO_GAME_QT=" + outPath).c_str());
 
-                        BTManager::startTask([outPath](BackgroundTask::Ptr backgroundTask)
-                        {
+                        BTManager::startTask([outPath](BackgroundTask::Ptr backgroundTask) {
                             cmd::setEnvironmnentVariable("NERO_GAME_QT", outPath);
                             backgroundTask->setCompleted(true);
                         });
@@ -115,10 +113,8 @@ namespace  nero
                     {
                         ImGui::OpenPopup(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str());
                     }
-
                 });
             }
-
         }
         else
         {
@@ -151,16 +147,14 @@ namespace  nero
             ImGui::SameLine(wording_width + input_width - 80.f);
             if(ImGui::Button("Browse##editor_path", ImVec2(60.f, 0)))
             {
-                file::selectFile([this](std::string outPath)
-                {
+                file::selectFile([this](std::string outPath) {
                     if(outPath.find("devenv.exe") != std::string::npos)
                     {
                         string::fillCharArray(m_Input.visualStudioPath, sizeof(m_Input.visualStudioPath), outPath);
 
                         putenv(std::string("NERO_GAME_VS=" + outPath).c_str());
 
-                        BTManager::startTask([outPath](BackgroundTask::Ptr backgroundTask)
-                        {
+                        BTManager::startTask([outPath](BackgroundTask::Ptr backgroundTask) {
                             cmd::setEnvironmnentVariable("NERO_GAME_VS", outPath);
                             backgroundTask->setCompleted(true);
                         });
@@ -171,21 +165,20 @@ namespace  nero
                     {
                         ImGui::OpenPopup(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str());
                     }
-
                 });
             }
         }
 
-        //Error modal
-        ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
-                                          ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar |ImGuiWindowFlags_NoMove;
+        // Error modal
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
+                                        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove;
         ImGui::SetNextWindowSize(ImVec2(250.f, 100.f));
         if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str(), nullptr, window_flags))
         {
             ImGui::TextWrapped("The path provided is not valid");
 
             ImGui::SetCursorPosY(100.f - 30.f);
-            ImGui::SetCursorPosX((250.f - 75.f)/2.f);
+            ImGui::SetCursorPosX((250.f - 75.f) / 2.f);
             if(ImGui::Button("Close", ImVec2(75.f, 20.f)))
             {
                 ImGui::CloseCurrentPopup();
@@ -203,7 +196,7 @@ namespace  nero
     void EditorSetupCodeEditorView::clearInput()
     {
         m_Input.selectQtCreator = true;
-        string::fillCharArray(m_Input.qtCreatorPath,	 sizeof(m_Input.qtCreatorPath),		StringPool.BLANK);
-        string::fillCharArray(m_Input.visualStudioPath,	 sizeof(m_Input.visualStudioPath),	StringPool.BLANK);
+        string::fillCharArray(m_Input.qtCreatorPath, sizeof(m_Input.qtCreatorPath), StringPool.BLANK);
+        string::fillCharArray(m_Input.visualStudioPath, sizeof(m_Input.visualStudioPath), StringPool.BLANK);
     }
-}
+} // namespace nero

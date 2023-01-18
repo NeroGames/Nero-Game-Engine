@@ -3,15 +3,13 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/object/GameLevelScriptObject.h>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	GameLevelScriptObject::GameLevelScriptObject(ScriptObject::Context context):
-		ScriptObject (context)
-	{
-
-	}
-}
-
+    GameLevelScriptObject::GameLevelScriptObject(ScriptObject::Context context)
+        : ScriptObject(context)
+    {
+    }
+} // namespace nero

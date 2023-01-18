@@ -3,16 +3,15 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/EditorUtilityWindow.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    EditorUtilityWindow::EditorUtilityWindow(EditorContext::Ptr editorContext):
-        UIComponent(std::move(editorContext))
+    EditorUtilityWindow::EditorUtilityWindow(EditorContext::Ptr editorContext)
+        : UIComponent(std::move(editorContext))
     {
-
     }
 
     EditorUtilityWindow::~EditorUtilityWindow()
@@ -22,7 +21,6 @@ namespace  nero
 
     void EditorUtilityWindow::destroy()
     {
-
     }
 
     void EditorUtilityWindow::render()
@@ -37,9 +35,11 @@ namespace  nero
 
         const auto builderMode = m_EditorContext->getBuilderMode();
 
-        int e = 0;
-        if(builderMode == BuilderMode::OBJECT) e = 0;
-        else if(builderMode == BuilderMode::MESH) e = 1;
+        int        e           = 0;
+        if(builderMode == BuilderMode::OBJECT)
+            e = 0;
+        else if(builderMode == BuilderMode::MESH)
+            e = 1;
         ImGui::RadioButton("Object", &e, 0);
         if(ImGui::IsItemEdited())
         {
@@ -52,9 +52,7 @@ namespace  nero
         }
         ImGui::RadioButton("Play", &e, 2);
 
-
         ImGui::EndChild();
-
 
         ImGui::BeginChild("save_load", ImVec2(0.f, 85.f), true);
         ImGui::Text("Save & Load");
@@ -65,7 +63,7 @@ namespace  nero
         static bool auto_save = false;
         ImGui::Checkbox("Auto save", &auto_save);
 
-        ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth()-8.f)/2.f, 0.f);
+        ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth() - 8.f) / 2.f, 0.f);
 
         if(ImGui::Button("Save", button_size))
         {
@@ -80,8 +78,6 @@ namespace  nero
         }
 
         ImGui::EndChild();
-
-
 
         ImGui::BeginChild("access_button", ImVec2(0.f, 90.f), true);
         ImGui::Text("Access Website");
@@ -101,7 +97,6 @@ namespace  nero
             cmd::launchBrowser("https://nero-games.com/forum");
         }
 
-
         if(ImGui::Button("Snippet", button_size))
         {
             cmd::launchBrowser("https://nero-games.com/snippet/engine-v2");
@@ -118,4 +113,4 @@ namespace  nero
 
         ImGui::End();
     }
-}
+} // namespace nero

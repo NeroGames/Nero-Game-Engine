@@ -5,25 +5,23 @@
 #ifndef SCRIPTMANAGER_H
 #define SCRIPTMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
-//STD
+// STD
 #include <memory>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ScriptManager
-    {
-        public:
-            typedef std::shared_ptr<ScriptManager>  Ptr;
+    class ScriptManager {
+      public:
+        typedef std::shared_ptr<ScriptManager> Ptr;
 
-        public:
-            /** Default constructor */
-            ScriptManager();
-            /** Default destructor */
-            virtual ~ScriptManager();
+      public:
+        /** Default constructor */
+        ScriptManager();
+        /** Default destructor */
+        virtual ~ScriptManager();
 
-        protected:
-
-        private:
+      protected:
+      private:
     };
-}
+} // namespace nero
 #endif // SCRIPTMANAGER_H

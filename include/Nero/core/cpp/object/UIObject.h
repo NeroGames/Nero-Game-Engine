@@ -5,31 +5,30 @@
 #ifndef UIOBJECT_H
 #define UIOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/object/Object.h>
-//SFML
+// SFML
 #include <SFML/Window/Event.hpp>
-//STD
+// STD
 #include <functional>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class UIObject : public Object
-    {
-        public:
-            typedef std::shared_ptr<UIObject>     Ptr;
-            static UIObject::Ptr                  Cast(Object::Ptr object);
+    class UIObject : public Object {
+      public:
+        typedef std::shared_ptr<UIObject> Ptr;
+        static UIObject::Ptr              Cast(Object::Ptr object);
 
-                                        UIObject();
+        UIObject();
 
-            void                        handleEvent(const sf::Event& event);
+        void handleEvent(const sf::Event& event);
 
-        protected:
-            virtual void                handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
-            virtual void                handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
+      protected:
+        virtual void handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
+        virtual void handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
 
-            virtual void			    handleObjectEvent(const sf::Event& event);
-            void					    handleAllChildEvent(const sf::Event& event);
+        virtual void handleObjectEvent(const sf::Event& event);
+        void         handleAllChildEvent(const sf::Event& event);
     };
-}
+} // namespace nero
 #endif // UIOBJECT_H

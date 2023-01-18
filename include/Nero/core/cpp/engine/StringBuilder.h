@@ -5,15 +5,14 @@
 #ifndef STRINGBUILDER_H
 #define STRINGBUILDER_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
-//#include <Nero/core/cpp/engine/EngineConstant.h>
+// Nero
+// #include <Nero/core/cpp/engine/EngineConstant.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	class StringBuilder
-	{
-		public:
-			StringBuilder();
-	};
-}
+    class StringBuilder {
+      public:
+        StringBuilder();
+    };
+} // namespace nero
 #endif // STRINGBUILDER_H

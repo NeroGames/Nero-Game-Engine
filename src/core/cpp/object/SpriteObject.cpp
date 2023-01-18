@@ -3,18 +3,19 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/object/SpriteObject.h>
 #include <Nero/core/cpp/object/MeshObject.h>
 #include <Nero/core/cpp/object/PhysicObject.h>
-//BOX2D
+// BOX2D
 #include <Box2D/Dynamics/b2Body.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    SpriteObject::SpriteObject(): Object()
-        ,m_TextureName("")
-        ,m_ParentLastPosition(sf::Vector2f(0.f,0.f))
+    SpriteObject::SpriteObject()
+        : Object()
+        , m_TextureName("")
+        , m_ParentLastPosition(sf::Vector2f(0.f, 0.f))
     {
         setFirstType(Object::Sprite_Object);
         setSecondType(Object::Sprite_Object);
@@ -41,7 +42,7 @@ namespace nero
         m_TextureName = texture;
     }
 
-	std::string  SpriteObject::getTextureName() const
+    std::string SpriteObject::getTextureName() const
     {
         return m_TextureName;
     }
@@ -89,13 +90,13 @@ namespace nero
     {
         nlohmann::json spriteJson;
 
-        spriteJson = Object::toJson();
+        spriteJson             = Object::toJson();
 
-        spriteJson["sprite"]    = getTextureName();
-        spriteJson["rotation"]  = getRotation();
-        spriteJson["position"]  = {{"x", getPosition().x}, {"y", getPosition().y}};
-        spriteJson["scale"]     = {{"x", getScale().x}, {"y", getScale().y}};
-        spriteJson["color"]     = {{"r", getColor().r}, {"g", getColor().g}, {"b", getColor().b}, {"a", getColor().a}};
+        spriteJson["sprite"]   = getTextureName();
+        spriteJson["rotation"] = getRotation();
+        spriteJson["position"] = {{"x", getPosition().x}, {"y", getPosition().y}};
+        spriteJson["scale"]    = {{"x", getScale().x}, {"y", getScale().y}};
+        spriteJson["color"]    = {{"r", getColor().r}, {"g", getColor().g}, {"b", getColor().b}, {"a", getColor().a}};
 
         return spriteJson;
     }
@@ -105,6 +106,6 @@ namespace nero
         if(object->getFirstType() != Object::Sprite_Object)
             return nullptr;
 
-        return  std::static_pointer_cast<SpriteObject>(object);
+        return std::static_pointer_cast<SpriteObject>(object);
     }
-}
+} // namespace nero

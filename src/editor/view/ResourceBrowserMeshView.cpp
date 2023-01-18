@@ -3,16 +3,15 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/ResourceBrowserMeshView.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    ResourceBrowserMeshView::ResourceBrowserMeshView(EditorContext::Ptr editorContext):
-         UIComponent(std::move(editorContext))
+    ResourceBrowserMeshView::ResourceBrowserMeshView(EditorContext::Ptr editorContext)
+        : UIComponent(std::move(editorContext))
     {
-
     }
 
     ResourceBrowserMeshView::~ResourceBrowserMeshView()
@@ -22,7 +21,6 @@ namespace  nero
 
     void ResourceBrowserMeshView::destroy()
     {
-
     }
 
     void ResourceBrowserMeshView::render()
@@ -30,16 +28,15 @@ namespace  nero
         if(m_EditorContext->getBuilderMode() != BuilderMode::OBJECT)
             return;
 
-        int resourceCount		= 3;
-        int count				= 0;
-        ImGuiStyle& style		= ImGui::GetStyle();
-        float windowWidth       = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+        int         resourceCount = 3;
+        int         count         = 0;
+        ImGuiStyle& style         = ImGui::GetStyle();
+        float       windowWidth   = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-        auto printSameLine = [&count, &resourceCount, &style, &windowWidth]()
-        {
+        auto        printSameLine = [&count, &resourceCount, &style, &windowWidth]() {
             float xLastButton = ImGui::GetItemRectMax().x;
             float xNextButton = xLastButton + style.ItemSpacing.x + 100.f;
-            if (count++ + 1 < resourceCount && xNextButton < windowWidth)
+            if(count++ + 1 < resourceCount && xNextButton < windowWidth)
                 ImGui::SameLine();
         };
 
@@ -65,4 +62,4 @@ namespace  nero
             worldBuilder->addObject(Object::Mesh_Object, "Line", m_EditorContext->getNewGameObjectPosition());
         }
     }
-}
+} // namespace nero

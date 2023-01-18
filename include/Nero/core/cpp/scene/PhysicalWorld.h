@@ -5,20 +5,19 @@
 #ifndef PHYSICALWORLD_H
 #define PHYSICALWORLD_H
 ///////////////////////////HEADERS///////////////////////////
-//STD
+// STD
 #include <memory>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	class PhysicalWorld
-	{
-		public:
-			//type definiton
-			typedef std::shared_ptr	<PhysicalWorld> Ptr;
+    class PhysicalWorld {
+      public:
+        // type definiton
+        typedef std::shared_ptr<PhysicalWorld> Ptr;
 
-		public:
-			PhysicalWorld();
-	};
-}
+      public:
+        PhysicalWorld();
+    };
+} // namespace nero
 
 #endif // PHYSICALWORLD_H

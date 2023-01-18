@@ -3,16 +3,14 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS///////////////////////////
-//SFML
+// SFML
 #include <Nero/core/cpp/scene/PhysicalWorld.h>
-//STD
+// STD
 #include <memory>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-	PhysicalWorld::PhysicalWorld()
-	{
-
-	}
-}
-
+    PhysicalWorld::PhysicalWorld()
+    {
+    }
+} // namespace nero

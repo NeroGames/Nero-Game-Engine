@@ -3,21 +3,20 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/WorkspaceTab.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    WorkspaceTab::WorkspaceTab(EditorContext::Ptr editorContext,
-                               TabSelectionHandler::Ptr tabSelectionHandler):
-         UIComponent(std::move(editorContext))
-        ,m_TabSelectionHandler(std::move(tabSelectionHandler))
-        ,m_NewWorkspaceView(m_EditorContext)
-        ,m_ImportWorkspaceView(m_EditorContext)
-        ,m_WorkspaceListView(m_EditorContext)
+    WorkspaceTab::WorkspaceTab(EditorContext::Ptr       editorContext,
+                               TabSelectionHandler::Ptr tabSelectionHandler)
+        : UIComponent(std::move(editorContext))
+        , m_TabSelectionHandler(std::move(tabSelectionHandler))
+        , m_NewWorkspaceView(m_EditorContext)
+        , m_ImportWorkspaceView(m_EditorContext)
+        , m_WorkspaceListView(m_EditorContext)
     {
-
     }
 
     WorkspaceTab::~WorkspaceTab()
@@ -27,7 +26,6 @@ namespace  nero
 
     void WorkspaceTab::destroy()
     {
-
     }
 
     void WorkspaceTab::render()
@@ -44,4 +42,4 @@ namespace  nero
 
         m_WorkspaceListView.render();
     }
-}
+} // namespace nero

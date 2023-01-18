@@ -5,19 +5,18 @@
 #ifndef RESOURCEBROWSERLIGHTMAPVIEW_H
 #define RESOURCEBROWSERLIGHTMAPVIEW_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceBrowserLightmapView : public UIComponent
-    {
-        public:
-                                    ResourceBrowserLightmapView(EditorContext::Ptr editorContext);
-            virtual                ~ResourceBrowserLightmapView() override;
+    class ResourceBrowserLightmapView : public UIComponent {
+      public:
+        ResourceBrowserLightmapView(EditorContext::Ptr editorContext);
+        virtual ~ResourceBrowserLightmapView() override;
 
-            virtual void 			destroy() override;
-            virtual void            render() override;
-	};
-}
+        virtual void destroy() override;
+        virtual void render() override;
+    };
+} // namespace nero
 #endif // RESOURCEBROWSERLIGHTMAPVIEW_H

@@ -5,36 +5,34 @@
 #ifndef ANIMATIONSEQUENCE_H
 #define ANIMATIONSEQUENCE_H
 ///////////////////////////HEADERS//////////////////////////
-//SFML
+// SFML
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Time.hpp>
-//STD
+// STD
 #include <string>
 #include <vector>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class AnimationSequence
-    {
-        public:
-                                            AnimationSequence();
+    class AnimationSequence {
+      public:
+        AnimationSequence();
 
-            void                            setFrameTable(const std::vector<sf::IntRect>& frameTable);
-            void                            setFrameRate(const float& frameRate);
-            void                            setLoop(bool flag);
-            const   sf::IntRect             getNextFrame();
-            float                           getFrameRate() const;
-            bool                            getLoop() const;
-            void                            reset();
-            void                            lock();
-            int                             getFrameCount() const;
+        void              setFrameTable(const std::vector<sf::IntRect>& frameTable);
+        void              setFrameRate(const float& frameRate);
+        void              setLoop(bool flag);
+        const sf::IntRect getNextFrame();
+        float             getFrameRate() const;
+        bool              getLoop() const;
+        void              reset();
+        void              lock();
+        int               getFrameCount() const;
 
-
-        private:
-            std::vector<sf::IntRect>        m_FrameTable;
-            float                           m_FrameRate;
-            bool                            m_Loop;
-            int                             m_CurrentFrame;
+      private:
+        std::vector<sf::IntRect> m_FrameTable;
+        float                    m_FrameRate;
+        bool                     m_Loop;
+        int                      m_CurrentFrame;
     };
-}
+} // namespace nero
 #endif // ANIMATIONSEQUENCE_H

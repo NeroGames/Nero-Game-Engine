@@ -5,19 +5,18 @@
 #ifndef RESOURCEBROWSERMESHVIEW_H
 #define RESOURCEBROWSERMESHVIEW_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceBrowserMeshView : public UIComponent
-    {
-        public:
-                                    ResourceBrowserMeshView(EditorContext::Ptr editorContext);
-            virtual                ~ResourceBrowserMeshView() override;
+    class ResourceBrowserMeshView : public UIComponent {
+      public:
+        ResourceBrowserMeshView(EditorContext::Ptr editorContext);
+        virtual ~ResourceBrowserMeshView() override;
 
-            virtual void 			destroy() override;
-            virtual void            render() override;
-	};
-}
+        virtual void destroy() override;
+        virtual void render() override;
+    };
+} // namespace nero
 #endif // RESOURCEBROWSERMESHVIEW_H

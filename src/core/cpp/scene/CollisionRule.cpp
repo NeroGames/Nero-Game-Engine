@@ -3,14 +3,14 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/scene/CollisionRule.h>
-//STD
+// STD
 #include <iostream>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-   CollisionRule::CollisionRule()
+    CollisionRule::CollisionRule()
     {
         m_CatecotryBitTab = {
             0x0000,
@@ -30,13 +30,12 @@ namespace nero
             0x2000,
             0x3000,
             0x8000,
-            0xFFFF
-        };
+            0xFFFF};
     }
 
     CollisionRule::~CollisionRule()
     {
-        //dtor
+        // dtor
     }
 
     void CollisionRule::canCollide(std::string categoryA, std::string categoryB)
@@ -60,7 +59,6 @@ namespace nero
         }
 
         std::cout << "\n";
-
     }
 
     void CollisionRule::printCategoryTab()
@@ -75,7 +73,6 @@ namespace nero
         }
 
         std::cout << "\n";
-
     }
 
     void CollisionRule::updateCategoryBit()
@@ -115,7 +112,6 @@ namespace nero
         }
 
         std::cout << "\n";
-
     }
 
     void CollisionRule::apply(Object::Ptr rootObject)
@@ -134,13 +130,13 @@ namespace nero
 
                 for(auto it = objectTab->begin(); it != objectTab->end(); it++)
                 {
-                    PhysicObject::Ptr physic_object = PhysicObject::Cast((*it));
+                    PhysicObject::Ptr  physic_object = PhysicObject::Cast((*it));
 
-                    std::string category = physic_object->getCategory();
+                    std::string        category      = physic_object->getCategory();
 
                     PhysicObject::Rule rule;
                     rule.categoryBits = m_CollisionRuleMap[category].first;
-                    rule.maskBits = m_CollisionRuleMap[category].second;
+                    rule.maskBits     = m_CollisionRuleMap[category].second;
 
                     physic_object->setCollisionRule(rule);
                 }
@@ -148,8 +144,8 @@ namespace nero
         }
     }
 
-     void CollisionRule::fullCollision(Object::Ptr rootObject)
-     {
+    void CollisionRule::fullCollision(Object::Ptr rootObject)
+    {
         auto layerTab = rootObject->getAllChild();
 
         for(auto layer = layerTab->begin(); layer != layerTab->end(); layer++)
@@ -160,19 +156,19 @@ namespace nero
 
                 for(auto it = objectTab->begin(); it != objectTab->end(); it++)
                 {
-                    PhysicObject::Ptr physic_object = std::static_pointer_cast<PhysicObject>((*it));
+                    PhysicObject::Ptr  physic_object = std::static_pointer_cast<PhysicObject>((*it));
 
-                    std::string category = physic_object->getCategory();
+                    std::string        category      = physic_object->getCategory();
 
                     PhysicObject::Rule rule;
                     rule.categoryBits = m_CatecotryBitTab[17];
-                    rule.maskBits = m_CatecotryBitTab[17];
+                    rule.maskBits     = m_CatecotryBitTab[17];
 
                     physic_object->setCollisionRule(rule);
                 }
             }
         }
-     }
+    }
 
     void CollisionRule::noCollision(Object::Ptr rootObject)
     {
@@ -186,11 +182,11 @@ namespace nero
 
                 for(auto it = objectTab->begin(); it != objectTab->end(); it++)
                 {
-                    PhysicObject::Ptr physic_object = std::static_pointer_cast<PhysicObject>((*it));
+                    PhysicObject::Ptr  physic_object = std::static_pointer_cast<PhysicObject>((*it));
 
                     PhysicObject::Rule rule;
                     rule.categoryBits = m_CatecotryBitTab[0];
-                    rule.maskBits = m_CatecotryBitTab[0];
+                    rule.maskBits     = m_CatecotryBitTab[0];
 
                     physic_object->setCollisionRule(rule);
                 }
@@ -198,12 +194,12 @@ namespace nero
         }
     }
 
-    PhysicObject::Rule  CollisionRule::getCollisionData(std::string category)
+    PhysicObject::Rule CollisionRule::getCollisionData(std::string category)
     {
         PhysicObject::Rule rule;
         rule.categoryBits = m_CollisionRuleMap[category].first;
-        rule.maskBits = m_CollisionRuleMap[category].second;
+        rule.maskBits     = m_CollisionRuleMap[category].second;
 
         return rule;
     }
-}
+} // namespace nero

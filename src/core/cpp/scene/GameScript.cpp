@@ -2,5 +2,4 @@
 
 GameScript::GameScript()
 {
-
 }

@@ -3,29 +3,28 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/scene/ObjectManager.h>
 #include <Nero/core/cpp/utility/Utility.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    ObjectManager::ObjectManager(Object::Ptr root_object, b2World* world,  std::vector<Screen::Ptr>& screenTable):
-         m_RootObject(root_object)
-        ,m_PhysicWorld(world)
-        ,m_DeadPhysicObject()
-        ,m_ScreenTable(screenTable)
-        ,m_JointCount(0)
-        ,m_ObjectCount(0)
+    ObjectManager::ObjectManager(Object::Ptr root_object, b2World* world, std::vector<Screen::Ptr>& screenTable)
+        : m_RootObject(root_object)
+        , m_PhysicWorld(world)
+        , m_DeadPhysicObject()
+        , m_ScreenTable(screenTable)
+        , m_JointCount(0)
+        , m_ObjectCount(0)
     {
-        m_CustomLayer =  LayerObject::Ptr(new LayerObject());
+        m_CustomLayer = LayerObject::Ptr(new LayerObject());
         m_CustomLayer->setId(-1);
         m_CustomLayer->setIsVisible(true);
         m_CustomLayer->setIsSelected(false);
         m_CustomLayer->setName("custom");
         m_CustomLayer->setOrder(0);
         m_RootObject->addChild(m_CustomLayer);
-
     }
 
     ObjectManager::~ObjectManager()
@@ -33,7 +32,6 @@ namespace nero
         m_PhysicWorld = nullptr;
         delete m_PhysicWorld;
     }
-
 
     void ObjectManager::findObject(Object::Ptr object, sf::String name, Object::Ptr& result)
     {
@@ -45,7 +43,7 @@ namespace nero
         else
         {
             auto childTab = object->getAllChild();
-            for (auto it = childTab->begin(); it != childTab->end(); it++)
+            for(auto it = childTab->begin(); it != childTab->end(); it++)
                 findObject(*it, name, result);
         }
     }
@@ -67,7 +65,7 @@ namespace nero
     {
         auto childTab = object->getAllChild();
 
-        for (auto it = childTab->begin(); it != childTab->end(); it++)
+        for(auto it = childTab->begin(); it != childTab->end(); it++)
             if((*it)->getName() == name)
                 return (*it);
 
@@ -81,18 +79,18 @@ namespace nero
 
     Object::Ptr ObjectManager::findObjectByLayerType(sf::String name, Object::Type layer_type)
     {
-        Object::Ptr result = nullptr;
+        Object::Ptr result   = nullptr;
 
-        auto layerTab = m_RootObject->getAllChild();
+        auto        layerTab = m_RootObject->getAllChild();
 
-        for (auto it = layerTab->begin(); it != layerTab->end(); it++)
+        for(auto it = layerTab->begin(); it != layerTab->end(); it++)
         {
             if((*it)->getSecondType() != layer_type)
                 continue;
 
-             result = findChildObject(*it, name);
+            result = findChildObject(*it, name);
 
-             if(result)
+            if(result)
                 break;
         }
 
@@ -121,8 +119,8 @@ namespace nero
 
     ///////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////
-    //Find by Object_Id
-     void ObjectManager::findObject(Object::Ptr object, int id, Object::Ptr& result)
+    // Find by Object_Id
+    void ObjectManager::findObject(Object::Ptr object, int id, Object::Ptr& result)
     {
         if(result != nullptr)
             return;
@@ -132,7 +130,7 @@ namespace nero
         else
         {
             auto childTab = object->getAllChild();
-            for (auto it = childTab->begin(); it != childTab->end(); it++)
+            for(auto it = childTab->begin(); it != childTab->end(); it++)
                 findObject(*it, id, result);
         }
     }
@@ -154,7 +152,7 @@ namespace nero
     {
         auto childTab = object->getAllChild();
 
-        for (auto it = childTab->begin(); it != childTab->end(); it++)
+        for(auto it = childTab->begin(); it != childTab->end(); it++)
             if((*it)->getId() == id)
                 return (*it);
 
@@ -168,18 +166,18 @@ namespace nero
 
     Object::Ptr ObjectManager::findObjectByLayerType(int id, Object::Type layer_type)
     {
-        Object::Ptr result = nullptr;
+        Object::Ptr result   = nullptr;
 
-        auto layerTab = m_RootObject->getAllChild();
+        auto        layerTab = m_RootObject->getAllChild();
 
-        for (auto it = layerTab->begin(); it != layerTab->end(); it++)
+        for(auto it = layerTab->begin(); it != layerTab->end(); it++)
         {
             if((*it)->getSecondType() != layer_type)
                 continue;
 
-             result = findChildObject(*it, id);
+            result = findChildObject(*it, id);
 
-             if(result)
+            if(result)
                 break;
         }
 
@@ -208,14 +206,14 @@ namespace nero
 
     ///////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////
-    //Checking
+    // Checking
     void ObjectManager::checkWorldObject(std::vector<sf::String> objectNameTab)
     {
         for(sf::String object_name : objectNameTab)
         {
             if(!findObject(object_name))
             {
-				//throw std::runtime_error("Object [" + nero_s(object_name) + "] not found, please check that you have entered the correct object name");
+                // throw std::runtime_error("Object [" + nero_s(object_name) + "] not found, please check that you have entered the correct object name");
             }
         }
     }
@@ -226,25 +224,25 @@ namespace nero
         {
             if(!findScreenUIObject(screen, object_name) && !findScreenObject(screen, object_name))
             {
-				//throw std::runtime_error("Object [" + nero_s(object_name) + "] not found in Screen [" + nero_s(screen) + "], please check that you have entered the correct object name");
+                // throw std::runtime_error("Object [" + nero_s(object_name) + "] not found in Screen [" + nero_s(screen) + "], please check that you have entered the correct object name");
             }
         }
     }
 
     ///////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////
-    //Move object by name
+    // Move object by name
     Object::Ptr ObjectManager::moveObject(sf::String name)
     {
-        Object::Ptr result = nullptr;
+        Object::Ptr result   = nullptr;
 
-        auto layerTab = m_RootObject->getAllChild();
+        auto        layerTab = m_RootObject->getAllChild();
 
-        for (auto it = layerTab->begin(); it != layerTab->end(); it++)
+        for(auto it = layerTab->begin(); it != layerTab->end(); it++)
         {
-             result = moveChildObject(*it, name);
+            result = moveChildObject(*it, name);
 
-             if(result)
+            if(result)
                 break;
         }
 
@@ -253,30 +251,29 @@ namespace nero
 
     Object::Ptr ObjectManager::moveObjectByLayerType(sf::String name, Object::Type layer_type)
     {
-        Object::Ptr result = nullptr;
+        Object::Ptr result   = nullptr;
 
-        auto layerTab = m_RootObject->getAllChild();
+        auto        layerTab = m_RootObject->getAllChild();
 
-        for (auto it = layerTab->begin(); it != layerTab->end(); it++)
+        for(auto it = layerTab->begin(); it != layerTab->end(); it++)
         {
             if((*it)->getSecondType() != layer_type)
                 continue;
 
-             result = moveChildObject(*it, name);
+            result = moveChildObject(*it, name);
 
-             if(result)
+            if(result)
                 break;
         }
 
         return result;
     }
 
-
     Object::Ptr ObjectManager::moveChildObject(Object::Ptr object, sf::String name)
     {
         auto childTab = object->getAllChild();
 
-        for (auto it = childTab->begin(); it != childTab->end(); it++)
+        for(auto it = childTab->begin(); it != childTab->end(); it++)
             if((*it)->getName() == name)
             {
                 auto result = (*it);
@@ -307,11 +304,11 @@ namespace nero
     ///////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////
-    bool ObjectManager::removeChildObject(Object::Ptr object,  Object::Ptr child)
+    bool ObjectManager::removeChildObject(Object::Ptr object, Object::Ptr child)
     {
         auto childTab = object->getAllChild();
 
-        for (auto it = childTab->begin(); it != childTab->end(); it++)
+        for(auto it = childTab->begin(); it != childTab->end(); it++)
         {
             if((*it)->getId() == child->getId())
             {
@@ -323,7 +320,6 @@ namespace nero
                     physic_Object->setDead(true);
                     physic_Object->setSecondType(Object::None);
                     m_DeadPhysicObject.push_back(physic_Object);
-
                 }
                 else
                 {
@@ -334,7 +330,6 @@ namespace nero
             }
         }
 
-
         return false;
     }
 
@@ -343,15 +338,15 @@ namespace nero
         if(!object)
             return false;
 
-        bool result = true;
+        bool result   = true;
 
         auto layerTab = m_RootObject->getAllChild();
 
-        for (auto it = layerTab->begin(); it != layerTab->end(); it++)
+        for(auto it = layerTab->begin(); it != layerTab->end(); it++)
         {
-             result = removeChildObject(*it, object);
+            result = removeChildObject(*it, object);
 
-             if(result)
+            if(result)
                 break;
         }
 
@@ -392,14 +387,14 @@ namespace nero
 
     Object::Ptr ObjectManager::findScreenUIObject(std::string screenName, std::string ObjectName)
     {
-        auto screen = std::find_if(m_ScreenTable.begin(), m_ScreenTable.end(), [&](Screen::Ptr screen){return screen->name == screenName;});
+        auto screen = std::find_if(m_ScreenTable.begin(), m_ScreenTable.end(), [&](Screen::Ptr screen) { return screen->name == screenName; });
 
         return findObject((*screen)->screenUI, ObjectName);
     }
 
     Object::Ptr ObjectManager::findScreenObject(std::string screenName, std::string ObjectName)
     {
-        auto screen = std::find_if(m_ScreenTable.begin(), m_ScreenTable.end(), [&](Screen::Ptr screen){return screen->name == screenName;});
+        auto screen = std::find_if(m_ScreenTable.begin(), m_ScreenTable.end(), [&](Screen::Ptr screen) { return screen->name == screenName; });
 
         return findObject((*screen)->screen, ObjectName);
     }
@@ -410,15 +405,15 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2DistanceJointDef jointDef;
-        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
-        jointDef.userData = (void *)joint->getJointId();
-		jointDef.localAnchorA = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
-		jointDef.localAnchorB = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
-		jointDef.length = property.length / EngineConstant.SCALE;
-        jointDef.frequencyHz = property.frequencyHz;
-        jointDef.dampingRatio = property.dampingRatio;
+        jointDef.userData         = (void*)joint->getJointId();
+        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
+        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
+        jointDef.length           = property.length / EngineConstant.SCALE;
+        jointDef.frequencyHz      = property.frequencyHz;
+        jointDef.dampingRatio     = property.dampingRatio;
 
         joint->setJoint((b2DistanceJoint*)m_PhysicWorld->CreateJoint(&jointDef));
 
@@ -437,14 +432,14 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2FrictionJointDef jointDef;
-        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
-        jointDef.userData = (void *)joint->getJointId();
-		jointDef.localAnchorA = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
-		jointDef.localAnchorB = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
-        jointDef.maxForce = property.maxForce;
-        jointDef.maxTorque = property.maxTorque;
+        jointDef.userData         = (void*)joint->getJointId();
+        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
+        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
+        jointDef.maxForce         = property.maxForce;
+        jointDef.maxTorque        = property.maxTorque;
 
         joint->setJoint((b2FrictionJoint*)m_PhysicWorld->CreateJoint(&jointDef));
 
@@ -463,14 +458,14 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2MotorJointDef jointDef;
-        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
-        jointDef.userData = (void *)joint->getJointId();
-		jointDef.linearOffset = graphics::sf_to_b2(property.linearOffset, EngineConstant.SCALE);
-		jointDef.angularOffset = math::toRadian(property.angularOffset);
-        jointDef.maxForce = property.maxForce;
-        jointDef.maxTorque = property.maxTorque;
+        jointDef.userData         = (void*)joint->getJointId();
+        jointDef.linearOffset     = graphics::sf_to_b2(property.linearOffset, EngineConstant.SCALE);
+        jointDef.angularOffset    = math::toRadian(property.angularOffset);
+        jointDef.maxForce         = property.maxForce;
+        jointDef.maxTorque        = property.maxTorque;
         jointDef.correctionFactor = property.correctionFactor;
 
         joint->setJoint((b2MotorJoint*)m_PhysicWorld->CreateJoint(&jointDef));
@@ -490,14 +485,14 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2MouseJointDef jointDef;
-        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
-        jointDef.userData = (void *)joint->getJointId();
-		jointDef.target = graphics::sf_to_b2(property.target, EngineConstant.SCALE);
-        jointDef.maxForce = property.maxForce;
-        jointDef.frequencyHz = property.frequencyHz;
-        jointDef.dampingRatio = property.dampingRatio;
+        jointDef.userData         = (void*)joint->getJointId();
+        jointDef.target           = graphics::sf_to_b2(property.target, EngineConstant.SCALE);
+        jointDef.maxForce         = property.maxForce;
+        jointDef.frequencyHz      = property.frequencyHz;
+        jointDef.dampingRatio     = property.dampingRatio;
 
         joint->setJoint((b2MouseJoint*)m_PhysicWorld->CreateJoint(&jointDef));
 
@@ -516,13 +511,13 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2RopeJointDef jointDef;
-        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
-        jointDef.userData = (void *)joint->getJointId();
-		jointDef.localAnchorA = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
-		jointDef.localAnchorB = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
-		jointDef.maxLength = property.maxLength / EngineConstant.SCALE;
+        jointDef.userData         = (void*)joint->getJointId();
+        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
+        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
+        jointDef.maxLength        = property.maxLength / EngineConstant.SCALE;
 
         joint->setJoint((b2RopeJoint*)m_PhysicWorld->CreateJoint(&jointDef));
 
@@ -541,15 +536,15 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2WeldJointDef jointDef;
-        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
-        jointDef.userData = (void *)joint->getJointId();
-		jointDef.localAnchorA = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
-		jointDef.localAnchorB = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
-		jointDef.referenceAngle = math::toRadian(property.referenceAngle);
-        jointDef.frequencyHz = property.frequencyHz;
-        jointDef.dampingRatio = property.dampingRatio;
+        jointDef.userData         = (void*)joint->getJointId();
+        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
+        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
+        jointDef.referenceAngle   = math::toRadian(property.referenceAngle);
+        jointDef.frequencyHz      = property.frequencyHz;
+        jointDef.dampingRatio     = property.dampingRatio;
 
         joint->setJoint((b2WeldJoint*)m_PhysicWorld->CreateJoint(&jointDef));
 
@@ -568,18 +563,18 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2WheelJointDef jointDef;
-        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
-        jointDef.userData = (void *)joint->getJointId();
-		jointDef.localAnchorA = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
-		jointDef.localAnchorB = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
-		jointDef.localAxisA = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
-        jointDef.enableMotor = property.enableMotor;
-        jointDef.maxMotorTorque = property.maxMotorForce;
-        jointDef.motorSpeed = property.motorSpeed;
-        jointDef.frequencyHz = property.frequencyHz;
-        jointDef.dampingRatio = property.dampingRatio;
+        jointDef.userData         = (void*)joint->getJointId();
+        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
+        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
+        jointDef.localAxisA       = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
+        jointDef.enableMotor      = property.enableMotor;
+        jointDef.maxMotorTorque   = property.maxMotorForce;
+        jointDef.motorSpeed       = property.motorSpeed;
+        jointDef.frequencyHz      = property.frequencyHz;
+        jointDef.dampingRatio     = property.dampingRatio;
 
         joint->setJoint((b2WheelJoint*)m_PhysicWorld->CreateJoint(&jointDef));
 
@@ -598,17 +593,17 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2PulleyJointDef jointDef;
-        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
-        jointDef.userData = (void *)joint->getJointId();
-		jointDef.groundAnchorA = graphics::sf_to_b2(property.groundAnchorA, EngineConstant.SCALE);
-		jointDef.groundAnchorB = graphics::sf_to_b2(property.groundAnchorB, EngineConstant.SCALE);
-		jointDef.localAnchorA = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
-		jointDef.localAnchorB = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
-		jointDef.lengthA = property.lengthA/EngineConstant.SCALE;
-		jointDef.lengthB = property.lengthB/EngineConstant.SCALE;
-        jointDef.ratio = property.ratio;
+        jointDef.userData         = (void*)joint->getJointId();
+        jointDef.groundAnchorA    = graphics::sf_to_b2(property.groundAnchorA, EngineConstant.SCALE);
+        jointDef.groundAnchorB    = graphics::sf_to_b2(property.groundAnchorB, EngineConstant.SCALE);
+        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
+        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
+        jointDef.lengthA          = property.lengthA / EngineConstant.SCALE;
+        jointDef.lengthB          = property.lengthB / EngineConstant.SCALE;
+        jointDef.ratio            = property.ratio;
 
         joint->setJoint((b2PulleyJoint*)m_PhysicWorld->CreateJoint(&jointDef));
 
@@ -627,20 +622,20 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2PrismaticJointDef jointDef;
-        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
-        jointDef.userData = (void *)joint->getJointId();
-		jointDef.localAnchorA = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
-		jointDef.localAnchorB = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
-		jointDef.localAxisA = graphics::sf_to_b2(property.localAxisA, EngineConstant.SCALE);
-		jointDef.referenceAngle = math::toRadian(property.referenceAngle);
-        jointDef.enableLimit = property.enableLimit;
-		jointDef.lowerTranslation = property.lowerTranslation/EngineConstant.SCALE;
-		jointDef.upperTranslation = property.upperTranslation/EngineConstant.SCALE;
-        jointDef.enableMotor = property.enableMotor;
-        jointDef.maxMotorForce = property.maxMotorForce;
-        jointDef.motorSpeed = property.motorSpeed;
+        jointDef.userData         = (void*)joint->getJointId();
+        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
+        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
+        jointDef.localAxisA       = graphics::sf_to_b2(property.localAxisA, EngineConstant.SCALE);
+        jointDef.referenceAngle   = math::toRadian(property.referenceAngle);
+        jointDef.enableLimit      = property.enableLimit;
+        jointDef.lowerTranslation = property.lowerTranslation / EngineConstant.SCALE;
+        jointDef.upperTranslation = property.upperTranslation / EngineConstant.SCALE;
+        jointDef.enableMotor      = property.enableMotor;
+        jointDef.maxMotorForce    = property.maxMotorForce;
+        jointDef.motorSpeed       = property.motorSpeed;
 
         joint->setJoint((b2PrismaticJoint*)m_PhysicWorld->CreateJoint(&jointDef));
 
@@ -659,19 +654,19 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2RevoluteJointDef jointDef;
-        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
-        jointDef.userData = (void *)joint->getJointId();
-		jointDef.localAnchorA = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
-		jointDef.localAnchorB = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
-		jointDef.referenceAngle = math::toRadian(property.referenceAngle);
-        jointDef.enableLimit = property.enableLimit;
-		jointDef.lowerAngle = math::toRadian(property.lowerAngle);
-		jointDef.upperAngle = math::toRadian(property.upperAngle);
-        jointDef.enableMotor = property.enableMotor;
-        jointDef.motorSpeed = property.motorSpeed;
-        jointDef.maxMotorTorque = property.maxMotorForce;
+        jointDef.userData         = (void*)joint->getJointId();
+        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
+        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
+        jointDef.referenceAngle   = math::toRadian(property.referenceAngle);
+        jointDef.enableLimit      = property.enableLimit;
+        jointDef.lowerAngle       = math::toRadian(property.lowerAngle);
+        jointDef.upperAngle       = math::toRadian(property.upperAngle);
+        jointDef.enableMotor      = property.enableMotor;
+        jointDef.motorSpeed       = property.motorSpeed;
+        jointDef.maxMotorTorque   = property.maxMotorForce;
 
         joint->setJoint((b2RevoluteJoint*)m_PhysicWorld->CreateJoint(&jointDef));
 
@@ -689,20 +684,22 @@ namespace nero
         PhysicJoint::Ptr jointA = findJoint(property.jointAId);
         PhysicJoint::Ptr jointB = findJoint(property.jointBId);
 
-        if(jointA->getType() != PhysicJoint::Prismatic_Joint && jointA->getType() != PhysicJoint::Revolute_Joint) return;
-        if(jointB->getType() != PhysicJoint::Prismatic_Joint && jointB->getType() != PhysicJoint::Revolute_Joint) return;
+        if(jointA->getType() != PhysicJoint::Prismatic_Joint && jointA->getType() != PhysicJoint::Revolute_Joint)
+            return;
+        if(jointB->getType() != PhysicJoint::Prismatic_Joint && jointB->getType() != PhysicJoint::Revolute_Joint)
+            return;
 
         GearJoint::Ptr joint = GearJoint::Ptr(new GearJoint());
         joint->setJointId(++m_JointCount);
 
         b2GearJointDef jointDef;
-        jointDef.bodyA = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
-        jointDef.userData = (void *)joint->getJointId();
-        jointDef.joint1 = jointA->getType() == PhysicJoint::Prismatic_Joint ? (b2Joint*)PrismaticJoint::Cast(jointA)->getJoint() : (b2Joint*)RevoluteJoint::Cast(jointA)->getJoint();
-        jointDef.joint2 = jointB->getType() == PhysicJoint::Prismatic_Joint ? (b2Joint*)PrismaticJoint::Cast(jointB)->getJoint() : (b2Joint*)RevoluteJoint::Cast(jointB)->getJoint();
-        jointDef.ratio  = property.ratio;
+        jointDef.userData         = (void*)joint->getJointId();
+        jointDef.joint1           = jointA->getType() == PhysicJoint::Prismatic_Joint ? (b2Joint*)PrismaticJoint::Cast(jointA)->getJoint() : (b2Joint*)RevoluteJoint::Cast(jointA)->getJoint();
+        jointDef.joint2           = jointB->getType() == PhysicJoint::Prismatic_Joint ? (b2Joint*)PrismaticJoint::Cast(jointB)->getJoint() : (b2Joint*)RevoluteJoint::Cast(jointB)->getJoint();
+        jointDef.ratio            = property.ratio;
 
         joint->setJoint((b2GearJoint*)m_PhysicWorld->CreateJoint(&jointDef));
 
@@ -773,11 +770,12 @@ namespace nero
     {
         auto layer = findLayerObject(name);
 
-        if(!layer) return false;
+        if(!layer)
+            return false;
 
         auto childTab = layer->getAllChild();
 
-        for (auto it = childTab->begin(); it != childTab->end(); it++)
+        for(auto it = childTab->begin(); it != childTab->end(); it++)
             removeObject(*it);
 
         return true;
@@ -792,5 +790,4 @@ namespace nero
     {
         m_ObjectCount = count;
     }
-}
-
+} // namespace nero

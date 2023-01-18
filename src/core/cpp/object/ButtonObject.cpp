@@ -3,22 +3,22 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/object/ButtonObject.h>
 #include <Nero/core/cpp/utility/Utility.h>
 
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-   ButtonObject::ButtonObject():
-        UIObject()
-       ,m_MouseEnter(false)
+    ButtonObject::ButtonObject()
+        : UIObject()
+        , m_MouseEnter(false)
     {
         setSecondType(Object::Button_Object);
 
-        m_OnMouseClick = [](){};
-        m_OnMouseEnter = [](){};
-        m_OnMouseLeave = [](){};
+        m_OnMouseClick = []() {};
+        m_OnMouseEnter = []() {};
+        m_OnMouseLeave = []() {};
     }
 
     void ButtonObject::onSelect()
@@ -41,9 +41,9 @@ namespace nero
         }
     }
 
-    void  ButtonObject::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
+    void ButtonObject::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
     {
-        sf::Vector2f position =  sf::Vector2f(mouse.x, mouse.y);
+        sf::Vector2f position = sf::Vector2f(mouse.x, mouse.y);
 
         if(getGlobalBounds().contains(position) && !m_MouseEnter)
         {
@@ -52,7 +52,6 @@ namespace nero
 
             if(m_OnMouseEnter)
                 m_OnMouseEnter();
-
         }
         else if(!getGlobalBounds().contains(position) && m_MouseEnter)
         {
@@ -74,7 +73,7 @@ namespace nero
         if(object->getSecondType() != Object::Button_Object)
             return nullptr;
 
-        return  std::static_pointer_cast<ButtonObject>(object);
+        return std::static_pointer_cast<ButtonObject>(object);
     }
 
     void ButtonObject::setOnMouseEnter(std::function<void()> callback)
@@ -82,14 +81,13 @@ namespace nero
         m_OnMouseEnter = callback;
     }
 
-    void ButtonObject::setOnMouseLeave(std::function<void ()> callback)
+    void ButtonObject::setOnMouseLeave(std::function<void()> callback)
     {
         m_OnMouseLeave = callback;
     }
 
-    void ButtonObject::setOnMouseClick(std::function<void ()> callback)
+    void ButtonObject::setOnMouseClick(std::function<void()> callback)
     {
         m_OnMouseClick = callback;
     }
-}
-
+} // namespace nero

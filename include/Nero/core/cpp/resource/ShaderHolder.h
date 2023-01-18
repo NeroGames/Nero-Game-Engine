@@ -5,39 +5,38 @@
 #ifndef SHADERHOLDER_H
 #define SHADERHOLDER_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/core/cpp/resource/ResourceHolder.h>
-//SFML
+// SFML
 #include <SFML/Graphics/Shader.hpp>
-//JSON
+// JSON
 #include <json/json.hpp>
-//STD
+// STD
 #include <memory>
 #include <vector>
 #include <map>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-	class ShaderHolder : public ResourceHolder
-    {
-		public: //utility
-			typedef std::shared_ptr<ShaderHolder>    Ptr;
-			using ResourceHolder::loadDirectory;
-			using	ResourceHolder::loadFile;
+    class ShaderHolder : public ResourceHolder {
+      public: // utility
+        typedef std::shared_ptr<ShaderHolder> Ptr;
+        using ResourceHolder::loadDirectory;
+        using ResourceHolder::loadFile;
 
-        public:
-												ShaderHolder();
-			void								load();
-			virtual void						clear() override;
+      public:
+        ShaderHolder();
+        void         load();
+        virtual void clear() override;
 
-        private:
-            void        addShader(std::string name, std::unique_ptr<sf::Shader> shader);
+      private:
+        void addShader(std::string name, std::unique_ptr<sf::Shader> shader);
 
-        private:
-            std::map<std::string, std::unique_ptr<sf::Shader>>	            m_ShaderMap;
-            std::vector<std::string>                                        m_ShaderTable;
-            nlohmann::json                                                  m_Configuration;
-            bool                                                            m_ShaderAvailable;
+      private:
+        std::map<std::string, std::unique_ptr<sf::Shader>> m_ShaderMap;
+        std::vector<std::string>                           m_ShaderTable;
+        nlohmann::json                                     m_Configuration;
+        bool                                               m_ShaderAvailable;
     };
-}
+} // namespace nero
 #endif // SHADERHOLDER_H

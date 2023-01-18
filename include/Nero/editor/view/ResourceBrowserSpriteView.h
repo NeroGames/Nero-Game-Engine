@@ -5,19 +5,18 @@
 #ifndef RESOURCEBROWSERSPRITEVIEW_H
 #define RESOURCEBROWSERSPRITEVIEW_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceBrowserSpriteView : public UIComponent
-    {
-        public:
-                                    ResourceBrowserSpriteView(EditorContext::Ptr editorContext);
-            virtual                ~ResourceBrowserSpriteView() override;
+    class ResourceBrowserSpriteView : public UIComponent {
+      public:
+        ResourceBrowserSpriteView(EditorContext::Ptr editorContext);
+        virtual ~ResourceBrowserSpriteView() override;
 
-            virtual void 			destroy() override;
-            virtual void            render() override;
-	};
-}
+        virtual void destroy() override;
+        virtual void render() override;
+    };
+} // namespace nero
 #endif // RESOURCEBROWSERSPRITEVIEW_H

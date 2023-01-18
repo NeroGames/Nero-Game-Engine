@@ -3,17 +3,16 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/ObjectLayerWindow.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
     ObjectLayerWindow::ObjectLayerWindow(EditorContext::Ptr editorContext)
-        :UIComponent(std::move(editorContext))
-        ,m_SelectedObjectLayerId(-1)
+        : UIComponent(std::move(editorContext))
+        , m_SelectedObjectLayerId(-1)
     {
-
     }
 
     ObjectLayerWindow::~ObjectLayerWindow()
@@ -23,7 +22,6 @@ namespace  nero
 
     void ObjectLayerWindow::destroy()
     {
-
     }
 
     void ObjectLayerWindow::render()
@@ -42,7 +40,7 @@ namespace  nero
 
         if(ImGui::Button("Add##add_object_layer", button_size))
         {
-            auto levelBuilder       = m_EditorContext->getLevelBuilder();
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
 
             if(!levelBuilder)
                 return;
@@ -54,7 +52,7 @@ namespace  nero
 
         if(ImGui::Button("Remove##remove_object_layer", button_size))
         {
-            auto levelBuilder       = m_EditorContext->getLevelBuilder();
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
 
             if(!levelBuilder)
                 return;
@@ -68,7 +66,7 @@ namespace  nero
 
         ImGui::BeginChild("##manage_object_layer", ImVec2(), true);
 
-        auto levelBuilder       = m_EditorContext->getLevelBuilder();
+        auto levelBuilder = m_EditorContext->getLevelBuilder();
 
         if(levelBuilder)
         {
@@ -95,11 +93,10 @@ namespace  nero
 
                     ImGui::SameLine();
 
-
                     auto color = getLayerColor(objectLayer->getSecondType());
 
-                    ImGui::PushStyleColor(ImGuiCol_FrameBg,			std::get<0>(color));
-                    ImGui::PushStyleColor(ImGuiCol_TextSelectedBg,	std::get<1>(color));
+                    ImGui::PushStyleColor(ImGuiCol_FrameBg, std::get<0>(color));
+                    ImGui::PushStyleColor(ImGuiCol_TextSelectedBg, std::get<1>(color));
 
                     char layer_name[100];
                     string::fillCharArray(layer_name, sizeof(layer_name), objectLayer->getName());
@@ -125,17 +122,16 @@ namespace  nero
     {
         switch(type)
         {
-            case Object::Sprite_Object:
-                return {
-                    ImVec4(0.3f, 0.6f, 0.5f, 0.5f),
-                            ImVec4(0.3f, 0.6f, 0.5f, 1.f),
-                } ;
+        case Object::Sprite_Object:
+            return {
+                ImVec4(0.3f, 0.6f, 0.5f, 0.5f),
+                ImVec4(0.3f, 0.6f, 0.5f, 1.f),
+            };
 
-            default:
-                return {
-                    ImGui::GetStyle().Colors[ImGuiCol_FrameBg],
-                            ImGui::GetStyle().Colors[ImGuiCol_TextSelectedBg]
-                };
+        default:
+            return {
+                ImGui::GetStyle().Colors[ImGuiCol_FrameBg],
+                ImGui::GetStyle().Colors[ImGuiCol_TextSelectedBg]};
         }
     }
-}
+} // namespace nero

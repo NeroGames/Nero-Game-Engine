@@ -3,20 +3,20 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/EditorSetup.h>
 #include <Nero/core/cpp/utility/String.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
     EditorSetup::EditorSetup(EditorContext::Ptr editorContext)
     {
-        Setting setting = editorContext->getEditorSetting()->getSetting("environment");
+        Setting setting   = editorContext->getEditorSetting()->getSetting("environment");
 
-        m_SetupCodeEditor       = setting.getString("qt_creator") == StringPool.BLANK &&
-                                  setting.getString("visual_studio") == StringPool.BLANK;
-        m_SetupTexturePacker    = setting.getString("texture_packer") == StringPool.BLANK;
-        m_SetupWorkspace        = editorContext->getProjectManager()->getWorkspaceTable().empty();
+        m_SetupCodeEditor = setting.getString("qt_creator") == StringPool.BLANK &&
+                            setting.getString("visual_studio") == StringPool.BLANK;
+        m_SetupTexturePacker = setting.getString("texture_packer") == StringPool.BLANK;
+        m_SetupWorkspace     = editorContext->getProjectManager()->getWorkspaceTable().empty();
     }
 
     bool EditorSetup::initiateSetup()
@@ -63,4 +63,4 @@ namespace  nero
     {
         m_SetupWorkspace = flag;
     }
-}
+} // namespace nero

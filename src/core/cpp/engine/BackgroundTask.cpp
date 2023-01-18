@@ -9,15 +9,15 @@
 namespace nero
 {
     BackgroundTask::BackgroundTask(const std::string& name, const std::string& category)
-        :m_Name(name)
-        ,m_Category(category)
-        ,m_Step(0)
-        ,m_ErrorCode()
-        ,m_Completed(false)
-        ,m_Failed(false)
-        ,m_Message(StringPool.BLANK)
+        : m_Name(name)
+        , m_Category(category)
+        , m_Step(0)
+        , m_ErrorCode()
+        , m_Completed(false)
+        , m_Failed(false)
+        , m_Message(StringPool.BLANK)
     {
-        //Empty
+        // Empty
     }
 
     std::string BackgroundTask::getName() const
@@ -80,7 +80,6 @@ namespace nero
 
     std::string BackgroundTask::getMessage() const
     {
-        return  m_Message;
+        return m_Message;
     }
-}
-
+} // namespace nero

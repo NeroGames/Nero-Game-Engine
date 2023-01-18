@@ -3,20 +3,19 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/object/SimpleActionObject.h>
 #include <Nero/core/cpp/utility/Utility.h>
-//STD
+// STD
 #include <iostream>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    SimpleActionObject::SimpleActionObject():
-        m_Object(nullptr),
-        m_ActionTable(),
-		m_TimeStep(EngineConstant.TIME_PER_FRAME)
+    SimpleActionObject::SimpleActionObject()
+        : m_Object(nullptr)
+        , m_ActionTable()
+        , m_TimeStep(EngineConstant.TIME_PER_FRAME)
     {
-
     }
 
     void SimpleActionObject::setObject(Object::Ptr object)
@@ -34,7 +33,7 @@ namespace nero
         m_ActionTable[name]->call(m_Object, m_TimeStep);
     }
 
-    Object::Ptr  SimpleActionObject::getObject()
+    Object::Ptr SimpleActionObject::getObject()
     {
         return m_Object;
     }
@@ -43,5 +42,4 @@ namespace nero
     {
         m_TimeStep = time_step;
     }
-}
-
+} // namespace nero

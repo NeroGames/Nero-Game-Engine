@@ -3,17 +3,16 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/WorldChunkWindow.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
     WorldChunkWindow::WorldChunkWindow(EditorContext::Ptr editorContext)
-        :UIComponent(std::move(editorContext))
-        ,m_SelectedChunkId(-1)
+        : UIComponent(std::move(editorContext))
+        , m_SelectedChunkId(-1)
     {
-
     }
 
     WorldChunkWindow::~WorldChunkWindow()
@@ -23,7 +22,6 @@ namespace  nero
 
     void WorldChunkWindow::destroy()
     {
-
     }
 
     void WorldChunkWindow::render()
@@ -56,7 +54,7 @@ namespace  nero
 
         if(ImGui::Button("Remove##remove_world_chunk", button_size))
         {
-            //removeWorldChunk();
+            // removeWorldChunk();
         }
 
         ImGui::Dummy(ImVec2(0.f, 5.f));
@@ -68,10 +66,10 @@ namespace  nero
 
         if(levelBuilder)
         {
-            auto& chunkTable = levelBuilder->getChunkTable();
+            auto& chunkTable    = levelBuilder->getChunkTable();
 
-            auto selectedChunk  = levelBuilder->getSelectedChunk();
-            m_SelectedChunkId	= selectedChunk ? selectedChunk->getChunkId() : -1;
+            auto  selectedChunk = levelBuilder->getSelectedChunk();
+            m_SelectedChunkId   = selectedChunk ? selectedChunk->getChunkId() : -1;
 
             for(const auto& worldChunk : chunkTable)
             {
@@ -85,7 +83,7 @@ namespace  nero
 
                 ImGui::SameLine();
 
-                itemId = "##visible_chunk" + toString(worldChunk->getChunkId());
+                itemId       = "##visible_chunk" + toString(worldChunk->getChunkId());
                 bool visible = worldChunk->isVisible();
                 ImGui::Checkbox(itemId.c_str(), &visible);
                 worldChunk->setVisible(visible);
@@ -109,4 +107,4 @@ namespace  nero
 
         ImGui::End();
     }
-}
+} // namespace nero

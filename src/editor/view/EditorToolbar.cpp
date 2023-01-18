@@ -3,28 +3,27 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/EditorToolbar.h>
 #include <Nero/editor/view/ToolbarScrollButton.h>
 #include <Nero/editor/EditorConstant.h>
 #include <Nero/editor/EditorUtility.h>
 ////////////////////////////////////////////////////////////
-namespace  nero
+namespace nero
 {
-    EditorToolbar::EditorToolbar(EditorContext::Ptr editorContext):
-        UIComponent(std::move(editorContext))
-        ,m_ToolbarContentWindow(nullptr)
-        ,m_ScrollButtonLeft(m_EditorContext,
-                            m_ToolbarContentWindow,
-                            ToolbarScrollButton::Direction::Left)
-        ,m_ScrollButtonRight(m_EditorContext,
+    EditorToolbar::EditorToolbar(EditorContext::Ptr editorContext)
+        : UIComponent(std::move(editorContext))
+        , m_ToolbarContentWindow(nullptr)
+        , m_ScrollButtonLeft(m_EditorContext,
                              m_ToolbarContentWindow,
-                             ToolbarScrollButton::Direction::Right)
-        ,m_ToolbarButtonGroup(m_EditorContext)
-        ,m_ProjectManagerPopup(m_EditorContext)
-        ,m_NewGameLevelPopup(m_EditorContext)
+                             ToolbarScrollButton::Direction::Left)
+        , m_ScrollButtonRight(m_EditorContext,
+                              m_ToolbarContentWindow,
+                              ToolbarScrollButton::Direction::Right)
+        , m_ToolbarButtonGroup(m_EditorContext)
+        , m_ProjectManagerPopup(m_EditorContext)
+        , m_NewGameLevelPopup(m_EditorContext)
     {
-
     }
 
     EditorToolbar::~EditorToolbar()
@@ -34,7 +33,6 @@ namespace  nero
 
     void EditorToolbar::destroy()
     {
-
     }
 
     void EditorToolbar::render()
@@ -44,8 +42,8 @@ namespace  nero
         ImGui::Begin(EditorConstant.WINDOW_TOOLBAR.c_str(), nullptr, ImGuiWindowFlags_NoDecoration);
 
         // Check scrolling
-        const float toolbarContentWindowWidth	= ImGui::GetWindowContentRegionWidth();
-        const bool  showScrollButton			= toolbarContentWindowWidth < EditorConstant.WINDOW_TOOLBAR_MIN_WIDTH;
+        const float toolbarContentWindowWidth = ImGui::GetWindowContentRegionWidth();
+        const bool  showScrollButton          = toolbarContentWindowWidth < EditorConstant.WINDOW_TOOLBAR_MIN_WIDTH;
 
         // Scrool left button
         if(showScrollButton)
@@ -60,13 +58,13 @@ namespace  nero
         {
             ImGui::SetNextWindowContentWidth(EditorConstant.WINDOW_TOOLBAR_MIN_WIDTH);
             ImGui::BeginChild("##toolbarwindowcontent",
-                              ImVec2(toolbarContentWindowWidth -67.f, 0.f),
+                              ImVec2(toolbarContentWindowWidth - 67.f, 0.f),
                               false,
                               ImGuiWindowFlags_HorizontalScrollbar |
-                              ImGuiWindowFlags_NoScrollbar |
-                              ImGuiWindowFlags_ScrollToolbar |
-                              ImGuiWindowFlags_NoResize |
-                              ImGuiWindowFlags_AlwaysUseWindowPadding);
+                                  ImGuiWindowFlags_NoScrollbar |
+                                  ImGuiWindowFlags_ScrollToolbar |
+                                  ImGuiWindowFlags_NoResize |
+                                  ImGuiWindowFlags_AlwaysUseWindowPadding);
             m_ToolbarContentWindow = ImGui::GetCurrentWindow();
         }
         else
@@ -75,8 +73,8 @@ namespace  nero
                               ImVec2(),
                               false,
                               ImGuiWindowFlags_NoScrollbar |
-                              ImGuiWindowFlags_NoScrollWithMouse |
-                              ImGuiWindowFlags_AlwaysUseWindowPadding);
+                                  ImGuiWindowFlags_NoScrollWithMouse |
+                                  ImGuiWindowFlags_AlwaysUseWindowPadding);
         }
 
         // Render toolbar
@@ -113,7 +111,7 @@ namespace  nero
         m_ProjectManagerPopup.render();
         m_NewGameLevelPopup.render();
         // TODO
-        //m_NewGameScreenPopup.render();
-        //m_NewGameScriptPopup.render();
+        // m_NewGameScreenPopup.render();
+        // m_NewGameScriptPopup.render();
     }
-}
+} // namespace nero

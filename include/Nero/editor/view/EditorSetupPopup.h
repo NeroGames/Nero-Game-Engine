@@ -5,26 +5,25 @@
 #ifndef EDITORSETUPPOPUP_H
 #define EDITORSETUPPOPUP_H
 ///////////////////////////HEADERS//////////////////////////
-//Nero
+// Nero
 #include <Nero/editor/view/UIComponent.h>
 #include <Nero/editor/EditorSetup.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorSetupPopup : public UIComponent
-    {
-        public:
-                                    EditorSetupPopup(EditorContext::Ptr editorContext, EditorSetup::Ptr editorSetup);
-            virtual                ~EditorSetupPopup() override;
+    class EditorSetupPopup : public UIComponent {
+      public:
+        EditorSetupPopup(EditorContext::Ptr editorContext, EditorSetup::Ptr editorSetup);
+        virtual ~EditorSetupPopup() override;
 
-            virtual void 			destroy() override;
-            virtual void            render() override;
+        virtual void destroy() override;
+        virtual void render() override;
 
-        private:
-            EditorSetup::Ptr                            m_EditorSetup;
-            unsigned int                                m_CurrentViewIndex;
-            std::shared_ptr<UIComponent>                m_CurrentView;
-            std::vector<std::shared_ptr<UIComponent>>   m_ViewTable;
-	};
-}
+      private:
+        EditorSetup::Ptr                          m_EditorSetup;
+        unsigned int                              m_CurrentViewIndex;
+        std::shared_ptr<UIComponent>              m_CurrentView;
+        std::vector<std::shared_ptr<UIComponent>> m_ViewTable;
+    };
+} // namespace nero
 #endif // EDITORSETUPPOPUP_H

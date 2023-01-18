@@ -3,21 +3,21 @@
 // Copyright (c) 2016-2021 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//NERO
+// NERO
 #include <Nero/core/cpp/model/WheelJoint.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    WheelJoint::WheelJoint():
-         PhysicJoint()
-        ,m_Joint(nullptr)
+    WheelJoint::WheelJoint()
+        : PhysicJoint()
+        , m_Joint(nullptr)
     {
         m_Type = PhysicJoint::Wheel_Joint;
     }
 
     WheelJoint::~WheelJoint()
     {
-        //dtor
+        // dtor
     }
 
     void WheelJoint::setJoint(b2WheelJoint* joint)
@@ -35,11 +35,11 @@ namespace nero
         if(joint->getType() != PhysicJoint::Wheel_Joint)
             return nullptr;
 
-        return  std::static_pointer_cast<WheelJoint>(joint);
+        return std::static_pointer_cast<WheelJoint>(joint);
     }
 
     b2Joint* WheelJoint::getGenericJoint()
     {
         return (b2Joint*)m_Joint;
     }
-}
+} // namespace nero
