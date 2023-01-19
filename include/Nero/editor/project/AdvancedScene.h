@@ -52,6 +52,8 @@ namespace nero
         void                     renderShape();
         //
         void                     clearGameSceneObject();
+        void                     buildGameScene();
+
         LevelBuilder::Ptr        getLevelBuilder() const;
         void registerLevelClass(const std::string levelName, GameLevel::Ptr gameLevel);
 

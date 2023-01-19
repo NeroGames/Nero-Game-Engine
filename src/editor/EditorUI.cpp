@@ -1116,8 +1116,7 @@ namespace nero
         {
             if(m_EditorContext->getEditorMode() == EditorMode::WORLD_BUILDER)
             {
-                // TODO
-                // m_EditorContext->getAdvancedScene()->buildGameScene();
+                m_EditorContext->getAdvancedScene()->buildGameScene();
                 m_EditorContext->setEditorMode(EditorMode::PLAY_GAME);
             }
         };

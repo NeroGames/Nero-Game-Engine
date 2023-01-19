@@ -309,4 +309,10 @@ namespace nero
     {
         m_GameLevelMap.emplace(levelName, gameLevel);
     }
+
+    void AdvancedScene::buildGameScene()
+    {
+        // TODO
+    }
+
 } // namespace nero
