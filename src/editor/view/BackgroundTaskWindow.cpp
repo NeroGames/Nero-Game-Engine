@@ -63,7 +63,6 @@ namespace nero
                 if(!task->completed())
                 {
                     ImGui::Text(task->getMessage().c_str());
-                    ImGui::Text("----");
                 }
             }
         }

@@ -39,6 +39,9 @@ namespace nero
         // Game Level
         void createGameLevel(const Parameter& levelParameter) const;
         void openGameLevel(const std::string levelName) const;
+        // Play Mode
+        void playGameScene() const;
+        void stopGameScene() const;
 
       private:
         friend class EditorUI;
@@ -58,6 +61,9 @@ namespace nero
         // Game Level
         std::function<void(const Parameter&)>                      m_CreateGameLevelCallback;
         std::function<void(const std::string&)>                    m_OpenGameLevelCallback;
+        // Game Scene
+        std::function<void()>                                      m_PlayGameSceneCallback;
+        std::function<void()>                                      m_StopGameSceneCallback;
     };
 } // namespace nero
 

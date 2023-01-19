@@ -107,10 +107,10 @@ namespace nero
 
         // Render on Front Screen
         m_RenderTexture->setView(m_RenderTexture->getDefaultView());
-        /*if(m_AdvancedScene)
-                {
-                    m_AdvancedScene->renderFrontScreen(m_EditorMode, m_BuilderMode);
-                }*/
+        // if(m_AdvancedScene)
+        // {
+        //    m_AdvancedScene->renderFrontScreen(m_EditorMode, m_BuilderMode);
+        // }
         renderCamera();
         renderGameModeInfo();
         m_RenderTexture->setView(m_EditorCamera->getView());

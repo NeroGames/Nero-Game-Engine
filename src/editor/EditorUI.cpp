@@ -665,57 +665,6 @@ namespace nero
         }
     }
 
-    void EditorUI::playScene()
-    {
-        if(m_EditorContext->getAdvancedScene() &&
-           m_EditorContext->getEditorMode() != EditorMode::PLAY_GAME)
-        {
-            try
-            {
-                // m_AdvancedScene->playScene();
-                m_EditorContext->setEditorMode(EditorMode::PLAY_GAME);
-            }
-            catch(std::exception const& e)
-            {
-            }
-        }
-    }
-
-    void EditorUI::pauseScene()
-    {
-        /*if(m_AdvancedScene && editorMode == EditorMode::PLAY_GAME)
-                {
-                        auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
-
-                        gameLevel->levelSetting->setBool("pause_level",
-           !gameLevel->levelSetting->getBool("pause_level"));
-                }*/
-    }
-
-    void EditorUI::stepScene()
-    {
-
-        /*if(m_AdvancedScene && editorMode == EditorMode::PLAY_GAME)
-                {
-                        auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
-
-                        gameLevel->levelSetting->setBool("pause_scene", true);
-                        gameLevel->levelSetting->setBool("single_step", true);
-                }*/
-    }
-
-    void EditorUI::resetScene()
-    {
-        /*if(m_AdvancedScene && editorMode == EditorMode::PLAY_GAME)
-                {
-                        m_AdvancedScene->playScene();
-                }*/
-    }
-
-    void EditorUI::renderScene()
-    {
-    }
-
     void EditorUI::onSaveProject()
     {
         auto gameProject = m_EditorContext->getGameProject();
@@ -1160,6 +1109,24 @@ namespace nero
             if(gameProject)
             {
                 gameProject->loadLibrary();
+            }
+        };
+
+        m_EditorProxy->m_PlayGameSceneCallback = [this]()
+        {
+            if(m_EditorContext->getEditorMode() == EditorMode::WORLD_BUILDER)
+            {
+                // TODO
+                // m_EditorContext->getAdvancedScene()->buildGameScene();
+                m_EditorContext->setEditorMode(EditorMode::PLAY_GAME);
+            }
+        };
+
+        m_EditorProxy->m_StopGameSceneCallback = [this]()
+        {
+            if(m_EditorContext->getEditorMode() == EditorMode::PLAY_GAME)
+            {
+                m_EditorContext->setEditorMode(EditorMode::WORLD_BUILDER);
             }
         };
     }

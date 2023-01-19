@@ -168,12 +168,6 @@ namespace nero
         // Tabs
         TabSelectionHandler            m_BottomDockspaceTabBarSwitch;
         void                           showScriptCreationWindow();
-        // function
-        void                           playScene();
-        void                           pauseScene();
-        void                           stepScene();
-        void                           resetScene();
-        void                           renderScene();
         ax::NodeEditor::EditorContext* g_Context;
         std::string                    getString(const EditorMode& editorMode);
         void                           clearScriptWizardInput();

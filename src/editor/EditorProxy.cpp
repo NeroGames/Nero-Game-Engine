@@ -77,4 +77,14 @@ namespace nero
     {
         m_ReloadProjectLibraryCallback();
     }
+
+    void EditorProxy::playGameScene() const
+    {
+        m_PlayGameSceneCallback();
+    }
+
+    void EditorProxy::stopGameScene() const
+    {
+        m_StopGameSceneCallback();
+    }
 } // namespace nero

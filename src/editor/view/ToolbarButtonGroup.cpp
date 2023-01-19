@@ -104,6 +104,7 @@ namespace nero
         // play
         if(ImGui::Button(ICON_FA_PLAY, ImVec2(45.f, 28.f)))
         {
+            m_EditorContext->getEditorProxy()->playGameScene();
         }
 
         ImGui::SameLine();
@@ -122,9 +123,10 @@ namespace nero
 
         ImGui::SameLine();
 
-        // reset
-        if(ImGui::Button(ICON_FA_CIRCLE, ImVec2(45.f, 28.f)))
+        // stop
+        if(ImGui::Button(ICON_FA_SQUARE_FULL, ImVec2(45.f, 28.f)))
         {
+            m_EditorContext->getEditorProxy()->stopGameScene();
         }
 
         ImGui::SameLine();
