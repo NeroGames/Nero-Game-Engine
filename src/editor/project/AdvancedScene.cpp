@@ -24,7 +24,18 @@ namespace nero
     {
         Setting sceneSetting;
         sceneSetting.loadSetting(file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"}, StringPool.EXT_NERO), true, true);
-        m_RegisteredLevelTable = sceneSetting.getStringTable("level_table");
+        m_RegisteredLevelTable      = sceneSetting.getStringTable("level_table");
+
+        // TODO
+        std::string resourceSetting = file::getPath({"setting", "resource"}, StringPool.EXT_JSON);
+        m_EditorSetting             = std::make_shared<Setting>();
+        m_EditorSetting->loadSetting(resourceSetting, true);
+    }
+
+    void AdvancedScene::clear()
+    {
+        m_LevelBuilder = nullptr;
+        m_RegisteredLevelTable.clear();
     }
 
     std::string AdvancedScene::createLevel(const Parameter& parameter)

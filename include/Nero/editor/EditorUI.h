@@ -55,7 +55,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorUI {
+    class EditorUI
+    {
 
       public:
         typedef std::unique_ptr<EditorUI>          Ptr;
@@ -188,7 +189,7 @@ namespace nero
         void                           autoSaveProject();
         sf::Clock                      m_AutoSaveClock;
         ImVec4                         ambient_light;
-        void                           createScriptObject(const Parameter& parameter);
+        // void                           createScriptObject(const Parameter& parameter);
         ImVec4                         getLoggingColor(logging::LEVEL level);
     };
 

@@ -12,7 +12,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class AdvancedCamera : public Camera {
+    class AdvancedCamera : public Camera
+    {
       public:
         typedef std::shared_ptr<AdvancedCamera> Ptr;
 

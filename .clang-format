@@ -13,7 +13,7 @@ SortIncludes: false
 BreakBeforeBraces: Custom
 # Control of individual brace wrapping cases
 BraceWrapping:
-    AfterClass: false
+    AfterClass: true
     AfterControlStatement: true
     AfterEnum : true
     AfterFunction : true
@@ -24,9 +24,10 @@ BraceWrapping:
     BeforeElse : true
     IndentBraces : false
     AfterExternBlock : true
-    SplitEmptyFunction : false
-    SplitEmptyRecord : false
+    SplitEmptyFunction : true
+    SplitEmptyRecord : true
     SplitEmptyNamespace : true
+    BeforeLambdaBody: true
 
 BreakConstructorInitializers: BeforeComma
 BreakBeforeTernaryOperators: true
@@ -53,3 +54,9 @@ AllowAllArgumentsOnNextLine: false
 BinPackParameters: false
 ColumnLimit: 0
 AllowShortBlocksOnASingleLine: Never
+
+ExperimentalAutoDetectBinPacking: false
+BinPackArguments: false
+AllowShortLambdasOnASingleLine: None
+BreakStringLiterals: true
+LambdaBodyIndentation: Signature

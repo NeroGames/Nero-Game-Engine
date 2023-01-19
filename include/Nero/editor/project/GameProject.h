@@ -21,63 +21,48 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class GameProject {
+    class GameProject
+    {
       public:
-        typedef std::shared_ptr<GameProject>       Ptr;
-        typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
-
-        typedef Scene::Ptr(CreateCppSceneFn)(Scene::Context);
-        // typedef LuaScene::Ptr (CreateLuaSceneFn)(Scene::Context);
+        using Ptr                        = std::shared_ptr<GameProject>;
+        using RenderTexturePtr           = std::shared_ptr<sf::RenderTexture>;
+        using CreateCppGameSceneCallback = Scene::Ptr(Scene::Context);
+        using CreateCppGameLevelCallback = GameLevel::Ptr(GameLevel::Context);
+        // TODO
+        // using CreateCppGameScreenCallback = GameScreen::Ptr(GameScreen::Context);
 
       public:
-        GameProject();
+        GameProject(Setting::Ptr projectSetting = nullptr);
 
-        void                         init(const Setting::Ptr& setting);
-        void                         loadProject();
-        void                         saveProject();
-        void                         saveGameLevel();
-        void                         loadGameLevel();
-        // void								saveGameScreen();
-        void                         loadGameScreen();
-        // void								loadLibrary();
-        void                         openEditor();
-        void                         render();
-        void                         destroyScene();
-        void                         handleEvent(const sf::Event& event);
-        void                         update(const sf::Time& timestep);
+        void               init();
+        void               loadLibrary();
+        void               openEditor();
+        void               closeProject();
+        // Setter
+        void               setRenderTexture(const RenderTexturePtr& renderTexture);
+        void               setRenderContext(const RenderContext::Ptr& renderContext);
+        void               setCamera(const Camera::Ptr& camera);
+        // Getter
+        AdvancedScene::Ptr getAdvancedScene();
+        std::string        getProjectName() const;
+        std::string        getProjectDirectory() const;
 
-        AdvancedScene::Ptr           getAdvancedScene();
-        void                         setRenderTexture(const RenderTexturePtr& renderTexture);
-        void                         setCamera(const Camera::Ptr& camera);
-        void                         openQtCreator(const std::string& file = StringPool.BLANK);
-        void                         openVisualStudio(const std::string& file = StringPool.BLANK);
-        void                         setRenderContext(const RenderContext::Ptr& renderContext);
-        void                         setEngineSetting(const Setting::Ptr& setting);
-        void                         close();
-        std::string                  getProjectName() const;
-        std::vector<BackgroundTask>& getBackgroundTaskTable();
-        void                         createScriptObject(const Parameter& parameter);
-        ResourceManager::Ptr         getResourceManager();
-        void                         loadResource(const Parameter& parameter);
-
-        const std::string            getResourceFoler() const;
-        // static
-        static void                  compileProject(const std::string&        projectDirectory,
-                                                    const BackgroundTask::Ptr backgroundTask);
+        // Static
+        static void        compileProject(const std::string&        projectDirectory,
+                                          const BackgroundTask::Ptr backgroundTask);
 
       private:
-        BackgroundTask& createBackgroundTask(const std::string& name, const std::string& category);
+        void openQtCreator(const std::string& file = StringPool.BLANK);
+        void openVisualStudio(const std::string& file = StringPool.BLANK);
 
       private:
-        Scene::Ptr                        m_Scene;
-        std::vector<BackgroundTask>       m_BackgroundTaskTable;
-        Setting::Ptr                      m_ProjectSetting;
-        ResourceManager::Ptr              m_ResourceManager;
-        Setting::Ptr                      m_EngineSetting;
-        AdvancedScene::Ptr                m_AdvancedScene;
-        std::string                       m_EditorProcessId;
-        boost::function<CreateCppSceneFn> m_CreateCppSceneFn;
-        // boost::function<CreateLuaSceneFn> m_CreateLuaSceneFn;
+        AdvancedScene::Ptr                          m_AdvancedScene;
+        Setting::Ptr                                m_ProjectSetting;
+        // User defined class
+        boost::function<CreateCppGameSceneCallback> m_CreateCppGameSceneCallback;
+        boost::function<CreateCppGameLevelCallback> m_CreateCppGameLevelCallback;
+        // Open code editor
+        std::string                                 m_CodeEditorProcessId;
     };
 } // namespace nero
 

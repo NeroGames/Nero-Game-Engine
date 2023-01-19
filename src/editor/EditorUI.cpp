@@ -38,7 +38,7 @@ namespace nero
         , m_EditorSoundHolder(soundHolder)
         , m_EditorSetting(setting)
         // Main paramater
-        , m_ProjectManager(std::make_unique<ProjectManager>())
+        , m_ProjectManager(std::make_unique<ProjectManager>(m_EditorSetting))
         , m_EditorProxy(std::make_shared<EditorProxy>())
         , m_RenderTexture(std::make_shared<sf::RenderTexture>())
         , m_RenderContext(std::make_shared<RenderContext>())
@@ -98,7 +98,6 @@ namespace nero
 
         io.Fonts->Clear();
         io.Fonts->AddFontDefault();
-        // io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation-Vector.otf", 15.f);
         ImGui::SFML::UpdateFontTexture();
 
         ImFontConfig config;
@@ -139,8 +138,6 @@ namespace nero
 
         // clear workspace input
         clearScriptWizardInput();
-
-        m_ProjectManager->setSetting(m_EditorSetting);
 
         // register signal handler
         registerSignalHandler();
@@ -523,9 +520,7 @@ namespace nero
                     ImGui::SetNextWindowSize(ImVec2(500.f, 400.f));
                     if(ImGui::BeginPopupModal("Select Script Class", nullptr, window_flags))
                     {
-                        std::vector<std::string> script_type = {"Game Level Script", "Game Screen Script", "Startup Screen Script",
-                                                                "Physic Script Object", "Simple Script Object", "Action Object",
-                                                                "Action"};
+                        std::vector<std::string> script_type = {"Game Level Script", "Game Screen Script", "Startup Screen Script", "Physic Script Object", "Simple Script Object", "Action Object", "Action"};
 
                         for(auto type : script_type)
                         {
@@ -585,7 +580,7 @@ namespace nero
 
                         clearScriptWizardInput();
 
-                        createScriptObject(parameter);
+                        // createScriptObject(parameter);
 
                         // ImGui::OpenPopup("Script Created");
                     }
@@ -604,16 +599,6 @@ namespace nero
             }
 
             ImGui::EndPopup();
-        }
-    }
-
-    void EditorUI::createScriptObject(const Parameter& parameter)
-    {
-        auto gameProject = m_EditorContext->getGameProject();
-
-        if(gameProject)
-        {
-            gameProject->createScriptObject(parameter);
         }
     }
 
@@ -1002,7 +987,8 @@ namespace nero
     void EditorUI::setupEditorProxy()
     {
         // Open project
-        m_EditorProxy->m_OpenProjectCallback = [this](const std::string& projectDirectory) {
+        m_EditorProxy->m_OpenProjectCallback = [this](const std::string& projectDirectory)
+        {
             // open new project
             if(m_ProjectManager)
             {
@@ -1017,18 +1003,21 @@ namespace nero
         };
 
         // Create project
-        m_EditorProxy->m_CreateProjectCallback = [this](const Parameter& projectParameter, const unsigned int& projectCount) {
+        m_EditorProxy->m_CreateProjectCallback = [this](const Parameter& projectParameter, const unsigned int& projectCount)
+        {
             nero_log("on create project in background")
                 std::string taskName = EditorConstant.TASK_CREATE_PROJECT + toString(projectCount);
             BTManager::startTask(&ProjectManager::createProject, m_ProjectManager.get(), projectParameter, taskName);
         };
 
-        m_EditorProxy->m_SaveProjectCallback = [this]() {
+        m_EditorProxy->m_SaveProjectCallback = [this]()
+        {
             // TODO
         };
 
         // Close project
-        m_EditorProxy->m_CloseProjectCallback = [this]() {
+        m_EditorProxy->m_CloseProjectCallback = [this]()
+        {
             m_ProjectManager->closeProject();
 
             // update editor window title
@@ -1036,24 +1025,27 @@ namespace nero
         };
 
         // Create workspace
-        m_EditorProxy->m_CreateWorkspaceCallback = [this](const Parameter& workspaceParameter) {
+        m_EditorProxy->m_CreateWorkspaceCallback = [this](const Parameter& workspaceParameter)
+        {
             m_ProjectManager->createWorkspace(workspaceParameter);
         };
 
         // Import workspace
-        m_EditorProxy->m_ImportWorkspaceCallback = [this](const std::string& workspaceDirectory) {
+        m_EditorProxy->m_ImportWorkspaceCallback = [this](const std::string& workspaceDirectory)
+        {
             m_ProjectManager->importWorkspace(workspaceDirectory);
         };
 
         // Close editor
-        m_EditorProxy->m_CloseEditorCallback = [this]() {
-            nero_log("Closing the Editor")
+        m_EditorProxy->m_CloseEditorCallback = [this]()
+        {
+            nero_log("Closing the Editor");
 
-                nero_log("-> Saving window settings")
-                    std::string windowSettingFile = file::getPath({"setting", "window"}, StringPool.EXT_JSON);
-            Setting             windowSetting     = m_EditorSetting->getSetting("window");
-            sf::Vector2u        windowSize        = m_RenderWindow.getSize();
-            sf::Vector2i        windowPosition    = m_RenderWindow.getPosition();
+            nero_log("-> Saving window settings");
+            std::string  windowSettingFile = file::getPath({"setting", "window"}, StringPool.EXT_JSON);
+            Setting      windowSetting     = m_EditorSetting->getSetting("window");
+            sf::Vector2u windowSize        = m_RenderWindow.getSize();
+            sf::Vector2i windowPosition    = m_RenderWindow.getPosition();
 
             if(windowPosition.x < -8)
             {
@@ -1073,18 +1065,19 @@ namespace nero
 
             if(m_EditorContext->getGameProject())
             {
-                nero_log("-> Closing project")
-                    m_EditorProxy->closeProject();
+                nero_log("-> Closing project");
+                m_EditorProxy->closeProject();
             }
 
-            nero_log("---")
-                nero_log("Editor closed")
+            nero_log("---");
+            nero_log("Editor closed");
 
-                    m_RenderWindow.close();
+            m_RenderWindow.close();
         };
 
         // Create workspace
-        m_EditorProxy->m_CreateGameLevelCallback = [this](const Parameter& levelParameter) {
+        m_EditorProxy->m_CreateGameLevelCallback = [this](const Parameter& levelParameter)
+        {
             auto advancedScene = m_EditorContext->getAdvancedScene();
 
             // Advanced Scene not available
@@ -1099,9 +1092,15 @@ namespace nero
                 m_EditorContext->setSelectedGameLevelName(levelName);
                 m_EditorProxy->openGameLevel(levelName);
             }
+
+            BTManager::startTask([this](BackgroundTask::Ptr backgroundTask)
+                                 {
+                                     GameProject::compileProject(m_EditorContext->getGameProject()->getProjectDirectory(), backgroundTask);
+                                 });
         };
 
-        m_EditorProxy->m_OpenGameLevelCallback = [this](const std::string levelName) {
+        m_EditorProxy->m_OpenGameLevelCallback = [this](const std::string levelName)
+        {
             auto advancedScene = m_EditorContext->getAdvancedScene();
 
             // Advanced Scene not available

@@ -12,10 +12,10 @@ namespace nero
     ////////////////////////////////////////////////////////////
     AdvancedCamera::AdvancedCamera(const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio)
         : Camera(defaultPos, panSpeed, rotSpeed, zRatio)
+        , m_IsPanningUp(false)
         , m_IsPanningDown(false)
         , m_IsPanningLeft(false)
         , m_IsPanningRight(false)
-        , m_IsPanningUp(false)
         , m_IsRotatingLeft(false)
         , m_IsRotatingRight(false)
         , m_IsZoomingIn(false)

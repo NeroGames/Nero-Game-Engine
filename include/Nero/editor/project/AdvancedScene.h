@@ -16,7 +16,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class AdvancedScene {
+    class AdvancedScene
+    {
       public:
         typedef std::shared_ptr<AdvancedScene> Ptr;
 
@@ -24,6 +25,7 @@ namespace nero
         AdvancedScene();
 
         void                     init();
+        void                     clear();
         // level
         std::string              createLevel(const Parameter& parameter);
         void                     openLevel(const std::string& levelName);

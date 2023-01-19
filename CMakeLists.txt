@@ -106,18 +106,19 @@ file(GLOB_RECURSE NERO_GAME_CORE_SOURCES
 # Dependencies
 set(NERO_GAME_CORE_DEP ${SFML_LIBS} ${OPENGL_gl_LIBRARY} ${LUA_LIBS} ${CPP_FILESYSTEM}  ${Box2D_LIBS} ${EASY_PROFILER} ${POCO})
 # Build Nero Game Core
-add_library(nerogame-core ${NERO_GAME_CORE_SOURCES} )
-target_link_libraries(nerogame-core ${NERO_GAME_CORE_DEP})
+add_library(CoreEngine ${NERO_GAME_CORE_SOURCES} )
+target_link_libraries(CoreEngine ${NERO_GAME_CORE_DEP})
+set_target_properties(CoreEngine PROPERTIES OUTPUT_NAME "nerogame-core")
 
 # Install Nero Game Core Library
 #----------------------------------------------------------------------------------#
 #[[#]]
-add_custom_command(TARGET nerogame-core
+add_custom_command(TARGET CoreEngine
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E remove_directory    "${NERO_GAME_HOME}/Nerolib/include/Nero/core"
         COMMAND ${CMAKE_COMMAND} -E make_directory      "${NERO_GAME_HOME}/Nerolib/include/Nero/core"
         COMMAND ${CMAKE_COMMAND} -E make_directory      "${NERO_GAME_HOME}/Nerolib/lib/"
-        COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:nerogame-core>" "${NERO_GAME_HOME}/Nerolib/lib/"
+        COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:CoreEngine>" "${NERO_GAME_HOME}/Nerolib/lib/"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/include/Nero/core" "${NERO_GAME_HOME}/Nerolib/include/Nero/core")
 #]]
 # Nero Game Render Engine (Desktop)
@@ -128,7 +129,7 @@ file(GLOB_RECURSE NERO_GAME_RENDERER_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/renderer/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/resources.rc")
 # Dependencies
-set(NERO_GAME_RENDERER_DEP nerogame-core ${NERO_GAME_CORE_DEP})
+set(NERO_GAME_RENDERER_DEP CoreEngine ${NERO_GAME_CORE_DEP})
 # Build Nero Render Egnine
 add_executable(RenderEngine ${NERO_GAME_RENDERER_SOURCES})
 target_link_libraries(RenderEngine ${NERO_GAME_RENDERER_DEP})
@@ -146,7 +147,7 @@ file(GLOB_RECURSE NERO_GAME_EDITOR_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/library/nodeeditor/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/resources.rc")
 # Dependencies
-set(NERO_GAME_EDITOR_DEP nerogame-core ${NERO_GAME_CORE_DEP} comctl32.lib ${LIBGIT2_LIBS})
+set(NERO_GAME_EDITOR_DEP CoreEngine ${NERO_GAME_CORE_DEP} comctl32.lib ${LIBGIT2_LIBS})
 # Build Nero Game Editor
 add_executable(GameEditor ${NERO_GAME_EDITOR_SOURCES})
 target_link_libraries(GameEditor ${NERO_GAME_EDITOR_DEP})
@@ -155,7 +156,7 @@ set_target_properties(GameEditor PROPERTIES OUTPUT_NAME "Nero Game Engine")
 # Install Nero Game Editor
 #----------------------------------------------------------------------------------#
 #[[#]]
-add_custom_command(TARGET nerogame-core
+add_custom_command(TARGET CoreEngine
         PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E remove_directory    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/template"
         COMMAND ${CMAKE_COMMAND} -E copy_directory      "${CMAKE_SOURCE_DIR}/template" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/template")
@@ -209,7 +210,7 @@ file(GLOB_RECURSE TEST_LABORATORY_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/library/imgui/*")
 
 # Dependencies
-set(TEST_LABORATORY_DEP nerogame-core ${NERO_GAME_CORE_DEP} ${GTEST} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${LIBGIT2_LIBS})
+set(TEST_LABORATORY_DEP CoreEngine ${NERO_GAME_CORE_DEP} ${GTEST} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${LIBGIT2_LIBS})
 # Build Test Laboratory
 add_executable(TestLab ${TEST_LABORATORY_SOURCES})
 target_link_libraries(TestLab ${TEST_LABORATORY_DEP})

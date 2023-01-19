@@ -20,9 +20,9 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    ProjectManager::ProjectManager()
-        : m_GameProject(nullptr)
-        , m_EditorSetting(nullptr)
+    ProjectManager::ProjectManager(Setting::Ptr editorSetting)
+        : m_EditorSetting(std::move(editorSetting))
+        , m_GameProject(nullptr)
     {
     }
 
@@ -115,9 +115,8 @@ namespace nero
 
     const std::vector<std::string> ProjectManager::getWorkspaceNameTable() const
     {
-        auto                     workspaceTable = file::loadJson(file::getPath({"setting", "workspace"}));
-
         std::vector<std::string> result;
+        auto                     workspaceTable = file::loadJson(file::getPath({"setting", "workspace"}));
 
         for(auto workspace : workspaceTable)
         {
@@ -200,9 +199,6 @@ namespace nero
         file::createDirectory(file::getPath({projectDirectory, "Scene", "level"}));
         file::createDirectory(file::getPath({projectDirectory, "Scene", "screen"}));
         file::createDirectory(file::getPath({projectDirectory, "Scene", "factory"}));
-
-        // file::createDirectory(file::getPath({projectDirectory, "Resource"}));
-        // ResourceManager::buildDirectory(file::getPath({projectDirectory, "Resource"}));
 
         // Step 1-2 : Create project document
         Setting document;
@@ -295,7 +291,7 @@ namespace nero
         file::saveFile(file::getPath({projectDirectory, "Scene", "scene"}, StringPool.EXT_NERO), scene_setting.toString());
 
         // Step 3 : compile the project
-        compileProject(projectDirectory, backgroundTask);
+        GameProject::compileProject(projectDirectory, backgroundTask);
 
         /*if(backgroundTask->getErrorCode() != 0)
         {
@@ -339,11 +335,6 @@ namespace nero
         return false;
     }
 
-    void ProjectManager::setSetting(const Setting::Ptr& setting)
-    {
-        m_EditorSetting = setting;
-    }
-
     const std::vector<nlohmann::json> ProjectManager::getWorkspaceProjectTable(const std::string& workspace_name)
     {
         std::vector<nlohmann::json>                       result;
@@ -367,11 +358,6 @@ namespace nero
         }
 
         return result;
-    }
-
-    void ProjectManager::compileProject(const std::string& projectDirectory, BackgroundTask::Ptr backgroundTask)
-    {
-        GameProject::compileProject(projectDirectory, backgroundTask);
     }
 
     std::string ProjectManager::formatSceneClassName(std::vector<std::string> wordTable)
@@ -451,39 +437,19 @@ namespace nero
         return result;
     }
 
-    std::string ProjectManager::getEngineDirectory() const
-    {
-        return file::getCurrentPath();
-    }
-
     GameProject::Ptr ProjectManager::openProject(const std::string& projectDirectory)
     {
         nero_log("openning project " + projectDirectory);
 
-        Setting::Ptr setting = std::make_shared<Setting>();
-        setting->loadSetting(file::getPath({projectDirectory, ".project"}), true, true);
-        setting->setString("project_directory", projectDirectory);
-        setting->setString("workspace_directory", file::getParentDirectory(projectDirectory, 2));
+        Setting::Ptr projectSetting = std::make_shared<Setting>();
+        projectSetting->loadSetting(file::getPath({projectDirectory, ".project"}), true, true);
+        projectSetting->setString("project_directory", projectDirectory);
+        projectSetting->setString("workspace_directory", file::getParentDirectory(projectDirectory, 2));
 
-        m_GameProject = std::make_shared<GameProject>();
-        m_GameProject->setEngineSetting(m_EditorSetting);
-        m_GameProject->init(setting);
-
-        /*m_GameProject->setSetting(m_EditorSetting);
-        m_GameProject->setRenderTexture(m_RenderTexture);
-        m_GameProject->setRenderContext(m_RenderContext);
-        m_GameProject->setCamera(m_Camera);*/
-
-        /*m_GameProject->loadResource(parameter);
-        nero_log("initializing project");
-
-        nero_log("loading project");
-        m_GameProject->loadProject();
-        nero_log("loading project library");
+        m_GameProject = std::make_shared<GameProject>(projectSetting);
+        m_GameProject->init();
         m_GameProject->loadLibrary();
-        //m_GameProject->loadLibraryDemo();
-        nero_log("openning editor");
-        m_GameProject->openEditor();*/
+        m_GameProject->openEditor();
 
         updateRecentProject(projectDirectory);
 
@@ -497,7 +463,7 @@ namespace nero
 
     void ProjectManager::closeProject()
     {
-        m_GameProject->close();
+        m_GameProject->closeProject();
         m_GameProject = nullptr;
     }
 
