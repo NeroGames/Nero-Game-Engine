@@ -8,6 +8,19 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
+    GameLevel::Context::Context(std::string                        levelName,
+                                Setting::Ptr                       levelSetting,
+                                std::string                        levelDirectory,
+                                std::shared_ptr<sf::RenderTexture> renderTexture,
+                                Camera::Ptr                        camera)
+        : levelName(levelName)
+        , levelSetting(levelSetting)
+        , levelDirectory(levelDirectory)
+        , renderTexture(renderTexture)
+        , camera(camera)
+    {
+    }
+
     GameLevel::GameLevel(GameLevel::Context context)
         : m_LevelContext(context)
         , m_ResourceManager(std::make_shared<ResourceManager>(

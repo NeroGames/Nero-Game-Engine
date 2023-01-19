@@ -11,6 +11,7 @@
 #include <Nero/core/cpp/model/Collision.h>
 #include <Nero/core/cpp/scene/PhysicalWorld.h>
 #include <Nero/core/cpp/scene/LightEngine.h>
+#include <Nero/core/cpp/camera/Camera.h>
 // SFML
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Window/Event.hpp>
@@ -27,8 +28,17 @@ namespace nero
 
         struct Context
         {
-            Setting::Ptr levelSetting;
-            std::string  levelDirectory;
+            Context(std::string                        levelName,
+                    Setting::Ptr                       levelSetting,
+                    std::string                        levelDirectory,
+                    std::shared_ptr<sf::RenderTexture> renderTexture,
+                    Camera::Ptr                        camera);
+
+            std::string                        levelName;
+            Setting::Ptr                       levelSetting;
+            std::string                        levelDirectory;
+            std::shared_ptr<sf::RenderTexture> renderTexture;
+            Camera::Ptr                        camera;
         };
 
       public:

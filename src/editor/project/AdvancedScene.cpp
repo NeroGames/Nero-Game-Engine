@@ -160,12 +160,10 @@ namespace nero
                                   true);
 
         // Create Level Context
-        GameLevel::Context levelContext;
-        levelContext.levelSetting   = levelSetting;
-        levelContext.levelDirectory = levelDirectory;
+        GameLevel::Context levelContext(levelName, levelSetting, levelDirectory, nullptr, nullptr);
 
         // Create a new Level Builder
-        m_LevelBuilder              = std::make_shared<LevelBuilder>(levelContext);
+        m_LevelBuilder = std::make_shared<LevelBuilder>(levelContext);
         m_LevelBuilder->setEditorSetting(m_EditorSetting);
         m_LevelBuilder->setRenderContext(m_RenderContext);
         m_LevelBuilder->setRenderTexture(m_RenderTexture);
@@ -304,5 +302,11 @@ namespace nero
     void AdvancedScene::clearGameSceneObject()
     {
         m_GameScene = nullptr;
+        m_GameLevelMap.clear();
+    }
+
+    void AdvancedScene::registerLevelClass(const std::string levelName, GameLevel::Ptr gameLevel)
+    {
+        m_GameLevelMap.emplace(levelName, gameLevel);
     }
 } // namespace nero

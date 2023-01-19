@@ -53,22 +53,24 @@ namespace nero
         //
         void                     clearGameSceneObject();
         LevelBuilder::Ptr        getLevelBuilder() const;
+        void registerLevelClass(const std::string levelName, GameLevel::Ptr gameLevel);
 
       private:
         // level
-        LevelBuilder::Ptr                  m_LevelBuilder;
-        std::vector<std::string>           m_RegisteredLevelTable;
+        LevelBuilder::Ptr                     m_LevelBuilder;
+        std::vector<std::string>              m_RegisteredLevelTable;
         // screen
-        ScreenBuilder::Ptr                 m_SelectedScreen;
+        ScreenBuilder::Ptr                    m_SelectedScreen;
         // setting
-        Setting::Ptr                       m_EditorSetting;
-        Setting::Ptr                       m_ProjectSetting;
-        Setting::Ptr                       m_SceneSetting;
+        Setting::Ptr                          m_EditorSetting;
+        Setting::Ptr                          m_ProjectSetting;
+        Setting::Ptr                          m_SceneSetting;
         // render
-        RenderContext::Ptr                 m_RenderContext;
-        std::shared_ptr<sf::RenderTexture> m_RenderTexture;
+        RenderContext::Ptr                    m_RenderContext;
+        std::shared_ptr<sf::RenderTexture>    m_RenderTexture;
         //
-        GameScene::Ptr                     m_GameScene;
+        GameScene::Ptr                        m_GameScene;
+        std::map<std::string, GameLevel::Ptr> m_GameLevelMap;
     };
 } // namespace nero
 #endif // ADVANCEDSCENE_H

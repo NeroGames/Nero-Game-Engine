@@ -101,6 +101,44 @@ namespace nero
 
             // Load Game Level
             // TODO
+            for(const std::string levelName : m_AdvancedScene->getRegisteredLevelTable())
+            {
+                nero_log("loading Game Level Class - " + levelName);
+
+                const std::string createFunctionName =
+                    "create" + string::formatString(levelName, string::Format::CAMEL_CASE_UPPER) +
+                    "GameLevel";
+
+                m_CreateCppGameLevelCallback.clear();
+                m_CreateCppGameLevelCallback = boost::dll::import_alias<CreateCppGameLevelCallback>(
+                    libraryFilePath,
+                    createFunctionName,
+                    boost::dll::load_mode::append_decorations);
+
+                // Build level directory
+                std::string levelDirectory =
+                    file::getPath({m_ProjectSetting->getString("project_directory"),
+                                   "Scene",
+                                   "level",
+                                   boost::algorithm::to_lower_copy(levelName)});
+
+                // Load level setting
+                Setting::Ptr levelSetting = std::make_shared<Setting>();
+                levelSetting->loadSetting(
+                    file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO),
+                    true,
+                    true);
+
+                m_AdvancedScene->registerLevelClass(
+                    levelName,
+                    m_CreateCppGameLevelCallback(GameLevel::Context(levelName,
+                                                                    levelSetting,
+                                                                    levelDirectory,
+                                                                    m_RenderTexture,
+                                                                    m_Camera)));
+            }
+
+            m_CreateCppGameLevelCallback.clear();
 
             // Loag Game Screen
             // TODO
@@ -243,7 +281,7 @@ namespace nero
         nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
 
         backgroundTask->nextStep();
-        backgroundTask->addMessage("Step 2/3 - Building Project");
+        backgroundTask->addMessage("Step 3/3 - Building Project");
         cmd::Process buildProcess = cmd::runCommand(mingw32, {"-C", buildPath});
         backgroundTask->setErrorCode(buildProcess.getExistCode());
         nero_log("build project exit code = " + toString(buildProcess.getExistCode()));
