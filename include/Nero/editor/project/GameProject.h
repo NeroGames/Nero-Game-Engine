@@ -8,7 +8,7 @@
 // Nero
 #include <Nero/core/cpp/utility/CommandLine.h>
 #include <Nero/editor/project/AdvancedScene.h>
-#include <Nero/core/cpp/scene/Scene.h>
+#include <Nero/core/cpp/scene/GameScene.h>
 #include <Nero/core/lua/scene/LuaScene.h>
 #include <Nero/core/cpp/engine/BackgroundTask.h>
 #include <Nero/editor/EditorCamera.h>
@@ -26,7 +26,7 @@ namespace nero
       public:
         using Ptr                        = std::shared_ptr<GameProject>;
         using RenderTexturePtr           = std::shared_ptr<sf::RenderTexture>;
-        using CreateCppGameSceneCallback = Scene::Ptr(Scene::Context);
+        using CreateCppGameSceneCallback = GameScene::Ptr(GameScene::Context);
         using CreateCppGameLevelCallback = GameLevel::Ptr(GameLevel::Context);
         // TODO
         // using CreateCppGameScreenCallback = GameScreen::Ptr(GameScreen::Context);
@@ -63,6 +63,10 @@ namespace nero
         boost::function<CreateCppGameLevelCallback> m_CreateCppGameLevelCallback;
         // Open code editor
         std::string                                 m_CodeEditorProcessId;
+        //
+        RenderTexturePtr                            m_RenderTexture;
+        RenderContext::Ptr                          m_RenderContext;
+        Camera::Ptr                                 m_Camera;
     };
 } // namespace nero
 

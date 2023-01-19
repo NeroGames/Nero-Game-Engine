@@ -520,7 +520,7 @@ namespace nero
         return result;
     }
 
-    GameProject::Ptr ProjectManager::openProject(const std::string& projectDirectory)
+    void ProjectManager::openProject(const std::string& projectDirectory)
     {
         nero_log("openning project " + projectDirectory);
 
@@ -532,12 +532,8 @@ namespace nero
 
         m_GameProject = std::make_shared<GameProject>(projectSetting);
         m_GameProject->init();
-        m_GameProject->loadLibrary();
-        m_GameProject->openEditor();
 
         updateRecentProject(projectDirectory);
-
-        return m_GameProject;
     }
 
     GameProject::Ptr ProjectManager::getGameProject()

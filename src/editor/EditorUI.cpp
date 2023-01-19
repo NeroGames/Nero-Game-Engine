@@ -992,12 +992,15 @@ namespace nero
             if(m_ProjectManager)
             {
                 m_ProjectManager->openProject(projectDirectory);
-                auto advancedScene = m_EditorContext->getAdvancedScene();
-                advancedScene->setRenderTexture(m_RenderTexture);
-                advancedScene->setRenderContext(m_RenderContext);
+                auto gameProject = m_EditorContext->getGameProject();
+                gameProject->setRenderTexture(m_RenderTexture);
+                gameProject->setRenderContext(m_RenderContext);
+                gameProject->setCamera(m_EditorCamera);
+                gameProject->loadLibrary();
+                gameProject->openEditor();
 
                 // update editor window title
-                m_UpdateWindowTitleCallback(m_EditorContext->getGameProject()->getProjectName());
+                m_UpdateWindowTitleCallback(gameProject->getProjectName());
             }
         };
 

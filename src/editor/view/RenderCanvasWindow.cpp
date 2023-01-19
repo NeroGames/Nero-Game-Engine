@@ -87,10 +87,22 @@ namespace nero
 
         prepareRenderTexture();
 
-        auto levelBuilder = m_EditorContext->getLevelBuilder();
-        if(levelBuilder)
+        const auto editorMode = m_EditorContext->getEditorMode();
+        if(editorMode == EditorMode::WORLD_BUILDER)
         {
-            levelBuilder->render();
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
+            if(levelBuilder)
+            {
+                levelBuilder->render();
+            }
+        }
+        else if(editorMode == EditorMode::PLAY_GAME)
+        {
+            auto advancedScene = m_EditorContext->getAdvancedScene();
+            if(advancedScene)
+            {
+                advancedScene->render();
+            }
         }
 
         // Render on Front Screen

@@ -65,7 +65,6 @@ namespace nero
 
         if(file::fileExist(libraryFileCopy))
         {
-            m_AdvancedScene->clear();
             m_CreateCppGameSceneCallback.clear();
             m_CreateCppGameLevelCallback.clear();
 
@@ -90,8 +89,13 @@ namespace nero
 
             if(!m_CreateCppGameSceneCallback.empty())
             {
-                // TODO pass value to advanced scene
-                // m_AdvancedScene->setCppSceneCreator(m_CreateCppGameSceneCallback);
+                m_AdvancedScene->setGameScene(m_CreateCppGameSceneCallback(
+                    GameScene::Context("My Game",
+                                       m_RenderTexture,
+                                       m_Camera,
+                                       m_ProjectSetting,
+                                       GameScene::EngineType::EDITOR,
+                                       GameScene::PlatformType::WINDOWS)));
             }
 
             // Load Game Level
@@ -290,5 +294,22 @@ namespace nero
         m_AdvancedScene->m_GameScreenTable.clear();*/
 
         // m_CreateCppSceneFn.clear();
+    }
+
+    void GameProject::setRenderTexture(const RenderTexturePtr& renderTexture)
+    {
+        m_RenderTexture = renderTexture;
+        m_AdvancedScene->setRenderTexture(m_RenderTexture);
+    }
+
+    void GameProject::setRenderContext(const RenderContext::Ptr& renderContext)
+    {
+        m_RenderContext = renderContext;
+        m_AdvancedScene->setRenderContext(m_RenderContext);
+    }
+
+    void GameProject::setCamera(const Camera::Ptr& camera)
+    {
+        m_Camera = camera;
     }
 } // namespace nero

@@ -8,6 +8,7 @@
 // Nero
 #include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/core/cpp/engine/Setting.h>
+#include <Nero/core/cpp/scene/GameScene.h>
 #include <Nero/editor/level/LevelBuilder.h>
 #include <Nero/editor/screen/ScreenBuilder.h>
 // STD
@@ -43,6 +44,12 @@ namespace nero
         void                     setRenderContext(const RenderContext::Ptr& renderContext);
         void              setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
         LevelBuilder::Ptr getLevelBuilder() const;
+        // Game Scene
+        void              setGameScene(GameScene::Ptr gameScene);
+        void              handleEvent(const sf::Event& event);
+        void              update(const sf::Time& timeStep);
+        void              render();
+        void              renderShape();
 
       private:
         // level
@@ -57,6 +64,8 @@ namespace nero
         // render
         RenderContext::Ptr                 m_RenderContext;
         std::shared_ptr<sf::RenderTexture> m_RenderTexture;
+        //
+        GameScene::Ptr                     m_GameScene;
     };
 } // namespace nero
 #endif // ADVANCEDSCENE_H

@@ -13,12 +13,12 @@ namespace nero
                                 Setting::Ptr                       setting,
                                 EngineType                         engineType,
                                 PlatformType                       platformType)
-        : sceneName(sceneName)
-        , renderTexture(renderTexture)
+        : renderTexture(renderTexture)
         , camera(camera)
         , setting(setting)
         , engineType(engineType)
         , platformType(platformType)
+        , sceneName(sceneName)
     {
     }
 
@@ -28,6 +28,7 @@ namespace nero
     }
 
     GameScene::GameScene(GameScene::Context context)
+        : m_SceneContext(context)
     {
     }
 
@@ -62,5 +63,15 @@ namespace nero
 
     void GameScene::renderFrontScreen()
     {
+    }
+
+    std::shared_ptr<sf::RenderTexture> GameScene::getRenderTexture()
+    {
+        return m_SceneContext.renderTexture;
+    }
+
+    Camera::Ptr GameScene::getCamera()
+    {
+        return m_SceneContext.camera;
     }
 } // namespace nero

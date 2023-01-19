@@ -271,4 +271,33 @@ namespace nero
     {
         return m_LevelBuilder;
     }
+
+    void AdvancedScene::setGameScene(GameScene::Ptr gameScene)
+    {
+        m_GameScene = gameScene;
+    }
+
+    void AdvancedScene::handleEvent(const sf::Event& event)
+    {
+        if(m_GameScene)
+            m_GameScene->handleEvent(event);
+    }
+
+    void AdvancedScene::update(const sf::Time& timeStep)
+    {
+        if(m_GameScene)
+            m_GameScene->update(timeStep);
+    }
+
+    void AdvancedScene::render()
+    {
+        if(m_GameScene)
+            m_GameScene->render();
+    }
+
+    void AdvancedScene::renderShape()
+    {
+        if(m_GameScene)
+            m_GameScene->renderShape();
+    }
 } // namespace nero

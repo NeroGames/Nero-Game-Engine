@@ -36,8 +36,8 @@ namespace nero
 
         // Game Project
         void createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-        GameProject::Ptr openProject(const std::string& projectDirectory);
-        void             closeProject();
+        void openProject(const std::string& projectDirectory);
+        void closeProject();
         bool projectExist(const std::string& projectName, const std::string& workspaceName);
         const std::vector<nlohmann::json> getWorkspaceProjectTable(const std::string& workpsace);
         nlohmann::json                    findProject(const std::string& workspace_name,

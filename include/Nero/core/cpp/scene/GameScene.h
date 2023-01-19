@@ -70,13 +70,19 @@ namespace nero
         GameScene(Context context);
         virtual ~GameScene();
         // main method
-        virtual void init();
-        virtual void destroy();
-        virtual void handleEvent(const sf::Event& event);
-        virtual void update(const sf::Time& timeStep);
-        virtual void render();
-        virtual void renderShape();
-        virtual void renderFrontScreen();
+        virtual void                       init();
+        virtual void                       destroy();
+        virtual void                       handleEvent(const sf::Event& event);
+        virtual void                       update(const sf::Time& timeStep);
+        virtual void                       render();
+        virtual void                       renderShape();
+        virtual void                       renderFrontScreen();
+
+        std::shared_ptr<sf::RenderTexture> getRenderTexture();
+        Camera::Ptr                        getCamera();
+
+      private:
+        Context m_SceneContext;
     };
 } // namespace nero
 
