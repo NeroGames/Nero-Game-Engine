@@ -34,7 +34,8 @@ namespace nero
         ImGuiStyle& style          = ImGui::GetStyle();
         float       xWindowVisible = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-        auto        printSameLine  = [&count, &resourceCount, &style, &xWindowVisible]() {
+        auto        printSameLine  = [&count, &resourceCount, &style, &xWindowVisible]()
+        {
             float xLastButton = ImGui::GetItemRectMax().x;
             float xNextButton = xLastButton + style.ItemSpacing.x + 100.f;
             if(count++ + 1 < resourceCount && xNextButton < xWindowVisible)
@@ -90,7 +91,8 @@ namespace nero
         popResourceStyle(selected);
 
         // TODO
-        //  Shape, Particle, Composite, Sound, Music, LuaScript, Spawner, Factory, CPPScript, EmptyObject
+        //  Shape, Particle, Composite, Sound, Music, LuaScript, Spawner, Factory, CPPScript,
+        //  EmptyObject
 
         ImGui::End();
     }

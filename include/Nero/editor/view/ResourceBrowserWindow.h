@@ -16,7 +16,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceBrowserWindow : public UIComponent {
+    class ResourceBrowserWindow : public UIComponent
+    {
       public:
         ResourceBrowserWindow(EditorContext::Ptr editorContext);
         virtual ~ResourceBrowserWindow() override;

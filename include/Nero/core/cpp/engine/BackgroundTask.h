@@ -12,7 +12,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class BackgroundTask {
+    class BackgroundTask
+    {
       public:
         using Ptr = std::shared_ptr<BackgroundTask>;
 

@@ -9,7 +9,10 @@
 namespace nero
 {
     ////////////////////////////////////////////////////////////
-    Camera::Camera(const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio)
+    Camera::Camera(const sf::Vector2f& defaultPos,
+                   const float&        panSpeed,
+                   const float&        rotSpeed,
+                   const float&        zRatio)
         : m_DefaultPosition(defaultPos)
         , m_PanningSpeed(panSpeed)
         , m_DefaultPanningSpeed(panSpeed)
@@ -27,7 +30,11 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    Camera::Camera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos, const float& panSpeed, const float& rotSpeed, const float& zRatio)
+    Camera::Camera(const sf::Vector2f& viewSize,
+                   const sf::Vector2f& defaultPos,
+                   const float&        panSpeed,
+                   const float&        rotSpeed,
+                   const float&        zRatio)
         : m_DefaultPosition(defaultPos)
         , m_PanningSpeed(panSpeed)
         , m_DefaultPanningSpeed(panSpeed)
@@ -107,7 +114,8 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    void Camera::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
+    void Camera::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse,
+                                         const bool&                        isPressed)
     {
         // Empty
     }

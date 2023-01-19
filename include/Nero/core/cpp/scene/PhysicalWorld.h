@@ -10,7 +10,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class PhysicalWorld {
+    class PhysicalWorld
+    {
       public:
         // type definiton
         typedef std::shared_ptr<PhysicalWorld> Ptr;

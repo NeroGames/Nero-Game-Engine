@@ -100,7 +100,8 @@ namespace nero
         m_ParameterHolder[setting] = value;
     }
 
-    void Parameter::setStringTable(const std::string& setting, const std::vector<std::string>& value)
+    void Parameter::setStringTable(const std::string&              setting,
+                                   const std::vector<std::string>& value)
     {
         m_ParameterHolder[setting] = value;
     }

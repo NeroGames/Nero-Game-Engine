@@ -13,20 +13,19 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class SimpleActionObject : public Object {
+    class SimpleActionObject : public Object
+    {
       public:
         SimpleActionObject();
 
-        template <class T>
-        void registerAction(sf::String name);
+        template <class T> void registerAction(sf::String name);
 
-        template <class T>
-        void        registerAction(sf::String name, const T& action);
+        template <class T> void registerAction(sf::String name, const T& action);
 
-        void        dropAction(sf::String name);
-        void        callAction(sf::String name);
-        void        setObject(Object::Ptr object);
-        Object::Ptr getObject();
+        void                    dropAction(sf::String name);
+        void                    callAction(sf::String name);
+        void                    setObject(Object::Ptr object);
+        Object::Ptr             getObject();
 
       private:
         virtual void updateObject(sf::Time time_step);
@@ -37,14 +36,12 @@ namespace nero
         std::map<sf::String, ObjectAction::Ptr> m_ActionTable;
     };
 
-    template <typename T>
-    void SimpleActionObject::registerAction(sf::String name)
+    template <typename T> void SimpleActionObject::registerAction(sf::String name)
     {
         m_ActionTable[name] = ObjectAction::Ptr(new T());
     }
 
-    template <class T>
-    void SimpleActionObject::registerAction(sf::String name, const T& action)
+    template <class T> void SimpleActionObject::registerAction(sf::String name, const T& action)
     {
         m_ActionTable[name] = ObjectAction::Ptr(new T(action));
     }

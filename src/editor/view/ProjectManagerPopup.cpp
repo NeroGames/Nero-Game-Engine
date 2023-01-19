@@ -17,11 +17,10 @@ namespace nero
         , m_OpenProjectTab(m_EditorContext, m_TabSelectionHandler)
         , m_WorkspaceTab(m_EditorContext, m_TabSelectionHandler)
     {
-        m_TabSelectionHandler->registerTab(
-            {EditorConstant.TAB_RECENT_PROJECT,
-             EditorConstant.TAB_CREATE_PROJECT,
-             EditorConstant.TAB_OPEN_PROJECT,
-             EditorConstant.TAB_WORKSPACE});
+        m_TabSelectionHandler->registerTab({EditorConstant.TAB_RECENT_PROJECT,
+                                            EditorConstant.TAB_CREATE_PROJECT,
+                                            EditorConstant.TAB_OPEN_PROJECT,
+                                            EditorConstant.TAB_WORKSPACE});
     }
 
     ProjectManagerPopup::~ProjectManagerPopup()
@@ -41,10 +40,8 @@ namespace nero
     void ProjectManagerPopup::render()
     {
         // Window flags
-        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking |
-                                       ImGuiWindowFlags_Modal |
-                                       ImGuiWindowFlags_NoResize |
-                                       ImGuiWindowFlags_NoCollapse |
+        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal |
+                                       ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
                                        ImGuiWindowFlags_NoScrollbar;
         // Winsow size
         ImVec2 winsowSize = EditorConstant.WINDOW_PROJECT_MANAGER_SIZE;
@@ -52,47 +49,65 @@ namespace nero
         // Project manager window
         ImGui::SetNextWindowSize(winsowSize);
         // Begin window
-        if(ImGui::BeginPopupModal(EditorConstant.WINDOW_PROJECT_MANAGER.c_str(), nullptr, windowFlags))
+        if(ImGui::BeginPopupModal(EditorConstant.WINDOW_PROJECT_MANAGER.c_str(),
+                                  nullptr,
+                                  windowFlags))
         {
             // Save cursor position
             ImVec2 cursor = ImGui::GetCursorPos();
 
             // Panel 1 : Engine Banner
-            ImGui::BeginChild("##project_manager_panel_1", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.33f, winsowSize.y - 20.f));
+            ImGui::BeginChild(
+                "##project_manager_panel_1",
+                ImVec2(ImGui::GetWindowContentRegionWidth() * 0.33f, winsowSize.y - 20.f));
             ImGui::Image(m_EditorContext->getTextureHolder()->getTexture("editor_project_manager"));
             ImGui::EndChild();
 
             // Panel 2 : Window tabs
             ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() * 0.33f);
             ImGui::SetCursorPosY(cursor.y);
-            ImGui::BeginChild("##project_manager_panel_2", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.67f, winsowSize.y * 0.85f));
+            ImGui::BeginChild(
+                "##project_manager_panel_2",
+                ImVec2(ImGui::GetWindowContentRegionWidth() * 0.67f, winsowSize.y * 0.85f));
 
             if(ImGui::BeginTabBar("##project_manager_tabbar"))
             {
                 ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
-                if(ImGui::BeginTabItem(EditorConstant.TAB_RECENT_PROJECT.c_str(), nullptr, m_TabSelectionHandler->getTabStatus(EditorConstant.TAB_RECENT_PROJECT)))
+                if(ImGui::BeginTabItem(
+                       EditorConstant.TAB_RECENT_PROJECT.c_str(),
+                       nullptr,
+                       m_TabSelectionHandler->getTabStatus(EditorConstant.TAB_RECENT_PROJECT)))
                 {
                     m_RecentProjectTab.render();
 
                     ImGui::EndTabItem();
                 }
 
-                if(ImGui::BeginTabItem(EditorConstant.TAB_CREATE_PROJECT.c_str(), nullptr, m_TabSelectionHandler->getTabStatus(EditorConstant.TAB_CREATE_PROJECT)))
+                if(ImGui::BeginTabItem(
+                       EditorConstant.TAB_CREATE_PROJECT.c_str(),
+                       nullptr,
+                       m_TabSelectionHandler->getTabStatus(EditorConstant.TAB_CREATE_PROJECT)))
                 {
                     m_NewProjectTab.render();
 
                     ImGui::EndTabItem();
                 }
 
-                if(ImGui::BeginTabItem(EditorConstant.TAB_OPEN_PROJECT.c_str(), nullptr, m_TabSelectionHandler->getTabStatus(EditorConstant.TAB_OPEN_PROJECT)))
+                if(ImGui::BeginTabItem(
+                       EditorConstant.TAB_OPEN_PROJECT.c_str(),
+                       nullptr,
+                       m_TabSelectionHandler->getTabStatus(EditorConstant.TAB_OPEN_PROJECT)))
                 {
                     m_OpenProjectTab.render();
 
                     ImGui::EndTabItem();
                 }
 
-                if(ImGui::BeginTabItem(EditorConstant.TAB_WORKSPACE.c_str(), nullptr, m_TabSelectionHandler->getTabStatus(EditorConstant.TAB_WORKSPACE)))
+                if(ImGui::BeginTabItem(
+                       EditorConstant.TAB_WORKSPACE.c_str(),
+                       nullptr,
+                       m_TabSelectionHandler->getTabStatus(EditorConstant.TAB_WORKSPACE)))
                 {
                     m_WorkspaceTab.render();
 

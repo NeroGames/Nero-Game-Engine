@@ -13,7 +13,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceHolder {
+    class ResourceHolder
+    {
       public:
         ResourceHolder();
         ResourceHolder(const Setting& setting);
@@ -29,9 +30,9 @@ namespace nero
         void                           setSetting(const Setting& setting);
         void                           loadDirectory(const std::string& directory);
         const std::vector<std::string> loadFile(const std::vector<std::string> fileTable);
-        void                           addDirectory(const std::string& directory, bool autoSelect = false);
-        void                           selectDirectory(const std::string& directory);
-        void                           reloadDirectory(const std::string& directory);
+        void addDirectory(const std::string& directory, bool autoSelect = false);
+        void selectDirectory(const std::string& directory);
+        void reloadDirectory(const std::string& directory);
 
       protected:
         Setting                         m_Setting;

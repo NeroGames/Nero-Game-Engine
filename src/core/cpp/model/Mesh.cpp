@@ -184,7 +184,8 @@ namespace nero
             // update circle shape
             if(m_MeshShape == Shape::Circle)
             {
-                float radius = math::distance(m_VertexTable.front().getPosition(), m_VertexTable.back().getPosition());
+                float radius = math::distance(m_VertexTable.front().getPosition(),
+                                              m_VertexTable.back().getPosition());
 
                 if(!m_CircleShape)
                 {
@@ -207,7 +208,8 @@ namespace nero
 
                 if(m_Valid)
                 {
-                    std::vector<std::vector<sf::Vector2f>> polygonTable = math::concaveToConvex(posTable);
+                    std::vector<std::vector<sf::Vector2f>> polygonTable =
+                        math::concaveToConvex(posTable);
 
                     for(std::vector<sf::Vector2f> pointTable : polygonTable)
                     {
@@ -230,17 +232,21 @@ namespace nero
             if(m_MeshShape == Shape::Polygon)
             {
                 for(auto it = m_PolygonTable.begin(); it != m_PolygonTable.end(); it++)
-                    it->setFillColor(sf::Color(meshColor.r, meshColor.g, meshColor.b, m_ColorAlpha));
+                    it->setFillColor(
+                        sf::Color(meshColor.r, meshColor.g, meshColor.b, m_ColorAlpha));
             }
             else if(m_MeshShape == Shape::Circle)
             {
-                m_CircleShape->setFillColor(sf::Color(meshColor.r, meshColor.g, meshColor.b, m_ColorAlpha));
+                m_CircleShape->setFillColor(
+                    sf::Color(meshColor.r, meshColor.g, meshColor.b, m_ColorAlpha));
                 m_CircleShape->setOutlineColor(meshColor);
             }
         }
     }
 
-    std::vector<sf::Vector2f> Mesh::generateRegularPolygon(const sf::Vector2f& position, const int& pointCount, const float& radius)
+    std::vector<sf::Vector2f> Mesh::generateRegularPolygon(const sf::Vector2f& position,
+                                                           const int&          pointCount,
+                                                           const float&        radius)
     {
         std::vector<sf::Vector2f> pointTable;
 
@@ -323,20 +329,26 @@ namespace nero
         case Shape::Polygon:
         case Shape::Chain:
         case Shape::Line: {
-            std::vector<sf::Vector2f> posTable  = getVertexPosition();
+            std::vector<sf::Vector2f> posTable = getVertexPosition();
 
-            auto                      xExtremes = std::minmax_element(posTable.begin(), posTable.end(),
-                                                                      [](const sf::Vector2f& lhs, const sf::Vector2f& rhs) {
-                                                     return lhs.x < rhs.x;
-                                                 });
+            auto                      xExtremes =
+                std::minmax_element(posTable.begin(),
+                                    posTable.end(),
+                                    [](const sf::Vector2f& lhs, const sf::Vector2f& rhs)
+                                    {
+                                        return lhs.x < rhs.x;
+                                    });
 
-            auto                      yExtremes = std::minmax_element(posTable.begin(), posTable.end(),
-                                                                      [](const sf::Vector2f& lhs, const sf::Vector2f& rhs) {
-                                                     return lhs.y < rhs.y;
-                                                 });
+            auto yExtremes =
+                std::minmax_element(posTable.begin(),
+                                    posTable.end(),
+                                    [](const sf::Vector2f& lhs, const sf::Vector2f& rhs)
+                                    {
+                                        return lhs.y < rhs.y;
+                                    });
 
-            sf::Vector2f              upperLeft(xExtremes.first->x, yExtremes.first->y);
-            sf::Vector2f              lowerRight(xExtremes.second->x, yExtremes.second->y);
+            sf::Vector2f upperLeft(xExtremes.first->x, yExtremes.first->y);
+            sf::Vector2f lowerRight(xExtremes.second->x, yExtremes.second->y);
 
             boundRect.left   = upperLeft.x - 5.f;
             boundRect.top    = upperLeft.y - 5.f;
@@ -349,7 +361,8 @@ namespace nero
         return boundRect;
     }
 
-    void Mesh::updateMesh(const sf::Vector2f& position, const sf::Vector2f& scale, const float& rotation)
+    void
+    Mesh::updateMesh(const sf::Vector2f& position, const sf::Vector2f& scale, const float& rotation)
     {
         if(scale != m_Scale)
         {
@@ -387,8 +400,10 @@ namespace nero
 
             sf::Vector2f center   = math::getLineCenter(pos1, pos2);
 
-            sf::Vector2f new_pos1 = sf::Vector2f((pos1.x - center.x) * factor.x + center.x, (pos1.y - center.y) * factor.y + center.y);
-            sf::Vector2f new_pos2 = sf::Vector2f((pos2.x - center.x) * factor.x + center.x, (pos2.y - center.y) * factor.y + center.y);
+            sf::Vector2f new_pos1 = sf::Vector2f((pos1.x - center.x) * factor.x + center.x,
+                                                 (pos1.y - center.y) * factor.y + center.y);
+            sf::Vector2f new_pos2 = sf::Vector2f((pos2.x - center.x) * factor.x + center.x,
+                                                 (pos2.y - center.y) * factor.y + center.y);
 
             m_VertexTable.front().setPosition(new_pos1);
             m_VertexTable.back().setPosition(new_pos2);
@@ -397,7 +412,8 @@ namespace nero
         {
             sf::Vector2f center  = m_VertexTable.front().getPosition();
             sf::Vector2f pos     = m_VertexTable.back().getPosition();
-            sf::Vector2f new_pos = sf::Vector2f((pos.x - center.x) * factor.x + center.x, (pos.y - center.y) * factor.y + center.y);
+            sf::Vector2f new_pos = sf::Vector2f((pos.x - center.x) * factor.x + center.x,
+                                                (pos.y - center.y) * factor.y + center.y);
             m_VertexTable.back().setPosition(new_pos);
         }
         else
@@ -408,7 +424,8 @@ namespace nero
             for(auto it = m_VertexTable.begin(); it != m_VertexTable.end(); it++)
             {
                 sf::Vector2f pos     = it->getPosition();
-                sf::Vector2f new_pos = sf::Vector2f((pos.x - center.x) * factor.x + center.x, (pos.y - center.y) * factor.y + center.y);
+                sf::Vector2f new_pos = sf::Vector2f((pos.x - center.x) * factor.x + center.x,
+                                                    (pos.y - center.y) * factor.y + center.y);
 
                 it->setPosition(new_pos);
             }
@@ -421,13 +438,19 @@ namespace nero
     {
         if(m_MeshShape == Shape::Line)
         {
-            sf::Vector2f center = math::getLineCenter(m_VertexTable.front().getPosition(), m_VertexTable.back().getPosition());
-            m_VertexTable.front().setPosition(math::rotateVertex(center, angle, m_VertexTable.front().getPosition()));
-            m_VertexTable.back().setPosition(math::rotateVertex(center, angle, m_VertexTable.back().getPosition()));
+            sf::Vector2f center = math::getLineCenter(m_VertexTable.front().getPosition(),
+                                                      m_VertexTable.back().getPosition());
+            m_VertexTable.front().setPosition(
+                math::rotateVertex(center, angle, m_VertexTable.front().getPosition()));
+            m_VertexTable.back().setPosition(
+                math::rotateVertex(center, angle, m_VertexTable.back().getPosition()));
         }
         else if(m_MeshShape == Shape::Circle)
         {
-            m_VertexTable.back().setPosition(math::rotateVertex(m_VertexTable.front().getPosition(), angle, m_VertexTable.back().getPosition()));
+            m_VertexTable.back().setPosition(
+                math::rotateVertex(m_VertexTable.front().getPosition(),
+                                   angle,
+                                   m_VertexTable.back().getPosition()));
         }
         else
         {
@@ -494,8 +517,8 @@ namespace nero
                                 m_Size = 75.f;
 
                 //Create vertex
-                                sf::Vector2f point1 = sf::Vector2f(m_Position.x - m_Size, m_Position.y);
-                                sf::Vector2f point2 = sf::Vector2f(m_Position.x + m_Size, m_Position.y);
+                                sf::Vector2f point1 = sf::Vector2f(m_Position.x - m_Size,
+m_Position.y); sf::Vector2f point2 = sf::Vector2f(m_Position.x + m_Size, m_Position.y);
                 m_VertexTab.push_back(createVertex(point1, m_Color));
                 m_VertexTab.push_back(createVertex(point2, m_Color));
 
@@ -516,8 +539,8 @@ namespace nero
 
                 //Create vertex
                                 sf::Vector2f center = sf::Vector2f(m_Position);
-                                sf::Vector2f point = sf::Vector2f(m_Position.x + m_Size, m_Position.y);
-                m_VertexTab.push_back(createVertex(center, m_Color));
+                                sf::Vector2f point = sf::Vector2f(m_Position.x + m_Size,
+m_Position.y); m_VertexTab.push_back(createVertex(center, m_Color));
                 m_VertexTab.push_back(createVertex(point, m_Color));
 
                 //Create line
@@ -538,7 +561,8 @@ namespace nero
                                 m_Size = 50.f;
 
                 //Create vertex and polygon
-                                m_PolygonTab.push_back(createRegularPolygon(m_Position, m_Color, 4));
+                                m_PolygonTab.push_back(createRegularPolygon(m_Position, m_Color,
+4));
 
                 //Create line
                 updateLineShapeLoop();
@@ -580,7 +604,8 @@ namespace nero
         {
             sf::Vector2f point1 = m_VertexTab[i].getPosition();
             sf::Vector2f point2 = m_VertexTab[i+1].getPosition();
-                        m_LineTab.push_back(createLine(point1, point2, graphics::getTransparentColor(m_Color, Color_Alpha)));
+                        m_LineTab.push_back(createLine(point1, point2,
+graphics::getTransparentColor(m_Color, Color_Alpha)));
 
             validate(point1, point2);
         }
@@ -589,7 +614,8 @@ namespace nero
         {
             sf::Vector2f point1 = m_VertexTab[0].getPosition();
             sf::Vector2f point2 = m_VertexTab[m_VertexTab.size()-1].getPosition();
-                        m_LineTab.push_back(createLine(point1, point2, graphics::getTransparentColor(m_Color, Color_Alpha)));
+                        m_LineTab.push_back(createLine(point1, point2,
+graphics::getTransparentColor(m_Color, Color_Alpha)));
 
             validate(point1, point2);
         }
@@ -605,7 +631,8 @@ namespace nero
         updateLine(true);
     }
 
-    sf::RectangleShape Mesh::createLine(const sf::Vector2f& point1, const sf::Vector2f& point2, const sf::Color& color)
+    sf::RectangleShape Mesh::createLine(const sf::Vector2f& point1, const sf::Vector2f& point2,
+const sf::Color& color)
     {
         sf::RectangleShape line;
 
@@ -625,8 +652,8 @@ namespace nero
 
     void Mesh::updateCircleShape()
     {
-                m_Size = math::distance(m_VertexTab.front().getPosition(), m_VertexTab.back().getPosition());
-                m_CircleShape.setOrigin(sf::Vector2f(m_Size, m_Size));
+                m_Size = math::distance(m_VertexTab.front().getPosition(),
+m_VertexTab.back().getPosition()); m_CircleShape.setOrigin(sf::Vector2f(m_Size, m_Size));
         m_CircleShape.setOutlineThickness(Vertex_Size/8.f);
         m_CircleShape.setOutlineColor(m_Color);
                 m_CircleShape.setFillColor(graphics::getTransparentColor(m_Color, 50));
@@ -634,7 +661,8 @@ namespace nero
         m_CircleShape.setRadius(m_Size);
     }
 
-    sf::ConvexShape Mesh::createRegularPolygon(const sf::Vector2f& position, const sf::Color& color, const int& pointCount)
+    sf::ConvexShape Mesh::createRegularPolygon(const sf::Vector2f& position, const sf::Color& color,
+const int& pointCount)
     {
                 float theta = math::PI/4.f;
 
@@ -684,7 +712,8 @@ namespace nero
         {
             m_IsValid = true;
 
-                        std::vector<VectorTable> convexPolygonTab = math::concaveToConvex(vertexVectorTable);
+                        std::vector<VectorTable> convexPolygonTab =
+math::concaveToConvex(vertexVectorTable);
 
             for(VectorTable polygon : convexPolygonTab)
             {
@@ -776,8 +805,8 @@ namespace nero
 
         if(m_Shape == Circle_Mesh)
         {
-                        m_CircleShape.setFillColor(graphics::getTransparentColor(color, Color_Alpha));
-            m_CircleShape.setOutlineColor(color);
+                        m_CircleShape.setFillColor(graphics::getTransparentColor(color,
+Color_Alpha)); m_CircleShape.setOutlineColor(color);
         }
     }
 
@@ -891,8 +920,8 @@ namespace nero
                                      });
 
                 auto yExtremes = std::minmax_element(v.begin(), v.end(),
-                                                     [](const sf::Vector2f& lhs, const sf::Vector2f& rhs) {
-                                                        return lhs.y < rhs.y;
+                                                     [](const sf::Vector2f& lhs, const sf::Vector2f&
+rhs) { return lhs.y < rhs.y;
                                                      });
 
                 sf::Vector2f  upperLeft(xExtremes.first->x, yExtremes.first->y);
@@ -927,7 +956,8 @@ namespace nero
     {
 
                 //m_SelectionRect.setPosition(getGlobalBounds().left,  getGlobalBounds().top);
-                //m_SelectionRect.setSize(sf::Vector2f(getGlobalBounds().width,  getGlobalBounds().height));
+                //m_SelectionRect.setSize(sf::Vector2f(getGlobalBounds().width,
+getGlobalBounds().height));
 
 
                 //states.transform *= getTransform();
@@ -964,14 +994,16 @@ namespace nero
     {
         if(m_Shape == Mesh::Line_Mesh)
         {
-                        sf::Vector2f center = math::getLineCenter(m_VertexTab.front().getPosition(), m_VertexTab.back().getPosition());
-                        m_VertexTab.front().setPosition(math::rotateVertex(center, angle, m_VertexTab.front().getPosition()));
-                        m_VertexTab.back().setPosition(math::rotateVertex(center, angle, m_VertexTab.back().getPosition()));
+                        sf::Vector2f center = math::getLineCenter(m_VertexTab.front().getPosition(),
+m_VertexTab.back().getPosition()); m_VertexTab.front().setPosition(math::rotateVertex(center, angle,
+m_VertexTab.front().getPosition())); m_VertexTab.back().setPosition(math::rotateVertex(center,
+angle, m_VertexTab.back().getPosition()));
 
         }
         else if (m_Shape == Mesh::Circle_Mesh)
         {
-                        m_VertexTab.back().setPosition(math::rotateVertex(m_VertexTab.front().getPosition(), angle, m_VertexTab.back().getPosition()));
+                        m_VertexTab.back().setPosition(math::rotateVertex(m_VertexTab.front().getPosition(),
+angle, m_VertexTab.back().getPosition()));
         }
         else
         {
@@ -980,7 +1012,8 @@ namespace nero
 
             for(auto it = m_VertexTab.begin(); it != m_VertexTab.end(); it++)
             {
-                                it->setPosition(math::rotateVertex(center, angle, it->getPosition()));
+                                it->setPosition(math::rotateVertex(center, angle,
+it->getPosition()));
             }
         }
 
@@ -998,8 +1031,9 @@ namespace nero
 
                         sf::Vector2f center = math::getLineCenter(pos1, pos2);
 
-                        sf::Vector2f new_pos1 = sf::Vector2f((pos1.x-center.x)*scale + center.x, (pos1.y-center.y)*scale + center.y);
-                        sf::Vector2f new_pos2 = sf::Vector2f((pos2.x-center.x)*scale + center.x, (pos2.y-center.y)*scale + center.y);
+                        sf::Vector2f new_pos1 = sf::Vector2f((pos1.x-center.x)*scale + center.x,
+(pos1.y-center.y)*scale + center.y); sf::Vector2f new_pos2 = sf::Vector2f((pos2.x-center.x)*scale +
+center.x, (pos2.y-center.y)*scale + center.y);
 
                         m_VertexTab.front().setPosition(new_pos1);
                         m_VertexTab.back().setPosition(new_pos2);
@@ -1008,8 +1042,8 @@ namespace nero
                 {
                         sf::Vector2f center = m_VertexTab.front().getPosition();
                         sf::Vector2f pos = m_VertexTab.back().getPosition();
-                        sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale + center.x, (pos.y-center.y)*scale + center.y);
-                        m_VertexTab.back().setPosition(new_pos);
+                        sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale + center.x,
+(pos.y-center.y)*scale + center.y); m_VertexTab.back().setPosition(new_pos);
                 }
                 else
                 {
@@ -1019,7 +1053,8 @@ namespace nero
                         for(auto it = m_VertexTab.begin(); it != m_VertexTab.end(); it++)
                         {
                                 sf::Vector2f pos = it->getPosition();
-                                sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale + center.x, (pos.y-center.y)*scale + center.y);
+                                sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale +
+center.x, (pos.y-center.y)*scale + center.y);
 
                                 it->setPosition(new_pos);
                         }

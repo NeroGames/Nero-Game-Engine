@@ -72,7 +72,8 @@ namespace nero
             m_NewWorkspaceView.render();
         }
 
-        m_EditorSetup->setNextSetup(!m_EditorContext->getProjectManager()->getWorkspaceTable().empty());
+        m_EditorSetup->setNextSetup(
+            !m_EditorContext->getProjectManager()->getWorkspaceTable().empty());
     }
 
     void EditorSetupWorkspaceView::clearInput()

@@ -23,7 +23,11 @@ namespace nero
     void AdvancedScene::init()
     {
         Setting sceneSetting;
-        sceneSetting.loadSetting(file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"}, StringPool.EXT_NERO), true, true);
+        sceneSetting.loadSetting(
+            file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"},
+                          StringPool.EXT_NERO),
+            true,
+            true);
         m_RegisteredLevelTable      = sceneSetting.getStringTable("level_table");
 
         // TODO
@@ -41,10 +45,12 @@ namespace nero
     std::string AdvancedScene::createLevel(const Parameter& parameter)
     {
         // Generate parameters
-        std::string levelName  = string::trim(parameter.getString("level_name"));
-        std::string levelID    = string::formatString(levelName, string::Format::COMPACT_LOWER);
-        std::string className  = string::formatString(levelName, string::Format::CAMEL_CASE_UPPER) + "GameLevel";
-        std::string headerGard = string::formatString(levelName, string::Format::COMPACT_UPPER) + "_H";
+        std::string levelName = string::trim(parameter.getString("level_name"));
+        std::string levelID   = string::formatString(levelName, string::Format::COMPACT_LOWER);
+        std::string className =
+            string::formatString(levelName, string::Format::CAMEL_CASE_UPPER) + "GameLevel";
+        std::string headerGard =
+            string::formatString(levelName, string::Format::COMPACT_UPPER) + "_H";
 
         // generate source file
         // paremeter
@@ -53,37 +59,64 @@ namespace nero
         // file 1 : header
         boost::algorithm::replace_all(headerFile, "::GameLevelClass::", className);
         boost::algorithm::replace_all(headerFile, "::HeaderGard::", headerGard);
-        boost::algorithm::replace_all(headerFile, "::Namespace::", m_ProjectSetting->getString("project_namespace"));
-        boost::algorithm::replace_all(headerFile, "::ProjectName::", m_ProjectSetting->getString("project_name"));
-        boost::algorithm::replace_all(headerFile, "::ProjectLead::", m_ProjectSetting->getString("project_lead"));
-        boost::algorithm::replace_all(headerFile, "::CoyprightDate::", toString(datetime::getCurrentDateTime().date().year()));
+        boost::algorithm::replace_all(headerFile,
+                                      "::Namespace::",
+                                      m_ProjectSetting->getString("project_namespace"));
+        boost::algorithm::replace_all(headerFile,
+                                      "::ProjectName::",
+                                      m_ProjectSetting->getString("project_name"));
+        boost::algorithm::replace_all(headerFile,
+                                      "::ProjectLead::",
+                                      m_ProjectSetting->getString("project_lead"));
+        boost::algorithm::replace_all(headerFile,
+                                      "::CoyprightDate::",
+                                      toString(datetime::getCurrentDateTime().date().year()));
         // file 2 : source
         boost::algorithm::replace_all(sourceFile, "::GameLevelClass::", className);
-        boost::algorithm::replace_all(sourceFile, "::Namespace::", m_ProjectSetting->getString("project_namespace"));
-        boost::algorithm::replace_all(sourceFile, "::ProjectName::", m_ProjectSetting->getString("project_name"));
-        boost::algorithm::replace_all(sourceFile, "::ProjectLead::", m_ProjectSetting->getString("project_lead"));
-        boost::algorithm::replace_all(sourceFile, "::CoyprightDate::", toString(datetime::getCurrentDateTime().date().year()));
+        boost::algorithm::replace_all(sourceFile,
+                                      "::Namespace::",
+                                      m_ProjectSetting->getString("project_namespace"));
+        boost::algorithm::replace_all(sourceFile,
+                                      "::ProjectName::",
+                                      m_ProjectSetting->getString("project_name"));
+        boost::algorithm::replace_all(sourceFile,
+                                      "::ProjectLead::",
+                                      m_ProjectSetting->getString("project_lead"));
+        boost::algorithm::replace_all(sourceFile,
+                                      "::CoyprightDate::",
+                                      toString(datetime::getCurrentDateTime().date().year()));
         // save file
-        file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"), "cpp", "level", className}, StringPool.EXT_H), headerFile);
-        file::saveFile(file::getPath({m_ProjectSetting->getString("source_directory"), "cpp", "level", className}, StringPool.EXT_CPP), sourceFile);
+        file::saveFile(
+            file::getPath(
+                {m_ProjectSetting->getString("source_directory"), "cpp", "level", className},
+                StringPool.EXT_H),
+            headerFile);
+        file::saveFile(
+            file::getPath(
+                {m_ProjectSetting->getString("source_directory"), "cpp", "level", className},
+                StringPool.EXT_CPP),
+            sourceFile);
 
         // generate level directory
         // directory
-        std::string levelDirectory = file::getPath({m_ProjectSetting->getString("project_directory"),
-                                                    "Scene",
-                                                    "level",
-                                                    boost::algorithm::to_lower_copy(levelName)});
+        std::string levelDirectory =
+            file::getPath({m_ProjectSetting->getString("project_directory"),
+                           "Scene",
+                           "level",
+                           boost::algorithm::to_lower_copy(levelName)});
         file::createDirectory(levelDirectory);
         file::createDirectory(file::getPath({levelDirectory, "chunk"}));
         file::createDirectory(file::getPath({levelDirectory, "resource"}));
         ResourceManager::buildDirectory(file::getPath({levelDirectory, "resource"}));
         // level document
         Parameter document;
-        document.setString("creation_date", datetime::formatDateTime(datetime::getCurrentDateTime()));
+        document.setString("creation_date",
+                           datetime::formatDateTime(datetime::getCurrentDateTime()));
         document.setString("level_name", levelName);
         document.setString("level_id", levelID);
         document.setString("template", parameter.getString("template"));
-        file::saveFile(file::getPath({levelDirectory, "level"}, StringPool.EXT_NERO), document.toString());
+        file::saveFile(file::getPath({levelDirectory, "level"}, StringPool.EXT_NERO),
+                       document.toString());
         // setting
         Setting setting;
         setting.setString("level_name", levelName);
@@ -93,7 +126,8 @@ namespace nero
         setting.setInt("chunk_count", 0);
         setting.setBool("opened", false);
         setting.setSetting("resource", m_EditorSetting->getSetting("resource"));
-        file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO), setting.toString());
+        file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO),
+                       setting.toString());
 
         registerLevel(levelName);
 
@@ -113,14 +147,17 @@ namespace nero
         }
 
         // Build level directory
-        std::string  levelDirectory = file::getPath({m_ProjectSetting->getString("project_directory"),
-                                                     "Scene",
-                                                     "level",
-                                                     boost::algorithm::to_lower_copy(levelName)});
+        std::string levelDirectory =
+            file::getPath({m_ProjectSetting->getString("project_directory"),
+                           "Scene",
+                           "level",
+                           boost::algorithm::to_lower_copy(levelName)});
 
         // Load level setting
-        Setting::Ptr levelSetting   = std::make_shared<Setting>();
-        levelSetting->loadSetting(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO), true, true);
+        Setting::Ptr levelSetting = std::make_shared<Setting>();
+        levelSetting->loadSetting(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO),
+                                  true,
+                                  true);
 
         // Create Level Context
         GameLevel::Context levelContext;
@@ -163,22 +200,39 @@ namespace nero
         m_RegisteredLevelTable.push_back(levelName);
 
         Setting scene_document;
-        scene_document.loadSetting(file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"}, StringPool.EXT_NERO), true, true);
+        scene_document.loadSetting(
+            file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"},
+                          StringPool.EXT_NERO),
+            true,
+            true);
         scene_document.setStringTable("level_table", m_RegisteredLevelTable);
-        file::saveFile(file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"}, StringPool.EXT_NERO), scene_document.toString(), true);
+        file::saveFile(
+            file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"},
+                          StringPool.EXT_NERO),
+            scene_document.toString(),
+            true);
     }
 
     void AdvancedScene::unregisterLevel(const std::string& levelName)
     {
-        auto it = std::find(m_RegisteredLevelTable.begin(), m_RegisteredLevelTable.end(), levelName);
+        auto it =
+            std::find(m_RegisteredLevelTable.begin(), m_RegisteredLevelTable.end(), levelName);
 
         if(it != m_RegisteredLevelTable.end())
             m_RegisteredLevelTable.erase(it);
 
         Setting scene_document;
-        scene_document.loadSetting(file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"}, StringPool.EXT_NERO), true, true);
+        scene_document.loadSetting(
+            file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"},
+                          StringPool.EXT_NERO),
+            true,
+            true);
         scene_document.setStringTable("level_table", m_RegisteredLevelTable);
-        file::saveFile(file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"}, StringPool.EXT_NERO), scene_document.toString(), true);
+        file::saveFile(
+            file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"},
+                          StringPool.EXT_NERO),
+            scene_document.toString(),
+            true);
     }
 
     void AdvancedScene::createScreen(const Parameter& parameter)

@@ -13,13 +13,21 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class Camera {
+    class Camera
+    {
       public:
         typedef std::shared_ptr<Camera> Ptr;
 
       public:
-        Camera(const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f), const float& panSpeed = 300.f, const float& rotSpeed = 0.5f, const float& zRatio = 0.99f);
-        Camera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f), const float& panSpeed = 300.f, const float& rotSpeed = 0.5f, const float& zRatio = 0.99f);
+        Camera(const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f),
+               const float&        panSpeed   = 300.f,
+               const float&        rotSpeed   = 0.5f,
+               const float&        zRatio     = 0.99f);
+        Camera(const sf::Vector2f& viewSize,
+               const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f),
+               const float&        panSpeed   = 300.f,
+               const float&        rotSpeed   = 0.5f,
+               const float&        zRatio     = 0.99f);
         virtual ~Camera();
 
         virtual void handleEvent(const sf::Event& event);
@@ -27,7 +35,8 @@ namespace nero
         virtual void render();
         // Handle inputs
         virtual void handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
-        virtual void handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
+        virtual void handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse,
+                                             const bool&                        isPressed);
         virtual void handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
         virtual void handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse);
         // Set Settings

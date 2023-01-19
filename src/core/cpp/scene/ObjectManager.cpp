@@ -10,7 +10,9 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    ObjectManager::ObjectManager(Object::Ptr root_object, b2World* world, std::vector<Screen::Ptr>& screenTable)
+    ObjectManager::ObjectManager(Object::Ptr               root_object,
+                                 b2World*                  world,
+                                 std::vector<Screen::Ptr>& screenTable)
         : m_RootObject(root_object)
         , m_PhysicWorld(world)
         , m_DeadPhysicObject()
@@ -213,7 +215,8 @@ namespace nero
         {
             if(!findObject(object_name))
             {
-                // throw std::runtime_error("Object [" + nero_s(object_name) + "] not found, please check that you have entered the correct object name");
+                // throw std::runtime_error("Object [" + nero_s(object_name) + "] not found, please
+                // check that you have entered the correct object name");
             }
         }
     }
@@ -224,7 +227,9 @@ namespace nero
         {
             if(!findScreenUIObject(screen, object_name) && !findScreenObject(screen, object_name))
             {
-                // throw std::runtime_error("Object [" + nero_s(object_name) + "] not found in Screen [" + nero_s(screen) + "], please check that you have entered the correct object name");
+                // throw std::runtime_error("Object [" + nero_s(object_name) + "] not found in
+                // Screen [" + nero_s(screen) + "], please check that you have entered the correct
+                // object name");
             }
         }
     }
@@ -312,7 +317,9 @@ namespace nero
         {
             if((*it)->getId() == child->getId())
             {
-                if((object->getSecondType() == Object::Physic_Object || object->getSecondType() == Object::Solid_Object || object->getSecondType() == Object::Animation_Solid_Object) &&
+                if((object->getSecondType() == Object::Physic_Object ||
+                    object->getSecondType() == Object::Solid_Object ||
+                    object->getSecondType() == Object::Animation_Solid_Object) &&
                    (*it)->getSecondType() != Object::None)
                 {
                     PhysicObject::Ptr physic_Object = PhysicObject::Cast(*it);
@@ -387,19 +394,31 @@ namespace nero
 
     Object::Ptr ObjectManager::findScreenUIObject(std::string screenName, std::string ObjectName)
     {
-        auto screen = std::find_if(m_ScreenTable.begin(), m_ScreenTable.end(), [&](Screen::Ptr screen) { return screen->name == screenName; });
+        auto screen = std::find_if(m_ScreenTable.begin(),
+                                   m_ScreenTable.end(),
+                                   [&](Screen::Ptr screen)
+                                   {
+                                       return screen->name == screenName;
+                                   });
 
         return findObject((*screen)->screenUI, ObjectName);
     }
 
     Object::Ptr ObjectManager::findScreenObject(std::string screenName, std::string ObjectName)
     {
-        auto screen = std::find_if(m_ScreenTable.begin(), m_ScreenTable.end(), [&](Screen::Ptr screen) { return screen->name == screenName; });
+        auto screen = std::find_if(m_ScreenTable.begin(),
+                                   m_ScreenTable.end(),
+                                   [&](Screen::Ptr screen)
+                                   {
+                                       return screen->name == screenName;
+                                   });
 
         return findObject((*screen)->screen, ObjectName);
     }
 
-    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, DistanceJointProperty property)
+    void ObjectManager::createJoint(Object::Ptr           objectA,
+                                    Object::Ptr           objectB,
+                                    DistanceJointProperty property)
     {
         DistanceJoint::Ptr joint = DistanceJoint::Ptr(new DistanceJoint());
         joint->setJointId(++m_JointCount);
@@ -426,7 +445,9 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, FrictionJointProperty property)
+    void ObjectManager::createJoint(Object::Ptr           objectA,
+                                    Object::Ptr           objectB,
+                                    FrictionJointProperty property)
     {
         FrictionJoint::Ptr joint = FrictionJoint::Ptr(new FrictionJoint());
         joint->setJointId(++m_JointCount);
@@ -452,7 +473,9 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, MotorJointProperty property)
+    void ObjectManager::createJoint(Object::Ptr        objectA,
+                                    Object::Ptr        objectB,
+                                    MotorJointProperty property)
     {
         MotorJoint::Ptr joint = MotorJoint::Ptr(new MotorJoint());
         joint->setJointId(++m_JointCount);
@@ -479,7 +502,9 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, MouseJointProperty property)
+    void ObjectManager::createJoint(Object::Ptr        objectA,
+                                    Object::Ptr        objectB,
+                                    MouseJointProperty property)
     {
         MouseJoint::Ptr joint = MouseJoint::Ptr(new MouseJoint());
         joint->setJointId(++m_JointCount);
@@ -505,7 +530,8 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, RopeJointProperty property)
+    void
+    ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, RopeJointProperty property)
     {
         RopeJoint::Ptr joint = RopeJoint::Ptr(new RopeJoint());
         joint->setJointId(++m_JointCount);
@@ -530,7 +556,8 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, WeldJointProperty property)
+    void
+    ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, WeldJointProperty property)
     {
         WeldJoint::Ptr joint = WeldJoint::Ptr(new WeldJoint());
         joint->setJointId(++m_JointCount);
@@ -557,7 +584,9 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, WheelJointProperty property)
+    void ObjectManager::createJoint(Object::Ptr        objectA,
+                                    Object::Ptr        objectB,
+                                    WheelJointProperty property)
     {
         WheelJoint::Ptr joint = WheelJoint::Ptr(new WheelJoint());
         joint->setJointId(++m_JointCount);
@@ -587,7 +616,9 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, PulleyJointProperty property)
+    void ObjectManager::createJoint(Object::Ptr         objectA,
+                                    Object::Ptr         objectB,
+                                    PulleyJointProperty property)
     {
         PulleyJoint::Ptr joint = PulleyJoint::Ptr(new PulleyJoint());
         joint->setJointId(++m_JointCount);
@@ -597,13 +628,13 @@ namespace nero
         jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
-        jointDef.groundAnchorA    = graphics::sf_to_b2(property.groundAnchorA, EngineConstant.SCALE);
-        jointDef.groundAnchorB    = graphics::sf_to_b2(property.groundAnchorB, EngineConstant.SCALE);
-        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
-        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
-        jointDef.lengthA          = property.lengthA / EngineConstant.SCALE;
-        jointDef.lengthB          = property.lengthB / EngineConstant.SCALE;
-        jointDef.ratio            = property.ratio;
+        jointDef.groundAnchorA = graphics::sf_to_b2(property.groundAnchorA, EngineConstant.SCALE);
+        jointDef.groundAnchorB = graphics::sf_to_b2(property.groundAnchorB, EngineConstant.SCALE);
+        jointDef.localAnchorA  = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
+        jointDef.localAnchorB  = graphics::sf_to_b2(property.localAnchorB, EngineConstant.SCALE);
+        jointDef.lengthA       = property.lengthA / EngineConstant.SCALE;
+        jointDef.lengthB       = property.lengthB / EngineConstant.SCALE;
+        jointDef.ratio         = property.ratio;
 
         joint->setJoint((b2PulleyJoint*)m_PhysicWorld->CreateJoint(&jointDef));
 
@@ -616,7 +647,9 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, PrismaticJointProperty property)
+    void ObjectManager::createJoint(Object::Ptr            objectA,
+                                    Object::Ptr            objectB,
+                                    PrismaticJointProperty property)
     {
         PrismaticJoint::Ptr joint = PrismaticJoint::Ptr(new PrismaticJoint());
         joint->setJointId(++m_JointCount);
@@ -648,7 +681,9 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, RevoluteJointProperty property)
+    void ObjectManager::createJoint(Object::Ptr           objectA,
+                                    Object::Ptr           objectB,
+                                    RevoluteJointProperty property)
     {
         RevoluteJoint::Ptr joint = RevoluteJoint::Ptr(new RevoluteJoint());
         joint->setJointId(++m_JointCount);
@@ -679,14 +714,17 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, GearJointProperty property)
+    void
+    ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, GearJointProperty property)
     {
         PhysicJoint::Ptr jointA = findJoint(property.jointAId);
         PhysicJoint::Ptr jointB = findJoint(property.jointBId);
 
-        if(jointA->getType() != PhysicJoint::Prismatic_Joint && jointA->getType() != PhysicJoint::Revolute_Joint)
+        if(jointA->getType() != PhysicJoint::Prismatic_Joint &&
+           jointA->getType() != PhysicJoint::Revolute_Joint)
             return;
-        if(jointB->getType() != PhysicJoint::Prismatic_Joint && jointB->getType() != PhysicJoint::Revolute_Joint)
+        if(jointB->getType() != PhysicJoint::Prismatic_Joint &&
+           jointB->getType() != PhysicJoint::Revolute_Joint)
             return;
 
         GearJoint::Ptr joint = GearJoint::Ptr(new GearJoint());
@@ -697,8 +735,12 @@ namespace nero
         jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
-        jointDef.joint1           = jointA->getType() == PhysicJoint::Prismatic_Joint ? (b2Joint*)PrismaticJoint::Cast(jointA)->getJoint() : (b2Joint*)RevoluteJoint::Cast(jointA)->getJoint();
-        jointDef.joint2           = jointB->getType() == PhysicJoint::Prismatic_Joint ? (b2Joint*)PrismaticJoint::Cast(jointB)->getJoint() : (b2Joint*)RevoluteJoint::Cast(jointB)->getJoint();
+        jointDef.joint1           = jointA->getType() == PhysicJoint::Prismatic_Joint
+                                        ? (b2Joint*)PrismaticJoint::Cast(jointA)->getJoint()
+                                        : (b2Joint*)RevoluteJoint::Cast(jointA)->getJoint();
+        jointDef.joint2           = jointB->getType() == PhysicJoint::Prismatic_Joint
+                                        ? (b2Joint*)PrismaticJoint::Cast(jointB)->getJoint()
+                                        : (b2Joint*)RevoluteJoint::Cast(jointB)->getJoint();
         jointDef.ratio            = property.ratio;
 
         joint->setJoint((b2GearJoint*)m_PhysicWorld->CreateJoint(&jointDef));

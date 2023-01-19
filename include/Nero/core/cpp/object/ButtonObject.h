@@ -12,7 +12,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ButtonObject : public UIObject {
+    class ButtonObject : public UIObject
+    {
       public:
         typedef std::shared_ptr<ButtonObject> Ptr;
         static ButtonObject::Ptr              Cast(Object::Ptr object);
@@ -27,7 +28,8 @@ namespace nero
         void setOnMouseClick(std::function<void()> callback);
 
       private:
-        void                  handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
+        void                  handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse,
+                                                     const bool&                        isPressed);
         void                  handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
         virtual sf::FloatRect getGlobalBounds() const;
 

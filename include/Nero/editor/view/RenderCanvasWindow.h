@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class RenderCanvasWindow : public UIComponent {
+    class RenderCanvasWindow : public UIComponent
+    {
       public:
         using RenderTexturePtr = std::shared_ptr<sf::RenderTexture>;
 

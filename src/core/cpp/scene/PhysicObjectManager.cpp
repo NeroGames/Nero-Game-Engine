@@ -53,7 +53,8 @@ void PhysicObjectManager::setupBodyDef(Mesh& mesh)
 void PhysicObjectManager::setupVertexTab(b2Vec2* tab, Mesh& mesh)
 {
     for(int i = 0; i < mesh.getAllVertex()->size(); i++)
-                    tab[i] = graphics::sf_to_b2(mesh.getAllVertex()->at(i).getPosition() - mesh.getCenter(), EngineConstant.SCALE);
+                    tab[i] = graphics::sf_to_b2(mesh.getAllVertex()->at(i).getPosition() -
+mesh.getCenter(), EngineConstant.SCALE);
 }
 
 void PhysicObjectManager::setupFixtureDef(Mesh& mesh)
@@ -64,7 +65,8 @@ void PhysicObjectManager::setupFixtureDef(Mesh& mesh)
     m_FixtureDef.restitution    = mesh.getRestitution();
 }
 
-void PhysicObjectManager::computePolygonBody(b2Body* pBody, b2FixtureDef* pFixtureDef, std::vector<b2Vec2>* pVerticesVec, int scale)
+void PhysicObjectManager::computePolygonBody(b2Body* pBody, b2FixtureDef* pFixtureDef,
+std::vector<b2Vec2>* pVerticesVec, int scale)
 {
     int i, n=pVerticesVec->size(), j, m;
     std::vector<b2Vec2> vec;
@@ -127,8 +129,8 @@ PhysicObject::Ptr PhysicObjectManager::createObject(Mesh* mesh)
             m_FixtureDef.shape = &shape;
             object.getBody()->CreateFixture(&m_FixtureDef);
 
-                            object.getBody()->SetTransform(graphics::sf_to_b2(mesh->getCenter(), EngineConstant.SCALE), 0.f);
-            object.setSize(mesh->getSize());
+                            object.getBody()->SetTransform(graphics::sf_to_b2(mesh->getCenter(),
+EngineConstant.SCALE), 0.f); object.setSize(mesh->getSize());
 
             return std::make_shared<PhysicObject>(object);
         }
@@ -146,8 +148,8 @@ PhysicObject::Ptr PhysicObjectManager::createObject(Mesh* mesh)
             m_FixtureDef.shape = &shape;
             object.getBody()->CreateFixture(&m_FixtureDef);
 
-                            object.getBody()->SetTransform(graphics::sf_to_b2(mesh->getCenter(), EngineConstant.SCALE), 0.f);
-            object.setSize(mesh->getSize());
+                            object.getBody()->SetTransform(graphics::sf_to_b2(mesh->getCenter(),
+EngineConstant.SCALE), 0.f); object.setSize(mesh->getSize());
 
             return std::make_shared<PhysicObject>(object);
         }
@@ -167,10 +169,11 @@ PhysicObject::Ptr PhysicObjectManager::createObject(Mesh* mesh)
 
             setupFixtureDef(*mesh);
 
-                            computePolygonBody(object.getBody(), &m_FixtureDef, &vectTab, EngineConstant.SCALE);
+                            computePolygonBody(object.getBody(), &m_FixtureDef, &vectTab,
+EngineConstant.SCALE);
 
-                            object.getBody()->SetTransform(graphics::sf_to_b2(mesh->getCenter(), EngineConstant.SCALE), 0.f);
-            object.setSize(mesh->getSize());
+                            object.getBody()->SetTransform(graphics::sf_to_b2(mesh->getCenter(),
+EngineConstant.SCALE), 0.f); object.setSize(mesh->getSize());
 
             return std::make_shared<PhysicObject>(object);
 
@@ -191,8 +194,8 @@ PhysicObject::Ptr PhysicObjectManager::createObject(Mesh* mesh)
             m_FixtureDef.shape = &shape;
             object.getBody()->CreateFixture(&m_FixtureDef);
 
-                            object.getBody()->SetTransform(graphics::sf_to_b2(mesh->getCenter(), EngineConstant.SCALE), 0.f);
-            object.setSize(mesh->getSize());
+                            object.getBody()->SetTransform(graphics::sf_to_b2(mesh->getCenter(),
+EngineConstant.SCALE), 0.f); object.setSize(mesh->getSize());
 
             return std::make_shared<PhysicObject>(object);
 

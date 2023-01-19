@@ -25,7 +25,8 @@ namespace nero
         const std::string LAUNCH_APPLICATION_WINDOWS = "START /B ";
         const std::string FILTER_PROCESS_WINDOWS     = "START /B tasklist /fo csv | findstr /i ";
 
-        class Process {
+        class Process
+        {
           public:
             Poco::Pipe&  getOutPipe();
             Poco::Pipe&  getErrorPipe();
@@ -36,7 +37,9 @@ namespace nero
 
           private:
             Process(Poco::ProcessHandle handle);
-            friend Process runCommand(const std::string& command, const std::vector<std::string>& argument, bool waitCompletion);
+            friend Process runCommand(const std::string&              command,
+                                      const std::vector<std::string>& argument,
+                                      bool                            waitCompletion);
 
           private:
             Poco::Pipe          m_OutPipe;
@@ -45,8 +48,11 @@ namespace nero
             int                 m_ExitCode;
         };
 
-        Process     runCommand(const std::string& command, const std::vector<std::string>& argument = {}, bool waitCompletion = true);
-        std::string launchApplication(const std::string& path, const std::string& processName = StringPool.BLANK);
+        Process     runCommand(const std::string&              command,
+                               const std::vector<std::string>& argument       = {},
+                               bool                            waitCompletion = true);
+        std::string launchApplication(const std::string& path,
+                                      const std::string& processName = StringPool.BLANK);
         void        launchBrowser(const std::string& url);
         void        killProcess(const unsigned int& processId);
         std::string findProcessId(const std::string& application);

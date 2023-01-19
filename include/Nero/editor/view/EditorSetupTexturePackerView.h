@@ -11,7 +11,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorSetupTexturePackerView : public UIComponent {
+    class EditorSetupTexturePackerView : public UIComponent
+    {
       public:
         EditorSetupTexturePackerView(EditorContext::Ptr editorContext,
                                      EditorSetup::Ptr   editorSetup);

@@ -14,7 +14,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class LightObject : public Object {
+    class LightObject : public Object
+    {
       public:
         typedef std::shared_ptr<LightObject> Ptr;
         static Ptr                           Cast(Object::Ptr object);
@@ -23,15 +24,15 @@ namespace nero
         LightObject();
         virtual ~LightObject();
 
-        const std::string         getLightmap() const;
-        void                      setLightmap(const std::string& lightmap);
-        void                      setLight(ltbl::LightPointEmission* light);
-        void                      setCloneCallback(std::function<ltbl::LightPointEmission*()> callback);
+        const std::string   getLightmap() const;
+        void                setLightmap(const std::string& lightmap);
+        void                setLight(ltbl::LightPointEmission* light);
+        void                setCloneCallback(std::function<ltbl::LightPointEmission*()> callback);
 
-        virtual Object::Ptr       clone(sf::Vector2f& position) const;
-        virtual Object::Ptr       clone() const;
+        virtual Object::Ptr clone(sf::Vector2f& position) const;
+        virtual Object::Ptr clone() const;
 
-        virtual void              setColor(const sf::Color& color);
+        virtual void        setColor(const sf::Color& color);
         virtual const sf::Color&  getColor() const;
 
         void                      setSprite(const sf::Sprite& sprite);

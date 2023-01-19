@@ -15,7 +15,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ProjectManagerPopup : public UIComponent {
+    class ProjectManagerPopup : public UIComponent
+    {
       public:
         ProjectManagerPopup(EditorContext::Ptr editorContext);
         virtual ~ProjectManagerPopup() override;

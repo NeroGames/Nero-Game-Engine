@@ -28,7 +28,8 @@ namespace nero
 
     void LevelBuilder::loadResource()
     {
-        m_GameLevel->getResourceManager()->loadDirectory(file::getPath({m_GameLevel->getLevelDirectory(), "resource"}));
+        m_GameLevel->getResourceManager()->loadDirectory(
+            file::getPath({m_GameLevel->getLevelDirectory(), "resource"}));
     }
 
     ResourceManager::Ptr LevelBuilder::getResourceManager()
@@ -61,7 +62,8 @@ namespace nero
         // create
         ChunkBuilder::Ptr chunkBuilder = std::make_shared<ChunkBuilder>();
         chunkBuilder->setChunkId(++m_ChunkCount);
-        chunkBuilder->setChunkName(std::string("world chunk ") + toString(chunkBuilder->getChunkId()));
+        chunkBuilder->setChunkName(std::string("world chunk ") +
+                                   toString(chunkBuilder->getChunkId()));
         chunkBuilder->setSelected(false);
         chunkBuilder->setVisible(true);
         chunkBuilder->setAutoLoad(false);
@@ -117,12 +119,15 @@ namespace nero
         for(auto chunk : m_ChunkTable)
         {
             // update is_seleted
-            chunk->getChunkId() == m_SelectedChunk->getChunkId() ? chunk->setSelected(true) : chunk->setSelected(false);
+            chunk->getChunkId() == m_SelectedChunk->getChunkId() ? chunk->setSelected(true)
+                                                                 : chunk->setSelected(false);
 
             // save chunk
             file::saveFile(
-                file::getPath({m_GameLevel->getLevelDirectory(), "chunk", chunk->getChunkName()}, StringPool.EXT_NERO),
-                chunk->saveChunk().dump(3), true);
+                file::getPath({m_GameLevel->getLevelDirectory(), "chunk", chunk->getChunkName()},
+                              StringPool.EXT_NERO),
+                chunk->saveChunk().dump(3),
+                true);
         }
 
         // setting
@@ -131,12 +136,14 @@ namespace nero
 
         file::saveFile(
             file::getPath({m_GameLevel->getLevelDirectory(), "setting"}, StringPool.EXT_NERO),
-            m_LevelSetting->toString(), true);
+            m_LevelSetting->toString(),
+            true);
     }
 
     void LevelBuilder::loadGameLevel()
     {
-        std::experimental::filesystem::path               chunkDirectory(file::getPath({m_GameLevel->getLevelDirectory(), "chunk"}));
+        std::experimental::filesystem::path chunkDirectory(
+            file::getPath({m_GameLevel->getLevelDirectory(), "chunk"}));
 
         std::experimental::filesystem::directory_iterator it{chunkDirectory};
         while(it != std::experimental::filesystem::directory_iterator{})

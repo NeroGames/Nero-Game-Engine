@@ -11,10 +11,10 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorSetupCodeEditorView : public UIComponent {
+    class EditorSetupCodeEditorView : public UIComponent
+    {
       public:
-        EditorSetupCodeEditorView(EditorContext::Ptr editorContext,
-                                  EditorSetup::Ptr   editorSetup);
+        EditorSetupCodeEditorView(EditorContext::Ptr editorContext, EditorSetup::Ptr editorSetup);
         virtual ~EditorSetupCodeEditorView() override;
 
         virtual void destroy() override;

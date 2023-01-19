@@ -54,7 +54,8 @@ namespace nero
         }
     };
 
-    class DownloadManager {
+    class DownloadManager
+    {
       public:
         typedef std::shared_ptr<DownloadManager> Ptr;
 
@@ -62,13 +63,14 @@ namespace nero
         DownloadManager();
         ~DownloadManager();
 
-        DownloadProgress::Ptr                   downloadFile(const std::string& fileUrl, const std::string& destinationFile);
-        void                                    downloadFile(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-        float                                   getFileSize(const std::string& fileUrl);
-        float                                   getMegaBytes(const float bytes);
-        float                                   getKiloBytes(const float bytes);
-        float                                   getGigaBytes(const float bytes);
-        std::string                             getPrettyString(const float bytes);
+        DownloadProgress::Ptr downloadFile(const std::string& fileUrl,
+                                           const std::string& destinationFile);
+        void        downloadFile(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+        float       getFileSize(const std::string& fileUrl);
+        float       getMegaBytes(const float bytes);
+        float       getKiloBytes(const float bytes);
+        float       getGigaBytes(const float bytes);
+        std::string getPrettyString(const float bytes);
         std::map<std::string, std::future<int>> m_FutureMap;
         std::future<int>                        my_Future;
         Poco::Net::HTTPSClientSession           m_NeroGameSession;

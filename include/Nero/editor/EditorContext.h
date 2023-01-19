@@ -15,7 +15,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorContext {
+    class EditorContext
+    {
       public:
         using Ptr              = std::shared_ptr<EditorContext>;
         using RenderTexturePtr = std::shared_ptr<sf::RenderTexture>;

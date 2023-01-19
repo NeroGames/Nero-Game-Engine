@@ -7,7 +7,12 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    GameScene::Context::Context(std::string sceneName, std::shared_ptr<sf::RenderTexture> renderTexture, Camera::Ptr camera, Setting::Ptr setting, EngineType engineType, PlatformType platformType)
+    GameScene::Context::Context(std::string                        sceneName,
+                                std::shared_ptr<sf::RenderTexture> renderTexture,
+                                Camera::Ptr                        camera,
+                                Setting::Ptr                       setting,
+                                EngineType                         engineType,
+                                PlatformType                       platformType)
         : sceneName(sceneName)
         , renderTexture(renderTexture)
         , camera(camera)

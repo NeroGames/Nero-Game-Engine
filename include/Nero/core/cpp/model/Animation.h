@@ -20,7 +20,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class Animation : public sf::Transformable, public sf::Drawable {
+    class Animation : public sf::Transformable, public sf::Drawable
+    {
       public:
         typedef std::map<std::string, AnimationSequence> SequenceMap;
 

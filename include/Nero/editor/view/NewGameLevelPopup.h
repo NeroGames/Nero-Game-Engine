@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class NewGameLevelPopup : public UIComponent {
+    class NewGameLevelPopup : public UIComponent
+    {
       public:
         NewGameLevelPopup(EditorContext::Ptr editorContext);
         virtual ~NewGameLevelPopup() override;

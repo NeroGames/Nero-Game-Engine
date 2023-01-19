@@ -45,8 +45,8 @@ namespace nero
         }
 
         // Read the .txt file to retrieve sprite bound
-        std::string                                               txtHelper  = file::replaceExtension(filePath.string(), "txt");
-        std::string                                               jsonHelper = file::replaceExtension(filePath.string(), "json");
+        std::string txtHelper  = file::replaceExtension(filePath.string(), "txt");
+        std::string jsonHelper = file::replaceExtension(filePath.string(), "json");
 
         std::map<std::string, std::map<std::string, sf::IntRect>> spriteMap;
         std::vector<std::string>                                  spriteTable;
@@ -59,13 +59,14 @@ namespace nero
 
             for(auto& frame : frame_table)
             {
-                std::string spriteName             = file::removeFileExtension(frame["filename"].get<std::string>());
-                int         rectLeft               = frame["frame"]["x"];
-                int         rectTop                = frame["frame"]["y"];
-                int         rectWidth              = frame["frame"]["w"];
-                int         rectHeight             = frame["frame"]["h"];
+                std::string spriteName =
+                    file::removeFileExtension(frame["filename"].get<std::string>());
+                int         rectLeft    = frame["frame"]["x"];
+                int         rectTop     = frame["frame"]["y"];
+                int         rectWidth   = frame["frame"]["w"];
+                int         rectHeight  = frame["frame"]["h"];
 
-                sf::IntRect spriteBound            = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
+                sf::IntRect spriteBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
 
                 spriteMap[textureName][spriteName] = spriteBound;
                 spriteTable.push_back(spriteName);
@@ -75,7 +76,8 @@ namespace nero
                 nero_log("loaded : " + spriteName);
             }
         }
-        else if(file::fileExist(txtHelper)) // .txt helper file exist, the texture get several sprites
+        else if(file::fileExist(
+                    txtHelper)) // .txt helper file exist, the texture get several sprites
         {
             /*std::ifstream inStream(txtHelper);
             //Split each line to retrieve the necessary information
@@ -103,7 +105,7 @@ namespace nero
         }
         else // helper file not exist, texture is the sprite
         {
-            sf::IntRect spriteBound             = sf::IntRect(0, 0, texture->getSize().x, texture->getSize().y);
+            sf::IntRect spriteBound = sf::IntRect(0, 0, texture->getSize().x, texture->getSize().y);
 
             spriteMap[textureName][textureName] = spriteBound;
             spriteTable.push_back(textureName);
@@ -126,7 +128,8 @@ namespace nero
         return true;
     }
 
-    void TextureHolder::addSpriteBound(std::map<std::string, std::map<std::string, sf::IntRect>> spriteMap)
+    void TextureHolder::addSpriteBound(
+        std::map<std::string, std::map<std::string, sf::IntRect>> spriteMap)
     {
         for(auto const& entry : spriteMap)
         {
@@ -170,7 +173,8 @@ namespace nero
         while(it != std::experimental::filesystem::directory_iterator{})
         {
             // When we found a Texture
-            if(file::checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
+            if(file::checkExtention(it->path().extension().string(),
+                                    m_Setting.getStringTable("extension")))
             {
                 // Load the Texture
                 loadFile(it->path().string());
@@ -193,7 +197,9 @@ namespace nero
         return true;
     }
 
-    void TextureHolder::addSpriteBound(std::string textureName, std::string spriteName, sf::IntRect spriteBound)
+    void TextureHolder::addSpriteBound(std::string textureName,
+                                       std::string spriteName,
+                                       sf::IntRect spriteBound)
     {
         m_SpriteMap[textureName][spriteName] = spriteBound;
     }

@@ -46,12 +46,14 @@ namespace nero
             return boost::algorithm::replace_all_copy(path, "\\", "/");
         }
 
-        std::string getPath(const std::initializer_list<const char*>& list, const std::string& extension)
+        std::string getPath(const std::initializer_list<const char*>& list,
+                            const std::string&                        extension)
         {
             return getPath(std::vector<std::string>(list.begin(), list.end()), extension);
         }
 
-        std::string getWindowsPath(const std::vector<std::string>& list, const std::string& extension)
+        std::string getWindowsPath(const std::vector<std::string>& list,
+                                   const std::string&              extension)
         {
             // Blank path
             if(list.empty())
@@ -82,7 +84,8 @@ namespace nero
             return boost::algorithm::replace_all_copy(path, "/", "\\");
         }
 
-        std::string getWindowsPath(const std::initializer_list<const char*>& list, const std::string& extension)
+        std::string getWindowsPath(const std::initializer_list<const char*>& list,
+                                   const std::string&                        extension)
         {
             return getWindowsPath(std::vector<std::string>(list.begin(), list.end()), extension);
         }
@@ -210,7 +213,10 @@ namespace nero
             stream.close();
         }
 
-        void saveFile(const std::string& fileName, const unsigned char* content, const unsigned int length, bool overwrite)
+        void saveFile(const std::string&   fileName,
+                      const unsigned char* content,
+                      const unsigned int   length,
+                      bool                 overwrite)
         {
             if(fileExist(fileName) && !overwrite)
             {
@@ -225,7 +231,8 @@ namespace nero
                 return;
             }
 
-            stream.write(reinterpret_cast<const char*>(content), static_cast<std::streamsize>(length));
+            stream.write(reinterpret_cast<const char*>(content),
+                         static_cast<std::streamsize>(length));
             stream.close();
         }
 
@@ -275,7 +282,8 @@ namespace nero
             return filename.substr(0, lastdot);
         }
 
-        bool checkExtention(const std::string& extention, const std::vector<std::string>& extentionTable)
+        bool checkExtention(const std::string&              extention,
+                            const std::vector<std::string>& extentionTable)
         {
             bool result = false;
 
@@ -320,7 +328,10 @@ namespace nero
             return path.filename().stem().string();
         }
 
-        bool copyFile(const std::string& source, const std::string& destination, const std::ios::openmode& readMode, const std::ios::openmode& writeMode)
+        bool copyFile(const std::string&        source,
+                      const std::string&        destination,
+                      const std::ios::openmode& readMode,
+                      const std::ios::openmode& writeMode)
         {
             std::ifstream sourceStream(source, readMode);
             std::ofstream destinationStream(destination, writeMode);

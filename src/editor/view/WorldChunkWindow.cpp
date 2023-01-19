@@ -42,8 +42,7 @@ namespace nero
         {
             auto levelBuilder = m_EditorContext->getLevelBuilder();
 
-            if(levelBuilder &&
-               m_EditorContext->getEditorMode() == EditorMode::WORLD_BUILDER &&
+            if(levelBuilder && m_EditorContext->getEditorMode() == EditorMode::WORLD_BUILDER &&
                m_EditorContext->getBuilderMode() == BuilderMode::OBJECT)
             {
                 auto worldChunk = levelBuilder->addChunk();

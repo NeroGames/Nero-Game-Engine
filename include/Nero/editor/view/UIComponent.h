@@ -15,7 +15,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class UIComponent {
+    class UIComponent
+    {
       public:
         UIComponent(EditorContext::Ptr editorContext);
         virtual ~UIComponent();

@@ -11,7 +11,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorSetupWelcomeView : public UIComponent {
+    class EditorSetupWelcomeView : public UIComponent
+    {
       public:
         EditorSetupWelcomeView(EditorContext::Ptr editorContext, EditorSetup::Ptr editorSetup);
         virtual ~EditorSetupWelcomeView() override;

@@ -40,7 +40,8 @@ namespace nero
         ImGui::Dummy(ImVec2(0.f, 10.f));
 
         ImGui::SetCursorPosX((ImGui::GetWindowContentRegionWidth() - 150.f) / 2.f);
-        ImGui::Image(m_EditorContext->getTextureHolder()->getTexture("texture_packer_icon"), ImVec2(150.f, 150.f));
+        ImGui::Image(m_EditorContext->getTextureHolder()->getTexture("texture_packer_icon"),
+                     ImVec2(150.f, 150.f));
 
         ImGui::Dummy(ImVec2(0.f, 10.f));
 
@@ -69,36 +70,50 @@ namespace nero
         ImGui::Text("Texture Packer");
         ImGui::SameLine(wording_width);
         ImGui::SetNextItemWidth(input_width - 100.f);
-        ImGui::InputText("##texturepacker", m_Input.texturePackerPath, sizeof(m_Input.texturePackerPath), ImGuiInputTextFlags_ReadOnly);
+        ImGui::InputText("##texturepacker",
+                         m_Input.texturePackerPath,
+                         sizeof(m_Input.texturePackerPath),
+                         ImGuiInputTextFlags_ReadOnly);
         ImGui::SameLine(wording_width + input_width - 80.f);
         if(ImGui::Button("Browse##texturepacker", ImVec2(60.f, 0)))
         {
-            file::selectFile([this](std::string outPath) {
-                if(outPath.find("TexturePackerGUI.exe") != std::string::npos)
+            file::selectFile(
+                [this](std::string outPath)
                 {
-                    string::fillCharArray(m_Input.texturePackerPath, sizeof(m_Input.texturePackerPath), outPath);
+                    if(outPath.find("TexturePackerGUI.exe") != std::string::npos)
+                    {
+                        string::fillCharArray(m_Input.texturePackerPath,
+                                              sizeof(m_Input.texturePackerPath),
+                                              outPath);
 
-                    putenv(std::string("NERO_GAME_TP=" + outPath).c_str());
+                        putenv(std::string("NERO_GAME_TP=" + outPath).c_str());
 
-                    BTManager::startTask([outPath](BackgroundTask::Ptr backgroundTask) {
-                        cmd::setEnvironmnentVariable("NERO_GAME_TP", outPath);
-                        backgroundTask->setCompleted(true);
-                    });
+                        BTManager::startTask(
+                            [outPath](BackgroundTask::Ptr backgroundTask)
+                            {
+                                cmd::setEnvironmnentVariable("NERO_GAME_TP", outPath);
+                                backgroundTask->setCompleted(true);
+                            });
 
-                    m_EditorContext->getEditorSetting()->getSetting("environment").setString("texture_packer", outPath);
-                }
-                else
-                {
-                    ImGui::OpenPopup(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str());
-                }
-            });
+                        m_EditorContext->getEditorSetting()
+                            ->getSetting("environment")
+                            .setString("texture_packer", outPath);
+                    }
+                    else
+                    {
+                        ImGui::OpenPopup(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str());
+                    }
+                });
         }
 
         // Error modal
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
-                                        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove;
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal |
+                                        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
+                                        ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove;
         ImGui::SetNextWindowSize(ImVec2(250.f, 100.f));
-        if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str(), nullptr, window_flags))
+        if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str(),
+                                  nullptr,
+                                  window_flags))
         {
             ImGui::TextWrapped("The path provided is not valid");
 
@@ -112,11 +127,15 @@ namespace nero
             ImGui::EndPopup();
         }
 
-        m_EditorSetup->setNextSetup(m_EditorContext->getEditorSetting()->getSetting("environment").getString("texture_packer") != StringPool.BLANK);
+        m_EditorSetup->setNextSetup(m_EditorContext->getEditorSetting()
+                                        ->getSetting("environment")
+                                        .getString("texture_packer") != StringPool.BLANK);
     }
 
     void EditorSetupTexturePackerView::clearInput()
     {
-        string::fillCharArray(m_Input.texturePackerPath, sizeof(m_Input.texturePackerPath), StringPool.BLANK);
+        string::fillCharArray(m_Input.texturePackerPath,
+                              sizeof(m_Input.texturePackerPath),
+                              StringPool.BLANK);
     }
 } // namespace nero

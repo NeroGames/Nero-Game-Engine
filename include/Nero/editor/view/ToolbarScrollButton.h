@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ToolbarScrollButton : public UIComponent {
+    class ToolbarScrollButton : public UIComponent
+    {
       public:
         enum class Direction
         {

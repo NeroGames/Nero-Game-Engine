@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceBrowserAnimationView : public UIComponent {
+    class ResourceBrowserAnimationView : public UIComponent
+    {
       public:
         ResourceBrowserAnimationView(EditorContext::Ptr editorContext);
         virtual ~ResourceBrowserAnimationView() override;

@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceBrowserMeshView : public UIComponent {
+    class ResourceBrowserMeshView : public UIComponent
+    {
       public:
         ResourceBrowserMeshView(EditorContext::Ptr editorContext);
         virtual ~ResourceBrowserMeshView() override;

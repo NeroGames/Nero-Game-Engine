@@ -16,7 +16,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class FontHolder : public ResourceHolder {
+    class FontHolder : public ResourceHolder
+    {
       public: // utility
         typedef std::shared_ptr<FontHolder> Ptr;
         using ResourceHolder::loadDirectory;

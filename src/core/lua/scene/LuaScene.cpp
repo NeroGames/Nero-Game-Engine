@@ -9,7 +9,8 @@ namespace  nero
                  Scene (context)
                 ,m_LuaState()
     {
-                m_LuaState.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math, sol::lib::table, sol::lib::string);
+                m_LuaState.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math,
+sol::lib::table, sol::lib::string);
 
                 //m_LuaState
 
@@ -26,7 +27,8 @@ namespace  nero
 
 
                         m_NeroTable["scene"] = LuaScene::Ptr(this);
-                        //m_LuaState.new_usertype<LuaScene>("LuaScene", "getName", &LuaScene::getName);
+                        //m_LuaState.new_usertype<LuaScene>("LuaScene", "getName",
+&LuaScene::getName);
         }
 
         void LuaScene::bindLogging()
@@ -53,7 +55,8 @@ namespace  nero
                         nero_log(message, level);
                 });
 
-                m_NeroTable.set_function("log_if", [](const std::string& message, bool condition, int level)
+                m_NeroTable.set_function("log_if", [](const std::string& message, bool condition,
+int level)
                 {
                         nero_log_if(message, condition, level);
                 });

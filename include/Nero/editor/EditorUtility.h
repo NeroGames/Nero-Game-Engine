@@ -21,7 +21,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class TabSelectionHandler {
+    class TabSelectionHandler
+    {
       public:
         using Ptr = std::shared_ptr<TabSelectionHandler>;
 

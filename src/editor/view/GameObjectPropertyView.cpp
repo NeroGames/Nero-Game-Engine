@@ -56,8 +56,13 @@ namespace nero
                     ImGui::SameLine(wording_width);
                     ImGui::SetNextItemWidth(input_width);
                     char object_name[100];
-                    string::fillCharArray(object_name, sizeof(object_name), selectedObject ? selectedObject->getName() : "");
-                    std::string input_id = selectedObject ? std::string("##object_name") + toString(selectedObject->getObjectId()) : std::string("##object_name");
+                    string::fillCharArray(object_name,
+                                          sizeof(object_name),
+                                          selectedObject ? selectedObject->getName() : "");
+                    std::string input_id =
+                        selectedObject
+                            ? std::string("##object_name") + toString(selectedObject->getObjectId())
+                            : std::string("##object_name");
                     ImGui::InputText(input_id.c_str(), object_name, sizeof(object_name));
                     if(selectedObject && ImGui::IsItemEdited())
                     {
@@ -69,8 +74,13 @@ namespace nero
                     ImGui::SameLine(wording_width);
                     ImGui::SetNextItemWidth(input_width);
                     char object_type[100];
-                    string::fillCharArray(object_type, sizeof(object_type), selectedObject ? selectedObject->getTypeString() : "");
-                    ImGui::InputText("##object_type", object_type, sizeof(object_type), ImGuiInputTextFlags_ReadOnly);
+                    string::fillCharArray(object_type,
+                                          sizeof(object_type),
+                                          selectedObject ? selectedObject->getTypeString() : "");
+                    ImGui::InputText("##object_type",
+                                     object_type,
+                                     sizeof(object_type),
+                                     ImGuiInputTextFlags_ReadOnly);
                     ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
                     ImGui::Text("Category");
@@ -163,22 +173,28 @@ namespace nero
                             {
                                 ImGui::BeginChild("object_sprite", ImVec2(0.f, 70.f), true);
 
-                                float             wording_width = 70.f;
-                                float             input_width   = ImGui::GetWindowContentRegionWidth() - 70.f;
+                                float wording_width = 70.f;
+                                float input_width   = ImGui::GetWindowContentRegionWidth() - 70.f;
 
-                                SpriteObject::Ptr spriteObject  = SpriteObject::Cast(component);
+                                SpriteObject::Ptr spriteObject = SpriteObject::Cast(component);
 
                                 ImGui::Text("Sprite");
                                 ImGui::SameLine(wording_width);
                                 ImGui::SetNextItemWidth(input_width);
                                 char* object_sprite = "";
-                                ImGui::InputText("##object_sprite", object_sprite, sizeof(object_sprite), ImGuiInputTextFlags_ReadOnly);
+                                ImGui::InputText("##object_sprite",
+                                                 object_sprite,
+                                                 sizeof(object_sprite),
+                                                 ImGuiInputTextFlags_ReadOnly);
                                 ImGui::Dummy(ImVec2(0.0f, 1.0f));
                                 ImGui::Text("Texture");
                                 ImGui::SameLine(wording_width);
                                 ImGui::SetNextItemWidth(input_width);
                                 char* sprite_texture = "";
-                                ImGui::InputText("##sprite_texture", object_sprite, sizeof(sprite_texture), ImGuiInputTextFlags_ReadOnly);
+                                ImGui::InputText("##sprite_texture",
+                                                 object_sprite,
+                                                 sizeof(sprite_texture),
+                                                 ImGuiInputTextFlags_ReadOnly);
                                 ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
                                 ImGui::EndChild();
@@ -191,21 +207,27 @@ namespace nero
                             {
                                 ImGui::BeginChild("mesh_object", ImVec2(0.f, 100.f), true);
 
-                                float           wording_width = 70.f;
-                                float           input_width   = ImGui::GetWindowContentRegionWidth() - 70.f;
-                                MeshObject::Ptr meshObject    = MeshObject::Cast(component);
+                                float wording_width = 70.f;
+                                float input_width   = ImGui::GetWindowContentRegionWidth() - 70.f;
+                                MeshObject::Ptr meshObject = MeshObject::Cast(component);
 
                                 ImGui::Text("Shape");
                                 ImGui::SameLine(wording_width);
                                 ImGui::SetNextItemWidth(input_width);
                                 char* object_sprite = "";
-                                ImGui::InputText("##mesh_shape", object_sprite, sizeof(object_sprite), ImGuiInputTextFlags_ReadOnly);
+                                ImGui::InputText("##mesh_shape",
+                                                 object_sprite,
+                                                 sizeof(object_sprite),
+                                                 ImGuiInputTextFlags_ReadOnly);
                                 ImGui::Dummy(ImVec2(0.0f, 1.0f));
                                 ImGui::Text("Type");
                                 ImGui::SameLine(wording_width);
                                 ImGui::SetNextItemWidth(input_width);
                                 char* sprite_texture = "";
-                                ImGui::InputText("##mesh_type", object_sprite, sizeof(sprite_texture), ImGuiInputTextFlags_ReadOnly);
+                                ImGui::InputText("##mesh_type",
+                                                 object_sprite,
+                                                 sizeof(sprite_texture),
+                                                 ImGuiInputTextFlags_ReadOnly);
                                 ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
                                 ImGui::EndChild();
@@ -241,7 +263,8 @@ namespace nero
         return result;
     }
 
-    void GameObjectPropertyView::getComponentTable(Object::Ptr object, std::vector<Object::Ptr>& result)
+    void GameObjectPropertyView::getComponentTable(Object::Ptr               object,
+                                                   std::vector<Object::Ptr>& result)
     {
         if(object != nullptr)
         {

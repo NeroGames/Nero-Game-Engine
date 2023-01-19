@@ -23,13 +23,25 @@ namespace nero
 
     void GameProject::init()
     {
-        m_ProjectSetting->setString("source_directory", file::getPath({getProjectDirectory(), "Source", m_ProjectSetting->getString("project_name")}));
-        m_ProjectSetting->setString("build_directory", file::getPath({getProjectDirectory(), "Build"}));
-        m_ProjectSetting->setString("cmake_file", file::getPath({m_ProjectSetting->getString("source_directory"), "CMakeLists"}, StringPool.EXT_TEXT));
+        m_ProjectSetting->setString(
+            "source_directory",
+            file::getPath(
+                {getProjectDirectory(), "Source", m_ProjectSetting->getString("project_name")}));
+        m_ProjectSetting->setString("build_directory",
+                                    file::getPath({getProjectDirectory(), "Build"}));
+        m_ProjectSetting->setString(
+            "cmake_file",
+            file::getPath({m_ProjectSetting->getString("source_directory"), "CMakeLists"},
+                          StringPool.EXT_TEXT));
 
-        std::string library         = string::formatString(m_ProjectSetting->getString("project_name"), string::Format::COMPACT_LOWER);
-        std::string libraryFile     = file::getPath({m_ProjectSetting->getString("build_directory"), "libnerogame-" + library}, StringPool.EXT_DLL);
-        std::string libraryFileCopy = file::getPath({m_ProjectSetting->getString("build_directory"), "libnerogame-" + library + "-copy"}, StringPool.EXT_DLL);
+        std::string library     = string::formatString(m_ProjectSetting->getString("project_name"),
+                                                   string::Format::COMPACT_LOWER);
+        std::string libraryFile = file::getPath(
+            {m_ProjectSetting->getString("build_directory"), "libnerogame-" + library},
+            StringPool.EXT_DLL);
+        std::string libraryFileCopy = file::getPath(
+            {m_ProjectSetting->getString("build_directory"), "libnerogame-" + library + "-copy"},
+            StringPool.EXT_DLL);
 
         m_ProjectSetting->setString("library_file", libraryFile);
         m_ProjectSetting->setString("library_file_copy", libraryFileCopy);
@@ -71,9 +83,10 @@ namespace nero
             nero_log_if("project library loaded", sharedLibrary.is_loaded());
 
             m_CreateCppGameSceneCallback.clear();
-            m_CreateCppGameSceneCallback = boost::dll::import_alias<CreateCppGameSceneCallback>(libraryFilePath,
-                                                                                                "createScene",
-                                                                                                boost::dll::load_mode::append_decorations);
+            m_CreateCppGameSceneCallback = boost::dll::import_alias<CreateCppGameSceneCallback>(
+                libraryFilePath,
+                "createScene",
+                boost::dll::load_mode::append_decorations);
 
             if(!m_CreateCppGameSceneCallback.empty())
             {
@@ -117,7 +130,8 @@ namespace nero
 
         if(cmd::processRunning(m_CodeEditorProcessId))
         {
-            std::string cmd = "START \"\" " + file::escapeSpace(file::getWindowsPath(QT_CREATOR)) + " -pid " + m_CodeEditorProcessId;
+            std::string cmd = "START \"\" " + file::escapeSpace(file::getWindowsPath(QT_CREATOR)) +
+                              " -pid " + m_CodeEditorProcessId;
             system(cmd.c_str());
         }
         else
@@ -137,8 +151,9 @@ namespace nero
 
     void GameProject::openVisualStudio(const std::string& file)
     {
-        char*             visualStudio  = getenv("NERO_GAME_VS");
-        const std::string VISUAL_STUDIO = visualStudio ? std::string(visualStudio) : StringPool.BLANK;
+        char*             visualStudio = getenv("NERO_GAME_VS");
+        const std::string VISUAL_STUDIO =
+            visualStudio ? std::string(visualStudio) : StringPool.BLANK;
 
         if(VISUAL_STUDIO == StringPool.BLANK)
             return;
@@ -151,8 +166,11 @@ namespace nero
             }
             else
             {
-                std::string cmd = "START \"\" " + file::escapeSpace(file::getWindowsPath(VISUAL_STUDIO));
-                cmd += " \"" + file::getWindowsPath(m_ProjectSetting->getString("source_directory")) + "\"" + " /Edit";
+                std::string cmd =
+                    "START \"\" " + file::escapeSpace(file::getWindowsPath(VISUAL_STUDIO));
+                cmd += " \"" +
+                       file::getWindowsPath(m_ProjectSetting->getString("source_directory")) +
+                       "\"" + " /Edit";
                 system(cmd.c_str());
 
                 m_CodeEditorProcessId = cmd::findProcessId("devenv");
@@ -160,12 +178,15 @@ namespace nero
         }
         else
         {
-            std::string cmd = "START \"\" " + file::escapeSpace(file::getWindowsPath(VISUAL_STUDIO)) + " \"" + file + "\" " + " /Edit";
+            std::string cmd = "START \"\" " +
+                              file::escapeSpace(file::getWindowsPath(VISUAL_STUDIO)) + " \"" +
+                              file + "\" " + " /Edit";
             system(cmd.c_str());
         }
     }
 
-    void GameProject::compileProject(const std::string& projectDirectory, const BackgroundTask::Ptr backgroundTask)
+    void GameProject::compileProject(const std::string&        projectDirectory,
+                                     const BackgroundTask::Ptr backgroundTask)
     {
         Parameter parameter;
         parameter.loadJson(file::loadJson(file::getPath({projectDirectory, ".project"}), true));
@@ -197,7 +218,20 @@ namespace nero
 
         backgroundTask->nextStep();
         backgroundTask->addMessage("Step 2/3 - Configuring Project");
-        cmd::Process configProcess = cmd::runCommand(cmake, {"-G", "MinGW Makefiles", "-S", sourcePath, "-B", buildPath, "-D", "CMAKE_CXX_COMPILER=" + file::getPath(gxx), "-D", "CMAKE_C_COMPILER=" + file::getPath(gcc), "-D", "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32)});
+        cmd::Process configProcess =
+            cmd::runCommand(cmake,
+                            {"-G",
+                             "MinGW Makefiles",
+                             "-S",
+                             sourcePath,
+                             "-B",
+                             buildPath,
+                             "-D",
+                             "CMAKE_CXX_COMPILER=" + file::getPath(gxx),
+                             "-D",
+                             "CMAKE_C_COMPILER=" + file::getPath(gcc),
+                             "-D",
+                             "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32)});
         backgroundTask->setErrorCode(configProcess.getExistCode());
         nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
 

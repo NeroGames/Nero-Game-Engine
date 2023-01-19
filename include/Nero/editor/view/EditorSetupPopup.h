@@ -11,7 +11,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorSetupPopup : public UIComponent {
+    class EditorSetupPopup : public UIComponent
+    {
       public:
         EditorSetupPopup(EditorContext::Ptr editorContext, EditorSetup::Ptr editorSetup);
         virtual ~EditorSetupPopup() override;

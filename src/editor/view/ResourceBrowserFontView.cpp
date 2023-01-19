@@ -40,9 +40,8 @@ namespace nero
             {
                 if(m_EditorContext->getBuilderMode() == BuilderMode::OBJECT)
                 {
-                    auto worldBuilder = m_EditorContext->getLevelBuilder()
-                                            ->getSelectedChunk()
-                                            ->getWorldBuilder();
+                    auto worldBuilder =
+                        m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();
 
                     worldBuilder->addObject(Object::Text_Object,
                                             fontTable[i],
@@ -54,7 +53,8 @@ namespace nero
 
     sf::Texture& ResourceBrowserFontView::getFontTexture(const std::string& fontName)
     {
-        std::string fontPath = file::getPath({"resource/editor/texture", fontName}, StringPool.EXT_PNG);
+        std::string fontPath =
+            file::getPath({"resource/editor/texture", fontName}, StringPool.EXT_PNG);
 
         // Create new font texture if not exist
         if(!file::fileExist(fontPath))
@@ -63,7 +63,8 @@ namespace nero
             renderTexture.create(300.f, 100.f);
             renderTexture.clear(sf::Color::White);
             sf::Text text;
-            text.setFont(m_EditorContext->getCurrentResourceManager()->getFontHolder()->getFont(fontName));
+            text.setFont(
+                m_EditorContext->getCurrentResourceManager()->getFontHolder()->getFont(fontName));
             text.setString(fontName);
             text.setOrigin(text.getGlobalBounds().width / 2.f, text.getGlobalBounds().height / 2.f);
             text.setFillColor(sf::Color::Black);

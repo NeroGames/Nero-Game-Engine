@@ -35,8 +35,10 @@ namespace nero
 
         ImGui::Dummy(ImVec2(0.f, 20.f));
 
-        ImGui::TextWrapped("If you see this window it's because it's your first time using the Engine or because you are missing some configurations");
-        ImGui::TextWrapped("The following things need to done in order for the Engine to function properly");
+        ImGui::TextWrapped("If you see this window it's because it's your first time using the "
+                           "Engine or because you are missing some configurations");
+        ImGui::TextWrapped(
+            "The following things need to done in order for the Engine to function properly");
 
         ImGui::Dummy(ImVec2(0.f, 20.f));
 

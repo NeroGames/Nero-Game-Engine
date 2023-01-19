@@ -67,12 +67,15 @@ namespace nero
         // Build the logo sprite
         m_LogoSprite.setTexture(m_ResourceManager->getTextureHolder()->getTexture("nero_logo"));
         graphics::centerOrigin(m_LogoSprite);
-        m_LogoSprite.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f, m_RenderWindow->getSize().y / 3.f));
+        m_LogoSprite.setPosition(
+            sf::Vector2f(m_RenderWindow->getSize().x / 2.f, m_RenderWindow->getSize().y / 3.f));
         m_LogoSprite.setScale(sf::Vector2f(1.001f, 1.001f));
         // Build the copyrights sprite
-        m_CopyrightsSprite.setTexture(m_ResourceManager->getTextureHolder()->getTexture("copyrights"));
+        m_CopyrightsSprite.setTexture(
+            m_ResourceManager->getTextureHolder()->getTexture("copyrights"));
         graphics::centerOrigin(m_CopyrightsSprite);
-        m_CopyrightsSprite.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f, m_RenderWindow->getSize().y - 50.f));
+        m_CopyrightsSprite.setPosition(
+            sf::Vector2f(m_RenderWindow->getSize().x / 2.f, m_RenderWindow->getSize().y - 50.f));
         m_CopyrightsSprite.setScale(sf::Vector2f(1.001f, 1.001f));
         // Build the left loading rectangle
         m_LoadingRectLeft.setSize(sf::Vector2f(15.f, 15.f));
@@ -80,16 +83,19 @@ namespace nero
         m_LoadingRectLeft.setOutlineColor(sf::Color::Black);
         m_LoadingRectLeft.setFillColor(sf::Color::White);
         m_LoadingRectLeft.setOrigin(sf::Vector2f(10.f, 10.f));
-        m_LoadingRectLeft.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f - 250.f, (m_RenderWindow->getSize().y / 3.f) + 300.f));
+        m_LoadingRectLeft.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f - 250.f,
+                                                   (m_RenderWindow->getSize().y / 3.f) + 300.f));
         m_LoadingRectLeft.setRotation(45.f);
         // Build the right loading rectangle
         m_LoadingRectRight = m_LoadingRectLeft;
-        m_LoadingRectRight.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f + 250.f, (m_RenderWindow->getSize().y / 3.f) + 300.f));
+        m_LoadingRectRight.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f + 250.f,
+                                                    (m_RenderWindow->getSize().y / 3.f) + 300.f));
         // Build the loading ball
         m_LoadingBall.setRadius(5.f);
         m_LoadingBall.setOrigin(sf::Vector2f(5.f, 5.f));
         m_LoadingBall.setFillColor(sf::Color::Black);
-        m_LoadingBall.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f, (m_RenderWindow->getSize().y / 3.f) + 300.f));
+        m_LoadingBall.setPosition(sf::Vector2f(m_RenderWindow->getSize().x / 2.f,
+                                               (m_RenderWindow->getSize().y / 3.f) + 300.f));
         // Set default parameters for the ball movement
         m_MaxLeft   = m_LoadingRectLeft.getPosition().x + 30.f;
         m_MaxRight  = m_LoadingRectRight.getPosition().x - 30.f;

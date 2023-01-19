@@ -1,7 +1,8 @@
 #ifndef GAMESCREEN_H
 #define GAMESCREEN_H
 
-class GameScreen {
+class GameScreen
+{
   public:
     GameScreen();
 };

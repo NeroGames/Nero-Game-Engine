@@ -16,7 +16,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class GameEditor : public CoreEngine {
+    class GameEditor : public CoreEngine
+    {
       public:
         GameEditor();
         virtual ~GameEditor() override;

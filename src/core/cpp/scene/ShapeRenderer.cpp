@@ -17,7 +17,9 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    ShapeRenderer::ShapeRenderer(RenderTexturePtr renderTexture, const float& thickness, const int& transparency)
+    ShapeRenderer::ShapeRenderer(RenderTexturePtr renderTexture,
+                                 const float&     thickness,
+                                 const int&       transparency)
         : m_RenderTexture(renderTexture)
         , m_Thickness(thickness)
         , m_Transparency(transparency)
@@ -42,7 +44,8 @@ namespace nero
         m_RenderTexture->draw(polygon);
     }
 
-    void ShapeRenderer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+    void
+    ShapeRenderer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
     {
         // Solid convex shape
         sf::ConvexShape solidPolygon;
@@ -75,7 +78,10 @@ namespace nero
         m_RenderTexture->draw(circle);
     }
 
-    void ShapeRenderer::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
+    void ShapeRenderer::DrawSolidCircle(const b2Vec2&  center,
+                                        float32        radius,
+                                        const b2Vec2&  axis,
+                                        const b2Color& color)
     {
         // Solid circle shape
         sf::CircleShape solidCircle;
@@ -97,7 +103,8 @@ namespace nero
     void ShapeRenderer::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
     {
         sf::RectangleShape line;
-        float              length = math::distance(graphics::b2_to_sf(p1, EngineConstant.SCALE), graphics::b2_to_sf(p2, EngineConstant.SCALE));
+        float              length = math::distance(graphics::b2_to_sf(p1, EngineConstant.SCALE),
+                                      graphics::b2_to_sf(p2, EngineConstant.SCALE));
         line.setSize(sf::Vector2f(length, m_Thickness));
         line.setPosition(graphics::b2_to_sf(p1, EngineConstant.SCALE));
         line.setFillColor(graphics::b2_to_sf(color));
@@ -143,9 +150,13 @@ namespace nero
         aabb_shape.setPointCount(4);
 
         aabb_shape.setPoint(0, graphics::b2_to_sf(aabb->lowerBound, EngineConstant.SCALE));
-        aabb_shape.setPoint(1, sf::Vector2f(aabb->upperBound.x * EngineConstant.SCALE, aabb->lowerBound.y * EngineConstant.SCALE));
+        aabb_shape.setPoint(1,
+                            sf::Vector2f(aabb->upperBound.x * EngineConstant.SCALE,
+                                         aabb->lowerBound.y * EngineConstant.SCALE));
         aabb_shape.setPoint(2, graphics::b2_to_sf(aabb->upperBound, EngineConstant.SCALE));
-        aabb_shape.setPoint(3, sf::Vector2f(aabb->lowerBound.x * EngineConstant.SCALE, aabb->upperBound.y * EngineConstant.SCALE));
+        aabb_shape.setPoint(3,
+                            sf::Vector2f(aabb->lowerBound.x * EngineConstant.SCALE,
+                                         aabb->upperBound.y * EngineConstant.SCALE));
 
         m_RenderTexture->draw(aabb_shape);
     }

@@ -250,8 +250,14 @@ namespace nero
         textJson["rotation"]                = getRotation();
         textJson["position"]                = {{"x", getPosition().x}, {"y", getPosition().y}};
         textJson["scale"]                   = {{"x", getScale().x}, {"y", getScale().y}};
-        textJson["fill_color"]              = {{"r", getColor().r}, {"g", getColor().g}, {"b", getColor().b}, {"a", getColor().a}};
-        textJson["outline_color"]           = {{"r", getOutlineColor().r}, {"g", getOutlineColor().g}, {"b", getOutlineColor().b}, {"a", getOutlineColor().a}};
+        textJson["fill_color"]              = {{"r", getColor().r},
+                                               {"g", getColor().g},
+                                               {"b", getColor().b},
+                                               {"a", getColor().a}};
+        textJson["outline_color"]           = {{"r", getOutlineColor().r},
+                                               {"g", getOutlineColor().g},
+                                               {"b", getOutlineColor().b},
+                                               {"a", getOutlineColor().a}};
         textJson["font"]                    = m_Font;
         textJson["content"]                 = m_Content;
         textJson["font_size"]               = m_FontSize;

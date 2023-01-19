@@ -13,7 +13,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorSetupWorkspaceView : public UIComponent {
+    class EditorSetupWorkspaceView : public UIComponent
+    {
       public:
         EditorSetupWorkspaceView(EditorContext::Ptr editorContext, EditorSetup::Ptr editorSetup);
         virtual ~EditorSetupWorkspaceView() override;

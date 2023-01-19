@@ -10,7 +10,8 @@ namespace nero
 {
     GameLevel::GameLevel(GameLevel::Context context)
         : m_LevelContext(context)
-        , m_ResourceManager(std::make_shared<ResourceManager>(m_LevelContext.levelSetting->getSetting("resource")))
+        , m_ResourceManager(std::make_shared<ResourceManager>(
+              m_LevelContext.levelSetting->getSetting("resource")))
     {
     }
 
@@ -71,7 +72,9 @@ namespace nero
     {
     }
 
-    void GameLevel::onKeyboardButton(const sf::Keyboard::Key& key, const bool& isPressed, const ModifierKey& modifier)
+    void GameLevel::onKeyboardButton(const sf::Keyboard::Key& key,
+                                     const bool&              isPressed,
+                                     const ModifierKey&       modifier)
     {
     }
 
@@ -83,11 +86,15 @@ namespace nero
     {
     }
 
-    void GameLevel::onMouseButton(const sf::Mouse::Button& button, const bool& isPressed, const sf::Vector2f& position)
+    void GameLevel::onMouseButton(const sf::Mouse::Button& button,
+                                  const bool&              isPressed,
+                                  const sf::Vector2f&      position)
     {
     }
 
-    void GameLevel::onMouseWheel(const sf::Mouse::Wheel& wheel, const float& delta, const sf::Vector2f& position)
+    void GameLevel::onMouseWheel(const sf::Mouse::Wheel& wheel,
+                                 const float&            delta,
+                                 const sf::Vector2f&     position)
     {
     }
 
@@ -99,11 +106,15 @@ namespace nero
     {
     }
 
-    void GameLevel::onJoystickButton(const unsigned int& joystickId, const unsigned int& button, const bool& isPressed)
+    void GameLevel::onJoystickButton(const unsigned int& joystickId,
+                                     const unsigned int& button,
+                                     const bool&         isPressed)
     {
     }
 
-    void GameLevel::onJoystickAxis(const unsigned int& joystickId, const sf::Joystick::Axis& axis, const float& position)
+    void GameLevel::onJoystickAxis(const unsigned int&       joystickId,
+                                   const sf::Joystick::Axis& axis,
+                                   const float&              position)
     {
     }
 

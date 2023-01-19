@@ -19,10 +19,12 @@ namespace nero
     std::string AppLauncher::visaulStudioProcessId  = StringPool.BLANK;
     std::string AppLauncher::profilerProcessId      = StringPool.BLANK;
     std::string AppLauncher::texturePackerProcessId = StringPool.BLANK;
-    std::string AppLauncher::NERO_GAME_HOME         = getenv("NERO_GAME_HOME") ? std::string(getenv("NERO_GAME_HOME")) : StringPool.BLANK;
-    std::string AppLauncher::TEXTURE_PACKER         = getenv("NERO_GAME_TP") ? std::string(getenv("NERO_GAME_TP")) : StringPool.BLANK;
+    std::string AppLauncher::NERO_GAME_HOME =
+        getenv("NERO_GAME_HOME") ? std::string(getenv("NERO_GAME_HOME")) : StringPool.BLANK;
+    std::string AppLauncher::TEXTURE_PACKER =
+        getenv("NERO_GAME_TP") ? std::string(getenv("NERO_GAME_TP")) : StringPool.BLANK;
 
-    void        TabSelectionHandler::registerTab(const std::vector<std::string>& tabNameTable)
+    void TabSelectionHandler::registerTab(const std::vector<std::string>& tabNameTable)
     {
         if(tabNameTable.size() <= 0)
         {
@@ -196,7 +198,8 @@ namespace nero
         }
         else
         {
-            AppLauncher::texturePackerProcessId = cmd::launchApplication(AppLauncher::TEXTURE_PACKER);
+            AppLauncher::texturePackerProcessId =
+                cmd::launchApplication(AppLauncher::TEXTURE_PACKER);
 
             usleep(100);
 
@@ -212,7 +215,7 @@ namespace nero
         }
         else
         {
-            std::string profiler           = AppLauncher::NERO_GAME_HOME + "/Tools/Profiler/profiler_gui.exe";
+            std::string profiler = AppLauncher::NERO_GAME_HOME + "/Tools/Profiler/profiler_gui.exe";
             AppLauncher::profilerProcessId = cmd::launchApplication(profiler);
 
             usleep(100);

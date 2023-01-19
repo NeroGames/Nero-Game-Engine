@@ -11,7 +11,8 @@
 
 namespace nero
 {
-    class ScriptObject : public Object {
+    class ScriptObject : public Object
+    {
       public: // utility
         struct Context
         {

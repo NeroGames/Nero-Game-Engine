@@ -154,7 +154,12 @@ namespace nero
 
     Object::Ptr Object::removeChild(const Object::Ptr& child)
     {
-        auto found = std::find_if(m_ChildTab.begin(), m_ChildTab.end(), [&](Object::Ptr& p) { return p.get() == child.get(); });
+        auto found = std::find_if(m_ChildTab.begin(),
+                                  m_ChildTab.end(),
+                                  [&](Object::Ptr& p)
+                                  {
+                                      return p.get() == child.get();
+                                  });
         assert(found != m_ChildTab.end());
 
         Object::Ptr result = std::move(*found);

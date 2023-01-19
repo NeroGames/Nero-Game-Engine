@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceSelectionWindow : public UIComponent {
+    class ResourceSelectionWindow : public UIComponent
+    {
       public:
         ResourceSelectionWindow(EditorContext::Ptr editorContext);
         virtual ~ResourceSelectionWindow() override;

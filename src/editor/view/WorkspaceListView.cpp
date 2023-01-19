@@ -28,17 +28,21 @@ namespace nero
         float            wording_width = 150.f;
 
         ImGuiWindowFlags window_flag   = ImGuiWindowFlags_None;
-        window_flag |= ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar;
+        window_flag |=
+            ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar;
         ImGui::BeginChild("##workspace_list", ImVec2(0.f, 0.f), true, window_flag);
         ImGui::Dummy(ImVec2(0.0f, 4.0f));
-        for(const nlohmann::json& worksapce : m_EditorContext->getProjectManager()->getWorkspaceTable())
+        for(const nlohmann::json& worksapce :
+            m_EditorContext->getProjectManager()->getWorkspaceTable())
         {
             if(ImGui::CollapsingHeader(worksapce["workspace_name"].get<std::string>().c_str()))
             {
-                std::string project_lead        = ": " + worksapce["project_lead"].get<std::string>();
-                std::string company_name        = ": " + worksapce["company_name"].get<std::string>();
-                std::string project_namespace   = ": " + worksapce["project_namespace"].get<std::string>();
-                std::string workspace_directory = ": " + worksapce["workspace_directory"].get<std::string>();
+                std::string project_lead = ": " + worksapce["project_lead"].get<std::string>();
+                std::string company_name = ": " + worksapce["company_name"].get<std::string>();
+                std::string project_namespace =
+                    ": " + worksapce["project_namespace"].get<std::string>();
+                std::string workspace_directory =
+                    ": " + worksapce["workspace_directory"].get<std::string>();
 
                 ImGui::Text("Workspace Directory");
                 ImGui::SameLine(wording_width);

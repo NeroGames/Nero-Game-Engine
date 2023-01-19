@@ -21,7 +21,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class Object : public sf::Transformable, public sf::Drawable {
+    class Object : public sf::Transformable, public sf::Drawable
+    {
       public:
         typedef std::shared_ptr<Object> Ptr;
         static Ptr                      Cast(Object::Ptr object);
@@ -49,61 +50,60 @@ namespace nero
       public:
         Object();
 
-        void                     setId(const int& id);
-        void                     setName(const std::string& name);
-        void                     setSecondType(const Type& type);
-        void                     setCategory(const std::string& category);
+        void                       setId(const int& id);
+        void                       setName(const std::string& name);
+        void                       setSecondType(const Type& type);
+        void                       setCategory(const std::string& category);
 
-        void                     setIsVisible(bool flag);
-        void                     setIsUpdateable(bool flag);
-        void                     setIsSelectable(bool flag);
-        void                     setIsSelected(bool flag);
+        void                       setIsVisible(bool flag);
+        void                       setIsUpdateable(bool flag);
+        void                       setIsSelectable(bool flag);
+        void                       setIsSelected(bool flag);
 
-        const int&               getId() const;
-        const int&               getObjectId() const;
-        const std::string&       getName() const;
-        const std::string&       getCategory() const;
-        const Type&              getFirstType() const;
-        const Type&              getSecondType() const;
-        std::string              getTypeString(const Type& type) const;
-        std::string              getTypeString() const;
+        const int&                 getId() const;
+        const int&                 getObjectId() const;
+        const std::string&         getName() const;
+        const std::string&         getCategory() const;
+        const Type&                getFirstType() const;
+        const Type&                getSecondType() const;
+        std::string                getTypeString(const Type& type) const;
+        std::string                getTypeString() const;
 
-        bool                     isVisible() const;
-        bool                     isUpdateable() const;
-        bool                     isSelectable() const;
-        bool                     isSelected() const;
+        bool                       isVisible() const;
+        bool                       isUpdateable() const;
+        bool                       isSelectable() const;
+        bool                       isSelected() const;
 
-        virtual sf::Vector2f     getCenter() const;
-        sf::Vector2f             getWorldPosition() const;
-        sf::Transform            getWorldTransform() const;
-        virtual sf::FloatRect    getGlobalBounds() const;
+        virtual sf::Vector2f       getCenter() const;
+        sf::Vector2f               getWorldPosition() const;
+        sf::Transform              getWorldTransform() const;
+        virtual sf::FloatRect      getGlobalBounds() const;
 
-        void                     addChild(Object::Ptr child);
-        Object::Ptr              removeChild(const Object::Ptr& child);
-        void                     removeAllChild();
-        Object::Ptr              removeChild(const int& index);
-        Object::Ptr              removeFirstChild();
-        const std::vector<Ptr>*  getAllChild() const;
-        std::vector<Ptr>*        getAllChild();
-        Object::Ptr              getChild(const int& index) const;
-        Object::Ptr              getFirstChild() const;
-        const int                getChildCount() const;
+        void                       addChild(Object::Ptr child);
+        Object::Ptr                removeChild(const Object::Ptr& child);
+        void                       removeAllChild();
+        Object::Ptr                removeChild(const int& index);
+        Object::Ptr                removeFirstChild();
+        const std::vector<Ptr>*    getAllChild() const;
+        std::vector<Ptr>*          getAllChild();
+        Object::Ptr                getChild(const int& index) const;
+        Object::Ptr                getFirstChild() const;
+        const int                  getChildCount() const;
 
-        virtual void             setColor(const sf::Color& color);
-        virtual const sf::Color& getColor() const;
+        virtual void               setColor(const sf::Color& color);
+        virtual const sf::Color&   getColor() const;
 
-        virtual Object::Ptr      clone(sf::Vector2f& position) const;
-        virtual Object::Ptr      clone() const;
+        virtual Object::Ptr        clone(sf::Vector2f& position) const;
+        virtual Object::Ptr        clone() const;
 
-        template <typename T>
-        void                   clone(T& object) const;
+        template <typename T> void clone(T& object) const;
 
-        virtual nlohmann::json toJson() const;
-        virtual sf::String     toString() const;
+        virtual nlohmann::json     toJson() const;
+        virtual sf::String         toString() const;
 
-        void                   update(sf::Time time_step);
+        void                       update(sf::Time time_step);
 
-        Object*                getParent() const;
+        Object*                    getParent() const;
 
       protected:
         void setFirstType(const Type& type);
@@ -133,8 +133,7 @@ namespace nero
         bool                     m_IsDisabled;
     };
 
-    template <typename T>
-    void Object::clone(T& object) const
+    template <typename T> void Object::clone(T& object) const
     {
         object->setId(getId());
         object->setName(getName());

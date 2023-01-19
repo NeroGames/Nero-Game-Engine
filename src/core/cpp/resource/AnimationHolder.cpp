@@ -61,7 +61,8 @@ namespace nero
 
             for(auto& frame : frame_table)
             {
-                std::string              frameName    = file::removeFileExtension(frame["filename"].get<std::string>());
+                std::string frameName =
+                    file::removeFileExtension(frame["filename"].get<std::string>());
                 std::vector<std::string> splitResult  = string::splitString(frameName, '/');
 
                 std::string              sequenceName = splitResult[0];
@@ -72,14 +73,15 @@ namespace nero
                 int         rectWidth                 = frame["frame"]["w"];
                 int         rectHeight                = frame["frame"]["h"];
 
-                sf::IntRect frameBound                = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
+                sf::IntRect frameBound = sf::IntRect(rectLeft, rectTop, rectWidth, rectHeight);
 
                 if(m_SequenceMap.find(textureName) == m_SequenceMap.end())
                 {
                     m_SequenceMap[textureName][sequenceName] = std::vector<sf::IntRect>();
                 }
 
-                // nero_log("loaded : " + textureName + "-" + sequenceName + " " + _s(frameBound.width) + " " + _s(frameBound.height));
+                // nero_log("loaded : " + textureName + "-" + sequenceName + " " +
+                // _s(frameBound.width) + " " + _s(frameBound.height));
                 m_SequenceMap[textureName][sequenceName].push_back(frameBound);
             }
         }
@@ -117,7 +119,8 @@ namespace nero
         {
             nero_log(it->path().string());
 
-            if(file::checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
+            if(file::checkExtention(it->path().extension().string(),
+                                    m_Setting.getStringTable("extension")))
             {
                 loadFile(it->path().string());
             }
@@ -167,7 +170,8 @@ namespace nero
         return found->second.find(getDefaultSequence(animationName))->second[0];
     }
 
-    std::map<std::string, std::vector<sf::IntRect>> AnimationHolder::getSequenceMap(std::string animationName) const
+    std::map<std::string, std::vector<sf::IntRect>>
+    AnimationHolder::getSequenceMap(std::string animationName) const
     {
         auto found = m_SequenceMap.find(animationName);
 

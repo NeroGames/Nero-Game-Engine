@@ -13,9 +13,12 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class Collision {
+    class Collision
+    {
       public:
-        Collision(b2Contact* contact, const b2Manifold* oldManifold, const b2ContactImpulse* m_ContactImpulse);
+        Collision(b2Contact*              contact,
+                  const b2Manifold*       oldManifold,
+                  const b2ContactImpulse* m_ContactImpulse);
         ~Collision();
         // Initialize Collision
         void                      setObjectA(PhysicObject::Ptr objectA);

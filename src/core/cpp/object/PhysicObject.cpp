@@ -124,7 +124,9 @@ namespace nero
 
     void PhysicObject::applyForce(const sf::Vector2f& force, const sf::Vector2f& origin, bool wake)
     {
-        m_Body->ApplyForce(graphics::sf_to_b2(force, EngineConstant.SCALE), graphics::sf_to_b2(origin, EngineConstant.SCALE), wake);
+        m_Body->ApplyForce(graphics::sf_to_b2(force, EngineConstant.SCALE),
+                           graphics::sf_to_b2(origin, EngineConstant.SCALE),
+                           wake);
     }
 
     void PhysicObject::applyForceToCenter(const sf::Vector2f& force, bool wake)
@@ -132,9 +134,13 @@ namespace nero
         m_Body->ApplyForceToCenter(graphics::sf_to_b2(force, EngineConstant.SCALE), wake);
     }
 
-    void PhysicObject::applyLinearImpulse(const sf::Vector2f& impulse, const sf::Vector2f& origin, bool wake)
+    void PhysicObject::applyLinearImpulse(const sf::Vector2f& impulse,
+                                          const sf::Vector2f& origin,
+                                          bool                wake)
     {
-        m_Body->ApplyLinearImpulse(graphics::sf_to_b2(impulse, EngineConstant.SCALE), graphics::sf_to_b2(origin, EngineConstant.SCALE), wake);
+        m_Body->ApplyLinearImpulse(graphics::sf_to_b2(impulse, EngineConstant.SCALE),
+                                   graphics::sf_to_b2(origin, EngineConstant.SCALE),
+                                   wake);
     }
 
     void PhysicObject::applyTorque(float torque, bool wake)

@@ -41,8 +41,8 @@ namespace nero
         void                     setProjectSetting(const Setting::Ptr& setting);
         // render
         void                     setRenderContext(const RenderContext::Ptr& renderContext);
-        void                     setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
-        LevelBuilder::Ptr        getLevelBuilder() const;
+        void              setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
+        LevelBuilder::Ptr getLevelBuilder() const;
 
       private:
         // level

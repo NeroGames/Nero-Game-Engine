@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceBrowserSpriteView : public UIComponent {
+    class ResourceBrowserSpriteView : public UIComponent
+    {
       public:
         ResourceBrowserSpriteView(EditorContext::Ptr editorContext);
         virtual ~ResourceBrowserSpriteView() override;

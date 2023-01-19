@@ -10,7 +10,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class LightEngine {
+    class LightEngine
+    {
       public:
         // type definiton
         typedef std::shared_ptr<LightEngine> Ptr;

@@ -12,7 +12,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class SceneExplorerWindow : public UIComponent {
+    class SceneExplorerWindow : public UIComponent
+    {
       public:
         SceneExplorerWindow(EditorContext::Ptr editorContext);
         virtual ~SceneExplorerWindow() override;

@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ObjectLayerWindow : public UIComponent {
+    class ObjectLayerWindow : public UIComponent
+    {
       public:
         ObjectLayerWindow(EditorContext::Ptr editorContext);
         virtual ~ObjectLayerWindow() override;

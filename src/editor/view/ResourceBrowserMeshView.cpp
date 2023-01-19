@@ -33,7 +33,8 @@ namespace nero
         ImGuiStyle& style         = ImGui::GetStyle();
         float       windowWidth   = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-        auto        printSameLine = [&count, &resourceCount, &style, &windowWidth]() {
+        auto        printSameLine = [&count, &resourceCount, &style, &windowWidth]()
+        {
             float xLastButton = ImGui::GetItemRectMax().x;
             float xNextButton = xLastButton + style.ItemSpacing.x + 100.f;
             if(count++ + 1 < resourceCount && xNextButton < windowWidth)
@@ -42,24 +43,33 @@ namespace nero
 
         if(ImGui::Button("Polygon", ImVec2(100.f, 100.f)))
         {
-            auto worldBuilder = m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();
-            worldBuilder->addObject(Object::Mesh_Object, "Polygon", m_EditorContext->getNewGameObjectPosition());
+            auto worldBuilder =
+                m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();
+            worldBuilder->addObject(Object::Mesh_Object,
+                                    "Polygon",
+                                    m_EditorContext->getNewGameObjectPosition());
         }
 
         printSameLine();
 
         if(ImGui::Button("Circle", ImVec2(100.f, 100.f)))
         {
-            auto worldBuilder = m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();
-            worldBuilder->addObject(Object::Mesh_Object, "Circle", m_EditorContext->getNewGameObjectPosition());
+            auto worldBuilder =
+                m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();
+            worldBuilder->addObject(Object::Mesh_Object,
+                                    "Circle",
+                                    m_EditorContext->getNewGameObjectPosition());
         }
 
         printSameLine();
 
         if(ImGui::Button("Line", ImVec2(100.f, 100.f)))
         {
-            auto worldBuilder = m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();
-            worldBuilder->addObject(Object::Mesh_Object, "Line", m_EditorContext->getNewGameObjectPosition());
+            auto worldBuilder =
+                m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();
+            worldBuilder->addObject(Object::Mesh_Object,
+                                    "Line",
+                                    m_EditorContext->getNewGameObjectPosition());
         }
     }
 } // namespace nero

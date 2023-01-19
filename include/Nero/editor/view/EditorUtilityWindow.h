@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorUtilityWindow : public UIComponent {
+    class EditorUtilityWindow : public UIComponent
+    {
       public:
         EditorUtilityWindow(EditorContext::Ptr editorContext);
         virtual ~EditorUtilityWindow() override;

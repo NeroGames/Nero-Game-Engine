@@ -50,8 +50,8 @@ namespace nero
         for(Object* parent = getParent(); parent != nullptr; parent = parent->getParent())
         {
             position += parent->getPosition();
-            scale.x *= parent->getScale().x;
-            scale.y *= parent->getScale().y;
+            scale.x  *= parent->getScale().x;
+            scale.y  *= parent->getScale().y;
             rotation += parent->getRotation();
         }
 

@@ -96,7 +96,10 @@ namespace nero
         spriteJson["rotation"] = getRotation();
         spriteJson["position"] = {{"x", getPosition().x}, {"y", getPosition().y}};
         spriteJson["scale"]    = {{"x", getScale().x}, {"y", getScale().y}};
-        spriteJson["color"]    = {{"r", getColor().r}, {"g", getColor().g}, {"b", getColor().b}, {"a", getColor().a}};
+        spriteJson["color"]    = {{"r", getColor().r},
+                                  {"g", getColor().g},
+                                  {"b", getColor().b},
+                                  {"a", getColor().a}};
 
         return spriteJson;
     }

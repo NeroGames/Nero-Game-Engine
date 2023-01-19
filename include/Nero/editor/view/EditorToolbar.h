@@ -14,7 +14,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorToolbar : public UIComponent {
+    class EditorToolbar : public UIComponent
+    {
       public:
         EditorToolbar(EditorContext::Ptr editorContext);
         virtual ~EditorToolbar() override;

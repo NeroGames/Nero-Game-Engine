@@ -31,11 +31,11 @@ namespace nero
         ImGui::Separator();
         ImGui::Dummy(ImVec2(0.0f, 16.0f));
 
-        ImVec2       buttonSize(130, 100);
-        float        spacing            = (ImGui::GetWindowContentRegionWidth() - 3 * 150) / 2.f;
-        float        xWindowVisible     = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-        unsigned int buttonCount        = 6;
-        auto         recentProjectTable = file::loadJson(file::getPath({"setting", "recent_project"}));
+        ImVec2 buttonSize(130, 100);
+        float  spacing           = (ImGui::GetWindowContentRegionWidth() - 3 * 150) / 2.f;
+        float  xWindowVisible    = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+        unsigned int buttonCount = 6;
+        auto recentProjectTable  = file::loadJson(file::getPath({"setting", "recent_project"}));
 
         for(unsigned int i = 0; i < buttonCount; i++)
         {
@@ -43,16 +43,19 @@ namespace nero
             {
                 auto project = recentProjectTable[recentProjectTable.size() - i - 1];
 
-                ImGui::Image(m_EditorContext->getTextureHolder()->getTexture("recent_project_" + toString(i + 1)));
+                ImGui::Image(m_EditorContext->getTextureHolder()->getTexture("recent_project_" +
+                                                                             toString(i + 1)));
                 ImGui::SameLine(0.f, 5.f);
-                std::string projectName = string::wrapString(project["project_name"].get<std::string>(), 17);
+                std::string projectName =
+                    string::wrapString(project["project_name"].get<std::string>(), 17);
 
                 ImGui::PushID(i);
                 if(ImGui::Button(projectName.c_str(), buttonSize))
                 {
                     ImGui::CloseCurrentPopup();
 
-                    m_EditorContext->getEditorProxy()->openProject(project["project_directory"].get<std::string>());
+                    m_EditorContext->getEditorProxy()->openProject(
+                        project["project_directory"].get<std::string>());
                 }
                 ImGui::PopID();
             }

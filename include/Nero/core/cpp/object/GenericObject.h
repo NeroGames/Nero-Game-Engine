@@ -11,7 +11,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class GenericObject {
+    class GenericObject
+    {
       public: // Types definitions
         typedef std::shared_ptr<GenericObject> Ptr;
 

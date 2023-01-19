@@ -18,7 +18,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class SoundManager {
+    class SoundManager
+    {
       public:
         typedef std::shared_ptr<SoundManager> Ptr;
 

@@ -24,8 +24,17 @@ namespace nero
         Poco::Net::FTPStreamFactory::registerFactory();
 
         // Note: we must create the passphrase handler prior Context
-        Poco::SharedPtr<Poco::Net::InvalidCertificateHandler> ptrCert    = new Poco::Net::ConsoleCertificateHandler(false); // ask the user via console
-        Poco::Net::Context::Ptr                               ptrContext = new Poco::Net::Context(Poco::Net::Context::TLSV1_1_CLIENT_USE, "", "", "rootcert.pem", Poco::Net::Context::VERIFY_RELAXED, 9, false, "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH");
+        Poco::SharedPtr<Poco::Net::InvalidCertificateHandler> ptrCert =
+            new Poco::Net::ConsoleCertificateHandler(false); // ask the user via console
+        Poco::Net::Context::Ptr ptrContext =
+            new Poco::Net::Context(Poco::Net::Context::TLSV1_1_CLIENT_USE,
+                                   "",
+                                   "",
+                                   "rootcert.pem",
+                                   Poco::Net::Context::VERIFY_RELAXED,
+                                   9,
+                                   false,
+                                   "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH");
         // ptrContext->requireMinimumProtocol(Poco::Net::Context::PROTO_TLSV1_1);
         Poco::Net::SSLManager::instance().initializeClient(0, ptrCert, ptrContext);
     }
@@ -34,7 +43,8 @@ namespace nero
     {
     }
 
-    DownloadProgress::Ptr DownloadManager::downloadFile(const std::string& fileUrl, const std::string& destinationFile)
+    DownloadProgress::Ptr DownloadManager::downloadFile(const std::string& fileUrl,
+                                                        const std::string& destinationFile)
     {
         nero_log("creating download progress object");
         DownloadProgress::Ptr downloadProgress = std::make_shared<DownloadProgress>();
@@ -62,18 +72,24 @@ namespace nero
         downloadProgress->m_Downloading  = true;
         downloadProgress->m_DownloadSize = downloadSize;
         my_Future                        = std::async(
-            std::launch::async, [&](DownloadProgress::Ptr& downloadProgress) {
+            std::launch::async,
+            [&](DownloadProgress::Ptr& downloadProgress)
+            {
                 nero_log("preparing download stream");
 
                 Poco::URI                     uri(fileUrl);
-                std::unique_ptr<std::istream> pStr(Poco::URIStreamOpener::defaultOpener().open(uri));
+                std::unique_ptr<std::istream> pStr(
+                    Poco::URIStreamOpener::defaultOpener().open(uri));
 
                 nero_log("initializing download progess object");
 
-                downloadProgress->m_DownloadStream = std::make_shared<std::ofstream>(destinationFile, std::ofstream::binary);
+                downloadProgress->m_DownloadStream =
+                    std::make_shared<std::ofstream>(destinationFile, std::ofstream::binary);
 
-                downloadProgress->m_Ready          = true;
-                std::streamsize size               = Poco::StreamCopier::copyStream(*pStr.get(), *downloadProgress->m_DownloadStream);
+                downloadProgress->m_Ready = true;
+                std::streamsize size =
+                    Poco::StreamCopier::copyStream(*pStr.get(),
+                                                   *downloadProgress->m_DownloadStream);
                 downloadProgress->m_DownloadStream->close();
                 downloadProgress->m_Downloading = false;
                 return 0;
@@ -83,7 +99,8 @@ namespace nero
         return downloadProgress;
     }
 
-    void DownloadManager::downloadFile(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
+    void DownloadManager::downloadFile(const Parameter&    parameter,
+                                       BackgroundTask::Ptr backgroundTask)
     {
     }
 
@@ -97,7 +114,9 @@ namespace nero
                 path = "/";
 
             Poco::Net::HTTPSClientSession session(uri.getHost(), uri.getPort());
-            Poco::Net::HTTPRequest        request(Poco::Net::HTTPRequest::HTTP_GET, path, Poco::Net::HTTPMessage::HTTP_1_1);
+            Poco::Net::HTTPRequest        request(Poco::Net::HTTPRequest::HTTP_GET,
+                                           path,
+                                           Poco::Net::HTTPMessage::HTTP_1_1);
 
             Poco::Net::HTTPResponse       response;
 

@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ImportWorkspaceView : public UIComponent {
+    class ImportWorkspaceView : public UIComponent
+    {
       public:
         ImportWorkspaceView(EditorContext::Ptr editorContext);
         virtual ~ImportWorkspaceView() override;

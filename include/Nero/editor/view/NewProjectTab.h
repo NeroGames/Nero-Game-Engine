@@ -11,7 +11,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class NewProjectTab : public UIComponent {
+    class NewProjectTab : public UIComponent
+    {
       public:
         NewProjectTab(EditorContext::Ptr       editorContext,
                       TabSelectionHandler::Ptr tabSelectionHandler);

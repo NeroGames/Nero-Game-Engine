@@ -18,7 +18,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class TextureHolder : public ResourceHolder {
+    class TextureHolder : public ResourceHolder
+    {
       public: // utility
         typedef std::shared_ptr<TextureHolder> Ptr;
         using ResourceHolder::loadDirectory;

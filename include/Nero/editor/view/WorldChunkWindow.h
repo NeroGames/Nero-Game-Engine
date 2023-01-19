@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class WorldChunkWindow : public UIComponent {
+    class WorldChunkWindow : public UIComponent
+    {
       public:
         WorldChunkWindow(EditorContext::Ptr editorContext);
         virtual ~WorldChunkWindow() override;

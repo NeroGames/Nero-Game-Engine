@@ -14,7 +14,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class UIObject : public Object {
+    class UIObject : public Object
+    {
       public:
         typedef std::shared_ptr<UIObject> Ptr;
         static UIObject::Ptr              Cast(Object::Ptr object);
@@ -24,7 +25,8 @@ namespace nero
         void handleEvent(const sf::Event& event);
 
       protected:
-        virtual void handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
+        virtual void handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse,
+                                            const bool&                        isPressed);
         virtual void handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
 
         virtual void handleObjectEvent(const sf::Event& event);

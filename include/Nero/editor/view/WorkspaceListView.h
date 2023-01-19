@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class WorkspaceListView : public UIComponent {
+    class WorkspaceListView : public UIComponent
+    {
       public:
         WorkspaceListView(EditorContext::Ptr editorContext);
         virtual ~WorkspaceListView() override;

@@ -11,7 +11,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorDockspace : public UIComponent {
+    class EditorDockspace : public UIComponent
+    {
       public:
         EditorDockspace(EditorContext::Ptr editorContext);
         virtual ~EditorDockspace() override;

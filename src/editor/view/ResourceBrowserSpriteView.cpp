@@ -38,7 +38,7 @@ namespace nero
 
         for(int i = 0; i < spriteCount; i++)
         {
-            sf::Vector2u textureSize     = textureHolder->getSpriteTexture(spriteTable[i]).getSize();
+            sf::Vector2u textureSize = textureHolder->getSpriteTexture(spriteTable[i]).getSize();
             sf::Vector2u nextTextureSize = textureSize;
 
             if(i < spriteCount - 1)
@@ -52,13 +52,13 @@ namespace nero
             sf::Vector2f nextSpriteSize(nextTextureSize.x, nextTextureSize.y);
             nextSpriteSize = formatTexturetSize(nextSpriteSize, 250);
 
-            if(ImGui::ImageButton(textureHolder->getSpriteTexture(spriteTable[i]), ImVec2(spriteSize.x, spriteSize.y)))
+            if(ImGui::ImageButton(textureHolder->getSpriteTexture(spriteTable[i]),
+                                  ImVec2(spriteSize.x, spriteSize.y)))
             {
                 if(m_EditorContext->getBuilderMode() == BuilderMode::OBJECT)
                 {
-                    auto worldBuilder = m_EditorContext->getLevelBuilder()
-                                            ->getSelectedChunk()
-                                            ->getWorldBuilder();
+                    auto worldBuilder =
+                        m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();
 
                     worldBuilder->addObject(Object::Sprite_Object,
                                             spriteTable[i],

@@ -19,7 +19,8 @@ namespace nero
 
     void GenericObject::destroyObject()
     {
-        // m_Parent simply refers to the parent, it does not hold the parent, therefore we do not call delete(m_Parent)
+        // m_Parent simply refers to the parent, it does not hold the parent, therefore we do not
+        // call delete(m_Parent)
         m_Parent = nullptr;
     }
 } // namespace nero

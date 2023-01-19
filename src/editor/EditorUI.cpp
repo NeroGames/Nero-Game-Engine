@@ -42,15 +42,14 @@ namespace nero
         , m_EditorProxy(std::make_shared<EditorProxy>())
         , m_RenderTexture(std::make_shared<sf::RenderTexture>())
         , m_RenderContext(std::make_shared<RenderContext>())
-        , m_EditorContext(std::make_shared<EditorContext>(
-              m_EditorProxy,
-              m_ProjectManager,
-              m_EditorTextureHolder,
-              m_EditorFontHolder,
-              m_EditorSetting,
-              m_RenderTexture,
-              m_RenderContext,
-              m_EditorCamera))
+        , m_EditorContext(std::make_shared<EditorContext>(m_EditorProxy,
+                                                          m_ProjectManager,
+                                                          m_EditorTextureHolder,
+                                                          m_EditorFontHolder,
+                                                          m_EditorSetting,
+                                                          m_RenderTexture,
+                                                          m_RenderContext,
+                                                          m_EditorCamera))
         , m_EditorSetup(std::make_shared<EditorSetup>(m_EditorContext))
         // User Interface
         , m_EditorDockspace(m_EditorContext)
@@ -92,8 +91,8 @@ namespace nero
 
     void EditorUI::init()
     {
-        ImGuiIO& io = ImGui::GetIO();
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        ImGuiIO& io                          = ImGui::GetIO();
+        io.ConfigFlags                       |= ImGuiConfigFlags_DockingEnable;
         io.ConfigWindowsMoveFromTitleBarOnly = true;
 
         io.Fonts->Clear();
@@ -105,36 +104,71 @@ namespace nero
         config.PixelSnapH                  = true;
         config.GlyphMinAdvanceX            = 13.0f; // Use if you want to make the icon monospaced
         static const ImWchar icon_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
-        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 18.0f, &config, icon_ranges);
-        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 18.0f, &config, icon_ranges);
-        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 18.0f, &config, icon_ranges);
+        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf",
+                                     18.0f,
+                                     &config,
+                                     icon_ranges);
+        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf",
+                                     18.0f,
+                                     &config,
+                                     icon_ranges);
+        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf",
+                                     18.0f,
+                                     &config,
+                                     icon_ranges);
         ImGui::SFML::UpdateFontTexture();
 
         io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation.ttf", 17.f);
-        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 18.0f, &config, icon_ranges);
-        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 18.0f, &config, icon_ranges);
-        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 18.0f, &config, icon_ranges);
+        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf",
+                                     18.0f,
+                                     &config,
+                                     icon_ranges);
+        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf",
+                                     18.0f,
+                                     &config,
+                                     icon_ranges);
+        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf",
+                                     18.0f,
+                                     &config,
+                                     icon_ranges);
         ImGui::SFML::UpdateFontTexture();
 
         io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation.ttf", 25.f);
-        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 18.0f, &config, icon_ranges);
-        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 18.0f, &config, icon_ranges);
-        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 18.0f, &config, icon_ranges);
+        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf",
+                                     18.0f,
+                                     &config,
+                                     icon_ranges);
+        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf",
+                                     18.0f,
+                                     &config,
+                                     icon_ranges);
+        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf",
+                                     18.0f,
+                                     &config,
+                                     icon_ranges);
         ImGui::SFML::UpdateFontTexture();
 
         io.Fonts->AddFontFromFileTTF("resource/editor/font/Sansation.ttf", 14.f);
-        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf", 14.0f, &config, icon_ranges);
-        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf", 14.0f, &config, icon_ranges);
-        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf", 14.0f, &config, icon_ranges);
+        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-regular-400.ttf",
+                                     14.0f,
+                                     &config,
+                                     icon_ranges);
+        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-solid-900.ttf",
+                                     14.0f,
+                                     &config,
+                                     icon_ranges);
+        io.Fonts->AddFontFromFileTTF("resource/editor/font/fa-brands-400.ttf",
+                                     14.0f,
+                                     &config,
+                                     icon_ranges);
         ImGui::SFML::UpdateFontTexture();
 
         g_Context = ax::NodeEditor::CreateEditor();
 
-        m_BottomDockspaceTabBarSwitch.registerTab(
-            {
-                EditorConstant.WINDOW_RESOURCE,
-                EditorConstant.WINDOW_LOGGING,
-            });
+        m_BottomDockspaceTabBarSwitch.registerTab({
+            EditorConstant.WINDOW_RESOURCE,
+            EditorConstant.WINDOW_LOGGING,
+        });
 
         // clear workspace input
         clearScriptWizardInput();
@@ -158,11 +192,13 @@ namespace nero
         {
             auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
 
-            if(worldBuilder && editorMode == EditorMode::WORLD_BUILDER && builderMode == BuilderMode::OBJECT && mouseOnCanvas())
+            if(worldBuilder && editorMode == EditorMode::WORLD_BUILDER &&
+               builderMode == BuilderMode::OBJECT && mouseOnCanvas())
             {
                 worldBuilder->handleEvent(event);
             }
-            else if(worldBuilder && editorMode == EditorMode::WORLD_BUILDER && builderMode == BuilderMode::MESH && mouseOnCanvas())
+            else if(worldBuilder && editorMode == EditorMode::WORLD_BUILDER &&
+                    builderMode == BuilderMode::MESH && mouseOnCanvas())
             {
                 worldBuilder->getMeshEditor()->handleEvent(event);
             }
@@ -199,7 +235,8 @@ namespace nero
         {
             auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
 
-            if(editorMode == EditorMode::WORLD_BUILDER && builderMode == BuilderMode::OBJECT && worldBuilder)
+            if(editorMode == EditorMode::WORLD_BUILDER && builderMode == BuilderMode::OBJECT &&
+               worldBuilder)
             {
                 worldBuilder->update(timeStep);
             }
@@ -370,15 +407,18 @@ namespace nero
     void EditorUI::showScriptCreationWindow()
     {
         // Window flags
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
-                                        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal |
+                                        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
+                                        ImGuiWindowFlags_NoScrollbar;
         // Winsow size
         ImVec2 winsow_size = EditorConstant.WINDOW_SCRIPT_WIZARD_SIZE;
 
         // Project manager window
         ImGui::SetNextWindowSize(winsow_size);
         // Begin window
-        if(ImGui::BeginPopupModal(EditorConstant.WINDOW_SCRIPT_WIZARD.c_str(), nullptr, window_flags))
+        if(ImGui::BeginPopupModal(EditorConstant.WINDOW_SCRIPT_WIZARD.c_str(),
+                                  nullptr,
+                                  window_flags))
         {
 
             if(ImGui::BeginTabBar("##scrip_wizard_tabbar"))
@@ -399,7 +439,10 @@ namespace nero
                     ImGui::Text("Parent Class");
                     ImGui::SameLine(wording_width);
                     ImGui::SetNextItemWidth(input_width - 110.f);
-                    ImGui::InputText("##parent_class", m_InputParentClass, sizeof(m_InputParentClass), ImGuiInputTextFlags_ReadOnly);
+                    ImGui::InputText("##parent_class",
+                                     m_InputParentClass,
+                                     sizeof(m_InputParentClass),
+                                     ImGuiInputTextFlags_ReadOnly);
                     ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 100.f);
                     if(ImGui::Button("Select##select_script_parent_class", ImVec2(100.f, 0)))
                     {
@@ -419,7 +462,8 @@ namespace nero
                             ImGui::SetNextItemWidth(input_width);
 
                             //load workpsace
-                            std::vector<std::string> gameLevelNameTable = m_AdvancedScene->getGameLevelNameTable();
+                            std::vector<std::string> gameLevelNameTable =
+                    m_AdvancedScene->getGameLevelNameTable();
 
                             gameLevelNameTable.insert(gameLevelNameTable.begin(), StringPool.BLANK);
 
@@ -434,11 +478,14 @@ namespace nero
                             string::fillCharTable(levelComboTable, gameLevelNameTable);
 
                             m_SelectedGameLevel = levelComboTable[m_SelectedGameLevelIndex];
-                            if (ImGui::BeginCombo("##game_level_combo", m_SelectedGameLevel, ImGuiComboFlags())) // The second parameter is the label previewed before opening the combo.
+                            if (ImGui::BeginCombo("##game_level_combo", m_SelectedGameLevel,
+                    ImGuiComboFlags())) // The second parameter is the label previewed before
+                    opening the combo.
                             {
                                     for (int n = 0; n < levelCount; n++)
                                     {
-                                            bool is_selected = (m_SelectedGameLevel == levelComboTable[n]);
+                                            bool is_selected = (m_SelectedGameLevel ==
+                    levelComboTable[n]);
 
 
                                             if (ImGui::Selectable(levelComboTable[n], is_selected))
@@ -472,7 +519,8 @@ namespace nero
                             ImGui::SetNextItemWidth(input_width);
 
                             //load workpsace
-                            std::vector<std::string> gameScreenNameTable = m_AdvancedScene->getGameScreenNameTable();
+                            std::vector<std::string> gameScreenNameTable =
+                    m_AdvancedScene->getGameScreenNameTable();
 
                             if(gameScreenNameTable.empty())
                             {
@@ -485,11 +533,14 @@ namespace nero
                             string::fillCharTable(screenComboTable, gameScreenNameTable);
 
                             m_SelectedGameScreen = screenComboTable[m_SelectedGameScreenIndex];
-                            if (ImGui::BeginCombo("##game_level_combo", m_SelectedGameScreen, ImGuiComboFlags())) // The second parameter is the label previewed before opening the combo.
+                            if (ImGui::BeginCombo("##game_level_combo", m_SelectedGameScreen,
+                    ImGuiComboFlags())) // The second parameter is the label previewed before
+                    opening the combo.
                             {
                                     for (int n = 0; n < screenCount; n++)
                                     {
-                                            bool is_selected = (m_SelectedGameScreen == screenComboTable[n]);
+                                            bool is_selected = (m_SelectedGameScreen ==
+                    screenComboTable[n]);
 
 
                                             if (ImGui::Selectable(screenComboTable[n], is_selected))
@@ -520,18 +571,28 @@ namespace nero
                     ImGui::SetNextWindowSize(ImVec2(500.f, 400.f));
                     if(ImGui::BeginPopupModal("Select Script Class", nullptr, window_flags))
                     {
-                        std::vector<std::string> script_type = {"Game Level Script", "Game Screen Script", "Startup Screen Script", "Physic Script Object", "Simple Script Object", "Action Object", "Action"};
+                        std::vector<std::string> script_type = {"Game Level Script",
+                                                                "Game Screen Script",
+                                                                "Startup Screen Script",
+                                                                "Physic Script Object",
+                                                                "Simple Script Object",
+                                                                "Action Object",
+                                                                "Action"};
 
                         for(auto type : script_type)
                         {
                             ImGui::Text(type.c_str());
                             ImGui::Separator();
-                            ImGui::Text("Use a Game Level Script to manage the behavior of a Game Level \n"
-                                        "two line description");
+                            ImGui::Text(
+                                "Use a Game Level Script to manage the behavior of a Game Level \n"
+                                "two line description");
                             ImGui::Dummy(ImVec2(0.f, 2.f));
-                            if(ImGui::Button(type.c_str(), ImVec2(ImGui::GetWindowContentRegionWidth(), 50.f)))
+                            if(ImGui::Button(type.c_str(),
+                                             ImVec2(ImGui::GetWindowContentRegionWidth(), 50.f)))
                             {
-                                string::fillCharArray(m_InputParentClass, sizeof(m_InputParentClass), type);
+                                string::fillCharArray(m_InputParentClass,
+                                                      sizeof(m_InputParentClass),
+                                                      type);
                                 ImGui::CloseCurrentPopup();
                             }
 
@@ -571,7 +632,8 @@ namespace nero
 
                         if(std::string(m_SelectedScriptType) == "Game Level Script")
                         {
-                            parameter.setString("level_name", m_EditorContext->getSelectedGameLevelName());
+                            parameter.setString("level_name",
+                                                m_EditorContext->getSelectedGameLevelName());
                         }
                         else if(std::string(m_SelectedScriptType) == "Game Screen Script")
                         {
@@ -604,7 +666,8 @@ namespace nero
 
     void EditorUI::playScene()
     {
-        if(m_EditorContext->getAdvancedScene() && m_EditorContext->getEditorMode() != EditorMode::PLAY_GAME)
+        if(m_EditorContext->getAdvancedScene() &&
+           m_EditorContext->getEditorMode() != EditorMode::PLAY_GAME)
         {
             try
             {
@@ -623,7 +686,8 @@ namespace nero
                 {
                         auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
 
-                        gameLevel->levelSetting->setBool("pause_level", !gameLevel->levelSetting->getBool("pause_level"));
+                        gameLevel->levelSetting->setBool("pause_level",
+           !gameLevel->levelSetting->getBool("pause_level"));
                 }*/
     }
 
@@ -736,7 +800,8 @@ namespace nero
 
     void EditorUI::autoSaveProject()
     {
-        /*if(m_GameProject && m_AutoSaveClock.getElapsedTime() > sf::seconds(m_EditorSetting->getSetting("editor").getUInt("auto_save_interval")))
+        /*if(m_GameProject && m_AutoSaveClock.getElapsedTime() >
+        sf::seconds(m_EditorSetting->getSetting("editor").getUInt("auto_save_interval")))
         {
                 m_GameProject->saveProject();
                 m_AutoSaveClock.restart();
@@ -769,7 +834,8 @@ namespace nero
                 for(const auto& gameScreen : m_AdvancedScene->getGameScreenTable())
                 {
                         std::string itemId = "##select_screen" + toString(gameScreen->screenId);
-                        ImGui::RadioButton(itemId.c_str(), &m_InputSelectedGameScreenId, gameScreen->screenId);
+                        ImGui::RadioButton(itemId.c_str(), &m_InputSelectedGameScreenId,
+        gameScreen->screenId);
 
                         if(ImGui::IsItemClicked())
                         {
@@ -816,8 +882,8 @@ namespace nero
     void EditorUI::showNewGameScreenPopup()
     {
         // Window flags
-        /*ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
-                                                                                  ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+        /*ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal |
+        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
                 //Winsow size
                 ImVec2 winsow_size = ImVec2(400.f, 200.f);
                 ImGui::SetNextWindowSize(winsow_size);
@@ -830,8 +896,8 @@ namespace nero
 
                         ImGui::Text("Screen Name");
                         ImGui::SameLine(wording_width);
-                        ImGui::InputText("##new_screen_name", m_NewGameScreenInput.name, sizeof(m_NewGameScreenInput.name));
-                        ImGui::Dummy(ImVec2(0.0f, 1.0f));
+                        ImGui::InputText("##new_screen_name", m_NewGameScreenInput.name,
+        sizeof(m_NewGameScreenInput.name)); ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
                         ImGui::Text("parent");
                         ImGui::SameLine(wording_width);
@@ -864,9 +930,11 @@ namespace nero
                                 else
                                 {
                                         Parameter parameter;
-                                        parameter.setString("screen_name", std::string(m_NewGameScreenInput.name));
-                                        //parameter.setString("parent", std::string(m_NewGameScreenInput.parent));
-                                        parameter.setString("template", std::string(m_NewGameScreenInput.prototype));
+                                        parameter.setString("screen_name",
+        std::string(m_NewGameScreenInput.name));
+                                        //parameter.setString("parent",
+        std::string(m_NewGameScreenInput.parent)); parameter.setString("template",
+        std::string(m_NewGameScreenInput.prototype));
 
                                         createGameScreen(parameter);
                                 }
@@ -911,9 +979,14 @@ namespace nero
         static int  corner   = 3;
         if(corner != -1)
         {
-            ImGuiViewport* viewport         = ImGui::GetMainViewport();
-            ImVec2         window_pos       = ImVec2((corner & 1) ? (viewport->Pos.x + viewport->Size.x - DISTANCE) : (viewport->Pos.x + DISTANCE), (corner & 2) ? (viewport->Pos.y + viewport->Size.y - DISTANCE) : (viewport->Pos.y + DISTANCE));
-            ImVec2         window_pos_pivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
+            ImGuiViewport* viewport = ImGui::GetMainViewport();
+            ImVec2         window_pos =
+                ImVec2((corner & 1) ? (viewport->Pos.x + viewport->Size.x - DISTANCE)
+                                    : (viewport->Pos.x + DISTANCE),
+                       (corner & 2) ? (viewport->Pos.y + viewport->Size.y - DISTANCE)
+                                    : (viewport->Pos.y + DISTANCE));
+            ImVec2 window_pos_pivot =
+                ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
             ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
             ImGui::SetNextWindowViewport(viewport->ID);
         }
@@ -922,7 +995,12 @@ namespace nero
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.000f, 1.000f, 1.000f, 1.00f));
         ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.911f, 0.499f, 0.146f, 1.000f));
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.000f, 0.000f, 0.000f, 1.00f));
-        if(ImGui::Begin("##background_task_window", nullptr, (corner != -1 ? ImGuiWindowFlags_NoMove : 0) | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
+        if(ImGui::Begin("##background_task_window",
+                        nullptr,
+                        (corner != -1 ? ImGuiWindowFlags_NoMove : 0) | ImGuiWindowFlags_NoDocking |
+                            ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+                            ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
+                            ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
         {
             auto& taskTable = BTManager::getTaskTable();
 
@@ -1003,11 +1081,15 @@ namespace nero
         };
 
         // Create project
-        m_EditorProxy->m_CreateProjectCallback = [this](const Parameter& projectParameter, const unsigned int& projectCount)
+        m_EditorProxy->m_CreateProjectCallback =
+            [this](const Parameter& projectParameter, const unsigned int& projectCount)
         {
-            nero_log("on create project in background")
-                std::string taskName = EditorConstant.TASK_CREATE_PROJECT + toString(projectCount);
-            BTManager::startTask(&ProjectManager::createProject, m_ProjectManager.get(), projectParameter, taskName);
+            nero_log("on create project in background") std::string taskName =
+                EditorConstant.TASK_CREATE_PROJECT + toString(projectCount);
+            BTManager::startTask(&ProjectManager::createProject,
+                                 m_ProjectManager.get(),
+                                 projectParameter,
+                                 taskName);
         };
 
         m_EditorProxy->m_SaveProjectCallback = [this]()
@@ -1042,10 +1124,11 @@ namespace nero
             nero_log("Closing the Editor");
 
             nero_log("-> Saving window settings");
-            std::string  windowSettingFile = file::getPath({"setting", "window"}, StringPool.EXT_JSON);
-            Setting      windowSetting     = m_EditorSetting->getSetting("window");
-            sf::Vector2u windowSize        = m_RenderWindow.getSize();
-            sf::Vector2i windowPosition    = m_RenderWindow.getPosition();
+            std::string windowSettingFile =
+                file::getPath({"setting", "window"}, StringPool.EXT_JSON);
+            Setting      windowSetting  = m_EditorSetting->getSetting("window");
+            sf::Vector2u windowSize     = m_RenderWindow.getSize();
+            sf::Vector2i windowPosition = m_RenderWindow.getPosition();
 
             if(windowPosition.x < -8)
             {
@@ -1093,10 +1176,13 @@ namespace nero
                 m_EditorProxy->openGameLevel(levelName);
             }
 
-            BTManager::startTask([this](BackgroundTask::Ptr backgroundTask)
-                                 {
-                                     GameProject::compileProject(m_EditorContext->getGameProject()->getProjectDirectory(), backgroundTask);
-                                 });
+            BTManager::startTask(
+                [this](BackgroundTask::Ptr backgroundTask)
+                {
+                    GameProject::compileProject(
+                        m_EditorContext->getGameProject()->getProjectDirectory(),
+                        backgroundTask);
+                });
         };
 
         m_EditorProxy->m_OpenGameLevelCallback = [this](const std::string levelName)

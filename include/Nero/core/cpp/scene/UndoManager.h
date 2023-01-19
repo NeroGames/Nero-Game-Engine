@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class UndoManager {
+    class UndoManager
+    {
       public:
         typedef std::shared_ptr<UndoManager> Ptr;
 

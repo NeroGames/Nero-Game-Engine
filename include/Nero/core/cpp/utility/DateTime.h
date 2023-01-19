@@ -21,7 +21,8 @@ namespace nero
         } DateFormat;
 
         boost::posix_time::ptime getCurrentDateTime();
-        std::string              formatDateTime(const boost::posix_time::ptime& time, const std::string& format = DateFormat.DEFAULT);
+        std::string              formatDateTime(const boost::posix_time::ptime& time,
+                                                const std::string&              format = DateFormat.DEFAULT);
         std::wstring             toWideString(const std::string& input);
     } // namespace datetime
 } // namespace nero

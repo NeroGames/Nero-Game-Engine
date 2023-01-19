@@ -12,7 +12,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class PrismaticJoint : public PhysicJoint {
+    class PrismaticJoint : public PhysicJoint
+    {
       public:
         typedef std::shared_ptr<PrismaticJoint> Ptr;
         static Ptr                              Cast(PhysicJoint::Ptr joint);

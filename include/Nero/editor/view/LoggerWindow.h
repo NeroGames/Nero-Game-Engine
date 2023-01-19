@@ -11,7 +11,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class LoggerWindow : public UIComponent {
+    class LoggerWindow : public UIComponent
+    {
       public:
         LoggerWindow(EditorContext::Ptr editorContext);
         virtual ~LoggerWindow() override;

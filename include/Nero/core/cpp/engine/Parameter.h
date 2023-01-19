@@ -13,7 +13,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class Parameter {
+    class Parameter
+    {
       public:
         typedef std::shared_ptr<Parameter> Ptr;
 
@@ -40,7 +41,7 @@ namespace nero
         void                     setUInt(const std::string& setting, const unsigned int value);
         void                     setBool(const std::string& setting, const bool value);
         void                     setString(const std::string& setting, const std::string& value);
-        void                     setStringTable(const std::string& setting, const std::vector<std::string>& value);
+        void setStringTable(const std::string& setting, const std::vector<std::string>& value);
 
       private:
         // parameter holder

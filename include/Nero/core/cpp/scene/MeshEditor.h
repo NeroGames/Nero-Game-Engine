@@ -14,7 +14,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class MeshEditor {
+    class MeshEditor
+    {
       public:
         typedef std::shared_ptr<MeshEditor>        Ptr;
         typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
@@ -39,7 +40,8 @@ namespace nero
 
       private: // Methods
         void handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
-        void handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
+        void handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse,
+                                     const bool&                        isPressed);
         void handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
         void rotateMesh(Mesh* mesh, float speed = 0.1f);
         void scaleMesh(Mesh* mesh, float scale = 0.1f);

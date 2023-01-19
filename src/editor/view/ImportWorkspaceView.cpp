@@ -43,9 +43,13 @@ namespace nero
 
         if(ImGui::Button("Browse##choose_workspace_import", ImVec2(60.f, 0)))
         {
-            file::selectDirectory([this](std::string outPath) {
-                string::fillCharArray(m_Input.locationImport, sizeof(m_Input.locationImport), outPath);
-            });
+            file::selectDirectory(
+                [this](std::string outPath)
+                {
+                    string::fillCharArray(m_Input.locationImport,
+                                          sizeof(m_Input.locationImport),
+                                          outPath);
+                });
         }
 
         ImGui::SameLine(wordingWidth + inputWidth - 60.f);
@@ -68,12 +72,15 @@ namespace nero
                 m_Input.errorMessage = "The selected location is not a valid directory";
             }
             // workpspace already exist
-            else if(m_EditorContext->getProjectManager()->workspaceExist(file::getFileName(std::string(m_Input.locationImport))))
+            else if(m_EditorContext->getProjectManager()->workspaceExist(
+                        file::getFileName(std::string(m_Input.locationImport))))
             {
-                m_Input.errorMessage = "A Workspace with the same Id already exist, Please choose another Name";
+                m_Input.errorMessage =
+                    "A Workspace with the same Id already exist, Please choose another Name";
             }
             // workpspace location not valid
-            else if(!file::fileExist(file::getPath({std::string(m_Input.locationImport), ".workspace"})))
+            else if(!file::fileExist(
+                        file::getPath({std::string(m_Input.locationImport), ".workspace"})))
             {
                 m_Input.errorMessage = "The selected directory is not a valid Workspace";
             }
@@ -96,13 +103,18 @@ namespace nero
             // import workspace
             m_EditorContext->getEditorProxy()->importWorkspace(std::string(m_Input.locationImport));
             // clear input
-            string::fillCharArray(m_Input.locationImport, sizeof(m_Input.locationImport), StringPool.BLANK);
+            string::fillCharArray(m_Input.locationImport,
+                                  sizeof(m_Input.locationImport),
+                                  StringPool.BLANK);
         }
 
-        ImGuiWindowFlags modal_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
-                                       ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+        ImGuiWindowFlags modal_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal |
+                                       ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
+                                       ImGuiWindowFlags_NoScrollbar;
         ImGui::SetNextWindowSize(ImVec2(300.f, 130.f));
-        if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_IMPORTING_WORKSPACE.c_str(), nullptr, modal_flags))
+        if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_IMPORTING_WORKSPACE.c_str(),
+                                  nullptr,
+                                  modal_flags))
         {
             ImGui::TextWrapped("%s", m_Input.errorMessage.c_str());
 
@@ -132,12 +144,14 @@ namespace nero
 
     void ImportWorkspaceView::clearInput()
     {
-        string::fillCharArray(m_Input.locationImport, sizeof(m_Input.locationImport), StringPool.BLANK);
+        string::fillCharArray(m_Input.locationImport,
+                              sizeof(m_Input.locationImport),
+                              StringPool.BLANK);
     }
 
     bool ImportWorkspaceView::workspaceDocumentValid(const std::string& workspaceDirectory)
     {
-        auto              document         = file::loadJson(file::getPath({workspaceDirectory, ".workspace"}), true);
+        auto document = file::loadJson(file::getPath({workspaceDirectory, ".workspace"}), true);
         const std::string projectNamespace = document["project_namespace"].get<std::string>();
 
         bool              documentValid =
@@ -146,9 +160,11 @@ namespace nero
             // Check engine version
             document["engine_version"].get<std::string>() == "2.0.0" &&
             // Check workspace name
-            document["workspace_name"].get<std::string>() == file::getFileName(workspaceDirectory) &&
+            document["workspace_name"].get<std::string>() ==
+                file::getFileName(workspaceDirectory) &&
             // Check namespace
-            projectNamespace != StringPool.BLANK && string::matchPattern(std::string(projectNamespace), StringPool.REGEX_NAMESPACE);
+            projectNamespace != StringPool.BLANK &&
+            string::matchPattern(std::string(projectNamespace), StringPool.REGEX_NAMESPACE);
 
         return documentValid;
     }

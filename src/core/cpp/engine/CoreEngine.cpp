@@ -23,7 +23,10 @@ namespace nero
 
     void CoreEngine::createEngineWindow()
     {
-        m_RenderWindow.create(sf::VideoMode(EngineConstant.ENGINE_WINDOW_WIDTH, EngineConstant.ENGINE_WINDOW_HEIGHT), EngineConstant.ENGINE_WINDOW_TITLE, sf::Style::Default);
+        m_RenderWindow.create(
+            sf::VideoMode(EngineConstant.ENGINE_WINDOW_WIDTH, EngineConstant.ENGINE_WINDOW_HEIGHT),
+            EngineConstant.ENGINE_WINDOW_TITLE,
+            sf::Style::Default);
     }
 
     CoreEngine::~CoreEngine()
@@ -43,10 +46,11 @@ namespace nero
 
             // Accumulate the time elapsed at each loop
             sf::Time elapsedTime = clock.restart();
-            timeSinceLastUpdate += elapsedTime;
+            timeSinceLastUpdate  += elapsedTime;
 
-            // When the time comes over the value of "TIME_PER_FRAME" do --> 1 --> 2 then do --> 2 --> 3
-            // TIME_PER_FRAME is constant with a value of 1/60 second (the game is update 60 time per second)
+            // When the time comes over the value of "TIME_PER_FRAME" do --> 1 --> 2 then do --> 2
+            // --> 3 TIME_PER_FRAME is constant with a value of 1/60 second (the game is update 60
+            // time per second)
             while(timeSinceLastUpdate > EngineConstant.TIME_PER_FRAME)
             {
                 EASY_VALUE("TIME_SINCE_LAST_UPDATE", timeSinceLastUpdate.asMilliseconds());
@@ -83,7 +87,7 @@ namespace nero
 
         // Accumulate data for on 1 second
         m_ElapsedTime += timeStep;
-        m_FrameCount += 1;
+        m_FrameCount  += 1;
 
         // Then compute the frame rate
         if(m_ElapsedTime >= sf::seconds(1.0f))
@@ -91,8 +95,8 @@ namespace nero
             m_FramePerSecond = m_FrameCount;
             m_TimePerFrame   = m_ElapsedTime.asSeconds() / m_FrameCount;
 
-            m_ElapsedTime -= sf::seconds(1.0f);
-            m_FrameCount = 0;
+            m_ElapsedTime    -= sf::seconds(1.0f);
+            m_FrameCount     = 0;
         }
     }
 
@@ -147,7 +151,9 @@ namespace nero
     {
         if(m_WindowIcon.loadFromFile(icon))
         {
-            m_RenderWindow.setIcon(m_WindowIcon.getSize().x, m_WindowIcon.getSize().y, m_WindowIcon.getPixelsPtr());
+            m_RenderWindow.setIcon(m_WindowIcon.getSize().x,
+                                   m_WindowIcon.getSize().y,
+                                   m_WindowIcon.getPixelsPtr());
         }
     }
 } // namespace nero

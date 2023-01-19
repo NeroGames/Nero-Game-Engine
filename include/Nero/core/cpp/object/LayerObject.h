@@ -12,7 +12,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class LayerObject : public Object {
+    class LayerObject : public Object
+    {
       public:
         typedef std::shared_ptr<LayerObject>  Ptr;
         typedef std::vector<LayerObject::Ptr> Tab;

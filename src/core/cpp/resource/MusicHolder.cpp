@@ -80,7 +80,8 @@ namespace nero
         std::experimental::filesystem::directory_iterator it{folderPath};
         while(it != std::experimental::filesystem::directory_iterator{})
         {
-            if(file::checkExtention(it->path().extension().string(), m_Setting.getStringTable("extension")))
+            if(file::checkExtention(it->path().extension().string(),
+                                    m_Setting.getStringTable("extension")))
             {
                 loadFile(it->path().string());
             }

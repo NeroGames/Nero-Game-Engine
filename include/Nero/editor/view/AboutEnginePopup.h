@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class AboutEnginePopup : public UIComponent {
+    class AboutEnginePopup : public UIComponent
+    {
       public:
         AboutEnginePopup(EditorContext::Ptr editorContext);
         virtual ~AboutEnginePopup() override;

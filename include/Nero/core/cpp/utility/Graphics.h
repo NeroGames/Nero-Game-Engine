@@ -35,20 +35,16 @@ namespace nero
         sf::Color      getTransparentColor(const sf::Color& color, int transparency = 255);
         nlohmann::json colorToJson(const sf::Color& color);
         sf::Color      colorFromJson(nlohmann::json json);
-        template <typename T>
-        nlohmann::json vectorToJson(T point);
-        template <typename T>
-        nlohmann::json vectorFromJson(T point);
+        template <typename T> nlohmann::json vectorToJson(T point);
+        template <typename T> nlohmann::json vectorFromJson(T point);
 
         // template functions
-        template <typename T>
-        nlohmann::json vectorToJson(T point)
+        template <typename T> nlohmann::json vectorToJson(T point)
         {
             return {{"x", point.x}, {"y", point.y}};
         }
 
-        template <typename T>
-        T vectorFromJson(nlohmann::json json)
+        template <typename T> T vectorFromJson(nlohmann::json json)
         {
             T point;
             point.x = json["x"];

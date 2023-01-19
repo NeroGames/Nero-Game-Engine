@@ -37,7 +37,8 @@ namespace nero
         m_LightmapHolder  = std::make_shared<TextureHolder>(setting.getSetting("texture"));
 
         // m_LuaScriptHolder	= std::make_shared<ScriptHolder>(setting.getSetting("script"));
-        // m_ShaderHolder		= std::make_shared<ShaderHolder>(setting.getSetting("shader"));
+        // m_ShaderHolder		=
+        // std::make_shared<ShaderHolder>(setting.getSetting("shader"));
     }
 
     ResourceManager::~ResourceManager()
@@ -114,7 +115,8 @@ namespace nero
         return false;
     }
 
-    const std::vector<std::string> ResourceManager::loadFile(ResourceType type, const std::vector<std::string> fileTable)
+    const std::vector<std::string>
+    ResourceManager::loadFile(ResourceType type, const std::vector<std::string> fileTable)
     {
         switch(type)
         {

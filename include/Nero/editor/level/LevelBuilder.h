@@ -13,7 +13,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class LevelBuilder {
+    class LevelBuilder
+    {
       public: // utility
         typedef std::shared_ptr<LevelBuilder> Ptr;
 
@@ -21,19 +22,19 @@ namespace nero
         LevelBuilder(GameLevel::Context context);
         ~LevelBuilder();
 
-        void                            loadResource();
-        Setting::Ptr                    getLevelSetting();
-        std::string                     getLevelName();
-        std::string                     getResourceFoler();
-        ResourceManager::Ptr            getResourceManager();
-        void                            setEditorSetting(const Setting::Ptr& setting);
-        void                            saveGameLevel();
-        void                            loadGameLevel();
-        void                            setRenderContext(const RenderContext::Ptr& renderContext);
-        void                            setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
+        void                 loadResource();
+        Setting::Ptr         getLevelSetting();
+        std::string          getLevelName();
+        std::string          getResourceFoler();
+        ResourceManager::Ptr getResourceManager();
+        void                 setEditorSetting(const Setting::Ptr& setting);
+        void                 saveGameLevel();
+        void                 loadGameLevel();
+        void                 setRenderContext(const RenderContext::Ptr& renderContext);
+        void              setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
         // chunk
-        ChunkBuilder::Ptr               addChunk();
-        void                            removeChunk();
+        ChunkBuilder::Ptr addChunk();
+        void              removeChunk();
         std::vector<ChunkBuilder::Ptr>& getChunkTable();
         ChunkBuilder::Ptr               getSelectedChunk();
         void                            setSelectedChunk(ChunkBuilder::Ptr worldChunk);

@@ -11,12 +11,15 @@ namespace nero
 {
     namespace logging
     {
-        Poco::PatternFormatter*  Logger::m_PatternFormatter      = new Poco::PatternFormatter("%s: %t");
-        Poco::FormattingChannel* Logger::m_ConsoleFormating      = new Poco::FormattingChannel(Logger::m_PatternFormatter);
-        Poco::FormattingChannel* Logger::m_StringStreamFormating = new Poco::FormattingChannel(Logger::m_PatternFormatter);
-        Poco::FormattingChannel* Logger::m_FileFormating         = new Poco::FormattingChannel(Logger::m_PatternFormatter);
-        std::stringstream        Logger::m_StringStream          = std::stringstream();
-        Setting                  Logger::m_LoggingSetting        = Setting();
+        Poco::PatternFormatter*  Logger::m_PatternFormatter = new Poco::PatternFormatter("%s: %t");
+        Poco::FormattingChannel* Logger::m_ConsoleFormating =
+            new Poco::FormattingChannel(Logger::m_PatternFormatter);
+        Poco::FormattingChannel* Logger::m_StringStreamFormating =
+            new Poco::FormattingChannel(Logger::m_PatternFormatter);
+        Poco::FormattingChannel* Logger::m_FileFormating =
+            new Poco::FormattingChannel(Logger::m_PatternFormatter);
+        std::stringstream Logger::m_StringStream   = std::stringstream();
+        Setting           Logger::m_LoggingSetting = Setting();
 
         Logger::Logger()
         {
@@ -49,9 +52,10 @@ namespace nero
             console_channel->setProperty("criticalColor", "black");
             console_channel->setProperty("fatalColor", "black");
             // string stream channel
-            Poco::AutoPtr<Poco::StreamChannel> string_channel(new Poco::StreamChannel(m_StringStream));
+            Poco::AutoPtr<Poco::StreamChannel> string_channel(
+                new Poco::StreamChannel(m_StringStream));
             // file chinnel
-            Poco::AutoPtr<Poco::FileChannel>   file_channel(new Poco::FileChannel);
+            Poco::AutoPtr<Poco::FileChannel> file_channel(new Poco::FileChannel);
             file_channel->setProperty("path", "logging/nero_game_engine.log");
             file_channel->setProperty("rotation", "1 days");
             file_channel->setProperty("archive", "timestamp");

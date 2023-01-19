@@ -30,7 +30,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class Scene : public b2ContactListener {
+    class Scene : public b2ContactListener
+    {
       public: // type definiton
         typedef std::shared_ptr<Scene>             Ptr;
         typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
@@ -55,9 +56,16 @@ namespace nero
             IOS
         };
 
-        class Context {
+        class Context
+        {
           public:
-            Context(std::string sceneName, RenderTexturePtr renderTexture, ResourceManager::Ptr resourceManager, Camera::Ptr camera, Setting::Ptr setting, EngineType engineType, PlatformType platformType);
+            Context(std::string          sceneName,
+                    RenderTexturePtr     renderTexture,
+                    ResourceManager::Ptr resourceManager,
+                    Camera::Ptr          camera,
+                    Setting::Ptr         setting,
+                    EngineType           engineType,
+                    PlatformType         platformType);
 
             Context();
 
@@ -86,39 +94,40 @@ namespace nero
         virtual void renderFrontScreen();
 
       protected:
-        virtual void         init();
-        virtual void         destroy();
+        virtual void     init();
+        virtual void     destroy();
         // collision
-        virtual void         handleCollisionContactBegin(Collision collision);
-        virtual void         handleCollisionContactEnd(Collision collision);
-        virtual void         handleCollisionPreSolveContact(Collision collision);
-        virtual void         handleCollisionPostSolveContact(Collision collision);
+        virtual void     handleCollisionContactBegin(Collision collision);
+        virtual void     handleCollisionContactEnd(Collision collision);
+        virtual void     handleCollisionPreSolveContact(Collision collision);
+        virtual void     handleCollisionPostSolveContact(Collision collision);
         // input
-        virtual void         handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
-        virtual void         handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
-        virtual void         handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
-        virtual void         handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse);
+        virtual void     handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
+        virtual void     handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse,
+                                                const bool&                        isPressed);
+        virtual void     handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
+        virtual void     handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse);
         // gameplay
-        void                 pauseScene();
-        void                 resumeScene();
-        void                 resetScene();
-        void                 quitScene();
-        void                 hideGameWorld();
-        void                 showGameWorld();
-        void                 loadGameLevel(const std::string& levelName);
-        void                 enableGameLevel(const std::string& levelName);
-        void                 loadWorldChunk(const std::string& name);
-        void                 unLoadGameLevel(const std::string& name);
-        void                 unLoadWorldChunk(const std::string& name);
-        void                 hideGameScreen(const std::string& name);
-        void                 showGameScreen(const std::string& name);
-        void                 enableObjectLayer(const std::string& name);
-        void                 disableObjectLayer(const std::string& name);
-        void                 enableGameChunk(const std::string& name);
-        void                 disableGameChunk(const std::string& name);
+        void             pauseScene();
+        void             resumeScene();
+        void             resetScene();
+        void             quitScene();
+        void             hideGameWorld();
+        void             showGameWorld();
+        void             loadGameLevel(const std::string& levelName);
+        void             enableGameLevel(const std::string& levelName);
+        void             loadWorldChunk(const std::string& name);
+        void             unLoadGameLevel(const std::string& name);
+        void             unLoadWorldChunk(const std::string& name);
+        void             hideGameScreen(const std::string& name);
+        void             showGameScreen(const std::string& name);
+        void             enableObjectLayer(const std::string& name);
+        void             disableObjectLayer(const std::string& name);
+        void             enableGameChunk(const std::string& name);
+        void             disableGameChunk(const std::string& name);
 
-        Context&             getSceneContext();
-        RenderTexturePtr     getRenderTexture();
+        Context&         getSceneContext();
+        RenderTexturePtr getRenderTexture();
         ResourceManager::Ptr getResourceHolder();
 
       private:
@@ -143,36 +152,37 @@ namespace nero
         friend class EngineRenderer;
         friend class SceneRenderer;
         // scene context
-        Context                                                           m_SceneContext;
+        Context               m_SceneContext;
         // game world
-        Object::Ptr                                                       m_GameWorld;
+        Object::Ptr           m_GameWorld;
         // physic world
-        b2World*                                                          m_PhysicWorld;
-        int32                                                             m_ContactPointCount;
-        ContactPoint                                                      m_ContactVectorTablele[MAX_CONTACT_POINT];
+        b2World*              m_PhysicWorld;
+        int32                 m_ContactPointCount;
+        ContactPoint          m_ContactVectorTablele[MAX_CONTACT_POINT];
         // manager
-        ShapeRenderer                                                     m_ShapeRenderer;
-        ObjectManager::Ptr                                                m_ObjectManager;
-        SoundManager::Ptr                                                 m_SoundManager;
+        ShapeRenderer         m_ShapeRenderer;
+        ObjectManager::Ptr    m_ObjectManager;
+        SoundManager::Ptr     m_SoundManager;
         // frame rate
-        float                                                             m_FrameRate;
-        float                                                             m_FrameTime;
+        float                 m_FrameRate;
+        float                 m_FrameTime;
         // gameplay
-        bool                                                              m_HideWorld;
+        bool                  m_HideWorld;
         // text display
-        sf::Text                                                          m_InformationText;
-        sf::String                                                        m_InformationContent;
+        sf::Text              m_InformationText;
+        sf::String            m_InformationContent;
         //
-        Setting::Ptr                                                      m_LevelSetting;
+        Setting::Ptr          m_LevelSetting;
         //
-        LightManagerPtr                                                   m_LightManager;
+        LightManagerPtr       m_LightManager;
         //
-        std::function<void()>                                             m_QuitEngine;
+        std::function<void()> m_QuitEngine;
         //
         std::map<std::string, boost::function<CreateCppGameLevelScript>>  m_CreateGameLevelMap;
         std::map<std::string, boost::function<CreateCppGameScreenScript>> m_CreateGameScreenMap;
-        // std::map<std::string, boost::function<CreateCppSimpleScript>>	m_CreateGameScreenMap;
-        // std::map<std::string, boost::function<CreateCppPhysicScript>> m_CreateGameScreenMap;
+        // std::map<std::string, boost::function<CreateCppSimpleScript>>
+        // m_CreateGameScreenMap; std::map<std::string, boost::function<CreateCppPhysicScript>>
+        // m_CreateGameScreenMap;
         //
         Setting::Ptr                                                      m_GameSetting;
         //

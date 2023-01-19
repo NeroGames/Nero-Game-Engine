@@ -25,7 +25,8 @@ namespace nero
         handleAllChildEvent(event);
     }
 
-    void UIObject::handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
+    void UIObject::handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse,
+                                          const bool&                        isPressed)
     {
         // Empty
     }

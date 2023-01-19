@@ -12,7 +12,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class DistanceJoint : public PhysicJoint {
+    class DistanceJoint : public PhysicJoint
+    {
       public:
         typedef std::shared_ptr<DistanceJoint> Ptr;
         static Ptr                             Cast(PhysicJoint::Ptr joint);

@@ -43,7 +43,9 @@ namespace nero
     void ConsoleWindow::render()
     {
         ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-        if(!ImGui::Begin(EditorConstant.WINDOW_CONSOLE.c_str(), nullptr, ImGuiWindowFlags_NoScrollbar))
+        if(!ImGui::Begin(EditorConstant.WINDOW_CONSOLE.c_str(),
+                         nullptr,
+                         ImGuiWindowFlags_NoScrollbar))
         {
             ImGui::End();
             return;
@@ -56,12 +58,13 @@ namespace nero
         ImGui::Text("Command");
         ImGui::SameLine(100.f);
         bool onInputText = ImGui::InputText(
-            "##input", m_ConsoleData.InputBuf,
+            "##input",
+            m_ConsoleData.InputBuf,
             IM_ARRAYSIZE(m_ConsoleData.InputBuf),
-            ImGuiInputTextFlags_EnterReturnsTrue |
-                ImGuiInputTextFlags_CallbackCompletion |
+            ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion |
                 ImGuiInputTextFlags_CallbackHistory,
-            [](ImGuiInputTextCallbackData* data) -> int {
+            [](ImGuiInputTextCallbackData* data) -> int
+            {
                 ConsoleWindow* console = (ConsoleWindow*)data->UserData;
                 return console->textEditCallback(data);
             },
@@ -93,7 +96,11 @@ namespace nero
         ImGui::Dummy(ImVec2(0.f, 3.f));
 
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.000f, 0.000f, 0.000f, 1.000f));
-        ImGui::BeginChild("ScrollingRegion", ImVec2(0, 0), true, ImGuiWindowFlags_HorizontalScrollbar); // Leave room for 1 separator + 1 InputText
+        ImGui::BeginChild(
+            "ScrollingRegion",
+            ImVec2(0, 0),
+            true,
+            ImGuiWindowFlags_HorizontalScrollbar); // Leave room for 1 separator + 1 InputText
         if(ImGui::BeginPopupContextWindow())
         {
             if(ImGui::Selectable("Clear"))
@@ -101,17 +108,25 @@ namespace nero
             ImGui::EndPopup();
         }
 
-        // Display every line as a separate entry so we can change their color or add custom widgets. If you only want raw text you can use ImGui::TextUnformatted(log.begin(), log.end());
-        // NB- if you have thousands of entries this approach may be too inefficient and may require user-side clipping to only process visible items.
-        // You can seek and display only the lines that are visible using the ImGuiListClipper helper, if your elements are evenly spaced and you have cheap random access to the elements.
-        // To use the clipper we could replace the 'for (int i = 0; i < Items.Size; i++)' loop with:
+        // Display every line as a separate entry so we can change their color or add custom
+        // widgets. If you only want raw text you can use ImGui::TextUnformatted(log.begin(),
+        // log.end()); NB- if you have thousands of entries this approach may be too inefficient and
+        // may require user-side clipping to only process visible items. You can seek and display
+        // only the lines that are visible using the ImGuiListClipper helper, if your elements are
+        // evenly spaced and you have cheap random access to the elements. To use the clipper we
+        // could replace the 'for (int i = 0; i < Items.Size; i++)' loop with:
         //     ImGuiListClipper clipper(Items.Size);
         //     while (clipper.Step())
         //         for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
-        // However, note that you can not use this code as is if a filter is active because it breaks the 'cheap random-access' property. We would need random-access on the post-filtered list.
-        // A typical application wanting coarse clipping and filtering may want to pre-compute an array of indices that passed the filtering test, recomputing this array when user changes the filter,
-        // and appending newly elements as they are inserted. This is left as a task to the user until we can manage to improve this example code!
-        // If your items are of variable size you may want to implement code similar to what ImGuiListClipper does. Or split your data into fixed height items to allow random-seeking into your list.
+        // However, note that you can not use this code as is if a filter is active because it
+        // breaks the 'cheap random-access' property. We would need random-access on the
+        // post-filtered list. A typical application wanting coarse clipping and filtering may want
+        // to pre-compute an array of indices that passed the filtering test, recomputing this array
+        // when user changes the filter, and appending newly elements as they are inserted. This is
+        // left as a task to the user until we can manage to improve this example code! If your
+        // items are of variable size you may want to implement code similar to what
+        // ImGuiListClipper does. Or split your data into fixed height items to allow random-seeking
+        // into your list.
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1)); // Tighten spacing
         if(copy_to_clipboard)
             ImGui::LogToClipboard();
@@ -121,7 +136,8 @@ namespace nero
             if(!m_ConsoleData.Filter.PassFilter(item))
                 continue;
 
-            // Normally you would store more information in your item (e.g. make Items[] an array of structure, store color/type etc.)
+            // Normally you would store more information in your item (e.g. make Items[] an array of
+            // structure, store color/type etc.)
             bool pop_color = false;
             if(strstr(item, "[error]"))
             {
@@ -186,7 +202,8 @@ namespace nero
     {
         addLog("# %s\n", command_line);
 
-        // Insert into history. First find match and delete it so it can be pushed to the back. This isn't trying to be smart or optimal.
+        // Insert into history. First find match and delete it so it can be pushed to the back. This
+        // isn't trying to be smart or optimal.
         m_ConsoleData.HistoryPos = -1;
         for(int i = m_ConsoleData.History.Size - 1; i >= 0; i--)
             if(stringIcmp(m_ConsoleData.History[i], command_line) == 0)
@@ -221,7 +238,8 @@ namespace nero
 
     int ConsoleWindow::textEditCallback(ImGuiInputTextCallbackData* data)
     {
-        // AddLog("cursor: %d, selection: %d-%d", data->CursorPos, data->SelectionStart, data->SelectionEnd);
+        // AddLog("cursor: %d, selection: %d-%d", data->CursorPos, data->SelectionStart,
+        // data->SelectionEnd);
         switch(data->EventFlag)
         {
         case ImGuiInputTextFlags_CallbackCompletion: {
@@ -241,7 +259,9 @@ namespace nero
             // Build a list of candidates
             ImVector<const char*> candidates;
             for(int i = 0; i < m_ConsoleData.Commands.Size; i++)
-                if(stringNicmp(m_ConsoleData.Commands[i], word_start, (int)(word_end - word_start)) == 0)
+                if(stringNicmp(m_ConsoleData.Commands[i],
+                               word_start,
+                               (int)(word_end - word_start)) == 0)
                     candidates.push_back(m_ConsoleData.Commands[i]);
 
             if(candidates.Size == 0)
@@ -251,14 +271,16 @@ namespace nero
             }
             else if(candidates.Size == 1)
             {
-                // Single match. Delete the beginning of the word and replace it entirely so we've got nice casing
+                // Single match. Delete the beginning of the word and replace it entirely so we've
+                // got nice casing
                 data->DeleteChars((int)(word_start - data->Buf), (int)(word_end - word_start));
                 data->InsertChars(data->CursorPos, candidates[0]);
                 data->InsertChars(data->CursorPos, " ");
             }
             else
             {
-                // Multiple matches. Complete as much as we can, so inputing "C" will complete to "CL" and display "CLEAR" and "CLASSIFY"
+                // Multiple matches. Complete as much as we can, so inputing "C" will complete to
+                // "CL" and display "CLEAR" and "CLASSIFY"
                 int match_len = (int)(word_end - word_start);
                 for(;;)
                 {
@@ -305,10 +327,13 @@ namespace nero
                         m_ConsoleData.HistoryPos = -1;
             }
 
-            // A better implementation would preserve the data on the current input line along with cursor position.
+            // A better implementation would preserve the data on the current input line along with
+            // cursor position.
             if(prev_history_pos != m_ConsoleData.HistoryPos)
             {
-                const char* history_str = (m_ConsoleData.HistoryPos >= 0) ? m_ConsoleData.History[m_ConsoleData.HistoryPos] : "";
+                const char* history_str = (m_ConsoleData.HistoryPos >= 0)
+                                              ? m_ConsoleData.History[m_ConsoleData.HistoryPos]
+                                              : "";
                 data->DeleteChars(0, data->BufTextLen);
                 data->InsertChars(0, history_str);
             }

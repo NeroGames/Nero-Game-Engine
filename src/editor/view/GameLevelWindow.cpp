@@ -30,7 +30,8 @@ namespace nero
         ImVec2 button_size = ImVec2(100.f, 0.f);
         if(ImGui::Button("Open##open_game_level", button_size))
         {
-            m_EditorContext->getEditorProxy()->openGameLevel(m_EditorContext->getSelectedGameLevelName());
+            m_EditorContext->getEditorProxy()->openGameLevel(
+                m_EditorContext->getSelectedGameLevelName());
         }
 
         ImGui::SameLine();
@@ -69,13 +70,14 @@ namespace nero
 
         ImGui::BeginChild("##show_game_level", ImVec2(), true);
 
-        auto        levelNameTable    = m_EditorContext->getAdvancedScene()->getRegisteredLevelTable();
-        ImGuiStyle& style             = ImGui::GetStyle();
-        float       window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionWidth();
+        auto        levelNameTable = m_EditorContext->getAdvancedScene()->getRegisteredLevelTable();
+        ImGuiStyle& style          = ImGui::GetStyle();
+        float window_visible_x2    = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionWidth();
 
-        int         level_count       = levelNameTable.size();
-        int         count             = 0;
-        auto        printSameLine     = [&count, &level_count, &style, &window_visible_x2]() {
+        int   level_count          = levelNameTable.size();
+        int   count                = 0;
+        auto  printSameLine        = [&count, &level_count, &style, &window_visible_x2]()
+        {
             float last_button_x2 = ImGui::GetItemRectMax().x;
             float next_button_x2 = last_button_x2 + style.ItemSpacing.x + 100.f;
             if(count++ + 1 < level_count && next_button_x2 < window_visible_x2)

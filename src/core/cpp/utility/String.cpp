@@ -72,7 +72,7 @@ namespace nero
                     if(s != StringPool.BLANK)
                     {
                         boost::algorithm::to_lower(s);
-                        s[0] = std::toupper(s[0]);
+                        s[0]   = std::toupper(s[0]);
                         result += s;
                     }
                 }
@@ -83,7 +83,8 @@ namespace nero
             return result;
         }
 
-        std::vector<std::string>& splitString(const std::string& s, char delim, std::vector<std::string>& elems)
+        std::vector<std::string>&
+        splitString(const std::string& s, char delim, std::vector<std::string>& elems)
         {
             std::stringstream ss(s);
             std::string       item;
@@ -138,7 +139,12 @@ namespace nero
 
             auto result = splitString(string, StringPool.SPACE_CHAR);
 
-            std::remove_if(result.begin(), result.end(), [](std::string word) { return word == StringPool.BLANK; });
+            std::remove_if(result.begin(),
+                           result.end(),
+                           [](std::string word)
+                           {
+                               return word == StringPool.BLANK;
+                           });
 
             return result;
         }
@@ -164,7 +170,7 @@ namespace nero
                 else
                 {
                     result += line + StringPool.NEW_LINE;
-                    line = word + StringPool.SPACE;
+                    line   = word + StringPool.SPACE;
                 }
             }
 

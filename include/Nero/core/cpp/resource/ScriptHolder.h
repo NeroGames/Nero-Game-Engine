@@ -15,7 +15,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ScriptHolder : public ResourceHolder {
+    class ScriptHolder : public ResourceHolder
+    {
       public: // utility
         typedef std::shared_ptr<ScriptHolder> Ptr;
         using ResourceHolder::loadDirectory;

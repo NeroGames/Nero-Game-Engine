@@ -18,7 +18,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceManager {
+    class ResourceManager
+    {
       public: // utility
         typedef std::shared_ptr<ResourceManager> Ptr;
 
@@ -31,13 +32,14 @@ namespace nero
 
         void                           loadDirectory(const std::string& directory);
         bool                           loadFile(ResourceType type, const std::string& file);
-        const std::vector<std::string> loadFile(ResourceType type, const std::vector<std::string> fileTable);
+        const std::vector<std::string> loadFile(ResourceType                   type,
+                                                const std::vector<std::string> fileTable);
         void                           loadRequired(const nlohmann::json& requiredResource);
 
         // void						loadDirectory();
-        // void						addDirectory(const Setting& setting, bool autoSelect = false);
-        // void						loadResource();
-        // void						reloadResource();
+        // void						addDirectory(const Setting& setting, bool autoSelect
+        // = false); void						loadResource(); void
+        // reloadResource();
         void                           clearResource();
 
         void                           destroy();

@@ -79,7 +79,9 @@ namespace nero
                 for(const auto& objectLayer : worldBuilder->getLayerTable())
                 {
                     std::string itemId = "##select_layer" + toString(objectLayer->getObjectId());
-                    ImGui::RadioButton(itemId.c_str(), &m_SelectedObjectLayerId, objectLayer->getObjectId());
+                    ImGui::RadioButton(itemId.c_str(),
+                                       &m_SelectedObjectLayerId,
+                                       objectLayer->getObjectId());
 
                     if(ImGui::IsItemClicked())
                     {
@@ -129,9 +131,8 @@ namespace nero
             };
 
         default:
-            return {
-                ImGui::GetStyle().Colors[ImGuiCol_FrameBg],
-                ImGui::GetStyle().Colors[ImGuiCol_TextSelectedBg]};
+            return {ImGui::GetStyle().Colors[ImGuiCol_FrameBg],
+                    ImGui::GetStyle().Colors[ImGuiCol_TextSelectedBg]};
         }
     }
 } // namespace nero

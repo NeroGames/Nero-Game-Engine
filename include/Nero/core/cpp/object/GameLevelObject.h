@@ -12,7 +12,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class GameLevelObject : public Object {
+    class GameLevelObject : public Object
+    {
       public:
         typedef std::shared_ptr<GameLevelObject> Ptr;
 

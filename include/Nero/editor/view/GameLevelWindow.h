@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class GameLevelWindow : public UIComponent {
+    class GameLevelWindow : public UIComponent
+    {
       public:
         GameLevelWindow(EditorContext::Ptr editorContext);
         virtual ~GameLevelWindow() override;

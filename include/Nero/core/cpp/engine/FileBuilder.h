@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class FileBuilder {
+    class FileBuilder
+    {
       public:
         FileBuilder();
     };

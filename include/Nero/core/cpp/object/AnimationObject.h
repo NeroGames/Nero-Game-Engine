@@ -11,7 +11,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class AnimationObject : public Object {
+    class AnimationObject : public Object
+    {
       public:
         typedef std::shared_ptr<AnimationObject> Ptr;
         static Ptr                               Cast(Object::Ptr object);

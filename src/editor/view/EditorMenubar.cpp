@@ -70,20 +70,25 @@ namespace nero
 
                 ImGui::Separator();
 
-                auto recentProjectTable = file::loadJson(file::getPath({"setting", "recent_project"}));
+                auto recentProjectTable =
+                    file::loadJson(file::getPath({"setting", "recent_project"}));
 
                 if(ImGui::BeginMenu("Recent Projects", !recentProjectTable.empty()))
                 {
 
-                    const int projectCount = recentProjectTable.size() > 10 ? 10 : recentProjectTable.size();
+                    const int projectCount =
+                        recentProjectTable.size() > 10 ? 10 : recentProjectTable.size();
 
                     for(int i = projectCount - 1; i >= 0; i--)
                     {
                         auto project = recentProjectTable[i];
 
-                        if(ImGui::MenuItem(project["project_name"].get<std::string>().c_str(), nullptr, false))
+                        if(ImGui::MenuItem(project["project_name"].get<std::string>().c_str(),
+                                           nullptr,
+                                           false))
                         {
-                            m_EditorContext->getEditorProxy()->openProject(project["project_directory"].get<std::string>());
+                            m_EditorContext->getEditorProxy()->openProject(
+                                project["project_directory"].get<std::string>());
                         }
                     }
 
@@ -142,7 +147,7 @@ namespace nero
             // TODO
             if(ImGui::BeginMenu("Views", false))
             {
-                const char* names[]   = {"Logging", "Quick Helps", "Mackerel", "Pollock", "Tilefish"};
+                const char* names[] = {"Logging", "Quick Helps", "Mackerel", "Pollock", "Tilefish"};
                 static bool toggles[] = {true, false, false, false, false};
                 for(int i = 0; i < IM_ARRAYSIZE(names); i++)
                     ImGui::MenuItem(names[i], "", &toggles[i]);

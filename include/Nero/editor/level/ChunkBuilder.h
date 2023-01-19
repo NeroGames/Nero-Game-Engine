@@ -12,7 +12,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ChunkBuilder {
+    class ChunkBuilder
+    {
       public: // utility
         typedef std::shared_ptr<ChunkBuilder> Ptr;
 

@@ -18,8 +18,15 @@ namespace nero
         typedef std::shared_ptr<AdvancedCamera> Ptr;
 
       public:
-        AdvancedCamera(const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f), const float& panSpeed = 300.f, const float& rotSpeed = 0.5f, const float& zRatio = 0.99f);
-        AdvancedCamera(const sf::Vector2f& viewSize, const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f), const float& panSpeed = 300.f, const float& rotSpeed = 0.5f, const float& zRatio = 0.99f);
+        AdvancedCamera(const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f),
+                       const float&        panSpeed   = 300.f,
+                       const float&        rotSpeed   = 0.5f,
+                       const float&        zRatio     = 0.99f);
+        AdvancedCamera(const sf::Vector2f& viewSize,
+                       const sf::Vector2f& defaultPos = sf::Vector2f(0.f, 0.f),
+                       const float&        panSpeed   = 300.f,
+                       const float&        rotSpeed   = 0.5f,
+                       const float&        zRatio     = 0.99f);
         virtual ~AdvancedCamera();
 
         void update(const sf::Time& deltaTime);

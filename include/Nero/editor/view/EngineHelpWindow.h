@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EngineHelpWindow : public UIComponent {
+    class EngineHelpWindow : public UIComponent
+    {
       public:
         EngineHelpWindow(EditorContext::Ptr editorContext);
         virtual ~EngineHelpWindow() override;

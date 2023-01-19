@@ -12,25 +12,24 @@ namespace nero
 {
     CollisionRule::CollisionRule()
     {
-        m_CatecotryBitTab = {
-            0x0000,
-            0x0001,
-            0x0002,
-            0x0004,
-            0x0008,
-            0x0010,
-            0x0020,
-            0x0040,
-            0x0080,
-            0x0100,
-            0x0200,
-            0x0400,
-            0x0800,
-            0x1000,
-            0x2000,
-            0x3000,
-            0x8000,
-            0xFFFF};
+        m_CatecotryBitTab = {0x0000,
+                             0x0001,
+                             0x0002,
+                             0x0004,
+                             0x0008,
+                             0x0010,
+                             0x0020,
+                             0x0040,
+                             0x0080,
+                             0x0100,
+                             0x0200,
+                             0x0400,
+                             0x0800,
+                             0x1000,
+                             0x2000,
+                             0x3000,
+                             0x8000,
+                             0xFFFF};
     }
 
     CollisionRule::~CollisionRule()
@@ -93,7 +92,8 @@ namespace nero
 
             for(std::string mask : cat.second)
             {
-                m_CollisionRuleMap[cat.first].second = m_CollisionRuleMap[cat.first].second | m_CollisionRuleMap[mask].first;
+                m_CollisionRuleMap[cat.first].second =
+                    m_CollisionRuleMap[cat.first].second | m_CollisionRuleMap[mask].first;
             }
         }
     }
@@ -124,7 +124,9 @@ namespace nero
 
         for(auto layer = layerTab->begin(); layer != layerTab->end(); layer++)
         {
-            if((*layer)->getSecondType() == Object::Physic_Object || (*layer)->getSecondType() == Object::Solid_Object || (*layer)->getSecondType() == Object::Animation_Solid_Object)
+            if((*layer)->getSecondType() == Object::Physic_Object ||
+               (*layer)->getSecondType() == Object::Solid_Object ||
+               (*layer)->getSecondType() == Object::Animation_Solid_Object)
             {
                 auto objectTab = (*layer)->getAllChild();
 
@@ -150,15 +152,17 @@ namespace nero
 
         for(auto layer = layerTab->begin(); layer != layerTab->end(); layer++)
         {
-            if((*layer)->getSecondType() == Object::Physic_Object || (*layer)->getSecondType() == Object::Solid_Object || (*layer)->getSecondType() == Object::Animation_Solid_Object)
+            if((*layer)->getSecondType() == Object::Physic_Object ||
+               (*layer)->getSecondType() == Object::Solid_Object ||
+               (*layer)->getSecondType() == Object::Animation_Solid_Object)
             {
                 auto objectTab = (*layer)->getAllChild();
 
                 for(auto it = objectTab->begin(); it != objectTab->end(); it++)
                 {
-                    PhysicObject::Ptr  physic_object = std::static_pointer_cast<PhysicObject>((*it));
+                    PhysicObject::Ptr physic_object = std::static_pointer_cast<PhysicObject>((*it));
 
-                    std::string        category      = physic_object->getCategory();
+                    std::string       category      = physic_object->getCategory();
 
                     PhysicObject::Rule rule;
                     rule.categoryBits = m_CatecotryBitTab[17];
@@ -176,13 +180,15 @@ namespace nero
 
         for(auto layer = layerTab->begin(); layer != layerTab->end(); layer++)
         {
-            if((*layer)->getSecondType() == Object::Physic_Object || (*layer)->getSecondType() == Object::Solid_Object || (*layer)->getSecondType() == Object::Animation_Solid_Object)
+            if((*layer)->getSecondType() == Object::Physic_Object ||
+               (*layer)->getSecondType() == Object::Solid_Object ||
+               (*layer)->getSecondType() == Object::Animation_Solid_Object)
             {
                 auto objectTab = (*layer)->getAllChild();
 
                 for(auto it = objectTab->begin(); it != objectTab->end(); it++)
                 {
-                    PhysicObject::Ptr  physic_object = std::static_pointer_cast<PhysicObject>((*it));
+                    PhysicObject::Ptr physic_object = std::static_pointer_cast<PhysicObject>((*it));
 
                     PhysicObject::Rule rule;
                     rule.categoryBits = m_CatecotryBitTab[0];

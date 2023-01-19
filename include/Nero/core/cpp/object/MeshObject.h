@@ -14,7 +14,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class MeshObject : public Object {
+    class MeshObject : public Object
+    {
       public:
         typedef std::shared_ptr<MeshObject> Ptr;
         static Ptr                          Cast(Object::Ptr object);

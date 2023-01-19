@@ -12,7 +12,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class RevoluteJoint : public PhysicJoint {
+    class RevoluteJoint : public PhysicJoint
+    {
       public:
         typedef std::shared_ptr<RevoluteJoint> Ptr;
         static Ptr                             Cast(PhysicJoint::Ptr joint);

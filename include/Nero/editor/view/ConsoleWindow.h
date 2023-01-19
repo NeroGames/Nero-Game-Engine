@@ -13,7 +13,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ConsoleWindow : public UIComponent {
+    class ConsoleWindow : public UIComponent
+    {
       public:
         ConsoleWindow(EditorContext::Ptr editorContext);
         virtual ~ConsoleWindow() override;

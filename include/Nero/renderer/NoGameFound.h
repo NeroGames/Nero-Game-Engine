@@ -10,7 +10,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class NoGameFound : public Scene {
+    class NoGameFound : public Scene
+    {
       public: // Utility
         typedef std::shared_ptr<NoGameFound> Ptr;
 

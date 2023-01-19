@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class SceneGraphView : public UIComponent {
+    class SceneGraphView : public UIComponent
+    {
       public:
         SceneGraphView(EditorContext::Ptr editorContext);
         virtual ~SceneGraphView() override;

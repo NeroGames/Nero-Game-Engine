@@ -46,9 +46,8 @@ namespace nero
         void          setMeshId(const int& meshId);
         int           getMeshId() const;
         sf::FloatRect getGlobalBounds() const;
-        void          updateMesh(const sf::Vector2f& position,
-                                 const sf::Vector2f& scale,
-                                 const float&        rotation);
+        void
+        updateMesh(const sf::Vector2f& position, const sf::Vector2f& scale, const float& rotation);
 
       private:
         // draw
@@ -62,7 +61,9 @@ namespace nero
         void                      addLine(const sf::Vector2f& point1, const sf::Vector2f& point2);
         void                      addPolygon(const std::vector<sf::Vector2f>& pointTable);
         void                      updateMesh(const bool& shape = true, const bool& color = true);
-        std::vector<sf::Vector2f> generateRegularPolygon(const sf::Vector2f& position, const int& pointCount, const float& radius);
+        std::vector<sf::Vector2f> generateRegularPolygon(const sf::Vector2f& position,
+                                                         const int&          pointCount,
+                                                         const float&        radius);
         sf::Color                 getColor();
         void                      validate(const sf::Vector2f& point1, const sf::Vector2f& point2);
         std::vector<sf::Vector2f> getVertexPosition() const;
@@ -106,7 +107,8 @@ namespace nero
     {
         public: //Utility
             std::vector<sf::String> String_Type{"static_mesh", "dynamic_mesh", "kinematic_mesh"};
-            std::vector<sf::String> String_Shape{"polygon_mesh", "circle_mesh", "chain_mesh", "line_mesh", "none"};
+            std::vector<sf::String> String_Shape{"polygon_mesh", "circle_mesh", "chain_mesh",
+"line_mesh", "none"};
 
 
             typedef std::vector<sf::RectangleShape>     VertexTab;
@@ -121,7 +123,8 @@ namespace nero
             float                                       Min_Vertex_Distance     = 1.f;
 
         public: //Method
-                                                                                Mesh(Shape shape = None);
+                                                                                Mesh(Shape shape =
+None);
 
             void                        updateShape();
             void                        updateCircleShape();
@@ -129,7 +132,8 @@ namespace nero
             void                        updateLineShapeLoop();
             void                        updatePolygonShape();
             void                        updateColor();
-                        void						update(const sf::Transform& transform);
+                        void						update(const sf::Transform&
+transform);
 
 
             void                        addVertex(sf::Vector2f point, const int& index);
@@ -144,7 +148,7 @@ namespace nero
             sf::Vector2f                getPosition()           const;
             float                       getRotation()           const;
             int                         getPointCount()         const;
-                        VectorTable					getAllVertexPoint()     const;
+                        VectorTable					getAllVertexPoint() const;
             sf::FloatRect               getGlobalBounds()       const;
             sf::Vector2f                getCenter()             const;
 
@@ -192,14 +196,17 @@ namespace nero
         private: //Method
             void                        updateLine(bool loop);
             void                        setColor(sf::Color color);
-            void                        validate(const sf::Vector2f& point1, const sf::Vector2f& point2);
+            void                        validate(const sf::Vector2f& point1, const sf::Vector2f&
+point2);
 
-            sf::RectangleShape          createVertex(const sf::Vector2f& point, const sf::Color& color);
-            sf::RectangleShape          createLine(const sf::Vector2f& point1, const sf::Vector2f& point2, const sf::Color& color);
-            sf::ConvexShape             createRegularPolygon(const sf::Vector2f& position, const sf::Color& color, const int& pointCount);
-            sf::ConvexShape             createPolygon(const VectorTable& VectorTable, const sf::Color& color);
+            sf::RectangleShape          createVertex(const sf::Vector2f& point, const sf::Color&
+color); sf::RectangleShape          createLine(const sf::Vector2f& point1, const sf::Vector2f&
+point2, const sf::Color& color); sf::ConvexShape             createRegularPolygon(const
+sf::Vector2f& position, const sf::Color& color, const int& pointCount); sf::ConvexShape
+createPolygon(const VectorTable& VectorTable, const sf::Color& color);
 
-            virtual void			    draw(sf::RenderTarget& target, sf::RenderStates states) const;
+            virtual void			    draw(sf::RenderTarget& target, sf::RenderStates
+states) const;
 
         private: //Attribute
             friend class                MeshEditor;

@@ -21,7 +21,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class RenderEngine : public CoreEngine {
+    class RenderEngine : public CoreEngine
+    {
       public:
         typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
         // Load Class

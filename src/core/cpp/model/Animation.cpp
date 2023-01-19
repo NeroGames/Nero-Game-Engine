@@ -126,7 +126,7 @@ namespace nero
         if(m_pause)
             return;
 
-        m_ElapsedTime += timeStep;
+        m_ElapsedTime      += timeStep;
         sf::Time framerate = sf::seconds(m_SequenceMap[m_CurrentSequence].getFrameRate());
 
         if(m_ElapsedTime >= framerate)

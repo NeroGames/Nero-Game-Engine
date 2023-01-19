@@ -11,7 +11,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class UpdateManager {
+    class UpdateManager
+    {
       public:
         UpdateManager();
     };

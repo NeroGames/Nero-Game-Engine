@@ -39,7 +39,8 @@ namespace nero
 
         ImGui::Dummy(ImVec2(0.f, 20.f));
 
-        ImGui::TextWrapped("You can use QT Creator or Visual Studio 2019, We recommand using QT Creator");
+        ImGui::TextWrapped(
+            "You can use QT Creator or Visual Studio 2019, We recommand using QT Creator");
 
         ImGui::Dummy(ImVec2(0.f, 20.f));
 
@@ -91,29 +92,40 @@ namespace nero
             ImGui::Text("QtCreator");
             ImGui::SameLine(wording_width);
             ImGui::SetNextItemWidth(input_width - 100.f);
-            ImGui::InputText("##qtcreator", m_Input.qtCreatorPath, sizeof(m_Input.qtCreatorPath), ImGuiInputTextFlags_ReadOnly);
+            ImGui::InputText("##qtcreator",
+                             m_Input.qtCreatorPath,
+                             sizeof(m_Input.qtCreatorPath),
+                             ImGuiInputTextFlags_ReadOnly);
             ImGui::SameLine(wording_width + input_width - 80.f);
             if(ImGui::Button("Browse##editor_path", ImVec2(60.f, 0)))
             {
-                file::selectFile([this](std::string outPath) {
-                    if(outPath.find("qtcreator.exe") != std::string::npos)
+                file::selectFile(
+                    [this](std::string outPath)
                     {
-                        string::fillCharArray(m_Input.qtCreatorPath, sizeof(m_Input.qtCreatorPath), outPath);
+                        if(outPath.find("qtcreator.exe") != std::string::npos)
+                        {
+                            string::fillCharArray(m_Input.qtCreatorPath,
+                                                  sizeof(m_Input.qtCreatorPath),
+                                                  outPath);
 
-                        putenv(std::string("NERO_GAME_QT=" + outPath).c_str());
+                            putenv(std::string("NERO_GAME_QT=" + outPath).c_str());
 
-                        BTManager::startTask([outPath](BackgroundTask::Ptr backgroundTask) {
-                            cmd::setEnvironmnentVariable("NERO_GAME_QT", outPath);
-                            backgroundTask->setCompleted(true);
-                        });
+                            BTManager::startTask(
+                                [outPath](BackgroundTask::Ptr backgroundTask)
+                                {
+                                    cmd::setEnvironmnentVariable("NERO_GAME_QT", outPath);
+                                    backgroundTask->setCompleted(true);
+                                });
 
-                        m_EditorContext->getEditorSetting()->getSetting("environment").setString("qt_creator", outPath);
-                    }
-                    else
-                    {
-                        ImGui::OpenPopup(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str());
-                    }
-                });
+                            m_EditorContext->getEditorSetting()
+                                ->getSetting("environment")
+                                .setString("qt_creator", outPath);
+                        }
+                        else
+                        {
+                            ImGui::OpenPopup(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str());
+                        }
+                    });
             }
         }
         else
@@ -122,9 +134,11 @@ namespace nero
 
             ImGui::Dummy(ImVec2(0.f, 10.f));
 
-            ImGui::Text("After installing Visual Studio, please provide the path to its excutable.");
+            ImGui::Text(
+                "After installing Visual Studio, please provide the path to its excutable.");
             ImGui::Text("Here are some examples of path");
-            ImGui::BulletText("C:/Program Files (x86)/Microsoft Visual Studio/2019/Preview/Common7/IDE/devenv.exe");
+            ImGui::BulletText("C:/Program Files (x86)/Microsoft Visual "
+                              "Studio/2019/Preview/Common7/IDE/devenv.exe");
 
             ImGui::Dummy(ImVec2(0.f, 10.f));
 
@@ -143,37 +157,51 @@ namespace nero
             ImGui::Text("Visual Studio");
             ImGui::SameLine(wording_width);
             ImGui::SetNextItemWidth(input_width - 100.f);
-            ImGui::InputText("##visualstudio", m_Input.visualStudioPath, sizeof(m_Input.visualStudioPath), ImGuiInputTextFlags_ReadOnly);
+            ImGui::InputText("##visualstudio",
+                             m_Input.visualStudioPath,
+                             sizeof(m_Input.visualStudioPath),
+                             ImGuiInputTextFlags_ReadOnly);
             ImGui::SameLine(wording_width + input_width - 80.f);
             if(ImGui::Button("Browse##editor_path", ImVec2(60.f, 0)))
             {
-                file::selectFile([this](std::string outPath) {
-                    if(outPath.find("devenv.exe") != std::string::npos)
+                file::selectFile(
+                    [this](std::string outPath)
                     {
-                        string::fillCharArray(m_Input.visualStudioPath, sizeof(m_Input.visualStudioPath), outPath);
+                        if(outPath.find("devenv.exe") != std::string::npos)
+                        {
+                            string::fillCharArray(m_Input.visualStudioPath,
+                                                  sizeof(m_Input.visualStudioPath),
+                                                  outPath);
 
-                        putenv(std::string("NERO_GAME_VS=" + outPath).c_str());
+                            putenv(std::string("NERO_GAME_VS=" + outPath).c_str());
 
-                        BTManager::startTask([outPath](BackgroundTask::Ptr backgroundTask) {
-                            cmd::setEnvironmnentVariable("NERO_GAME_VS", outPath);
-                            backgroundTask->setCompleted(true);
-                        });
+                            BTManager::startTask(
+                                [outPath](BackgroundTask::Ptr backgroundTask)
+                                {
+                                    cmd::setEnvironmnentVariable("NERO_GAME_VS", outPath);
+                                    backgroundTask->setCompleted(true);
+                                });
 
-                        m_EditorContext->getEditorSetting()->getSetting("environment").setString("visual_studio", outPath);
-                    }
-                    else
-                    {
-                        ImGui::OpenPopup(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str());
-                    }
-                });
+                            m_EditorContext->getEditorSetting()
+                                ->getSetting("environment")
+                                .setString("visual_studio", outPath);
+                        }
+                        else
+                        {
+                            ImGui::OpenPopup(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str());
+                        }
+                    });
             }
         }
 
         // Error modal
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
-                                        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove;
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal |
+                                        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
+                                        ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove;
         ImGui::SetNextWindowSize(ImVec2(250.f, 100.f));
-        if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str(), nullptr, window_flags))
+        if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_INVALID_PATH.c_str(),
+                                  nullptr,
+                                  window_flags))
         {
             ImGui::TextWrapped("The path provided is not valid");
 
@@ -196,7 +224,11 @@ namespace nero
     void EditorSetupCodeEditorView::clearInput()
     {
         m_Input.selectQtCreator = true;
-        string::fillCharArray(m_Input.qtCreatorPath, sizeof(m_Input.qtCreatorPath), StringPool.BLANK);
-        string::fillCharArray(m_Input.visualStudioPath, sizeof(m_Input.visualStudioPath), StringPool.BLANK);
+        string::fillCharArray(m_Input.qtCreatorPath,
+                              sizeof(m_Input.qtCreatorPath),
+                              StringPool.BLANK);
+        string::fillCharArray(m_Input.visualStudioPath,
+                              sizeof(m_Input.visualStudioPath),
+                              StringPool.BLANK);
     }
 } // namespace nero

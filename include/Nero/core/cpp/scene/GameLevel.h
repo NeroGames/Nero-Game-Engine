@@ -19,7 +19,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class GameLevel {
+    class GameLevel
+    {
       public:
         // utility
         typedef std::shared_ptr<GameLevel> Ptr;
@@ -35,39 +36,49 @@ namespace nero
         GameLevel(GameLevel::Context context);
         virtual ~GameLevel();
         // main
-        virtual void         init();
-        virtual void         destroy();
-        virtual void         handleEvent(const sf::Event& event);
-        virtual void         update(const sf::Time& timeStep);
-        virtual void         render();
-        virtual void         renderShape();
+        virtual void init();
+        virtual void destroy();
+        virtual void handleEvent(const sf::Event& event);
+        virtual void update(const sf::Time& timeStep);
+        virtual void render();
+        virtual void renderShape();
         // builder
-        void                 loadLevel();
-        void                 loadChunk();
-        void                 loadLayer();
-        void                 loadObject();
+        void         loadLevel();
+        void         loadChunk();
+        void         loadLayer();
+        void         loadObject();
         // input
         // window
-        virtual void         onWindowClosed();
-        virtual void         onWindowResized(const sf::Vector2u& size);
-        virtual void         onWindowFocusChanged(const bool& gainedFocus);
+        virtual void onWindowClosed();
+        virtual void onWindowResized(const sf::Vector2u& size);
+        virtual void onWindowFocusChanged(const bool& gainedFocus);
         // keyboard
-        virtual void         onKeyboardButton(const sf::Keyboard::Key& key, const bool& isPressed, const ModifierKey& modifier);
-        virtual void         onTextEntered(const std::string& c);
+        virtual void onKeyboardButton(const sf::Keyboard::Key& key,
+                                      const bool&              isPressed,
+                                      const ModifierKey&       modifier);
+        virtual void onTextEntered(const std::string& c);
         // mouse
-        virtual void         onMouseMoved(const sf::Vector2f& position);
-        virtual void         onMouseButton(const sf::Mouse::Button& button, const bool& isPressed, const sf::Vector2f& position);
-        virtual void         onMouseWheel(const sf::Mouse::Wheel& wheel, const float& delta, const sf::Vector2f& position);
-        virtual void         onMouseWindowSurface(const bool& mouseEntered);
+        virtual void onMouseMoved(const sf::Vector2f& position);
+        virtual void onMouseButton(const sf::Mouse::Button& button,
+                                   const bool&              isPressed,
+                                   const sf::Vector2f&      position);
+        virtual void onMouseWheel(const sf::Mouse::Wheel& wheel,
+                                  const float&            delta,
+                                  const sf::Vector2f&     position);
+        virtual void onMouseWindowSurface(const bool& mouseEntered);
         // joystick
-        virtual void         onJoystickConnection(const unsigned int& joystickId, const bool& connected);
-        virtual void         onJoystickButton(const unsigned int& joystickId, const unsigned int& button, const bool& isPressed);
-        virtual void         onJoystickAxis(const unsigned int& joystickId, const sf::Joystick::Axis& axis, const float& position);
+        virtual void onJoystickConnection(const unsigned int& joystickId, const bool& connected);
+        virtual void onJoystickButton(const unsigned int& joystickId,
+                                      const unsigned int& button,
+                                      const bool&         isPressed);
+        virtual void onJoystickAxis(const unsigned int&       joystickId,
+                                    const sf::Joystick::Axis& axis,
+                                    const float&              position);
         // collision
-        virtual void         onCollisionContactBegin(Collision collision);
-        virtual void         onCollisionContactEnd(Collision collision);
-        virtual void         onCollisionPreSolveContact(Collision collision);
-        virtual void         onCollisionPostSolveContact(Collision collision);
+        virtual void onCollisionContactBegin(Collision collision);
+        virtual void onCollisionContactEnd(Collision collision);
+        virtual void onCollisionPreSolveContact(Collision collision);
+        virtual void onCollisionPostSolveContact(Collision collision);
         //
         ResourceManager::Ptr getResourceManager() const;
         Setting::Ptr         getSetting() const;

@@ -16,9 +16,15 @@ namespace nero
     {
         setSecondType(Object::Button_Object);
 
-        m_OnMouseClick = []() {};
-        m_OnMouseEnter = []() {};
-        m_OnMouseLeave = []() {};
+        m_OnMouseClick = []()
+        {
+        };
+        m_OnMouseEnter = []()
+        {
+        };
+        m_OnMouseLeave = []()
+        {
+        };
     }
 
     void ButtonObject::onSelect()
@@ -33,7 +39,8 @@ namespace nero
             m_OnMouseLeave();
     }
 
-    void ButtonObject::handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed)
+    void ButtonObject::handleMouseButtonInput(const sf::Event::MouseButtonEvent& mouse,
+                                              const bool&                        isPressed)
     {
         if(isPressed && getGlobalBounds().contains(sf::Vector2f(mouse.x, mouse.y)))
         {

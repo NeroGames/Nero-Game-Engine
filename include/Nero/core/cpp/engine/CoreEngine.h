@@ -18,7 +18,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class CoreEngine {
+    class CoreEngine
+    {
       public:
         CoreEngine(bool createWindow = true);
         virtual ~CoreEngine();

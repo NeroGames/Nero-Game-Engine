@@ -12,7 +12,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class PhysicJoint {
+    class PhysicJoint
+    {
       public:
         enum Type
         {

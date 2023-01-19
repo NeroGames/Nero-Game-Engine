@@ -12,7 +12,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class WeldJoint : public PhysicJoint {
+    class WeldJoint : public PhysicJoint
+    {
       public:
         typedef std::shared_ptr<WeldJoint> Ptr;
         static Ptr                         Cast(PhysicJoint::Ptr joint);

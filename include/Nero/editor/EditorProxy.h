@@ -13,7 +13,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorProxy {
+    class EditorProxy
+    {
       public:
         using Ptr = std::shared_ptr<EditorProxy>;
 

@@ -75,8 +75,10 @@ namespace nero
     {
         sf::Vector2f center;
 
-        center.x = m_HorizontalLineTable.at(0).getPosition().x + m_HorizontalLineTable.at(0).getSize().x / 2.f;
-        center.y = m_VerticalLineTable.at(0).getPosition().y + m_VerticalLineTable.at(0).getSize().y / 2.f;
+        center.x = m_HorizontalLineTable.at(0).getPosition().x +
+                   m_HorizontalLineTable.at(0).getSize().x / 2.f;
+        center.y =
+            m_VerticalLineTable.at(0).getPosition().y + m_VerticalLineTable.at(0).getSize().y / 2.f;
 
         return center;
     }

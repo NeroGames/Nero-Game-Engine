@@ -10,7 +10,9 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    Collision::Collision(b2Contact* contact, const b2Manifold* oldManifold, const b2ContactImpulse* contactImpulse)
+    Collision::Collision(b2Contact*              contact,
+                         const b2Manifold*       oldManifold,
+                         const b2ContactImpulse* contactImpulse)
         : m_Contact(contact)
         , m_OldManifold(oldManifold)
         , m_ContactImpulse(contactImpulse)
@@ -200,7 +202,8 @@ namespace nero
         math::VectorTable vectorTable;
 
         for(int i = 0; i < getPointCount(); i++)
-            vectorTable.push_back(graphics::b2_to_sf(m_WorldManifold->points[i], EngineConstant.SCALE));
+            vectorTable.push_back(
+                graphics::b2_to_sf(m_WorldManifold->points[i], EngineConstant.SCALE));
 
         return vectorTable;
     }
@@ -227,8 +230,7 @@ namespace nero
 
     bool Collision::isCollising(sf::String catA)
     {
-        return getObjectA()->getCategory() == catA ||
-               getObjectB()->getCategory() == catA;
+        return getObjectA()->getCategory() == catA || getObjectB()->getCategory() == catA;
     }
 
     bool Collision::isCollising(sf::String catA, sf::String catB)
@@ -236,24 +238,19 @@ namespace nero
         if(!getObjectA() || !getObjectB())
             return false;
 
-        return (getObjectA()->getCategory() == catA &&
-                getObjectB()->getCategory() == catB) ||
-               (getObjectA()->getCategory() == catB &&
-                getObjectB()->getCategory() == catA);
+        return (getObjectA()->getCategory() == catA && getObjectB()->getCategory() == catB) ||
+               (getObjectA()->getCategory() == catB && getObjectB()->getCategory() == catA);
     }
 
     bool Collision::isObjectCollising(sf::String nameA)
     {
-        return getObjectA()->getName() == nameA ||
-               getObjectB()->getName() == nameA;
+        return getObjectA()->getName() == nameA || getObjectB()->getName() == nameA;
     }
 
     bool Collision::isObjectCollising(sf::String nameA, sf::String nameB)
     {
-        return (getObjectA()->getName() == nameA &&
-                getObjectB()->getName() == nameB) ||
-               (getObjectA()->getName() == nameB &&
-                getObjectB()->getName() == nameA);
+        return (getObjectA()->getName() == nameA && getObjectB()->getName() == nameB) ||
+               (getObjectA()->getName() == nameB && getObjectB()->getName() == nameA);
     }
 
     PhysicObject::Ptr Collision::getObject(sf::String indicator)

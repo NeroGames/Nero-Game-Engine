@@ -18,7 +18,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class GameScene {
+    class GameScene
+    {
       public:
         // type definiton
         typedef std::shared_ptr<GameScene> Ptr;
@@ -41,7 +42,8 @@ namespace nero
         };
 
         // scene context
-        class Context {
+        class Context
+        {
           public:
             Context(std::string                        sceneName,
                     std::shared_ptr<sf::RenderTexture> renderTexture,

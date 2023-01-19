@@ -18,7 +18,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ShaderHolder : public ResourceHolder {
+    class ShaderHolder : public ResourceHolder
+    {
       public: // utility
         typedef std::shared_ptr<ShaderHolder> Ptr;
         using ResourceHolder::loadDirectory;

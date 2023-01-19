@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class StringBuilder {
+    class StringBuilder
+    {
       public:
         StringBuilder();
     };

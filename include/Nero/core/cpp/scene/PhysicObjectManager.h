@@ -17,7 +17,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class PhysicObjectManager {
+    class PhysicObjectManager
+    {
         /*public:
                         PhysicObjectManager();
     virtual            ~PhysicObjectManager();
@@ -29,7 +30,8 @@ private:
     void                setupBodyDef(Mesh& mesh);
     void                setupFixtureDef(Mesh& mesh);
     void                setupVertexTab(b2Vec2* tab, Mesh& mesh);
-    void                computePolygonBody(b2Body* pBody, b2FixtureDef* pFixtureDef, std::vector<b2Vec2>* pVerticesVec, int scale);
+    void                computePolygonBody(b2Body* pBody, b2FixtureDef* pFixtureDef,
+std::vector<b2Vec2>* pVerticesVec, int scale);
 
 private:
     b2World*            m_World;

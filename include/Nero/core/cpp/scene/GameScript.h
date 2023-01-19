@@ -1,7 +1,8 @@
 #ifndef GAMESCRIPT_H
 #define GAMESCRIPT_H
 
-class GameScript {
+class GameScript
+{
   public:
     GameScript();
 };

@@ -11,7 +11,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ToolbarButtonGroup : public UIComponent {
+    class ToolbarButtonGroup : public UIComponent
+    {
       public:
         ToolbarButtonGroup(EditorContext::Ptr editorContext);
         virtual ~ToolbarButtonGroup() override;

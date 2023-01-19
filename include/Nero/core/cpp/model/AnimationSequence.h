@@ -14,7 +14,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class AnimationSequence {
+    class AnimationSequence
+    {
       public:
         AnimationSequence();
 

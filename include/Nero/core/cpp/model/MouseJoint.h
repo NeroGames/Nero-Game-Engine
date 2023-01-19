@@ -12,7 +12,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class MouseJoint : public PhysicJoint {
+    class MouseJoint : public PhysicJoint
+    {
       public:
         typedef std::shared_ptr<MouseJoint> Ptr;
         static Ptr                          Cast(PhysicJoint::Ptr joint);

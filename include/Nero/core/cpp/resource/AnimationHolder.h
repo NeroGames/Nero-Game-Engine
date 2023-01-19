@@ -18,7 +18,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class AnimationHolder : public ResourceHolder {
+    class AnimationHolder : public ResourceHolder
+    {
       public: // utility
         typedef std::shared_ptr<AnimationHolder> Ptr;
         using ResourceHolder::loadDirectory;
@@ -29,18 +30,19 @@ namespace nero
         AnimationHolder(const Setting& setting);
         virtual ~AnimationHolder() override;
 
-        virtual void                                    loadDirectory() override;
-        virtual bool                                    loadFile(const std::string& file) override;
-        virtual void                                    destroy() override;
-        virtual void                                    clear() override;
+        virtual void                    loadDirectory() override;
+        virtual bool                    loadFile(const std::string& file) override;
+        virtual void                    destroy() override;
+        virtual void                    clear() override;
 
-        sf::Texture&                                    getTexture(std::string animationName);
-        const sf::Texture&                              getTexture(std::string animationName) const;
-        sf::IntRect                                     getAnimationBound(std::string animationName) const;
-        std::string                                     getDefaultSequence(std::string animationName) const;
-        const std::vector<std::string>&                 getAnimationTable() const;
+        sf::Texture&                    getTexture(std::string animationName);
+        const sf::Texture&              getTexture(std::string animationName) const;
+        sf::IntRect                     getAnimationBound(std::string animationName) const;
+        std::string                     getDefaultSequence(std::string animationName) const;
+        const std::vector<std::string>& getAnimationTable() const;
 
-        std::map<std::string, std::vector<sf::IntRect>> getSequenceMap(std::string animationName) const;
+        std::map<std::string, std::vector<sf::IntRect>>
+        getSequenceMap(std::string animationName) const;
 
       private:
         bool addTexture(std::string name, std::unique_ptr<sf::Texture> texture);

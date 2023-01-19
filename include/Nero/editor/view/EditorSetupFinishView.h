@@ -11,7 +11,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorSetupFinishView : public UIComponent {
+    class EditorSetupFinishView : public UIComponent
+    {
       public:
         EditorSetupFinishView(EditorContext::Ptr editorContext, EditorSetup::Ptr editorSetup);
         virtual ~EditorSetupFinishView() override;

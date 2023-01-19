@@ -12,7 +12,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class GameObject : public GenericObject {
+    class GameObject : public GenericObject
+    {
       public: // Types Definiton
         typedef std::shared_ptr<GameObject> Ptr;
 

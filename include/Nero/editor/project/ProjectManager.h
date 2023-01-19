@@ -35,12 +35,13 @@ namespace nero
         ~ProjectManager();
 
         // Game Project
-        void                              createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-        GameProject::Ptr                  openProject(const std::string& projectDirectory);
-        void                              closeProject();
-        bool                              projectExist(const std::string& projectName, const std::string& workspaceName);
+        void createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+        GameProject::Ptr openProject(const std::string& projectDirectory);
+        void             closeProject();
+        bool projectExist(const std::string& projectName, const std::string& workspaceName);
         const std::vector<nlohmann::json> getWorkspaceProjectTable(const std::string& workpsace);
-        nlohmann::json                    findProject(const std::string& workspace_name, const std::string& project_name);
+        nlohmann::json                    findProject(const std::string& workspace_name,
+                                                      const std::string& project_name);
         void                              updateRecentProject(const std::string& projectDirectory);
         GameProject::Ptr                  getGameProject();
         // Workspace
@@ -54,9 +55,9 @@ namespace nero
 
       private:
         // Game Project
-        void        createCppProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-        void        createLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
-        void        createCppLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+        void createCppProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+        void createLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
+        void createCppLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask);
         // Other
         std::string formatSceneClassName(std::vector<std::string> wordTable);
         std::string formatHeaderGard(std::vector<std::string> wordTable);

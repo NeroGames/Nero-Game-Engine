@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ScreenBuilder {
+    class ScreenBuilder
+    {
       public:
         typedef std::shared_ptr<ScreenBuilder> Ptr;
 

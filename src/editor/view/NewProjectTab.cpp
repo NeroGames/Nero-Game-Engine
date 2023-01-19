@@ -33,19 +33,15 @@ namespace nero
     {
         // Udpate Input using workspace data
         const auto workspaceTable = m_EditorContext->getProjectManager()->getWorkspaceTable();
-        if(!workspaceTable.empty() &&
-           m_Input.projectNamespace == StringPool.BLANK &&
-           m_Input.projectLead == StringPool.BLANK &&
-           m_Input.company == StringPool.BLANK)
+        if(!workspaceTable.empty() && m_Input.projectNamespace == StringPool.BLANK &&
+           m_Input.projectLead == StringPool.BLANK && m_Input.company == StringPool.BLANK)
         {
             updateInput(workspaceTable);
         }
 
         // Window flags
-        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking |
-                                       ImGuiWindowFlags_Modal |
-                                       ImGuiWindowFlags_NoResize |
-                                       ImGuiWindowFlags_NoCollapse |
+        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal |
+                                       ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
                                        ImGuiWindowFlags_NoScrollbar;
         // Winsow size
         ImVec2 winsowSize   = EditorConstant.WINDOW_PROJECT_MANAGER_SIZE;
@@ -77,15 +73,19 @@ namespace nero
         ImGui::SetNextItemWidth(inputWidth);
 
         // load workpsace
-        std::vector<std::string> workspaceNameTable = m_EditorContext->getProjectManager()->getWorkspaceNameTable();
+        std::vector<std::string> workspaceNameTable =
+            m_EditorContext->getProjectManager()->getWorkspaceNameTable();
 
-        std::size_t              worskpaceCount     = workspaceNameTable.size();
+        std::size_t worskpaceCount = workspaceNameTable.size();
 
-        const char*              workspaceComboTable[worskpaceCount];
+        const char* workspaceComboTable[worskpaceCount];
         nero_fill_char_array(workspaceComboTable, workspaceNameTable);
 
         m_Input.workspace = workspaceComboTable[m_Input.workspaceIndex];
-        if(ImGui::BeginCombo("##workspace_combo", m_Input.workspace, ImGuiComboFlags())) // The second parameter is the label previewed before opening the combo.
+        if(ImGui::BeginCombo("##workspace_combo",
+                             m_Input.workspace,
+                             ImGuiComboFlags())) // The second parameter is the label previewed
+                                                 // before opening the combo.
         {
             for(std::size_t n = 0; n < worskpaceCount; n++)
             {
@@ -96,7 +96,8 @@ namespace nero
                     m_Input.workspace      = workspaceComboTable[n];
                     m_Input.workspaceIndex = n;
 
-                    auto workspace         = m_EditorContext->getProjectManager()->findWorkspace(workspaceNameTable[n]);
+                    auto workspace =
+                        m_EditorContext->getProjectManager()->findWorkspace(workspaceNameTable[n]);
 
                     string::fillCharArray(m_Input.company,
                                           sizeof(m_Input.company),
@@ -122,9 +123,15 @@ namespace nero
         ImGui::Text("Project Type");
         ImGui::SameLine(wordingWidth);
         ImGui::SetNextItemWidth(inputWidth);
-        const char* projectTypeComboTable[] = {"CPP Project"};                                 // Demo //{"CPP Project", "Lua Project", "CPP and Lua Project"};
-        m_Input.projectType                 = projectTypeComboTable[m_Input.projectTypeIndex]; // Here our selection is a single pointer stored outside the object.
-        if(ImGui::BeginCombo("##project_type_combo", m_Input.projectType, ImGuiComboFlags()))  // The second parameter is the label previewed before opening the combo.
+        const char* projectTypeComboTable[] = {
+            "CPP Project"}; // Demo //{"CPP Project", "Lua Project", "CPP and Lua Project"};
+        m_Input.projectType =
+            projectTypeComboTable[m_Input.projectTypeIndex]; // Here our selection is a single
+                                                             // pointer stored outside the object.
+        if(ImGui::BeginCombo("##project_type_combo",
+                             m_Input.projectType,
+                             ImGuiComboFlags())) // The second parameter is the label previewed
+                                                 // before opening the combo.
         {
             for(int n = 0; n < IM_ARRAYSIZE(projectTypeComboTable); n++)
             {
@@ -150,12 +157,15 @@ namespace nero
         ImGui::SetNextItemWidth(inputWidth);
 
         std::vector<std::string> codeEditorTable;
-        if(m_EditorContext->getEditorSetting()->getSetting("environment").getString("qt_creator") != StringPool.BLANK)
+        if(m_EditorContext->getEditorSetting()->getSetting("environment").getString("qt_creator") !=
+           StringPool.BLANK)
         {
             codeEditorTable.push_back("Qt Creator");
         }
 
-        if(m_EditorContext->getEditorSetting()->getSetting("environment").getString("visual_studio") != StringPool.BLANK)
+        if(m_EditorContext->getEditorSetting()
+               ->getSetting("environment")
+               .getString("visual_studio") != StringPool.BLANK)
         {
             codeEditorTable.push_back("Visual Studio");
         }
@@ -202,13 +212,19 @@ namespace nero
         ImGui::Text("Namesapce");
         ImGui::SameLine(wordingWidth);
         ImGui::SetNextItemWidth(inputWidth);
-        ImGui::InputText("##project_namespace", m_Input.projectNamespace, IM_ARRAYSIZE(m_Input.projectNamespace));
+        ImGui::InputText("##project_namespace",
+                         m_Input.projectNamespace,
+                         IM_ARRAYSIZE(m_Input.projectNamespace));
         ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
         ImGui::Text("Description");
         ImGui::SameLine(wordingWidth);
         static ImGuiInputTextFlags flags = ImGuiInputTextFlags_AllowTabInput;
-        ImGui::InputTextMultiline("##project_description", m_Input.description, IM_ARRAYSIZE(m_Input.description), ImVec2(inputWidth, ImGui::GetTextLineHeight() * 5), flags);
+        ImGui::InputTextMultiline("##project_description",
+                                  m_Input.description,
+                                  IM_ARRAYSIZE(m_Input.description),
+                                  ImVec2(inputWidth, ImGui::GetTextLineHeight() * 5),
+                                  flags);
         ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
         ImGui::SetCursorPosX(ImGui::GetWindowContentRegionWidth() - 102.f);
@@ -230,12 +246,17 @@ namespace nero
             else if(!string::matchPattern(std::string(m_Input.name), StringPool.REGEX_NAME_02))
             {
                 m_Input.errorMessage = "Invalid Project Name";
-                m_Input.redirectLink = "https://nero-games.com/learn/engine-v2/create-project#project_name";
+                m_Input.redirectLink =
+                    "https://nero-games.com/learn/engine-v2/create-project#project_name";
             }
-            else if(m_EditorContext->getProjectManager()->projectExist(std::string(m_Input.name), std::string(m_Input.workspace)))
+            else if(m_EditorContext->getProjectManager()->projectExist(
+                        std::string(m_Input.name),
+                        std::string(m_Input.workspace)))
             {
-                m_Input.errorMessage = "A project with the same Id already exist, please choose another Project Name";
-                m_Input.redirectLink = "https://nero-games.com/learn/engine-v2/create-project#project_name";
+                m_Input.errorMessage =
+                    "A project with the same Id already exist, please choose another Project Name";
+                m_Input.redirectLink =
+                    "https://nero-games.com/learn/engine-v2/create-project#project_name";
             }
             // Worksapce blank
             else if(std::string(m_Input.workspace) == StringPool.BLANK)
@@ -262,7 +283,8 @@ namespace nero
             else if(!string::matchPattern(std::string(m_Input.company), StringPool.REGEX_NAME_01))
             {
                 m_Input.errorMessage = "Invalid Company Name";
-                m_Input.redirectLink = "https://nero-games.com/learn/engine-v2/create-project#company_name";
+                m_Input.redirectLink =
+                    "https://nero-games.com/learn/engine-v2/create-project#company_name";
             }
             // workpspace project lead name blank
             else if(std::string(m_Input.projectLead) == StringPool.BLANK)
@@ -271,10 +293,12 @@ namespace nero
                 m_Input.redirectLink = StringPool.BLANK;
             }
             // workpspace project lead not matching regex
-            else if(!string::matchPattern(std::string(m_Input.projectLead), StringPool.REGEX_NAME_01))
+            else if(!string::matchPattern(std::string(m_Input.projectLead),
+                                          StringPool.REGEX_NAME_01))
             {
                 m_Input.errorMessage = "Invalid Project Lead";
-                m_Input.redirectLink = "https://nero-games.com/learn/engine-v2/create-project#project_lead";
+                m_Input.redirectLink =
+                    "https://nero-games.com/learn/engine-v2/create-project#project_lead";
             }
             // workpspace namespace blank
             else if(std::string(m_Input.projectNamespace) == StringPool.BLANK)
@@ -283,10 +307,12 @@ namespace nero
                 m_Input.redirectLink = StringPool.BLANK;
             }
             // workpspace namespace not matching regex
-            else if(!string::matchPattern(std::string(m_Input.projectNamespace), StringPool.REGEX_NAMESPACE))
+            else if(!string::matchPattern(std::string(m_Input.projectNamespace),
+                                          StringPool.REGEX_NAMESPACE))
             {
                 m_Input.errorMessage = "Invalid Project Namespace";
-                m_Input.redirectLink = "https://nero-games.com/learn/engine-v2/create-project#namespace";
+                m_Input.redirectLink =
+                    "https://nero-games.com/learn/engine-v2/create-project#namespace";
             }
             else
             {
@@ -311,7 +337,8 @@ namespace nero
             parameter.setString("code_editor", std::string(m_Input.codeEditor));
             parameter.setBool("startup_pack", m_Input.startupPack);
 
-            m_Input.lastCreatedProject = m_EditorContext->getProjectManager()->getProjectDirectory(parameter);
+            m_Input.lastCreatedProject =
+                m_EditorContext->getProjectManager()->getProjectDirectory(parameter);
 
             clearInput();
             updateInput(m_EditorContext->getProjectManager()->getWorkspaceTable());
@@ -323,10 +350,13 @@ namespace nero
         }
 
         // Error modal
-        ImGuiWindowFlags modal_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
-                                       ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+        ImGuiWindowFlags modal_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal |
+                                       ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
+                                       ImGuiWindowFlags_NoScrollbar;
         ImGui::SetNextWindowSize(ImVec2(300.f, 130.f));
-        if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_CREATING_PROJECT.c_str(), nullptr, modal_flags))
+        if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_CREATING_PROJECT.c_str(),
+                                  nullptr,
+                                  modal_flags))
         {
             ImGui::TextWrapped("%s", m_Input.errorMessage.c_str());
 
@@ -352,9 +382,12 @@ namespace nero
         }
 
         ImGui::SetNextWindowSize(ImVec2(400.f, 200.f));
-        if(ImGui::BeginPopupModal(EditorConstant.MODAL_WAITING_PROJECT_CREATION.c_str(), nullptr, windowFlags))
+        if(ImGui::BeginPopupModal(EditorConstant.MODAL_WAITING_PROJECT_CREATION.c_str(),
+                                  nullptr,
+                                  windowFlags))
         {
-            std::string         taskName          = EditorConstant.TASK_CREATE_PROJECT + toString(m_NewProjectCount - 1);
+            std::string taskName =
+                EditorConstant.TASK_CREATE_PROJECT + toString(m_NewProjectCount - 1);
             BackgroundTask::Ptr createProjectTask = BTManager::findTaskByName(taskName);
 
             if(createProjectTask)
@@ -398,7 +431,9 @@ namespace nero
         string::fillCharArray(m_Input.name, sizeof(m_Input.name), StringPool.BLANK);
         string::fillCharArray(m_Input.projectLead, sizeof(m_Input.projectLead), StringPool.BLANK);
         string::fillCharArray(m_Input.company, sizeof(m_Input.company), StringPool.BLANK);
-        string::fillCharArray(m_Input.projectNamespace, sizeof(m_Input.projectNamespace), StringPool.BLANK);
+        string::fillCharArray(m_Input.projectNamespace,
+                              sizeof(m_Input.projectNamespace),
+                              StringPool.BLANK);
         string::fillCharArray(m_Input.description, sizeof(m_Input.description), StringPool.BLANK);
         m_Input.projectTypeIndex = 0;
         m_Input.codeEditorIndex  = 0;
@@ -417,9 +452,15 @@ namespace nero
 
         auto workspace = workspaceTable.front();
 
-        string::fillCharArray(m_Input.company, sizeof(m_Input.company), workspace["company_name"].get<std::string>());
-        string::fillCharArray(m_Input.projectLead, sizeof(m_Input.projectLead), workspace["project_lead"].get<std::string>());
-        string::fillCharArray(m_Input.projectNamespace, sizeof(m_Input.projectNamespace), workspace["project_namespace"].get<std::string>());
+        string::fillCharArray(m_Input.company,
+                              sizeof(m_Input.company),
+                              workspace["company_name"].get<std::string>());
+        string::fillCharArray(m_Input.projectLead,
+                              sizeof(m_Input.projectLead),
+                              workspace["project_lead"].get<std::string>());
+        string::fillCharArray(m_Input.projectNamespace,
+                              sizeof(m_Input.projectNamespace),
+                              workspace["project_namespace"].get<std::string>());
         m_Input.workspaceIndex = 0;
     }
 } // namespace nero

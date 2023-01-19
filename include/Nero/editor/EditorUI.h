@@ -133,20 +133,19 @@ namespace nero
 
       private:
         //////////////docksapce
-        bool                           m_InterfaceFirstDraw;
-        void                           interfaceFirstDraw();
+        bool m_InterfaceFirstDraw;
+        void interfaceFirstDraw();
         //////////////Project
-        void                           compileProject();
-        void                           editProject();
-        void                           reloadProject();
-        void                           createGameScreen(const Parameter& parameter);
+        void compileProject();
+        void editProject();
+        void reloadProject();
+        void createGameScreen(const Parameter& parameter);
         //
         // editor view
-        void                           showGameScreenWindow();
+        void showGameScreenWindow();
         // utility
-        void                           showToggleButton(bool                  toggle,
-                                                        const std::string&    label,
-                                                        std::function<void()> callback);
+        void
+        showToggleButton(bool toggle, const std::string& label, std::function<void()> callback);
         // project creation
         ImGuiIO                        baseio;
         std::stringstream              buffer;

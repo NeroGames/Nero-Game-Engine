@@ -18,7 +18,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class LoadingScreen : public StartupScreen {
+    class LoadingScreen : public StartupScreen
+    {
       public:
         typedef std::unique_ptr<LoadingScreen> Ptr;
 

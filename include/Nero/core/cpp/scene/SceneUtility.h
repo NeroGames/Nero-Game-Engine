@@ -37,7 +37,8 @@ namespace nero
     };
 
     // query callback
-    class QueryCallback : public b2QueryCallback {
+    class QueryCallback : public b2QueryCallback
+    {
       public:
         QueryCallback(const b2Vec2& point);
         ~QueryCallback();

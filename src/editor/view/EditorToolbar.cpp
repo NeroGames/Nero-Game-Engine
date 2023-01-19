@@ -43,7 +43,8 @@ namespace nero
 
         // Check scrolling
         const float toolbarContentWindowWidth = ImGui::GetWindowContentRegionWidth();
-        const bool  showScrollButton          = toolbarContentWindowWidth < EditorConstant.WINDOW_TOOLBAR_MIN_WIDTH;
+        const bool  showScrollButton =
+            toolbarContentWindowWidth < EditorConstant.WINDOW_TOOLBAR_MIN_WIDTH;
 
         // Scrool left button
         if(showScrollButton)
@@ -60,10 +61,8 @@ namespace nero
             ImGui::BeginChild("##toolbarwindowcontent",
                               ImVec2(toolbarContentWindowWidth - 67.f, 0.f),
                               false,
-                              ImGuiWindowFlags_HorizontalScrollbar |
-                                  ImGuiWindowFlags_NoScrollbar |
-                                  ImGuiWindowFlags_ScrollToolbar |
-                                  ImGuiWindowFlags_NoResize |
+                              ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoScrollbar |
+                                  ImGuiWindowFlags_ScrollToolbar | ImGuiWindowFlags_NoResize |
                                   ImGuiWindowFlags_AlwaysUseWindowPadding);
             m_ToolbarContentWindow = ImGui::GetCurrentWindow();
         }
@@ -72,8 +71,7 @@ namespace nero
             ImGui::BeginChild("##toolbarwindowcontent",
                               ImVec2(),
                               false,
-                              ImGuiWindowFlags_NoScrollbar |
-                                  ImGuiWindowFlags_NoScrollWithMouse |
+                              ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse |
                                   ImGuiWindowFlags_AlwaysUseWindowPadding);
         }
 

@@ -21,7 +21,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class Grid : public sf::Transformable, public sf::Drawable {
+    class Grid : public sf::Transformable, public sf::Drawable
+    {
       public:
         typedef std::shared_ptr<Grid> Ptr;
 

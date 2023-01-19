@@ -29,8 +29,9 @@ namespace nero
     void NewGameLevelPopup::render()
     {
         // Window flags
-        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
-                                       ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal |
+                                       ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
+                                       ImGuiWindowFlags_NoScrollbar;
         // Window size
         ImVec2 winsowSize = ImVec2(400.f, 180.f);
         ImGui::SetNextWindowSize(winsowSize);
@@ -111,10 +112,13 @@ namespace nero
                 }
             }
 
-            ImGuiWindowFlags modal_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal | ImGuiWindowFlags_NoResize |
-                                           ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar;
+            ImGuiWindowFlags modal_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_Modal |
+                                           ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse |
+                                           ImGuiWindowFlags_NoScrollbar;
             ImGui::SetNextWindowSize(ImVec2(300.f, 130.f));
-            if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_CREATING_LEVEL.c_str(), nullptr, modal_flags))
+            if(ImGui::BeginPopupModal(EditorConstant.MODAL_ERROR_CREATING_LEVEL.c_str(),
+                                      nullptr,
+                                      modal_flags))
             {
                 ImGui::TextWrapped("%s", m_Input.errorMessage.c_str());
 

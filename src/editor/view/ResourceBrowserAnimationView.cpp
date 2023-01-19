@@ -34,7 +34,7 @@ namespace nero
 
         auto&        animationTable  = animationHolder->getAnimationTable();
         unsigned int animationCount  = animationTable.size();
-        float        xWindowVisible  = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+        float xWindowVisible = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
         for(unsigned int i = 0; i < animationCount; i++)
         {
@@ -63,9 +63,8 @@ namespace nero
             {
                 if(m_EditorContext->getBuilderMode() == BuilderMode::OBJECT)
                 {
-                    auto worldBuilder = m_EditorContext->getLevelBuilder()
-                                            ->getSelectedChunk()
-                                            ->getWorldBuilder();
+                    auto worldBuilder =
+                        m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();
 
                     worldBuilder->addObject(Object::Animation_Object,
                                             animationTable[i],

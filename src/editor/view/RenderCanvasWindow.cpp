@@ -63,18 +63,25 @@ namespace nero
 
         if(mouseOnCanvas() && ImGui::IsWindowFocused())
         {
-            sf::Vector2f world_pos = m_RenderTexture
-                                         ->mapPixelToCoords(sf::Vector2i(m_RenderContext->mousePosition.x,
-                                                                         m_RenderContext->mousePosition.y),
-                                                            m_RenderTexture->getView());
+            sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(
+                sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
+                m_RenderTexture->getView());
 
-            std::string canvas_pos_string = "Canvas x = " + toString(m_RenderContext->mousePosition.x) + " y = " + toString(m_RenderContext->mousePosition.y);
-            std::string wrold_pos_string  = "World x = " + toString(world_pos.x) + " y = " + toString(world_pos.y);
-            std::string camera_pos_string = "Camera x = " + toString(m_EditorCamera->getPosition().x) + " y = " + toString(m_EditorCamera->getPosition().y);
+            std::string canvas_pos_string =
+                "Canvas x = " + toString(m_RenderContext->mousePosition.x) +
+                " y = " + toString(m_RenderContext->mousePosition.y);
+            std::string wrold_pos_string =
+                "World x = " + toString(world_pos.x) + " y = " + toString(world_pos.y);
+            std::string camera_pos_string =
+                "Camera x = " + toString(m_EditorCamera->getPosition().x) +
+                " y = " + toString(m_EditorCamera->getPosition().y);
 
-            m_MousePositionString         = canvas_pos_string + " | " + wrold_pos_string + " | " + camera_pos_string;
+            m_MousePositionString =
+                canvas_pos_string + " | " + wrold_pos_string + " | " + camera_pos_string;
         }
-        float start = (ImGui::GetWindowContentRegionWidth() - ImGui::CalcTextSize(m_MousePositionString.c_str()).x) / 2.f;
+        float start = (ImGui::GetWindowContentRegionWidth() -
+                       ImGui::CalcTextSize(m_MousePositionString.c_str()).x) /
+                      2.f;
         ImGui::SetCursorPosX(start);
         ImGui::Text(m_MousePositionString.c_str());
 
@@ -172,16 +179,19 @@ namespace nero
         float        titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
         sf::Vector2f windowPadding  = ImGui::GetStyle().WindowPadding;
 
-        windowSize.y -= 23.f;
+        windowSize.y                -= 23.f;
 
         RenderContext renderContext;
-        renderContext.canvasPosition = sf::Vector2f(windowPosition.x + windowPadding.x,
-                                                    windowPosition.y + titleBarHeight + windowPadding.y + 22.f);
-        renderContext.canvasSize     = sf::Vector2f(windowSize.x - windowPadding.x * 2,
-                                                    windowSize.y - titleBarHeight - windowPadding.y * 2);
-        renderContext.mousePosition  = sf::Vector2f(mousePosition.x - renderContext.canvasPosition.x,
-                                                    mousePosition.y - renderContext.canvasPosition.y);
-        renderContext.focus          = ImGui::IsWindowFocused();
+        renderContext.canvasPosition =
+            sf::Vector2f(windowPosition.x + windowPadding.x,
+                         windowPosition.y + titleBarHeight + windowPadding.y + 22.f);
+        renderContext.canvasSize =
+            sf::Vector2f(windowSize.x - windowPadding.x * 2,
+                         windowSize.y - titleBarHeight - windowPadding.y * 2);
+        renderContext.mousePosition =
+            sf::Vector2f(mousePosition.x - renderContext.canvasPosition.x,
+                         mousePosition.y - renderContext.canvasPosition.y);
+        renderContext.focus = ImGui::IsWindowFocused();
 
         if(renderContext.canvasSize.x < 100.f)
         {
@@ -202,15 +212,16 @@ namespace nero
            m_RenderTexture->getSize().y != m_RenderContext->canvasSize.y)
         {
             m_RenderTexture->create(m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y);
-            m_EditorCamera->updateView(sf::Vector2f(m_RenderContext->canvasSize.x,
-                                                    m_RenderContext->canvasSize.y));
+            m_EditorCamera->updateView(
+                sf::Vector2f(m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y));
         }
 
         sf::Color clearColor = sf::Color::Black;
 
         if(m_EditorContext->getEditorMode() == EditorMode::PLAY_GAME)
         {
-            /*if(m_AdvancedScene && m_AdvancedScene->getSelectedGameLevel()->levelSetting->getBool("enable_lighting"))
+            /*if(m_AdvancedScene &&
+            m_AdvancedScene->getSelectedGameLevel()->levelSetting->getBool("enable_lighting"))
             {
                 clearColor = sf::Color::White;
             }*/

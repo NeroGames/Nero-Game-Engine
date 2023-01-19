@@ -27,7 +27,10 @@ namespace nero
 
     void SceneGraphView::render()
     {
-        if(ImGui::CollapsingHeader("Scene", m_EditorContext->getAdvancedScene() ? ImGuiTreeNodeFlags_DefaultOpen : ImGuiTreeNodeFlags_None))
+        if(ImGui::CollapsingHeader("Scene",
+                                   m_EditorContext->getAdvancedScene()
+                                       ? ImGuiTreeNodeFlags_DefaultOpen
+                                       : ImGuiTreeNodeFlags_None))
         {
             auto levelBuilder = m_EditorContext->getLevelBuilder();
 
@@ -42,16 +45,18 @@ namespace nero
                 ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 
                 ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[3]);
-                if(ImGui::TreeNode(std::string(ICON_FA_FOLDER_OPEN " " + levelBuilder->getLevelName()).c_str()))
+                if(ImGui::TreeNode(
+                       std::string(ICON_FA_FOLDER_OPEN " " + levelBuilder->getLevelName()).c_str()))
                 {
                     int        chunk_node_clicked   = -1;
                     static int chunk_selection_mask = (1 << levelBuilder->getChunkTable().size());
-                    int        selectedWorldChunkId = levelBuilder->getSelectedChunk()->getChunkId();
+                    int selectedWorldChunkId = levelBuilder->getSelectedChunk()->getChunkId();
 
-                    int        loop_chunk           = 0;
+                    int loop_chunk           = 0;
                     for(const auto& worldChunk : levelBuilder->getChunkTable())
                     {
-                        ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+                        ImGuiTreeNodeFlags node_flags =
+                            ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
                         if(chunk_selection_mask & (1 << loop_chunk))
                         {
@@ -59,7 +64,11 @@ namespace nero
                         }
 
                         ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-                        bool chunk_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_chunk, node_flags, std::string(ICON_FA_FOLDER " " + worldChunk->getChunkName()).c_str(), loop_chunk);
+                        bool chunk_node_open = ImGui::TreeNodeEx(
+                            (void*)(intptr_t)loop_chunk,
+                            node_flags,
+                            std::string(ICON_FA_FOLDER " " + worldChunk->getChunkName()).c_str(),
+                            loop_chunk);
 
                         if(worldChunk->getChunkId() == selectedWorldChunkId)
                         {
@@ -75,13 +84,17 @@ namespace nero
                         if(chunk_node_open)
                         {
                             // display chunk layer here
-                            int layer_node_clicked    = -1;
-                            int selectedObjectLayerId = worldChunk->getWorldBuilder()->getSelectedLayer()->getObjectId();
+                            int layer_node_clicked = -1;
+                            int selectedObjectLayerId =
+                                worldChunk->getWorldBuilder()->getSelectedLayer()->getObjectId();
 
-                            int loop_layer            = 0;
-                            for(const auto& objectLayer : worldChunk->getWorldBuilder()->getLayerTable())
+                            int loop_layer = 0;
+                            for(const auto& objectLayer :
+                                worldChunk->getWorldBuilder()->getLayerTable())
                             {
-                                ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+                                ImGuiTreeNodeFlags node_flags =
+                                    ImGuiTreeNodeFlags_OpenOnArrow |
+                                    ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
                                 if(objectLayer->getObjectId() == selectedObjectLayerId)
                                 {
@@ -89,9 +102,14 @@ namespace nero
                                 }
 
                                 ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-                                bool layer_node_open = ImGui::TreeNodeEx((void*)(intptr_t)loop_layer, node_flags, std::string(ICON_FA_FILE " " + objectLayer->getName()).c_str(), loop_layer);
+                                bool layer_node_open = ImGui::TreeNodeEx(
+                                    (void*)(intptr_t)loop_layer,
+                                    node_flags,
+                                    std::string(ICON_FA_FILE " " + objectLayer->getName()).c_str(),
+                                    loop_layer);
 
-                                if(objectLayer->getObjectId() == selectedObjectLayerId && worldChunk->getChunkId() == selectedWorldChunkId)
+                                if(objectLayer->getObjectId() == selectedObjectLayerId &&
+                                   worldChunk->getChunkId() == selectedWorldChunkId)
                                 {
                                     layer_node_clicked = loop_layer;
                                     chunk_node_clicked = loop_chunk;
@@ -113,25 +131,35 @@ namespace nero
 
                                     if(worldChunk->getWorldBuilder()->getSelectedObject())
                                     {
-                                        selectedGameObjectId = worldChunk->getWorldBuilder()->getSelectedObject()->getObjectId();
+                                        selectedGameObjectId = worldChunk->getWorldBuilder()
+                                                                   ->getSelectedObject()
+                                                                   ->getObjectId();
                                     }
 
                                     int loop_object = 0;
                                     for(const auto& gameObject : *objectLayer->getAllChild())
                                     {
                                         ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_None;
-                                        node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+                                        node_flags                    |= ImGuiTreeNodeFlags_Leaf |
+                                                      ImGuiTreeNodeFlags_NoTreePushOnOpen;
 
                                         if(gameObject->getObjectId() == selectedGameObjectId)
                                         {
                                             node_flags |= ImGuiTreeNodeFlags_Selected;
                                         }
 
-                                        std::string object_name = std::string(gameObject->getName());
+                                        std::string object_name =
+                                            std::string(gameObject->getName());
 
-                                        ImGui::TreeNodeEx((void*)(intptr_t)loop_object, node_flags, std::string(ICON_FA_CUBE " " + object_name).c_str(), loop_object);
+                                        ImGui::TreeNodeEx(
+                                            (void*)(intptr_t)loop_object,
+                                            node_flags,
+                                            std::string(ICON_FA_CUBE " " + object_name).c_str(),
+                                            loop_object);
 
-                                        if(gameObject->getObjectId() == selectedGameObjectId && objectLayer->getObjectId() == selectedObjectLayerId && worldChunk->getChunkId() == selectedWorldChunkId)
+                                        if(gameObject->getObjectId() == selectedGameObjectId &&
+                                           objectLayer->getObjectId() == selectedObjectLayerId &&
+                                           worldChunk->getChunkId() == selectedWorldChunkId)
                                         {
                                             object_node_clicked = loop_object;
                                             layer_node_clicked  = loop_layer;
@@ -208,11 +236,13 @@ namespace nero
                     ImGui::Text("Lighting");
                     ImGui::Separator();
                     ImGui::Dummy(ImVec2(0.f, 5.f));
-                    static bool enable_lighting = gameLevel->levelSetting->getBool("enable_lighting");
-                    ImGui::Checkbox("Enable Lighting##enable_lighting", &enable_lighting);
+                    static bool enable_lighting =
+                gameLevel->levelSetting->getBool("enable_lighting"); ImGui::Checkbox("Enable
+                Lighting##enable_lighting", &enable_lighting);
                     gameLevel->levelSetting->setBool("enable_lighting", enable_lighting);
 
-                    ImGui::ColorEdit4("Ambient Light", &ambient_light.x, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_NoDragDrop);
+                    ImGui::ColorEdit4("Ambient Light", &ambient_light.x,
+                ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_NoDragDrop);
 
                     ImGui::Dummy(ImVec2(0.f, 5.f));
 
@@ -240,24 +270,30 @@ namespace nero
                     ImGui::Checkbox("Draw AABB##draw_aabb", &draw_aabb);
                     gameLevel->levelSetting->setBool("draw_aabb", draw_aabb);
 
-                    static bool draw_contact_point = gameLevel->levelSetting->getBool("draw_contact_point");
-                    ImGui::Checkbox("Draw Contact Point##draw_contact_point", &draw_contact_point);
+                    static bool draw_contact_point =
+                gameLevel->levelSetting->getBool("draw_contact_point"); ImGui::Checkbox("Draw
+                Contact Point##draw_contact_point", &draw_contact_point);
                     gameLevel->levelSetting->setBool("draw_contact_point", draw_contact_point);
 
-                    static bool draw_contact_normal = gameLevel->levelSetting->getBool("draw_contact_normal");
-                    ImGui::Checkbox("Draw Contact Normal##draw_contact_normal", &draw_contact_normal);
+                    static bool draw_contact_normal =
+                gameLevel->levelSetting->getBool("draw_contact_normal"); ImGui::Checkbox("Draw
+                Contact Normal##draw_contact_normal", &draw_contact_normal);
                     gameLevel->levelSetting->setBool("draw_contact_normal", draw_contact_normal);
 
-                    static bool draw_contact_impulse = gameLevel->levelSetting->getBool("draw_contact_impulse");
-                    ImGui::Checkbox("Draw Contact Impulse##draw_contact_impulse", &draw_contact_impulse);
+                    static bool draw_contact_impulse =
+                gameLevel->levelSetting->getBool("draw_contact_impulse"); ImGui::Checkbox("Draw
+                Contact Impulse##draw_contact_impulse", &draw_contact_impulse);
                     gameLevel->levelSetting->setBool("draw_contact_impulse", draw_contact_impulse);
 
-                    static bool draw_friction_impulse = gameLevel->levelSetting->getBool("draw_friction_impulse");
-                    ImGui::Checkbox("Draw Friction Impulse##draw_friction_impulse", &draw_friction_impulse);
-                    gameLevel->levelSetting->setBool("draw_friction_impulse", draw_friction_impulse);
+                    static bool draw_friction_impulse =
+                gameLevel->levelSetting->getBool("draw_friction_impulse"); ImGui::Checkbox("Draw
+                Friction Impulse##draw_friction_impulse", &draw_friction_impulse);
+                    gameLevel->levelSetting->setBool("draw_friction_impulse",
+                draw_friction_impulse);
 
-                    static bool draw_center_of_mass = gameLevel->levelSetting->getBool("draw_center_of_mass");
-                    ImGui::Checkbox("Draw Centroid##draw_center_of_mass", &draw_center_of_mass);
+                    static bool draw_center_of_mass =
+                gameLevel->levelSetting->getBool("draw_center_of_mass"); ImGui::Checkbox("Draw
+                Centroid##draw_center_of_mass", &draw_center_of_mass);
                     gameLevel->levelSetting->setBool("draw_center_of_mass", draw_center_of_mass);
 
                     static bool draw_statistic = gameLevel->levelSetting->getBool("draw_statistic");

@@ -32,7 +32,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class WorldBuilder {
+    class WorldBuilder
+    {
       public:
         typedef std::shared_ptr<WorldBuilder>      Ptr;
         typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
@@ -41,16 +42,17 @@ namespace nero
       public:
         WorldBuilder();
 
-        void                    init();
+        void init();
 
         // Main
-        void                    handleEvent(const sf::Event& event);
-        void                    update(const sf::Time& elapsedTime);
-        void                    render();
+        void handleEvent(const sf::Event& event);
+        void update(const sf::Time& elapsedTime);
+        void render();
         // Input
-        void                    handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
-        void                    handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse, const bool& isPressed);
-        void                    handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
+        void handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
+        void handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse,
+                                     const bool&                        isPressed);
+        void handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
         // Layer
         const LayerObject::Ptr  addLayer();
         void                    deleteLayer(int id);
@@ -79,7 +81,9 @@ namespace nero
             Down_Right
         };
 
-        bool             addObject(Object::Type type, const sf::String& label, sf::Vector2f position = sf::Vector2f(0.f, 0.f));
+        bool             addObject(Object::Type      type,
+                                   const sf::String& label,
+                                   sf::Vector2f      position = sf::Vector2f(0.f, 0.f));
         void             copyObject(const Position& position);
         void             deleteObject(Object::Ptr object);
         void             setObjectName(const sf::String& name);

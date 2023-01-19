@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceBrowserFontView : public UIComponent {
+    class ResourceBrowserFontView : public UIComponent
+    {
       public:
         ResourceBrowserFontView(EditorContext::Ptr editorContext);
         virtual ~ResourceBrowserFontView() override;

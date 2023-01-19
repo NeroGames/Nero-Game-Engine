@@ -34,16 +34,16 @@ namespace nero
         float randomFloat()
         {
             float r = (float)(std::rand() & (RAND_LIMIT));
-            r /= RAND_LIMIT;
-            r = 2.0f * r - 1.0f;
+            r       /= RAND_LIMIT;
+            r       = 2.0f * r - 1.0f;
             return r;
         }
 
         float randomFloat(float lo, float hi)
         {
             float r = (float)(std::rand() & (RAND_LIMIT));
-            r /= RAND_LIMIT;
-            r = (hi - lo) * r + lo;
+            r       /= RAND_LIMIT;
+            r       = (hi - lo) * r + lo;
             return r;
         }
 
@@ -181,7 +181,8 @@ namespace nero
             return x1 * y2 + x2 * y3 + x3 * y1 - y1 * x2 - y2 * x3 - y3 * x1;
         }
 
-        sf::Vector2f* hitRay(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
+        sf::Vector2f*
+        hitRay(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
         {
             float t1 = x3 - x1;
             float t2 = y3 - y1;
@@ -210,8 +211,10 @@ namespace nero
 
         bool isOnSegment(float px, float py, float x1, float y1, float x2, float y2)
         {
-            bool b1 = ((((x1 + 0.1) >= px) && px >= x2 - 0.1) || (((x1 - 0.1) <= px) && px <= x2 + 0.1));
-            bool b2 = ((((y1 + 0.1) >= py) && py >= y2 - 0.1) || (((y1 - 0.1) <= py) && py <= y2 + 0.1));
+            bool b1 =
+                ((((x1 + 0.1) >= px) && px >= x2 - 0.1) || (((x1 - 0.1) <= px) && px <= x2 + 0.1));
+            bool b2 =
+                ((((y1 + 0.1) >= py) && py >= y2 - 0.1) || (((y1 - 0.1) <= py) && py <= y2 + 0.1));
             return ((b1 && b2) && isOnLine(px, py, x1, y1, x2, y2));
         }
 
@@ -219,7 +222,8 @@ namespace nero
         {
             if((((x2 - x1) > 0.1) || x1 - x2 > 0.1))
             {
-                float a = (y2 - y1) / (x2 - x1), possibleY = a * (px - x1) + y1, diff = (possibleY > py) ? possibleY - py : py - possibleY;
+                float a = (y2 - y1) / (x2 - x1), possibleY = a * (px - x1) + y1,
+                      diff = (possibleY > py) ? possibleY - py : py - possibleY;
                 return (diff < 0.1);
             }
 
@@ -250,7 +254,12 @@ namespace nero
                     {
                         if(!fl)
                         {
-                            d = det(verticesVec[i].x, verticesVec[i].y, verticesVec[i2].x, verticesVec[i2].y, verticesVec[j].x, verticesVec[j].y);
+                            d = det(verticesVec[i].x,
+                                    verticesVec[i].y,
+                                    verticesVec[i2].x,
+                                    verticesVec[i2].y,
+                                    verticesVec[j].x,
+                                    verticesVec[j].y);
                             if((d > 0))
                             {
                                 fl = true;
@@ -260,7 +269,14 @@ namespace nero
                         if((j != i3))
                         {
                             j2 = (j < n - 1) ? j + 1 : 0;
-                            if(hitSegment(verticesVec[i].x, verticesVec[i].y, verticesVec[i2].x, verticesVec[i2].y, verticesVec[j].x, verticesVec[j].y, verticesVec[j2].x, verticesVec[j2].y))
+                            if(hitSegment(verticesVec[i].x,
+                                          verticesVec[i].y,
+                                          verticesVec[i2].x,
+                                          verticesVec[i2].y,
+                                          verticesVec[j].x,
+                                          verticesVec[j].y,
+                                          verticesVec[j2].x,
+                                          verticesVec[j2].y))
                             {
                                 ret = 1; // TODO: This may be wrong!!!
                             }
@@ -289,7 +305,8 @@ namespace nero
             return ret;
         }
 
-        sf::Vector2f* hitSegment(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
+        sf::Vector2f*
+        hitSegment(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
         {
             float t1 = x3 - x1;
             float t2 = y3 - y1;
@@ -331,45 +348,45 @@ namespace nero
             int          i          = 0;
             for(i = 0; i < vertices.size() - 1; ++i)
             {
-                x0 = vertices[i].x;
-                y0 = vertices[i].y;
-                x1 = vertices[i + 1].x;
-                y1 = vertices[i + 1].y;
-                a  = x0 * y1 - x1 * y0;
+                x0         = vertices[i].x;
+                y0         = vertices[i].y;
+                x1         = vertices[i + 1].x;
+                y1         = vertices[i + 1].y;
+                a          = x0 * y1 - x1 * y0;
                 signedArea += a;
-                center.x += (x0 + x1) * a;
-                center.y += (y0 + y1) * a;
+                center.x   += (x0 + x1) * a;
+                center.y   += (y0 + y1) * a;
             }
 
             // Do last vertex separately to avoid performing an expensive
             // modulus operation in each iteration.
-            x0 = vertices[i].x;
-            y0 = vertices[i].y;
-            x1 = vertices[0].x;
-            y1 = vertices[0].y;
-            a  = x0 * y1 - x1 * y0;
+            x0         = vertices[i].x;
+            y0         = vertices[i].y;
+            x1         = vertices[0].x;
+            y1         = vertices[0].y;
+            a          = x0 * y1 - x1 * y0;
             signedArea += a;
-            center.x += (x0 + x1) * a;
-            center.y += (y0 + y1) * a;
+            center.x   += (x0 + x1) * a;
+            center.y   += (y0 + y1) * a;
 
             signedArea *= 0.5;
-            center.x /= (6.0 * signedArea);
-            center.y /= (6.0 * signedArea);
+            center.x   /= (6.0 * signedArea);
+            center.y   /= (6.0 * signedArea);
 
             return center;
         }
 
         sf::Vector2f rotateVertex(sf::Vector2f center, float angle, sf::Vector2f p)
         {
-            float cx = center.x;
-            float cy = center.y;
+            float cx   = center.x;
+            float cy   = center.y;
 
-            float s  = std::sin(toRadian(angle));
-            float c  = std::cos(toRadian(angle));
+            float s    = std::sin(toRadian(angle));
+            float c    = std::cos(toRadian(angle));
 
             // translate point back to origin:
-            p.x -= cx;
-            p.y -= cy;
+            p.x        -= cx;
+            p.y        -= cy;
 
             // rotate point
             float xnew = p.x * c - p.y * s;
@@ -530,7 +547,8 @@ namespace nero
                                 {
                                     // TODO: Throw Error !!!
                                 }
-                                if(((k == j1) && !isOnSegment(v1.x, v1.y, vec[h].x, vec[h].y, p2.x, p2.y)))
+                                if(((k == j1) &&
+                                    !isOnSegment(v1.x, v1.y, vec[h].x, vec[h].y, p2.x, p2.y)))
                                 {
                                     vec2->push_back(vec[k]);
                                 }

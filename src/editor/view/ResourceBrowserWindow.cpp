@@ -41,14 +41,18 @@ namespace nero
         {
             if(ImGui::Button("Import File##import_resource", ImVec2(100.f, 0.f)))
             {
-                file::selectFile([this, selectedResourceType, resourceManager](std::vector<std::string> fileTable) {
-                    const auto loadedFileTable = resourceManager->loadFile(selectedResourceType, fileTable);
-
-                    if(!loadedFileTable.empty())
+                file::selectFile(
+                    [this, selectedResourceType, resourceManager](
+                        std::vector<std::string> fileTable)
                     {
-                        saveResourceFile(selectedResourceType, loadedFileTable);
-                    }
-                });
+                        const auto loadedFileTable =
+                            resourceManager->loadFile(selectedResourceType, fileTable);
+
+                        if(!loadedFileTable.empty())
+                        {
+                            saveResourceFile(selectedResourceType, loadedFileTable);
+                        }
+                    });
             }
         }
 
@@ -103,7 +107,8 @@ namespace nero
         ImGui::End();
     }
 
-    void ResourceBrowserWindow::saveResourceFile(const ResourceType& resourceType, const std::vector<std::string> loadedFileTable)
+    void ResourceBrowserWindow::saveResourceFile(const ResourceType&            resourceType,
+                                                 const std::vector<std::string> loadedFileTable)
     {
         // TODO manager screen builder and other
         const auto resourceFolder = m_EditorContext->getLevelBuilder()->getResourceDirectory();
@@ -114,13 +119,17 @@ namespace nero
             // copy texture file and json helper
             for(std::string file : loadedFileTable)
             {
-                file::copyFile(file, file::getPath({resourceFolder, "texture", file::getFileName(file, true)}));
+                file::copyFile(
+                    file,
+                    file::getPath({resourceFolder, "texture", file::getFileName(file, true)}));
 
                 std::string jsonHelper = file::replaceExtension(file, "json");
                 if(file::fileExist(jsonHelper))
                 {
-                    file::saveFile(file::getPath({resourceFolder, "texture", file::getFileName(jsonHelper, true)}),
-                                   file::loadJson(jsonHelper, true).dump(3));
+                    file::saveFile(
+                        file::getPath(
+                            {resourceFolder, "texture", file::getFileName(jsonHelper, true)}),
+                        file::loadJson(jsonHelper, true).dump(3));
                 }
             }
         }
@@ -130,14 +139,18 @@ namespace nero
             // copy texture file and json helper
             for(std::string file : loadedFileTable)
             {
-                file::copyFile(file, file::getPath({resourceFolder, "animation", file::getFileName(file, true)}));
+                file::copyFile(
+                    file,
+                    file::getPath({resourceFolder, "animation", file::getFileName(file, true)}));
 
                 std::string jsonHelper = file::replaceExtension(file, "json");
                 if(file::fileExist(jsonHelper))
                 {
 
-                    file::saveFile(file::getPath({resourceFolder, "animation", file::getFileName(jsonHelper, true)}),
-                                   file::loadJson(jsonHelper, true).dump(3));
+                    file::saveFile(
+                        file::getPath(
+                            {resourceFolder, "animation", file::getFileName(jsonHelper, true)}),
+                        file::loadJson(jsonHelper, true).dump(3));
                 }
             }
         }
@@ -146,7 +159,9 @@ namespace nero
         case ResourceType::Font: {
             for(std::string file : loadedFileTable)
             {
-                file::copyFile(file, file::getPath({resourceFolder, "font", file::getFileName(file, true)}));
+                file::copyFile(
+                    file,
+                    file::getPath({resourceFolder, "font", file::getFileName(file, true)}));
             }
         }
         break;
@@ -154,7 +169,9 @@ namespace nero
         case ResourceType::Sound: {
             for(std::string file : loadedFileTable)
             {
-                file::copyFile(file, file::getPath({resourceFolder, "sound", file::getFileName(file, true)}));
+                file::copyFile(
+                    file,
+                    file::getPath({resourceFolder, "sound", file::getFileName(file, true)}));
             }
         }
         break;
@@ -162,7 +179,9 @@ namespace nero
         case ResourceType::Music: {
             for(std::string file : loadedFileTable)
             {
-                file::copyFile(file, file::getPath({resourceFolder, "music", file::getFileName(file, true)}));
+                file::copyFile(
+                    file,
+                    file::getPath({resourceFolder, "music", file::getFileName(file, true)}));
             }
         }
         break;
@@ -170,7 +189,9 @@ namespace nero
         case ResourceType::Lightmap: {
             for(std::string file : loadedFileTable)
             {
-                file::copyFile(file, file::getPath({resourceFolder, "lightmap", file::getFileName(file, true)}));
+                file::copyFile(
+                    file,
+                    file::getPath({resourceFolder, "lightmap", file::getFileName(file, true)}));
             }
         }
         break;
@@ -185,12 +206,9 @@ namespace nero
 
     bool ResourceBrowserWindow::loadableResource(const ResourceType& resourceType)
     {
-        return resourceType == ResourceType::Texture ||
-               resourceType == ResourceType::Animation ||
-               resourceType == ResourceType::Lightmap ||
-               resourceType == ResourceType::Font ||
-               resourceType == ResourceType::Sound ||
-               resourceType == ResourceType::Music ||
+        return resourceType == ResourceType::Texture || resourceType == ResourceType::Animation ||
+               resourceType == ResourceType::Lightmap || resourceType == ResourceType::Font ||
+               resourceType == ResourceType::Sound || resourceType == ResourceType::Music ||
                resourceType == ResourceType::Particle;
     }
 } // namespace nero

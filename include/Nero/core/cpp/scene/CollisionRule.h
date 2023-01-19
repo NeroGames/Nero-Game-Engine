@@ -15,7 +15,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class CollisionRule {
+    class CollisionRule
+    {
       public:
         CollisionRule();
         virtual ~CollisionRule();

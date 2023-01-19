@@ -15,7 +15,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class EditorSetup {
+    class EditorSetup
+    {
       public:
         using Ptr = std::shared_ptr<EditorSetup>;
 

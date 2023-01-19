@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ResourceBrowserLightmapView : public UIComponent {
+    class ResourceBrowserLightmapView : public UIComponent
+    {
       public:
         ResourceBrowserLightmapView(EditorContext::Ptr editorContext);
         virtual ~ResourceBrowserLightmapView() override;

@@ -37,7 +37,8 @@ namespace nero
         nero_log(parameter.getString("workspace_location"));
         nero_log(parameter.getString("workspace_name"));
 
-        std::string directory = file::getPath({parameter.getString("workspace_location"), parameter.getString("workspace_name")});
+        std::string directory = file::getPath(
+            {parameter.getString("workspace_location"), parameter.getString("workspace_name")});
         file::createDirectory(directory);
         file::createDirectory(file::getPath({directory, "Project"}));
 
@@ -55,9 +56,9 @@ namespace nero
         auto           worksapceSetting = file::loadJson(file::getPath({"setting", "workspace"}));
 
         nlohmann::json workspace;
-        workspace["order"]               = worksapceSetting.size() + 1;
-        workspace["workspace_id"]        = string::formatString(parameter.getString("workspace_name"));
-        workspace["workspace_name"]      = parameter.getString("workspace_name");
+        workspace["order"]          = worksapceSetting.size() + 1;
+        workspace["workspace_id"]   = string::formatString(parameter.getString("workspace_name"));
+        workspace["workspace_name"] = parameter.getString("workspace_name");
         workspace["workspace_directory"] = directory;
         workspace["project_lead"]        = parameter.getString("project_lead");
         workspace["company_name"]        = parameter.getString("company_name");
@@ -65,7 +66,9 @@ namespace nero
 
         worksapceSetting.push_back(workspace);
 
-        file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON), worksapceSetting.dump(3), true);
+        file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON),
+                       worksapceSetting.dump(3),
+                       true);
     }
 
     void ProjectManager::importWorkspace(const std::string& directory)
@@ -79,9 +82,9 @@ namespace nero
         parameter.setString("workspace_name", file::getFileName(directory));
 
         nlohmann::json workspace;
-        workspace["order"]               = worksapceSetting.size() + 1;
-        workspace["workspace_id"]        = string::formatString(parameter.getString("workspace_name"));
-        workspace["workspace_name"]      = parameter.getString("workspace_name");
+        workspace["order"]          = worksapceSetting.size() + 1;
+        workspace["workspace_id"]   = string::formatString(parameter.getString("workspace_name"));
+        workspace["workspace_name"] = parameter.getString("workspace_name");
         workspace["workspace_directory"] = directory;
         workspace["project_lead"]        = parameter.getString("project_lead");
         workspace["company_name"]        = parameter.getString("company_name");
@@ -89,7 +92,9 @@ namespace nero
 
         worksapceSetting.push_back(workspace);
 
-        file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON), worksapceSetting.dump(3), true);
+        file::saveFile(file::getPath({"setting", "workspace"}, StringPool.EXT_JSON),
+                       worksapceSetting.dump(3),
+                       true);
         file::saveFile(file::getPath({directory, ".workspace"}), parameter.toString());
     }
 
@@ -116,7 +121,7 @@ namespace nero
     const std::vector<std::string> ProjectManager::getWorkspaceNameTable() const
     {
         std::vector<std::string> result;
-        auto                     workspaceTable = file::loadJson(file::getPath({"setting", "workspace"}));
+        auto workspaceTable = file::loadJson(file::getPath({"setting", "workspace"}));
 
         for(auto workspace : workspaceTable)
         {
@@ -144,7 +149,8 @@ namespace nero
         return result;
     }
 
-    void ProjectManager::createProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
+    void ProjectManager::createProject(const Parameter&    parameter,
+                                       BackgroundTask::Ptr backgroundTask)
     {
         nero_log("Creating project - " + parameter.getString("project_name"));
 
@@ -171,11 +177,14 @@ namespace nero
 
     std::string ProjectManager::getProjectDirectory(const Parameter& parameter)
     {
-        std::string workspaceDirectory = findWorkspace(parameter.getString("workspace_name"))["workspace_directory"].get<std::string>();
+        std::string workspaceDirectory =
+            findWorkspace(parameter.getString("workspace_name"))["workspace_directory"]
+                .get<std::string>();
         return file::getPath({workspaceDirectory, "Project", parameter.getString("project_name")});
     }
 
-    void ProjectManager::createCppProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
+    void ProjectManager::createCppProject(const Parameter&    parameter,
+                                          BackgroundTask::Ptr backgroundTask)
     {
         nero_log("Creating a new CPP Project");
 
@@ -183,17 +192,23 @@ namespace nero
         backgroundTask->nextStep();
         backgroundTask->addMessage("Generating Project Directory");
 
-        std::string project_name       = parameter.getString("project_name");
-        std::string workspaceDirectory = findWorkspace(parameter.getString("workspace_name"))["workspace_directory"].get<std::string>();
-        std::string projectDirectory   = file::getPath({workspaceDirectory, "Project", parameter.getString("project_name")});
+        std::string project_name = parameter.getString("project_name");
+        std::string workspaceDirectory =
+            findWorkspace(parameter.getString("workspace_name"))["workspace_directory"]
+                .get<std::string>();
+        std::string projectDirectory =
+            file::getPath({workspaceDirectory, "Project", parameter.getString("project_name")});
 
         file::createDirectory(file::getPath({projectDirectory}));
         file::createDirectory(file::getPath({projectDirectory, "Source"}));
         file::createDirectory(file::getPath({projectDirectory, "Source", project_name}));
         file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp"}));
-        file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "level"}));
-        file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "screen"}));
-        file::createDirectory(file::getPath({projectDirectory, "Source", project_name, "cpp", "script"}));
+        file::createDirectory(
+            file::getPath({projectDirectory, "Source", project_name, "cpp", "level"}));
+        file::createDirectory(
+            file::getPath({projectDirectory, "Source", project_name, "cpp", "screen"}));
+        file::createDirectory(
+            file::getPath({projectDirectory, "Source", project_name, "cpp", "script"}));
         file::createDirectory(file::getPath({projectDirectory, "Build"}));
         file::createDirectory(file::getPath({projectDirectory, "Scene"}));
         file::createDirectory(file::getPath({projectDirectory, "Scene", "level"}));
@@ -204,8 +219,10 @@ namespace nero
         Setting document;
         document.setString("engine_version", EngineConstant.ENGINE_VERSION);
         document.setString("document_type", EngineConstant.DOCUMENT_TYPE_PROJECT);
-        document.setString("creation_date", datetime::formatDateTime(datetime::getCurrentDateTime()));
-        document.setString("modification_date", datetime::formatDateTime(datetime::getCurrentDateTime()));
+        document.setString("creation_date",
+                           datetime::formatDateTime(datetime::getCurrentDateTime()));
+        document.setString("modification_date",
+                           datetime::formatDateTime(datetime::getCurrentDateTime()));
         document.setString("project_name", parameter.getString("project_name"));
         document.setString("project_id", string::formatString(parameter.getString("project_name")));
         document.setString("project_type", parameter.getString("project_type"));
@@ -224,71 +241,132 @@ namespace nero
         backgroundTask->addMessage("Generating Project Files");
 
         // Step 2 : Generate file
-        std::string cmake_template         = file::loadText("template/cpp_project/CMakeLists.txt");
-        std::string cmake_setting_template = file::loadText("template/cpp_project/CMakeSettings.json");
-        std::string scene_header_template  = file::loadText("template/cpp_project/CppScene.h");
-        std::string scene_source_template  = file::loadText("template/cpp_project/CppScene.cpp");
-        std::string screen_header_template = file::loadText("template/cpp_project/CppStartupScreen.h");
-        std::string screen_source_template = file::loadText("template/cpp_project/CppStartupScreen.cpp");
+        std::string cmake_template = file::loadText("template/cpp_project/CMakeLists.txt");
+        std::string cmake_setting_template =
+            file::loadText("template/cpp_project/CMakeSettings.json");
+        std::string scene_header_template = file::loadText("template/cpp_project/CppScene.h");
+        std::string scene_source_template = file::loadText("template/cpp_project/CppScene.cpp");
+        std::string screen_header_template =
+            file::loadText("template/cpp_project/CppStartupScreen.h");
+        std::string screen_source_template =
+            file::loadText("template/cpp_project/CppStartupScreen.cpp");
 
-        auto        wordTable              = string::getWordTable(parameter.getString("project_name"));
+        auto        wordTable    = string::getWordTable(parameter.getString("project_name"));
 
-        std::string scene_class            = formatSceneClassName(wordTable);
-        std::string class_header           = formatHeaderGard(wordTable);
+        std::string scene_class  = formatSceneClassName(wordTable);
+        std::string class_header = formatHeaderGard(wordTable);
 
         // file 1 : header
         boost::algorithm::replace_all(scene_header_template, "::SceneClass::", scene_class);
         boost::algorithm::replace_all(scene_header_template, "::HeaderGard::", class_header);
-        boost::algorithm::replace_all(scene_header_template, "::Namespace::", parameter.getString("project_namespace"));
-        boost::algorithm::replace_all(scene_header_template, "::ProjectName::", parameter.getString("project_name"));
-        boost::algorithm::replace_all(scene_header_template, "::ProjectLead::", parameter.getString("project_lead"));
-        boost::algorithm::replace_all(scene_header_template, "::CoyprightDate::", toString(datetime::getCurrentDateTime().date().year()));
+        boost::algorithm::replace_all(scene_header_template,
+                                      "::Namespace::",
+                                      parameter.getString("project_namespace"));
+        boost::algorithm::replace_all(scene_header_template,
+                                      "::ProjectName::",
+                                      parameter.getString("project_name"));
+        boost::algorithm::replace_all(scene_header_template,
+                                      "::ProjectLead::",
+                                      parameter.getString("project_lead"));
+        boost::algorithm::replace_all(scene_header_template,
+                                      "::CoyprightDate::",
+                                      toString(datetime::getCurrentDateTime().date().year()));
 
         // file 2 : source
         boost::algorithm::replace_all(scene_source_template, "::SceneClass::", scene_class);
-        boost::algorithm::replace_all(scene_source_template, "::Namespace::", parameter.getString("project_namespace"));
-        boost::algorithm::replace_all(scene_source_template, "::ProjectName::", parameter.getString("project_name"));
-        boost::algorithm::replace_all(scene_source_template, "::ProjectLead::", parameter.getString("project_lead"));
-        boost::algorithm::replace_all(scene_source_template, "::CoyprightDate::", toString(datetime::getCurrentDateTime().date().year()));
+        boost::algorithm::replace_all(scene_source_template,
+                                      "::Namespace::",
+                                      parameter.getString("project_namespace"));
+        boost::algorithm::replace_all(scene_source_template,
+                                      "::ProjectName::",
+                                      parameter.getString("project_name"));
+        boost::algorithm::replace_all(scene_source_template,
+                                      "::ProjectLead::",
+                                      parameter.getString("project_lead"));
+        boost::algorithm::replace_all(scene_source_template,
+                                      "::CoyprightDate::",
+                                      toString(datetime::getCurrentDateTime().date().year()));
 
         // file 3 : cmake text list
-        boost::algorithm::replace_all(cmake_template, "::Project_Name::", formatCmakeProjectName(wordTable));
-        boost::algorithm::replace_all(cmake_template, "::Project_Library::", formatCmakeProjectLibrary(wordTable));
+        boost::algorithm::replace_all(cmake_template,
+                                      "::Project_Name::",
+                                      formatCmakeProjectName(wordTable));
+        boost::algorithm::replace_all(cmake_template,
+                                      "::Project_Library::",
+                                      formatCmakeProjectLibrary(wordTable));
 
         // file 4 : cmake setting
         nero_log(projectDirectory);
         nero_log(file::getPath({projectDirectory, "Build"}));
-        boost::algorithm::replace_all(cmake_setting_template, "::Project_Build_Directory::", file::escapeBackslash(file::getPath({projectDirectory, "Build"})));
+        boost::algorithm::replace_all(
+            cmake_setting_template,
+            "::Project_Build_Directory::",
+            file::escapeBackslash(file::getPath({projectDirectory, "Build"})));
 
         // file 5 : startup screen header
-        boost::algorithm::replace_all(screen_header_template, "::StartupScreenClass::", "LoadingScreen");
+        boost::algorithm::replace_all(screen_header_template,
+                                      "::StartupScreenClass::",
+                                      "LoadingScreen");
         boost::algorithm::replace_all(screen_header_template, "::HeaderGard::", "LOADINGSCREEN_H");
-        boost::algorithm::replace_all(screen_header_template, "::Namespace::", parameter.getString("project_namespace"));
-        boost::algorithm::replace_all(screen_header_template, "::ProjectName::", parameter.getString("project_name"));
-        boost::algorithm::replace_all(screen_header_template, "::ProjectLead::", parameter.getString("project_lead"));
-        boost::algorithm::replace_all(screen_header_template, "::CoyprightDate::", toString(datetime::getCurrentDateTime().date().year()));
+        boost::algorithm::replace_all(screen_header_template,
+                                      "::Namespace::",
+                                      parameter.getString("project_namespace"));
+        boost::algorithm::replace_all(screen_header_template,
+                                      "::ProjectName::",
+                                      parameter.getString("project_name"));
+        boost::algorithm::replace_all(screen_header_template,
+                                      "::ProjectLead::",
+                                      parameter.getString("project_lead"));
+        boost::algorithm::replace_all(screen_header_template,
+                                      "::CoyprightDate::",
+                                      toString(datetime::getCurrentDateTime().date().year()));
 
         // file 6 : startup screen header
-        boost::algorithm::replace_all(screen_source_template, "::StartupScreenClass::", "LoadingScreen");
-        boost::algorithm::replace_all(screen_source_template, "::Namespace::", parameter.getString("project_namespace"));
-        boost::algorithm::replace_all(screen_source_template, "::ProjectName::", parameter.getString("project_name"));
-        boost::algorithm::replace_all(screen_source_template, "::ProjectLead::", parameter.getString("project_lead"));
-        boost::algorithm::replace_all(screen_source_template, "::CoyprightDate::", toString(datetime::getCurrentDateTime().date().year()));
+        boost::algorithm::replace_all(screen_source_template,
+                                      "::StartupScreenClass::",
+                                      "LoadingScreen");
+        boost::algorithm::replace_all(screen_source_template,
+                                      "::Namespace::",
+                                      parameter.getString("project_namespace"));
+        boost::algorithm::replace_all(screen_source_template,
+                                      "::ProjectName::",
+                                      parameter.getString("project_name"));
+        boost::algorithm::replace_all(screen_source_template,
+                                      "::ProjectLead::",
+                                      parameter.getString("project_lead"));
+        boost::algorithm::replace_all(screen_source_template,
+                                      "::CoyprightDate::",
+                                      toString(datetime::getCurrentDateTime().date().year()));
 
         // save file
         // source
-        file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeLists"}, StringPool.EXT_TEXT), cmake_template);
-        file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeSettings"}, StringPool.EXT_JSON), cmake_setting_template);
-        file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXT_H), scene_header_template);
-        file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class}, StringPool.EXT_CPP), scene_source_template);
-        file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", "LoadingScreen"}, StringPool.EXT_H), screen_header_template);
-        file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", "LoadingScreen"}, StringPool.EXT_CPP), screen_source_template);
+        file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeLists"},
+                                     StringPool.EXT_TEXT),
+                       cmake_template);
+        file::saveFile(file::getPath({projectDirectory, "Source", project_name, "CMakeSettings"},
+                                     StringPool.EXT_JSON),
+                       cmake_setting_template);
+        file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class},
+                                     StringPool.EXT_H),
+                       scene_header_template);
+        file::saveFile(file::getPath({projectDirectory, "Source", project_name, "cpp", scene_class},
+                                     StringPool.EXT_CPP),
+                       scene_source_template);
+        file::saveFile(
+            file::getPath({projectDirectory, "Source", project_name, "cpp", "LoadingScreen"},
+                          StringPool.EXT_H),
+            screen_header_template);
+        file::saveFile(
+            file::getPath({projectDirectory, "Source", project_name, "cpp", "LoadingScreen"},
+                          StringPool.EXT_CPP),
+            screen_source_template);
         // scene
         Setting scene_setting;
         scene_setting.setStringTable("level_table", std::vector<std::string>());
         scene_setting.setStringTable("screen_table", std::vector<std::string>());
         scene_setting.setStringTable("object_table", std::vector<std::string>());
-        file::saveFile(file::getPath({projectDirectory, "Scene", "scene"}, StringPool.EXT_NERO), scene_setting.toString());
+        file::saveFile(file::getPath({projectDirectory, "Scene", "scene"}, StringPool.EXT_NERO),
+                       scene_setting.toString());
 
         // Step 3 : compile the project
         GameProject::compileProject(projectDirectory, backgroundTask);
@@ -304,17 +382,20 @@ namespace nero
         backgroundTask->setCompleted(true);
     }
 
-    void ProjectManager::createLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
+    void ProjectManager::createLuaProject(const Parameter&    parameter,
+                                          BackgroundTask::Ptr backgroundTask)
     {
         nero_log("not_implemented");
     }
 
-    void ProjectManager::createCppLuaProject(const Parameter& parameter, BackgroundTask::Ptr backgroundTask)
+    void ProjectManager::createCppLuaProject(const Parameter&    parameter,
+                                             BackgroundTask::Ptr backgroundTask)
     {
         nero_log("not_implemented");
     }
 
-    bool ProjectManager::projectExist(const std::string& projectName, const std::string& workspaceName)
+    bool ProjectManager::projectExist(const std::string& projectName,
+                                      const std::string& workspaceName)
     {
         // check workspace exist
         if(!workspaceExist(workspaceName))
@@ -335,13 +416,15 @@ namespace nero
         return false;
     }
 
-    const std::vector<nlohmann::json> ProjectManager::getWorkspaceProjectTable(const std::string& workspace_name)
+    const std::vector<nlohmann::json>
+    ProjectManager::getWorkspaceProjectTable(const std::string& workspace_name)
     {
-        std::vector<nlohmann::json>                       result;
+        std::vector<nlohmann::json>         result;
 
-        nlohmann::json                                    projectWorkpsace = findWorkspace(workspace_name);
+        nlohmann::json                      projectWorkpsace = findWorkspace(workspace_name);
 
-        std::experimental::filesystem::path               folder_path(file::getPath({projectWorkpsace["workspace_directory"].get<std::string>(), "Project"}));
+        std::experimental::filesystem::path folder_path(
+            file::getPath({projectWorkpsace["workspace_directory"].get<std::string>(), "Project"}));
 
         std::experimental::filesystem::directory_iterator it{folder_path};
         while(it != std::experimental::filesystem::directory_iterator{})
@@ -369,7 +452,7 @@ namespace nero
             if(s != StringPool.BLANK)
             {
                 boost::algorithm::to_lower(s);
-                s[0] = std::toupper(s[0]);
+                s[0]   = std::toupper(s[0]);
                 result += s;
             }
         }
@@ -408,7 +491,7 @@ namespace nero
             if(s != StringPool.BLANK)
             {
                 boost::algorithm::to_lower(s);
-                s[0] = std::toupper(s[0]);
+                s[0]   = std::toupper(s[0]);
                 result += s + " ";
             }
         }
@@ -444,7 +527,8 @@ namespace nero
         Setting::Ptr projectSetting = std::make_shared<Setting>();
         projectSetting->loadSetting(file::getPath({projectDirectory, ".project"}), true, true);
         projectSetting->setString("project_directory", projectDirectory);
-        projectSetting->setString("workspace_directory", file::getParentDirectory(projectDirectory, 2));
+        projectSetting->setString("workspace_directory",
+                                  file::getParentDirectory(projectDirectory, 2));
 
         m_GameProject = std::make_shared<GameProject>(projectSetting);
         m_GameProject->init();
@@ -472,11 +556,13 @@ namespace nero
         auto      recentProject = file::loadJson(file::getPath({"setting", "recent_project"}));
 
         Parameter projectDocument;
-        projectDocument.loadJson(file::loadJson(file::getPath({projectDirectory, ".project"}), true));
+        projectDocument.loadJson(
+            file::loadJson(file::getPath({projectDirectory, ".project"}), true));
 
         for(int i = 0; i < recentProject.size(); i++)
         {
-            if(recentProject[i]["project_name"].get<std::string>() == projectDocument.getString("project_name"))
+            if(recentProject[i]["project_name"].get<std::string>() ==
+               projectDocument.getString("project_name"))
             {
                 recentProject.erase(i);
                 break;
@@ -490,10 +576,13 @@ namespace nero
 
         recentProject.push_back(recent.toJson());
 
-        file::saveFile(file::getPath({"setting", "recent_project"}, StringPool.EXT_JSON), recentProject.dump(3), true);
+        file::saveFile(file::getPath({"setting", "recent_project"}, StringPool.EXT_JSON),
+                       recentProject.dump(3),
+                       true);
     }
 
-    nlohmann::json ProjectManager::findProject(const std::string& workspace_name, const std::string& project_name)
+    nlohmann::json ProjectManager::findProject(const std::string& workspace_name,
+                                               const std::string& project_name)
     {
         nlohmann::json result;
 

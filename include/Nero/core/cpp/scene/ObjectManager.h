@@ -30,68 +30,71 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class ObjectManager {
+    class ObjectManager
+    {
       public:
         typedef std::vector<Object::Ptr>       ObjectTab;
         typedef std::vector<PhysicObject::Ptr> PhysicObjectTab;
         typedef std::shared_ptr<ObjectManager> Ptr;
 
       public:
-        ObjectManager(Object::Ptr root_object, b2World* world, std::vector<Screen::Ptr>& screenTable);
+        ObjectManager(Object::Ptr               root_object,
+                      b2World*                  world,
+                      std::vector<Screen::Ptr>& screenTable);
         ~ObjectManager();
 
         // Find by name
-        Object::Ptr      findObject(sf::String name);
-        Object::Ptr      findLayerObject(sf::String name);
-        Object::Ptr      findObjectInLayer(sf::String name, sf::String layer);
-        Object::Ptr      findSpriteObject(sf::String name);
-        Object::Ptr      findPhysicObject(sf::String name);
-        Object::Ptr      findSolidObject(sf::String name);
+        Object::Ptr findObject(sf::String name);
+        Object::Ptr findLayerObject(sf::String name);
+        Object::Ptr findObjectInLayer(sf::String name, sf::String layer);
+        Object::Ptr findSpriteObject(sf::String name);
+        Object::Ptr findPhysicObject(sf::String name);
+        Object::Ptr findSolidObject(sf::String name);
 
-        Object::Ptr      findScreenUIObject(std::string screenName, std::string ObjectName);
-        Object::Ptr      findScreenObject(std::string screenName, std::string ObjectName);
+        Object::Ptr findScreenUIObject(std::string screenName, std::string ObjectName);
+        Object::Ptr findScreenObject(std::string screenName, std::string ObjectName);
 
         // Find by id
-        Object::Ptr      findObject(int id);
-        Object::Ptr      findLayerObject(int id);
-        Object::Ptr      findObjectInLayer(int id, sf::String layer);
-        Object::Ptr      findSpriteObject(int id);
-        Object::Ptr      findPhysicObject(int id);
-        Object::Ptr      findSolidObject(int id);
+        Object::Ptr findObject(int id);
+        Object::Ptr findLayerObject(int id);
+        Object::Ptr findObjectInLayer(int id, sf::String layer);
+        Object::Ptr findSpriteObject(int id);
+        Object::Ptr findPhysicObject(int id);
+        Object::Ptr findSolidObject(int id);
         // Move
-        Object::Ptr      moveObject(sf::String name);
-        Object::Ptr      movePhysicObject(sf::String name);
-        Object::Ptr      moveSpriteObject(sf::String name);
-        Object::Ptr      moveSolidObject(sf::String name);
+        Object::Ptr moveObject(sf::String name);
+        Object::Ptr movePhysicObject(sf::String name);
+        Object::Ptr moveSpriteObject(sf::String name);
+        Object::Ptr moveSolidObject(sf::String name);
         // Remove
-        bool             removeObject(Object::Ptr object);
-        bool             removeObject(sf::String name);
-        bool             removeLayer(std::string name);
+        bool        removeObject(Object::Ptr object);
+        bool        removeObject(sf::String name);
+        bool        removeLayer(std::string name);
         //
-        void             checkWorldObject(std::vector<sf::String> objectNameTab);
-        void             checkScreenObject(std::string screen, std::vector<sf::String> objectNameTab);
+        void        checkWorldObject(std::vector<sf::String> objectNameTab);
+        void        checkScreenObject(std::string screen, std::vector<sf::String> objectNameTab);
         //
-        void             removeDeadPhysicObject();
+        void        removeDeadPhysicObject();
 
-        void             setPhysicWorld(b2World* world);
+        void        setPhysicWorld(b2World* world);
         //
-        void             addSpriteObject(Object::Ptr object);
-        void             addPhysicObject(Object::Ptr object);
-        void             addSolidObject(Object::Ptr object);
-        void             addObject(Object::Ptr object);
+        void        addSpriteObject(Object::Ptr object);
+        void        addPhysicObject(Object::Ptr object);
+        void        addSolidObject(Object::Ptr object);
+        void        addObject(Object::Ptr object);
 
         // joints
-        void             createJoint(Object::Ptr objectA, Object::Ptr objectB, DistanceJointProperty property);
-        void             createJoint(Object::Ptr objectA, Object::Ptr objectB, FrictionJointProperty property);
-        void             createJoint(Object::Ptr objectA, Object::Ptr objectB, MotorJointProperty property);
-        void             createJoint(Object::Ptr objectA, Object::Ptr objectB, MouseJointProperty property);
-        void             createJoint(Object::Ptr objectA, Object::Ptr objectB, RopeJointProperty property);
-        void             createJoint(Object::Ptr objectA, Object::Ptr objectB, WeldJointProperty property);
-        void             createJoint(Object::Ptr objectA, Object::Ptr objectB, WheelJointProperty property);
-        void             createJoint(Object::Ptr objectA, Object::Ptr objectB, PulleyJointProperty property);
-        void             createJoint(Object::Ptr objectA, Object::Ptr objectB, PrismaticJointProperty property);
-        void             createJoint(Object::Ptr objectA, Object::Ptr objectB, RevoluteJointProperty property);
-        void             createJoint(Object::Ptr objectA, Object::Ptr objectB, GearJointProperty property);
+        void createJoint(Object::Ptr objectA, Object::Ptr objectB, DistanceJointProperty property);
+        void createJoint(Object::Ptr objectA, Object::Ptr objectB, FrictionJointProperty property);
+        void createJoint(Object::Ptr objectA, Object::Ptr objectB, MotorJointProperty property);
+        void createJoint(Object::Ptr objectA, Object::Ptr objectB, MouseJointProperty property);
+        void createJoint(Object::Ptr objectA, Object::Ptr objectB, RopeJointProperty property);
+        void createJoint(Object::Ptr objectA, Object::Ptr objectB, WeldJointProperty property);
+        void createJoint(Object::Ptr objectA, Object::Ptr objectB, WheelJointProperty property);
+        void createJoint(Object::Ptr objectA, Object::Ptr objectB, PulleyJointProperty property);
+        void createJoint(Object::Ptr objectA, Object::Ptr objectB, PrismaticJointProperty property);
+        void createJoint(Object::Ptr objectA, Object::Ptr objectB, RevoluteJointProperty property);
+        void createJoint(Object::Ptr objectA, Object::Ptr objectB, GearJointProperty property);
         //
         PhysicJoint::Ptr findJoint(int jointId);
         PhysicJoint::Ptr findJoint(const std::string& jointName);

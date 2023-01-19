@@ -41,9 +41,10 @@ namespace nero
         }
 
         // load the shader json
-        nlohmann::json shader_table = file::loadJson(m_Configuration["descriptor"].get<std::string>());
+        nlohmann::json shader_table =
+            file::loadJson(m_Configuration["descriptor"].get<std::string>());
 
-        shader_table                = shader_table["shader_list"];
+        shader_table = shader_table["shader_list"];
 
         for(auto& shader_json : shader_table)
         {
@@ -52,7 +53,8 @@ namespace nero
             // std::unique_ptr<sf::Shader> shader = make_unique<sf::Shader>();
             sf::String  shaderName;
 
-            if(shader_json.find("fragment") != shader_json.end() && shader_json.find("vertex") != shader_json.end())
+            if(shader_json.find("fragment") != shader_json.end() &&
+               shader_json.find("vertex") != shader_json.end())
             {
                 std::string file_1 = folder_name + "/" + shader_json["vertex"].get<std::string>();
                 std::string file_2 = folder_name + "/" + shader_json["fragment"].get<std::string>();
@@ -79,9 +81,11 @@ namespace nero
                 if(shader_json.find("name") != shader_json.end())
                     shaderName = shader_json["name"].get<std::string>();
                 else
-                    shaderName = file::removeFileExtension(file_1) + "_" + file::removeFileExtension(file_2);
+                    shaderName =
+                        file::removeFileExtension(file_1) + "_" + file::removeFileExtension(file_2);
             }
-            else if(shader_json.find("fragment") != shader_json.end() && shader_json.find("vertex") == shader_json.end())
+            else if(shader_json.find("fragment") != shader_json.end() &&
+                    shader_json.find("vertex") == shader_json.end())
             {
                 std::string file = folder_name + "/" + shader_json["fragment"].get<std::string>();
 
@@ -102,7 +106,8 @@ namespace nero
                 else
                     shaderName = file::removeFileExtension(file);
             }
-            else if(shader_json.find("fragment") == shader_json.end() && shader_json.find("vertex") != shader_json.end())
+            else if(shader_json.find("fragment") == shader_json.end() &&
+                    shader_json.find("vertex") != shader_json.end())
             {
                 std::string file = folder_name + "/" + shader_json["vertex"].get<std::string>();
 

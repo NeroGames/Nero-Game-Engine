@@ -14,7 +14,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class WorkspaceTab : public UIComponent {
+    class WorkspaceTab : public UIComponent
+    {
       public:
         WorkspaceTab(EditorContext::Ptr       editorContext,
                      TabSelectionHandler::Ptr tabSelectionHandler);

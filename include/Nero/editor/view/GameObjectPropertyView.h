@@ -10,7 +10,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class GameObjectPropertyView : public UIComponent {
+    class GameObjectPropertyView : public UIComponent
+    {
       public:
         GameObjectPropertyView(EditorContext::Ptr editorContext);
         virtual ~GameObjectPropertyView() override;
@@ -20,8 +21,7 @@ namespace nero
 
       private:
         std::vector<Object::Ptr> getComponentTable(Object::Ptr root);
-        void                     getComponentTable(Object::Ptr               object,
-                                                   std::vector<Object::Ptr>& result);
+        void getComponentTable(Object::Ptr object, std::vector<Object::Ptr>& result);
     };
 } // namespace nero
 #endif // GAMEOBJECTPROPERTYVIEW_H

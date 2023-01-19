@@ -12,7 +12,8 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class CommandLine : public CLI::App {
+    class CommandLine : public CLI::App
+    {
       public:
         CommandLine();
         void handleCommand();

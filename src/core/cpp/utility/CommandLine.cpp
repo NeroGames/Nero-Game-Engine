@@ -56,11 +56,14 @@ namespace nero
             Poco::Process::kill(m_Handle);
         }
 
-        Process runCommand(const std::string& command, const std::vector<std::string>& argument, bool waitCompletion)
+        Process runCommand(const std::string&              command,
+                           const std::vector<std::string>& argument,
+                           bool                            waitCompletion)
         {
 
-            Poco::Pipe            outPipe, errorPipe;
-            Process               process(Poco::Process::launch(command, argument, nullptr, &outPipe, &errorPipe));
+            Poco::Pipe outPipe, errorPipe;
+            Process    process(
+                Poco::Process::launch(command, argument, nullptr, &outPipe, &errorPipe));
 
             Poco::PipeInputStream outStream(outPipe);
             Poco::PipeInputStream errorStream(errorPipe);
@@ -96,10 +99,12 @@ namespace nero
         {
 #ifdef NERO_OS_WINDOW
 
-            std::string command = LAUNCH_APPLICATION_WINDOWS + file::escapeSpace(file::getWindowsPath(path));
+            std::string command =
+                LAUNCH_APPLICATION_WINDOWS + file::escapeSpace(file::getWindowsPath(path));
             system(command.c_str());
 
-            return findProcessId(processName == StringPool.BLANK ? file::getFileName(path) : processName);
+            return findProcessId(processName == StringPool.BLANK ? file::getFileName(path)
+                                                                 : processName);
 
 #elif NERO_OS_LINUX
 
@@ -125,10 +130,15 @@ namespace nero
         {
 #ifdef NERO_OS_WINDOW
 
-            Poco::Pipe            outPipe;
-            Poco::Pipe            outPipe2;
-            Poco::ProcessHandle   handle  = Poco::Process::launch("tasklist", {"/fo", "csv"}, nullptr, &outPipe, &outPipe);
-            Poco::ProcessHandle   handle2 = Poco::Process::launch("findstr", {"/i", application}, &outPipe, &outPipe2, &outPipe2);
+            Poco::Pipe          outPipe;
+            Poco::Pipe          outPipe2;
+            Poco::ProcessHandle handle =
+                Poco::Process::launch("tasklist", {"/fo", "csv"}, nullptr, &outPipe, &outPipe);
+            Poco::ProcessHandle   handle2 = Poco::Process::launch("findstr",
+                                                                  {"/i", application},
+                                                                &outPipe,
+                                                                &outPipe2,
+                                                                &outPipe2);
 
             Poco::PipeInputStream outStream(outPipe2);
             std::stringstream     stringStream;
@@ -136,7 +146,7 @@ namespace nero
 
             auto        processTableSplit = string::splitString(stringStream.str(), '\r\n');
 
-            std::string result            = string::splitString(processTableSplit.back(), ',').at(1);
+            std::string result = string::splitString(processTableSplit.back(), ',').at(1);
             result.pop_back();
             result.erase(result.begin());
 
@@ -156,8 +166,9 @@ namespace nero
 
 #ifdef NERO_OS_WINDOW
 
-            Poco::Pipe            outPipe;
-            Poco::ProcessHandle   handle = Poco::Process::launch("tasklist", {"/fo", "csv"}, nullptr, &outPipe, &outPipe);
+            Poco::Pipe          outPipe;
+            Poco::ProcessHandle handle =
+                Poco::Process::launch("tasklist", {"/fo", "csv"}, nullptr, &outPipe, &outPipe);
 
             Poco::PipeInputStream outStream(outPipe);
             std::stringstream     stringStream;
@@ -177,8 +188,9 @@ namespace nero
         {
 #ifdef NERO_OS_WINDOW
 
-            Poco::Pipe            outPipe;
-            Poco::ProcessHandle   handle = Poco::Process::launch("setx", {name, value}, nullptr, &outPipe, &outPipe);
+            Poco::Pipe          outPipe;
+            Poco::ProcessHandle handle =
+                Poco::Process::launch("setx", {name, value}, nullptr, &outPipe, &outPipe);
             Poco::PipeInputStream outStream(outPipe);
             Poco::StreamCopier::copyStream(outStream, nero::logging::Logger::getStringStream());
 
@@ -191,14 +203,17 @@ namespace nero
 
         void showApplication(const std::string& name)
         {
-            std::string NERO_GAME_HOME = getenv("NERO_GAME_HOME") ? std::string(getenv("NERO_GAME_HOME")) : StringPool.BLANK;
+            std::string NERO_GAME_HOME =
+                getenv("NERO_GAME_HOME") ? std::string(getenv("NERO_GAME_HOME")) : StringPool.BLANK;
 
-            std::string windowmode     = file::escapeSpace(file::getWindowsPath(NERO_GAME_HOME + "/Tools/Script/windowmode.bat"));
-            std::string sendkeys       = file::escapeSpace(file::getWindowsPath(NERO_GAME_HOME + "/Tools/Script/sendkeys.bat"));
+            std::string windowmode = file::escapeSpace(
+                file::getWindowsPath(NERO_GAME_HOME + "/Tools/Script/windowmode.bat"));
+            std::string sendkeys = file::escapeSpace(
+                file::getWindowsPath(NERO_GAME_HOME + "/Tools/Script/sendkeys.bat"));
 
             // std::string cmd1 = windowmode + " -pid " + proccessId + " -mode restore";
-            std::string cmd1           = "call " + windowmode + " -title " + name + " -mode maximized";
-            std::string cmd2           = "call " + sendkeys + " " + name + "  \"\"";
+            std::string cmd1 = "call " + windowmode + " -title " + name + " -mode maximized";
+            std::string cmd2 = "call " + sendkeys + " " + name + "  \"\"";
 
             // cmd::runCommand("call", {windowmode, "-pid", proccessId, "-mode", "restore"}, false);
             // usleep(100);

@@ -46,21 +46,20 @@ namespace nero
     void RenderEngine::noGameFound()
     {
         // create window
-        m_RenderWindow.create(sf::VideoMode(
-                                  EngineConstant.ENGINE_WINDOW_WIDTH,
-                                  EngineConstant.ENGINE_WINDOW_HEIGHT),
-                              EngineConstant.NO_GAME_FOUND,
-                              sf::Style::Close);
+        m_RenderWindow.create(
+            sf::VideoMode(EngineConstant.ENGINE_WINDOW_WIDTH, EngineConstant.ENGINE_WINDOW_HEIGHT),
+            EngineConstant.NO_GAME_FOUND,
+            sf::Style::Close);
 
         // build NoGameScene
-        m_GameScene     = NoGameFound::Ptr(new NoGameFound(Scene::Context(
-            EngineConstant.NO_GAME_FOUND,
-            m_RenderTexture,
-            m_GameWorldResourceManager,
-            m_Camera,
-            m_GameSetting,
-            Scene::EngineType::RENDER_ENGINE,
-            Scene::PlatformType::WINDOWS)));
+        m_GameScene =
+            NoGameFound::Ptr(new NoGameFound(Scene::Context(EngineConstant.NO_GAME_FOUND,
+                                                            m_RenderTexture,
+                                                            m_GameWorldResourceManager,
+                                                            m_Camera,
+                                                            m_GameSetting,
+                                                            Scene::EngineType::RENDER_ENGINE,
+                                                            Scene::PlatformType::WINDOWS)));
 
         // set quit engine callback
         // m_GameScene->m_QuitEngine = [this](){ m_RenderWindow.close();};
@@ -94,21 +93,25 @@ namespace nero
 
     void RenderEngine::createRenderWindow()
     {
-        m_RenderWindow.create(sf::VideoMode(
-                                  m_GameSetting->getUInt("window_width"),
-                                  m_GameSetting->getUInt("window_height")),
+        m_RenderWindow.create(sf::VideoMode(m_GameSetting->getUInt("window_width"),
+                                            m_GameSetting->getUInt("window_height")),
                               m_GameSetting->getString("game_name"),
                               getWindowStyle(m_GameSetting->getString("window_style")));
     }
 
     void RenderEngine::startEngineInBackground()
     {
-        m_StartEngineFuture = std::async(std::launch::async, &RenderEngine::startEngine, this, std::ref(m_EngineStarted), m_StartupScreen->getDuration());
+        m_StartEngineFuture = std::async(std::launch::async,
+                                         &RenderEngine::startEngine,
+                                         this,
+                                         std::ref(m_EngineStarted),
+                                         m_StartupScreen->getDuration());
     }
 
     void RenderEngine::loadStartupScreen()
     {
-        boost::dll::fs::path game_library_path(file::removeFileExtension(m_GameSetting->getString("game_library_file")));
+        boost::dll::fs::path game_library_path(
+            file::removeFileExtension(m_GameSetting->getString("game_library_file")));
 
         m_CreateCppStartupScreen = boost::dll::import_alias<CreateCppStartupScreen>(
             game_library_path,
@@ -122,7 +125,8 @@ namespace nero
             // provide render window
             m_StartupScreen->setRenderWindow(&m_RenderWindow);
             // load resource
-            m_StartupScreenResourceManager->loadDirectory(m_GameSetting->getString("startup_screen_resource_directory"));
+            m_StartupScreenResourceManager->loadDirectory(
+                m_GameSetting->getString("startup_screen_resource_directory"));
             // provide resource
             m_StartupScreen->setResourceManager(m_StartupScreenResourceManager);
         }
@@ -136,50 +140,52 @@ namespace nero
     int RenderEngine::startEngine(bool& engineStarted, const unsigned int duration)
     {
         // load scene class
-        boost::dll::fs::path game_library_path(file::removeFileExtension(m_GameSetting->getString("game_library_file")));
+        boost::dll::fs::path game_library_path(
+            file::removeFileExtension(m_GameSetting->getString("game_library_file")));
 
-        m_CreateCppScene = boost::dll::import_alias<CreateCppScene>(
-            game_library_path,
-            EngineConstant.DLL_CREATE_SCENE,
-            boost::dll::load_mode::append_decorations);
+        m_CreateCppScene =
+            boost::dll::import_alias<CreateCppScene>(game_library_path,
+                                                     EngineConstant.DLL_CREATE_SCENE,
+                                                     boost::dll::load_mode::append_decorations);
         // create scene object
         if(!m_CreateCppScene.empty())
         {
-            m_GameScene = m_CreateCppScene(Scene::Context(
-                m_GameSetting->getString("game_name"),
-                m_RenderTexture,
-                m_GameWorldResourceManager,
-                m_Camera,
-                m_GameSetting,
-                Scene::EngineType::RENDER_ENGINE,
-                Scene::PlatformType::WINDOWS));
+            m_GameScene = m_CreateCppScene(Scene::Context(m_GameSetting->getString("game_name"),
+                                                          m_RenderTexture,
+                                                          m_GameWorldResourceManager,
+                                                          m_Camera,
+                                                          m_GameSetting,
+                                                          Scene::EngineType::RENDER_ENGINE,
+                                                          Scene::PlatformType::WINDOWS));
         }
 
         // load all game screen script class
-        for(const std::string& script_class : m_GameSetting->getStringTable("game_screen_script_table"))
+        for(const std::string& script_class :
+            m_GameSetting->getStringTable("game_screen_script_table"))
         {
-            /*m_GameScene->m_CreateGameScreenMap[script_class] = boost::dll::import_alias<CreateCppScene>(
-                                                                                             game_library_path,
-                                                                                             std::string("create" + script_class),
-                                                                                             boost::dll::load_mode::append_decorations);*/
+            /*m_GameScene->m_CreateGameScreenMap[script_class] =
+               boost::dll::import_alias<CreateCppScene>( game_library_path, std::string("create" +
+               script_class), boost::dll::load_mode::append_decorations);*/
         }
 
         // load all game object simple script class
-        for(const std::string& screen_class : m_GameSetting->getStringTable("game_object_simple_script_table"))
+        for(const std::string& screen_class :
+            m_GameSetting->getStringTable("game_object_simple_script_table"))
         {
             /*m_CreateSimpleScriptMap[script_class] = boost::dll::import_alias<CreateCppScene>(
                                                                                              game_library_path,
-                                                                                             std::string("create" + script_class),
-                                                                                             boost::dll::load_mode::append_decorations);*/
+                                                                                             std::string("create"
+               + script_class), boost::dll::load_mode::append_decorations);*/
         }
 
         // load all game object physic script class
-        for(const std::string& screen_class : m_GameSetting->getStringTable("game_object_physic_script_table"))
+        for(const std::string& screen_class :
+            m_GameSetting->getStringTable("game_object_physic_script_table"))
         {
             /*m_CreatePhysicScriptMap[script_class] = boost::dll::import_alias<CreateCppScene>(
                                                                                              game_library_path,
-                                                                                             std::string("create" + script_class),
-                                                                                             boost::dll::load_mode::append_decorations);*/
+                                                                                             std::string("create"
+               + script_class), boost::dll::load_mode::append_decorations);*/
         }
 
         //
