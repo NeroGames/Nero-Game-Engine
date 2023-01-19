@@ -25,7 +25,6 @@ namespace nero
 
       private:
         void renderToolbarContent();
-        void renderToolbarButtonGroup();
         void renderToolbarPopupGroup();
 
       private:

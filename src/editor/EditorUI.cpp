@@ -66,6 +66,7 @@ namespace nero
         , m_ConsoleWindow(m_EditorContext)
         , m_LoggerWindow(m_EditorContext)
         , m_RenderCanvasWindow(m_EditorContext)
+        , m_BackgroundTaskWindow(m_EditorContext)
         //
         , m_InterfaceFirstDraw(true)
         , m_SelectedScriptTypeIndex(0)
@@ -297,7 +298,7 @@ namespace nero
         interfaceFirstDraw();
 
         // background task
-        showBackgroundTaskWindow();
+        m_BackgroundTaskWindow.render();
 
         if(m_EditorSetup->initiateSetup())
         {
@@ -715,38 +716,6 @@ namespace nero
     {
     }
 
-    void EditorUI::compileProject()
-    {
-        /*auto gameProject = m_EditorContext->getGameProject();
-
-        if(gameProject)
-                {
-            BTManager::startTask(&GameProject::compileProject, gameProject.get());
-        }*/
-    }
-
-    void EditorUI::editProject()
-    {
-        auto gameProject = m_EditorContext->getGameProject();
-
-        if(gameProject)
-        {
-            gameProject->openEditor();
-        }
-    }
-
-    void EditorUI::reloadProject()
-    {
-        auto gameProject = m_EditorContext->getGameProject();
-
-        if(gameProject)
-        {
-            nero_log("reloading project ...");
-
-            // gameProject->loadLibrary();
-        }
-    }
-
     void EditorUI::onSaveProject()
     {
         auto gameProject = m_EditorContext->getGameProject();
@@ -969,54 +938,6 @@ namespace nero
         }
     }
 
-    void EditorUI::showBackgroundTaskWindow()
-    {
-        if(!m_EditorContext->getGameProject())
-            return;
-
-        // FIXME-VIEWPORT: Select a default viewport
-        const float DISTANCE = 10.0f;
-        static int  corner   = 3;
-        if(corner != -1)
-        {
-            ImGuiViewport* viewport = ImGui::GetMainViewport();
-            ImVec2         window_pos =
-                ImVec2((corner & 1) ? (viewport->Pos.x + viewport->Size.x - DISTANCE)
-                                    : (viewport->Pos.x + DISTANCE),
-                       (corner & 2) ? (viewport->Pos.y + viewport->Size.y - DISTANCE)
-                                    : (viewport->Pos.y + DISTANCE));
-            ImVec2 window_pos_pivot =
-                ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
-            ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
-            ImGui::SetNextWindowViewport(viewport->ID);
-        }
-        // ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.f);
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.000f, 1.000f, 1.000f, 1.00f));
-        ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.911f, 0.499f, 0.146f, 1.000f));
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.000f, 0.000f, 0.000f, 1.00f));
-        if(ImGui::Begin("##background_task_window",
-                        nullptr,
-                        (corner != -1 ? ImGuiWindowFlags_NoMove : 0) | ImGuiWindowFlags_NoDocking |
-                            ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-                            ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
-                            ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
-        {
-            auto& taskTable = BTManager::getTaskTable();
-
-            for(BackgroundTask::Ptr task : taskTable)
-            {
-                if(!task->completed())
-                {
-                    ImGui::Text(task->getMessage().c_str());
-                }
-            }
-        }
-        ImGui::End();
-        ImGui::PopStyleColor(3);
-        ImGui::PopStyleVar();
-    }
-
     void EditorUI::clearScriptWizardInput()
     {
         string::fillCharArray(m_InputClassName, sizeof(m_InputClassName), StringPool.BLANK);
@@ -1202,6 +1123,41 @@ namespace nero
             }
             advancedScene->openLevel(levelName);
             m_EditorContext->setOpenedGameLevelName(levelName);
+        };
+
+        m_EditorProxy->m_OpenCodeEditorCallback = [this]()
+        {
+            auto gameProject = m_EditorContext->getGameProject();
+
+            if(gameProject)
+            {
+                gameProject->openEditor();
+            }
+        };
+
+        m_EditorProxy->m_CompileProjectCallback = [this]()
+        {
+            auto gameProject = m_EditorContext->getGameProject();
+
+            if(gameProject)
+            {
+                BTManager::startTask(
+                    [gameProject](BackgroundTask::Ptr backgroundTask)
+                    {
+                        GameProject::compileProject(gameProject->getProjectDirectory(),
+                                                    backgroundTask);
+                    });
+            }
+        };
+
+        m_EditorProxy->m_ReloadProjectLibraryCallback = [this]()
+        {
+            auto gameProject = m_EditorContext->getGameProject();
+
+            if(gameProject)
+            {
+                gameProject->loadLibrary();
+            }
         };
     }
 } // namespace nero

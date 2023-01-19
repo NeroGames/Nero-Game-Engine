@@ -188,6 +188,8 @@ namespace nero
     void GameProject::compileProject(const std::string&        projectDirectory,
                                      const BackgroundTask::Ptr backgroundTask)
     {
+        // TODO : prevent multiple compilation at the same time
+
         Parameter parameter;
         parameter.loadJson(file::loadJson(file::getPath({projectDirectory, ".project"}), true));
         const std::string projectName    = parameter.getString("project_name");

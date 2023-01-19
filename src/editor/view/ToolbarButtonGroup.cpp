@@ -190,21 +190,21 @@ namespace nero
 
             if(ImGui::Button(ICON_FA_EDIT, ImVec2(45.f, 28.f)))
             {
-                // editProject();
+                m_EditorContext->getEditorProxy()->openCodeEditor();
             }
 
             ImGui::SameLine();
 
             if(ImGui::Button(ICON_FA_COGS, ImVec2(45.f, 28.f)))
             {
-                // compileProject();
+                m_EditorContext->getEditorProxy()->compileProject();
             }
 
             ImGui::SameLine();
 
             if(ImGui::Button(ICON_FA_SYNC, ImVec2(45.f, 28.f)))
             {
-                // reloadProject();
+                m_EditorContext->getEditorProxy()->reloadProjectLibrary();
             }
 
             ImGui::SameLine();
@@ -213,8 +213,6 @@ namespace nero
         if(ImGui::Button(ICON_FA_ANCHOR " Project", ImVec2(95.f, 28.f)))
         {
             ImGui::OpenPopup(EditorConstant.WINDOW_PROJECT_MANAGER.c_str());
-            // TODO
-            // m_ProjectManagerTabBarSwitch.selectTab(EditorConstant.TAB_RECENT_PROJECT);
         }
     }
 } // namespace nero

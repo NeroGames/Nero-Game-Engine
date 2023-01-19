@@ -28,6 +28,9 @@ namespace nero
         void saveProject() const;
         void closeProject() const;
         void loadProject() const;
+        void openCodeEditor() const;
+        void compileProject() const;
+        void reloadProjectLibrary() const;
         // Workspace
         void createWorkspace(const Parameter& workspaceParameter) const;
         void importWorkspace(const std::string& workspaceDirectory) const;
@@ -44,6 +47,9 @@ namespace nero
         std::function<void(const Parameter&, const unsigned int&)> m_CreateProjectCallback;
         std::function<void()>                                      m_SaveProjectCallback;
         std::function<void()>                                      m_CloseProjectCallback;
+        std::function<void()>                                      m_OpenCodeEditorCallback;
+        std::function<void()>                                      m_CompileProjectCallback;
+        std::function<void()>                                      m_ReloadProjectLibraryCallback;
         // Workspace
         std::function<void(const Parameter&)>                      m_CreateWorkspaceCallback;
         std::function<void(const std::string&)>                    m_ImportWorkspaceCallback;

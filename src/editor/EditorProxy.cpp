@@ -62,4 +62,19 @@ namespace nero
     {
         m_OpenGameLevelCallback(levelName);
     }
+
+    void EditorProxy::openCodeEditor() const
+    {
+        m_OpenCodeEditorCallback();
+    }
+
+    void EditorProxy::compileProject() const
+    {
+        m_CompileProjectCallback();
+    }
+
+    void EditorProxy::reloadProjectLibrary() const
+    {
+        m_ReloadProjectLibraryCallback();
+    }
 } // namespace nero

@@ -23,6 +23,7 @@
 #include <Nero/editor/view/ConsoleWindow.h>
 #include <Nero/editor/view/LoggerWindow.h>
 #include <Nero/editor/view/RenderCanvasWindow.h>
+#include <Nero/editor/view/BackgroundTaskWindow.h>
 
 #include <Nero/editor/project/ProjectManager.h>
 #include <Nero/core/cpp/scene/Scene.h>
@@ -127,25 +128,20 @@ namespace nero
         ConsoleWindow                           m_ConsoleWindow;
         LoggerWindow                            m_LoggerWindow;
         RenderCanvasWindow                      m_RenderCanvasWindow;
+        BackgroundTaskWindow                    m_BackgroundTaskWindow;
         // Core Engine callback
         std::function<void(const std::string&)> m_UpdateWindowTitleCallback;
         bool                                    mouseOnCanvas();
 
       private:
         //////////////docksapce
-        bool m_InterfaceFirstDraw;
-        void interfaceFirstDraw();
+        bool                           m_InterfaceFirstDraw;
+        void                           interfaceFirstDraw();
         //////////////Project
-        void compileProject();
-        void editProject();
-        void reloadProject();
-        void createGameScreen(const Parameter& parameter);
+        void                           createGameScreen(const Parameter& parameter);
         //
         // editor view
-        void showGameScreenWindow();
-        // utility
-        void
-        showToggleButton(bool toggle, const std::string& label, std::function<void()> callback);
+        void                           showGameScreenWindow();
         // project creation
         ImGuiIO                        baseio;
         std::stringstream              buffer;
@@ -154,7 +150,6 @@ namespace nero
         void                           showGameProjectWindow();
         void                           showGameSettingWindow();
         void                           showVisualScriptWindow();
-        void                           showBackgroundTaskWindow();
         ////////////////////////Project and Workspace////////////////////////
         // General
         // Script Wizard
