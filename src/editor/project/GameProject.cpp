@@ -65,6 +65,7 @@ namespace nero
 
         if(file::fileExist(libraryFileCopy))
         {
+            m_AdvancedScene->clearGameSceneObject();
             m_CreateCppGameSceneCallback.clear();
             m_CreateCppGameLevelCallback.clear();
 
@@ -272,28 +273,15 @@ namespace nero
 
     void GameProject::closeProject()
     {
-        /*if(cmd::processRunning(m_EditorProcessId))
+        if(cmd::processRunning(m_CodeEditorProcessId))
         {
-                std::string kill_command = "taskkill /F /PID " + m_EditorProcessId;
-                system(kill_command.c_str());
-        }*/
+            std::string cmd = "taskkill /F /PID " + m_CodeEditorProcessId;
+            system(cmd.c_str());
+        }
 
-        // nero_log("clearing resources");
-        // m_ResourceManager->clearResource();
-
-        // m_DemoScene = nullptr;
-        // m_CreateCppSceneFn.clear();
-
-        // delete scene
-        /*m_AdvancedScene->m_Scene = nullptr;
-        m_AdvancedScene->m_CreateCppScene.clear();
-        m_CreateCppSceneFn.clear();
-
-        //delete level and screen
-        m_AdvancedScene->m_GameLevelTable.clear();
-        m_AdvancedScene->m_GameScreenTable.clear();*/
-
-        // m_CreateCppSceneFn.clear();
+        m_AdvancedScene->clearGameSceneObject();
+        m_CreateCppGameSceneCallback.clear();
+        m_CreateCppGameLevelCallback.clear();
     }
 
     void GameProject::setRenderTexture(const RenderTexturePtr& renderTexture)

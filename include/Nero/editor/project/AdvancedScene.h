@@ -20,7 +20,8 @@ namespace nero
     class AdvancedScene
     {
       public:
-        typedef std::shared_ptr<AdvancedScene> Ptr;
+        using Ptr              = std::shared_ptr<AdvancedScene>;
+        using RenderTexturePtr = std::shared_ptr<sf::RenderTexture>;
 
       public:
         AdvancedScene();
@@ -42,14 +43,16 @@ namespace nero
         void                     setProjectSetting(const Setting::Ptr& setting);
         // render
         void                     setRenderContext(const RenderContext::Ptr& renderContext);
-        void              setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
-        LevelBuilder::Ptr getLevelBuilder() const;
+        void                     setRenderTexture(const RenderTexturePtr& renderTexture);
         // Game Scene
-        void              setGameScene(GameScene::Ptr gameScene);
-        void              handleEvent(const sf::Event& event);
-        void              update(const sf::Time& timeStep);
-        void              render();
-        void              renderShape();
+        void                     setGameScene(GameScene::Ptr gameScene);
+        void                     handleEvent(const sf::Event& event);
+        void                     update(const sf::Time& timeStep);
+        void                     render();
+        void                     renderShape();
+        //
+        void                     clearGameSceneObject();
+        LevelBuilder::Ptr        getLevelBuilder() const;
 
       private:
         // level

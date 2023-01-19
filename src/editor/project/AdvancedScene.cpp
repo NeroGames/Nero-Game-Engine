@@ -300,4 +300,9 @@ namespace nero
         if(m_GameScene)
             m_GameScene->renderShape();
     }
+
+    void AdvancedScene::clearGameSceneObject()
+    {
+        m_GameScene = nullptr;
+    }
 } // namespace nero
