@@ -146,6 +146,9 @@ namespace nero
 
     void ToolbarButtonGroup::renderRightButtonGroup()
     {
+        if(m_EditorContext->getEditorMode() == EditorMode::PLAY_GAME)
+            return;
+
         float rightOffset = 95.f;
 
         if(m_EditorContext->getGameProject())
