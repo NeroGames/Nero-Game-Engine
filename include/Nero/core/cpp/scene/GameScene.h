@@ -8,10 +8,13 @@
 // Nero
 #include <Nero/core/cpp/camera/Camera.h>
 #include <Nero/core/cpp/engine/Setting.h>
+#include <Nero/core/cpp/scene/GameLevel.h>
 // SFML
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
+// Boost
+#include <boost/config.hpp>
 // STD
 #include <memory>
 #include <vector>
@@ -63,6 +66,7 @@ namespace nero
             EngineType                         engineType;
             PlatformType                       platformType;
             std::string                        sceneName;
+            GameLevel::Ptr                     gameLevel;
         };
 
       public:
@@ -80,9 +84,11 @@ namespace nero
 
         std::shared_ptr<sf::RenderTexture> getRenderTexture();
         Camera::Ptr                        getCamera();
+        void                               setGameLevel(const GameLevel::Ptr& gameLevel);
 
-      private:
-        Context m_SceneContext;
+      protected:
+        Context                    m_SceneContext;
+        std::shared_ptr<GameLevel> m_GameLevel;
     };
 } // namespace nero
 

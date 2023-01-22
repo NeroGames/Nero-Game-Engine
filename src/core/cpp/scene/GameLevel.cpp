@@ -21,10 +21,18 @@ namespace nero
     {
     }
 
+    GameLevel::Context::Context()
+    {
+    }
+
     GameLevel::GameLevel(GameLevel::Context context)
         : m_LevelContext(context)
         , m_ResourceManager(std::make_shared<ResourceManager>(
               m_LevelContext.levelSetting->getSetting("resource")))
+    {
+    }
+
+    GameLevel::GameLevel()
     {
     }
 
@@ -160,5 +168,15 @@ namespace nero
     std::string GameLevel::getLevelDirectory() const
     {
         return m_LevelContext.levelDirectory;
+    }
+
+    std::shared_ptr<sf::RenderTexture> GameLevel::getRenderTexture()
+    {
+        return m_LevelContext.renderTexture;
+    }
+
+    Camera::Ptr GameLevel::getCamera()
+    {
+        return m_LevelContext.camera;
     }
 } // namespace nero

@@ -118,8 +118,8 @@ namespace nero
         m_CanvasXAxis.setRotation(m_EditorCamera->getView().getRotation());
         m_CanvasYAxis.setRotation(m_EditorCamera->getView().getRotation() + 90.f);
 
-        m_RenderTexture->draw(m_CanvasXAxis);
-        m_RenderTexture->draw(m_CanvasYAxis);
+        // m_RenderTexture->draw(m_CanvasXAxis);
+        // m_RenderTexture->draw(m_CanvasYAxis);
 
         ImGui::Image(flipTexture(m_RenderTexture->getTexture()));
 

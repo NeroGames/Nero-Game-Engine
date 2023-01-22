@@ -67,7 +67,7 @@ namespace nero
         {
             m_AdvancedScene->clearGameSceneObject();
             m_CreateCppGameSceneCallback.clear();
-            m_CreateCppGameLevelCallback.clear();
+            m_CreateCppGameLevelCallbackTable.clear();
 
             file::removeFile(libraryFileCopy);
         }
@@ -109,8 +109,8 @@ namespace nero
                     "create" + string::formatString(levelName, string::Format::CAMEL_CASE_UPPER) +
                     "GameLevel";
 
-                m_CreateCppGameLevelCallback.clear();
-                m_CreateCppGameLevelCallback = boost::dll::import_alias<CreateCppGameLevelCallback>(
+                boost::function<CreateCppGameLevelCallback> createCppGameLevelCallback;
+                createCppGameLevelCallback = boost::dll::import_alias<CreateCppGameLevelCallback>(
                     libraryFilePath,
                     createFunctionName,
                     boost::dll::load_mode::append_decorations);
@@ -131,14 +131,15 @@ namespace nero
 
                 m_AdvancedScene->registerLevelClass(
                     levelName,
-                    m_CreateCppGameLevelCallback(GameLevel::Context(levelName,
-                                                                    levelSetting,
-                                                                    levelDirectory,
-                                                                    m_RenderTexture,
-                                                                    m_Camera)));
-            }
+                    createCppGameLevelCallback(GameLevel::Context(levelName,
+                                                                  levelSetting,
+                                                                  levelDirectory,
+                                                                  m_RenderTexture,
+                                                                  m_Camera)));
 
-            m_CreateCppGameLevelCallback.clear();
+                m_CreateCppGameLevelCallbackTable.push_back(createCppGameLevelCallback);
+                // createCppGameLevelCallback.clear();
+            }
 
             // Loag Game Screen
             // TODO
@@ -319,7 +320,7 @@ namespace nero
 
         m_AdvancedScene->clearGameSceneObject();
         m_CreateCppGameSceneCallback.clear();
-        m_CreateCppGameLevelCallback.clear();
+        m_CreateCppGameLevelCallbackTable.clear();
     }
 
     void GameProject::setRenderTexture(const RenderTexturePtr& renderTexture)

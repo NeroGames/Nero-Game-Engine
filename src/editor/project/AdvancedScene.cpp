@@ -312,13 +312,14 @@ namespace nero
 
     void AdvancedScene::buildGameScene()
     {
-        if(m_LevelBuilder)
+        if(m_GameScene && m_LevelBuilder)
         {
             GameLevel::Ptr gameLevel = m_GameLevelMap.at(m_LevelBuilder->getLevelName());
 
             // m_LevelBuilder->buildLevel(currentGamelLevel->getLevelRoot());
 
-            // m_GameScene->setSelectedGameLevel(gameLevel);
+            if(gameLevel)
+                m_GameScene->setGameLevel(gameLevel);
         }
     }
 

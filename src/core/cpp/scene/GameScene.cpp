@@ -29,6 +29,7 @@ namespace nero
 
     GameScene::GameScene(GameScene::Context context)
         : m_SceneContext(context)
+        , m_GameLevel(std::make_shared<GameLevel>())
     {
     }
 
@@ -55,6 +56,8 @@ namespace nero
 
     void GameScene::render()
     {
+        if(m_GameLevel)
+            m_GameLevel->render();
     }
 
     void GameScene::renderShape()
@@ -73,5 +76,10 @@ namespace nero
     Camera::Ptr GameScene::getCamera()
     {
         return m_SceneContext.camera;
+    }
+
+    void GameScene::setGameLevel(const GameLevel::Ptr& gameLevel)
+    {
+        m_GameLevel = gameLevel;
     }
 } // namespace nero

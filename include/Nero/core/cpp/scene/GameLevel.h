@@ -15,6 +15,8 @@
 // SFML
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Window/Event.hpp>
+// Boost
+#include <boost/config.hpp>
 // STD
 #include <memory>
 /////////////////////////////////////////////////////////////
@@ -26,13 +28,16 @@ namespace nero
         // utility
         typedef std::shared_ptr<GameLevel> Ptr;
 
-        struct Context
+        class Context
         {
+          public:
             Context(std::string                        levelName,
                     Setting::Ptr                       levelSetting,
                     std::string                        levelDirectory,
                     std::shared_ptr<sf::RenderTexture> renderTexture,
                     Camera::Ptr                        camera);
+
+            Context();
 
             std::string                        levelName;
             Setting::Ptr                       levelSetting;
@@ -44,6 +49,7 @@ namespace nero
       public:
         // ctr & dtr
         GameLevel(GameLevel::Context context);
+        GameLevel();
         virtual ~GameLevel();
         // main
         virtual void init();
@@ -90,9 +96,12 @@ namespace nero
         virtual void onCollisionPreSolveContact(Collision collision);
         virtual void onCollisionPostSolveContact(Collision collision);
         //
-        ResourceManager::Ptr getResourceManager() const;
-        Setting::Ptr         getSetting() const;
-        std::string          getLevelDirectory() const;
+        ResourceManager::Ptr               getResourceManager() const;
+        Setting::Ptr                       getSetting() const;
+        std::string                        getLevelDirectory() const;
+
+        std::shared_ptr<sf::RenderTexture> getRenderTexture();
+        Camera::Ptr                        getCamera();
 
       private:
         std::shared_ptr<sf::RenderTexture> m_RenderTexture;

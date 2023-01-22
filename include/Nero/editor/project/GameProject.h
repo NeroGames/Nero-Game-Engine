@@ -56,17 +56,17 @@ namespace nero
         void openVisualStudio(const std::string& file = StringPool.BLANK);
 
       private:
-        AdvancedScene::Ptr                          m_AdvancedScene;
-        Setting::Ptr                                m_ProjectSetting;
+        AdvancedScene::Ptr                                       m_AdvancedScene;
+        Setting::Ptr                                             m_ProjectSetting;
         // User defined class
-        boost::function<CreateCppGameSceneCallback> m_CreateCppGameSceneCallback;
-        boost::function<CreateCppGameLevelCallback> m_CreateCppGameLevelCallback;
+        boost::function<CreateCppGameSceneCallback>              m_CreateCppGameSceneCallback;
+        std::vector<boost::function<CreateCppGameLevelCallback>> m_CreateCppGameLevelCallbackTable;
         // Open code editor
-        std::string                                 m_CodeEditorProcessId;
+        std::string                                              m_CodeEditorProcessId;
         //
-        RenderTexturePtr                            m_RenderTexture;
-        RenderContext::Ptr                          m_RenderContext;
-        Camera::Ptr                                 m_Camera;
+        RenderTexturePtr                                         m_RenderTexture;
+        RenderContext::Ptr                                       m_RenderContext;
+        Camera::Ptr                                              m_Camera;
     };
 } // namespace nero
 
