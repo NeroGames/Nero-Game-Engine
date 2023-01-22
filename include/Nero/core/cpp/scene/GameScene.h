@@ -13,8 +13,6 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
-// Boost
-#include <boost/config.hpp>
 // STD
 #include <memory>
 #include <vector>
@@ -24,8 +22,7 @@ namespace nero
     class GameScene
     {
       public:
-        // type definiton
-        typedef std::shared_ptr<GameScene> Ptr;
+        using Ptr = std::shared_ptr<GameScene>;
 
         // utility
         enum class EngineType
@@ -55,8 +52,6 @@ namespace nero
                     EngineType                         engineType,
                     PlatformType                       platformType);
 
-            Context();
-
           private:
             friend class GameScene;
             friend class GameProject;
@@ -66,7 +61,6 @@ namespace nero
             EngineType                         engineType;
             PlatformType                       platformType;
             std::string                        sceneName;
-            GameLevel::Ptr                     gameLevel;
         };
 
       public:
@@ -86,7 +80,7 @@ namespace nero
         Camera::Ptr                        getCamera();
         void                               setGameLevel(const GameLevel::Ptr& gameLevel);
 
-      protected:
+      private:
         Context                    m_SceneContext;
         std::shared_ptr<GameLevel> m_GameLevel;
     };

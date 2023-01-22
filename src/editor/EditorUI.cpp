@@ -1049,13 +1049,13 @@ namespace nero
                 m_EditorProxy->openGameLevel(levelName);
             }
 
-            BTManager::startTask(
+            /*BTManager::startTask(
                 [this](BackgroundTask::Ptr backgroundTask)
                 {
                     GameProject::compileProject(
                         m_EditorContext->getGameProject()->getProjectDirectory(),
                         backgroundTask);
-                });
+                });*/
         };
 
         m_EditorProxy->m_OpenGameLevelCallback = [this](const std::string levelName)

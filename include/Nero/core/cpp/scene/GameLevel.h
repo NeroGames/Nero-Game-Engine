@@ -15,8 +15,6 @@
 // SFML
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Window/Event.hpp>
-// Boost
-#include <boost/config.hpp>
 // STD
 #include <memory>
 /////////////////////////////////////////////////////////////
@@ -49,7 +47,6 @@ namespace nero
       public:
         // ctr & dtr
         GameLevel(GameLevel::Context context);
-        GameLevel();
         virtual ~GameLevel();
         // main
         virtual void init();

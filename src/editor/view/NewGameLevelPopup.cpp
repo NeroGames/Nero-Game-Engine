@@ -107,6 +107,7 @@ namespace nero
                     parameter.setString("template", string::trim(std::string(m_Input.prototype)));
 
                     m_EditorContext->getEditorProxy()->createGameLevel(parameter);
+                    clearInput();
 
                     ImGui::CloseCurrentPopup();
                 }

@@ -32,10 +32,6 @@ namespace nero
     {
     }
 
-    GameLevel::GameLevel()
-    {
-    }
-
     GameLevel::~GameLevel()
     {
         destroy();

@@ -22,14 +22,9 @@ namespace nero
     {
     }
 
-    GameScene::Context::Context()
-    {
-        // empty
-    }
-
     GameScene::GameScene(GameScene::Context context)
         : m_SceneContext(context)
-        , m_GameLevel(std::make_shared<GameLevel>())
+        , m_GameLevel(nullptr)
     {
     }
 
