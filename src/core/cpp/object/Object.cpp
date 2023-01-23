@@ -322,47 +322,47 @@ namespace nero
     {
         switch(type)
         {
-        case Sprite_Object:
-            return "sprite_object";
+            case Sprite_Object:
+                return "sprite_object";
 
-        case Mesh_Object:
-            return "mesh_object";
+            case Mesh_Object:
+                return "mesh_object";
 
-        case Physic_Object:
-            return "physic_object";
+            case Physic_Object:
+                return "physic_object";
 
-        case Meshed_Object:
-            return "meshed_object";
+            case Meshed_Object:
+                return "meshed_object";
 
-        case Solid_Object:
-            return "solid_object";
+            case Solid_Object:
+                return "solid_object";
 
-        case Layer_Object:
-            return "layer_object";
+            case Layer_Object:
+                return "layer_object";
 
-        case Animation_Object:
-            return "animation_object";
+            case Animation_Object:
+                return "animation_object";
 
-        case Animation_Meshed_Object:
-            return "animation_meshed_object";
+            case Animation_Meshed_Object:
+                return "animation_meshed_object";
 
-        case Animation_Solid_Object:
-            return "animation_solid_object";
+            case Animation_Solid_Object:
+                return "animation_solid_object";
 
-        case Text_Object:
-            return "text_object";
+            case Text_Object:
+                return "text_object";
 
-        case UI_Object:
-            return "ui_object";
+            case UI_Object:
+                return "ui_object";
 
-        case Button_Object:
-            return "button_object";
+            case Button_Object:
+                return "button_object";
 
-        case Light_Object:
-            return "light_object";
+            case Light_Object:
+                return "light_object";
 
-        default:
-            return "no_type";
+            default:
+                return "no_type";
         }
     }
 
@@ -370,47 +370,47 @@ namespace nero
     {
         switch(getSecondType())
         {
-        case Sprite_Object:
-            return "Sprite Object";
+            case Sprite_Object:
+                return "Sprite Object";
 
-        case Mesh_Object:
-            return "Mesh Object";
+            case Mesh_Object:
+                return "Mesh Object";
 
-        case Physic_Object:
-            return "Physic Object";
+            case Physic_Object:
+                return "Physic Object";
 
-        case Meshed_Object:
-            return "Meshed Object";
+            case Meshed_Object:
+                return "Meshed Object";
 
-        case Solid_Object:
-            return "Solid Object";
+            case Solid_Object:
+                return "Solid Object";
 
-        case Layer_Object:
-            return "Layer Object";
+            case Layer_Object:
+                return "Layer Object";
 
-        case Animation_Object:
-            return "Animation Object";
+            case Animation_Object:
+                return "Animation Object";
 
-        case Animation_Meshed_Object:
-            return "Meshed Animation Object";
+            case Animation_Meshed_Object:
+                return "Meshed Animation Object";
 
-        case Animation_Solid_Object:
-            return "Solid Animation Object";
+            case Animation_Solid_Object:
+                return "Solid Animation Object";
 
-        case Text_Object:
-            return "Text Object";
+            case Text_Object:
+                return "Text Object";
 
-        case UI_Object:
-            return "UI Object";
+            case UI_Object:
+                return "UI Object";
 
-        case Button_Object:
-            return "Button Object";
+            case Button_Object:
+                return "Button Object";
 
-        case Light_Object:
-            return "Light Object";
+            case Light_Object:
+                return "Light Object";
 
-        default:
-            return "No Type";
+            default:
+                return "No Type";
         }
     }
 

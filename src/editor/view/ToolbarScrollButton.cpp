@@ -32,18 +32,21 @@ namespace nero
     {
         switch(m_Direction)
         {
-        case Direction::Left: {
-            renderLeft();
-            break;
-        }
-        case Direction::Right: {
-            renderRight();
-            break;
-        }
-        case Direction::None: {
-            // TODO [ToolbarScrollButton] handle None case log + exception
-            break;
-        }
+            case Direction::Left:
+            {
+                renderLeft();
+                break;
+            }
+            case Direction::Right:
+            {
+                renderRight();
+                break;
+            }
+            case Direction::None:
+            {
+                // TODO [ToolbarScrollButton] handle None case log + exception
+                break;
+            }
         }
     }
 

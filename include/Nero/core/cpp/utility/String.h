@@ -48,13 +48,14 @@ namespace nero
         void  fillCharTable(char** charTab, const std::vector<std::string>& stringTab);
         void  fillCharArray(char* charArray, int arraySize, const std::string& string);
         char* arrayFromVector(const std::vector<std::string>& stringTab);
-        std::vector<std::string> getWordTable(std::string string);
-        std::vector<std::string>&
-        splitString(const std::string& s, char delim, std::vector<std::string>& elems);
-        std::vector<std::string> splitString(const std::string& s, char delim);
-        bool                     matchPattern(const std::string& input, const std::string& pattern);
-        std::string              toUpper(const std::string& input);
-        std::string              toLower(const std::string& input);
+        std::vector<std::string>  getWordTable(std::string string);
+        std::vector<std::string>& splitString(const std::string&        s,
+                                              char                      delim,
+                                              std::vector<std::string>& elems);
+        std::vector<std::string>  splitString(const std::string& s, char delim);
+        bool        matchPattern(const std::string& input, const std::string& pattern);
+        std::string toUpper(const std::string& input);
+        std::string toLower(const std::string& input);
 
     } // namespace string
 

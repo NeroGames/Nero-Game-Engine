@@ -162,13 +162,19 @@ namespace nero
     {
         nlohmann::json camera_setting;
 
-        camera_setting["default_position"] = {{"x", defaultPosition.x}, {"y", defaultPosition.y}};
+        camera_setting["default_position"] = {
+            {"x", defaultPosition.x},
+            {"y", defaultPosition.y}
+        };
         camera_setting["default_rotation"] = defaultRotation;
         camera_setting["default_zoom"]     = defaultZoom;
 
-        camera_setting["position"]         = {{"x", position.x}, {"y", position.y}};
-        camera_setting["rotation"]         = rotation;
-        camera_setting["zoom"]             = zoom;
+        camera_setting["position"]         = {
+            {"x", position.x},
+            {"y", position.y}
+        };
+        camera_setting["rotation"] = rotation;
+        camera_setting["zoom"]     = zoom;
 
         return camera_setting;
     }

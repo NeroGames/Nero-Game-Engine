@@ -207,17 +207,17 @@ namespace nero
 
         switch(event.type)
         {
-        case sf::Event::Closed:
-            m_EditorProxy->closeEditor();
-            break;
+            case sf::Event::Closed:
+                m_EditorProxy->closeEditor();
+                break;
 
-        // Keyboard
-        case sf::Event::KeyPressed:
-            handleKeyboardInput(event.key.code, true);
-            break;
-        case sf::Event::KeyReleased:
-            handleKeyboardInput(event.key.code, false);
-            break;
+            // Keyboard
+            case sf::Event::KeyPressed:
+                handleKeyboardInput(event.key.code, true);
+                break;
+            case sf::Event::KeyReleased:
+                handleKeyboardInput(event.key.code, false);
+                break;
         }
 
         ImGui::SFML::ProcessEvent(event);
@@ -674,20 +674,22 @@ namespace nero
 
         switch(m_EditorContext->getEditorMode())
         {
-        case EditorMode::WORLD_BUILDER: {
-            auto levelBuilder = m_EditorContext->getLevelBuilder();
-
-            if(levelBuilder)
+            case EditorMode::WORLD_BUILDER:
             {
-                levelBuilder->saveGameLevel();
-            }
-        }
-        break;
+                auto levelBuilder = m_EditorContext->getLevelBuilder();
 
-        case EditorMode::SCREEN_BUILDER: {
-            // m_GameProject->saveGameScreen();
-        }
-        break;
+                if(levelBuilder)
+                {
+                    levelBuilder->saveGameLevel();
+                }
+            }
+            break;
+
+            case EditorMode::SCREEN_BUILDER:
+            {
+                // m_GameProject->saveGameScreen();
+            }
+            break;
         }
     }
 
@@ -700,19 +702,21 @@ namespace nero
 
         switch(m_EditorContext->getEditorMode())
         {
-        case EditorMode::WORLD_BUILDER: {
-            // m_GameProject->loadGameLevel();
-        }
-        break;
-
-        case EditorMode::SCREEN_BUILDER: {
-            // m_GameProject->loadGameScreen();
-        }
-        break;
-        case EditorMode::OBJECT_BUILDER:
-        case EditorMode::PLAY_GAME:
-        case EditorMode::RENDER_GAME:
+            case EditorMode::WORLD_BUILDER:
+            {
+                // m_GameProject->loadGameLevel();
+            }
             break;
+
+            case EditorMode::SCREEN_BUILDER:
+            {
+                // m_GameProject->loadGameScreen();
+            }
+            break;
+            case EditorMode::OBJECT_BUILDER:
+            case EditorMode::PLAY_GAME:
+            case EditorMode::RENDER_GAME:
+                break;
         }
     }
 

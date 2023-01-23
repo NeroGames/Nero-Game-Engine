@@ -41,8 +41,8 @@ namespace nero
         std::string                     getDefaultSequence(std::string animationName) const;
         const std::vector<std::string>& getAnimationTable() const;
 
-        std::map<std::string, std::vector<sf::IntRect>>
-        getSequenceMap(std::string animationName) const;
+        std::map<std::string, std::vector<sf::IntRect>> getSequenceMap(
+            std::string animationName) const;
 
       private:
         bool addTexture(std::string name, std::unique_ptr<sf::Texture> texture);

@@ -37,8 +37,8 @@ namespace nero
         void                           loadRequired(const nlohmann::json& requiredResource);
 
         // void						loadDirectory();
-        // void						addDirectory(const Setting& setting, bool autoSelect
-        // = false); void						loadResource(); void
+        // void						addDirectory(const Setting& setting, bool
+        // autoSelect = false); void						loadResource(); void
         // reloadResource();
         void                           clearResource();
 

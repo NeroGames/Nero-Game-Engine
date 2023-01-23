@@ -21,16 +21,16 @@ namespace nero
     {
         switch(event.type)
         {
-        case sf::Event::Closed:
-            quitScene();
-            break;
+            case sf::Event::Closed:
+                quitScene();
+                break;
 
-        case sf::Event::MouseButtonPressed:
-            handleMouseButtonInput(event.mouseButton, true);
-            break;
-        case sf::Event::MouseButtonReleased:
-            handleMouseButtonInput(event.mouseButton, false);
-            break;
+            case sf::Event::MouseButtonPressed:
+                handleMouseButtonInput(event.mouseButton, true);
+                break;
+            case sf::Event::MouseButtonReleased:
+                handleMouseButtonInput(event.mouseButton, false);
+                break;
         }
     }
 

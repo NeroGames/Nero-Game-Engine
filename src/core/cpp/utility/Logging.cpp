@@ -91,49 +91,52 @@ namespace nero
         {
             switch(level)
             {
-            case LOG_INFO: {
-                m_PatternFormatter->setProperty("pattern", "%s: %t");
-            }
-            break;
-
-                /*case LOG_DEBUG:
+                case LOG_INFO:
                 {
-                        Poco::Logger::get("[Nero]").debug(message);
-                }break;
+                    m_PatternFormatter->setProperty("pattern", "%s: %t");
+                }
+                break;
 
-                case LOG_TRACE:
+                    /*case LOG_DEBUG:
+                    {
+                            Poco::Logger::get("[Nero]").debug(message);
+                    }break;
+
+                    case LOG_TRACE:
+                    {
+                            Poco::Logger::get("[Nero]").trace(message);
+                    }break;
+
+                    case LOG_WARNING:
+                    {
+                            Poco::Logger::get("[Nero]").warning(message);
+                    }break;
+
+                    case LOG_ERROR:
+                    {
+                            Poco::Logger::get("[Nero]").error(message);
+                    }break;
+
+                    case LOG_NOTICE:
+                    {
+                            Poco::Logger::get("[Nero]").notice(message);
+                    }break;
+
+                    case LOG_CRITICAL:
+                    {
+                            Poco::Logger::get("[Nero]").critical(message);
+                    }break;
+
+                    case LOG_FATAL:
+                    {
+                            Poco::Logger::get("[Nero]").fatal(message);
+                    }break;*/
+
+                default:
                 {
-                        Poco::Logger::get("[Nero]").trace(message);
-                }break;
-
-                case LOG_WARNING:
-                {
-                        Poco::Logger::get("[Nero]").warning(message);
-                }break;
-
-                case LOG_ERROR:
-                {
-                        Poco::Logger::get("[Nero]").error(message);
-                }break;
-
-                case LOG_NOTICE:
-                {
-                        Poco::Logger::get("[Nero]").notice(message);
-                }break;
-
-                case LOG_CRITICAL:
-                {
-                        Poco::Logger::get("[Nero]").critical(message);
-                }break;
-
-                case LOG_FATAL:
-                {
-                        Poco::Logger::get("[Nero]").fatal(message);
-                }break;*/
-
-            default: {
-                m_PatternFormatter->setProperty("pattern", "%Y-%m-%d %H:%M:%S.%c %N[%P]:%s:%q:%t");
-            }
+                    m_PatternFormatter->setProperty("pattern",
+                                                    "%Y-%m-%d %H:%M:%S.%c %N[%P]:%s:%q:%t");
+                }
             }
         }
 
@@ -145,45 +148,53 @@ namespace nero
             // log
             switch(level)
             {
-            case LOG_INFO: {
-                Poco::Logger::get("[Nero]").information(message);
-            }
-            break;
+                case LOG_INFO:
+                {
+                    Poco::Logger::get("[Nero]").information(message);
+                }
+                break;
 
-            case LOG_DEBUG: {
-                Poco::Logger::get("[Nero]").debug(message);
-            }
-            break;
+                case LOG_DEBUG:
+                {
+                    Poco::Logger::get("[Nero]").debug(message);
+                }
+                break;
 
-            case LOG_TRACE: {
-                Poco::Logger::get("[Nero]").trace(message);
-            }
-            break;
+                case LOG_TRACE:
+                {
+                    Poco::Logger::get("[Nero]").trace(message);
+                }
+                break;
 
-            case LOG_WARNING: {
-                Poco::Logger::get("[Nero]").warning(message);
-            }
-            break;
+                case LOG_WARNING:
+                {
+                    Poco::Logger::get("[Nero]").warning(message);
+                }
+                break;
 
-            case LOG_ERROR: {
-                Poco::Logger::get("[Nero]").error(message);
-            }
-            break;
+                case LOG_ERROR:
+                {
+                    Poco::Logger::get("[Nero]").error(message);
+                }
+                break;
 
-            case LOG_NOTICE: {
-                Poco::Logger::get("[Nero]").notice(message);
-            }
-            break;
+                case LOG_NOTICE:
+                {
+                    Poco::Logger::get("[Nero]").notice(message);
+                }
+                break;
 
-            case LOG_CRITICAL: {
-                Poco::Logger::get("[Nero]").critical(message);
-            }
-            break;
+                case LOG_CRITICAL:
+                {
+                    Poco::Logger::get("[Nero]").critical(message);
+                }
+                break;
 
-            case LOG_FATAL: {
-                Poco::Logger::get("[Nero]").fatal(message);
-            }
-            break;
+                case LOG_FATAL:
+                {
+                    Poco::Logger::get("[Nero]").fatal(message);
+                }
+                break;
             }
         }
 

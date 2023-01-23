@@ -154,18 +154,20 @@ namespace nero
     {
         switch(m_EditorMode)
         {
-        case EditorMode::WORLD_BUILDER: {
-            auto levelBuilder = getLevelBuilder();
+            case EditorMode::WORLD_BUILDER:
+            {
+                auto levelBuilder = getLevelBuilder();
 
-            if(!levelBuilder)
+                if(!levelBuilder)
+                    return nullptr;
+
+                return levelBuilder->getResourceManager();
+            }
+            default:
+            {
+                // TODO
                 return nullptr;
-
-            return levelBuilder->getResourceManager();
-        }
-        default: {
-            // TODO
-            return nullptr;
-        }
+            }
         }
     }
 

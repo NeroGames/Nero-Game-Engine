@@ -73,12 +73,20 @@ namespace nero
 
         animationJson["animation"] = m_Animation.getTexture();
         animationJson["rotation"]  = getRotation();
-        animationJson["position"]  = {{"x", getPosition().x}, {"y", getPosition().y}};
-        animationJson["scale"]     = {{"x", getScale().x}, {"y", getScale().y}};
-        animationJson["color"]     = {{"r", getColor().r},
-                                      {"g", getColor().g},
-                                      {"b", getColor().b},
-                                      {"a", getColor().a}};
+        animationJson["position"]  = {
+            {"x", getPosition().x},
+            {"y", getPosition().y}
+        };
+        animationJson["scale"] = {
+            {"x", getScale().x},
+            {"y", getScale().y}
+        };
+        animationJson["color"] = {
+            {"r", getColor().r},
+            {"g", getColor().g},
+            {"b", getColor().b},
+            {"a", getColor().a}
+        };
 
         nlohmann::json sequenceTableJson;
         const auto&    sequenceMap = m_Animation.getSequenceMap();

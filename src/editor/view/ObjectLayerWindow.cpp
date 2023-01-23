@@ -124,15 +124,15 @@ namespace nero
     {
         switch(type)
         {
-        case Object::Sprite_Object:
-            return {
-                ImVec4(0.3f, 0.6f, 0.5f, 0.5f),
-                ImVec4(0.3f, 0.6f, 0.5f, 1.f),
-            };
+            case Object::Sprite_Object:
+                return {
+                    ImVec4(0.3f, 0.6f, 0.5f, 0.5f),
+                    ImVec4(0.3f, 0.6f, 0.5f, 1.f),
+                };
 
-        default:
-            return {ImGui::GetStyle().Colors[ImGuiCol_FrameBg],
-                    ImGui::GetStyle().Colors[ImGuiCol_TextSelectedBg]};
+            default:
+                return {ImGui::GetStyle().Colors[ImGuiCol_FrameBg],
+                        ImGui::GetStyle().Colors[ImGuiCol_TextSelectedBg]};
         }
     }
 } // namespace nero

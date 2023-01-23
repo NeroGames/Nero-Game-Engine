@@ -38,53 +38,58 @@ namespace nero
 
             switch(format)
             {
-            case Format::SNAKE_CASE_LOWER: {
-                trim_left(result);
-                trim_right(result);
-                to_lower(result);
-                replace_all(result, StringPool.SPACE, StringPool.UNDERSCORE);
-            }
-            break;
-
-            case Format::COMPACT_LOWER: {
-                trim_left(result);
-                trim_right(result);
-                to_lower(result);
-                replace_all(result, StringPool.SPACE, StringPool.BLANK);
-            }
-            break;
-
-            case Format::COMPACT_UPPER: {
-                trim_left(result);
-                trim_right(result);
-                to_upper(result);
-                replace_all(result, StringPool.SPACE, StringPool.BLANK);
-            }
-            break;
-
-            case Format::CAMEL_CASE_UPPER: {
-                result                             = StringPool.BLANK;
-
-                std::vector<std::string> wordTable = string::getWordTable(input);
-
-                for(std::string s : wordTable)
+                case Format::SNAKE_CASE_LOWER:
                 {
-                    if(s != StringPool.BLANK)
+                    trim_left(result);
+                    trim_right(result);
+                    to_lower(result);
+                    replace_all(result, StringPool.SPACE, StringPool.UNDERSCORE);
+                }
+                break;
+
+                case Format::COMPACT_LOWER:
+                {
+                    trim_left(result);
+                    trim_right(result);
+                    to_lower(result);
+                    replace_all(result, StringPool.SPACE, StringPool.BLANK);
+                }
+                break;
+
+                case Format::COMPACT_UPPER:
+                {
+                    trim_left(result);
+                    trim_right(result);
+                    to_upper(result);
+                    replace_all(result, StringPool.SPACE, StringPool.BLANK);
+                }
+                break;
+
+                case Format::CAMEL_CASE_UPPER:
+                {
+                    result                             = StringPool.BLANK;
+
+                    std::vector<std::string> wordTable = string::getWordTable(input);
+
+                    for(std::string s : wordTable)
                     {
-                        boost::algorithm::to_lower(s);
-                        s[0]   = std::toupper(s[0]);
-                        result += s;
+                        if(s != StringPool.BLANK)
+                        {
+                            boost::algorithm::to_lower(s);
+                            s[0]   = std::toupper(s[0]);
+                            result += s;
+                        }
                     }
                 }
-            }
-            break;
+                break;
             }
 
             return result;
         }
 
-        std::vector<std::string>&
-        splitString(const std::string& s, char delim, std::vector<std::string>& elems)
+        std::vector<std::string>& splitString(const std::string&        s,
+                                              char                      delim,
+                                              std::vector<std::string>& elems)
         {
             std::stringstream ss(s);
             std::string       item;

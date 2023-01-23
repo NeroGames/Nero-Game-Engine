@@ -37,8 +37,9 @@ extern "C"
     /* nfd_<targetplatform>.c */
 
     /* single file open dialog */
-    nfdresult_t
-    NFD_OpenDialog(const nfdchar_t* filterList, const nfdchar_t* defaultPath, nfdchar_t** outPath);
+    nfdresult_t NFD_OpenDialog(const nfdchar_t* filterList,
+                               const nfdchar_t* defaultPath,
+                               nfdchar_t**      outPath);
 
     /* multiple file open dialog */
     nfdresult_t NFD_OpenDialogMultiple(const nfdchar_t* filterList,
@@ -46,8 +47,9 @@ extern "C"
                                        nfdpathset_t*    outPaths);
 
     /* save dialog */
-    nfdresult_t
-    NFD_SaveDialog(const nfdchar_t* filterList, const nfdchar_t* defaultPath, nfdchar_t** outPath);
+    nfdresult_t NFD_SaveDialog(const nfdchar_t* filterList,
+                               const nfdchar_t* defaultPath,
+                               nfdchar_t**      outPath);
 
     /* select folder dialog */
     nfdresult_t NFD_PickFolder(const nfdchar_t* defaultPath, nfdchar_t** outPath);

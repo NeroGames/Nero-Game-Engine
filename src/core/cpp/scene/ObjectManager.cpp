@@ -530,8 +530,9 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void
-    ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, RopeJointProperty property)
+    void ObjectManager::createJoint(Object::Ptr       objectA,
+                                    Object::Ptr       objectB,
+                                    RopeJointProperty property)
     {
         RopeJoint::Ptr joint = RopeJoint::Ptr(new RopeJoint());
         joint->setJointId(++m_JointCount);
@@ -556,8 +557,9 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void
-    ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, WeldJointProperty property)
+    void ObjectManager::createJoint(Object::Ptr       objectA,
+                                    Object::Ptr       objectB,
+                                    WeldJointProperty property)
     {
         WeldJoint::Ptr joint = WeldJoint::Ptr(new WeldJoint());
         joint->setJointId(++m_JointCount);
@@ -714,8 +716,9 @@ namespace nero
         m_PhysicJointTable.push_back(joint);
     }
 
-    void
-    ObjectManager::createJoint(Object::Ptr objectA, Object::Ptr objectB, GearJointProperty property)
+    void ObjectManager::createJoint(Object::Ptr       objectA,
+                                    Object::Ptr       objectB,
+                                    GearJointProperty property)
     {
         PhysicJoint::Ptr jointA = findJoint(property.jointAId);
         PhysicJoint::Ptr jointB = findJoint(property.jointBId);

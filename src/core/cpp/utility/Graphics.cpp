@@ -59,7 +59,12 @@ namespace nero
 
         nlohmann::json colorToJson(const sf::Color& color)
         {
-            return {{"r", color.r}, {"g", color.g}, {"b", color.b}, {"a", color.a}};
+            return {
+                {"r", color.r},
+                {"g", color.g},
+                {"b", color.b},
+                {"a", color.a}
+            };
         }
 
         sf::Color colorFromJson(nlohmann::json json)

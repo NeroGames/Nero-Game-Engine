@@ -49,128 +49,136 @@ namespace nero
 
         switch(getSecondType())
         {
-        case Object::Sprite_Object: {
-            layerJson["type"] = "sprite_layer";
-
-            std::vector<nlohmann::json> spriteJsonTab;
-
-            auto                        childTab = getAllChild();
-
-            for(auto it = childTab->begin(); it != childTab->end(); it++)
-                spriteJsonTab.push_back((*it)->toJson());
-
-            layerJson["sprite_table"] = spriteJsonTab;
-
-            return layerJson;
-        }
-
-        case Object::Mesh_Object: {
-            layerJson["type"] = "mesh_layer";
-
-            std::vector<nlohmann::json> meshJsonTab;
-
-            auto                        childTab = getAllChild();
-
-            for(auto it = childTab->begin(); it != childTab->end(); it++)
-                meshJsonTab.push_back((*it)->toJson());
-
-            layerJson["mesh_table"] = meshJsonTab;
-
-            return layerJson;
-        }
-
-        case Object::Meshed_Object: {
-            layerJson["type"] = "meshed_layer";
-
-            std::vector<nlohmann::json> meshedJsonTab;
-
-            auto                        childTab = getAllChild();
-
-            for(auto it = childTab->begin(); it != childTab->end(); it++)
+            case Object::Sprite_Object:
             {
-                nlohmann::json meshedJson;
-                meshedJson["sprite"] = (*it)->toJson();
-                meshedJson["mesh"]   = (*it)->getFirstChild()->toJson();
+                layerJson["type"] = "sprite_layer";
 
-                meshedJsonTab.push_back(meshedJson);
+                std::vector<nlohmann::json> spriteJsonTab;
+
+                auto                        childTab = getAllChild();
+
+                for(auto it = childTab->begin(); it != childTab->end(); it++)
+                    spriteJsonTab.push_back((*it)->toJson());
+
+                layerJson["sprite_table"] = spriteJsonTab;
+
+                return layerJson;
             }
 
-            layerJson["meshed_table"] = meshedJsonTab;
-
-            return layerJson;
-        }
-
-        case Object::Animation_Object: {
-            layerJson["type"] = "animation_layer";
-
-            std::vector<nlohmann::json> aniamtionJsonTab;
-
-            auto                        childTab = getAllChild();
-
-            for(auto it = childTab->begin(); it != childTab->end(); it++)
-                aniamtionJsonTab.push_back((*it)->toJson());
-
-            layerJson["animation_table"] = aniamtionJsonTab;
-
-            return layerJson;
-        }
-
-        case Object::Animation_Meshed_Object: {
-            layerJson["type"] = "animation_meshed_layer";
-
-            std::vector<nlohmann::json> meshedJsonTab;
-
-            auto                        childTab = getAllChild();
-
-            for(auto it = childTab->begin(); it != childTab->end(); it++)
+            case Object::Mesh_Object:
             {
-                nlohmann::json meshedJson;
-                meshedJson["animation"] = (*it)->toJson();
-                meshedJson["mesh"]      = (*it)->getFirstChild()->toJson();
+                layerJson["type"] = "mesh_layer";
 
-                meshedJsonTab.push_back(meshedJson);
+                std::vector<nlohmann::json> meshJsonTab;
+
+                auto                        childTab = getAllChild();
+
+                for(auto it = childTab->begin(); it != childTab->end(); it++)
+                    meshJsonTab.push_back((*it)->toJson());
+
+                layerJson["mesh_table"] = meshJsonTab;
+
+                return layerJson;
             }
 
-            layerJson["animation_meshed_table"] = meshedJsonTab;
+            case Object::Meshed_Object:
+            {
+                layerJson["type"] = "meshed_layer";
 
-            return layerJson;
-        }
+                std::vector<nlohmann::json> meshedJsonTab;
 
-        case Object::Button_Object: {
-            layerJson["type"] = "button_layer";
+                auto                        childTab = getAllChild();
 
-            std::vector<nlohmann::json> buttonJsonTab;
+                for(auto it = childTab->begin(); it != childTab->end(); it++)
+                {
+                    nlohmann::json meshedJson;
+                    meshedJson["sprite"] = (*it)->toJson();
+                    meshedJson["mesh"]   = (*it)->getFirstChild()->toJson();
 
-            auto                        childTab = getAllChild();
+                    meshedJsonTab.push_back(meshedJson);
+                }
 
-            for(auto it = childTab->begin(); it != childTab->end(); it++)
-                buttonJsonTab.push_back((*it)->toJson());
+                layerJson["meshed_table"] = meshedJsonTab;
 
-            layerJson["button_table"] = buttonJsonTab;
+                return layerJson;
+            }
 
-            return layerJson;
-        }
+            case Object::Animation_Object:
+            {
+                layerJson["type"] = "animation_layer";
 
-        case Object::Text_Object: {
-            layerJson["type"] = "text_layer";
+                std::vector<nlohmann::json> aniamtionJsonTab;
 
-            std::vector<nlohmann::json> textJsonTab;
+                auto                        childTab = getAllChild();
 
-            auto                        childTab = getAllChild();
+                for(auto it = childTab->begin(); it != childTab->end(); it++)
+                    aniamtionJsonTab.push_back((*it)->toJson());
 
-            for(auto it = childTab->begin(); it != childTab->end(); it++)
-                textJsonTab.push_back((*it)->toJson());
+                layerJson["animation_table"] = aniamtionJsonTab;
 
-            layerJson["text_table"] = textJsonTab;
+                return layerJson;
+            }
 
-            return layerJson;
-        }
+            case Object::Animation_Meshed_Object:
+            {
+                layerJson["type"] = "animation_meshed_layer";
 
-        case Object::None: {
-            layerJson["type"] = "empty_layer";
+                std::vector<nlohmann::json> meshedJsonTab;
 
-            return layerJson;
-        }
+                auto                        childTab = getAllChild();
+
+                for(auto it = childTab->begin(); it != childTab->end(); it++)
+                {
+                    nlohmann::json meshedJson;
+                    meshedJson["animation"] = (*it)->toJson();
+                    meshedJson["mesh"]      = (*it)->getFirstChild()->toJson();
+
+                    meshedJsonTab.push_back(meshedJson);
+                }
+
+                layerJson["animation_meshed_table"] = meshedJsonTab;
+
+                return layerJson;
+            }
+
+            case Object::Button_Object:
+            {
+                layerJson["type"] = "button_layer";
+
+                std::vector<nlohmann::json> buttonJsonTab;
+
+                auto                        childTab = getAllChild();
+
+                for(auto it = childTab->begin(); it != childTab->end(); it++)
+                    buttonJsonTab.push_back((*it)->toJson());
+
+                layerJson["button_table"] = buttonJsonTab;
+
+                return layerJson;
+            }
+
+            case Object::Text_Object:
+            {
+                layerJson["type"] = "text_layer";
+
+                std::vector<nlohmann::json> textJsonTab;
+
+                auto                        childTab = getAllChild();
+
+                for(auto it = childTab->begin(); it != childTab->end(); it++)
+                    textJsonTab.push_back((*it)->toJson());
+
+                layerJson["text_table"] = textJsonTab;
+
+                return layerJson;
+            }
+
+            case Object::None:
+            {
+                layerJson["type"] = "empty_layer";
+
+                return layerJson;
+            }
         }
     }
 

@@ -44,8 +44,9 @@ namespace nero
         m_RenderTexture->draw(polygon);
     }
 
-    void
-    ShapeRenderer::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
+    void ShapeRenderer::DrawSolidPolygon(const b2Vec2*  vertices,
+                                         int32          vertexCount,
+                                         const b2Color& color)
     {
         // Solid convex shape
         sf::ConvexShape solidPolygon;

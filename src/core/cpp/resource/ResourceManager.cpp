@@ -81,68 +81,81 @@ namespace nero
     {
         switch(type)
         {
-        case ResourceType::Texture: {
-            return m_TextureHolder->loadFile(file);
-        }
-
-        case ResourceType::Animation: {
-            return m_AnimationHolder->loadFile(file);
-        }
-
-        case ResourceType::Font: {
-            return m_FontHolder->loadFile(file);
-        }
-
-        case ResourceType::Sound: {
-            return m_SoundHolder->loadFile(file);
-        }
-
-        case ResourceType::Music: {
-            return m_MusicHolder->loadFile(file);
-        }
-
-        case ResourceType::Lightmap: {
-            bool added = m_LightmapHolder->loadFile(file);
-            if(added)
+            case ResourceType::Texture:
             {
-                m_LightmapHolder->smoothAllTexture();
+                return m_TextureHolder->loadFile(file);
             }
 
-            return added;
-        }
+            case ResourceType::Animation:
+            {
+                return m_AnimationHolder->loadFile(file);
+            }
+
+            case ResourceType::Font:
+            {
+                return m_FontHolder->loadFile(file);
+            }
+
+            case ResourceType::Sound:
+            {
+                return m_SoundHolder->loadFile(file);
+            }
+
+            case ResourceType::Music:
+            {
+                return m_MusicHolder->loadFile(file);
+            }
+
+            case ResourceType::Lightmap:
+            {
+                bool added = m_LightmapHolder->loadFile(file);
+                if(added)
+                {
+                    m_LightmapHolder->smoothAllTexture();
+                }
+
+                return added;
+            }
         }
 
         return false;
     }
 
-    const std::vector<std::string>
-    ResourceManager::loadFile(ResourceType type, const std::vector<std::string> fileTable)
+    const std::vector<std::string> ResourceManager::loadFile(
+        ResourceType                   type,
+        const std::vector<std::string> fileTable)
     {
         switch(type)
         {
-        case ResourceType::Texture: {
-            return m_TextureHolder->loadFile(fileTable);
-        }
+            case ResourceType::Texture:
+            {
+                return m_TextureHolder->loadFile(fileTable);
+            }
 
-        case ResourceType::Animation: {
-            return m_AnimationHolder->loadFile(fileTable);
-        }
+            case ResourceType::Animation:
+            {
+                return m_AnimationHolder->loadFile(fileTable);
+            }
 
-        case ResourceType::Font: {
-            return m_FontHolder->loadFile(fileTable);
-        }
+            case ResourceType::Font:
+            {
+                return m_FontHolder->loadFile(fileTable);
+            }
 
-        case ResourceType::Sound: {
-            return m_SoundHolder->loadFile(fileTable);
-        }
+            case ResourceType::Sound:
+            {
+                return m_SoundHolder->loadFile(fileTable);
+            }
 
-        case ResourceType::Music: {
-            return m_MusicHolder->loadFile(fileTable);
-        }
+            case ResourceType::Music:
+            {
+                return m_MusicHolder->loadFile(fileTable);
+            }
 
-        case ResourceType::Lightmap: {
-            return m_LightmapHolder->loadFile(fileTable);
-        }
+            case ResourceType::Lightmap:
+            {
+                return m_LightmapHolder->loadFile(fileTable);
+            }
         }
 
         return std::vector<std::string>();

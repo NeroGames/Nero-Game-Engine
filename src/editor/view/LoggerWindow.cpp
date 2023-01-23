@@ -162,47 +162,55 @@ namespace nero
     {
         switch(level)
         {
-        case logging::LOG_INFO: {
-            return ImVec4();
-        }
-        break;
+            case logging::LOG_INFO:
+            {
+                return ImVec4();
+            }
+            break;
 
-        case logging::LOG_DEBUG: {
-            return ImVec4();
-        }
-        break;
+            case logging::LOG_DEBUG:
+            {
+                return ImVec4();
+            }
+            break;
 
-        case logging::LOG_TRACE: {
-            return ImVec4();
-        }
-        break;
+            case logging::LOG_TRACE:
+            {
+                return ImVec4();
+            }
+            break;
 
-        case logging::LOG_WARNING: {
-            return ImVec4();
-        }
-        break;
+            case logging::LOG_WARNING:
+            {
+                return ImVec4();
+            }
+            break;
 
-        case logging::LOG_ERROR: {
-            return ImVec4();
-        }
-        break;
+            case logging::LOG_ERROR:
+            {
+                return ImVec4();
+            }
+            break;
 
-        case logging::LOG_NOTICE: {
-            return ImVec4();
-        }
-        break;
+            case logging::LOG_NOTICE:
+            {
+                return ImVec4();
+            }
+            break;
 
-        case logging::LOG_CRITICAL: {
-            return ImVec4();
-        }
-        break;
+            case logging::LOG_CRITICAL:
+            {
+                return ImVec4();
+            }
+            break;
 
-        case logging::LOG_FATAL: {
-            return ImVec4();
-        }
-        break;
+            case logging::LOG_FATAL:
+            {
+                return ImVec4();
+            }
+            break;
 
-            return ImGui::GetStyle().Colors[ImGuiCol_Text];
+                return ImGui::GetStyle().Colors[ImGuiCol_Text];
         }
     }
 } // namespace nero

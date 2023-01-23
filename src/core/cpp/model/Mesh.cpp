@@ -23,15 +23,15 @@ namespace nero
     {
         switch(shape)
         {
-        case Shape::Polygon:
-            createDefaultPolygon();
-            break;
-        case Shape::Circle:
-            createDefaultCircle();
-            break;
-        case Shape::Line:
-            createDefaultLine();
-            break;
+            case Shape::Polygon:
+                createDefaultPolygon();
+                break;
+            case Shape::Circle:
+                createDefaultCircle();
+                break;
+            case Shape::Line:
+                createDefaultLine();
+                break;
         }
 
         if(m_MeshShape != Shape::None)
@@ -282,15 +282,15 @@ namespace nero
         {
             switch(m_MeshType)
             {
-            case Type::Static:
-                return EngineConstant.COLOR_STATIC_MESH;
-                break;
-            case Type::Dynamic:
-                return EngineConstant.COLOR_DYNAMIC_MESH;
-                break;
-            case Type::Kinematic:
-                return EngineConstant.COLOR_KINEMATIC_MESH;
-                break;
+                case Type::Static:
+                    return EngineConstant.COLOR_STATIC_MESH;
+                    break;
+                case Type::Dynamic:
+                    return EngineConstant.COLOR_DYNAMIC_MESH;
+                    break;
+                case Type::Kinematic:
+                    return EngineConstant.COLOR_KINEMATIC_MESH;
+                    break;
             }
         }
         else
@@ -317,48 +317,50 @@ namespace nero
 
         switch(m_MeshShape)
         {
-        case Shape::Circle: {
-            sf::Vector2f point1 = m_VertexTable[0].getPosition();
-            sf::Vector2f point2 = m_VertexTable[1].getPosition();
-            float        radius = math::distance(point1, point2);
+            case Shape::Circle:
+            {
+                sf::Vector2f point1 = m_VertexTable[0].getPosition();
+                sf::Vector2f point2 = m_VertexTable[1].getPosition();
+                float        radius = math::distance(point1, point2);
 
-            boundRect.left      = point1.x - radius - 5.f;
-            boundRect.top       = point1.y - radius - 5.f;
-            boundRect.height    = radius * 2.f + 10.f;
-            boundRect.width     = radius * 2.f + 10.f;
-        }
-        break;
+                boundRect.left      = point1.x - radius - 5.f;
+                boundRect.top       = point1.y - radius - 5.f;
+                boundRect.height    = radius * 2.f + 10.f;
+                boundRect.width     = radius * 2.f + 10.f;
+            }
+            break;
 
-        case Shape::Polygon:
-        case Shape::Chain:
-        case Shape::Line: {
-            std::vector<sf::Vector2f> posTable = getVertexPosition();
+            case Shape::Polygon:
+            case Shape::Chain:
+            case Shape::Line:
+            {
+                std::vector<sf::Vector2f> posTable = getVertexPosition();
 
-            auto                      xExtremes =
-                std::minmax_element(posTable.begin(),
-                                    posTable.end(),
-                                    [](const sf::Vector2f& lhs, const sf::Vector2f& rhs)
-                                    {
-                                        return lhs.x < rhs.x;
-                                    });
+                auto                      xExtremes =
+                    std::minmax_element(posTable.begin(),
+                                        posTable.end(),
+                                        [](const sf::Vector2f& lhs, const sf::Vector2f& rhs)
+                                        {
+                                            return lhs.x < rhs.x;
+                                        });
 
-            auto yExtremes =
-                std::minmax_element(posTable.begin(),
-                                    posTable.end(),
-                                    [](const sf::Vector2f& lhs, const sf::Vector2f& rhs)
-                                    {
-                                        return lhs.y < rhs.y;
-                                    });
+                auto yExtremes =
+                    std::minmax_element(posTable.begin(),
+                                        posTable.end(),
+                                        [](const sf::Vector2f& lhs, const sf::Vector2f& rhs)
+                                        {
+                                            return lhs.y < rhs.y;
+                                        });
 
-            sf::Vector2f upperLeft(xExtremes.first->x, yExtremes.first->y);
-            sf::Vector2f lowerRight(xExtremes.second->x, yExtremes.second->y);
+                sf::Vector2f upperLeft(xExtremes.first->x, yExtremes.first->y);
+                sf::Vector2f lowerRight(xExtremes.second->x, yExtremes.second->y);
 
-            boundRect.left   = upperLeft.x - 5.f;
-            boundRect.top    = upperLeft.y - 5.f;
-            boundRect.width  = lowerRight.x - upperLeft.x + 10.f;
-            boundRect.height = lowerRight.y - upperLeft.y + 10.f;
-        }
-        break;
+                boundRect.left   = upperLeft.x - 5.f;
+                boundRect.top    = upperLeft.y - 5.f;
+                boundRect.width  = lowerRight.x - upperLeft.x + 10.f;
+                boundRect.height = lowerRight.y - upperLeft.y + 10.f;
+            }
+            break;
         }
 
         return boundRect;
@@ -685,15 +687,15 @@ namespace nero
         {
             switch(m_MeshType)
             {
-            case Type::Static:
-                m_Color = EngineConstant.COLOR_STATIC_MESH;
-                break;
-            case Type::Dynamic:
-                m_Color = EngineConstant.COLOR_DYNAMIC_MESH;
-                break;
-            case Type::Kinematic:
-                m_Color = EngineConstant.COLOR_KINEMATIC_MESH;
-                break;
+                case Type::Static:
+                    m_Color = EngineConstant.COLOR_STATIC_MESH;
+                    break;
+                case Type::Dynamic:
+                    m_Color = EngineConstant.COLOR_DYNAMIC_MESH;
+                    break;
+                case Type::Kinematic:
+                    m_Color = EngineConstant.COLOR_KINEMATIC_MESH;
+                    break;
             }
 
             setColor(m_Color);
@@ -736,17 +738,19 @@ namespace nero
 
         switch(m_MeshShape)
         {
-        case Mesh::Shape::Circle: {
-            bound.height = bound.height - 14.f;
-            bound.width  = bound.width - 14.f;
-        }
-        break;
+            case Mesh::Shape::Circle:
+            {
+                bound.height = bound.height - 14.f;
+                bound.width  = bound.width - 14.f;
+            }
+            break;
 
-        default: {
-            bound.height = bound.height - 20.f;
-            bound.width  = bound.width - 20.f;
-        }
-        break;
+            default:
+            {
+                bound.height = bound.height - 20.f;
+                bound.width  = bound.width - 20.f;
+            }
+            break;
         }
 
         return sf::Vector2f(bound.width, bound.height);

@@ -41,7 +41,10 @@ namespace nero
         // template functions
         template <typename T> nlohmann::json vectorToJson(T point)
         {
-            return {{"x", point.x}, {"y", point.y}};
+            return {
+                {"x", point.x},
+                {"y", point.y}
+            };
         }
 
         template <typename T> T vectorFromJson(nlohmann::json json)

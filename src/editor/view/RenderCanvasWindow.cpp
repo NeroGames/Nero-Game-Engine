@@ -291,35 +291,36 @@ namespace nero
     {
         switch(editorMode)
         {
-        case EditorMode::WORLD_BUILDER: {
-            const auto builderMode = m_EditorContext->getBuilderMode();
-
-            if(builderMode == BuilderMode::OBJECT)
+            case EditorMode::WORLD_BUILDER:
             {
-                return "World Builder - Object";
-            }
-            else if(builderMode == BuilderMode::MESH)
-            {
-                return "World Builder - Mesh";
-            }
-        }
-        break;
-        case EditorMode::SCREEN_BUILDER:
-            return "Screen Builder";
-            break;
-        case EditorMode::OBJECT_BUILDER:
-            return "Object Builder";
-            break;
-        case EditorMode::PLAY_GAME:
-            return "Play Game";
-            break;
-        case EditorMode::RENDER_GAME:
-            return "Render Game";
-            break;
+                const auto builderMode = m_EditorContext->getBuilderMode();
 
-        default:
-            return StringPool.BLANK;
+                if(builderMode == BuilderMode::OBJECT)
+                {
+                    return "World Builder - Object";
+                }
+                else if(builderMode == BuilderMode::MESH)
+                {
+                    return "World Builder - Mesh";
+                }
+            }
             break;
+            case EditorMode::SCREEN_BUILDER:
+                return "Screen Builder";
+                break;
+            case EditorMode::OBJECT_BUILDER:
+                return "Object Builder";
+                break;
+            case EditorMode::PLAY_GAME:
+                return "Play Game";
+                break;
+            case EditorMode::RENDER_GAME:
+                return "Render Game";
+                break;
+
+            default:
+                return StringPool.BLANK;
+                break;
         }
     }
 

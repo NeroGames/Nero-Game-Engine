@@ -40,18 +40,18 @@ namespace nero
     {
         switch(event.type)
         {
-        // Mouse Button
-        case sf::Event::MouseButtonPressed:
-            handleMouseButtonInput(event.mouseButton, true);
-            break;
-        case sf::Event::MouseButtonReleased:
-            handleMouseButtonInput(event.mouseButton, false);
-            break;
+            // Mouse Button
+            case sf::Event::MouseButtonPressed:
+                handleMouseButtonInput(event.mouseButton, true);
+                break;
+            case sf::Event::MouseButtonReleased:
+                handleMouseButtonInput(event.mouseButton, false);
+                break;
 
-        // Mouse move
-        case sf::Event::MouseMoved:
-            handleMouseMoveInput(event.mouseMove);
-            break;
+            // Mouse move
+            case sf::Event::MouseMoved:
+                handleMouseMoveInput(event.mouseMove);
+                break;
         }
     }
 

@@ -69,38 +69,43 @@ namespace nero
 
         switch(selectedResourceType)
         {
-        case ResourceType::Texture: {
-            m_ResourceBrowserSpriteView.render();
-        }
-        break;
-
-        case ResourceType::Animation: {
-            m_ResourceBrowserAnimationView.render();
-        }
-        break;
-
-        case ResourceType::Mesh: {
-            m_ResourceBrowserMeshView.render();
-        }
-        break;
-
-        case ResourceType::Font: {
-            m_ResourceBrowserFontView.render();
-        }
-        break;
-
-        case ResourceType::Lightmap: {
-            m_ResourceBrowserLightmapView.render();
-        }
-        break;
-
-        case ResourceType::None:
-        case ResourceType::Sound:
-        case ResourceType::Music:
-        case ResourceType::Shape:
-        case ResourceType::Particle:
-        case ResourceType::Composite:
+            case ResourceType::Texture:
+            {
+                m_ResourceBrowserSpriteView.render();
+            }
             break;
+
+            case ResourceType::Animation:
+            {
+                m_ResourceBrowserAnimationView.render();
+            }
+            break;
+
+            case ResourceType::Mesh:
+            {
+                m_ResourceBrowserMeshView.render();
+            }
+            break;
+
+            case ResourceType::Font:
+            {
+                m_ResourceBrowserFontView.render();
+            }
+            break;
+
+            case ResourceType::Lightmap:
+            {
+                m_ResourceBrowserLightmapView.render();
+            }
+            break;
+
+            case ResourceType::None:
+            case ResourceType::Sound:
+            case ResourceType::Music:
+            case ResourceType::Shape:
+            case ResourceType::Particle:
+            case ResourceType::Composite:
+                break;
         }
 
         ImGui::EndChild();
@@ -115,92 +120,99 @@ namespace nero
 
         switch(resourceType)
         {
-        case ResourceType::Texture: {
-            // copy texture file and json helper
-            for(std::string file : loadedFileTable)
+            case ResourceType::Texture:
             {
-                file::copyFile(
-                    file,
-                    file::getPath({resourceFolder, "texture", file::getFileName(file, true)}));
-
-                std::string jsonHelper = file::replaceExtension(file, "json");
-                if(file::fileExist(jsonHelper))
+                // copy texture file and json helper
+                for(std::string file : loadedFileTable)
                 {
-                    file::saveFile(
-                        file::getPath(
-                            {resourceFolder, "texture", file::getFileName(jsonHelper, true)}),
-                        file::loadJson(jsonHelper, true).dump(3));
+                    file::copyFile(
+                        file,
+                        file::getPath({resourceFolder, "texture", file::getFileName(file, true)}));
+
+                    std::string jsonHelper = file::replaceExtension(file, "json");
+                    if(file::fileExist(jsonHelper))
+                    {
+                        file::saveFile(
+                            file::getPath(
+                                {resourceFolder, "texture", file::getFileName(jsonHelper, true)}),
+                            file::loadJson(jsonHelper, true).dump(3));
+                    }
                 }
             }
-        }
-        break;
-
-        case ResourceType::Animation: {
-            // copy texture file and json helper
-            for(std::string file : loadedFileTable)
-            {
-                file::copyFile(
-                    file,
-                    file::getPath({resourceFolder, "animation", file::getFileName(file, true)}));
-
-                std::string jsonHelper = file::replaceExtension(file, "json");
-                if(file::fileExist(jsonHelper))
-                {
-
-                    file::saveFile(
-                        file::getPath(
-                            {resourceFolder, "animation", file::getFileName(jsonHelper, true)}),
-                        file::loadJson(jsonHelper, true).dump(3));
-                }
-            }
-        }
-        break;
-
-        case ResourceType::Font: {
-            for(std::string file : loadedFileTable)
-            {
-                file::copyFile(
-                    file,
-                    file::getPath({resourceFolder, "font", file::getFileName(file, true)}));
-            }
-        }
-        break;
-
-        case ResourceType::Sound: {
-            for(std::string file : loadedFileTable)
-            {
-                file::copyFile(
-                    file,
-                    file::getPath({resourceFolder, "sound", file::getFileName(file, true)}));
-            }
-        }
-        break;
-
-        case ResourceType::Music: {
-            for(std::string file : loadedFileTable)
-            {
-                file::copyFile(
-                    file,
-                    file::getPath({resourceFolder, "music", file::getFileName(file, true)}));
-            }
-        }
-        break;
-
-        case ResourceType::Lightmap: {
-            for(std::string file : loadedFileTable)
-            {
-                file::copyFile(
-                    file,
-                    file::getPath({resourceFolder, "lightmap", file::getFileName(file, true)}));
-            }
-        }
-        break;
-        case ResourceType::None:
-        case ResourceType::Mesh:
-        case ResourceType::Shape:
-        case ResourceType::Particle:
-        case ResourceType::Composite:
             break;
+
+            case ResourceType::Animation:
+            {
+                // copy texture file and json helper
+                for(std::string file : loadedFileTable)
+                {
+                    file::copyFile(
+                        file,
+                        file::getPath(
+                            {resourceFolder, "animation", file::getFileName(file, true)}));
+
+                    std::string jsonHelper = file::replaceExtension(file, "json");
+                    if(file::fileExist(jsonHelper))
+                    {
+
+                        file::saveFile(
+                            file::getPath(
+                                {resourceFolder, "animation", file::getFileName(jsonHelper, true)}),
+                            file::loadJson(jsonHelper, true).dump(3));
+                    }
+                }
+            }
+            break;
+
+            case ResourceType::Font:
+            {
+                for(std::string file : loadedFileTable)
+                {
+                    file::copyFile(
+                        file,
+                        file::getPath({resourceFolder, "font", file::getFileName(file, true)}));
+                }
+            }
+            break;
+
+            case ResourceType::Sound:
+            {
+                for(std::string file : loadedFileTable)
+                {
+                    file::copyFile(
+                        file,
+                        file::getPath({resourceFolder, "sound", file::getFileName(file, true)}));
+                }
+            }
+            break;
+
+            case ResourceType::Music:
+            {
+                for(std::string file : loadedFileTable)
+                {
+                    file::copyFile(
+                        file,
+                        file::getPath({resourceFolder, "music", file::getFileName(file, true)}));
+                }
+            }
+            break;
+
+            case ResourceType::Lightmap:
+            {
+                for(std::string file : loadedFileTable)
+                {
+                    file::copyFile(
+                        file,
+                        file::getPath({resourceFolder, "lightmap", file::getFileName(file, true)}));
+                }
+            }
+            break;
+            case ResourceType::None:
+            case ResourceType::Mesh:
+            case ResourceType::Shape:
+            case ResourceType::Particle:
+            case ResourceType::Composite:
+                break;
         }
     }
 

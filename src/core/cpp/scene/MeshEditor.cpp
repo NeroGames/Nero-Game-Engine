@@ -35,26 +35,26 @@ namespace nero
     {
         switch(event.type)
         {
-        // Keyboard
-        case sf::Event::KeyPressed:
-            handleKeyboardInput(event.key.code, true);
-            break;
-        case sf::Event::KeyReleased:
-            handleKeyboardInput(event.key.code, false);
-            break;
+            // Keyboard
+            case sf::Event::KeyPressed:
+                handleKeyboardInput(event.key.code, true);
+                break;
+            case sf::Event::KeyReleased:
+                handleKeyboardInput(event.key.code, false);
+                break;
 
-        // Mouse_Button
-        case sf::Event::MouseButtonPressed:
-            handleMouseButtonsInput(event.mouseButton, true);
-            break;
-        case sf::Event::MouseButtonReleased:
-            handleMouseButtonsInput(event.mouseButton, false);
-            break;
+            // Mouse_Button
+            case sf::Event::MouseButtonPressed:
+                handleMouseButtonsInput(event.mouseButton, true);
+                break;
+            case sf::Event::MouseButtonReleased:
+                handleMouseButtonsInput(event.mouseButton, false);
+                break;
 
-        // Mouse_Move
-        case sf::Event::MouseMoved:
-            handleMouseMoveInput(event.mouseMove);
-            break;
+            // Mouse_Move
+            case sf::Event::MouseMoved:
+                handleMouseMoveInput(event.mouseMove);
+                break;
         }
     }
 

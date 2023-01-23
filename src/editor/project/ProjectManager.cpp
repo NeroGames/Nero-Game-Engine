@@ -416,8 +416,8 @@ namespace nero
         return false;
     }
 
-    const std::vector<nlohmann::json>
-    ProjectManager::getWorkspaceProjectTable(const std::string& workspace_name)
+    const std::vector<nlohmann::json> ProjectManager::getWorkspaceProjectTable(
+        const std::string& workspace_name)
     {
         std::vector<nlohmann::json>         result;
 

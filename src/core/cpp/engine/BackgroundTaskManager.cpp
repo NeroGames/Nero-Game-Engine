@@ -121,8 +121,8 @@ namespace nero
         return nullptr;
     }
 
-    const std::vector<BackgroundTask::Ptr>
-    BackgroundTaskManager::findTaskByCategory(const std::string& category)
+    const std::vector<BackgroundTask::Ptr> BackgroundTaskManager::findTaskByCategory(
+        const std::string& category)
     {
         std::vector<BackgroundTask::Ptr> result;
 
