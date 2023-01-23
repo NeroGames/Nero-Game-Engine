@@ -50,7 +50,7 @@ namespace nero
         {
             m_EditorContext->setBuilderMode(BuilderMode::MESH);
         }
-        ImGui::RadioButton("Play", &e, 2);
+        ImGui::RadioButton("Joint", &e, 2);
 
         ImGui::EndChild();
 

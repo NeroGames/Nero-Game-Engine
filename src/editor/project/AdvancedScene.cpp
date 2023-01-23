@@ -137,14 +137,10 @@ namespace nero
     void AdvancedScene::openLevel(const std::string& levelName)
     {
         if(levelName == StringPool.BLANK)
-        {
             return;
-        }
 
         if(m_LevelBuilder)
-        {
             closeSelectedLevel();
-        }
 
         // Build level directory
         std::string levelDirectory =

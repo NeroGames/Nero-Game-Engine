@@ -138,8 +138,8 @@ namespace nero
     {
         nlohmann::json mesh_json;
 
-        mesh_json = Object::toJson();
-        // mesh_json["mesh"] = m_Mesh.toJson();
+        mesh_json         = Object::toJson();
+        mesh_json["mesh"] = m_Mesh.toJson();
 
         return mesh_json;
     }

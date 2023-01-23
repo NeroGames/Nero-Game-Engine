@@ -13,8 +13,8 @@
 namespace nero
 {
     WorldBuilder::WorldBuilder()
-        : // Main
-        m_PhysicWorld(nullptr)
+        // Main
+        : m_PhysicWorld(nullptr)
         , m_PhysicObjectManager()
         , m_SelectionRect()
         , m_LastMousePosition(0.f, 0.f)
@@ -1122,6 +1122,7 @@ namespace nero
             text_object->setText(text);
             text_object->setPosition(position);
             text_object->setId(getNewId());
+            text_object->setFont(label);
             std::string object_name = "text " + toString(text_object->getId());
             text_object->setName(object_name);
 
@@ -1778,64 +1779,62 @@ m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
 
     MeshObject::Ptr WorldBuilder::loadMesh(nlohmann::json& json)
     {
-        /*Mesh mesh = Mesh();
+        Mesh           mesh      = Mesh();
 
-nlohmann::json mesh_json = json["mesh"];
-//shape
-if(mesh_json["shape"] == "polygon_mesh")
-                mesh.setShape(Mesh::Shape::Polygon);
-else if(mesh_json["shape"] == "circle_mesh")
-    mesh.setShape(Mesh::Circle_Mesh);
-else if(mesh_json["shape"] == "line_mesh")
-    mesh.setShape(Mesh::Line_Mesh);
-else if(mesh_json["shape"] == "chain_mesh")
-    mesh.setShape(Mesh::Chain_Mesh);
+        nlohmann::json mesh_json = json["mesh"];
+        // shape
+        if(mesh_json["shape"] == "polygon_mesh")
+            mesh.setShape(Mesh::Shape::Polygon);
+        else if(mesh_json["shape"] == "circle_mesh")
+            mesh.setShape(Mesh::Shape::Circle);
+        else if(mesh_json["shape"] == "line_mesh")
+            mesh.setShape(Mesh::Shape::Line);
+        else if(mesh_json["shape"] == "chain_mesh")
+            mesh.setShape(Mesh::Shape::Chain);
 
-//type
-if(mesh_json["type"] == "static_mesh")
-                mesh.setType(Mesh::Type::Static);
-else if(mesh_json["type"] == "dynamic_mesh")
-                mesh.setType(Mesh::Type::Dynamic);
-else if(mesh_json["type"] == "kinematic_mesh")
-                mesh.setType(Mesh::Type::Kinematic);
+        // type
+        if(mesh_json["type"] == "static_mesh")
+            mesh.setType(Mesh::Type::Static);
+        else if(mesh_json["type"] == "dynamic_mesh")
+            mesh.setType(Mesh::Type::Dynamic);
+        else if(mesh_json["type"] == "kinematic_mesh")
+            mesh.setType(Mesh::Type::Kinematic);
 
-//properties
-mesh.setFixedRotation(mesh_json["fixed_rotation"]);
-mesh.setIsSensor(mesh_json["is_sensor"]);
-mesh.setAllowSleep(mesh_json["allow_sleep"]);
-mesh.setDensity(mesh_json["density"]);
-mesh.setFriction(mesh_json["friction"]);
-mesh.setRestitution(mesh_json["restitution"]);
-mesh.setGravityScale(mesh_json["gravity_scale"]);
-mesh.setIsValid(mesh_json["is_valid"]);
+        // properties
+        mesh.setFixedRotation(mesh_json["fixed_rotation"]);
+        mesh.setIsSensor(mesh_json["is_sensor"]);
+        mesh.setAllowSleep(mesh_json["allow_sleep"]);
+        mesh.setDensity(mesh_json["density"]);
+        mesh.setFriction(mesh_json["friction"]);
+        mesh.setRestitution(mesh_json["restitution"]);
+        mesh.setGravityScale(mesh_json["gravity_scale"]);
+        mesh.setIsValid(mesh_json["is_valid"]);
         mesh.setMeshId(json["object_id"]);
 
-//vertex
-nlohmann::json vertex_table = mesh_json["vertex_table"];
+        // vertex
+        nlohmann::json vertex_table = mesh_json["vertex_table"];
 
-for (auto& vertex : vertex_table)
-    mesh.addVertex(sf::Vector2f(vertex["x"], vertex["y"]));
+        for(auto& vertex : vertex_table)
+            mesh.addVertex(sf::Vector2f(vertex["x"], vertex["y"]));
 
-mesh.updateShape();
-mesh.updateColor();
+        mesh.updateShape();
+        mesh.updateColor();
 
-MeshObject::Ptr mesh_object(new MeshObject());
+        MeshObject::Ptr mesh_object(new MeshObject());
 
-mesh_object->setMesh(mesh);
-mesh_object->setId(json["object_id"]);
-mesh_object->setName(json["name"].get<std::string>());
-mesh_object->setCategory(json["category"].get<std::string>());
-mesh_object->setSecondType(Object::Mesh_Object);
-mesh_object->setIsVisible(json["is_visible"]);
-mesh_object->setIsUpdateable(json["is_updateable"]);
-mesh_object->setIsSelectable(json["is_selectable"]);
-mesh_object->setIsSelected(json["is_selected"]);
+        mesh_object->setMesh(mesh);
+        mesh_object->setId(json["object_id"]);
+        mesh_object->setName(json["name"].get<std::string>());
+        mesh_object->setCategory(json["category"].get<std::string>());
+        mesh_object->setSecondType(Object::Mesh_Object);
+        mesh_object->setIsVisible(json["is_visible"]);
+        mesh_object->setIsUpdateable(json["is_updateable"]);
+        mesh_object->setIsSelectable(json["is_selectable"]);
+        mesh_object->setIsSelected(json["is_selected"]);
 
-        //m_MeshEditor->addMesh(mesh_object);
+        m_MeshEditor->addMesh(mesh_object);
 
-        return mesh_object;*/
-
-        return nullptr;
+        return mesh_object;
     }
 
     TextObject::Ptr WorldBuilder::loadText(nlohmann::json& json)

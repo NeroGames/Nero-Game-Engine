@@ -34,10 +34,13 @@ namespace nero
             break;
         }
 
-        /*if(m_MeshShape != Shape::None)
+        if(m_MeshShape != Shape::None)
         {
-                setOrigin(getGlobalBounds().width / 2.f, getGlobalBounds().height / 2.f);
-        }*/
+            setOrigin(getGlobalBounds().width / 2.f, getGlobalBounds().height / 2.f);
+        }
+
+        // TODO
+        m_CircleShape = new sf::CircleShape();
     }
 
     Mesh::~Mesh()
@@ -361,8 +364,9 @@ namespace nero
         return boundRect;
     }
 
-    void
-    Mesh::updateMesh(const sf::Vector2f& position, const sf::Vector2f& scale, const float& rotation)
+    void Mesh::updateMesh(const sf::Vector2f& position,
+                          const sf::Vector2f& scale,
+                          const float&        rotation)
     {
         if(scale != m_Scale)
         {
@@ -471,123 +475,12 @@ namespace nero
         m_VertexTable.erase(m_VertexTable.begin() + index);
     }
 
-    void Mesh::setColor(const sf::Color& color)
-    {
-        m_Color = color;
-    }
-} // namespace nero
-
-/*
-////////////////////////////////////////////////////////////
-#include <Nero/core/cpp/utility/Math.h>
-#include <Nero/core/cpp/engine/EngineConstant.h>
-////////////////////////////////////////////////////////////
-namespace nero
-{
-        Mesh::Mesh(Shape shape):
-         m_Id(-1)
-        ,m_Shape(shape)
-                ,m_Type(Static_Mesh)
-        ,m_IsValid(true)
-                ,m_Position(sf::Vector2f(0.f,0.f))
-                ,m_Color(EngineConstant.COLOR_STATIC_MESH)
-        ,m_FixedRotation(false)
-        ,m_IsSensor(false)
-        ,m_AllowSleep(true)
-        ,m_Density(1.f)
-        ,m_Friction(0.1f)
-        ,m_Restitution(0.1f)
-        ,m_GravityScale(3.f)
-        ,m_VertexTab()
-        ,m_LineTab()
-        ,m_PolygonTab()
-        ,m_CircleShape()
-           ,m_SelectionRect()
-
-    {
-        switch(shape)
-        {
-            case Line_Mesh:
-            {
-                //A line is created with the position of its center end its size
-                //Representation : two vertex, one line
-
-                                m_Color = EngineConstant.COLOR_STATIC_MESH;
-                m_Type  = Static_Mesh;
-                                m_Size = 75.f;
-
-                //Create vertex
-                                sf::Vector2f point1 = sf::Vector2f(m_Position.x - m_Size,
-m_Position.y); sf::Vector2f point2 = sf::Vector2f(m_Position.x + m_Size, m_Position.y);
-                m_VertexTab.push_back(createVertex(point1, m_Color));
-                m_VertexTab.push_back(createVertex(point2, m_Color));
-
-                //Create line
-                updateLineShape();
-
-            }break;
-
-            case Circle_Mesh:
-            {
-                //A circle is created with the position of its center and the size of its radius
-                //Representation: two vertex, one line, one circle shape
-
-                                m_Color = EngineConstant.COLOR_DYNAMIC_MESH;
-                m_Type  = Dynamic_Mesh;
-                                m_Size = 50.f;
-
-
-                //Create vertex
-                                sf::Vector2f center = sf::Vector2f(m_Position);
-                                sf::Vector2f point = sf::Vector2f(m_Position.x + m_Size,
-m_Position.y); m_VertexTab.push_back(createVertex(center, m_Color));
-                m_VertexTab.push_back(createVertex(point, m_Color));
-
-                //Create line
-                updateLineShape();
-
-                //Create circle
-                updateCircleShape();
-
-            }break;
-
-            case Polygon_Mesh:
-            {
-                //The default polygon is a square
-                //Representation : a set of vertex, a set of lines and a set of polygon
-
-                                m_Color = EngineConstant.COLOR_DYNAMIC_MESH;
-                m_Type  = Dynamic_Mesh;
-                                m_Size = 50.f;
-
-                //Create vertex and polygon
-                                m_PolygonTab.push_back(createRegularPolygon(m_Position, m_Color,
-4));
-
-                //Create line
-                updateLineShapeLoop();
-
-            }break;
-        }
-
-                m_SelectionRect.setFillColor(sf::Color::Transparent);
-                m_SelectionRect.setOutlineColor(sf::Color::Green);
-                m_SelectionRect.setOutlineThickness(-3.f);
-        }
-
-    void Mesh::validate(const sf::Vector2f& point1, const sf::Vector2f& point2)
-    {
-                if(math::distance(point1, point2) < Min_Vertex_Distance)
-            m_IsValid = false;
-    }
-
-
     sf::RectangleShape Mesh::createVertex(const sf::Vector2f& point, const sf::Color& color)
     {
         sf::RectangleShape vertex;
 
-                vertex.setOrigin(sf::Vector2f(Vertex_Size/2.f, Vertex_Size/2.f));
-                vertex.setSize(sf::Vector2f(Vertex_Size, Vertex_Size));
+        vertex.setOrigin(sf::Vector2f(Vertex_Size / 2.f, Vertex_Size / 2.f));
+        vertex.setSize(sf::Vector2f(Vertex_Size, Vertex_Size));
         vertex.setPosition(point);
         vertex.setFillColor(color);
 
@@ -596,26 +489,26 @@ m_Position.y); m_VertexTab.push_back(createVertex(center, m_Color));
 
     void Mesh::updateLine(bool loop)
     {
-        m_LineTab.clear();
+        m_LineTable.clear();
 
-        m_IsValid = true;
+        m_Valid = true;
 
-        for(int i = 0; i < m_VertexTab.size()-1; i++)
+        for(int i = 0; i < m_VertexTable.size() - 1; i++)
         {
-            sf::Vector2f point1 = m_VertexTab[i].getPosition();
-            sf::Vector2f point2 = m_VertexTab[i+1].getPosition();
-                        m_LineTab.push_back(createLine(point1, point2,
-graphics::getTransparentColor(m_Color, Color_Alpha)));
+            sf::Vector2f point1 = m_VertexTable[i].getPosition();
+            sf::Vector2f point2 = m_VertexTable[i + 1].getPosition();
+            m_LineTable.push_back(
+                createLine(point1, point2, graphics::getTransparentColor(m_Color, Color_Alpha)));
 
             validate(point1, point2);
         }
 
         if(loop)
         {
-            sf::Vector2f point1 = m_VertexTab[0].getPosition();
-            sf::Vector2f point2 = m_VertexTab[m_VertexTab.size()-1].getPosition();
-                        m_LineTab.push_back(createLine(point1, point2,
-graphics::getTransparentColor(m_Color, Color_Alpha)));
+            sf::Vector2f point1 = m_VertexTable[0].getPosition();
+            sf::Vector2f point2 = m_VertexTable[m_VertexTable.size() - 1].getPosition();
+            m_LineTable.push_back(
+                createLine(point1, point2, graphics::getTransparentColor(m_Color, Color_Alpha)));
 
             validate(point1, point2);
         }
@@ -631,40 +524,43 @@ graphics::getTransparentColor(m_Color, Color_Alpha)));
         updateLine(true);
     }
 
-    sf::RectangleShape Mesh::createLine(const sf::Vector2f& point1, const sf::Vector2f& point2,
-const sf::Color& color)
+    sf::RectangleShape Mesh::createLine(const sf::Vector2f& point1,
+                                        const sf::Vector2f& point2,
+                                        const sf::Color&    color)
     {
         sf::RectangleShape line;
 
-                float length = math::distance(point1, point2);
-                line.setOrigin(sf::Vector2f(line.getOrigin().x, Vertex_Size/4.f));
-        line.setSize(sf::Vector2f(length, Vertex_Size/2.f));
+        float              length = math::distance(point1, point2);
+        line.setOrigin(sf::Vector2f(line.getOrigin().x, Vertex_Size / 4.f));
+        line.setSize(sf::Vector2f(length, Vertex_Size / 2.f));
         line.setPosition(point1);
         line.setFillColor(color);
 
         float delta_x = point2.x - point1.x;
         float delta_y = point2.y - point1.y;
-        float angle = atan2(delta_y, delta_x);
-                line.setRotation(math::toDegree(angle));
+        float angle   = atan2(delta_y, delta_x);
+        line.setRotation(math::toDegree(angle));
 
         return line;
     }
 
     void Mesh::updateCircleShape()
     {
-                m_Size = math::distance(m_VertexTab.front().getPosition(),
-m_VertexTab.back().getPosition()); m_CircleShape.setOrigin(sf::Vector2f(m_Size, m_Size));
-        m_CircleShape.setOutlineThickness(Vertex_Size/8.f);
-        m_CircleShape.setOutlineColor(m_Color);
-                m_CircleShape.setFillColor(graphics::getTransparentColor(m_Color, 50));
-        m_CircleShape.setPosition(m_VertexTab.front().getPosition());
-        m_CircleShape.setRadius(m_Size);
+        m_Size =
+            math::distance(m_VertexTable.front().getPosition(), m_VertexTable.back().getPosition());
+        m_CircleShape->setOrigin(sf::Vector2f(m_Size, m_Size));
+        m_CircleShape->setOutlineThickness(Vertex_Size / 8.f);
+        m_CircleShape->setOutlineColor(m_Color);
+        m_CircleShape->setFillColor(graphics::getTransparentColor(m_Color, 50));
+        m_CircleShape->setPosition(m_VertexTable.front().getPosition());
+        m_CircleShape->setRadius(m_Size);
     }
 
-    sf::ConvexShape Mesh::createRegularPolygon(const sf::Vector2f& position, const sf::Color& color,
-const int& pointCount)
+    sf::ConvexShape Mesh::createRegularPolygon(const sf::Vector2f& position,
+                                               const sf::Color&    color,
+                                               const int&          pointCount)
     {
-                float theta = math::PI/4.f;
+        float           theta = math::PI / 4.f;
 
         sf::ConvexShape poligon;
 
@@ -673,56 +569,55 @@ const int& pointCount)
         for(int i = 0; i < pointCount; i++)
         {
             sf::Vector2f point;
-                        point.x = m_Size * cos(2*math::PI*i/pointCount + theta) + position.x;
-                        point.y = m_Size * sin(2*math::PI*i/pointCount + theta) + position.y;
+            point.x = m_Size * cos(2 * math::PI * i / pointCount + theta) + position.x;
+            point.y = m_Size * sin(2 * math::PI * i / pointCount + theta) + position.y;
 
             poligon.setPoint(i, point);
 
-            m_VertexTab.push_back(createVertex(point, color));
+            m_VertexTable.push_back(createVertex(point, color));
         }
 
         poligon.setOutlineColor(color);
-                poligon.setFillColor(graphics::getTransparentColor(color, Color_Alpha));
+        poligon.setFillColor(graphics::getTransparentColor(color, Color_Alpha));
 
         return poligon;
     }
 
-        Mesh::VectorTable Mesh::getAllVertexPoint() const
+    Mesh::VectorTable Mesh::getAllVertexPoint() const
     {
-                VectorTable vectorTable;
+        VectorTable vectorTable;
 
-        for(auto vertex : m_VertexTab)
+        for(auto vertex : m_VertexTable)
         {
             sf::Vector2f point;
             point.x = vertex.getPosition().x;
             point.y = vertex.getPosition().y;
-                        vectorTable.push_back(point);
+            vectorTable.push_back(point);
         }
 
-                return vectorTable;
+        return vectorTable;
     }
 
     void Mesh::updatePolygonShape()
     {
-        m_PolygonTab.clear();
+        m_PolygonTable.clear();
 
-                VectorTable vertexVectorTable = getAllVertexPoint();
+        VectorTable vertexVectorTable = getAllVertexPoint();
 
-                if(math::validatePolygon(vertexVectorTable) == 0)
+        if(math::validatePolygon(vertexVectorTable) == 0)
         {
-            m_IsValid = true;
+            m_Valid                                   = true;
 
-                        std::vector<VectorTable> convexPolygonTab =
-math::concaveToConvex(vertexVectorTable);
+            std::vector<VectorTable> convexPolygonTab = math::concaveToConvex(vertexVectorTable);
 
             for(VectorTable polygon : convexPolygonTab)
             {
-                m_PolygonTab.push_back(createPolygon(polygon, m_Color));
+                m_PolygonTable.push_back(createPolygon(polygon, m_Color));
             }
         }
         else
         {
-            m_IsValid = false;
+            m_Valid = false;
         }
     }
 
@@ -737,29 +632,9 @@ math::concaveToConvex(vertexVectorTable);
         }
 
         polygon.setOutlineColor(color);
-                polygon.setFillColor(graphics::getTransparentColor(color, Color_Alpha));
+        polygon.setFillColor(graphics::getTransparentColor(color, Color_Alpha));
 
         return polygon;
-    }
-
-
-    void Mesh::addVertex(sf::Vector2f point, const int& index)
-    {
-        point.x += 1.f;
-        point.y += 1.f;
-
-        m_VertexTab.insert(m_VertexTab.begin() + index, createVertex(point, m_Color));
-
-        for(int i = 0; i < m_VertexTab.size()-1; i++)
-        {
-            sf::Vector2f point1 = m_VertexTab[i].getPosition();
-            sf::Vector2f point2 = m_VertexTab[i+1].getPosition();
-
-            validate(point1, point2);
-
-            if(!m_IsValid)
-                break;
-        }
     }
 
     void Mesh::addVertex(sf::Vector2f point)
@@ -767,78 +642,72 @@ math::concaveToConvex(vertexVectorTable);
         point.x += 0.000000000000000001f;
         point.y += 0.000000000000000001f;
 
-        m_VertexTab.push_back(createVertex(point, m_Color));
+        m_VertexTable.push_back(createVertex(point, m_Color));
 
-        for(int i = 0; i < m_VertexTab.size()-1; i++)
+        for(int i = 0; i < m_VertexTable.size() - 1; i++)
         {
-            sf::Vector2f point1 = m_VertexTab[i].getPosition();
-            sf::Vector2f point2 = m_VertexTab[i+1].getPosition();
+            sf::Vector2f point1 = m_VertexTable[i].getPosition();
+            sf::Vector2f point2 = m_VertexTable[i + 1].getPosition();
 
             validate(point1, point2);
 
-            if(!m_IsValid)
+            if(!m_Valid)
                 break;
         }
-
     }
 
-    void Mesh::deleteVertex(const int& index)
-    {
-        m_VertexTab.erase(m_VertexTab.begin() + index);
-    }
-
-    void Mesh::setColor(sf::Color color)
+    void Mesh::setColor(const sf::Color& color)
     {
         m_Color = color;
 
-        for(auto it = m_VertexTab.begin(); it != m_VertexTab.end(); it++)
+        for(auto it = m_VertexTable.begin(); it != m_VertexTable.end(); it++)
             it->setFillColor(color);
 
-        for(auto it = m_LineTab.begin(); it != m_LineTab.end(); it++)
-                        it->setFillColor(graphics::getTransparentColor(color, Color_Alpha));
+        for(auto it = m_LineTable.begin(); it != m_LineTable.end(); it++)
+            it->setFillColor(graphics::getTransparentColor(color, Color_Alpha));
 
-        if(m_Shape == Polygon_Mesh)
+        if(m_MeshShape == Shape::Polygon)
         {
-            for(auto it = m_PolygonTab.begin(); it != m_PolygonTab.end(); it++)
-                                it->setFillColor(graphics::getTransparentColor(color, Color_Alpha));
+            for(auto it = m_PolygonTable.begin(); it != m_PolygonTable.end(); it++)
+                it->setFillColor(graphics::getTransparentColor(color, Color_Alpha));
         }
 
-        if(m_Shape == Circle_Mesh)
+        if(m_MeshShape == Shape::Chain)
         {
-                        m_CircleShape.setFillColor(graphics::getTransparentColor(color,
-Color_Alpha)); m_CircleShape.setOutlineColor(color);
+            m_CircleShape->setFillColor(graphics::getTransparentColor(color, Color_Alpha));
+            m_CircleShape->setOutlineColor(color);
         }
     }
 
     void Mesh::updateColor()
     {
-        if(m_IsValid)
+        if(m_Valid)
         {
-            switch(m_Type)
+            switch(m_MeshType)
             {
-                case Static_Mesh:
-                                        m_Color = EngineConstant.COLOR_STATIC_MESH;
-                    break;
-                case Dynamic_Mesh:
-                                        m_Color = EngineConstant.COLOR_DYNAMIC_MESH;
-                    break;
-                case Kinematic_Mesh:
-                                        m_Color = EngineConstant.COLOR_KINEMATIC_MESH;
-                    break;
+            case Type::Static:
+                m_Color = EngineConstant.COLOR_STATIC_MESH;
+                break;
+            case Type::Dynamic:
+                m_Color = EngineConstant.COLOR_DYNAMIC_MESH;
+                break;
+            case Type::Kinematic:
+                m_Color = EngineConstant.COLOR_KINEMATIC_MESH;
+                break;
             }
 
             setColor(m_Color);
         }
         else
         {
-                        setColor(EngineConstant.COLOR_INVALIDE_MESH);
+            setColor(EngineConstant.COLOR_INVALIDE_MESH);
         }
     }
 
     sf::Vector2f Mesh::getPosition() const
     {
-        if(m_Shape == Circle_Mesh)
-            return m_CircleShape.getPosition();
+        if(m_MeshShape == Shape::Circle)
+            return m_CircleShape->getPosition();
         else
             return sf::Vector2f(0.f, 0.f);
     }
@@ -850,97 +719,42 @@ Color_Alpha)); m_CircleShape.setOutlineColor(color);
 
     float Mesh::getRadius() const
     {
-        if(m_Shape == Circle_Mesh)
-            return m_CircleShape.getRadius();
+        if(m_MeshShape == Shape::Circle)
+            return m_CircleShape->getRadius();
         else
             return m_Size;
     }
 
     int Mesh::getPointCount() const
     {
-        return m_VertexTab.size();
+        return m_VertexTable.size();
     }
 
     sf::Vector2f Mesh::getSize()
     {
         sf::FloatRect bound = getGlobalBounds();
 
-        switch(m_Shape)
+        switch(m_MeshShape)
         {
-            case Mesh::Circle_Mesh:
-            {
-                bound.height = bound.height - 14.f;
-                bound.width = bound.width - 14.f;
-            }break;
+        case Mesh::Shape::Circle: {
+            bound.height = bound.height - 14.f;
+            bound.width  = bound.width - 14.f;
+        }
+        break;
 
-            default:
-            {
-                bound.height = bound.height - 20.f;
-                bound.width = bound.width - 20.f;
-            }break;
+        default: {
+            bound.height = bound.height - 20.f;
+            bound.width  = bound.width - 20.f;
+        }
+        break;
         }
 
         return sf::Vector2f(bound.width, bound.height);
     }
 
-
-    sf::FloatRect Mesh::getGlobalBounds() const
-    {
-        sf::FloatRect boundRect;
-
-        switch(m_Shape)
-        {
-                        case Mesh::Line_Mesh:
-            {
-                                boundRect = m_LineTab[0].getGlobalBounds();
-                                boundRect.left = boundRect.left -10.f;
-                                boundRect.top = boundRect.top - 10.f;
-                                boundRect.height = boundRect.height  + 20.f;
-                                boundRect.width = boundRect.width + 20.f;
-
-                        }break;
-
-            case Mesh::Circle_Mesh:
-            {
-                                boundRect = m_CircleShape.getGlobalBounds();
-                boundRect.left = boundRect.left - 7.f;
-                boundRect.top = boundRect.top  -7.f;
-                boundRect.height = boundRect.height + 14.f;
-                boundRect.width = boundRect.width + 14.f;
-
-            }break;
-
-            default:
-            {
-                auto v = getAllVertexPoint();
-
-                auto xExtremes = std::minmax_element(v.begin(), v.end(),
-                                     [](const sf::Vector2f& lhs, const sf::Vector2f& rhs) {
-                                        return lhs.x < rhs.x;
-                                     });
-
-                auto yExtremes = std::minmax_element(v.begin(), v.end(),
-                                                     [](const sf::Vector2f& lhs, const sf::Vector2f&
-rhs) { return lhs.y < rhs.y;
-                                                     });
-
-                sf::Vector2f  upperLeft(xExtremes.first->x, yExtremes.first->y);
-                sf::Vector2f  lowerRight(xExtremes.second->x, yExtremes.second->y);
-
-                boundRect.left = upperLeft.x -10.f;
-                boundRect.top = upperLeft.y -10.f;
-                boundRect.width = lowerRight.x - upperLeft.x + 20.f;
-                boundRect.height = lowerRight.y - upperLeft.y  + 20.f;
-
-            }break;
-        }
-
-        return boundRect;
-    }
-
     void Mesh::updateShape()
     {
-        if(m_Shape == Polygon_Mesh)
+        if(m_MeshShape == Shape::Polygon)
         {
             updateLineShapeLoop();
             updatePolygonShape();
@@ -948,72 +762,44 @@ rhs) { return lhs.y < rhs.y;
         else
             updateLineShape();
 
-        if(m_Shape == Circle_Mesh)
+        if(m_MeshShape == Shape::Circle)
             updateCircleShape();
-    }
-
-    void Mesh::draw(sf::RenderTarget& target, sf::RenderStates states) const
-    {
-
-                //m_SelectionRect.setPosition(getGlobalBounds().left,  getGlobalBounds().top);
-                //m_SelectionRect.setSize(sf::Vector2f(getGlobalBounds().width,
-getGlobalBounds().height));
-
-
-                //states.transform *= getTransform();
-                states.transform = sf::Transform::Identity;
-
-        if(m_Shape == Mesh::Polygon_Mesh)
-            for(auto polygon : m_PolygonTab)
-                target.draw(polygon, states);
-
-        if(m_Shape == Mesh::Circle_Mesh)
-            target.draw(m_CircleShape, states);
-
-        for(auto line : m_LineTab)
-            target.draw(line, states);
-
-        for(auto vertex : m_VertexTab)
-            target.draw(vertex, states);
-
-                //if(m_Shape == Mesh::Line_Mesh)
-                //{
-                        target.draw(m_SelectionRect, states);
-                //}
     }
 
     void Mesh::move(const sf::Vector2f& offset)
     {
-        for(auto& vertex : m_VertexTab)
-                vertex.move(offset);
+        for(auto& vertex : m_VertexTable)
+            vertex.move(offset);
 
         updateShape();
     }
 
     void Mesh::rotate(const float& angle)
     {
-        if(m_Shape == Mesh::Line_Mesh)
+        if(m_MeshShape == Shape::Line)
         {
-                        sf::Vector2f center = math::getLineCenter(m_VertexTab.front().getPosition(),
-m_VertexTab.back().getPosition()); m_VertexTab.front().setPosition(math::rotateVertex(center, angle,
-m_VertexTab.front().getPosition())); m_VertexTab.back().setPosition(math::rotateVertex(center,
-angle, m_VertexTab.back().getPosition()));
-
+            sf::Vector2f center = math::getLineCenter(m_VertexTable.front().getPosition(),
+                                                      m_VertexTable.back().getPosition());
+            m_VertexTable.front().setPosition(
+                math::rotateVertex(center, angle, m_VertexTable.front().getPosition()));
+            m_VertexTable.back().setPosition(
+                math::rotateVertex(center, angle, m_VertexTable.back().getPosition()));
         }
-        else if (m_Shape == Mesh::Circle_Mesh)
+        else if(m_MeshShape == Mesh::Shape::Circle)
         {
-                        m_VertexTab.back().setPosition(math::rotateVertex(m_VertexTab.front().getPosition(),
-angle, m_VertexTab.back().getPosition()));
+            m_VertexTable.back().setPosition(
+                math::rotateVertex(m_VertexTable.front().getPosition(),
+                                   angle,
+                                   m_VertexTable.back().getPosition()));
         }
         else
         {
-            VectorTable VectorTable = getAllVertexPoint();
-                        sf::Vector2f center = math::getPolygonCenter(VectorTable);
+            VectorTable  VectorTable = getAllVertexPoint();
+            sf::Vector2f center      = math::getPolygonCenter(VectorTable);
 
-            for(auto it = m_VertexTab.begin(); it != m_VertexTab.end(); it++)
+            for(auto it = m_VertexTable.begin(); it != m_VertexTable.end(); it++)
             {
-                                it->setPosition(math::rotateVertex(center, angle,
-it->getPosition()));
+                it->setPosition(math::rotateVertex(center, angle, it->getPosition()));
             }
         }
 
@@ -1022,65 +808,62 @@ it->getPosition()));
 
     void Mesh::scale(const sf::Vector2f& factor)
     {
-                float scale = factor.x;
+        float scale = factor.x;
 
-                if(m_Shape == Mesh::Line_Mesh)
-                {
-                        sf::Vector2f pos1 = m_VertexTab.front().getPosition();
-                        sf::Vector2f pos2 = m_VertexTab.back().getPosition();
+        if(m_MeshShape == Shape::Line)
+        {
+            sf::Vector2f pos1     = m_VertexTable.front().getPosition();
+            sf::Vector2f pos2     = m_VertexTable.back().getPosition();
 
-                        sf::Vector2f center = math::getLineCenter(pos1, pos2);
+            sf::Vector2f center   = math::getLineCenter(pos1, pos2);
 
-                        sf::Vector2f new_pos1 = sf::Vector2f((pos1.x-center.x)*scale + center.x,
-(pos1.y-center.y)*scale + center.y); sf::Vector2f new_pos2 = sf::Vector2f((pos2.x-center.x)*scale +
-center.x, (pos2.y-center.y)*scale + center.y);
+            sf::Vector2f new_pos1 = sf::Vector2f((pos1.x - center.x) * scale + center.x,
+                                                 (pos1.y - center.y) * scale + center.y);
+            sf::Vector2f new_pos2 = sf::Vector2f((pos2.x - center.x) * scale + center.x,
+                                                 (pos2.y - center.y) * scale + center.y);
 
-                        m_VertexTab.front().setPosition(new_pos1);
-                        m_VertexTab.back().setPosition(new_pos2);
-                }
-                else if (m_Shape == Mesh::Circle_Mesh)
-                {
-                        sf::Vector2f center = m_VertexTab.front().getPosition();
-                        sf::Vector2f pos = m_VertexTab.back().getPosition();
-                        sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale + center.x,
-(pos.y-center.y)*scale + center.y); m_VertexTab.back().setPosition(new_pos);
-                }
-                else
-                {
-                        VectorTable vectorTab = getAllVertexPoint();
-                        sf::Vector2f center = math::getPolygonCenter(vectorTab);
+            m_VertexTable.front().setPosition(new_pos1);
+            m_VertexTable.back().setPosition(new_pos2);
+        }
+        else if(m_MeshShape == Mesh::Shape::Circle)
+        {
+            sf::Vector2f center  = m_VertexTable.front().getPosition();
+            sf::Vector2f pos     = m_VertexTable.back().getPosition();
+            sf::Vector2f new_pos = sf::Vector2f((pos.x - center.x) * scale + center.x,
+                                                (pos.y - center.y) * scale + center.y);
+            m_VertexTable.back().setPosition(new_pos);
+        }
+        else
+        {
+            VectorTable  vectorTab = getAllVertexPoint();
+            sf::Vector2f center    = math::getPolygonCenter(vectorTab);
 
-                        for(auto it = m_VertexTab.begin(); it != m_VertexTab.end(); it++)
-                        {
-                                sf::Vector2f pos = it->getPosition();
-                                sf::Vector2f new_pos = sf::Vector2f((pos.x-center.x)*scale +
-center.x, (pos.y-center.y)*scale + center.y);
+            for(auto it = m_VertexTable.begin(); it != m_VertexTable.end(); it++)
+            {
+                sf::Vector2f pos     = it->getPosition();
+                sf::Vector2f new_pos = sf::Vector2f((pos.x - center.x) * scale + center.x,
+                                                    (pos.y - center.y) * scale + center.y);
 
-                                it->setPosition(new_pos);
-                        }
-                }
-
-                updateShape();
+                it->setPosition(new_pos);
+            }
         }
 
-        int Mesh::getId() const
-        {
-                return m_Id;
+        updateShape();
     }
 
     Mesh::Type Mesh::getType() const
     {
-        return m_Type;
+        return m_MeshType;
     }
 
     Mesh::Shape Mesh::getShape() const
     {
-        return m_Shape;
+        return m_MeshShape;
     }
 
     bool Mesh::isValid() const
     {
-        return m_IsValid;
+        return m_Valid;
     }
 
     bool Mesh::getFixedRotation() const
@@ -1118,25 +901,19 @@ center.x, (pos.y-center.y)*scale + center.y);
         return m_GravityScale;
     }
 
-
-    void Mesh::setId(int id)
-    {
-        m_Id = id;
-    }
-
     void Mesh::setType(Type type)
     {
-        m_Type = type;
+        m_MeshType = type;
     }
 
     void Mesh::setShape(Shape shape)
     {
-        m_Shape = shape;
+        m_MeshShape = shape;
     }
 
     void Mesh::setIsValid(bool flag)
     {
-        m_IsValid = flag;
+        m_Valid = flag;
     }
 
     void Mesh::setFixedRotation(bool flag)
@@ -1169,7 +946,7 @@ center.x, (pos.y-center.y)*scale + center.y);
         m_Restitution = restitution;
     }
 
-     void Mesh::setGravityScale(float gravity_scale)
+    void Mesh::setGravityScale(float gravity_scale)
     {
         m_GravityScale = gravity_scale;
     }
@@ -1178,25 +955,28 @@ center.x, (pos.y-center.y)*scale + center.y);
     {
         nlohmann::json mesh;
 
-        mesh["shape"]           = String_Shape[getShape()];
-        mesh["type"]            = String_Type[getType()];
-        mesh["density"]         = getDensity();
-        mesh["friction"]        = getFriction();
-        mesh["restitution"]     = getRestitution();
-        mesh["fixed_rotation"]  = getFixedRotation();
-        mesh["is_sensor"]       = getIsSensor();
-        mesh["allow_sleep"]     = getAllowSleep();
-        mesh["gravity_scale"]   = getGravityScale();
-        mesh["is_valid"]        = isValid();
+        mesh["shape"]          = String_Shape[getShape()];
+        mesh["type"]           = String_Type[getType()];
+        mesh["density"]        = getDensity();
+        mesh["friction"]       = getFriction();
+        mesh["restitution"]    = getRestitution();
+        mesh["fixed_rotation"] = getFixedRotation();
+        mesh["is_sensor"]      = getIsSensor();
+        mesh["allow_sleep"]    = getAllowSleep();
+        mesh["gravity_scale"]  = getGravityScale();
+        mesh["is_valid"]       = isValid();
 
         std::vector<nlohmann::json> vertex_table;
 
-        int i = 0;
-        for(auto v : m_VertexTab)
+        int                         i = 0;
+        for(auto v : m_VertexTable)
         {
             nlohmann::json vertex;
 
-            vertex = {{"x", v.getPosition().x}, {"y", v.getPosition().y}};
+            vertex = {
+                {"x", v.getPosition().x},
+                {"y", v.getPosition().y}
+            };
             vertex["order"] = i++;
 
             vertex_table.push_back(vertex);
@@ -1215,37 +995,36 @@ center.x, (pos.y-center.y)*scale + center.y);
 
     Mesh::VertexTab* Mesh::getAllVertex()
     {
-        return &m_VertexTab;
+        return &m_VertexTable;
     }
 
     sf::Vector2f Mesh::getCenter() const
     {
-        sf::Vector2f center;
+        sf::Vector2f  center;
         sf::FloatRect bound = getGlobalBounds();
 
-        center.x = bound.left + bound.width/2.f;
-        center.y = bound.top + bound.height/2.f;
+        center.x            = bound.left + bound.width / 2.f;
+        center.y            = bound.top + bound.height / 2.f;
 
         return center;
     }
 
-        std::vector<sf::RectangleShape> Mesh::getLineTable()
-        {
-                return m_LineTab;
-        }
+    std::vector<sf::RectangleShape> Mesh::getLineTable()
+    {
+        return m_LineTable;
+    }
 
-        std::vector<sf::ConvexShape> Mesh::getPolygonTable()
-        {
-                return m_PolygonTab;
-        }
+    std::vector<sf::ConvexShape> Mesh::getPolygonTable()
+    {
+        return m_PolygonTable;
+    }
 
-        sf::CircleShape Mesh::getCircleShape()
-        {
-                return m_CircleShape;
-        }
+    sf::CircleShape* Mesh::getCircleShape()
+    {
+        return m_CircleShape;
+    }
 
-        void Mesh::update(const sf::Transform& transform)
-        {
-
-        }
-}*/
+    void Mesh::update(const sf::Transform& transform)
+    {
+    }
+} // namespace nero

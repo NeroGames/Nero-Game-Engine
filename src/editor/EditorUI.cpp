@@ -967,7 +967,12 @@ namespace nero
 
         m_EditorProxy->m_SaveProjectCallback = [this]()
         {
-            // TODO
+            // Saving game level
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
+            if(levelBuilder)
+            {
+                levelBuilder->saveGameLevel();
+            }
         };
 
         // Close project
