@@ -55,7 +55,7 @@ namespace nero
             if(ImGui::ImageButton(lightmapHolder->getSpriteTexture(spriteTable[i]),
                                   ImVec2(spriteSize.x, spriteSize.y)))
             {
-                if(m_EditorContext->getBuilderMode() == BuilderMode::OBJECT)
+                if(m_EditorContext->getBuilderMode() == BuilderMode::Object)
                 {
                     auto worldBuilder =
                         m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();

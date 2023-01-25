@@ -25,7 +25,7 @@ namespace nero
 
     void ResourceBrowserMeshView::render()
     {
-        if(m_EditorContext->getBuilderMode() != BuilderMode::OBJECT)
+        if(m_EditorContext->getBuilderMode() != BuilderMode::Object)
             return;
 
         int         resourceCount = 3;

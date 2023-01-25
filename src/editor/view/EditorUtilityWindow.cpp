@@ -36,19 +36,19 @@ namespace nero
         const auto builderMode = m_EditorContext->getBuilderMode();
 
         int        e           = 0;
-        if(builderMode == BuilderMode::OBJECT)
+        if(builderMode == BuilderMode::Object)
             e = 0;
-        else if(builderMode == BuilderMode::MESH)
+        else if(builderMode == BuilderMode::Mesh)
             e = 1;
         ImGui::RadioButton("Object", &e, 0);
         if(ImGui::IsItemEdited())
         {
-            m_EditorContext->setBuilderMode(BuilderMode::OBJECT);
+            m_EditorContext->setBuilderMode(BuilderMode::Object);
         }
         ImGui::RadioButton("Mesh", &e, 1);
         if(ImGui::IsItemEdited())
         {
-            m_EditorContext->setBuilderMode(BuilderMode::MESH);
+            m_EditorContext->setBuilderMode(BuilderMode::Mesh);
         }
         ImGui::RadioButton("Joint", &e, 2);
 

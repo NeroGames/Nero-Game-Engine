@@ -38,7 +38,7 @@ namespace nero
         {
             if(ImGui::ImageButton(getFontTexture(fontTable.at(i))))
             {
-                if(m_EditorContext->getBuilderMode() == BuilderMode::OBJECT)
+                if(m_EditorContext->getBuilderMode() == BuilderMode::Object)
                 {
                     auto worldBuilder =
                         m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();

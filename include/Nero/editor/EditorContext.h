@@ -30,8 +30,8 @@ namespace nero
                       RenderTexturePtr    renderTexture,
                       RenderContext::Ptr  renderContext,
                       AdvancedCamera::Ptr editorCamara,
-                      const EditorMode&   editorMode  = EditorMode::WORLD_BUILDER,
-                      const BuilderMode&  builderMode = BuilderMode::OBJECT);
+                      const EditorMode&   editorMode  = EditorMode::None,
+                      const BuilderMode&  builderMode = BuilderMode::None);
         virtual ~EditorContext();
 
         // Getter

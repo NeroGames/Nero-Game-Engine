@@ -38,25 +38,24 @@ namespace nero
 
     enum class EditorMode
     {
-        WORLD_BUILDER,
-        SCREEN_BUILDER,
-        OBJECT_BUILDER,
-        PLAY_GAME,
-        RENDER_GAME
+        World_Builder,
+        Screen_Builder,
+        Factory,
+        Play_Game,
+        Render_Game,
+        None
     };
 
     enum class BuilderMode
     {
-        OBJECT,
-        MESH,
-        JOINT
+        Object,
+        Mesh,
+        Joint,
+        None
     };
 
     struct AppLauncher
     {
-        // let the Interface only access
-        // friend class			EditorInterface;
-
         static std::string NERO_GAME_HOME;
         static std::string TEXTURE_PACKER;
         static std::string qtCreatorProcessId;
@@ -65,7 +64,6 @@ namespace nero
         static std::string texturePackerProcessId;
 
         static void        launchTexturePacker();
-
         static void        launchProfiler();
     };
 

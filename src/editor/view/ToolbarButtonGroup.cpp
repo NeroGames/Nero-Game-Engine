@@ -37,19 +37,19 @@ namespace nero
         if(!m_EditorContext->getGameProject())
             return;
 
-        if(m_EditorContext->getEditorMode() == EditorMode::WORLD_BUILDER)
+        if(m_EditorContext->getEditorMode() == EditorMode::World_Builder)
         {
             renderScreenButton();
             ImGui::SameLine();
             renderFactoryButton();
         }
-        else if(m_EditorContext->getEditorMode() == EditorMode::SCREEN_BUILDER)
+        else if(m_EditorContext->getEditorMode() == EditorMode::Screen_Builder)
         {
             renderWorldButton();
             ImGui::SameLine();
             renderFactoryButton();
         }
-        else if(m_EditorContext->getEditorMode() == EditorMode::OBJECT_BUILDER)
+        else if(m_EditorContext->getEditorMode() == EditorMode::Factory)
         {
             renderScreenButton();
             ImGui::SameLine();
@@ -61,7 +61,7 @@ namespace nero
     {
         if(ImGui::Button(ICON_FA_GLOBE_AFRICA " World", ImVec2(105.f, 28.f)))
         {
-            m_EditorContext->setEditorMode(EditorMode::WORLD_BUILDER);
+            m_EditorContext->setEditorMode(EditorMode::World_Builder);
             ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
         }
     }
@@ -70,7 +70,7 @@ namespace nero
     {
         if(ImGui::Button(ICON_FA_SQUARE " Screen", ImVec2(105.f, 28.f)))
         {
-            m_EditorContext->setEditorMode(EditorMode::SCREEN_BUILDER);
+            m_EditorContext->setEditorMode(EditorMode::Screen_Builder);
             ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
         }
     }
@@ -79,7 +79,7 @@ namespace nero
     {
         if(ImGui::Button(ICON_FA_WAREHOUSE " Factory", ImVec2(105.f, 28.f)))
         {
-            m_EditorContext->setEditorMode(EditorMode::OBJECT_BUILDER);
+            m_EditorContext->setEditorMode(EditorMode::Factory);
             ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
         }
     }
@@ -146,7 +146,7 @@ namespace nero
 
     void ToolbarButtonGroup::renderRightButtonGroup()
     {
-        if(m_EditorContext->getEditorMode() == EditorMode::PLAY_GAME)
+        if(m_EditorContext->getEditorMode() == EditorMode::Play_Game)
             return;
 
         float rightOffset = 95.f;
@@ -162,21 +162,21 @@ namespace nero
         {
             if(m_EditorContext->getGameProject()->getAdvancedScene())
             {
-                if(m_EditorContext->getEditorMode() == EditorMode::WORLD_BUILDER)
+                if(m_EditorContext->getEditorMode() == EditorMode::World_Builder)
                 {
                     if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Level", ImVec2(140.f, 28.f)))
                     {
                         ImGui::OpenPopup("Create Game Level");
                     }
                 }
-                else if(m_EditorContext->getEditorMode() == EditorMode::SCREEN_BUILDER)
+                else if(m_EditorContext->getEditorMode() == EditorMode::Screen_Builder)
                 {
                     if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Screen", ImVec2(140.f, 28.f)))
                     {
                         ImGui::OpenPopup("Create Game Screen");
                     }
                 }
-                else if(m_EditorContext->getEditorMode() == EditorMode::OBJECT_BUILDER)
+                else if(m_EditorContext->getEditorMode() == EditorMode::Factory)
                 {
                     if(ImGui::Button(ICON_FA_PLUS_SQUARE " New Object", ImVec2(140.f, 28.f)))
                     {

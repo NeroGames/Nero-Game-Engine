@@ -193,13 +193,13 @@ namespace nero
         {
             auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
 
-            if(worldBuilder && editorMode == EditorMode::WORLD_BUILDER &&
-               builderMode == BuilderMode::OBJECT && mouseOnCanvas())
+            if(worldBuilder && editorMode == EditorMode::World_Builder &&
+               builderMode == BuilderMode::Object && mouseOnCanvas())
             {
                 worldBuilder->handleEvent(event);
             }
-            else if(worldBuilder && editorMode == EditorMode::WORLD_BUILDER &&
-                    builderMode == BuilderMode::MESH && mouseOnCanvas())
+            else if(worldBuilder && editorMode == EditorMode::World_Builder &&
+                    builderMode == BuilderMode::Mesh && mouseOnCanvas())
             {
                 worldBuilder->getMeshEditor()->handleEvent(event);
             }
@@ -236,7 +236,7 @@ namespace nero
         {
             auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
 
-            if(editorMode == EditorMode::WORLD_BUILDER && builderMode == BuilderMode::OBJECT &&
+            if(editorMode == EditorMode::World_Builder && builderMode == BuilderMode::Object &&
                worldBuilder)
             {
                 worldBuilder->update(timeStep);
@@ -272,12 +272,12 @@ namespace nero
         // left dockspace
         // upper left
         m_EditorUtilityWindow.render();
-        /*if(editorMode == EditorMode::SCREEN_BUILDER)
+        /*if(editorMode == EditorMode::Screen_Builder)
                         showGameScreenWindow();*/
 
         // lower left
         m_ObjectLayerWindow.render();
-        if(editorMode == EditorMode::WORLD_BUILDER)
+        if(editorMode == EditorMode::World_Builder)
             m_WorldChunkWindow.render();
 
         // right dockspace
@@ -289,7 +289,7 @@ namespace nero
         m_LoggerWindow.render();
         m_ConsoleWindow.render();
 
-        if(m_EditorContext->getAdvancedScene() && editorMode == EditorMode::WORLD_BUILDER)
+        if(m_EditorContext->getAdvancedScene() && editorMode == EditorMode::World_Builder)
         {
             m_GameLevelWindow.render();
         }
@@ -346,21 +346,21 @@ namespace nero
         const auto editorMode  = m_EditorContext->getEditorMode();
         const auto builderMode = m_EditorContext->getBuilderMode();
 
-        if(editorMode == EditorMode::WORLD_BUILDER)
+        if(editorMode == EditorMode::World_Builder)
         {
-            if(builderMode == BuilderMode::OBJECT && !keyboard::CTRL_SHIFT_ALT())
+            if(builderMode == BuilderMode::Object && !keyboard::CTRL_SHIFT_ALT())
             {
-                m_EditorContext->setBuilderMode(BuilderMode::MESH);
+                m_EditorContext->setBuilderMode(BuilderMode::Mesh);
             }
-            else if(builderMode != BuilderMode::OBJECT && !keyboard::CTRL_SHIFT_ALT())
+            else if(builderMode != BuilderMode::Object && !keyboard::CTRL_SHIFT_ALT())
             {
-                m_EditorContext->setBuilderMode(BuilderMode::OBJECT);
+                m_EditorContext->setBuilderMode(BuilderMode::Object);
             }
         }
-        else if(editorMode == EditorMode::PLAY_GAME && !keyboard::CTRL_SHIFT_ALT())
+        else if(editorMode == EditorMode::Play_Game && !keyboard::CTRL_SHIFT_ALT())
         {
-            m_EditorContext->setEditorMode(EditorMode::WORLD_BUILDER);
-            m_EditorContext->setBuilderMode(BuilderMode::OBJECT);
+            m_EditorContext->setEditorMode(EditorMode::World_Builder);
+            m_EditorContext->setBuilderMode(BuilderMode::Object);
         }
     }
 
@@ -674,7 +674,7 @@ namespace nero
 
         switch(m_EditorContext->getEditorMode())
         {
-            case EditorMode::WORLD_BUILDER:
+            case EditorMode::World_Builder:
             {
                 auto levelBuilder = m_EditorContext->getLevelBuilder();
 
@@ -685,7 +685,7 @@ namespace nero
             }
             break;
 
-            case EditorMode::SCREEN_BUILDER:
+            case EditorMode::Screen_Builder:
             {
                 // m_GameProject->saveGameScreen();
             }
@@ -702,20 +702,20 @@ namespace nero
 
         switch(m_EditorContext->getEditorMode())
         {
-            case EditorMode::WORLD_BUILDER:
+            case EditorMode::World_Builder:
             {
                 // m_GameProject->loadGameLevel();
             }
             break;
 
-            case EditorMode::SCREEN_BUILDER:
+            case EditorMode::Screen_Builder:
             {
                 // m_GameProject->loadGameScreen();
             }
             break;
-            case EditorMode::OBJECT_BUILDER:
-            case EditorMode::PLAY_GAME:
-            case EditorMode::RENDER_GAME:
+            case EditorMode::Factory:
+            case EditorMode::Play_Game:
+            case EditorMode::Render_Game:
                 break;
         }
     }
@@ -1123,18 +1123,18 @@ namespace nero
 
         m_EditorProxy->m_PlayGameSceneCallback = [this]()
         {
-            if(m_EditorContext->getEditorMode() == EditorMode::WORLD_BUILDER)
+            if(m_EditorContext->getEditorMode() == EditorMode::World_Builder)
             {
                 m_EditorContext->getAdvancedScene()->buildGameScene();
-                m_EditorContext->setEditorMode(EditorMode::PLAY_GAME);
+                m_EditorContext->setEditorMode(EditorMode::Play_Game);
             }
         };
 
         m_EditorProxy->m_StopGameSceneCallback = [this]()
         {
-            if(m_EditorContext->getEditorMode() == EditorMode::PLAY_GAME)
+            if(m_EditorContext->getEditorMode() == EditorMode::Play_Game)
             {
-                m_EditorContext->setEditorMode(EditorMode::WORLD_BUILDER);
+                m_EditorContext->setEditorMode(EditorMode::World_Builder);
             }
         };
     }

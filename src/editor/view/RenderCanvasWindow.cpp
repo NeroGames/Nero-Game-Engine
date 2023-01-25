@@ -88,7 +88,7 @@ namespace nero
         prepareRenderTexture();
 
         const auto editorMode = m_EditorContext->getEditorMode();
-        if(editorMode == EditorMode::WORLD_BUILDER)
+        if(editorMode == EditorMode::World_Builder)
         {
             auto levelBuilder = m_EditorContext->getLevelBuilder();
             if(levelBuilder)
@@ -96,7 +96,7 @@ namespace nero
                 levelBuilder->render();
             }
         }
-        else if(editorMode == EditorMode::PLAY_GAME)
+        else if(editorMode == EditorMode::Play_Game)
         {
             auto advancedScene = m_EditorContext->getAdvancedScene();
             if(advancedScene)
@@ -138,17 +138,17 @@ namespace nero
 
                 if(ImGui::MenuItem("World Builder"))
                 {
-                    m_EditorContext->setEditorMode(EditorMode::WORLD_BUILDER);
+                    m_EditorContext->setEditorMode(EditorMode::World_Builder);
                 }
 
                 if(ImGui::MenuItem("Screen Builder"))
                 {
-                    m_EditorContext->setEditorMode(EditorMode::SCREEN_BUILDER);
+                    m_EditorContext->setEditorMode(EditorMode::Screen_Builder);
                 }
 
                 if(ImGui::MenuItem("Object Builder"))
                 {
-                    m_EditorContext->setEditorMode(EditorMode::OBJECT_BUILDER);
+                    m_EditorContext->setEditorMode(EditorMode::Factory);
                 }
 
                 ImGui::EndMenu();
@@ -230,7 +230,7 @@ namespace nero
 
         sf::Color clearColor = sf::Color::Black;
 
-        if(m_EditorContext->getEditorMode() == EditorMode::PLAY_GAME)
+        if(m_EditorContext->getEditorMode() == EditorMode::Play_Game)
         {
             /*if(m_AdvancedScene &&
             m_AdvancedScene->getSelectedGameLevel()->levelSetting->getBool("enable_lighting"))
@@ -291,30 +291,30 @@ namespace nero
     {
         switch(editorMode)
         {
-            case EditorMode::WORLD_BUILDER:
+            case EditorMode::World_Builder:
             {
                 const auto builderMode = m_EditorContext->getBuilderMode();
 
-                if(builderMode == BuilderMode::OBJECT)
+                if(builderMode == BuilderMode::Object)
                 {
                     return "World Builder - Object";
                 }
-                else if(builderMode == BuilderMode::MESH)
+                else if(builderMode == BuilderMode::Mesh)
                 {
                     return "World Builder - Mesh";
                 }
             }
             break;
-            case EditorMode::SCREEN_BUILDER:
+            case EditorMode::Screen_Builder:
                 return "Screen Builder";
                 break;
-            case EditorMode::OBJECT_BUILDER:
+            case EditorMode::Factory:
                 return "Object Builder";
                 break;
-            case EditorMode::PLAY_GAME:
+            case EditorMode::Play_Game:
                 return "Play Game";
                 break;
-            case EditorMode::RENDER_GAME:
+            case EditorMode::Render_Game:
                 return "Render Game";
                 break;
 

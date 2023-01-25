@@ -154,7 +154,7 @@ namespace nero
     {
         switch(m_EditorMode)
         {
-            case EditorMode::WORLD_BUILDER:
+            case EditorMode::World_Builder:
             {
                 auto levelBuilder = getLevelBuilder();
 
