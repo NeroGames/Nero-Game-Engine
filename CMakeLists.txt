@@ -177,30 +177,30 @@ set_target_properties(Console PROPERTIES OUTPUT_NAME "nero")
 
 # Doxygen Documentation
 #----------------------------------------------------------------------------------#
-# check if Doxygen is installed
-#[[
-find_package(Doxygen REQUIRED dot OPTIONAL_COMPONENTS mscgen dia)
-if (DOXYGEN_FOUND)
-    # set input and output files
-    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/doxygen/Doxyfile.in)
-    set(DOXYGEN_OUT ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Doxyfile)
+# Enable/Disable doxygen generation
+set (GENERATE_DOXYGEN FALSE)
 
-    # request to configure the file
-    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-    message("Doxygen build started")
+if (GENERATE_DOXYGEN)
+    find_package(Doxygen REQUIRED dot OPTIONAL_COMPONENTS mscgen dia)
+    if (DOXYGEN_FOUND)
+        # set input and output files
+        set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/doxygen/Doxyfile.in)
+        set(DOXYGEN_OUT ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Doxyfile)
 
-    # build the docs
-    add_custom_target(Doxygen ALL
-        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Generating API documentation with Doxygen"
-        VERBATIM )
-else (DOXYGEN_FOUND)
-  message("Doxygen need to be installed to generate the doxygen documentation")
-endif (DOXYGEN_FOUND)
-#]]
+        # request to configure the file
+        configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+        message("Doxygen build started")
 
-
+        # build the docs
+        add_custom_target(Doxygen ALL
+            COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+            COMMENT "Generating API documentation with Doxygen"
+            VERBATIM )
+    else (DOXYGEN_FOUND)
+      message("Doxygen need to be installed to generate the doxygen documentation")
+    endif (DOXYGEN_FOUND)
+endif(GENERATE_DOXYGEN)
 
 # Test Laboratory
 #----------------------------------------------------------------------------------#
@@ -214,3 +214,17 @@ set(TEST_LABORATORY_DEP CoreEngine ${NERO_GAME_CORE_DEP} ${GTEST} ${OPENSSL_LIBS
 # Build Test Laboratory
 add_executable(TestLab ${TEST_LABORATORY_SOURCES})
 target_link_libraries(TestLab ${TEST_LABORATORY_DEP})
+
+# Design Document
+#----------------------------------------------------------------------------------#
+# Design Document Files
+file(GLOB_RECURSE DESIGN_DOCUMENTATION_FILES
+    "${CMAKE_CURRENT_SOURCE_DIR}/designdoc/*.md"
+    "${CMAKE_CURRENT_SOURCE_DIR}/designdoc/*.drawio"
+    "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
+    "${CMAKE_CURRENT_SOURCE_DIR}/.clang-format"
+    "${CMAKE_CURRENT_SOURCE_DIR}/.gitignore"
+    "${CMAKE_CURRENT_SOURCE_DIR}/copyright.txt"
+    "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+add_custom_target(DesignDoc
+    SOURCES ${DESIGN_DOCUMENTATION_FILES})
