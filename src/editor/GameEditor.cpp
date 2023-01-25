@@ -115,40 +115,43 @@ namespace nero
         // TODO load and use logger settings
         logging::Logger::init();
 
-        nero_log(EngineConstant.ENGINE_NAME + StringPool.SPACE + EngineConstant.ENGINE_VERSION)
-            nero_log(EngineConstant.ENGINE_COPYRIGHT) nero_log(EngineConstant.LEARN_MORE_MESSAGE)
-                nero_log("---") nero_log("Nero Game Editor starting")
+        nero_log(EngineConstant.ENGINE_NAME + StringPool.SPACE + EngineConstant.ENGINE_VERSION);
+        nero_log(EngineConstant.ENGINE_COPYRIGHT) nero_log(EngineConstant.LEARN_MORE_MESSAGE);
+        nero_log("---") nero_log("Nero Game Editor starting");
     }
 
     void GameEditor::initSetting()
     {
         nero_log("Loading startup settings") m_EditorSetting = std::make_shared<Setting>();
 
-        nero_log("-> Loading render window settings") std::string windowSetting =
-            file::getPath({"setting", "window"}, StringPool.EXT_JSON);
+        nero_log("-> Loading render window settings");
+
+        std::string windowSetting = file::getPath({"setting", "window"}, StringPool.EXT_JSON);
         if(!file::fileExist(windowSetting))
         {
             file::saveFile(windowSetting, EditorSetting.windowSetting.dump(3));
         }
         m_EditorSetting->loadSetting(windowSetting, true);
 
-        nero_log("-> Loading resource settings") std::string resourceSetting =
-            file::getPath({"setting", "resource"}, StringPool.EXT_JSON);
+        nero_log("-> Loading resource settings");
+
+        std::string resourceSetting = file::getPath({"setting", "resource"}, StringPool.EXT_JSON);
         if(!file::fileExist(resourceSetting))
         {
             file::saveFile(resourceSetting, EditorSetting.resourceSetting.dump(3));
         }
         m_EditorSetting->loadSetting(resourceSetting, true);
 
-        nero_log("-> Load startup setting completed")
+        nero_log("-> Load startup setting completed");
     }
 
     void GameEditor::createRenderWindow()
     {
-        nero_log("Creating render window")
+        nero_log("Creating render window");
 
-            nero_log("-> Setting render window properties") const auto windowSetting =
-                m_EditorSetting->getSetting("window");
+        nero_log("-> Setting render window properties");
+
+        const auto windowSetting = m_EditorSetting->getSetting("window");
         m_RenderWindow.create(
             sf::VideoMode(windowSetting.getUInt("width"), windowSetting.getUInt("height")),
             EngineConstant.ENGINE_WINDOW_TITLE,
@@ -158,47 +161,51 @@ namespace nero
         m_RenderWindow.setVerticalSyncEnabled(true);
         m_RenderWindow.resetGLStates();
 
-        nero_log("-> Setting render window icon")
-            CoreEngine::setWindowIcon(windowSetting.getString("icon"));
+        nero_log("-> Setting render window icon");
+        CoreEngine::setWindowIcon(windowSetting.getString("icon"));
 
-        nero_log("-> Initializing Imgui") ImGui::SFML::Init(m_RenderWindow, false);
+        nero_log("-> Initializing Imgui");
+        ImGui::SFML::Init(m_RenderWindow, false);
 
-        nero_log("-> Render window creation completed")
+        nero_log("-> Render window creation completed");
     }
 
     void GameEditor::createLoadingScreen()
     {
-        nero_log("Creating loading screen")
+        nero_log("Creating loading screen");
 
-            nero_log("-> Loading startup resources") ResourceManager::Ptr resourceManager =
-                std::make_shared<ResourceManager>(m_EditorSetting->getSetting("resource"));
+        nero_log("-> Loading startup resources");
+        ResourceManager::Ptr resourceManager =
+            std::make_shared<ResourceManager>(m_EditorSetting->getSetting("resource"));
         resourceManager->loadDirectory("resource/startup");
 
-        nero_log("-> Setting up loading screen") m_LoadingScreen =
-            std::make_unique<LoadingScreen>();
+        nero_log("-> Setting up loading screen");
+        m_LoadingScreen = std::make_unique<LoadingScreen>();
         m_LoadingScreen->setRenderWindow(&m_RenderWindow);
         m_LoadingScreen->setResourceManager(resourceManager);
 
-        nero_log("-> Initializing loading screen") m_LoadingScreen->init();
+        nero_log("-> Initializing loading screen");
+        m_LoadingScreen->init();
 
-        nero_log("-> Loading screen creation completed")
+        nero_log("-> Loading screen creation completed");
     }
 
     void GameEditor::backgroundStartup()
     {
-        nero_log("Starting background operations") m_StartupFuture =
-            std::async(std::launch::async,
-                       &GameEditor::startEngine,
-                       this,
-                       std::ref(m_EditorStarted),
-                       m_LoadingScreen->getDuration());
+        nero_log("Starting background operations");
+        m_StartupFuture = std::async(std::launch::async,
+                                     &GameEditor::startEngine,
+                                     this,
+                                     std::ref(m_EditorStarted),
+                                     m_LoadingScreen->getDuration());
     }
 
     int GameEditor::startEngine(bool& editorStarted, const int duration)
     {
-        nero_log("Running background operations")
+        nero_log("Running background operations");
 
-            nero_log("-> Starting a clock") sf::Clock clock;
+        nero_log("-> Starting a clock");
+        sf::Clock clock;
 
         // Load setting
         loadSetting();
@@ -226,16 +233,17 @@ namespace nero
         // Commit
         editorStarted = true;
 
-        nero_log("-> Background operations completed") nero_log("---")
+        nero_log("-> Background operations completed");
+        nero_log("---");
 
-            return 0;
+        return 0;
     }
 
     void GameEditor::buildDirectory()
     {
-        nero_log("-> Building editor directory")
+        nero_log("-> Building editor directory");
 
-            file::createDirectory(file::getPath({"setting"}));
+        file::createDirectory(file::getPath({"setting"}));
         file::createDirectory(file::getPath({"logging"}));
         file::createDirectory(file::getPath({"plugin"}));
         // Template
@@ -271,22 +279,25 @@ namespace nero
 
     void GameEditor::loadSetting()
     {
-        nero_log("-> Loading editor settings")
+        nero_log("-> Loading editor settings");
 
-            nero_log("--> Loading recent project settings") checkRecentProject();
+        nero_log("--> Loading recent project settings");
+        checkRecentProject();
         m_EditorSetting->loadSetting(file::getPath({"setting", "recent_project"}));
 
-        nero_log("--> Loading workspace settings") checkWorkspace();
+        nero_log("--> Loading workspace settings");
+        checkWorkspace();
         m_EditorSetting->loadSetting(file::getPath({"setting", "worksapce"}));
 
-        nero_log("--> Loading dockspace settings")
-            m_EditorSetting->loadSetting(file::getPath({"setting", "dockspace"}));
+        nero_log("--> Loading dockspace settings");
+        m_EditorSetting->loadSetting(file::getPath({"setting", "dockspace"}));
         m_EditorSetting->getSetting("dockspace")
             .setBool("imgui_setting_exist",
                      file::fileExist(file::getPath({"setting", EditorConstant.FILE_IMGUI_SETTING},
                                                    StringPool.EXT_INI)));
 
-        nero_log("--> Loading startup settings") checkWorkspace();
+        nero_log("--> Loading startup settings");
+        checkWorkspace();
         m_EditorSetting->loadSetting(file::getPath({"setting", "startup"}));
     }
 
@@ -347,9 +358,9 @@ namespace nero
 
     void GameEditor::checkEnvironmentVariable()
     {
-        nero_log("-> Checking environment variable")
+        nero_log("-> Checking environment variable");
 
-            char*   env_home      = getenv("NERO_GAME_HOME");
+        char*       env_home      = getenv("NERO_GAME_HOME");
         char*       env_vs        = getenv("NERO_GAME_VS");
         char*       env_qt        = getenv("NERO_GAME_QT");
         char*       env_tp        = getenv("NERO_GAME_TP");
@@ -370,38 +381,38 @@ namespace nero
 
         if(env_home)
         {
-            nero_log("--> NERO_GAME_HOME = " + neroGameHome)
+            nero_log("--> NERO_GAME_HOME = " + neroGameHome);
         }
         else
         {
-            nero_log("--> NERO_GAME_HOME not found")
+            nero_log("--> NERO_GAME_HOME not found");
         }
 
         if(env_vs)
         {
-            nero_log("--> NERO_GAME_VS = " + visualStudio)
+            nero_log("--> NERO_GAME_VS = " + visualStudio);
         }
         else
         {
-            nero_log("--> NERO_GAME_VS not found")
+            nero_log("--> NERO_GAME_VS not found");
         }
 
         if(env_qt)
         {
-            nero_log("--> NERO_GAME_QT = " + qtCreator)
+            nero_log("--> NERO_GAME_QT = " + qtCreator);
         }
         else
         {
-            nero_log("--> NERO_GAME_QT not found")
+            nero_log("--> NERO_GAME_QT not found");
         }
 
         if(env_tp)
         {
-            nero_log("--> NERO_GAME_TP = " + texturePacker)
+            nero_log("--> NERO_GAME_TP = " + texturePacker);
         }
         else
         {
-            nero_log("--> NERO_GAME_TP not found")
+            nero_log("--> NERO_GAME_TP not found");
         }
 
         env_home = nullptr;
@@ -412,10 +423,10 @@ namespace nero
 
     void GameEditor::loadEditorResource()
     {
-        nero_log("-> Loading editor resource")
+        nero_log("-> Loading editor resource");
 
-            m_EditorTextureHolder = std::make_shared<TextureHolder>(
-                m_EditorSetting->getSetting("resource").getSetting("texture"));
+        m_EditorTextureHolder = std::make_shared<TextureHolder>(
+            m_EditorSetting->getSetting("resource").getSetting("texture"));
         m_EditorTextureHolder->loadDirectory("resource/editor/texture");
 
         m_EditorSoundHolder = std::make_shared<SoundHolder>(
@@ -434,14 +445,14 @@ namespace nero
 
     void GameEditor::createEditorInterface()
     {
-        nero_log("-> Creating editor interface")
+        nero_log("-> Creating editor interface");
 
-            m_EditorUI = std::make_unique<EditorUI>(m_RenderWindow,
-                                                    m_EditorCamera,
-                                                    m_EditorTextureHolder,
-                                                    m_EditorFontHolder,
-                                                    m_EditorSoundHolder,
-                                                    m_EditorSetting);
+        m_EditorUI = std::make_unique<EditorUI>(m_RenderWindow,
+                                                m_EditorCamera,
+                                                m_EditorTextureHolder,
+                                                m_EditorFontHolder,
+                                                m_EditorSoundHolder,
+                                                m_EditorSetting);
 
         // Set callback, allow interface to change window title
         m_EditorUI->setUpdateWindowTitleCallback(
@@ -457,9 +468,9 @@ namespace nero
     {
         if(m_EditorSetting->getSetting("startup").getBool("open_last_project"))
         {
-            nero_log("opening last project")
+            nero_log("opening last project");
 
-                auto recent_project = file::loadJson(file::getPath({"setting", "recent_project"}));
+            auto recent_project = file::loadJson(file::getPath({"setting", "recent_project"}));
 
             if(!recent_project.empty())
             {
@@ -470,7 +481,7 @@ namespace nero
             }
             else
             {
-                nero_log("recent projects are emtpy")
+                nero_log("recent projects are emtpy");
             }
         }
     }

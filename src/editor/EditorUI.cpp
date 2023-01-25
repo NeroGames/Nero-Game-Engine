@@ -60,6 +60,8 @@ namespace nero
         , m_AutoSaveTimeInterval(60)
         // Node Editor
         , m_NodeEditorContext(ax::NodeEditor::CreateEditor())
+        // Initial Draw
+        , m_EditorInitialDraw(true)
         // User Interface
         , m_EditorDockspace(m_EditorContext)
         , m_EditorToolbar(m_EditorContext)
@@ -76,10 +78,9 @@ namespace nero
         , m_LoggerWindow(m_EditorContext)
         , m_RenderCanvasWindow(m_EditorContext)
         , m_BackgroundTaskWindow(m_EditorContext)
+        , m_GameProjectWindow(m_EditorContext)
+        , m_GameSettingWindow(m_EditorContext)
         , m_NodeEditorWindow(m_EditorContext, m_NodeEditorContext)
-
-        // TODO
-        , m_InterfaceFirstDraw(true)
     {
         setupEditorProxy();
     }
@@ -255,9 +256,9 @@ namespace nero
         // viewport
         m_RenderCanvasWindow.render();
         // game project
-        showGameProjectWindow();
+        m_GameProjectWindow.render();
         // game setting
-        showGameSettingWindow();
+        m_GameSettingWindow.render();
         // visual script
         m_NodeEditorWindow.render();
         // resource manager
@@ -269,12 +270,18 @@ namespace nero
         // upper left
         m_EditorUtilityWindow.render();
         if(editorMode == EditorMode::Screen_Builder)
+        {
             // m_GameScreenWindow.render();
+        }
 
-            // lower left
-            m_ObjectLayerWindow.render();
+        // lower left
         if(editorMode == EditorMode::World_Builder)
+        {
             m_WorldChunkWindow.render();
+            m_GameLevelWindow.render();
+        }
+
+        m_ObjectLayerWindow.render();
 
         // right dockspace
         m_SceneExplorerWindow.render();
@@ -285,23 +292,17 @@ namespace nero
         m_LoggerWindow.render();
         m_ConsoleWindow.render();
 
-        if(m_EditorContext->getAdvancedScene() && editorMode == EditorMode::World_Builder)
-        {
-            m_GameLevelWindow.render();
-        }
+        // First Draw Setup
+        editorInitialDraw();
 
-        // init
-        interfaceFirstDraw();
-
-        // background task
+        // Background task
         m_BackgroundTaskWindow.render();
 
+        // Startup Popup
         if(m_EditorSetup->initiateSetup())
-        {
             m_EditorSetupPopup.render();
-        }
 
-        // commit
+        // Actual Rendering
         ImGui::SFML::Render(m_RenderWindow);
     }
 
@@ -334,7 +335,7 @@ namespace nero
 
     void EditorUI::setUpdateWindowTitleCallback(std::function<void(const std::string&)> callback)
     {
-        m_UpdateWindowTitleCallback = callback;
+        m_WindowTitleCallback = callback;
     }
 
     void EditorUI::switchBuilderMode()
@@ -360,23 +361,9 @@ namespace nero
         }
     }
 
-    void EditorUI::showGameSettingWindow()
+    void EditorUI::editorInitialDraw()
     {
-        ImGui::Begin(EditorConstant.WINDOW_GAME_SETTING.c_str());
-
-        ImGui::End();
-    }
-
-    void EditorUI::showGameProjectWindow()
-    {
-        ImGui::Begin(EditorConstant.WINDOW_GAME_PROJECT.c_str());
-
-        ImGui::End();
-    }
-
-    void EditorUI::interfaceFirstDraw()
-    {
-        if(m_InterfaceFirstDraw)
+        if(m_EditorInitialDraw)
         {
             ImGui::SetWindowFocus(EditorConstant.WINDOW_UTILITY.c_str());
             ImGui::SetWindowFocus(EditorConstant.WINDOW_LAYER.c_str());
@@ -387,7 +374,7 @@ namespace nero
             ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
 
             // commit
-            m_InterfaceFirstDraw = false;
+            m_EditorInitialDraw = false;
         }
     }
 
@@ -448,7 +435,7 @@ namespace nero
                 gameProject->openEditor();
 
                 // update editor window title
-                m_UpdateWindowTitleCallback(gameProject->getProjectName());
+                m_WindowTitleCallback(gameProject->getProjectName());
             }
         };
 
@@ -480,7 +467,7 @@ namespace nero
             m_ProjectManager->closeProject();
 
             // update editor window title
-            m_UpdateWindowTitleCallback(EngineConstant.ENGINE_WINDOW_TITLE);
+            m_WindowTitleCallback(EngineConstant.ENGINE_WINDOW_TITLE);
         };
 
         // Create workspace

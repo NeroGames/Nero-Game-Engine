@@ -25,6 +25,12 @@ namespace nero
 
     void GameLevelWindow::render()
     {
+        // TODO transfer to EditorProxy
+        auto advancedScene = m_EditorContext->getAdvancedScene();
+
+        if(!advancedScene)
+            return;
+
         ImGui::Begin(EditorConstant.WINDOW_LEVEL.c_str());
 
         ImVec2 button_size = ImVec2(100.f, 0.f);
@@ -50,12 +56,6 @@ namespace nero
 
         if(ImGui::Button("Close##close_game_level", button_size))
         {
-            // TODO transfer to EditorProxy
-            auto advancedScene = m_EditorContext->getAdvancedScene();
-
-            if(!advancedScene)
-                return;
-
             m_EditorContext->setOpenedGameLevelName(StringPool.BLANK);
             advancedScene->closeSelectedLevel();
         }

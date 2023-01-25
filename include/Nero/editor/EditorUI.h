@@ -38,6 +38,8 @@
 #include <Nero/editor/view/RenderCanvasWindow.h>
 #include <Nero/editor/view/BackgroundTaskWindow.h>
 #include <Nero/editor/view/NodeEditorWindow.h>
+#include <Nero/editor/view/GameProjectWindow.h>
+#include <Nero/editor/view/GameSettingWindow.h>
 // SFML
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -89,7 +91,10 @@ namespace nero
         void        setupEditorProxy();
         // Mouse Position
         bool        mouseOnCanvas();
-
+        // Initial Draw
+        void        editorInitialDraw();
+        // Editor Mode
+        void        switchBuilderMode();
         // signal handling
         void        registerSignalHandler();
         static void handleSignalAbnormalTermination(int signal);
@@ -120,6 +125,8 @@ namespace nero
         int                                     m_AutoSaveTimeInterval;
         // Node Editor
         ax::NodeEditor::EditorContext*          m_NodeEditorContext;
+        // Initial Draw
+        bool                                    m_EditorInitialDraw;
         // UI
         EditorDockspace                         m_EditorDockspace;
         EditorToolbar                           m_EditorToolbar;
@@ -136,19 +143,11 @@ namespace nero
         LoggerWindow                            m_LoggerWindow;
         RenderCanvasWindow                      m_RenderCanvasWindow;
         BackgroundTaskWindow                    m_BackgroundTaskWindow;
+        GameProjectWindow                       m_GameProjectWindow;
+        GameSettingWindow                       m_GameSettingWindow;
         NodeEditorWindow                        m_NodeEditorWindow;
         // Callback
-        std::function<void(const std::string&)> m_UpdateWindowTitleCallback;
-
-      private:
-        // TODO
-        bool m_InterfaceFirstDraw;
-        void interfaceFirstDraw();
-        void switchBuilderMode();
-
-        // TODO
-        void showGameProjectWindow();
-        void showGameSettingWindow();
+        std::function<void(const std::string&)> m_WindowTitleCallback;
     };
 } // namespace nero
 
