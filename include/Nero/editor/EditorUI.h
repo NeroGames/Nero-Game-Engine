@@ -87,6 +87,9 @@ namespace nero
         void        setUpdateWindowTitleCallback(std::function<void(const std::string&)> callback);
         // Editor proxy
         void        setupEditorProxy();
+        // Mouse Position
+        bool        mouseOnCanvas();
+
         // signal handling
         void        registerSignalHandler();
         static void handleSignalAbnormalTermination(int signal);
@@ -97,7 +100,6 @@ namespace nero
         static void handleSignalTerminsationRequest(int signal);
 
       private:
-        //////////////main attributes
         friend class GameEditor;
         // Constructor paramater
         sf::RenderWindow&                       m_RenderWindow;
@@ -129,56 +131,27 @@ namespace nero
         LoggerWindow                            m_LoggerWindow;
         RenderCanvasWindow                      m_RenderCanvasWindow;
         BackgroundTaskWindow                    m_BackgroundTaskWindow;
-        // Core Engine callback
+        // Callback
         std::function<void(const std::string&)> m_UpdateWindowTitleCallback;
-        bool                                    mouseOnCanvas();
 
       private:
         //////////////docksapce
         bool                           m_InterfaceFirstDraw;
         void                           interfaceFirstDraw();
         //////////////Project
-        void                           createGameScreen(const Parameter& parameter);
-        //
-        // editor view
-        void                           showGameScreenWindow();
-        // project creation
-        ImGuiIO                        baseio;
-        std::stringstream              buffer;
-        std::streambuf*                old;
         //
         void                           showGameProjectWindow();
         void                           showGameSettingWindow();
+
+        ax::NodeEditor::EditorContext* g_Context;
         void                           showVisualScriptWindow();
-        ////////////////////////Project and Workspace////////////////////////
-        // General
-        // Script Wizard
-        char                           m_InputClassName[100];
-        char                           m_InputParentClass[100];
-        const char*                    m_SelectedScriptType;
-        int                            m_SelectedScriptTypeIndex;
-        const char*                    m_InputSelectedGameLevel;
-        int                            m_SelectedGameLevelIndex;
-        const char*                    m_SelectedGameScreen;
-        int                            m_SelectedGameScreenIndex;
-        //
-        void                           showNewGameScreenPopup();
-        //
-        int                            m_InputSelectedGameScreenId;
-        // Tabs
+
         TabSelectionHandler            m_BottomDockspaceTabBarSwitch;
         void                           showScriptCreationWindow();
-        ax::NodeEditor::EditorContext* g_Context;
-        std::string                    getString(const EditorMode& editorMode);
         void                           clearScriptWizardInput();
         void                           switchBuilderMode();
-        void                           onSaveProject();
-        void                           onLoadProject();
-        void                           autoSaveProject();
         sf::Clock                      m_AutoSaveClock;
-        ImVec4                         ambient_light;
-        // void                           createScriptObject(const Parameter& parameter);
-        ImVec4                         getLoggingColor(logging::LEVEL level);
+        // Canvas Script window
     };
 
 } // namespace nero

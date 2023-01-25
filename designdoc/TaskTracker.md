@@ -26,3 +26,5 @@ In order to keep Taks small and relevant we will enfore the following rules
 - [Task-2] Review Enum naming style and toString operation
   - [Note-2.1] All Enum will use Snake_Case with first letter capital
   - [Note-2.2] For all Enum implement nero::toString, nero::toInt, nero::fromInt
+  
+- [Task-3] Clean EditorUI, move all UI elements into their on view class
