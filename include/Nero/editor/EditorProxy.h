@@ -42,6 +42,8 @@ namespace nero
         // Play Mode
         void playGameScene() const;
         void stopGameScene() const;
+        // Auto save
+        void autoSave() const;
 
       private:
         friend class EditorUI;
@@ -64,6 +66,8 @@ namespace nero
         // Game Scene
         std::function<void()>                                      m_PlayGameSceneCallback;
         std::function<void()>                                      m_StopGameSceneCallback;
+        // Auto Save
+        std::function<void()>                                      m_AutoSaveCallback;
     };
 } // namespace nero
 

@@ -8,9 +8,22 @@
 // Poco
 #include <Poco/Logger.h>
 // Nero
+#include <Nero/core/cpp/scene/Scene.h>
+#include <Nero/core/cpp/engine/Parameter.h>
+#include <Nero/core/lua/scene/LuaScene.h>
+#include <Nero/editor/project/GameProject.h>
+#include <Nero/core/cpp/utility/String.h>
+#include <Nero/core/cpp/resource/ResourceManager.h>
+#include <Nero/editor/EditorSetup.h>
+#include <Nero/editor/EditorCamera.h>
+#include <Nero/editor/EditorUtility.h>
+#include <Nero/editor/project/ProjectManager.h>
+#include <Nero/editor/project/AdvancedScene.h>
+#include <Nero/editor/level/LevelBuilder.h>
+#include <Nero/editor/screen/ScreenBuilder.h>
+#include <Nero/editor/level/WorldBuilder.h>
 #include <Nero/editor/view/EditorDockspace.h>
 #include <Nero/editor/view/EditorToolbar.h>
-#include <Nero/editor/EditorSetup.h>
 #include <Nero/editor/view/EditorSetupPopup.h>
 #include <Nero/editor/view/ResourceSelectionWindow.h>
 #include <Nero/editor/view/ResourceBrowserWindow.h>
@@ -24,31 +37,18 @@
 #include <Nero/editor/view/LoggerWindow.h>
 #include <Nero/editor/view/RenderCanvasWindow.h>
 #include <Nero/editor/view/BackgroundTaskWindow.h>
-
-#include <Nero/editor/project/ProjectManager.h>
-#include <Nero/core/cpp/scene/Scene.h>
-#include <Nero/core/cpp/engine/Parameter.h>
-#include <Nero/core/lua/scene/LuaScene.h>
-#include <Nero/editor/project/GameProject.h>
-#include <Nero/core/cpp/utility/String.h>
-#include <Nero/editor/project/AdvancedScene.h>
-#include <Nero/core/cpp/resource/ResourceManager.h>
-#include <Nero/editor/EditorCamera.h>
-#include <Nero/editor/EditorUtility.h>
-#include <Nero/editor/level/LevelBuilder.h>
-#include <Nero/editor/screen/ScreenBuilder.h>
-#include <Nero/editor/level/WorldBuilder.h>
-// Json
-#include <json/json.hpp>
+#include <Nero/editor/view/NodeEditorWindow.h>
 // SFML
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+// Json
+#include <json/json.hpp>
 // File Diaglog
 #include <nativefiledialog/include/nfd.h>
 // Node Editor
 #include <nodeeditor/imgui_node_editor.h>
-// STD
+// Std
 #include <memory>
 #include <functional>
 #include <future>
@@ -115,6 +115,11 @@ namespace nero
         RenderContext::Ptr                      m_RenderContext;
         EditorContext::Ptr                      m_EditorContext;
         EditorSetup::Ptr                        m_EditorSetup;
+        // Auto save
+        sf::Clock                               m_AutoSaveClock;
+        int                                     m_AutoSaveTimeInterval;
+        // Node Editor
+        ax::NodeEditor::EditorContext*          m_NodeEditorContext;
         // UI
         EditorDockspace                         m_EditorDockspace;
         EditorToolbar                           m_EditorToolbar;
@@ -131,29 +136,20 @@ namespace nero
         LoggerWindow                            m_LoggerWindow;
         RenderCanvasWindow                      m_RenderCanvasWindow;
         BackgroundTaskWindow                    m_BackgroundTaskWindow;
+        NodeEditorWindow                        m_NodeEditorWindow;
         // Callback
         std::function<void(const std::string&)> m_UpdateWindowTitleCallback;
 
       private:
-        //////////////docksapce
-        bool                           m_InterfaceFirstDraw;
-        void                           interfaceFirstDraw();
-        //////////////Project
-        //
-        void                           showGameProjectWindow();
-        void                           showGameSettingWindow();
+        // TODO
+        bool m_InterfaceFirstDraw;
+        void interfaceFirstDraw();
+        void switchBuilderMode();
 
-        ax::NodeEditor::EditorContext* g_Context;
-        void                           showVisualScriptWindow();
-
-        TabSelectionHandler            m_BottomDockspaceTabBarSwitch;
-        void                           showScriptCreationWindow();
-        void                           clearScriptWizardInput();
-        void                           switchBuilderMode();
-        sf::Clock                      m_AutoSaveClock;
-        // Canvas Script window
+        // TODO
+        void showGameProjectWindow();
+        void showGameSettingWindow();
     };
-
 } // namespace nero
 
 #endif // EDITORUI_H

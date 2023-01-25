@@ -5,20 +5,24 @@
 ///////////////////////////HEADERS//////////////////////////
 // Poco
 #include <Poco/Environment.h>
-// SFML
+// Nero
 #include <Nero/core/cpp/utility/Logging.h>
 #include <Nero/editor/EditorUI.h>
-#include <SFML/Window/Event.hpp>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 #include <Nero/core/cpp/utility/File.h>
-#include <SFML/Graphics/RenderTexture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
 #include <Nero/editor/EditorConstant.h>
 #include <Nero/core/cpp/engine/BackgroundTaskManager.h>
+// SFML
+#include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+// Icon Font
+#include <iconfont/IconsFontAwesome5.h>
+// Profiler
+#include <easy/profiler.h>
+// Std
 #include <functional>
 #include <vector>
-#include <iconfont/IconsFontAwesome5.h>
-#include <easy/profiler.h>
 #include <exception>
 #include <csignal>
 ////////////////////////////////////////////////////////////
@@ -51,6 +55,11 @@ namespace nero
                                                           m_RenderContext,
                                                           m_EditorCamera))
         , m_EditorSetup(std::make_shared<EditorSetup>(m_EditorContext))
+        // Auto Save
+        , m_AutoSaveClock()
+        , m_AutoSaveTimeInterval(60)
+        // Node Editor
+        , m_NodeEditorContext(ax::NodeEditor::CreateEditor())
         // User Interface
         , m_EditorDockspace(m_EditorContext)
         , m_EditorToolbar(m_EditorContext)
@@ -67,10 +76,10 @@ namespace nero
         , m_LoggerWindow(m_EditorContext)
         , m_RenderCanvasWindow(m_EditorContext)
         , m_BackgroundTaskWindow(m_EditorContext)
-        //
+        , m_NodeEditorWindow(m_EditorContext, m_NodeEditorContext)
+
+        // TODO
         , m_InterfaceFirstDraw(true)
-        , g_Context(nullptr)
-        , m_BottomDockspaceTabBarSwitch()
     {
         setupEditorProxy();
     }
@@ -82,8 +91,7 @@ namespace nero
 
     void EditorUI::destroy()
     {
-        nero_log("destroying engine interface ...");
-        ax::NodeEditor::DestroyEditor(g_Context);
+        ax::NodeEditor::DestroyEditor(m_NodeEditorContext);
     }
 
     void EditorUI::init()
@@ -160,13 +168,6 @@ namespace nero
                                      icon_ranges);
         ImGui::SFML::UpdateFontTexture();
 
-        g_Context = ax::NodeEditor::CreateEditor();
-
-        m_BottomDockspaceTabBarSwitch.registerTab({
-            EditorConstant.WINDOW_RESOURCE,
-            EditorConstant.WINDOW_LOGGING,
-        });
-
         // register signal handler
         registerSignalHandler();
     }
@@ -235,6 +236,8 @@ namespace nero
                 worldBuilder->update(timeStep);
             }
         }
+
+        m_EditorProxy->autoSave();
     }
 
     void EditorUI::render()
@@ -256,7 +259,7 @@ namespace nero
         // game setting
         showGameSettingWindow();
         // visual script
-        showVisualScriptWindow();
+        m_NodeEditorWindow.render();
         // resource manager
         m_ResourceSelectionWindow.render();
         // imgui demo
@@ -364,49 +367,12 @@ namespace nero
         ImGui::End();
     }
 
-    void EditorUI::showVisualScriptWindow()
-    {
-        ImGui::Begin(EditorConstant.WINDOW_VISUAL_SCRIPT.c_str());
-
-        ax::NodeEditor::SetCurrentEditor(g_Context);
-
-        ax::NodeEditor::Begin("My Editor");
-
-        int uniqueId = 1;
-
-        // Start drawing nodes.
-        ax::NodeEditor::BeginNode(uniqueId++);
-        ImGui::Text("Node A");
-        ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-        ImGui::Text("-> In");
-        ax::NodeEditor::EndPin();
-        ImGui::SameLine();
-        ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-        ImGui::Text("Out ->");
-        ax::NodeEditor::EndPin();
-        ax::NodeEditor::EndNode();
-
-        ax::NodeEditor::End();
-
-        ImGui::End();
-    }
-
     void EditorUI::showGameProjectWindow()
     {
         ImGui::Begin(EditorConstant.WINDOW_GAME_PROJECT.c_str());
 
         ImGui::End();
     }
-
-    /*void EditorUI::autoSaveProject()
-    {
-        if(m_GameProject && m_AutoSaveClock.getElapsedTime() >
-        sf::seconds(m_EditorSetting->getSetting("editor").getUInt("auto_save_interval")))
-        {
-                m_GameProject->saveProject();
-                m_AutoSaveClock.restart();
-        }
-    }*/
 
     void EditorUI::interfaceFirstDraw()
     {
@@ -664,6 +630,16 @@ namespace nero
             if(m_EditorContext->getEditorMode() == EditorMode::Play_Game)
             {
                 m_EditorContext->setEditorMode(EditorMode::World_Builder);
+            }
+        };
+
+        m_EditorProxy->m_AutoSaveCallback = [this]()
+        {
+            if(m_EditorContext->getGameProject() &&
+               m_AutoSaveClock.getElapsedTime() > sf::seconds(m_AutoSaveTimeInterval))
+            {
+                m_EditorProxy->saveProject();
+                m_AutoSaveClock.restart();
             }
         };
     }

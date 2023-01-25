@@ -87,4 +87,9 @@ namespace nero
     {
         m_StopGameSceneCallback();
     }
+
+    void EditorProxy::autoSave() const
+    {
+        m_AutoSaveCallback();
+    }
 } // namespace nero
