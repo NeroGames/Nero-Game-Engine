@@ -83,9 +83,9 @@ namespace nero
         m_PlayGameSceneCallback();
     }
 
-    void EditorProxy::stopGameScene() const
+    void EditorProxy::stopPlayGameScene() const
     {
-        m_StopGameSceneCallback();
+        m_StopPlayGameSceneCallback();
     }
 
     void EditorProxy::autoSave() const

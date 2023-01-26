@@ -76,17 +76,27 @@ namespace nero
         if(!m_EditorContext->getGameProject())
             return;
 
+        const auto editorMode = m_EditorContext->getEditorMode();
+        const bool gamePlaying =
+            editorMode == EditorMode::Play_Game || editorMode == EditorMode::Render_Game;
+
         float offSet = ImGui::GetWindowContentRegionWidth();
-        offSet       = (offSet - (45 * 7.f + 8.f * 6.f + 32.f)) / 2.f;
+        if(gamePlaying)
+            offSet = (offSet - (45 * 4.f + 8.f * 3.f + 32.f)) / 2.f;
+        else
+            offSet = (offSet - (45 * 7.f + 8.f * 6.f + 32.f)) / 2.f;
 
         ImGui::SameLine(offSet);
 
         // undo
-        if(ImGui::Button(ICON_FA_UNDO_ALT, ImVec2(45.f, 28.f)))
+        if(!gamePlaying)
         {
-        }
+            if(ImGui::Button(ICON_FA_UNDO_ALT, ImVec2(45.f, 28.f)))
+            {
+            }
 
-        ImGui::SameLine(0.f, 24.f);
+            ImGui::SameLine(0.f, 24.f);
+        }
 
         // play
         if(ImGui::Button(ICON_FA_PLAY, ImVec2(45.f, 28.f)))
@@ -113,21 +123,27 @@ namespace nero
         // stop
         if(ImGui::Button(ICON_FA_SQUARE_FULL, ImVec2(45.f, 28.f)))
         {
-            m_EditorContext->getEditorProxy()->stopGameScene();
+            m_EditorContext->getEditorProxy()->stopPlayGameScene();
         }
 
         ImGui::SameLine();
 
         // render
-        if(ImGui::Button(ICON_FA_GAMEPAD, ImVec2(45.f, 28.f)))
+        if(!gamePlaying)
         {
+            if(ImGui::Button(ICON_FA_GAMEPAD, ImVec2(45.f, 28.f)))
+            {
+            }
         }
 
-        ImGui::SameLine(0.f, 24.f);
-
         // redo
-        if(ImGui::Button(ICON_FA_REDO_ALT, ImVec2(45.f, 28.f)))
+        if(!gamePlaying)
         {
+            ImGui::SameLine(0.f, 24.f);
+
+            if(ImGui::Button(ICON_FA_REDO_ALT, ImVec2(45.f, 28.f)))
+            {
+            }
         }
     }
 

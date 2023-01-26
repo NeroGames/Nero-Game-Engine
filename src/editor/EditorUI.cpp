@@ -175,7 +175,9 @@ namespace nero
 
     void EditorUI::handleEvent(const sf::Event& event)
     {
-        if(mouseOnCanvas())
+        const bool mouseHoverCanvas = mouseOnCanvas();
+
+        if(mouseHoverCanvas)
         {
             m_EditorCamera->handleEvent(event);
         }
@@ -189,12 +191,12 @@ namespace nero
             auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
 
             if(worldBuilder && editorMode == EditorMode::World_Builder &&
-               builderMode == BuilderMode::Object && mouseOnCanvas())
+               builderMode == BuilderMode::Object && mouseHoverCanvas)
             {
                 worldBuilder->handleEvent(event);
             }
             else if(worldBuilder && editorMode == EditorMode::World_Builder &&
-                    builderMode == BuilderMode::Mesh && mouseOnCanvas())
+                    builderMode == BuilderMode::Mesh && mouseHoverCanvas)
             {
                 worldBuilder->getMeshEditor()->handleEvent(event);
             }
@@ -301,10 +303,31 @@ namespace nero
 
     void EditorUI::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
     {
+        const bool mouseHoverCanvas = mouseOnCanvas();
+
         if(isPressed)
         {
-            if(key == sf::Keyboard::Space && !keyboard::CTRL_SHIFT_ALT() && mouseOnCanvas())
+            // Switch between Builder Modes
+            if(key == sf::Keyboard::Space && mouseHoverCanvas)
+            {
                 switchBuilderMode();
+            }
+            // Play Game
+            else if(key == sf::Keyboard::Enter && !keyboard::CTRL_SHIFT_ALT() && mouseHoverCanvas)
+            {
+                m_EditorProxy->playGameScene();
+            }
+            // Stop Play Game
+            else if(key == sf::Keyboard::Escape && !keyboard::CTRL_SHIFT_ALT() && mouseHoverCanvas)
+            {
+                m_EditorProxy->stopPlayGameScene();
+            }
+            // Render Game
+            else if(key == sf::Keyboard::Enter && keyboard::CTRL() && mouseHoverCanvas)
+            {
+                // TODO
+                // m_EditorProxy->renderGameScene();
+            }
         }
     }
 
@@ -336,21 +359,35 @@ namespace nero
         const auto editorMode  = m_EditorContext->getEditorMode();
         const auto builderMode = m_EditorContext->getBuilderMode();
 
-        if(editorMode == EditorMode::World_Builder)
+        if(editorMode == EditorMode::World_Builder || editorMode == EditorMode::Factory)
         {
-            if(builderMode == BuilderMode::Object && !keyboard::CTRL_SHIFT_ALT())
+            switch(builderMode)
             {
-                m_EditorContext->setBuilderMode(BuilderMode::Mesh);
+                case BuilderMode::Object:
+                {
+                    if(!keyboard::CTRL_SHIFT_ALT())
+                        m_EditorContext->setBuilderMode(BuilderMode::Mesh);
+                    else if(keyboard::CTRL())
+                        m_EditorContext->setBuilderMode(BuilderMode::Joint);
+                }
+                break;
+                case BuilderMode::Mesh:
+                {
+                    if(!keyboard::CTRL_SHIFT_ALT())
+                        m_EditorContext->setBuilderMode(BuilderMode::Object);
+                    else if(keyboard::CTRL())
+                        m_EditorContext->setBuilderMode(BuilderMode::Joint);
+                }
+                break;
+                case BuilderMode::Joint:
+                {
+                    if(!keyboard::CTRL_SHIFT_ALT())
+                        m_EditorContext->setBuilderMode(BuilderMode::Object);
+                }
+                break;
+                case BuilderMode::None:
+                    break;
             }
-            else if(builderMode != BuilderMode::Object && !keyboard::CTRL_SHIFT_ALT())
-            {
-                m_EditorContext->setBuilderMode(BuilderMode::Object);
-            }
-        }
-        else if(editorMode == EditorMode::Play_Game && !keyboard::CTRL_SHIFT_ALT())
-        {
-            m_EditorContext->setEditorMode(EditorMode::World_Builder);
-            m_EditorContext->setBuilderMode(BuilderMode::Object);
         }
     }
 
@@ -608,7 +645,7 @@ namespace nero
             }
         };
 
-        m_EditorProxy->m_StopGameSceneCallback = [this]()
+        m_EditorProxy->m_StopPlayGameSceneCallback = [this]()
         {
             if(m_EditorContext->getEditorMode() == EditorMode::Play_Game)
             {

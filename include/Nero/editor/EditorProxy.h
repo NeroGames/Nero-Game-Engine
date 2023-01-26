@@ -41,7 +41,7 @@ namespace nero
         void openGameLevel(const std::string levelName) const;
         // Play Mode
         void playGameScene() const;
-        void stopGameScene() const;
+        void stopPlayGameScene() const;
         // Auto save
         void autoSave() const;
 
@@ -65,7 +65,7 @@ namespace nero
         std::function<void(const std::string&)>                    m_OpenGameLevelCallback;
         // Game Scene
         std::function<void()>                                      m_PlayGameSceneCallback;
-        std::function<void()>                                      m_StopGameSceneCallback;
+        std::function<void()>                                      m_StopPlayGameSceneCallback;
         // Auto Save
         std::function<void()>                                      m_AutoSaveCallback;
     };
