@@ -337,7 +337,9 @@ namespace nero
 
             if(key == sf::Keyboard::Up)
             {
-                m_NotificationManager->notify("DLL Loading, Goodmorning");
+                m_NotificationManager->notify(
+                    "DLL Loading, Goodmorning, LoooonnnnnnngMessssssssssssssssssssss dfsfsfsfsff "
+                    "dddd age");
             }
         }
     }

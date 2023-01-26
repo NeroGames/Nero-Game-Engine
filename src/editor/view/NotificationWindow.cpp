@@ -33,48 +33,75 @@ namespace nero
             return;
 
         // FIXME-VIEWPORT: Select a default viewport
-        const float DISTANCE = 10.0f;
-        static int  corner   = 3;
-        if(corner != -1)
+        const float    DISTANCE = 10.0f;
+        static int     corner   = 3;
+
+        ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImVec2 window_pos = ImVec2((corner & 1) ? (viewport->Pos.x + viewport->Size.x - DISTANCE)
+                                                : (viewport->Pos.x + DISTANCE),
+                                   (corner & 2) ? (viewport->Pos.y + viewport->Size.y - DISTANCE)
+                                                : (viewport->Pos.y + DISTANCE));
+        ImVec2 window_pos_pivot = ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
+        ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
+        ImGui::SetNextWindowViewport(viewport->ID);
+
+        ImVec2 nextWindowPosition = window_pos;
+
+        if(!taskTable.empty())
         {
-            ImGuiViewport* viewport = ImGui::GetMainViewport();
-            ImVec2         window_pos =
-                ImVec2((corner & 1) ? (viewport->Pos.x + viewport->Size.x - DISTANCE)
-                                    : (viewport->Pos.x + DISTANCE),
-                       (corner & 2) ? (viewport->Pos.y + viewport->Size.y - DISTANCE)
-                                    : (viewport->Pos.y + DISTANCE));
-            ImVec2 window_pos_pivot =
-                ImVec2((corner & 1) ? 1.0f : 0.0f, (corner & 2) ? 1.0f : 0.0f);
-            ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
-            ImGui::SetNextWindowViewport(viewport->ID);
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.f);
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.000f, 1.000f, 1.000f, 1.00f));
+            ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.911f, 0.499f, 0.146f, 1.000f));
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.000f, 0.000f, 0.000f, 1.00f));
+            if(ImGui::Begin("##background_task",
+                            nullptr,
+                            (corner != -1 ? ImGuiWindowFlags_NoMove : 0) |
+                                ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+                                ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize |
+                                ImGuiWindowFlags_NoSavedSettings |
+                                ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
+            {
+
+                for(BackgroundTask::Ptr task : taskTable)
+                {
+                    if(!task->completed())
+                    {
+                        ImGui::Text("%s", task->getMessage().c_str());
+                    }
+                }
+
+                nextWindowPosition.y -= ImGui::GetWindowHeight() + 5.f;
+            }
+            ImGui::End();
+            ImGui::PopStyleColor(3);
+            ImGui::PopStyleVar();
         }
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.f);
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.000f, 1.000f, 1.000f, 1.00f));
-        ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.911f, 0.499f, 0.146f, 1.000f));
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.000f, 0.000f, 0.000f, 1.00f));
-        if(ImGui::Begin("##corner_window",
-                        nullptr,
-                        (corner != -1 ? ImGuiWindowFlags_NoMove : 0) | ImGuiWindowFlags_NoDocking |
-                            ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-                            ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
-                            ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
+        if(!messageTable.empty())
         {
-            for(const std::string& message : messageTable)
-            {
-                ImGui::Text("%s", message.c_str());
-            }
+            ImGui::SetNextWindowPos(nextWindowPosition, ImGuiCond_Always, window_pos_pivot);
+            ImGui::SetNextWindowViewport(viewport->ID);
 
-            for(BackgroundTask::Ptr task : taskTable)
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.f);
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.000f, 1.000f, 1.000f, 1.00f));
+            ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.f, 0.499f, 0.146f, 1.000f));
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.000f, 0.000f, 0.000f, 1.00f));
+            if(ImGui::Begin("##notification",
+                            nullptr,
+                            (corner != -1 ? ImGuiWindowFlags_NoMove : 0) |
+                                ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+                                ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize |
+                                ImGuiWindowFlags_NoSavedSettings |
+                                ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
             {
-                if(!task->completed())
+                for(const std::string& message : messageTable)
                 {
-                    ImGui::Text("%s", task->getMessage().c_str());
+                    ImGui::Text("%s", message.c_str());
                 }
             }
+            ImGui::End();
+            ImGui::PopStyleColor(3);
+            ImGui::PopStyleVar();
         }
-        ImGui::End();
-        ImGui::PopStyleColor(3);
-        ImGui::PopStyleVar();
     }
 } // namespace nero

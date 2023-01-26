@@ -10,7 +10,7 @@
 namespace nero
 {
     NotificationManager::NotificationManager()
-        : m_NotificationTime(5.f)
+        : m_NotificationTime(2.5f)
     {
     }
 
