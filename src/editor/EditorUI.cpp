@@ -430,6 +430,9 @@ namespace nero
             // Update Editor mode
             m_EditorContext->setEditorMode(EditorMode::World_Builder);
             m_EditorContext->setBuilderMode(BuilderMode::Object);
+
+            // Restart auto save clock count
+            m_AutoSaveClock.restart();
         };
 
         // Create project
@@ -615,11 +618,13 @@ namespace nero
 
         m_EditorProxy->m_AutoSaveCallback = [this]()
         {
-            if(m_EditorContext->getGameProject() &&
+            if(m_EditorContext->autoSaveEnabled() && m_EditorContext->getGameProject() &&
                m_AutoSaveClock.getElapsedTime() > sf::seconds(m_AutoSaveTimeInterval))
             {
                 m_EditorProxy->saveProject();
                 m_AutoSaveClock.restart();
+
+                nero_log("Project auto saved");
             }
         };
     }

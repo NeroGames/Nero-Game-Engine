@@ -81,9 +81,12 @@ namespace nero
 
         ImGui::Dummy(ImVec2(0.f, 2.f));
 
-        // TODO Load and use user setting
-        static bool autoSave = false;
-        ImGui::Checkbox("Auto save", &autoSave);
+        bool autoSavedEnabled = m_EditorContext->autoSaveEnabled();
+        ImGui::Checkbox("Auto save", &autoSavedEnabled);
+        if(ImGui::IsItemEdited())
+        {
+            m_EditorContext->setAutoSaveEnabled(autoSavedEnabled);
+        }
 
         ImVec2 buttonSize = ImVec2((ImGui::GetWindowContentRegionWidth() - 8.f) / 2.f, 0.f);
 

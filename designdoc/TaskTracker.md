@@ -29,19 +29,21 @@ In order to keep Taks small and relevant we will enfore the following rules
   
 - [Task-3] Clean EditorUI, move all UI elements into their on view class
 
-- [Task-4] Enable Auto Saving TODO
+- [Task-4] Enable Auto Saving
 
-- [Task-5] Add a Notification Manager to the Eiditor TODO
-  - [Task-5.1] Add new class
-  - [Task-5.2] Add new UI view
-  - [Task-5.3] Connect to certain event (i.e reload dll)
+- [Task-5] Handle Editor modes switch using keyboard shortcuts
+
+- [Task-6] Add a Notification Manager to the Eiditor TODO
+  - [Task-6.1] Add new class
+  - [Task-6.2] Add new UI view
+  - [Task-6.3] Connect to certain event (i.e reload dll)
   
-- [Task-6] Handle Sprite Edition (add, play, save and reload) TODO
+- [Task-7] Handle Sprite Edition (add, play, save and reload) TODO
 
-- [Task-7] Handle Text Edition (add, play, save and reload) TODO
+- [Task-8] Handle Text Edition (add, play, save and reload) TODO
 
-- [Task-8] Handle Animation Edition (add, play, save and reload) TODO
+- [Task-9] Handle Animation Edition (add, play, save and reload) TODO
 
-- [Task-9] Handle Light Edition (add, play, save and reload) TODO
+- [Task-10] Handle Light Edition (add, play, save and reload) TODO
 
-- [Task-10] Handle Mesh Edition (add, play, save and reload) TODO
+- [Task-11] Handle Mesh Edition (add, play, save and reload) TODO

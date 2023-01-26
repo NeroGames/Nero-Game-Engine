@@ -55,6 +55,7 @@ namespace nero
         AdvancedCamera::Ptr  getEditorCamera() const;
         float                getFrameRate() const;
         float                getFrameTime() const;
+        bool                 autoSaveEnabled() const;
 
         // Setter
         void                 setEditorMode(const EditorMode& editorMode);
@@ -64,6 +65,7 @@ namespace nero
         void                 setSelectedResourceType(const ResourceType& resourceType);
         void                 setFrameRate(const float& frameRate);
         void                 setFrameTime(const float& frameTime);
+        void                 setAutoSaveEnabled(const bool& enabled);
 
       private:
         EditorProxy::Ptr    m_EditorProxy;
@@ -84,6 +86,8 @@ namespace nero
         // Frame Rate
         float               m_FrameRate;
         float               m_FrameTime;
+        // Auto Save
+        bool                m_AutoSaveEnabled;
     };
 } // namespace nero
 

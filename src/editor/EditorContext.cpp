@@ -33,6 +33,7 @@ namespace nero
         , m_SelectedResourceType(ResourceType::None)
         , m_FrameRate(0.f)
         , m_FrameTime(0.f)
+        , m_AutoSaveEnabled(true)
     {
     }
 
@@ -205,5 +206,15 @@ namespace nero
     void EditorContext::setFrameTime(const float& frameTime)
     {
         m_FrameTime = frameTime;
+    }
+
+    bool EditorContext::autoSaveEnabled() const
+    {
+        return m_AutoSaveEnabled;
+    }
+
+    void EditorContext::setAutoSaveEnabled(const bool& enabled)
+    {
+        m_AutoSaveEnabled = enabled;
     }
 } // namespace nero
