@@ -10,13 +10,12 @@
 namespace nero
 {
     NotificationManager::NotificationManager()
-        : m_NotificationTime(2.5f)
+        : m_NotificationTime(3.f)
     {
     }
 
     void NotificationManager::update(const sf::Time& timeStep)
     {
-        const auto previousCount = m_NotificationTable.size();
         for(auto it = m_NotificationTable.begin(); it != m_NotificationTable.end();)
         {
             it->timer += timeStep.asSeconds();

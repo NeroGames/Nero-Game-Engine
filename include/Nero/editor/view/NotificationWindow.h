@@ -18,6 +18,10 @@ namespace nero
 
         virtual void destroy() override;
         virtual void render() override;
+
+      private:
+        int   m_CornerPosition;
+        float m_BorderOffset;
     };
 } // namespace nero
 #endif // NOTIFICATIONWINDOW_H

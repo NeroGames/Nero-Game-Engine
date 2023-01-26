@@ -38,7 +38,6 @@
 #include <Nero/editor/view/ConsoleWindow.h>
 #include <Nero/editor/view/LoggerWindow.h>
 #include <Nero/editor/view/RenderCanvasWindow.h>
-#include <Nero/editor/view/BackgroundTaskWindow.h>
 #include <Nero/editor/view/NodeEditorWindow.h>
 #include <Nero/editor/view/GameProjectWindow.h>
 #include <Nero/editor/view/GameSettingWindow.h>
@@ -146,7 +145,6 @@ namespace nero
         ConsoleWindow                           m_ConsoleWindow;
         LoggerWindow                            m_LoggerWindow;
         RenderCanvasWindow                      m_RenderCanvasWindow;
-        BackgroundTaskWindow                    m_BackgroundTaskWindow;
         GameProjectWindow                       m_GameProjectWindow;
         GameSettingWindow                       m_GameSettingWindow;
         NotificationWindow                      m_NotificationWindow;

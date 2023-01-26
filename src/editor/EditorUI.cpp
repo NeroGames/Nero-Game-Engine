@@ -79,7 +79,6 @@ namespace nero
         , m_ConsoleWindow(m_EditorContext)
         , m_LoggerWindow(m_EditorContext)
         , m_RenderCanvasWindow(m_EditorContext)
-        , m_BackgroundTaskWindow(m_EditorContext)
         , m_GameProjectWindow(m_EditorContext)
         , m_GameSettingWindow(m_EditorContext)
         , m_NotificationWindow(m_EditorContext)
@@ -297,7 +296,6 @@ namespace nero
 
         // Notification & Background task
         m_NotificationWindow.render();
-        // m_BackgroundTaskWindow.render();
 
         // Startup Popup
         if(m_EditorSetup->initiateSetup())
@@ -333,13 +331,6 @@ namespace nero
             {
                 // TODO
                 // m_EditorProxy->renderGameScene();
-            }
-
-            if(key == sf::Keyboard::Up)
-            {
-                m_NotificationManager->notify(
-                    "DLL Loading, Goodmorning, LoooonnnnnnngMessssssssssssssssssssss dfsfsfsfsff "
-                    "dddd age");
             }
         }
     }
@@ -621,6 +612,7 @@ namespace nero
             if(gameProject)
             {
                 gameProject->openEditor();
+                m_EditorContext->getNotificationManager()->notify("Code Editor Opened");
             }
         };
 
@@ -646,6 +638,8 @@ namespace nero
             if(gameProject)
             {
                 gameProject->loadLibrary();
+
+                m_EditorContext->getNotificationManager()->notify("DLL Loaded");
             }
         };
 
@@ -674,7 +668,7 @@ namespace nero
                 m_EditorProxy->saveProject();
                 m_AutoSaveClock.restart();
 
-                nero_log("Project auto saved");
+                m_EditorContext->getNotificationManager()->notify("Project auto saved");
             }
         };
     }
