@@ -42,12 +42,14 @@ namespace nero
         , m_EditorSoundHolder(soundHolder)
         , m_EditorSetting(setting)
         // Main paramater
-        , m_ProjectManager(std::make_unique<ProjectManager>(m_EditorSetting))
+        , m_ProjectManager(std::make_shared<ProjectManager>(m_EditorSetting))
+        , m_NotificationManager(std::make_shared<NotificationManager>())
         , m_EditorProxy(std::make_shared<EditorProxy>())
         , m_RenderTexture(std::make_shared<sf::RenderTexture>())
         , m_RenderContext(std::make_shared<RenderContext>())
         , m_EditorContext(std::make_shared<EditorContext>(m_EditorProxy,
                                                           m_ProjectManager,
+                                                          m_NotificationManager,
                                                           m_EditorTextureHolder,
                                                           m_EditorFontHolder,
                                                           m_EditorSetting,
@@ -80,6 +82,7 @@ namespace nero
         , m_BackgroundTaskWindow(m_EditorContext)
         , m_GameProjectWindow(m_EditorContext)
         , m_GameSettingWindow(m_EditorContext)
+        , m_NotificationWindow(m_EditorContext)
         , m_NodeEditorWindow(m_EditorContext, m_NodeEditorContext)
     {
         setupEditorProxy();
@@ -241,6 +244,8 @@ namespace nero
         }
 
         m_EditorProxy->autoSave();
+
+        m_NotificationManager->update(timeStep);
     }
 
     void EditorUI::render()
@@ -290,8 +295,9 @@ namespace nero
         // First Draw Setup
         editorInitialDraw();
 
-        // Background task
-        m_BackgroundTaskWindow.render();
+        // Notification & Background task
+        m_NotificationWindow.render();
+        // m_BackgroundTaskWindow.render();
 
         // Startup Popup
         if(m_EditorSetup->initiateSetup())
@@ -327,6 +333,11 @@ namespace nero
             {
                 // TODO
                 // m_EditorProxy->renderGameScene();
+            }
+
+            if(key == sf::Keyboard::Up)
+            {
+                m_NotificationManager->notify("DLL Loading, Goodmorning");
             }
         }
     }

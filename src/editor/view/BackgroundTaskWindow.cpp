@@ -28,6 +28,11 @@ namespace nero
         if(!m_EditorContext->getGameProject())
             return;
 
+        auto& taskTable = BTManager::getTaskTable();
+
+        if(taskTable.empty())
+            return;
+
         // FIXME-VIEWPORT: Select a default viewport
         const float DISTANCE = 10.0f;
         static int  corner   = 3;
@@ -44,7 +49,7 @@ namespace nero
             ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
             ImGui::SetNextWindowViewport(viewport->ID);
         }
-        // ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
+
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.f);
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.000f, 1.000f, 1.000f, 1.00f));
         ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.911f, 0.499f, 0.146f, 1.000f));
@@ -56,8 +61,6 @@ namespace nero
                             ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
                             ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav))
         {
-            auto& taskTable = BTManager::getTaskTable();
-
             for(BackgroundTask::Ptr task : taskTable)
             {
                 if(!task->completed())

@@ -8,18 +8,20 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    EditorContext::EditorContext(EditorProxy::Ptr    editorProxy,
-                                 ProjectManager::Ptr projectManager,
-                                 TextureHolder::Ptr  textureHolder,
-                                 FontHolder::Ptr     fontHolder,
-                                 Setting::Ptr        editorSetting,
-                                 RenderTexturePtr    renderTexture,
-                                 RenderContext::Ptr  renderContext,
-                                 AdvancedCamera::Ptr editorCamara,
-                                 const EditorMode&   editorMode,
-                                 const BuilderMode&  builderMode)
+    EditorContext::EditorContext(EditorProxy::Ptr         editorProxy,
+                                 ProjectManager::Ptr      projectManager,
+                                 NotificationManager::Ptr notificationManager,
+                                 TextureHolder::Ptr       textureHolder,
+                                 FontHolder::Ptr          fontHolder,
+                                 Setting::Ptr             editorSetting,
+                                 RenderTexturePtr         renderTexture,
+                                 RenderContext::Ptr       renderContext,
+                                 AdvancedCamera::Ptr      editorCamara,
+                                 const EditorMode&        editorMode,
+                                 const BuilderMode&       builderMode)
         : m_EditorProxy(editorProxy)
         , m_ProjectManager(projectManager)
+        , m_NotificationManager(notificationManager)
         , m_TextureHolder(textureHolder)
         , m_FontHolder(fontHolder)
         , m_EditorSetting(editorSetting)
@@ -49,6 +51,11 @@ namespace nero
     ProjectManager::Ptr EditorContext::getProjectManager() const
     {
         return m_ProjectManager;
+    }
+
+    NotificationManager::Ptr EditorContext::getNotificationManager() const
+    {
+        return m_NotificationManager;
     }
 
     GameProject::Ptr EditorContext::getGameProject() const

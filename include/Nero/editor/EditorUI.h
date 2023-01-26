@@ -22,6 +22,8 @@
 #include <Nero/editor/level/LevelBuilder.h>
 #include <Nero/editor/screen/ScreenBuilder.h>
 #include <Nero/editor/level/WorldBuilder.h>
+#include <Nero/editor/NotificationManager.h>
+// UI
 #include <Nero/editor/view/EditorDockspace.h>
 #include <Nero/editor/view/EditorToolbar.h>
 #include <Nero/editor/view/EditorSetupPopup.h>
@@ -40,6 +42,7 @@
 #include <Nero/editor/view/NodeEditorWindow.h>
 #include <Nero/editor/view/GameProjectWindow.h>
 #include <Nero/editor/view/GameSettingWindow.h>
+#include <Nero/editor/view/NotificationWindow.h>
 // SFML
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -115,6 +118,7 @@ namespace nero
         Setting::Ptr                            m_EditorSetting;
         // Main paramater
         ProjectManager::Ptr                     m_ProjectManager;
+        NotificationManager::Ptr                m_NotificationManager;
         EditorProxy::Ptr                        m_EditorProxy;
         RenderTexturePtr                        m_RenderTexture;
         RenderContext::Ptr                      m_RenderContext;
@@ -145,6 +149,7 @@ namespace nero
         BackgroundTaskWindow                    m_BackgroundTaskWindow;
         GameProjectWindow                       m_GameProjectWindow;
         GameSettingWindow                       m_GameSettingWindow;
+        NotificationWindow                      m_NotificationWindow;
         NodeEditorWindow                        m_NodeEditorWindow;
         // Callback
         std::function<void(const std::string&)> m_WindowTitleCallback;
