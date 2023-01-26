@@ -10,7 +10,6 @@
 namespace nero
 {
     NotificationManager::NotificationManager()
-        : m_NotificationTime(3.f)
     {
     }
 
@@ -20,7 +19,7 @@ namespace nero
         {
             it->timer += timeStep.asSeconds();
 
-            if(it->timer >= m_NotificationTime)
+            if(it->timer >= it->timeOut)
             {
                 it = m_NotificationTable.erase(it);
             }
@@ -38,9 +37,9 @@ namespace nero
         }
     }
 
-    void NotificationManager::notify(const std::string& message)
+    void NotificationManager::notify(const std::string& message, const float& timeOut)
     {
-        m_NotificationTable.push_back(Notification{message, 0.f});
+        m_NotificationTable.push_back(Notification{message, timeOut, 0.f});
     }
 
     const std::vector<std::string>& NotificationManager::getMessageTable() const

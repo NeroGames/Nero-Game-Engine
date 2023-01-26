@@ -35,7 +35,7 @@ namespace nero
         GameProject(Setting::Ptr projectSetting = nullptr);
 
         void               init();
-        void               loadLibrary();
+        bool               loadLibrary();
         void               openEditor();
         void               closeProject();
         // Setter

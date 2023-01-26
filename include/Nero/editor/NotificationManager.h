@@ -22,21 +22,21 @@ namespace nero
       public:
         NotificationManager();
 
-        void                            update(const sf::Time& timeStep);
-        void                            notify(const std::string& message);
+        void update(const sf::Time& timeStep);
+        void notify(const std::string& message, const float& timeOut = 3.f);
         const std::vector<std::string>& getMessageTable() const;
 
       private:
         struct Notification
         {
             std::string message;
+            float       timeOut;
             float       timer;
         };
 
       private:
         std::vector<Notification> m_NotificationTable;
         std::vector<std::string>  m_MesssageTable;
-        float                     m_NotificationTime;
     };
 } // namespace nero
 #endif // NOTIFICATIONMANAGER_H

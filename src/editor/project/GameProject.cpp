@@ -52,7 +52,7 @@ namespace nero
         m_AdvancedScene->init();
     }
 
-    void GameProject::loadLibrary()
+    bool GameProject::loadLibrary()
     {
         const std::string libraryFile     = m_ProjectSetting->getString("library_file");
         const std::string libraryFileCopy = m_ProjectSetting->getString("library_file_copy");
@@ -60,7 +60,7 @@ namespace nero
         if(!file::fileExist(libraryFile))
         {
             nero_log("no library to load");
-            return;
+            return false;
         }
 
         if(file::fileExist(libraryFileCopy))
@@ -97,14 +97,18 @@ namespace nero
                                        m_ProjectSetting,
                                        GameScene::EngineType::EDITOR,
                                        GameScene::PlatformType::WINDOWS)));
+
+                nero_log("Scene Level Class Loaded");
+            }
+            else
+            {
+                return false;
             }
 
             // Load Game Level
             // TODO
             for(const std::string levelName : m_AdvancedScene->getRegisteredLevelTable())
             {
-                nero_log("loading Game Level Class - " + levelName);
-
                 const std::string createFunctionName =
                     "create" + string::formatString(levelName, string::Format::CAMEL_CASE_UPPER) +
                     "GameLevel";
@@ -139,15 +143,22 @@ namespace nero
 
                 m_CreateCppGameLevelCallbackTable.push_back(createCppGameLevelCallback);
                 // createCppGameLevelCallback.clear();
+
+                nero_log("Game Level Class Loaded - " + levelName);
             }
 
             // Loag Game Screen
             // TODO
+
+            nero_log("DLL loaded successfully");
         }
         catch(std::exception e)
         {
-            nero_log("loading failed");
+            nero_log("Failed to load DLL");
+            return false;
         }
+
+        return true;
     }
 
     void GameProject::openEditor()

@@ -63,7 +63,7 @@ namespace nero
 
                 for(BackgroundTask::Ptr task : taskTable)
                 {
-                    if(!task->completed())
+                    if(!task->completed() && !task->failed())
                     {
                         ImGui::Text("%s", task->getMessage().c_str());
                     }

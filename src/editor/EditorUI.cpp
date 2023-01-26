@@ -635,11 +635,16 @@ namespace nero
         {
             auto gameProject = m_EditorContext->getGameProject();
 
-            if(gameProject)
-            {
-                gameProject->loadLibrary();
+            if(!gameProject)
+                return;
 
-                m_EditorContext->getNotificationManager()->notify("DLL Loaded");
+            if(gameProject->loadLibrary())
+            {
+                m_EditorContext->getNotificationManager()->notify("DLL loaded", 10.f);
+            }
+            else
+            {
+                m_EditorContext->getNotificationManager()->notify("Failed to load DLL");
             }
         };
 
