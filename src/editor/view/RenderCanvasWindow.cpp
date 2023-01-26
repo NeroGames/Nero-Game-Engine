@@ -25,13 +25,13 @@ namespace nero
         m_CameraYAxis.setPosition(sf::Vector2f(20.f, 20.f));
         m_CameraYAxis.setRotation(90.f);
 
-        m_CanvasXAxis.setSize(sf::Vector2f(100.f, -2.f));
-        m_CanvasXAxis.setFillColor(sf::Color::Red);
-        m_CanvasXAxis.setOrigin(sf::Vector2f(50.f, -1.f));
+        m_CanvasXAxis.setSize(sf::Vector2f(20.f, 2.f));
+        m_CanvasXAxis.setOrigin(sf::Vector2f(10.f, 1.f));
+        m_CanvasXAxis.setFillColor(sf::Color(255, 0, 0, 100));
         m_CanvasXAxis.setPosition(sf::Vector2f(0.f, 0.f));
-        m_CanvasYAxis.setSize(sf::Vector2f(100.f, -2.f));
-        m_CanvasYAxis.setOrigin(sf::Vector2f(50.f, -1.f));
-        m_CanvasYAxis.setFillColor(sf::Color::Green);
+        m_CanvasYAxis.setSize(sf::Vector2f(20.f, 2.f));
+        m_CanvasYAxis.setOrigin(sf::Vector2f(10.f, 1.f));
+        m_CanvasYAxis.setFillColor(sf::Color(0, 255, 0, 100));
         m_CanvasYAxis.setPosition(sf::Vector2f(0.f, 0.f));
         m_CanvasYAxis.setRotation(90.f);
 
@@ -107,19 +107,17 @@ namespace nero
 
         // Render on Front Screen
         m_RenderTexture->setView(m_RenderTexture->getDefaultView());
-        // if(m_AdvancedScene)
-        // {
-        //    m_AdvancedScene->renderFrontScreen(m_EditorMode, m_BuilderMode);
-        // }
+        // TODO render Game Screen here
         renderCamera();
         renderGameModeInfo();
         m_RenderTexture->setView(m_EditorCamera->getView());
 
-        m_CanvasXAxis.setRotation(m_EditorCamera->getView().getRotation());
-        m_CanvasYAxis.setRotation(m_EditorCamera->getView().getRotation() + 90.f);
+        m_CanvasXAxis.rotate(m_CanvasXAxis.getRotation() - m_EditorCamera->getView().getRotation());
+        m_CanvasYAxis.rotate(m_CanvasXAxis.getRotation() - m_EditorCamera->getView().getRotation() +
+                             90.f);
 
-        // m_RenderTexture->draw(m_CanvasXAxis);
-        // m_RenderTexture->draw(m_CanvasYAxis);
+        m_RenderTexture->draw(m_CanvasXAxis);
+        m_RenderTexture->draw(m_CanvasYAxis);
 
         ImGui::Image(flipTexture(m_RenderTexture->getTexture()));
 
@@ -303,24 +301,45 @@ namespace nero
                 {
                     return "World Builder - Mesh";
                 }
+                else if(builderMode == BuilderMode::Joint)
+                {
+                    return "World Builder - Joint";
+                }
+
+                return "World Builder";
             }
-            break;
+
             case EditorMode::Screen_Builder:
-                return "Screen Builder";
-                break;
+                return "Screen Builder - Object";
+
             case EditorMode::Factory:
-                return "Object Builder";
-                break;
+            {
+                const auto builderMode = m_EditorContext->getBuilderMode();
+
+                if(builderMode == BuilderMode::Object)
+                {
+                    return "Factory - Object";
+                }
+                else if(builderMode == BuilderMode::Mesh)
+                {
+                    return "Factory - Mesh";
+                }
+                else if(builderMode == BuilderMode::Joint)
+                {
+                    return "Factory - Joint";
+                }
+
+                return "Factory";
+            }
+
             case EditorMode::Play_Game:
                 return "Play Game";
-                break;
+
             case EditorMode::Render_Game:
                 return "Render Game";
-                break;
 
             default:
-                return StringPool.BLANK;
-                break;
+                return "Game Editor";
         }
     }
 

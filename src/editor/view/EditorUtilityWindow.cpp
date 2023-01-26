@@ -5,6 +5,7 @@
 ///////////////////////////HEADERS//////////////////////////
 // Nero
 #include <Nero/editor/view/EditorUtilityWindow.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
 #include <Nero/editor/EditorConstant.h>
 ////////////////////////////////////////////////////////////
 namespace nero
@@ -27,52 +28,73 @@ namespace nero
     {
         ImGui::Begin(EditorConstant.WINDOW_UTILITY.c_str());
 
-        ImVec2 size = ImGui::GetWindowSize();
-
-        ImGui::BeginChild("scene_mode", ImVec2(0.f, 105.f), true);
-        ImGui::Text("Choose Scene Mode");
+        ImGui::BeginChild("##builder_mode", ImVec2(0.f, 105.f), true);
+        ImGui::Text("Choose Builder Mode");
         ImGui::Separator();
 
-        const auto builderMode = m_EditorContext->getBuilderMode();
+        const auto editorMode       = m_EditorContext->getEditorMode();
+        const auto builderMode      = m_EditorContext->getBuilderMode();
+        int        builderModeIndex = 0;
 
-        int        e           = 0;
-        if(builderMode == BuilderMode::Object)
-            e = 0;
-        else if(builderMode == BuilderMode::Mesh)
-            e = 1;
-        ImGui::RadioButton("Object", &e, 0);
-        if(ImGui::IsItemEdited())
+        switch(builderMode)
+        {
+            case BuilderMode::Object:
+                builderModeIndex = 0;
+                break;
+            case BuilderMode::Mesh:
+                builderModeIndex = 1;
+                break;
+            case BuilderMode::Joint:
+                builderModeIndex = 2;
+                break;
+            case BuilderMode::None:
+                builderModeIndex = 3;
+                break;
+        }
+
+        ImGui::RadioButton("Object", &builderModeIndex, 0);
+        if(ImGui::IsItemEdited() && builderMode != BuilderMode::None)
         {
             m_EditorContext->setBuilderMode(BuilderMode::Object);
         }
-        ImGui::RadioButton("Mesh", &e, 1);
-        if(ImGui::IsItemEdited())
+
+        if(editorMode != EditorMode::Screen_Builder)
         {
-            m_EditorContext->setBuilderMode(BuilderMode::Mesh);
+            ImGui::RadioButton("Mesh", &builderModeIndex, 1);
+            if(ImGui::IsItemEdited() && builderMode != BuilderMode::None)
+            {
+                m_EditorContext->setBuilderMode(BuilderMode::Mesh);
+            }
+
+            ImGui::RadioButton("Joint", &builderModeIndex, 2);
+            if(ImGui::IsItemEdited() && builderMode != BuilderMode::None)
+            {
+                m_EditorContext->setBuilderMode(BuilderMode::Joint);
+            }
         }
-        ImGui::RadioButton("Joint", &e, 2);
 
         ImGui::EndChild();
 
-        ImGui::BeginChild("save_load", ImVec2(0.f, 85.f), true);
+        ImGui::BeginChild("##save_and_load", ImVec2(0.f, 85.f), true);
         ImGui::Text("Save & Load");
         ImGui::Separator();
 
         ImGui::Dummy(ImVec2(0.f, 2.f));
 
-        static bool auto_save = false;
-        ImGui::Checkbox("Auto save", &auto_save);
+        // TODO Load and use user setting
+        static bool autoSave = false;
+        ImGui::Checkbox("Auto save", &autoSave);
 
-        ImVec2 button_size = ImVec2((ImGui::GetWindowContentRegionWidth() - 8.f) / 2.f, 0.f);
+        ImVec2 buttonSize = ImVec2((ImGui::GetWindowContentRegionWidth() - 8.f) / 2.f, 0.f);
 
-        if(ImGui::Button("Save", button_size))
+        if(ImGui::Button("Save", buttonSize))
         {
             m_EditorContext->getEditorProxy()->saveProject();
         }
 
         ImGui::SameLine();
 
-        if(ImGui::Button("Load", button_size))
+        if(ImGui::Button("Load", buttonSize))
         {
             m_EditorContext->getEditorProxy()->loadProject();
         }
@@ -85,28 +107,28 @@ namespace nero
 
         ImGui::Dummy(ImVec2(0.f, 2.f));
 
-        if(ImGui::Button("Learn", button_size))
+        if(ImGui::Button("Learn", buttonSize))
         {
-            cmd::launchBrowser("https://nero-games.com/learn/engine-v2");
+            cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/learn/engine-v2");
         }
 
         ImGui::SameLine();
 
-        if(ImGui::Button("Forum", button_size))
+        if(ImGui::Button("Forum", buttonSize))
         {
-            cmd::launchBrowser("https://nero-games.com/forum");
+            cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/forum");
         }
 
-        if(ImGui::Button("Snippet", button_size))
+        if(ImGui::Button("Snippet", buttonSize))
         {
-            cmd::launchBrowser("https://nero-games.com/snippet/engine-v2");
+            cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/snippet/engine-v2");
         }
 
         ImGui::SameLine();
 
-        if(ImGui::Button("API", button_size))
+        if(ImGui::Button("API", buttonSize))
         {
-            cmd::launchBrowser("https://nero-games.com/learn/engine-v2/api");
+            cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/learn/engine-v2/api");
         }
 
         ImGui::EndChild();

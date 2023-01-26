@@ -24,9 +24,6 @@ namespace nero
         void renderLeftButtonGroup();
         void renderMiddleButtonGroup();
         void renderRightButtonGroup();
-        void renderWorldButton();
-        void renderScreenButton();
-        void renderFactoryButton();
     };
 } // namespace nero
 #endif // TOOLBARBUTTONGROUP_H

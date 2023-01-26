@@ -37,51 +37,38 @@ namespace nero
         if(!m_EditorContext->getGameProject())
             return;
 
-        if(m_EditorContext->getEditorMode() == EditorMode::World_Builder)
-        {
-            renderScreenButton();
-            ImGui::SameLine();
-            renderFactoryButton();
-        }
-        else if(m_EditorContext->getEditorMode() == EditorMode::Screen_Builder)
-        {
-            renderWorldButton();
-            ImGui::SameLine();
-            renderFactoryButton();
-        }
-        else if(m_EditorContext->getEditorMode() == EditorMode::Factory)
-        {
-            renderScreenButton();
-            ImGui::SameLine();
-            renderWorldButton();
-        }
-    }
+        const auto editorMode = m_EditorContext->getEditorMode();
 
-    void ToolbarButtonGroup::renderWorldButton()
-    {
+        if(editorMode == EditorMode::Play_Game || editorMode == EditorMode::Render_Game)
+            return;
+
+        pushGameLevelStyle(false, editorMode == EditorMode::World_Builder);
         if(ImGui::Button(ICON_FA_GLOBE_AFRICA " World", ImVec2(105.f, 28.f)))
         {
             m_EditorContext->setEditorMode(EditorMode::World_Builder);
             ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
         }
-    }
+        popGameLevelStyle();
 
-    void ToolbarButtonGroup::renderScreenButton()
-    {
+        ImGui::SameLine();
+
+        pushGameLevelStyle(false, editorMode == EditorMode::Screen_Builder);
         if(ImGui::Button(ICON_FA_SQUARE " Screen", ImVec2(105.f, 28.f)))
         {
             m_EditorContext->setEditorMode(EditorMode::Screen_Builder);
             ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
         }
-    }
+        popGameLevelStyle();
 
-    void ToolbarButtonGroup::renderFactoryButton()
-    {
+        ImGui::SameLine();
+
+        pushGameLevelStyle(false, editorMode == EditorMode::Factory);
         if(ImGui::Button(ICON_FA_WAREHOUSE " Factory", ImVec2(105.f, 28.f)))
         {
             m_EditorContext->setEditorMode(EditorMode::Factory);
             ImGui::SetWindowFocus(EditorConstant.WINDOW_GAME_SCENE.c_str());
         }
+        popGameLevelStyle();
     }
 
     void ToolbarButtonGroup::renderMiddleButtonGroup()

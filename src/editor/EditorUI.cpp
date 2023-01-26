@@ -251,46 +251,39 @@ namespace nero
 
         m_EditorDockspace.render();
 
-        // Central dockspcace
         m_EditorToolbar.render();
-        // viewport
+
         m_RenderCanvasWindow.render();
-        // game project
         m_GameProjectWindow.render();
-        // game setting
         m_GameSettingWindow.render();
-        // visual script
         m_NodeEditorWindow.render();
-        // resource manager
         m_ResourceSelectionWindow.render();
-        // imgui demo
-        ImGui::ShowDemoWindow();
-
-        // left dockspace
-        // upper left
         m_EditorUtilityWindow.render();
-        if(editorMode == EditorMode::Screen_Builder)
-        {
-            // m_GameScreenWindow.render();
-        }
 
-        // lower left
         if(editorMode == EditorMode::World_Builder)
         {
             m_WorldChunkWindow.render();
             m_GameLevelWindow.render();
         }
 
-        m_ObjectLayerWindow.render();
+        if(editorMode == EditorMode::Screen_Builder)
+        {
+            // m_GameScreenWindow.render();
+        }
 
-        // right dockspace
+        if(editorMode != EditorMode::None)
+        {
+            m_ObjectLayerWindow.render();
+        }
+
         m_SceneExplorerWindow.render();
         m_EngineHelpWindow.render();
         m_ResourceBrowserWindow.render();
 
-        // bottom dockspacer
         m_LoggerWindow.render();
         m_ConsoleWindow.render();
+
+        ImGui::ShowDemoWindow();
 
         // First Draw Setup
         editorInitialDraw();
@@ -423,20 +416,20 @@ namespace nero
         // Open project
         m_EditorProxy->m_OpenProjectCallback = [this](const std::string& projectDirectory)
         {
-            // open new project
-            if(m_ProjectManager)
-            {
-                m_ProjectManager->openProject(projectDirectory);
-                auto gameProject = m_EditorContext->getGameProject();
-                gameProject->setRenderTexture(m_RenderTexture);
-                gameProject->setRenderContext(m_RenderContext);
-                gameProject->setCamera(m_EditorCamera);
-                gameProject->loadLibrary();
-                gameProject->openEditor();
+            m_ProjectManager->openProject(projectDirectory);
+            auto gameProject = m_EditorContext->getGameProject();
+            gameProject->setRenderTexture(m_RenderTexture);
+            gameProject->setRenderContext(m_RenderContext);
+            gameProject->setCamera(m_EditorCamera);
+            gameProject->loadLibrary();
+            gameProject->openEditor();
 
-                // update editor window title
-                m_WindowTitleCallback(gameProject->getProjectName());
-            }
+            // Update Editor window title
+            m_WindowTitleCallback(gameProject->getProjectName());
+
+            // Update Editor mode
+            m_EditorContext->setEditorMode(EditorMode::World_Builder);
+            m_EditorContext->setBuilderMode(BuilderMode::Object);
         };
 
         // Create project

@@ -127,7 +127,8 @@ namespace nero
 
     void EditorContext::setEditorMode(const EditorMode& editorMode)
     {
-        m_EditorMode = editorMode;
+        m_EditorMode  = editorMode;
+        m_BuilderMode = BuilderMode::Object;
     }
 
     void EditorContext::setBuilderMode(const BuilderMode& builderMode)
