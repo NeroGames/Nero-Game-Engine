@@ -47,9 +47,7 @@ namespace nero
         m_ProjectSetting->setString("library_file_copy", libraryFileCopy);
 
         // create advanced scene
-        m_AdvancedScene = std::make_shared<AdvancedScene>();
-        m_AdvancedScene->setProjectSetting(m_ProjectSetting);
-        m_AdvancedScene->init();
+        m_AdvancedScene = std::make_shared<AdvancedScene>(m_ProjectSetting);
     }
 
     bool GameProject::loadLibrary()
@@ -59,15 +57,13 @@ namespace nero
 
         if(!file::fileExist(libraryFile))
         {
-            nero_log("no library to load");
+            nero_log("No library to load");
             return false;
         }
 
         if(file::fileExist(libraryFileCopy))
         {
-            m_AdvancedScene->clearGameSceneObject();
-            m_CreateCppGameSceneCallback.clear();
-            m_CreateCppGameLevelCallbackTable.clear();
+            m_AdvancedScene->clearLoadedObject();
 
             file::removeFile(libraryFileCopy);
         }
@@ -80,75 +76,45 @@ namespace nero
         {
             boost::dll::shared_library sharedLibrary(libraryFileCopy);
 
-            nero_log_if("project library loaded", sharedLibrary.is_loaded());
-
-            m_CreateCppGameSceneCallback.clear();
-            m_CreateCppGameSceneCallback = boost::dll::import_alias<CreateCppGameSceneCallback>(
-                libraryFilePath,
-                "createScene",
-                boost::dll::load_mode::append_decorations);
-
-            if(!m_CreateCppGameSceneCallback.empty())
-            {
-                m_AdvancedScene->setGameScene(m_CreateCppGameSceneCallback(
-                    GameScene::Context("My Game",
-                                       m_RenderTexture,
-                                       m_Camera,
-                                       m_ProjectSetting,
-                                       GameScene::EngineType::EDITOR,
-                                       GameScene::PlatformType::WINDOWS)));
-
-                nero_log("Scene Level Class Loaded");
-            }
-            else
-            {
+            if(!sharedLibrary.is_loaded())
                 return false;
-            }
+
+            nero_log("Project DLL Loaded");
+
+            AdvancedScene::CreateCppGameSceneCallback createSceneCallback =
+                boost::dll::import_alias<AdvancedScene::CreateCppGameScene>(
+                    libraryFilePath,
+                    "createScene",
+                    boost::dll::load_mode::append_decorations);
+
+            if(createSceneCallback.empty())
+                return false;
+
+            m_AdvancedScene->setCreateSceneCallback(createSceneCallback);
+            createSceneCallback.clear();
+
+            nero_log("Scene Class Loaded");
 
             // Load Game Level
-            // TODO
             for(const std::string levelName : m_AdvancedScene->getRegisteredLevelTable())
             {
                 const std::string createFunctionName =
                     "create" + string::formatString(levelName, string::Format::CAMEL_CASE_UPPER) +
                     "GameLevel";
 
-                boost::function<CreateCppGameLevelCallback> createCppGameLevelCallback;
-                createCppGameLevelCallback = boost::dll::import_alias<CreateCppGameLevelCallback>(
-                    libraryFilePath,
-                    createFunctionName,
-                    boost::dll::load_mode::append_decorations);
+                AdvancedScene::CreateCppGameLevelCallback createCppGameLevelCallback =
+                    boost::dll::import_alias<AdvancedScene::CreateCppGameLevel>(
+                        libraryFilePath,
+                        createFunctionName,
+                        boost::dll::load_mode::append_decorations);
 
-                // Build level directory
-                std::string levelDirectory =
-                    file::getPath({m_ProjectSetting->getString("project_directory"),
-                                   "Scene",
-                                   "level",
-                                   boost::algorithm::to_lower_copy(levelName)});
-
-                // Load level setting
-                Setting::Ptr levelSetting = std::make_shared<Setting>();
-                levelSetting->loadSetting(
-                    file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO),
-                    true,
-                    true);
-
-                m_AdvancedScene->registerLevelClass(
-                    levelName,
-                    createCppGameLevelCallback(GameLevel::Context(levelName,
-                                                                  levelSetting,
-                                                                  levelDirectory,
-                                                                  m_RenderTexture,
-                                                                  m_Camera)));
-
-                m_CreateCppGameLevelCallbackTable.push_back(createCppGameLevelCallback);
-                // createCppGameLevelCallback.clear();
+                m_AdvancedScene->registerCreateLevelCallback(levelName, createCppGameLevelCallback);
+                createCppGameLevelCallback.clear();
 
                 nero_log("Game Level Class Loaded - " + levelName);
             }
 
-            // Loag Game Screen
-            // TODO
+            // TODO Loag Game Screen
 
             nero_log("DLL loaded successfully");
         }
@@ -329,25 +295,6 @@ namespace nero
             system(cmd.c_str());
         }
 
-        m_AdvancedScene->clearGameSceneObject();
-        m_CreateCppGameSceneCallback.clear();
-        m_CreateCppGameLevelCallbackTable.clear();
-    }
-
-    void GameProject::setRenderTexture(const RenderTexturePtr& renderTexture)
-    {
-        m_RenderTexture = renderTexture;
-        m_AdvancedScene->setRenderTexture(m_RenderTexture);
-    }
-
-    void GameProject::setRenderContext(const RenderContext::Ptr& renderContext)
-    {
-        m_RenderContext = renderContext;
-        m_AdvancedScene->setRenderContext(m_RenderContext);
-    }
-
-    void GameProject::setCamera(const Camera::Ptr& camera)
-    {
-        m_Camera = camera;
+        m_AdvancedScene->clearLoadedObject();
     }
 } // namespace nero

@@ -22,6 +22,10 @@ namespace nero
     {
     }
 
+    GameScene::Context::Context()
+    {
+    }
+
     GameScene::GameScene(GameScene::Context context)
         : m_SceneContext(context)
         , m_GameLevel(nullptr)

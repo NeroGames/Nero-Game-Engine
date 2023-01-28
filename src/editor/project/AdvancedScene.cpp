@@ -9,31 +9,33 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    AdvancedScene::AdvancedScene()
-        : m_LevelBuilder(nullptr)
-        , m_RegisteredLevelTable()
-        , m_SelectedScreen(nullptr)
-        , m_EditorSetting(nullptr)
-        , m_ProjectSetting(nullptr)
+    AdvancedScene::AdvancedScene(Setting::Ptr projectSetting)
+        : m_ProjectSetting(projectSetting)
         , m_RenderContext(nullptr)
         , m_RenderTexture(nullptr)
+        , m_LevelBuilder(nullptr)
+        , m_RegisteredLevelTable()
     {
     }
 
     void AdvancedScene::init()
     {
-        Setting sceneSetting;
-        sceneSetting.loadSetting(
+        // Retrieve teh list of Game Level
+        Setting::Ptr sceneSetting = std::make_shared<Setting>();
+        sceneSetting->loadSetting(
             file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"},
                           StringPool.EXT_NERO),
             true,
             true);
-        m_RegisteredLevelTable      = sceneSetting.getStringTable("level_table");
+        m_RegisteredLevelTable       = sceneSetting->getStringTable("level_table");
 
-        // TODO
-        std::string resourceSetting = file::getPath({"setting", "resource"}, StringPool.EXT_JSON);
-        m_EditorSetting             = std::make_shared<Setting>();
-        m_EditorSetting->loadSetting(resourceSetting, true);
+        // Create Scene context
+        m_SceneContext.sceneName     = m_ProjectSetting->getString("project_name");
+        m_SceneContext.camera        = m_EditorCamera;
+        m_SceneContext.renderTexture = m_RenderTexture;
+        m_SceneContext.setting       = sceneSetting;
+        m_SceneContext.engineType    = GameScene::EngineType::EDITOR;
+        m_SceneContext.platformType  = GameScene::PlatformType::WINDOWS;
     }
 
     void AdvancedScene::clear()
@@ -124,8 +126,6 @@ namespace nero
         setting.setBool("enable_physics", parameter.getBool("enable_physics"));
         setting.setBool("enable_light", parameter.getBool("enable_light"));
         setting.setInt("chunk_count", 0);
-        setting.setBool("opened", false);
-        setting.setSetting("resource", m_EditorSetting->getSetting("resource"));
         file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO),
                        setting.toString());
 
@@ -155,14 +155,22 @@ namespace nero
                                   true,
                                   true);
 
+        Setting resourceSetting;
+        resourceSetting.loadSetting(file::getPath({"setting", "resource"}, StringPool.EXT_JSON),
+                                    true,
+                                    true);
         // Create Level Context
-        GameLevel::Context levelContext(levelName, levelSetting, levelDirectory, nullptr, nullptr);
+        GameLevel::Context levelContext;
+        levelContext.levelName       = levelName;
+        levelContext.levelDirectory  = levelDirectory;
+        levelContext.levelSetting    = levelSetting;
+        levelContext.camera          = m_EditorCamera;
+        levelContext.renderTexture   = m_RenderTexture;
+        levelContext.resourceManager = std::make_shared<ResourceManager>(resourceSetting);
 
         // Create a new Level Builder
-        m_LevelBuilder = std::make_shared<LevelBuilder>(levelContext);
-        m_LevelBuilder->setEditorSetting(m_EditorSetting);
+        m_LevelBuilder               = std::make_shared<LevelBuilder>(levelContext);
         m_LevelBuilder->setRenderContext(m_RenderContext);
-        m_LevelBuilder->setRenderTexture(m_RenderTexture);
         m_LevelBuilder->loadResource();
 
         if(file::directoryEmpty(file::getPath({levelDirectory, "chunk"})))
@@ -193,57 +201,40 @@ namespace nero
         // register level
         m_RegisteredLevelTable.push_back(levelName);
 
-        Setting scene_document;
-        scene_document.loadSetting(
+        Setting sceneDocument;
+        sceneDocument.loadSetting(
             file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"},
                           StringPool.EXT_NERO),
             true,
             true);
-        scene_document.setStringTable("level_table", m_RegisteredLevelTable);
+        sceneDocument.setStringTable("level_table", m_RegisteredLevelTable);
         file::saveFile(
             file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"},
                           StringPool.EXT_NERO),
-            scene_document.toString(),
+            sceneDocument.toString(),
             true);
     }
 
     void AdvancedScene::unregisterLevel(const std::string& levelName)
     {
-        auto it =
+        auto result =
             std::find(m_RegisteredLevelTable.begin(), m_RegisteredLevelTable.end(), levelName);
 
-        if(it != m_RegisteredLevelTable.end())
-            m_RegisteredLevelTable.erase(it);
+        if(result != m_RegisteredLevelTable.end())
+            m_RegisteredLevelTable.erase(result);
 
-        Setting scene_document;
-        scene_document.loadSetting(
+        Setting sceneDocument;
+        sceneDocument.loadSetting(
             file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"},
                           StringPool.EXT_NERO),
             true,
             true);
-        scene_document.setStringTable("level_table", m_RegisteredLevelTable);
+        sceneDocument.setStringTable("level_table", m_RegisteredLevelTable);
         file::saveFile(
             file::getPath({m_ProjectSetting->getString("project_directory"), "Scene", "scene"},
                           StringPool.EXT_NERO),
-            scene_document.toString(),
+            sceneDocument.toString(),
             true);
-    }
-
-    void AdvancedScene::createScreen(const Parameter& parameter)
-    {
-        /*auto gameScreenBuilder = std::make_shared<GameScreenBuilder>();
-
-        return gameScreenBuilder;*/
-    }
-
-    void AdvancedScene::setEditorSetting(const Setting::Ptr& setting)
-    {
-        m_EditorSetting = setting;
-    }
-
-    void AdvancedScene::setProjectSetting(const Setting::Ptr& setting)
-    {
-        m_ProjectSetting = setting;
     }
 
     std::vector<std::string> AdvancedScene::getRegisteredLevelTable()
@@ -261,14 +252,14 @@ namespace nero
         m_RenderTexture = renderTexture;
     }
 
+    void AdvancedScene::setEditorCamera(const AdvancedCamera::Ptr& editorCamera)
+    {
+        m_EditorCamera = editorCamera;
+    }
+
     LevelBuilder::Ptr AdvancedScene::getLevelBuilder() const
     {
         return m_LevelBuilder;
-    }
-
-    void AdvancedScene::setGameScene(GameScene::Ptr gameScene)
-    {
-        m_GameScene = gameScene;
     }
 
     void AdvancedScene::handleEvent(const sf::Event& event)
@@ -295,26 +286,35 @@ namespace nero
             m_GameScene->renderShape();
     }
 
-    void AdvancedScene::clearGameSceneObject()
+    void AdvancedScene::clearLoadedObject()
     {
         m_GameScene = nullptr;
-        m_GameLevelMap.clear();
+        m_CreateCppGameSceneCallback.clear();
+        m_CreateCppGameLevelCallbackMap.clear();
     }
 
-    void AdvancedScene::registerLevelClass(const std::string levelName, GameLevel::Ptr gameLevel)
+    void AdvancedScene::setCreateSceneCallback(CreateCppGameSceneCallback callback)
     {
-        m_GameLevelMap.emplace(levelName, gameLevel);
+        m_CreateCppGameSceneCallback = std::move(callback);
+    }
+
+    void AdvancedScene::registerCreateLevelCallback(const std::string          levelName,
+                                                    CreateCppGameLevelCallback callback)
+    {
+        m_CreateCppGameLevelCallbackMap.emplace(levelName, callback);
     }
 
     void AdvancedScene::buildGameScene()
     {
-        if(!m_GameScene || !m_LevelBuilder)
-            return;
+        // Create Game Scene
+        m_GameScene                 = m_CreateCppGameSceneCallback(m_SceneContext);
 
         const std::string levelName = m_LevelBuilder->getLevelName();
-        if(m_GameLevelMap.count(levelName))
+        if(m_CreateCppGameLevelCallbackMap.count(levelName))
         {
-            GameLevel::Ptr gameLevel = m_GameLevelMap.at(levelName);
+            // Create Game Level
+            GameLevel::Ptr gameLevel =
+                m_CreateCppGameLevelCallbackMap.at(levelName)(m_LevelBuilder->getLevelContext());
 
             // m_LevelBuilder->buildLevel(currentGamelLevel->getLevelRoot());
 

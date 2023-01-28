@@ -453,12 +453,12 @@ namespace nero
         }
 
         // load level resource
-        ResourceManager::Ptr resourceManager = std::make_shared<ResourceManager>();
+        /*ResourceManager::Ptr resourceManager = std::make_shared<ResourceManager>();
         resourceManager->loadRequired(gameLevelJson["level_resource"]);
-        m_GameLevelResourceMap[levelName] = resourceManager;
+        m_GameLevelResourceMap[levelName] = resourceManager;*/
 
         // build level object
-        GameLevelObject::Ptr levelOject   = std::make_shared<GameLevelObject>();
+        GameLevelObject::Ptr levelOject = std::make_shared<GameLevelObject>();
         Parameter            levelParameter;
         levelParameter.loadJson(gameLevelJson["level_parameter"]);
         levelOject->init(levelParameter);

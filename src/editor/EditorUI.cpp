@@ -458,10 +458,12 @@ namespace nero
         m_EditorProxy->m_OpenProjectCallback = [this](const std::string& projectDirectory)
         {
             m_ProjectManager->openProject(projectDirectory);
-            auto gameProject = m_EditorContext->getGameProject();
-            gameProject->setRenderTexture(m_RenderTexture);
-            gameProject->setRenderContext(m_RenderContext);
-            gameProject->setCamera(m_EditorCamera);
+            auto gameProject   = m_EditorContext->getGameProject();
+            auto advancedScene = gameProject->getAdvancedScene();
+            advancedScene->setRenderTexture(m_RenderTexture);
+            advancedScene->setRenderContext(m_RenderContext);
+            advancedScene->setEditorCamera(m_EditorCamera);
+            advancedScene->init();
             gameProject->loadLibrary();
             gameProject->openEditor();
 

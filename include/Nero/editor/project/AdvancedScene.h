@@ -9,6 +9,7 @@
 #include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/core/cpp/engine/Setting.h>
 #include <Nero/core/cpp/scene/GameScene.h>
+#include <Nero/editor/EditorCamera.h>
 #include <Nero/editor/level/LevelBuilder.h>
 #include <Nero/editor/screen/ScreenBuilder.h>
 // STD
@@ -20,11 +21,15 @@ namespace nero
     class AdvancedScene
     {
       public:
-        using Ptr              = std::shared_ptr<AdvancedScene>;
-        using RenderTexturePtr = std::shared_ptr<sf::RenderTexture>;
+        using Ptr                        = std::shared_ptr<AdvancedScene>;
+        using RenderTexturePtr           = std::shared_ptr<sf::RenderTexture>;
+        using CreateCppGameScene         = GameScene::Ptr(GameScene::Context);
+        using CreateCppGameLevel         = GameLevel::Ptr(GameLevel::Context);
+        using CreateCppGameSceneCallback = boost::function<CreateCppGameScene>;
+        using CreateCppGameLevelCallback = boost::function<CreateCppGameLevel>;
 
       public:
-        AdvancedScene();
+        AdvancedScene(Setting::Ptr projectSetting);
 
         void                     init();
         void                     clear();
@@ -36,43 +41,38 @@ namespace nero
         void                     registerLevel(const std::string& levelName);
         void                     unregisterLevel(const std::string& levelName);
         std::vector<std::string> getRegisteredLevelTable();
-        // screen
-        void                     createScreen(const Parameter& parameter);
-        // setting
-        void                     setEditorSetting(const Setting::Ptr& setting);
-        void                     setProjectSetting(const Setting::Ptr& setting);
         // render
         void                     setRenderContext(const RenderContext::Ptr& renderContext);
         void                     setRenderTexture(const RenderTexturePtr& renderTexture);
+        void                     setEditorCamera(const AdvancedCamera::Ptr& editorCamera);
         // Game Scene
-        void                     setGameScene(GameScene::Ptr gameScene);
         void                     handleEvent(const sf::Event& event);
         void                     update(const sf::Time& timeStep);
         void                     render();
         void                     renderShape();
         //
-        void                     clearGameSceneObject();
+        void                     clearLoadedObject();
         void                     buildGameScene();
-
         LevelBuilder::Ptr        getLevelBuilder() const;
-        void registerLevelClass(const std::string levelName, GameLevel::Ptr gameLevel);
+        //
+        void                     setCreateSceneCallback(CreateCppGameSceneCallback callback);
+        void                     registerCreateLevelCallback(const std::string          levelName,
+                                                             CreateCppGameLevelCallback callback);
 
       private:
-        // level
-        LevelBuilder::Ptr                     m_LevelBuilder;
-        std::vector<std::string>              m_RegisteredLevelTable;
-        // screen
-        ScreenBuilder::Ptr                    m_SelectedScreen;
-        // setting
-        Setting::Ptr                          m_EditorSetting;
-        Setting::Ptr                          m_ProjectSetting;
-        Setting::Ptr                          m_SceneSetting;
-        // render
-        RenderContext::Ptr                    m_RenderContext;
-        std::shared_ptr<sf::RenderTexture>    m_RenderTexture;
-        //
-        GameScene::Ptr                        m_GameScene;
-        std::map<std::string, GameLevel::Ptr> m_GameLevelMap;
+        Setting::Ptr                                      m_ProjectSetting;
+        GameScene::Context                                m_SceneContext;
+        GameScene::Ptr                                    m_GameScene;
+        // Rendering
+        AdvancedCamera::Ptr                               m_EditorCamera;
+        RenderContext::Ptr                                m_RenderContext;
+        std::shared_ptr<sf::RenderTexture>                m_RenderTexture;
+        // Game Level
+        LevelBuilder::Ptr                                 m_LevelBuilder;
+        std::vector<std::string>                          m_RegisteredLevelTable;
+        // DLL callback
+        CreateCppGameSceneCallback                        m_CreateCppGameSceneCallback;
+        std::map<std::string, CreateCppGameLevelCallback> m_CreateCppGameLevelCallbackMap;
     };
 } // namespace nero
 #endif // ADVANCEDSCENE_H

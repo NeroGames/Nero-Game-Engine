@@ -22,19 +22,17 @@ namespace nero
         LevelBuilder(GameLevel::Context context);
         ~LevelBuilder();
 
-        void                 loadResource();
-        Setting::Ptr         getLevelSetting();
-        std::string          getLevelName();
-        std::string          getResourceFoler();
-        ResourceManager::Ptr getResourceManager();
-        void                 setEditorSetting(const Setting::Ptr& setting);
-        void                 saveGameLevel();
-        void                 loadGameLevel();
-        void                 setRenderContext(const RenderContext::Ptr& renderContext);
-        void              setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture);
+        void                            loadResource();
+        Setting::Ptr                    getLevelSetting();
+        std::string                     getLevelName();
+        std::string                     getResourceFoler();
+        ResourceManager::Ptr            getResourceManager();
+        void                            saveGameLevel();
+        void                            loadGameLevel();
+        void                            setRenderContext(const RenderContext::Ptr& renderContext);
         // chunk
-        ChunkBuilder::Ptr addChunk();
-        void              removeChunk();
+        ChunkBuilder::Ptr               addChunk();
+        void                            removeChunk();
         std::vector<ChunkBuilder::Ptr>& getChunkTable();
         ChunkBuilder::Ptr               getSelectedChunk();
         void                            setSelectedChunk(ChunkBuilder::Ptr worldChunk);
@@ -44,21 +42,18 @@ namespace nero
         bool                            isOpened() const;
         std::string                     getResourceDirectory() const;
         void                            render() const;
+        void                            buildLevel(Object::Ptr levelRoot);
+        GameLevel::Context              getLevelContext() const;
 
       private:
-        // Game Level
-        GameLevel::Ptr                     m_GameLevel;
-        Setting::Ptr                       m_LevelSetting;
-        // render
-        RenderContext::Ptr                 m_RenderContext;
-        std::shared_ptr<sf::RenderTexture> m_RenderTexture;
-        Setting::Ptr                       m_EditorSetting;
-        // chunk
-        ChunkBuilder::Ptr                  m_SelectedChunk;
-        std::vector<ChunkBuilder::Ptr>     m_ChunkTable;
-        int                                m_ChunkCount;
-        //
-        bool                               m_Opened;
+        // Level Context
+        GameLevel::Context             m_LevelContext;
+        RenderContext::Ptr             m_RenderContext;
+        bool                           m_LevelOpened;
+        // Chunk
+        ChunkBuilder::Ptr              m_SelectedChunk;
+        std::vector<ChunkBuilder::Ptr> m_ChunkTable;
+        int                            m_ChunkCount;
     };
 } // namespace nero
 #endif // LEVELBUILDER_H

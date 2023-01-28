@@ -42,6 +42,7 @@ namespace nero
             std::string                        levelDirectory;
             std::shared_ptr<sf::RenderTexture> renderTexture;
             Camera::Ptr                        camera;
+            ResourceManager::Ptr               resourceManager;
         };
 
       public:

@@ -24,12 +24,8 @@ namespace nero
         typedef std::shared_ptr<ResourceManager> Ptr;
 
       public:
-        ResourceManager();
         ResourceManager(const Setting& setting);
         ~ResourceManager();
-
-        void                           setSetting(const Setting& setting);
-
         void                           loadDirectory(const std::string& directory);
         bool                           loadFile(ResourceType type, const std::string& file);
         const std::vector<std::string> loadFile(ResourceType                   type,

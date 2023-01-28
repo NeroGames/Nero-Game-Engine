@@ -12,20 +12,6 @@
 
 namespace nero
 {
-    ResourceManager::ResourceManager()
-        : m_Setting()
-    {
-        m_TextureHolder   = std::make_shared<TextureHolder>();
-        m_AnimationHolder = std::make_shared<AnimationHolder>();
-        m_FontHolder      = std::make_shared<FontHolder>();
-        m_SoundHolder     = std::make_shared<SoundHolder>();
-        m_MusicHolder     = std::make_shared<MusicHolder>();
-        m_LightmapHolder  = std::make_shared<TextureHolder>();
-
-        // m_LuaScriptHolder	= std::make_shared<ScriptHolder>();
-        // m_ShaderHolder		= std::make_shared<ShaderHolder>();
-    }
-
     ResourceManager::ResourceManager(const Setting& setting)
         : m_Setting(setting)
     {
@@ -48,21 +34,6 @@ namespace nero
 
     void ResourceManager::destroy()
     {
-    }
-
-    void ResourceManager::setSetting(const Setting& setting)
-    {
-        m_Setting = setting;
-
-        m_TextureHolder->setSetting(setting.getSetting("texture"));
-        m_AnimationHolder->setSetting(setting.getSetting("animation"));
-        m_FontHolder->setSetting(setting.getSetting("font"));
-        m_SoundHolder->setSetting(setting.getSetting("sound"));
-        m_MusicHolder->setSetting(setting.getSetting("music"));
-        m_LightmapHolder->setSetting(setting.getSetting("texture"));
-
-        // m_LuaScriptHolder->setSetting(setting.getSetting("script"));
-        // m_ShaderHolder->setSetting(setting.getSetting("shader"));
     }
 
     void ResourceManager::loadDirectory(const std::string& directory)

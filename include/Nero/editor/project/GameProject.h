@@ -24,12 +24,7 @@ namespace nero
     class GameProject
     {
       public:
-        using Ptr                        = std::shared_ptr<GameProject>;
-        using RenderTexturePtr           = std::shared_ptr<sf::RenderTexture>;
-        using CreateCppGameSceneCallback = GameScene::Ptr(GameScene::Context);
-        using CreateCppGameLevelCallback = GameLevel::Ptr(GameLevel::Context);
-        // TODO
-        // using CreateCppGameScreenCallback = GameScreen::Ptr(GameScreen::Context);
+        using Ptr = std::shared_ptr<GameProject>;
 
       public:
         GameProject(Setting::Ptr projectSetting = nullptr);
@@ -38,10 +33,6 @@ namespace nero
         bool               loadLibrary();
         void               openEditor();
         void               closeProject();
-        // Setter
-        void               setRenderTexture(const RenderTexturePtr& renderTexture);
-        void               setRenderContext(const RenderContext::Ptr& renderContext);
-        void               setCamera(const Camera::Ptr& camera);
         // Getter
         AdvancedScene::Ptr getAdvancedScene();
         std::string        getProjectName() const;
@@ -56,17 +47,9 @@ namespace nero
         void openVisualStudio(const std::string& file = StringPool.BLANK);
 
       private:
-        AdvancedScene::Ptr                                       m_AdvancedScene;
-        Setting::Ptr                                             m_ProjectSetting;
-        // User defined class
-        boost::function<CreateCppGameSceneCallback>              m_CreateCppGameSceneCallback;
-        std::vector<boost::function<CreateCppGameLevelCallback>> m_CreateCppGameLevelCallbackTable;
-        // Open code editor
-        std::string                                              m_CodeEditorProcessId;
-        //
-        RenderTexturePtr                                         m_RenderTexture;
-        RenderContext::Ptr                                       m_RenderContext;
-        Camera::Ptr                                              m_Camera;
+        AdvancedScene::Ptr m_AdvancedScene;
+        Setting::Ptr       m_ProjectSetting;
+        std::string        m_CodeEditorProcessId;
     };
 } // namespace nero
 

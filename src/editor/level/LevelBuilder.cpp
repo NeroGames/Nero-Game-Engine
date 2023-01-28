@@ -9,15 +9,12 @@
 namespace nero
 {
     LevelBuilder::LevelBuilder(GameLevel::Context context)
-        : m_GameLevel(std::make_shared<GameLevel>(context))
-        , m_LevelSetting(m_GameLevel->getSetting())
+        : m_LevelContext(context)
         , m_RenderContext(nullptr)
-        , m_RenderTexture(nullptr)
-        , m_EditorSetting(nullptr)
+        , m_LevelOpened(false)
         , m_SelectedChunk(nullptr)
         , m_ChunkTable()
         , m_ChunkCount(0)
-        , m_Opened(false)
 
     {
     }
@@ -28,33 +25,28 @@ namespace nero
 
     void LevelBuilder::loadResource()
     {
-        m_GameLevel->getResourceManager()->loadDirectory(
-            file::getPath({m_GameLevel->getLevelDirectory(), "resource"}));
+        m_LevelContext.resourceManager->loadDirectory(
+            file::getPath({m_LevelContext.levelDirectory, "resource"}));
     }
 
     ResourceManager::Ptr LevelBuilder::getResourceManager()
     {
-        return m_GameLevel->getResourceManager();
-    }
-
-    void LevelBuilder::setEditorSetting(const Setting::Ptr& setting)
-    {
-        m_EditorSetting = setting;
+        return m_LevelContext.resourceManager;
     }
 
     std::string LevelBuilder::getLevelName()
     {
-        return m_GameLevel->getSetting()->getString("level_name");
+        return m_LevelContext.levelSetting->getString("level_name");
     }
 
     std::string LevelBuilder::getResourceFoler()
     {
-        return file::getPath({m_GameLevel->getLevelDirectory(), "resource"});
+        return file::getPath({m_LevelContext.levelDirectory, "resource"});
     }
 
     Setting::Ptr LevelBuilder::getLevelSetting()
     {
-        return m_GameLevel->getSetting();
+        return m_LevelContext.levelSetting;
     }
 
     ChunkBuilder::Ptr LevelBuilder::addChunk()
@@ -70,8 +62,8 @@ namespace nero
 
         WorldBuilder::Ptr worldBuilder = chunkBuilder->getWorldBuilder();
         worldBuilder->setRenderContext(m_RenderContext);
-        worldBuilder->setRenderTexture(m_RenderTexture);
-        worldBuilder->setResourceManager(m_GameLevel->getResourceManager());
+        worldBuilder->setRenderTexture(m_LevelContext.renderTexture);
+        worldBuilder->setResourceManager(m_LevelContext.resourceManager);
         worldBuilder->init();
 
         // register
@@ -108,11 +100,6 @@ namespace nero
         m_RenderContext = renderContext;
     }
 
-    void LevelBuilder::setRenderTexture(const std::shared_ptr<sf::RenderTexture>& renderTexture)
-    {
-        m_RenderTexture = renderTexture;
-    }
-
     void LevelBuilder::saveGameLevel()
     {
         // chunk
@@ -124,26 +111,26 @@ namespace nero
 
             // save chunk
             file::saveFile(
-                file::getPath({m_GameLevel->getLevelDirectory(), "chunk", chunk->getChunkName()},
+                file::getPath({m_LevelContext.levelDirectory, "chunk", chunk->getChunkName()},
                               StringPool.EXT_NERO),
                 chunk->saveChunk().dump(3),
                 true);
         }
 
         // setting
-        m_LevelSetting->setInt("chunk_count", m_ChunkCount);
-        m_LevelSetting->setBool("opened", m_Opened);
+        m_LevelContext.levelSetting->setInt("chunk_count", m_ChunkCount);
+        m_LevelContext.levelSetting->setBool("opened", m_LevelOpened);
 
         file::saveFile(
-            file::getPath({m_GameLevel->getLevelDirectory(), "setting"}, StringPool.EXT_NERO),
-            m_LevelSetting->toString(),
+            file::getPath({m_LevelContext.levelDirectory, "setting"}, StringPool.EXT_NERO),
+            m_LevelContext.levelSetting->toString(),
             true);
     }
 
     void LevelBuilder::loadGameLevel()
     {
         std::experimental::filesystem::path chunkDirectory(
-            file::getPath({m_GameLevel->getLevelDirectory(), "chunk"}));
+            file::getPath({m_LevelContext.levelDirectory, "chunk"}));
 
         std::experimental::filesystem::directory_iterator it{chunkDirectory};
         while(it != std::experimental::filesystem::directory_iterator{})
@@ -153,8 +140,8 @@ namespace nero
             it++;
         }
 
-        m_Opened     = m_LevelSetting->getBool("opened");
-        m_ChunkCount = m_LevelSetting->getInt("chunk_count");
+        m_LevelOpened = m_LevelContext.levelSetting->getBool("opened");
+        m_ChunkCount  = m_LevelContext.levelSetting->getInt("chunk_count");
     }
 
     void LevelBuilder::loadChunk(const std::string& fileName)
@@ -163,8 +150,8 @@ namespace nero
         WorldBuilder::Ptr worldBuilder = chunkBuilder->getWorldBuilder();
 
         worldBuilder->setRenderContext(m_RenderContext);
-        worldBuilder->setRenderTexture(m_RenderTexture);
-        worldBuilder->setResourceManager(m_GameLevel->getResourceManager());
+        worldBuilder->setRenderTexture(m_LevelContext.renderTexture);
+        worldBuilder->setResourceManager(m_LevelContext.resourceManager);
 
         chunkBuilder->loadChunk(file::loadJson(fileName, true));
 
@@ -178,17 +165,17 @@ namespace nero
 
     void LevelBuilder::setOpened(const bool& opened)
     {
-        m_Opened = opened;
+        m_LevelOpened = opened;
     }
 
     bool LevelBuilder::isOpened() const
     {
-        return m_Opened;
+        return m_LevelOpened;
     }
 
     std::string LevelBuilder::getResourceDirectory() const
     {
-        return file::getPath({m_GameLevel->getLevelDirectory(), "resource"});
+        return file::getPath({m_LevelContext.levelDirectory, "resource"});
     }
 
     void LevelBuilder::render() const
@@ -200,5 +187,10 @@ namespace nero
                 worldChunk->getWorldBuilder()->render();
             }
         }
+    }
+
+    GameLevel::Context LevelBuilder::getLevelContext() const
+    {
+        return m_LevelContext;
     }
 } // namespace nero

@@ -52,9 +52,8 @@ namespace nero
                     EngineType                         engineType,
                     PlatformType                       platformType);
 
-          private:
-            friend class GameScene;
-            friend class GameProject;
+            Context();
+
             std::shared_ptr<sf::RenderTexture> renderTexture;
             Camera::Ptr                        camera;
             Setting::Ptr                       setting;
