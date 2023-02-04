@@ -38,12 +38,14 @@ In order to keep Taks small and relevant we will enfore the following rules
   - [Task-6.2] Add new UI view
   - [Task-6.3] Connect to certain event (i.e reload dll)
   
-- [Task-7] Handle Sprite Edition (add, play, save and reload) TODO
+- [Task-7] Architecture Review GameProject, AdvancedScene, SceneBuilder
 
-- [Task-8] Enable Lighting (add, play, save and reload) TODO
+- [Task-8] Handle Sprite Edition (add, play, save and reload) TODO
 
-- [Task-9] Handle Text Edition (add, play, save and reload) TODO
+- [Task-9] Enable Lighting (add, play, save and reload) TODO
 
-- [Task-10] Handle Animation Edition (add, play, save and reload) TODO
+- [Task-10] Handle Text Edition (add, play, save and reload) TODO
 
-- [Task-11] Handle Mesh Edition (add, play, save and reload) TODO
+- [Task-11] Handle Animation Edition (add, play, save and reload) TODO
+
+- [Task-12] Handle Mesh Edition (add, play, save and reload) TODO

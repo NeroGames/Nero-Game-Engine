@@ -29,6 +29,8 @@ namespace nero
     GameScene::GameScene(GameScene::Context context)
         : m_SceneContext(context)
         , m_GameLevel(nullptr)
+        , m_SceneRoot(std::make_shared<Object>())
+
     {
     }
 
@@ -47,6 +49,8 @@ namespace nero
 
     void GameScene::handleEvent(const sf::Event& event)
     {
+        if(m_GameLevel)
+            m_GameLevel->handleEvent(event);
     }
 
     void GameScene::update(const sf::Time& timeStep)
@@ -55,8 +59,12 @@ namespace nero
 
     void GameScene::render()
     {
+        m_SceneContext.renderTexture->draw(*m_SceneRoot);
+
         if(m_GameLevel)
+        {
             m_GameLevel->render();
+        }
     }
 
     void GameScene::renderShape()
@@ -80,5 +88,6 @@ namespace nero
     void GameScene::setGameLevel(const GameLevel::Ptr& gameLevel)
     {
         m_GameLevel = gameLevel;
+        m_SceneRoot->addChild(m_GameLevel->getLevelRoot());
     }
 } // namespace nero

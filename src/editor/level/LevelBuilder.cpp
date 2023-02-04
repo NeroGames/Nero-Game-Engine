@@ -193,4 +193,16 @@ namespace nero
     {
         return m_LevelContext;
     }
+
+    void LevelBuilder::buildLevel(Object::Ptr levelRoot)
+    {
+        for(const auto& worldChunk : m_ChunkTable)
+        {
+            if(worldChunk->isVisible())
+            {
+                levelRoot->addChild(worldChunk->getWorldBuilder()->buildScene());
+            }
+        }
+    }
+
 } // namespace nero

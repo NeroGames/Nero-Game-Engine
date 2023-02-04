@@ -82,6 +82,7 @@ namespace nero
       private:
         Context                    m_SceneContext;
         std::shared_ptr<GameLevel> m_GameLevel;
+        Object::Ptr                m_SceneRoot;
     };
 } // namespace nero
 

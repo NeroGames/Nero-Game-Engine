@@ -226,11 +226,12 @@ namespace nero
 
         if(m_EditorContext->getEditorMode() == EditorMode::Play_Game)
         {
-            /*if(m_AdvancedScene &&
-            m_AdvancedScene->getSelectedGameLevel()->levelSetting->getBool("enable_lighting"))
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
+
+            if(levelBuilder && levelBuilder->getLevelSetting()->getBool("enable_light"))
             {
                 clearColor = sf::Color::White;
-            }*/
+            }
         }
 
         m_RenderTexture->clear(clearColor);

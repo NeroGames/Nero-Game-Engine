@@ -1436,6 +1436,38 @@ namespace nero
         m_UpdateUndo();
     }
 
+    Object::Ptr WorldBuilder::buildScene()
+    {
+        Object::Ptr chunkRoot = std::make_shared<Object>();
+
+        for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
+        {
+            if(!(*layer)->isVisible())
+                continue;
+
+            switch((*layer)->getSecondType())
+            {
+                case Object::Sprite_Object:
+                {
+                    Object::Ptr layer_object = (*layer)->clone();
+
+                    auto        children     = (*layer)->getAllChild();
+
+                    for(auto it = children->begin(); it != children->end(); it++)
+                    {
+                        Object::Ptr sprite_object = (*it)->clone();
+                        layer_object->addChild(sprite_object);
+                    }
+
+                    chunkRoot->addChild(layer_object);
+                }
+                break;
+            }
+        }
+
+        return chunkRoot;
+    }
+
     void WorldBuilder::buildScene(Object::Ptr rootObject)
     {
         /*for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)

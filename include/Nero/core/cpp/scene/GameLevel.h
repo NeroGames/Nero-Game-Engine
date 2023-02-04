@@ -15,6 +15,8 @@
 // SFML
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Window/Event.hpp>
+// Lighting
+#include <ltbl/LightSystem.hpp>
 // STD
 #include <memory>
 /////////////////////////////////////////////////////////////
@@ -100,13 +102,16 @@ namespace nero
 
         std::shared_ptr<sf::RenderTexture> getRenderTexture();
         Camera::Ptr                        getCamera();
+        Object::Ptr                        getLevelRoot() const;
 
       private:
         std::shared_ptr<sf::RenderTexture> m_RenderTexture;
         Context                            m_LevelContext;
         ResourceManager::Ptr               m_ResourceManager;
         PhysicalWorld::Ptr                 m_PhysicalWorld;
-        LightEngine::Ptr                   m_LightEngine;
+        // LightEngine::Ptr                   m_LightEngine;
+        Object::Ptr                        m_LevelRoot;
+        std::shared_ptr<ltbl::LightSystem> m_LightSystem;
     };
 } // namespace nero
 

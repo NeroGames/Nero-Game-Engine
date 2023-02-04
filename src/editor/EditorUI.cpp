@@ -188,20 +188,22 @@ namespace nero
         const auto builderMode  = m_EditorContext->getBuilderMode();
         auto       levelBuilder = m_EditorContext->getLevelBuilder();
 
-        if(levelBuilder)
+        if(editorMode == EditorMode::World_Builder && levelBuilder)
         {
             auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
 
-            if(worldBuilder && editorMode == EditorMode::World_Builder &&
-               builderMode == BuilderMode::Object && mouseHoverCanvas)
+            if(worldBuilder && builderMode == BuilderMode::Object && mouseHoverCanvas)
             {
                 worldBuilder->handleEvent(event);
             }
-            else if(worldBuilder && editorMode == EditorMode::World_Builder &&
-                    builderMode == BuilderMode::Mesh && mouseHoverCanvas)
+            else if(worldBuilder && builderMode == BuilderMode::Mesh && mouseHoverCanvas)
             {
                 worldBuilder->getMeshEditor()->handleEvent(event);
             }
+        }
+        else if(editorMode == EditorMode::Play_Game)
+        {
+            m_EditorContext->getAdvancedScene()->handleEvent(event);
         }
 
         switch(event.type)
@@ -331,6 +333,18 @@ namespace nero
             {
                 // TODO
                 // m_EditorProxy->renderGameScene();
+            }
+
+            if(key == sf::Keyboard::Up)
+            {
+                m_EditorContext->getNotificationManager()->notify("I'm a Notifcation :)");
+            }
+
+            if(key == sf::Keyboard::Down)
+            {
+                m_EditorContext->getNotificationManager()->notify(
+                    "I'm aaaaaaaaaaaaaaaaaaa Verrrrrrrrrrrrrrrrrrrrryyyyyyyyyyyyyyyy "
+                    "Looooooooooonnnnnnnnnnnnng Notifcation :)");
             }
         }
     }

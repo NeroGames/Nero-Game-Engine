@@ -112,6 +112,7 @@ namespace nero
         MeshEditor::Ptr  getMeshEditor();
         // Scene
         void             buildScene(Object::Ptr rootObject);
+        Object::Ptr      buildScene();
         void             destroyAllPhysicObject(Object::Ptr mainObject);
         void             updateLayerOrder();
         nlohmann::json   saveScene();
