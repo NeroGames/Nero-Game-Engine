@@ -49,7 +49,7 @@ namespace nero
             ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
             ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 
-        if(!taskTable.empty())
+        if(!taskTable.empty() && !BTManager::allTaskCompleted())
         {
             ImGui::SetNextWindowPos(windowPosition, ImGuiCond_Always, windowPosistionPivot);
             ImGui::SetNextWindowViewport(viewport->ID);

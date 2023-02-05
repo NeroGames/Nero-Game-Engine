@@ -144,4 +144,16 @@ namespace nero
             m_FutureMap[name].wait_for(std::chrono::milliseconds(milliSecond));
         }
     }
+
+    bool BackgroundTaskManager::allTaskCompleted()
+    {
+        for(const auto& task : m_BackgroundTaskTable)
+        {
+            if(!task->completed())
+                return false;
+        }
+
+        return true;
+    }
+
 } // namespace nero

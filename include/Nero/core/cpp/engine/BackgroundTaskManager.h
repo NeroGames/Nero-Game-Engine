@@ -69,6 +69,8 @@ namespace nero
              const std::string& category);
         static void pauseTask(const std::string& name, unsigned int milliSecond);
 
+        static bool allTaskCompleted();
+
       private:
         BackgroundTaskManager();
         static BackgroundTask::Ptr createTask(const std::string& taskName,
