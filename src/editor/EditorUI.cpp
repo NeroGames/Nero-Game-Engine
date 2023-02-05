@@ -247,6 +247,11 @@ namespace nero
         m_EditorProxy->autoSave();
 
         m_NotificationManager->update(timeStep);
+
+        if(editorMode == EditorMode::Play_Game)
+        {
+            m_EditorContext->getAdvancedScene()->update(timeStep);
+        }
     }
 
     void EditorUI::render()

@@ -1140,6 +1140,7 @@ namespace nero
                 text_object->setFont(label);
                 std::string object_name = "text " + toString(text_object->getId());
                 text_object->setName(object_name);
+                text_object->setContent(text.getString());
 
                 object = text_object;
             }
@@ -1516,6 +1517,38 @@ namespace nero
                     chunkRoot->addChild(layer_object);
                 }
                 break;
+
+                case Object::Animation_Object:
+                {
+                    Object::Ptr layer_object = (*layer)->clone();
+
+                    auto        children     = (*layer)->getAllChild();
+
+                    for(auto it = children->begin(); it != children->end(); it++)
+                    {
+                        Object::Ptr animation_object = (*it)->clone();
+                        layer_object->addChild(animation_object);
+                    }
+
+                    chunkRoot->addChild(layer_object);
+                }
+                break;
+
+                case Object::Text_Object:
+                {
+                    Object::Ptr layer_object = (*layer)->clone();
+
+                    auto        children     = (*layer)->getAllChild();
+
+                    for(auto it = children->begin(); it != children->end(); it++)
+                    {
+                        Object::Ptr text_object = (*it)->clone();
+                        layer_object->addChild(text_object);
+                    }
+
+                    chunkRoot->addChild(layer_object);
+                }
+                break;
             }
         }
 
@@ -1531,22 +1564,6 @@ namespace nero
 
     switch((*layer)->getSecondType())
     {
-        case Object::Sprite_Object:
-        {
-            Object::Ptr layer_object = (*layer)->clone();
-
-            auto children = (*layer)->getAllChild();
-
-            for(auto it = children->begin(); it != children->end(); it++)
-            {
-                Object::Ptr sprite_object = (*it)->clone();
-                layer_object->addChild(sprite_object);
-            }
-
-            rootObject->addChild(layer_object);
-
-        }break;
-
         case Object::Mesh_Object:
         {
             Object::Ptr layer_object = (*layer)->clone();
@@ -1650,23 +1667,7 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
 
         }break;
 
-        case Object::Animation_Object:
-        {
-            Object::Ptr layer_object = (*layer)->clone();
-
-            auto children = (*layer)->getAllChild();
-
-            for(auto it = children->begin(); it != children->end(); it++)
-            {
-                Object::Ptr animation_object = (*it)->clone();
-                layer_object->addChild(animation_object);
-            }
-
-            rootObject->addChild(layer_object);
-
-        }break;
-
-        case Object::Animation_Meshed_Object:
+         case Object::Animation_Meshed_Object:
         {
             Object::Ptr layer_object = (*layer)->clone();
 
@@ -1703,69 +1704,6 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
             rootObject->addChild(layer_object);
 
         }break;
-
-        case Object::Text_Object:
-        {
-            Object::Ptr layer_object = (*layer)->clone();
-
-            auto children = (*layer)->getAllChild();
-
-            for(auto it = children->begin(); it != children->end(); it++)
-            {
-                Object::Ptr text_object = (*it)->clone();
-                layer_object->addChild(text_object);
-            }
-
-            rootObject->addChild(layer_object);
-
-        }break;
-
-                        case Object::Light_Object:
-                        {
-                                if(m_LightManager)
-                                {
-                                        Object::Ptr layer_object = (*layer)->clone();
-
-                                        auto children = (*layer)->getAllChild();
-
-                                        for(auto it = children->begin(); it != children->end();
-it++)
-                                        {
-                                                Object::Ptr object = (*it)->clone();
-
-                                                LightObject::Ptr light_object =
-LightObject::Cast(object);
-                                                //create the light object
-                                                ltbl::LightPointEmission* point_light =
-m_LightManager->createLightPointEmission(); sf::Texture& light_map =
-m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
-                                                point_light->setOrigin(sf::Vector2f(light_map.getSize().x
-* 0.5f, light_map.getSize().y * 0.5f)); point_light->setTexture(light_map);
-                                                point_light->setScale(light_object->getScale());
-                                                point_light->setColor(light_object->getColor());
-                                                point_light->setPosition(light_object->getPosition());
-
-                                                light_object->setLight(point_light);
-
-                                                light_object->setCloneCallback([=]() ->
-ltbl::LightPointEmission*
-                                                {
-                                                        ltbl::LightPointEmission* point_light =
-m_LightManager->createLightPointEmission(); sf::Texture& light_map =
-m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
-                                                        point_light->setOrigin(sf::Vector2f(light_map.getSize().x
-* 0.5f, light_map.getSize().y * 0.5f)); point_light->setTexture(light_map);
-
-                                                        return point_light;
-                                                });
-
-                                                layer_object->addChild(light_object);
-                                        }
-
-                                        rootObject->addChild(layer_object);
-                                }
-
-                        }break;
     }
         }*/
     }
