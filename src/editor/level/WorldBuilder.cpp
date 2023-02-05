@@ -15,19 +15,19 @@ namespace nero
 {
     WorldBuilder::WorldBuilder()
         // Main
-        : m_PhysicWorld(nullptr)
-        , m_PhysicObjectManager()
-        , m_SelectionRect()
+        : m_SelectionRect()
         , m_LastMousePosition(0.f, 0.f)
-        // Speed
         , m_PanningSpeed(1.f)
         , m_RotationSpeed(0.5f)
+        // Speed
         , m_ZoomingRatio(0.1f)
-        // Object
         , m_SelectedLayer(nullptr)
-        , m_SelectedObject(nullptr)
         , m_LayerCount(0)
+        // Object
+        , m_SelectedObject(nullptr)
         , m_ObjectCount(0)
+        , m_PhysicObjectManager()
+        , m_PhysicWorld(nullptr)
         , m_RenderContext(nullptr)
         , m_RightSelection(false)
         , m_ClickedObject(false)
@@ -1172,23 +1172,6 @@ namespace nero
 
             case Object::Light_Object:
             {
-                /*LightObject::Ptr light_object = LightObject::Ptr(new LightObject());
-                light_object->setLightmap(label);
-                light_object->setColor(sf::Color::White);
-                light_object->setScale(3.f, 3.f);
-                light_object->setPosition(position);
-
-                sf::Sprite  sprite;
-                sf::IntRect rect =
-                    m_ResourceManager->getTextureHolder()->getSpriteBound("point_light_64");
-                sprite.setTextureRect(rect);
-                sprite.setTexture(
-                    m_ResourceManager->getTextureHolder()->getSpriteTexture("point_light_64"));
-                sprite.setOrigin(rect.width / 2.f, rect.height / 2.f);
-                light_object->setSprite(sprite);
-
-                object = light_object;*/
-
                 sf::Sprite sprite;
                 sprite.setTexture(m_LightTexture);
                 const auto textureSize = m_LightTexture.getSize();
@@ -1894,6 +1877,37 @@ m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
         return sprite_object;
     }
 
+    LightIcon::Ptr WorldBuilder::loadLight(nlohmann::json& json)
+    {
+        sf::Sprite sprite;
+        sprite.setTexture(m_LightTexture);
+        const auto textureSize = m_LightTexture.getSize();
+        sprite.setOrigin(textureSize.x / 2.f, textureSize.y / 2.f);
+
+        LightIcon::Ptr light_icon = std::make_shared<LightIcon>();
+
+        light_icon->setSprite(sprite);
+        light_icon->setLightmapName(json["lightmap_name"].get<std::string>());
+        light_icon->setPosition(json["position"]["x"], json["position"]["y"]);
+        light_icon->setRotation(json["rotation"]);
+        light_icon->setScale(json["scale"]["x"], json["scale"]["y"]);
+        light_icon->setColor(sf::Color(json["color"]["r"],
+                                       json["color"]["g"],
+                                       json["color"]["b"],
+                                       json["color"]["a"]));
+
+        light_icon->setId(json["object_id"]);
+        light_icon->setName(json["name"].get<std::string>());
+        light_icon->setCategory(json["category"].get<std::string>());
+        light_icon->setSecondType(Object::Light_Object);
+        light_icon->setIsVisible(json["is_visible"]);
+        light_icon->setIsUpdateable(json["is_updateable"]);
+        light_icon->setIsSelectable(json["is_selectable"]);
+        light_icon->setIsSelected(json["is_selected"]);
+
+        return light_icon;
+    }
+
     MeshObject::Ptr WorldBuilder::loadMesh(nlohmann::json& json)
     {
         Mesh           mesh      = Mesh();
@@ -2078,6 +2092,8 @@ m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
                 layer_type = Object::Button_Object;
             else if(layer["type"] == "text_layer")
                 layer_type = Object::Text_Object;
+            else if(layer["type"] == "light_layer")
+                layer_type = Object::Light_Object;
             else if(layer["type"] == "empty_layer")
                 layer_type = Object::None;
 
@@ -2187,6 +2203,17 @@ m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
 
                     for(auto& text : text_table)
                         layer_object->addChild(loadText(text));
+
+                    m_LayerTable.push_back(layer_object);
+                }
+                break;
+
+                case Object::Light_Object:
+                {
+                    nlohmann::json light_table = layer["light_table"];
+
+                    for(auto& light : light_table)
+                        layer_object->addChild(loadLight(light));
 
                     m_LayerTable.push_back(layer_object);
                 }

@@ -306,6 +306,9 @@ namespace nero
 
     void AdvancedScene::buildGameScene()
     {
+        if(!m_LevelBuilder)
+            return;
+
         // Create Game Scene
         m_GameScene                 = m_CreateCppGameSceneCallback(m_SceneContext);
 

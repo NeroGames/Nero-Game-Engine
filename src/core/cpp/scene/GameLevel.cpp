@@ -34,29 +34,9 @@ namespace nero
     {
         m_LightManager->create({-1000.f, -1000.f, 2000.f, 2000.f},
                                m_LevelContext.renderTexture->getSize());
-
-        // just of testing
-        sf::Texture& pointLightTexture =
-            m_LevelContext.resourceManager->getLightmapHolder()->getTexture("pointLightTexture");
         // Add a sun light
         ltbl::LightDirectionEmission* sun = m_LightManager->createLightDirectionEmission();
         sun->setColor(sf::Color(0, 51, 102, 50));
-
-        // Add a light point
-        /*ltbl::LightPointEmission* mlight = m_LightManager->createLightPointEmission();
-        mlight->setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f,
-                                       pointLightTexture.getSize().y * 0.5f));
-        mlight->setTexture(pointLightTexture);
-        mlight->setScale(3.f, 3.f);
-        mlight->setColor(sf::Color::White);*/
-
-        /*std::vector<sf::RectangleShape> shapes;
-        sf::RectangleShape              blocker;
-        blocker.setSize({200.f, 50.f});
-        blocker.setPosition({0.f, -300.f});
-        blocker.setFillColor(sf::Color::Red);
-        shapes.push_back(blocker);
-        m_LightManager->createLightShape(blocker);*/
     }
 
     GameLevel::~GameLevel()
@@ -74,21 +54,6 @@ namespace nero
 
     void GameLevel::handleEvent(const sf::Event& event)
     {
-        if(event.type == sf::Event::MouseButtonPressed &&
-           event.mouseButton.button == sf::Mouse::Left)
-        {
-            sf::Texture& pointLightTexture =
-                m_LevelContext.resourceManager->getLightmapHolder()->getTexture(
-                    "pointLightTexture");
-            auto light = m_LightManager->createLightPointEmission();
-            light->setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f,
-                                          pointLightTexture.getSize().y * 0.5f));
-            light->setTexture(pointLightTexture);
-            light->setScale(6.f, 6.f);
-            light->setColor(sf::Color::White);
-            light->setPosition(m_LevelContext.renderTexture->mapPixelToCoords(
-                {event.mouseButton.x, event.mouseButton.y}));
-        }
     }
 
     void GameLevel::update(const sf::Time& timeStep)
@@ -97,11 +62,15 @@ namespace nero
 
     void GameLevel::render()
     {
-        m_LightManager->render(*m_LevelContext.renderTexture.get());
     }
 
     void GameLevel::renderShape()
     {
+    }
+
+    void GameLevel::renderLight()
+    {
+        m_LightManager->render(*m_LevelContext.renderTexture.get());
     }
 
     void GameLevel::loadLevel()

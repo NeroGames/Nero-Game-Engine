@@ -18,6 +18,7 @@
 #include <Nero/core/cpp/scene/PhysicObjectManager.h>
 #include <Nero/core/cpp/scene/SceneUtility.h>
 #include <Nero/core/cpp/object/LightObject.h>
+#include <Nero/editor/icon/LightIcon.h>
 // SFML
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -160,6 +161,7 @@ namespace nero
         TextObject::Ptr      loadText(nlohmann::json& json);
         MeshObject::Ptr      loadMesh(nlohmann::json& json);
         AnimationObject::Ptr loadAnimation(nlohmann::json& json);
+        LightIcon::Ptr       loadLight(nlohmann::json& json);
         int                  getNewId();
 
       private:

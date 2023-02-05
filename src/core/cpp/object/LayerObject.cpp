@@ -173,6 +173,22 @@ namespace nero
                 return layerJson;
             }
 
+            case Object::Light_Object:
+            {
+                layerJson["type"] = "light_layer";
+
+                std::vector<nlohmann::json> lightJsonTab;
+
+                auto                        childTab = getAllChild();
+
+                for(auto it = childTab->begin(); it != childTab->end(); it++)
+                    lightJsonTab.push_back((*it)->toJson());
+
+                layerJson["light_table"] = lightJsonTab;
+
+                return layerJson;
+            }
+
             case Object::None:
             {
                 layerJson["type"] = "empty_layer";

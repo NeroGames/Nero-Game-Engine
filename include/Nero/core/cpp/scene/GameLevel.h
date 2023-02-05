@@ -58,6 +58,7 @@ namespace nero
         virtual void update(const sf::Time& timeStep);
         virtual void render();
         virtual void renderShape();
+        virtual void renderLight();
         // builder
         void         loadLevel();
         void         loadChunk();

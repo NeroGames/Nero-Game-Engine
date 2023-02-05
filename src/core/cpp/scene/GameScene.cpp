@@ -64,6 +64,7 @@ namespace nero
         if(m_GameLevel)
         {
             m_GameLevel->render();
+            m_GameLevel->renderLight();
         }
     }
 
