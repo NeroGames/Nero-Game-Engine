@@ -103,6 +103,7 @@ namespace nero
         std::shared_ptr<sf::RenderTexture> getRenderTexture();
         Camera::Ptr                        getCamera();
         Object::Ptr                        getLevelRoot() const;
+        std::shared_ptr<ltbl::LightSystem> getLightManager();
 
       private:
         std::shared_ptr<sf::RenderTexture> m_RenderTexture;
@@ -111,7 +112,7 @@ namespace nero
         PhysicalWorld::Ptr                 m_PhysicalWorld;
         // LightEngine::Ptr                   m_LightEngine;
         Object::Ptr                        m_LevelRoot;
-        std::shared_ptr<ltbl::LightSystem> m_LightSystem;
+        std::shared_ptr<ltbl::LightSystem> m_LightManager;
     };
 } // namespace nero
 

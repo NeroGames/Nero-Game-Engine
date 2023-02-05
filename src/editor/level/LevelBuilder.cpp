@@ -194,13 +194,14 @@ namespace nero
         return m_LevelContext;
     }
 
-    void LevelBuilder::buildLevel(Object::Ptr levelRoot)
+    void LevelBuilder::buildLevel(Object::Ptr                        levelRoot,
+                                  std::shared_ptr<ltbl::LightSystem> lightManager)
     {
         for(const auto& worldChunk : m_ChunkTable)
         {
             if(worldChunk->isVisible())
             {
-                levelRoot->addChild(worldChunk->getWorldBuilder()->buildScene());
+                levelRoot->addChild(worldChunk->getWorldBuilder()->buildScene(lightManager));
             }
         }
     }

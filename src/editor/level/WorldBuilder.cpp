@@ -6,6 +6,7 @@
 // NERO
 #include <Nero/editor/level/WorldBuilder.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
+#include <Nero/editor/icon/LightIcon.h>
 // STD
 #include <fstream>
 #include <string>
@@ -28,7 +29,6 @@ namespace nero
         , m_LayerCount(0)
         , m_ObjectCount(0)
         , m_RenderContext(nullptr)
-        , m_LightManager(nullptr)
         , m_RightSelection(false)
         , m_ClickedObject(false)
     {
@@ -50,6 +50,9 @@ namespace nero
         m_UpdateLogIf = [](const std::string&, bool, int)
         {
         };
+
+        // TODO
+        m_LightTexture.loadFromFile("resource/editor/texture/bubble_light.png");
     }
 
     void WorldBuilder::init()
@@ -1169,7 +1172,7 @@ namespace nero
 
             case Object::Light_Object:
             {
-                LightObject::Ptr light_object = LightObject::Ptr(new LightObject());
+                /*LightObject::Ptr light_object = LightObject::Ptr(new LightObject());
                 light_object->setLightmap(label);
                 light_object->setColor(sf::Color::White);
                 light_object->setScale(3.f, 3.f);
@@ -1184,7 +1187,24 @@ namespace nero
                 sprite.setOrigin(rect.width / 2.f, rect.height / 2.f);
                 light_object->setSprite(sprite);
 
-                object = light_object;
+                object = light_object;*/
+
+                sf::Sprite sprite;
+                sprite.setTexture(m_LightTexture);
+                const auto textureSize = m_LightTexture.getSize();
+                sprite.setOrigin(textureSize.x / 2.f, textureSize.y / 2.f);
+
+                LightIcon::Ptr light_icon = std::make_shared<LightIcon>();
+
+                light_icon->setSprite(sprite);
+                light_icon->setLightmapName(label);
+                light_icon->setSecondType(Object::Light_Object);
+                light_icon->setPosition(position);
+                light_icon->setId(getNewId());
+                std::string object_name = "light_icon " + toString(light_icon->getId());
+                light_icon->setName(object_name);
+
+                object = light_icon;
             }
             break;
         }
@@ -1436,7 +1456,7 @@ namespace nero
         m_UpdateUndo();
     }
 
-    Object::Ptr WorldBuilder::buildScene()
+    Object::Ptr WorldBuilder::buildScene(std::shared_ptr<ltbl::LightSystem> lightManager)
     {
         Object::Ptr chunkRoot = std::make_shared<Object>();
 
@@ -1457,6 +1477,57 @@ namespace nero
                     {
                         Object::Ptr sprite_object = (*it)->clone();
                         layer_object->addChild(sprite_object);
+                    }
+
+                    chunkRoot->addChild(layer_object);
+                }
+                break;
+
+                case Object::Light_Object:
+                {
+                    Object::Ptr layer_object = (*layer)->clone();
+
+                    auto        children     = (*layer)->getAllChild();
+
+                    for(auto it = children->begin(); it != children->end(); it++)
+                    {
+                        LightIcon::Ptr            lightIcon    = LightIcon::Cast(*it);
+                        LightObject::Ptr          light_object = std::make_shared<LightObject>();
+
+                        // create the light object
+                        ltbl::LightPointEmission* point_light =
+                            lightManager->createLightPointEmission();
+                        sf::Texture& light_map = m_ResourceManager->getLightmapHolder()->getTexture(
+                            lightIcon->getLightmapName());
+                        point_light->setOrigin(sf::Vector2f(light_map.getSize().x * 0.5f,
+                                                            light_map.getSize().y * 0.5f));
+                        point_light->setTexture(light_map);
+                        // TODO
+                        // point_light->setScale(lightIcon->getScale());
+                        point_light->setScale(6.f, 6.f);
+                        // TODO
+                        // point_light->setColor(lightIcon->getColor());
+                        point_light->setColor(sf::Color::White);
+                        point_light->setPosition(lightIcon->getPosition());
+
+                        light_object->setLight(point_light);
+
+                        light_object->setCloneCallback(
+                            [=]() -> ltbl::LightPointEmission*
+                            {
+                                ltbl::LightPointEmission* point_light =
+                                    lightManager->createLightPointEmission();
+                                sf::Texture& light_map =
+                                    m_ResourceManager->getLightmapHolder()->getTexture(
+                                        lightIcon->getLightmapName());
+                                point_light->setOrigin(sf::Vector2f(light_map.getSize().x * 0.5f,
+                                                                    light_map.getSize().y * 0.5f));
+                                point_light->setTexture(light_map);
+
+                                return point_light;
+                            });
+
+                        layer_object->addChild(light_object);
                     }
 
                     chunkRoot->addChild(layer_object);
@@ -2388,10 +2459,4 @@ m_ResourceManager->getLightmapHolder()->getTexture(light_object->getLightmap());
     {
         return m_SelectedLayer;
     }
-
-    void WorldBuilder::setLightManager(const LightManagerPtr& lightManager)
-    {
-        m_LightManager = lightManager;
-    }
-
 } // namespace nero

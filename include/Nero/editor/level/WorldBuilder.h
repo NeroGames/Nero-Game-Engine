@@ -112,7 +112,7 @@ namespace nero
         MeshEditor::Ptr  getMeshEditor();
         // Scene
         void             buildScene(Object::Ptr rootObject);
-        Object::Ptr      buildScene();
+        Object::Ptr      buildScene(std::shared_ptr<ltbl::LightSystem> lightManager);
         void             destroyAllPhysicObject(Object::Ptr mainObject);
         void             updateLayerOrder();
         nlohmann::json   saveScene();
@@ -143,7 +143,6 @@ namespace nero
         void             setRenderContext(const RenderContext::Ptr& renderContext);
         void             setRenderTexture(const RenderTexturePtr& renderTexture);
         void             setResourceManager(const ResourceManager::Ptr& resourceManager);
-        void             setLightManager(const LightManagerPtr& lightManager);
 
       private:
         Object::Ptr findObject(Object::Ptr object, sf::Vector2f pos);
@@ -189,9 +188,9 @@ namespace nero
 
         RenderTexturePtr                                   m_RenderTexture;
         RenderContext::Ptr                                 m_RenderContext;
-        LightManagerPtr                                    m_LightManager;
         bool                                               m_RightSelection;
         bool                                               m_ClickedObject;
+        sf::Texture                                        m_LightTexture;
 
         std::function<void()>                              m_UpdateUI;
         std::function<void()>                              m_UpdateUndo;

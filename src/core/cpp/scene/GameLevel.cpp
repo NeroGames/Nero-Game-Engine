@@ -30,20 +30,20 @@ namespace nero
         , m_ResourceManager(std::make_shared<ResourceManager>(
               m_LevelContext.levelSetting->getSetting("resource")))
         , m_LevelRoot(std::make_shared<Object>())
-        , m_LightSystem(std::make_shared<ltbl::LightSystem>(false))
+        , m_LightManager(std::make_shared<ltbl::LightSystem>(false))
     {
-        m_LightSystem->create({-1000.f, -1000.f, 2000.f, 2000.f},
-                              m_LevelContext.renderTexture->getSize());
+        m_LightManager->create({-1000.f, -1000.f, 2000.f, 2000.f},
+                               m_LevelContext.renderTexture->getSize());
 
         // just of testing
         sf::Texture& pointLightTexture =
             m_LevelContext.resourceManager->getLightmapHolder()->getTexture("pointLightTexture");
         // Add a sun light
-        ltbl::LightDirectionEmission* sun = m_LightSystem->createLightDirectionEmission();
+        ltbl::LightDirectionEmission* sun = m_LightManager->createLightDirectionEmission();
         sun->setColor(sf::Color(0, 51, 102, 50));
 
         // Add a light point
-        /*ltbl::LightPointEmission* mlight = m_LightSystem->createLightPointEmission();
+        /*ltbl::LightPointEmission* mlight = m_LightManager->createLightPointEmission();
         mlight->setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f,
                                        pointLightTexture.getSize().y * 0.5f));
         mlight->setTexture(pointLightTexture);
@@ -56,7 +56,7 @@ namespace nero
         blocker.setPosition({0.f, -300.f});
         blocker.setFillColor(sf::Color::Red);
         shapes.push_back(blocker);
-        m_LightSystem->createLightShape(blocker);*/
+        m_LightManager->createLightShape(blocker);*/
     }
 
     GameLevel::~GameLevel()
@@ -80,7 +80,7 @@ namespace nero
             sf::Texture& pointLightTexture =
                 m_LevelContext.resourceManager->getLightmapHolder()->getTexture(
                     "pointLightTexture");
-            auto light = m_LightSystem->createLightPointEmission();
+            auto light = m_LightManager->createLightPointEmission();
             light->setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f,
                                           pointLightTexture.getSize().y * 0.5f));
             light->setTexture(pointLightTexture);
@@ -97,7 +97,7 @@ namespace nero
 
     void GameLevel::render()
     {
-        m_LightSystem->render(*m_LevelContext.renderTexture.get());
+        m_LightManager->render(*m_LevelContext.renderTexture.get());
     }
 
     void GameLevel::renderShape()
@@ -223,4 +223,10 @@ namespace nero
     {
         return m_LevelRoot;
     }
+
+    std::shared_ptr<ltbl::LightSystem> GameLevel::getLightManager()
+    {
+        return m_LightManager;
+    }
+
 } // namespace nero
