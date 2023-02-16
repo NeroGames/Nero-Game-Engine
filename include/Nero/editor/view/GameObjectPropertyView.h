@@ -22,6 +22,14 @@ namespace nero
       private:
         std::vector<Object::Ptr> getComponentTable(Object::Ptr root);
         void getComponentTable(Object::Ptr object, std::vector<Object::Ptr>& result);
+
+        void renderGeneralProperty(Object::Ptr selectedObject);
+        void renderTransformProperty(Object::Ptr selectedObject);
+        void renderColorProperty(Object::Ptr selectedObject);
+        void renderSpriteProperty(SpriteObject::Ptr spriteObject);
+        void renderTextProperty(TextObject::Ptr textObject);
+        void renderAnimationProperty();
+        void renderLightProperty();
     };
 } // namespace nero
 #endif // GAMEOBJECTPROPERTYVIEW_H

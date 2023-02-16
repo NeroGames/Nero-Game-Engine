@@ -84,7 +84,7 @@ namespace nero
 
         selected = selectedResourceType == ResourceType::Font;
         pushResourceStyle(selected);
-        if(ImGui::Button("Font##browse_font_resource", ImVec2(100.f, 100.f)))
+        if(ImGui::Button("Font & Text##browse_font_resource", ImVec2(100.f, 100.f)))
         {
             m_EditorContext->setSelectedResourceType(ResourceType::Font);
         }

@@ -43,9 +43,21 @@ namespace nero
                     auto worldBuilder =
                         m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();
 
-                    worldBuilder->addObject(Object::Text_Object,
-                                            fontTable[i],
-                                            m_EditorContext->getNewGameObjectPosition());
+                    auto selectedObject = worldBuilder->getSelectedObject();
+                    if(selectedObject && selectedObject->getSecondType() == Object::Text_Object)
+                    {
+                        auto textObject = TextObject::Cast(selectedObject);
+                        textObject->getText().setFont(
+                            m_EditorContext->getCurrentResourceManager()->getFontHolder()->getFont(
+                                fontTable[i]));
+                        textObject->setFont(fontTable[i]);
+                    }
+                    else
+                    {
+                        worldBuilder->addObject(Object::Text_Object,
+                                                fontTable[i],
+                                                m_EditorContext->getNewGameObjectPosition());
+                    }
                 }
             }
         }

@@ -102,7 +102,7 @@ namespace nero
 
                     char layer_name[100];
                     string::fillCharArray(layer_name, sizeof(layer_name), objectLayer->getName());
-                    ImGui::SetNextItemWidth(118.f);
+                    ImGui::SetNextItemWidth(ImGui::GetWindowContentRegionWidth() - 55.f);
                     itemId = "##layer_name" + toString(objectLayer->getObjectId());
                     ImGui::InputText(itemId.c_str(), layer_name, sizeof(layer_name));
 
@@ -125,10 +125,16 @@ namespace nero
         switch(type)
         {
             case Object::Sprite_Object:
-                return {
-                    ImVec4(0.3f, 0.6f, 0.5f, 0.5f),
-                    ImVec4(0.3f, 0.6f, 0.5f, 1.f),
-                };
+                return {ImVec4(0.f, 0.698f, 1.f, 1.f), ImVec4(0.f, 0.698f, 1.f, 1.f)};
+
+            case Object::Light_Object:
+                return {ImVec4(1.f, 0.497f, 0.f, 1.f), ImVec4(1.f, 0.497f, 0.f, 1.f)};
+
+            case Object::Animation_Object:
+                return {ImVec4(0.630f, 0.234f, 0.692f, 1.f), ImVec4(0.630f, 0.234f, 0.692f, 1.f)};
+
+            case Object::Text_Object:
+                return {ImVec4(0.f, 0.834f, 0.790f, 1.f), ImVec4(0.f, 0.834f, 0.790f, 1.f)};
 
             default:
                 return {ImGui::GetStyle().Colors[ImGuiCol_FrameBg],

@@ -355,11 +355,11 @@ namespace nero
 
         if(mouse.button == sf::Mouse::Left && !isPressed && m_SelectedLayer && m_SelectedObject)
         {
-            if(!m_RightSelection)
-            {
-                m_SelectedObject = nullptr;
-                m_UpdateUndo();
-            }
+            // if(!m_RightSelection)
+            //{
+            m_SelectedObject = nullptr;
+            m_UpdateUndo();
+            //}
         }
     }
 

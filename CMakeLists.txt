@@ -226,5 +226,5 @@ file(GLOB_RECURSE DESIGN_DOCUMENTATION_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/.gitignore"
     "${CMAKE_CURRENT_SOURCE_DIR}/copyright.txt"
     "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-add_custom_target(DesignDoc
+add_custom_target(ProjectDoc
     SOURCES ${DESIGN_DOCUMENTATION_FILES})
