@@ -141,78 +141,7 @@ namespace nero
                                                            ImGuiTreeNodeFlags_DefaultOpen |
                                                                ImGuiWindowFlags_NoScrollWithMouse))
                                 {
-                                    auto  animationObject = AnimationObject::Cast(selectedObject);
-                                    auto  sequenceMap     = animationObject->getSequenceMap();
-                                    float wording_width   = 70.f;
-                                    float input_width = ImGui::GetWindowContentRegionWidth() - 70.f;
-
-                                    for(auto it = sequenceMap.rbegin(); it != sequenceMap.rend();
-                                        it++)
-                                    {
-                                        ImGui::BeginChild(it->first.c_str(),
-                                                          ImVec2(0.f, 150.f),
-                                                          true);
-
-                                        // Sequence Name
-                                        ImGui::Text("Sequence");
-                                        ImGui::SameLine(wording_width);
-                                        ImGui::SetNextItemWidth(input_width);
-                                        char* sequenceName = const_cast<char*>(it->first.c_str());
-                                        std::string nameId =
-                                            std::string("##") + it->first + "_name";
-                                        ImGui::InputText(nameId.c_str(),
-                                                         sequenceName,
-                                                         sizeof(sequenceName),
-                                                         ImGuiInputTextFlags_ReadOnly);
-                                        ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
-                                        // Looping
-                                        ImGui::Text("Loop");
-                                        ImGui::SameLine(wording_width);
-                                        ImGui::SetNextItemWidth(input_width);
-                                        bool        loopSequence = it->second.getLoop();
-                                        std::string loopId =
-                                            std::string("##") + it->first + "_loop";
-
-                                        ImGui::Checkbox(loopId.c_str(), &loopSequence);
-                                        if(ImGui::IsItemEdited())
-                                        {
-                                            it->second.setLoop(loopSequence);
-                                        }
-                                        ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
-                                        // Update framrate
-                                        // Looping
-                                        ImGui::Text("Framerate");
-                                        ImGui::SameLine(wording_width);
-                                        ImGui::SetNextItemWidth(input_width);
-                                        ImGui::PushID(
-                                            std::string(it->first + "_framerate").c_str());
-                                        int framerate = 1.f / it->second.getFrameRate();
-                                        ImGui::InputInt("##", &framerate);
-                                        if(ImGui::IsItemEdited())
-                                        {
-                                            it->second.setFrameRate(1.f / framerate);
-                                        }
-                                        ImGui::PopID();
-                                        ImGui::Dummy(ImVec2(0.0f, 5.0f));
-
-                                        // Select sequence
-                                        ImGui::PushID(std::string(it->first + "_select").c_str());
-                                        if(ImGui::Button("Select", ImVec2(70.f, 0.f)))
-                                        {
-                                            animationObject->setSequence(it->first);
-                                            // TODO
-                                            // animationObject->setFrameRate();
-                                        }
-                                        ImGui::PopID();
-
-                                        ImGui::Dummy(ImVec2(0.0f, 10.0f));
-
-                                        ImGui::EndChild();
-                                    }
-
-                                    // ImGui::EndChild();
+                                    renderAnimationProperty(AnimationObject::Cast(component));
                                 }
                             }
                             break;
@@ -481,7 +410,7 @@ namespace nero
 
         ImGui::Text("Outline Color");
         ImGui::SameLine(wording_width);
-        ImGui::SetNextItemWidth(input_width - 30.f);
+        ImGui::SetNextItemWidth(input_width);
         sf::Color outlineColor = textObject->getOutlineColor();
         ImVec4    thicknessColor(outlineColor.r / 255.f,
                               outlineColor.g / 255.f,
@@ -555,8 +484,65 @@ namespace nero
         ImGui::EndChild();
     }
 
-    void GameObjectPropertyView::renderAnimationProperty()
+    void GameObjectPropertyView::renderAnimationProperty(AnimationObject::Ptr animationObject)
     {
+        auto& sequenceMap   = animationObject->getSequenceMap();
+        float wording_width = 100.f;
+        float input_width   = ImGui::GetWindowContentRegionWidth() - wording_width - 10.f;
+
+        for(auto it = sequenceMap.begin(); it != sequenceMap.end(); it++)
+        {
+            ImGui::BeginChild(it->first.c_str(), ImVec2(0.f, 120.f), true);
+
+            // Sequence Name
+            ImGui::Text("Sequence");
+            ImGui::SameLine(wording_width);
+            ImGui::SetNextItemWidth(input_width);
+            char sequenceName[256];
+            string::fillCharArray(sequenceName, sizeof(it->first), it->first);
+            std::string sequenceNameId = std::string("##") + it->first + "_name";
+            ImGui::InputText(sequenceNameId.c_str(),
+                             sequenceName,
+                             sizeof(sequenceName),
+                             ImGuiInputTextFlags_ReadOnly);
+            ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+            ImGui::Text("Framerate");
+            ImGui::SameLine(wording_width);
+            ImGui::SetNextItemWidth(input_width);
+            std::string framerateId = std::string("##") + sequenceName + "_framerate";
+            float       framerate   = 1.f / it->second.getFrameRate();
+            ImGui::InputFloat("##framerate", &framerate, 0.5f, 1.0f, "%.3f");
+            if(ImGui::IsItemEdited())
+            {
+                animationObject->setSequence(it->first);
+                animationObject->setFrameRate(1.f / framerate);
+            }
+            ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+            // Looping
+            ImGui::Text("Loop");
+            ImGui::SameLine(wording_width);
+            ImGui::SetNextItemWidth(input_width);
+            bool        loopSequence = it->second.getLoop();
+            std::string loopId       = std::string("##") + it->first + "_loop";
+
+            ImGui::Checkbox(loopId.c_str(), &loopSequence);
+            if(ImGui::IsItemEdited())
+            {
+                animationObject->setSequence(it->first);
+                animationObject->setLoop(loopSequence);
+            }
+            ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 70.f);
+            std::string selectButton = std::string("Select##") + it->first + "_select";
+            if(ImGui::Button(selectButton.c_str(), ImVec2(70.f, 0.f)))
+            {
+                animationObject->setSequence(it->first);
+            }
+            ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+            ImGui::EndChild();
+        }
     }
 
     void GameObjectPropertyView::renderLightProperty()
