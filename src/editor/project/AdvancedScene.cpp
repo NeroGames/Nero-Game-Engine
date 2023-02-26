@@ -309,6 +309,12 @@ namespace nero
         if(!m_LevelBuilder)
             return;
 
+        if(m_CreateCppGameSceneCallback.empty())
+        {
+            // TODO notify
+            return;
+        }
+
         // Create Game Scene
         m_GameScene                 = m_CreateCppGameSceneCallback(m_SceneContext);
 

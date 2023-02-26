@@ -77,7 +77,33 @@ namespace nero
 
     void LevelBuilder::removeChunk()
     {
-        // TODO remove chunk
+        // We should always have one chunk
+        if(m_ChunkTable.size() == 1)
+            return;
+
+        for(auto it = m_ChunkTable.begin(); it != m_ChunkTable.end(); it++)
+        {
+            if(m_SelectedChunk->getChunkId() == (*it)->getChunkId())
+            {
+                // Select the next
+                if(it == m_ChunkTable.begin())
+                    m_SelectedChunk = *(it + 1);
+                else
+                    m_SelectedChunk = *(it - 1);
+
+                // delete file from disk
+                auto chunkFile =
+                    file::getPath({m_LevelContext.levelDirectory, "chunk", (*it)->getChunkName()},
+                                  StringPool.EXT_NERO);
+
+                file::removeFile(chunkFile);
+
+                // remove level builder from memory
+                m_ChunkTable.erase(it);
+
+                break;
+            }
+        }
     }
 
     std::vector<ChunkBuilder::Ptr>& LevelBuilder::getChunkTable()
@@ -102,6 +128,9 @@ namespace nero
 
     void LevelBuilder::saveGameLevel()
     {
+        // Delete all chunk first (necessary when chunks are renamed)
+        file::removeDirectory(file::getPath({m_LevelContext.levelDirectory, "chunk"}));
+        file::createDirectory(file::getPath({m_LevelContext.levelDirectory, "chunk"}));
         // chunk
         for(auto chunk : m_ChunkTable)
         {

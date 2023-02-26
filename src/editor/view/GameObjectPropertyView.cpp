@@ -246,6 +246,7 @@ namespace nero
         ImGui::SetNextItemWidth(input_width);
         if(ImGui::BeginCombo("##object_category", {}, ImGuiComboFlags()))
         {
+            // TODO
             ImGui::EndCombo();
         }
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
@@ -383,7 +384,7 @@ namespace nero
         ImGui::SetNextItemWidth(input_width);
         std::string textureName = spriteObject->getTextureName();
         char        spriteTexture[256];
-        string::fillCharArray(spriteTexture, textureName.size(), textureName);
+        string::fillCharArray(spriteTexture, sizeof(spriteTexture), textureName);
         ImGui::InputText("##sprite_texture",
                          spriteTexture,
                          sizeof(spriteTexture),
@@ -405,7 +406,7 @@ namespace nero
         ImGui::SetNextItemWidth(input_width);
         std::string content = textObject->getContent();
         char        contentChar[5000];
-        string::fillCharArray(contentChar, content.size(), content);
+        string::fillCharArray(contentChar, sizeof(contentChar), content);
         ImGui::InputText("##sprite_texture", contentChar, sizeof(contentChar));
         if(ImGui::IsItemEdited())
         {
@@ -526,7 +527,7 @@ namespace nero
             ImGui::SameLine(wording_width);
             ImGui::SetNextItemWidth(input_width);
             char sequenceName[256];
-            string::fillCharArray(sequenceName, sizeof(it->first), it->first);
+            string::fillCharArray(sequenceName, sizeof(sequenceName), it->first);
             std::string sequenceNameId = std::string("##") + it->first + "_name";
             ImGui::InputText(sequenceNameId.c_str(),
                              sequenceName,

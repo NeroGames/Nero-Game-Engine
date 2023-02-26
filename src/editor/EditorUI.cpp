@@ -273,18 +273,22 @@ namespace nero
         m_ResourceSelectionWindow.render();
         m_EditorUtilityWindow.render();
 
-        if(editorMode == EditorMode::World_Builder)
+        if(m_EditorContext->getAdvancedScene())
         {
-            m_WorldChunkWindow.render();
             m_GameLevelWindow.render();
         }
 
-        if(editorMode == EditorMode::Screen_Builder)
+        if(m_EditorContext->getLevelBuilder())
+        {
+            m_WorldChunkWindow.render();
+        }
+
+        if(editorMode != EditorMode::World_Builder)
         {
             // m_GameScreenWindow.render();
         }
 
-        if(editorMode != EditorMode::None)
+        if(m_EditorContext->getLevelBuilder())
         {
             m_ObjectLayerWindow.render();
         }
@@ -598,13 +602,13 @@ namespace nero
                 m_EditorProxy->openGameLevel(levelName);
             }
 
-            /*BTManager::startTask(
+            BTManager::startTask(
                 [this](BackgroundTask::Ptr backgroundTask)
                 {
                     GameProject::compileProject(
                         m_EditorContext->getGameProject()->getProjectDirectory(),
                         backgroundTask);
-                });*/
+                });
         };
 
         m_EditorProxy->m_OpenGameLevelCallback = [this](const std::string levelName)

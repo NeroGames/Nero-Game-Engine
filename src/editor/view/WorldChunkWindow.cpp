@@ -32,13 +32,11 @@ namespace nero
         ImGui::Separator();
         ImGui::Dummy(ImVec2(0.f, 2.f));
 
-        float width = 90.f;
-
         ImGui::Dummy(ImVec2(0.f, 2.f));
 
-        ImVec2 button_size = ImVec2(width, 0.f);
+        ImVec2 buttonSize = ImVec2((ImGui::GetWindowContentRegionWidth() - 8.f) / 2.f, 0.f);
 
-        if(ImGui::Button("Add##add_world_chunk", button_size))
+        if(ImGui::Button("Add##add_world_chunk", buttonSize))
         {
             auto levelBuilder = m_EditorContext->getLevelBuilder();
 
@@ -51,9 +49,15 @@ namespace nero
 
         ImGui::SameLine();
 
-        if(ImGui::Button("Remove##remove_world_chunk", button_size))
+        if(ImGui::Button("Remove##remove_world_chunk", buttonSize))
         {
-            // removeWorldChunk();
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
+
+            if(levelBuilder && m_EditorContext->getEditorMode() == EditorMode::World_Builder &&
+               m_EditorContext->getBuilderMode() == BuilderMode::Object)
+            {
+                levelBuilder->removeChunk();
+            }
         }
 
         ImGui::Dummy(ImVec2(0.f, 5.f));
@@ -91,7 +95,7 @@ namespace nero
 
                 char chunk_name[100];
                 string::fillCharArray(chunk_name, sizeof(chunk_name), worldChunk->getChunkName());
-                ImGui::SetNextItemWidth(118.f);
+                ImGui::SetNextItemWidth(ImGui::GetWindowContentRegionWidth() - 55.f);
                 itemId = "##chunk_name" + toString(worldChunk->getChunkId());
                 ImGui::InputText(itemId.c_str(), chunk_name, sizeof(chunk_name));
 
