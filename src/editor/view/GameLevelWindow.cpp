@@ -100,6 +100,11 @@ namespace nero
             {
                 m_EditorContext->setSelectedGameLevelName(name);
             }
+            if(ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+            {
+                m_EditorContext->getEditorProxy()->openGameLevel(
+                    m_EditorContext->getSelectedGameLevelName());
+            }
             popGameLevelStyle();
 
             printSameLine();

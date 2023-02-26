@@ -181,16 +181,22 @@ namespace nero
     std::string AnimationHolder::getDefaultSequence(std::string animationName) const
     {
         auto foundAnimation = m_SequenceMap.find(animationName);
-        auto foundSequence  = foundAnimation->second.find("idle");
 
+        // Try idle
+        auto foundSequence  = foundAnimation->second.find("idle");
         if(foundSequence != foundAnimation->second.end())
         {
             return "idle";
         }
-        else
+
+        // Try main animation name
+        foundSequence = foundAnimation->second.find(animationName);
+        if(foundSequence != foundAnimation->second.end())
         {
-            return foundAnimation->second.begin()->first;
+            return animationName;
         }
+
+        return foundAnimation->second.begin()->first;
     }
 
     void AnimationHolder::clear()

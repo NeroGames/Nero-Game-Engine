@@ -553,8 +553,6 @@ namespace nero
 
     bool WorldBuilder::mergeLayerUp(int id)
     {
-        nero_log("up up my layer");
-
         for(auto it = m_LayerTable.begin(); it != m_LayerTable.end(); it++)
         {
             if((*it)->getId() == id && it != (m_LayerTable.end() - 1))

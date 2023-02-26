@@ -6,6 +6,8 @@
 // Nero
 #include <Nero/editor/view/SceneGraphView.h>
 #include <Nero/editor/EditorConstant.h>
+// Boost
+#include <boost/range/adaptor/reversed.hpp>
 // IconFont
 #include <iconfont/IconsFontAwesome5.h>
 ////////////////////////////////////////////////////////////
@@ -53,7 +55,8 @@ namespace nero
                     int selectedWorldChunkId = levelBuilder->getSelectedChunk()->getChunkId();
 
                     int loop_chunk           = 0;
-                    for(const auto& worldChunk : levelBuilder->getChunkTable())
+                    for(const auto& worldChunk :
+                        boost::adaptors::reverse(levelBuilder->getChunkTable()))
                     {
                         ImGuiTreeNodeFlags node_flags =
                             ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
@@ -89,8 +92,8 @@ namespace nero
                                 worldChunk->getWorldBuilder()->getSelectedLayer()->getObjectId();
 
                             int loop_layer = 0;
-                            for(const auto& objectLayer :
-                                worldChunk->getWorldBuilder()->getLayerTable())
+                            for(const auto& objectLayer : boost::adaptors::reverse(
+                                    worldChunk->getWorldBuilder()->getLayerTable()))
                             {
                                 ImGuiTreeNodeFlags node_flags =
                                     ImGuiTreeNodeFlags_OpenOnArrow |
@@ -137,7 +140,8 @@ namespace nero
                                     }
 
                                     int loop_object = 0;
-                                    for(const auto& gameObject : *objectLayer->getAllChild())
+                                    for(const auto& gameObject :
+                                        boost::adaptors::reverse(*objectLayer->getAllChild()))
                                     {
                                         ImGuiTreeNodeFlags node_flags = ImGuiTreeNodeFlags_None;
                                         node_flags                    |= ImGuiTreeNodeFlags_Leaf |

@@ -6,6 +6,8 @@
 // Nero
 #include <Nero/editor/view/ObjectLayerWindow.h>
 #include <Nero/editor/EditorConstant.h>
+// Boost
+#include <boost/range/adaptor/reversed.hpp>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -32,13 +34,12 @@ namespace nero
         ImGui::Separator();
         ImGui::Dummy(ImVec2(0.f, 2.f));
 
-        float width = 90.f;
-
         ImGui::Dummy(ImVec2(0.f, 2.f));
 
-        ImVec2 button_size = ImVec2(width, 0.f);
+        ImVec2 smallButtonSize = ImVec2((ImGui::GetWindowContentRegionWidth() - 24.f) / 4.f, 0.f);
+        ImVec2 buttonSize      = ImVec2((ImGui::GetWindowContentRegionWidth() - 8.f) / 2.f, 0.f);
 
-        if(ImGui::Button("Add##add_object_layer", button_size))
+        if(ImGui::Button("Add##add_object_layer", smallButtonSize))
         {
             auto levelBuilder = m_EditorContext->getLevelBuilder();
 
@@ -50,7 +51,36 @@ namespace nero
 
         ImGui::SameLine();
 
-        if(ImGui::Button("Remove##remove_object_layer", button_size))
+        if(ImGui::Button("Up##moveup_object_layer", smallButtonSize))
+        {
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
+
+            if(!levelBuilder)
+                return;
+
+            auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
+
+            worldBuilder->moveLayerUp(worldBuilder->getSelectedLayer()->getObjectId());
+        }
+
+        ImGui::SameLine();
+
+        if(ImGui::Button("Down##movedown_object_layer", smallButtonSize))
+        {
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
+
+            if(!levelBuilder)
+                return;
+
+            auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
+
+            worldBuilder->moveLayerDown(worldBuilder->getSelectedLayer()->getObjectId());
+        }
+
+        ImGui::SameLine();
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.000f));
+        if(ImGui::Button("Del##remove_object_layer", smallButtonSize))
         {
             auto levelBuilder = m_EditorContext->getLevelBuilder();
 
@@ -60,6 +90,33 @@ namespace nero
             auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
 
             worldBuilder->deleteLayer(worldBuilder->getSelectedLayer()->getObjectId());
+        }
+        ImGui::PopStyleColor();
+
+        if(ImGui::Button("Merge Up", buttonSize))
+        {
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
+
+            if(!levelBuilder)
+                return;
+
+            auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
+
+            worldBuilder->mergeLayerUp(worldBuilder->getSelectedLayer()->getObjectId());
+        }
+
+        ImGui::SameLine();
+
+        if(ImGui::Button("Merge Down", buttonSize))
+        {
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
+
+            if(!levelBuilder)
+                return;
+
+            auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
+
+            worldBuilder->mergeLayerDown(worldBuilder->getSelectedLayer()->getObjectId());
         }
 
         ImGui::Dummy(ImVec2(0.f, 5.f));
@@ -76,7 +133,8 @@ namespace nero
             {
                 m_SelectedObjectLayerId = worldBuilder->getSelectedLayer()->getObjectId();
 
-                for(const auto& objectLayer : worldBuilder->getLayerTable())
+                for(const auto& objectLayer :
+                    boost::adaptors::reverse(worldBuilder->getLayerTable()))
                 {
                     std::string itemId = "##select_layer" + toString(objectLayer->getObjectId());
                     ImGui::RadioButton(itemId.c_str(),

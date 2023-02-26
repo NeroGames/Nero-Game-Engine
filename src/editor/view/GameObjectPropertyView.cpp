@@ -206,7 +206,7 @@ namespace nero
 
     void GameObjectPropertyView::renderGeneralProperty(Object::Ptr selectedObject)
     {
-        ImGui::BeginChild("object_general", ImVec2(0.f, 110.f), true);
+        ImGui::BeginChild("object_general", ImVec2(0.f, 140.f), true);
         ImGui::Dummy(ImVec2(0.0f, 5.0f));
         float wording_width = 70.f;
         float input_width   = ImGui::GetWindowContentRegionWidth() - 70.f;
@@ -247,6 +247,33 @@ namespace nero
         if(ImGui::BeginCombo("##object_category", {}, ImGuiComboFlags()))
         {
             ImGui::EndCombo();
+        }
+        ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+        ImVec2 buttonSize = ImVec2((ImGui::GetWindowContentRegionWidth() - 8.f) / 2.f, 0.f);
+
+        if(ImGui::Button("Move Up", buttonSize))
+        {
+            if(selectedObject)
+            {
+                m_EditorContext->getLevelBuilder()
+                    ->getSelectedChunk()
+                    ->getWorldBuilder()
+                    ->moveObjectUp();
+            }
+        }
+
+        ImGui::SameLine();
+
+        if(ImGui::Button("Move Down", buttonSize))
+        {
+            if(selectedObject)
+            {
+                m_EditorContext->getLevelBuilder()
+                    ->getSelectedChunk()
+                    ->getWorldBuilder()
+                    ->moveObjectDown();
+            }
         }
         ImGui::EndChild();
     }
