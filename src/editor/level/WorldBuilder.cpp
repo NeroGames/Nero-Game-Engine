@@ -1481,17 +1481,14 @@ namespace nero
                             lightManager->createLightPointEmission();
                         sf::Texture& light_map = m_ResourceManager->getLightmapHolder()->getTexture(
                             lightIcon->getLightmapName());
+
+                        point_light->setTexture(light_map);
                         point_light->setOrigin(sf::Vector2f(light_map.getSize().x * 0.5f,
                                                             light_map.getSize().y * 0.5f));
-                        point_light->setTexture(light_map);
-                        // TODO
-                        // point_light->setScale(lightIcon->getScale());
-                        point_light->setScale(6.f, 6.f);
-                        // TODO
-                        // point_light->setColor(lightIcon->getColor());
-                        point_light->setColor(sf::Color::White);
                         point_light->setPosition(lightIcon->getPosition());
-
+                        point_light->setScale(lightIcon->getScale());
+                        point_light->setRotation(lightIcon->getRotation());
+                        point_light->setColor(lightIcon->getColor());
                         light_object->setLight(point_light);
 
                         light_object->setCloneCallback(
@@ -1504,6 +1501,9 @@ namespace nero
                                         lightIcon->getLightmapName());
                                 point_light->setOrigin(sf::Vector2f(light_map.getSize().x * 0.5f,
                                                                     light_map.getSize().y * 0.5f));
+                                point_light->setScale(lightIcon->getScale());
+                                point_light->setRotation(lightIcon->getRotation());
+                                point_light->setColor(lightIcon->getColor());
                                 point_light->setTexture(light_map);
 
                                 return point_light;

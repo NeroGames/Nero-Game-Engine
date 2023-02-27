@@ -14,7 +14,7 @@ namespace nero
         , m_ChunkName(StringPool.BLANK)
         , m_Visible(false)
         , m_Selected(false)
-        , m_AutoLoad(false)
+        , m_LoadWithLevel(false)
         , m_WorldBuilder(std::make_shared<WorldBuilder>())
     {
     }
@@ -43,9 +43,9 @@ namespace nero
         return m_Selected;
     }
 
-    bool ChunkBuilder::isAutoLoad() const
+    bool ChunkBuilder::loadWithLevel() const
     {
-        return m_AutoLoad;
+        return m_LoadWithLevel;
     }
 
     void ChunkBuilder::setChunkId(const int& chunkId)
@@ -68,9 +68,9 @@ namespace nero
         m_Selected = selected;
     }
 
-    void ChunkBuilder::setAutoLoad(const bool& autoLoad)
+    void ChunkBuilder::setLoadWithLevel(const bool& laodWithLevel)
     {
-        m_AutoLoad = autoLoad;
+        m_LoadWithLevel = laodWithLevel;
     }
 
     WorldBuilder::Ptr ChunkBuilder::getWorldBuilder() const
@@ -80,25 +80,25 @@ namespace nero
 
     nlohmann::json ChunkBuilder::saveChunk() const
     {
-        nlohmann::json chunkSaved = nlohmann::json::object();
+        nlohmann::json chunkSaved     = nlohmann::json::object();
 
-        chunkSaved["chunk_id"]    = m_ChunkId;
-        chunkSaved["chunk_name"]  = m_ChunkName;
-        chunkSaved["visible"]     = m_Visible;
-        chunkSaved["selected"]    = m_Selected;
-        chunkSaved["auto_load"]   = m_AutoLoad;
-        chunkSaved["game_world"]  = m_WorldBuilder->saveScene();
+        chunkSaved["chunk_id"]        = m_ChunkId;
+        chunkSaved["chunk_name"]      = m_ChunkName;
+        chunkSaved["visible"]         = m_Visible;
+        chunkSaved["selected"]        = m_Selected;
+        chunkSaved["load_with_level"] = m_LoadWithLevel;
+        chunkSaved["game_world"]      = m_WorldBuilder->saveScene();
 
         return chunkSaved;
     }
 
     void ChunkBuilder::loadChunk(const nlohmann::json& chunkSaved)
     {
-        m_ChunkId   = chunkSaved["chunk_id"];
-        m_ChunkName = chunkSaved["chunk_name"];
-        m_Visible   = chunkSaved["visible"];
-        m_Selected  = chunkSaved["selected"];
-        m_AutoLoad  = chunkSaved["auto_load"];
+        m_ChunkId       = chunkSaved["chunk_id"];
+        m_ChunkName     = chunkSaved["chunk_name"];
+        m_Visible       = chunkSaved["visible"];
+        m_Selected      = chunkSaved["selected"];
+        m_LoadWithLevel = chunkSaved["load_with_level"];
 
         m_WorldBuilder->loadScene(chunkSaved["game_world"]);
     }

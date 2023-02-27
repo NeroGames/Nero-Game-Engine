@@ -25,13 +25,13 @@ namespace nero
         void              setChunkName(const std::string& chunkName);
         void              setVisible(const bool& visible);
         void              setSelected(const bool& selected);
-        void              setAutoLoad(const bool& autoLoad);
+        void              setLoadWithLevel(const bool& laodWithLevel);
         // get
         int               getChunkId() const;
         std::string       getChunkName() const;
         bool              isVisible() const;
         bool              isSelected() const;
-        bool              isAutoLoad() const;
+        bool              loadWithLevel() const;
         WorldBuilder::Ptr getWorldBuilder() const;
         //
         nlohmann::json    saveChunk() const;
@@ -43,7 +43,7 @@ namespace nero
         std::string       m_ChunkName;
         bool              m_Visible;
         bool              m_Selected;
-        bool              m_AutoLoad;
+        bool              m_LoadWithLevel;
         // game world
         WorldBuilder::Ptr m_WorldBuilder;
     };

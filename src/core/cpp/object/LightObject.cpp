@@ -10,8 +10,8 @@ namespace nero
 {
     LightObject::LightObject()
         : m_Lightmap(StringPool.BLANK)
-        , m_Color(sf::Color::White)
         , m_Light(nullptr)
+        , m_Color(sf::Color::White)
     {
         setFirstType(Object::Light_Object);
         setSecondType(Object::Light_Object);
@@ -94,11 +94,6 @@ namespace nero
     void LightObject::updateObject(sf::Time time_step)
     {
         m_Sprite.setScale(1.f, 1.f);
-
-        /*if(m_Light)
-        {
-                m_Light->setPosition(getPosition());
-        }*/
     }
 
     void LightObject::drawObject(sf::RenderTarget& target, sf::RenderStates states) const

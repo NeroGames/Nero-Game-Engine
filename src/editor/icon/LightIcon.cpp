@@ -81,6 +81,16 @@ namespace nero
         return light_icon;
     }
 
+    void LightIcon::setColor(const sf::Color& color)
+    {
+        m_LightColor = color;
+    }
+
+    const sf::Color& LightIcon::getColor() const
+    {
+        return m_LightColor;
+    }
+
     nlohmann::json LightIcon::toJson() const
     {
         nlohmann::json iconJson;
@@ -114,29 +124,4 @@ namespace nero
 
         return std::static_pointer_cast<LightIcon>(object);
     }
-
-    void LightIcon::scale(const sf::Vector2f& factor)
-    {
-    }
-
-    void LightIcon::scale(float factorX, float factorY)
-    {
-    }
-
-    void LightIcon::setScale(float factorX, float factorY)
-    {
-    }
-
-    void LightIcon::setScale(const sf::Vector2f& factors)
-    {
-    }
-
-    void LightIcon::rotate(float angle)
-    {
-    }
-
-    void LightIcon::setRotation(float angle)
-    {
-    }
-
 } // namespace nero

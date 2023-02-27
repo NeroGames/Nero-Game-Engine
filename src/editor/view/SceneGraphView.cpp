@@ -321,12 +321,21 @@ namespace nero
             }
         }
 
-        if(ImGui::CollapsingHeader("World Chunk"))
+        if(ImGui::CollapsingHeader("World Chunk", ImGuiTreeNodeFlags_DefaultOpen))
         {
-        }
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
 
-        if(ImGui::CollapsingHeader("Object Layer"))
-        {
+            if(levelBuilder)
+            {
+                ImGui::BeginChild("world_chunk", ImVec2(0.f, 35.f), true);
+                bool loadWithLevel = levelBuilder->getSelectedChunk()->loadWithLevel();
+                ImGui::Checkbox("Loader With Game Level##load_chunk", &loadWithLevel);
+                if(ImGui::IsItemEdited())
+                {
+                    levelBuilder->getSelectedChunk()->setLoadWithLevel(loadWithLevel);
+                }
+                ImGui::EndChild();
+            }
         }
     }
 } // namespace nero

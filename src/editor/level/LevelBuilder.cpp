@@ -58,7 +58,7 @@ namespace nero
                                    toString(chunkBuilder->getChunkId()));
         chunkBuilder->setSelected(false);
         chunkBuilder->setVisible(true);
-        chunkBuilder->setAutoLoad(false);
+        chunkBuilder->setLoadWithLevel(false);
 
         WorldBuilder::Ptr worldBuilder = chunkBuilder->getWorldBuilder();
         worldBuilder->setRenderContext(m_RenderContext);

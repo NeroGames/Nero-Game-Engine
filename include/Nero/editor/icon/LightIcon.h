@@ -24,32 +24,25 @@ namespace nero
       public:
         LightIcon();
 
-        void                   setSprite(const sf::Sprite& sprite);
-        const sf::Sprite&      getSprite() const;
-        virtual sf::FloatRect  getGlobalBounds() const;
-
-        void                   setLightmapName(const sf::String& lightmap);
-        std::string            getLightmapName() const;
-
-        virtual Object::Ptr    clone(sf::Vector2f& position) const;
-        virtual Object::Ptr    clone() const;
-
-        virtual nlohmann::json toJson() const;
-
-        virtual void           scale(const sf::Vector2f& factor);
-        virtual void           scale(float factorX, float factorY);
-        virtual void           setScale(float factorX, float factorY);
-        virtual void           setScale(const sf::Vector2f& factors);
-        virtual void           rotate(float angle);
-        virtual void           setRotation(float angle);
+        void                     setSprite(const sf::Sprite& sprite);
+        const sf::Sprite&        getSprite() const;
+        virtual sf::FloatRect    getGlobalBounds() const override;
+        void                     setLightmapName(const sf::String& lightmap);
+        std::string              getLightmapName() const;
+        virtual Object::Ptr      clone(sf::Vector2f& position) const override;
+        virtual Object::Ptr      clone() const override;
+        virtual nlohmann::json   toJson() const override;
+        virtual void             setColor(const sf::Color& color) override;
+        virtual const sf::Color& getColor() const override;
 
       private:
-        virtual void drawObject(sf::RenderTarget& target, sf::RenderStates states) const;
+        virtual void drawObject(sf::RenderTarget& target, sf::RenderStates states) const override;
 
       private:
         sf::Sprite   m_Sprite;
         sf::String   m_LightmapName;
         sf::Vector2f m_ParentLastPosition;
+        sf::Color    m_LightColor;
     };
 } // namespace nero
 #endif // LIGHTICON_H
