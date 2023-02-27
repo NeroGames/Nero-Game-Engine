@@ -39,6 +39,7 @@ namespace nero
         // Game Level
         void createGameLevel(const Parameter& levelParameter) const;
         void openGameLevel(const std::string levelName) const;
+        void removeGameLevel(const std::string levelName) const;
         // Play Mode
         void playGameScene() const;
         void stopPlayGameScene() const;
@@ -63,6 +64,7 @@ namespace nero
         // Game Level
         std::function<void(const Parameter&)>                      m_CreateGameLevelCallback;
         std::function<void(const std::string&)>                    m_OpenGameLevelCallback;
+        std::function<void(const std::string&)>                    m_RemoveGameLevelCallback;
         // Game Scene
         std::function<void()>                                      m_PlayGameSceneCallback;
         std::function<void()>                                      m_StopPlayGameSceneCallback;

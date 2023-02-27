@@ -11,6 +11,8 @@ namespace nero
 {
     GameObjectPropertyView::GameObjectPropertyView(EditorContext::Ptr editorContext)
         : UIComponent(std::move(editorContext))
+        , m_GameObjectColor(1.f, 1.f, 1.f, 1.f)
+        , m_TextOutlineColor(1.f, 1.f, 1.f, 1.f)
     {
     }
 
@@ -351,22 +353,22 @@ namespace nero
         float wording_width = 70.f;
         ImGui::Text("Color");
         ImGui::SameLine(wording_width);
-        ImVec4 colorPickerColor(1.f, 1.f, 1.f, 1.f);
+
         if(selectedObject)
         {
             sf::Color color = selectedObject->getColor();
-            colorPickerColor =
+            m_GameObjectColor =
                 ImVec4(color.r / 255.f, color.g / 255.f, color.g / 255.f, color.a / 255.f);
         }
         ImGui::ColorEdit4("##color",
-                          &colorPickerColor.x,
+                          &m_GameObjectColor.x,
                           ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_NoDragDrop);
         if(selectedObject && ImGui::IsItemEdited())
         {
-            selectedObject->setColor(sf::Color(static_cast<sf::Uint8>(colorPickerColor.x * 255),
-                                               static_cast<sf::Uint8>(colorPickerColor.y * 255),
-                                               static_cast<sf::Uint8>(colorPickerColor.z * 255),
-                                               static_cast<sf::Uint8>(colorPickerColor.w * 255)));
+            selectedObject->setColor(sf::Color(static_cast<sf::Uint8>(m_GameObjectColor.x * 255),
+                                               static_cast<sf::Uint8>(m_GameObjectColor.y * 255),
+                                               static_cast<sf::Uint8>(m_GameObjectColor.z * 255),
+                                               static_cast<sf::Uint8>(m_GameObjectColor.w * 255)));
         }
 
         ImGui::EndChild();
@@ -439,21 +441,20 @@ namespace nero
         ImGui::Text("Outline Color");
         ImGui::SameLine(wording_width);
         ImGui::SetNextItemWidth(input_width);
-        sf::Color outlineColor = textObject->getOutlineColor();
-        ImVec4    thicknessColor(outlineColor.r / 255.f,
-                              outlineColor.g / 255.f,
-                              outlineColor.g / 255.f,
-                              outlineColor.a / 255.f);
+        sf::Color color = textObject->getOutlineColor();
+        m_TextOutlineColor =
+            ImVec4(color.r / 255.f, color.g / 255.f, color.g / 255.f, color.a / 255.f);
 
         ImGui::ColorEdit4("##outlineColor",
-                          &thicknessColor.x,
+                          &m_TextOutlineColor.x,
                           ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_NoDragDrop);
         if(ImGui::IsItemEdited())
         {
-            textObject->setOutlineColor(sf::Color(static_cast<sf::Uint8>(thicknessColor.x * 255),
-                                                  static_cast<sf::Uint8>(thicknessColor.y * 255),
-                                                  static_cast<sf::Uint8>(thicknessColor.z * 255),
-                                                  static_cast<sf::Uint8>(thicknessColor.w * 255)));
+            textObject->setOutlineColor(
+                sf::Color(static_cast<sf::Uint8>(m_TextOutlineColor.x * 255),
+                          static_cast<sf::Uint8>(m_TextOutlineColor.y * 255),
+                          static_cast<sf::Uint8>(m_TextOutlineColor.z * 255),
+                          static_cast<sf::Uint8>(m_TextOutlineColor.w * 255)));
         }
         ImGui::Dummy(ImVec2(0.0f, 1.0f));
 

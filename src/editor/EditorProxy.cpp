@@ -63,6 +63,11 @@ namespace nero
         m_OpenGameLevelCallback(levelName);
     }
 
+    void EditorProxy::removeGameLevel(const std::string levelName) const
+    {
+        m_RemoveGameLevelCallback(levelName);
+    }
+
     void EditorProxy::openCodeEditor() const
     {
         m_OpenCodeEditorCallback();

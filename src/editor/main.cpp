@@ -22,6 +22,7 @@ int main()
     editor.run();
 
     // Stop Profiler
+    profiler::stopCapture();
     profiler::stopListen();
 
     return 0;

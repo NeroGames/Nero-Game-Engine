@@ -31,6 +31,7 @@ namespace nero
 
         const Animation::SequenceMap& getSequenceMap() const;
         void                          setSequence(std::string name);
+        const std::string             getCurrentSequence() const;
         void                          setFrameRate(float frameRate);
         void                          setLoop(bool flag);
         void                          verticalFlip();

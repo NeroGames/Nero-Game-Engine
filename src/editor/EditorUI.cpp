@@ -488,7 +488,6 @@ namespace nero
             advancedScene->setEditorCamera(m_EditorCamera);
             advancedScene->init();
             gameProject->loadLibrary();
-            gameProject->openEditor();
 
             // Update Editor window title
             m_WindowTitleCallback(gameProject->getProjectName());
@@ -601,14 +600,6 @@ namespace nero
                 m_EditorContext->setSelectedGameLevelName(levelName);
                 m_EditorProxy->openGameLevel(levelName);
             }
-
-            BTManager::startTask(
-                [this](BackgroundTask::Ptr backgroundTask)
-                {
-                    GameProject::compileProject(
-                        m_EditorContext->getGameProject()->getProjectDirectory(),
-                        backgroundTask);
-                });
         };
 
         m_EditorProxy->m_OpenGameLevelCallback = [this](const std::string levelName)
@@ -628,6 +619,20 @@ namespace nero
             }
             advancedScene->openLevel(levelName);
             m_EditorContext->setOpenedGameLevelName(levelName);
+        };
+
+        m_EditorProxy->m_RemoveGameLevelCallback = [this](const std::string levelName)
+        {
+            auto advancedScene = m_EditorContext->getAdvancedScene();
+
+            // Advanced Scene not available
+            if(!advancedScene)
+                return;
+
+            if(advancedScene->removeLevel(levelName))
+            {
+                m_EditorProxy->compileProject();
+            }
         };
 
         m_EditorProxy->m_OpenCodeEditorCallback = [this]()

@@ -49,7 +49,8 @@ namespace nero
 
         ImGui::SameLine();
 
-        if(ImGui::Button("Remove##remove_world_chunk", buttonSize))
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.000f));
+        if(ImGui::Button("Delete##remove_world_chunk", buttonSize))
         {
             auto levelBuilder = m_EditorContext->getLevelBuilder();
 
@@ -59,6 +60,7 @@ namespace nero
                 levelBuilder->removeChunk();
             }
         }
+        ImGui::PopStyleColor();
 
         ImGui::Dummy(ImVec2(0.f, 5.f));
 

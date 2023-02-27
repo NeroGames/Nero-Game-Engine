@@ -40,6 +40,7 @@ namespace nero
         const sf::Color&   getColor() const;
 
         const SequenceMap& getSequenceMap() const;
+        const std::string  getCurrentSequence() const;
         void               setFrameRate(float frameRate);
         void               setLoop(bool flag);
 

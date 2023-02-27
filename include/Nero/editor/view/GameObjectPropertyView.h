@@ -30,6 +30,10 @@ namespace nero
         void renderTextProperty(TextObject::Ptr textObject);
         void renderAnimationProperty(AnimationObject::Ptr animationObject);
         void renderLightProperty();
+
+      private:
+        ImVec4 m_GameObjectColor;
+        ImVec4 m_TextOutlineColor;
     };
 } // namespace nero
 #endif // GAMEOBJECTPROPERTYVIEW_H

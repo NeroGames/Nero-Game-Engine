@@ -98,7 +98,8 @@ namespace nero
             sequenceTableJson[it->first] = sequenceJson;
         }
 
-        animationJson["sequence_table"] = sequenceTableJson;
+        animationJson["sequence_table"]   = sequenceTableJson;
+        animationJson["current_sequence"] = getCurrentSequence();
 
         return animationJson;
     }
@@ -121,6 +122,10 @@ namespace nero
     void AnimationObject::setSequence(std::string name)
     {
         m_Animation.setSequence(name);
+    }
+    const std::string AnimationObject::getCurrentSequence() const
+    {
+        return m_Animation.getCurrentSequence();
     }
 
     void AnimationObject::setFrameRate(float frameRate)

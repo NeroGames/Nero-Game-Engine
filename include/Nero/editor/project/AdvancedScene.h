@@ -37,7 +37,7 @@ namespace nero
         std::string              createLevel(const Parameter& parameter);
         void                     openLevel(const std::string& levelName);
         void                     closeSelectedLevel();
-        void                     removeLevel(const std::string& levelName);
+        bool                     removeLevel(const std::string& levelName);
         void                     registerLevel(const std::string& levelName);
         void                     unregisterLevel(const std::string& levelName);
         std::vector<std::string> getRegisteredLevelTable();

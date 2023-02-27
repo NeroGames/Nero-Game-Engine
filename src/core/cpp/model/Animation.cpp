@@ -60,6 +60,11 @@ namespace nero
         }
     }
 
+    const std::string Animation::getCurrentSequence() const
+    {
+        return m_CurrentSequence;
+    }
+
     ////////////////////////////////////////////////////////////
     std::string Animation::getTexture() const
     {

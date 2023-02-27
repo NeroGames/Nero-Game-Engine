@@ -2209,7 +2209,7 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
 
         animation.setSprite(sprite);
         animation.setTexture(label);
-        animation.setSequence(m_ResourceManager->getAnimationHolder()->getDefaultSequence(label));
+        animation.setSequence(json["current_sequence"].get<std::string>());
 
         animation_object->setAnimation(animation);
 

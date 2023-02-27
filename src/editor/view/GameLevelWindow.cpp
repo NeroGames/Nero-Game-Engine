@@ -42,18 +42,6 @@ namespace nero
 
         ImGui::SameLine();
 
-        if(ImGui::Button("Edit##edit_game_level", button_size))
-        {
-        }
-
-        ImGui::SameLine();
-
-        if(ImGui::Button("Copy##copy_game_level", button_size))
-        {
-        }
-
-        ImGui::SameLine();
-
         if(ImGui::Button("Close##close_game_level", button_size))
         {
             m_EditorContext->setOpenedGameLevelName(StringPool.BLANK);
@@ -62,9 +50,13 @@ namespace nero
 
         ImGui::SameLine(ImGui::GetWindowContentRegionWidth() - 93.f);
 
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.000f));
         if(ImGui::Button("Delete##delete_game_level", button_size))
         {
+            m_EditorContext->getEditorProxy()->removeGameLevel(
+                m_EditorContext->getSelectedGameLevelName());
         }
+        ImGui::PopStyleColor();
 
         ImGui::Dummy(ImVec2(0.f, 2.f));
 

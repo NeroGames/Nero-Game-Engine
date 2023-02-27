@@ -188,12 +188,43 @@ namespace nero
 
     void AdvancedScene::closeSelectedLevel()
     {
-        // TODO close selected level
+        // TODO
+        // m_LevelBuilder->destroy();
+        m_LevelBuilder = nullptr;
     }
 
-    void AdvancedScene::removeLevel(const std::string& levelName)
+    bool AdvancedScene::removeLevel(const std::string& levelName)
     {
-        // TODO remove level
+        // Cannot remove currently opened level
+        if(getLevelBuilder() && getLevelBuilder()->getLevelName() == levelName)
+            return false;
+
+        // Remove level directory
+        std::string levelDirectory =
+            file::getPath({m_ProjectSetting->getString("project_directory"),
+                           "Scene",
+                           "level",
+                           boost::algorithm::to_lower_copy(levelName)});
+        file::removeDirectory(levelDirectory);
+
+        // Remove source code
+        std::string className =
+            string::formatString(levelName, string::Format::CAMEL_CASE_UPPER) + "GameLevel";
+        std::string headerFile = file::getPath(
+            {m_ProjectSetting->getString("source_directory"), "cpp", "level", className},
+            StringPool.EXT_H);
+
+        std::string sourceFile = file::getPath(
+            {m_ProjectSetting->getString("source_directory"), "cpp", "level", className},
+            StringPool.EXT_CPP);
+
+        file::removeFile(headerFile);
+        file::removeFile(sourceFile);
+
+        // Remove level from scene
+        unregisterLevel(levelName);
+
+        return true;
     }
 
     void AdvancedScene::registerLevel(const std::string& levelName)
