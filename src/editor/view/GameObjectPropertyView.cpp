@@ -165,9 +165,7 @@ namespace nero
                                                            ImGuiTreeNodeFlags_DefaultOpen |
                                                                ImGuiWindowFlags_NoScrollWithMouse))
                                 {
-                                    ImGui::BeginChild("light_object", ImVec2(0.f, 100.f), true);
-
-                                    ImGui::EndChild();
+                                    renderLightProperty(LightIcon::Cast(component));
                                 }
                             }
                             break;
@@ -357,11 +355,16 @@ namespace nero
         if(selectedObject)
         {
             sf::Color color = selectedObject->getColor();
-            m_GameObjectColor =
-                ImVec4(color.r / 255.f, color.g / 255.f, color.g / 255.f, color.a / 255.f);
+            ImVec4    tempColor(color.r / 255.f, color.g / 255.f, color.g / 255.f, color.a / 255.f);
+
+            if(tempColor.x != m_GameObjectColor.x && tempColor.y != m_GameObjectColor.y &&
+               tempColor.z != m_GameObjectColor.z && tempColor.w != m_GameObjectColor.w)
+            {
+                m_GameObjectColor = tempColor;
+            }
         }
         ImGui::ColorEdit4("##color",
-                          &m_GameObjectColor.x,
+                          (float*)&m_GameObjectColor,
                           ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_NoDragDrop);
         if(selectedObject && ImGui::IsItemEdited())
         {
@@ -442,8 +445,13 @@ namespace nero
         ImGui::SameLine(wording_width);
         ImGui::SetNextItemWidth(input_width);
         sf::Color color = textObject->getOutlineColor();
-        m_TextOutlineColor =
-            ImVec4(color.r / 255.f, color.g / 255.f, color.g / 255.f, color.a / 255.f);
+        ImVec4    tempColor(color.r / 255.f, color.g / 255.f, color.g / 255.f, color.a / 255.f);
+
+        if(tempColor.x != m_TextOutlineColor.x && tempColor.y != m_TextOutlineColor.y &&
+           tempColor.z != m_TextOutlineColor.z && tempColor.w != m_TextOutlineColor.w)
+        {
+            m_TextOutlineColor = tempColor;
+        }
 
         ImGui::ColorEdit4("##outlineColor",
                           &m_TextOutlineColor.x,
@@ -574,8 +582,16 @@ namespace nero
         }
     }
 
-    void GameObjectPropertyView::renderLightProperty()
+    void GameObjectPropertyView::renderLightProperty(LightIcon::Ptr lightIconObject)
     {
+        ImGui::BeginChild("object_light", ImVec2(0.f, 35.f), true);
+        bool lightEnabled = lightIconObject->getLightEnabled();
+        ImGui::Checkbox("Enable Light##light_enabled", &lightEnabled);
+        if(ImGui::IsItemEdited())
+        {
+            lightIconObject->setLightEnabled(lightEnabled);
+        }
+        ImGui::EndChild();
     }
 
 } // namespace nero

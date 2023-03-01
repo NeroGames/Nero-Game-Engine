@@ -29,7 +29,7 @@ namespace nero
         void renderSpriteProperty(SpriteObject::Ptr spriteObject);
         void renderTextProperty(TextObject::Ptr textObject);
         void renderAnimationProperty(AnimationObject::Ptr animationObject);
-        void renderLightProperty();
+        void renderLightProperty(LightIcon::Ptr lightIconObject);
 
       private:
         ImVec4 m_GameObjectColor;

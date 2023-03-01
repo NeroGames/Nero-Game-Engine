@@ -39,6 +39,8 @@ namespace nero
         virtual sf::FloatRect     getGlobalBounds() const;
         virtual void              updateObject(sf::Time time_step) override;
         ltbl::LightPointEmission* getLight();
+        bool                      getLightEnabled() const;
+        void                      setLightEnabled(bool enabled);
 
       private:
         virtual void drawObject(sf::RenderTarget& target, sf::RenderStates states) const;

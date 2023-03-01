@@ -12,6 +12,8 @@ namespace nero
         : Object()
         , m_LightmapName("")
         , m_ParentLastPosition(sf::Vector2f(0.f, 0.f))
+        , m_LightColor(sf::Color::White)
+        , m_LightEnabled(true)
     {
         setFirstType(Object::Light_Object);
         setSecondType(Object::Light_Object);
@@ -91,6 +93,21 @@ namespace nero
         return m_LightColor;
     }
 
+    bool LightIcon::getLightEnabled() const
+    {
+        return m_LightEnabled;
+    }
+
+    void LightIcon::setLightEnabled(bool enabled)
+    {
+        m_LightEnabled = enabled;
+
+        if(m_LightEnabled)
+            m_Sprite.setColor(sf::Color::White);
+        else
+            m_Sprite.setColor(sf::Color::Red);
+    }
+
     nlohmann::json LightIcon::toJson() const
     {
         nlohmann::json iconJson;
@@ -98,6 +115,7 @@ namespace nero
         iconJson                  = Object::toJson();
 
         iconJson["lightmap_name"] = getLightmapName();
+        iconJson["enabled"]       = getLightEnabled();
         iconJson["rotation"]      = getRotation();
         iconJson["position"]      = {
             {"x", getPosition().x},

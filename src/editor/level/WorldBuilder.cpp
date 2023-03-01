@@ -1473,8 +1473,7 @@ namespace nero
 
                     for(auto it = children->begin(); it != children->end(); it++)
                     {
-                        LightIcon::Ptr            lightIcon    = LightIcon::Cast(*it);
-                        LightObject::Ptr          light_object = std::make_shared<LightObject>();
+                        LightIcon::Ptr            lightIcon = LightIcon::Cast(*it);
 
                         // create the light object
                         ltbl::LightPointEmission* point_light =
@@ -1489,8 +1488,10 @@ namespace nero
                         point_light->setScale(lightIcon->getScale());
                         point_light->setRotation(lightIcon->getRotation());
                         point_light->setColor(lightIcon->getColor());
-                        light_object->setLight(point_light);
+                        point_light->setTurnedOn(lightIcon->getLightEnabled());
 
+                        LightObject::Ptr light_object = std::make_shared<LightObject>();
+                        light_object->setLight(point_light);
                         light_object->setCloneCallback(
                             [=]() -> ltbl::LightPointEmission*
                             {
@@ -1505,6 +1506,7 @@ namespace nero
                                 point_light->setRotation(lightIcon->getRotation());
                                 point_light->setColor(lightIcon->getColor());
                                 point_light->setTexture(light_map);
+                                point_light->setTurnedOn(lightIcon->getLightEnabled());
 
                                 return point_light;
                             });
@@ -1824,6 +1826,7 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
 
         light_icon->setSprite(sprite);
         light_icon->setLightmapName(json["lightmap_name"].get<std::string>());
+        light_icon->setLightEnabled(json["enabled"]);
         light_icon->setPosition(json["position"]["x"], json["position"]["y"]);
         light_icon->setRotation(json["rotation"]);
         light_icon->setScale(json["scale"]["x"], json["scale"]["y"]);

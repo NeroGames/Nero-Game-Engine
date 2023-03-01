@@ -34,6 +34,8 @@ namespace nero
         virtual nlohmann::json   toJson() const override;
         virtual void             setColor(const sf::Color& color) override;
         virtual const sf::Color& getColor() const override;
+        bool                     getLightEnabled() const;
+        void                     setLightEnabled(bool enabled);
 
       private:
         virtual void drawObject(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -43,6 +45,7 @@ namespace nero
         sf::String   m_LightmapName;
         sf::Vector2f m_ParentLastPosition;
         sf::Color    m_LightColor;
+        bool         m_LightEnabled;
     };
 } // namespace nero
 #endif // LIGHTICON_H

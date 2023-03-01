@@ -116,4 +116,14 @@ namespace nero
         return m_Light;
     }
 
+    bool LightObject::getLightEnabled() const
+    {
+        return m_Light->isTurnedOn();
+    }
+
+    void LightObject::setLightEnabled(bool enabled)
+    {
+        m_Light->setTurnedOn(enabled);
+    }
+
 } // namespace nero
