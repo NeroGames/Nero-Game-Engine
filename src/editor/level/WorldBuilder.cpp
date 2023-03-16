@@ -904,18 +904,18 @@ namespace nero
 
             case Object::Mesh_Object:
             {
-                if(!m_SelectedObject)
+                /*if(!m_SelectedObject)
                 {
                     // m_UpdateLog("adding Mesh Object of Type [" + label + "]", nero::Info);
 
-                    Mesh mesh;
+                    PointMesh::Ptr mesh;
 
                     if(label == "Polygon")
-                        mesh = Mesh(Mesh::Shape::Polygon);
+                        mesh = Mesh(PointMesh::Shape::Polygon);
                     else if(label == "Circle")
-                        mesh = Mesh(Mesh::Shape::Circle);
+                        mesh = Mesh(PointMesh::Shape::Circle);
                     else if(label == "Line")
-                        mesh = Mesh(Mesh::Shape::Line);
+                        mesh = Mesh(PointMesh::Shape::Line);
 
                     mesh.setMeshId(getNewId());
 
@@ -947,11 +947,11 @@ namespace nero
                     Mesh mesh;
 
                     if(label == "Polygon")
-                        mesh = Mesh(Mesh::Shape::Polygon);
+                        mesh = Mesh(PointMesh::Shape::Polygon);
                     else if(label == "Circle")
-                        mesh = Mesh(Mesh::Shape::Circle);
+                        mesh = Mesh(PointMesh::Shape::Circle);
                     else if(label == "Line")
-                        mesh = Mesh(Mesh::Shape::Line);
+                        mesh = Mesh(PointMesh::Shape::Line);
 
                     mesh.setMeshId(getNewId());
                     std::shared_ptr<MeshObject> mesh_object(new MeshObject());
@@ -976,7 +976,7 @@ namespace nero
                 else
                 {
                     return false;
-                }
+                }*/
             }
             break;
 
@@ -986,7 +986,7 @@ namespace nero
                 // nero::Info);
 
                 // Sprite Object
-                sf::Sprite  sprite;
+                /*sf::Sprite  sprite;
                 sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound(label);
                 sprite.setTextureRect(rect);
                 sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture(label));
@@ -1003,7 +1003,7 @@ namespace nero
                 sprite_object->setIsUpdateable(true);
 
                 // Mesh Object
-                Mesh mesh = Mesh(Mesh::Shape::Polygon);
+                Mesh mesh = Mesh(PointMesh::Shape::Polygon);
                 mesh.setMeshId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getMeshId());
@@ -1019,7 +1019,7 @@ namespace nero
                 // update one time
                 sprite_object->update(EngineConstant.TIME_PER_FRAME);
 
-                object = sprite_object;
+                object = sprite_object;*/
             }
             break;
 
@@ -1068,7 +1068,7 @@ namespace nero
                 // m_UpdateLog("adding Meshed Animation Object with Animation [" + label + "]",
                 // nero::Info);
 
-                Animation animation;
+                /*Animation animation;
                 auto sequenceMap = m_ResourceManager->getAnimationHolder()->getSequenceMap(label);
 
                 for(auto it = sequenceMap.begin(); it != sequenceMap.end(); it++)
@@ -1100,7 +1100,7 @@ namespace nero
                 animation_object->setName(object_name);
 
                 // Mesh Object
-                Mesh mesh = Mesh(Mesh::Shape::Polygon);
+                Mesh mesh = Mesh(PointMesh::Shape::Polygon);
                 mesh.setMeshId(getNewId());
                 MeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getMeshId());
@@ -1116,7 +1116,7 @@ namespace nero
                 // update one time
                 animation_object->update(EngineConstant.TIME_PER_FRAME);
 
-                object = animation_object;
+                object = animation_object;*/
             }
             break;
 
@@ -1244,7 +1244,7 @@ namespace nero
 
     void WorldBuilder::setMeshType(const sf::String& label)
     {
-        if(!m_SelectedObject)
+        /*if(!m_SelectedObject)
             return;
 
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
@@ -1272,12 +1272,12 @@ namespace nero
 
         mesh_object->setMeshType(type);
 
-        m_UpdateUndo();
+        m_UpdateUndo();*/
     }
 
     void WorldBuilder::setMeshFixedRotation(bool flag)
     {
-        if(!m_SelectedObject)
+        /*if(!m_SelectedObject)
             return;
 
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
@@ -1297,12 +1297,12 @@ namespace nero
 
         mesh_object->setMeshFixedRotation(flag);
 
-        m_UpdateUndo();
+        m_UpdateUndo();*/
     }
 
     void WorldBuilder::setMeshSensor(bool flag)
     {
-        if(!m_SelectedObject)
+        /*if(!m_SelectedObject)
             return;
 
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
@@ -1322,12 +1322,12 @@ namespace nero
 
         mesh_object->setMeshSensor(flag);
 
-        m_UpdateUndo();
+        m_UpdateUndo();*/
     }
 
     void WorldBuilder::setMeshAllowSleep(bool flag)
     {
-        if(!m_SelectedObject)
+        /*if(!m_SelectedObject)
             return;
 
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
@@ -1347,12 +1347,12 @@ namespace nero
 
         mesh_object->setMeshAllowSleep(flag);
 
-        m_UpdateUndo();
+        m_UpdateUndo();*/
     }
 
     void WorldBuilder::setMeshDensity(float density)
     {
-        if(!m_SelectedObject)
+        /*if(!m_SelectedObject)
             return;
 
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
@@ -1369,12 +1369,12 @@ namespace nero
 
         mesh_object->setMeshDensity(density);
 
-        m_UpdateUndo();
+        m_UpdateUndo();*/
     }
 
     void WorldBuilder::setMeshFriction(float friction)
     {
-        if(!m_SelectedObject)
+        /*if(!m_SelectedObject)
             return;
 
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
@@ -1391,12 +1391,12 @@ namespace nero
 
         mesh_object->setMeshFriction(friction);
 
-        m_UpdateUndo();
+        m_UpdateUndo();*/
     }
 
     void WorldBuilder::setMeshRestitution(float restitution)
     {
-        if(!m_SelectedObject)
+        /*if(!m_SelectedObject)
             return;
 
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
@@ -1413,12 +1413,12 @@ namespace nero
 
         mesh_object->setMeshRestitution(restitution);
 
-        m_UpdateUndo();
+        m_UpdateUndo();*/
     }
 
     void WorldBuilder::setMeshGravityScale(float gravityScale)
     {
-        if(!m_SelectedObject)
+        /*if(!m_SelectedObject)
             return;
 
         if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
@@ -1435,7 +1435,7 @@ namespace nero
 
         mesh_object->setMeshGravityScale(gravityScale);
 
-        m_UpdateUndo();
+        m_UpdateUndo();*/
     }
 
     Object::Ptr WorldBuilder::buildScene(std::shared_ptr<ltbl::LightSystem> lightManager)
@@ -1608,7 +1608,7 @@ mesh_object->getMesh()->getLineTable())
 
                                                         }break;
 
-                                                        case Mesh::Shape::Polygon:
+                                                        case PointMesh::Shape::Polygon:
                                                         {
 
                                                                 for(sf::ConvexShape shape :
@@ -1849,18 +1849,18 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
 
     MeshObject::Ptr WorldBuilder::loadMesh(nlohmann::json& json)
     {
-        Mesh           mesh      = Mesh();
+        /*Mesh           mesh      = Mesh();
 
         nlohmann::json mesh_json = json["mesh"];
         // shape
         if(mesh_json["shape"] == "polygon_mesh")
-            mesh.setShape(Mesh::Shape::Polygon);
+            mesh.setShape(PointMesh::Shape::Polygon);
         else if(mesh_json["shape"] == "circle_mesh")
-            mesh.setShape(Mesh::Shape::Circle);
+            mesh.setShape(PointMesh::Shape::Circle);
         else if(mesh_json["shape"] == "line_mesh")
-            mesh.setShape(Mesh::Shape::Line);
+            mesh.setShape(PointMesh::Shape::Line);
         else if(mesh_json["shape"] == "chain_mesh")
-            mesh.setShape(Mesh::Shape::Chain);
+            mesh.setShape(PointMesh::Shape::Chain);
 
         // type
         if(mesh_json["type"] == "static_mesh")
@@ -1904,7 +1904,9 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
 
         m_MeshEditor->addMesh(mesh_object);
 
-        return mesh_object;
+        return mesh_object;*/
+
+        return nullptr;
     }
 
     TextObject::Ptr WorldBuilder::loadText(nlohmann::json& json)
