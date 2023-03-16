@@ -904,6 +904,26 @@ namespace nero
 
             case Object::Mesh_Object:
             {
+                PointMesh::Ptr mesh;
+
+                if(label == "Line")
+                    mesh = std::make_shared<PointMesh>(PointMesh::Shape::Line);
+
+                mesh->setMeshId(getNewId());
+
+                MeshObject::Ptr meshObject = std::make_shared<MeshObject>();
+                meshObject->setId(mesh->getMeshId());
+                meshObject->setName("mesh " + toString(mesh->getMeshId()));
+                meshObject->setMesh(mesh);
+                meshObject->setPosition(position);
+                meshObject->setSecondType(Object::Mesh_Object);
+                sf::FloatRect globalBound = meshObject->getGlobalBounds();
+                meshObject->setOrigin(globalBound.width / 2.f, globalBound.height / 2.f);
+
+                m_MeshEditor->addMesh(meshObject);
+
+                object = meshObject;
+
                 /*if(!m_SelectedObject)
                 {
                     // m_UpdateLog("adding Mesh Object of Type [" + label + "]", nero::Info);

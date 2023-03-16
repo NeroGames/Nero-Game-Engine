@@ -19,7 +19,7 @@ namespace nero
         // Create the default Line/Chain with two vertices
         if(m_MeshShape == Shape::Line || m_MeshShape == Shape::Chain)
         {
-            const auto center = getPointCenter();
+            const auto center = sf::Vector2f(0.f, 0.f);
             const auto radius = 75.f;
             addVertex(sf::Vector2f(center.x + radius, center.y));
             addVertex(sf::Vector2f(center.x - radius, center.y));
