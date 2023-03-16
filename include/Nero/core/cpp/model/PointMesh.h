@@ -67,13 +67,14 @@ namespace nero
         VertexTable&           getVertexTable();
         LineTable&             getLineTable();
         unsigned int           getPointCount() const;
-        void                   updateColor();
+
         sf::Color              getColor() const;
         sf::String             toSting() const;
 
         virtual sf::FloatRect  getGlobalBounds() const;
         virtual sf::Vector2f   getPointCenter() const;
         virtual void           updateShape();
+        virtual void           updateColor();
         virtual void           moveMesh(const sf::Vector2f& offset);
         virtual void           scaleMesh(const sf::Vector2f& scaleFactor);
         virtual void           rotateMesh(const float& angle);

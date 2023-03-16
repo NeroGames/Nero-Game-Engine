@@ -7,6 +7,7 @@
 #include <Nero/editor/level/WorldBuilder.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 #include <Nero/editor/icon/LightIcon.h>
+#include <Nero/core/cpp/model/CircleMesh.h>
 // STD
 #include <fstream>
 #include <string>
@@ -908,6 +909,10 @@ namespace nero
 
                 if(label == "Line")
                     mesh = std::make_shared<PointMesh>(PointMesh::Shape::Line);
+                /*else if(label == "Polygon")
+                    mesh = std::make_shared<PolygonMesh>();*/
+                else if(label == "Circle")
+                    mesh = std::make_shared<CircleMesh>();
 
                 mesh->setMeshId(getNewId());
 
