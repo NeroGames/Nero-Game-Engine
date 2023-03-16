@@ -7,7 +7,7 @@
 ///////////////////////////HEADERS//////////////////////////
 // NERO
 #include <Nero/core/cpp/object/Object.h>
-#include <Nero/core/cpp/model/Mesh.h>
+#include <Nero/core/cpp/model/PointMesh.h>
 // SFML
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -22,32 +22,14 @@ namespace nero
 
       public:
         MeshObject();
-        virtual ~MeshObject();
+        virtual ~MeshObject() override;
 
-        void                   setMesh(const Mesh& mesh);
-        Mesh*                  getMesh();
+        void                   setMesh(const PointMesh::Ptr& mesh);
+        PointMesh::Ptr         getMesh();
 
         virtual sf::FloatRect  getGlobalBounds() const;
 
-        void                   setMeshType(Mesh::Type type);
-
-        void                   setMeshFixedRotation(bool flag);
-        void                   setMeshSensor(bool flag);
-        void                   setMeshAllowSleep(bool flag);
-
-        void                   setMeshDensity(const float& density);
-        void                   setMeshFriction(const float& friction);
-        void                   setMeshRestitution(const float& restitution);
-        void                   setMeshGravityScale(const float& gravityScale);
-
-        bool                   getMeshFixedRotation() const;
-        bool                   getMeshSensor() const;
-        bool                   getMeshAllowSleep() const;
-
-        float                  getMeshDensity() const;
-        float                  getMeshFriction() const;
-        float                  getMeshRestitution() const;
-        float                  getMeshGravityScale() const;
+        void                   setMeshType(PointMesh::Type type);
 
         Object::Ptr            clone(sf::Vector2f& position) const;
         Object::Ptr            clone() const;
@@ -55,10 +37,9 @@ namespace nero
 
       private:
         void drawObject(sf::RenderTarget& target, sf::RenderStates states) const;
-        void updateObject(sf::Time time_step);
 
       private:
-        Mesh m_Mesh;
+        PointMesh::Ptr m_Mesh;
     };
 } // namespace nero
 #endif // MESHEDOBJECT_H

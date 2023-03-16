@@ -86,12 +86,12 @@ namespace nero
         m_SelectedMesh = nullptr;
     }
 
-    void MeshEditor::scaleMesh(Mesh* mesh, float factor)
+    void MeshEditor::scaleMesh(PointMesh::Ptr mesh, float factor)
     {
         mesh->scaleMesh(sf::Vector2f(factor, factor));
     }
 
-    void MeshEditor::rotateMesh(Mesh* mesh, float angle)
+    void MeshEditor::rotateMesh(PointMesh::Ptr mesh, float angle)
     {
         mesh->rotateMesh(angle);
     }
@@ -101,11 +101,11 @@ namespace nero
         return m_MeshTab;
     }
 
-    void MeshEditor::deselectMesh(MeshObject::Ptr mesh)
+    void MeshEditor::deselectMesh(MeshObject::Ptr meshObject)
     {
-        if(mesh)
+        if(meshObject)
         {
-            mesh->getMesh()->updateMesh(false, true);
+            meshObject->getMesh()->updateColor();
 
             for(auto vertex : m_SelectedVertexTab)
                 vertex = nullptr;
@@ -149,7 +149,7 @@ namespace nero
             if(key == sf::Keyboard::Escape && keyboard::CTRL())
                 deselectMesh(m_SelectedMesh);
 
-            m_SelectedMesh->getMesh()->updateMesh();
+            m_SelectedMesh->getMesh()->updateShape();
         }
 
         if(!isPressed)
@@ -205,19 +205,19 @@ namespace nero
                     // Click on vertex
                     // Move vertex : Line, Chain, Polygon, Circle
                     // Extrude vertex : Line vertex, Chain edge vertex
-                    for(auto vertex_it = (*mesh_it)->getMesh()->m_VertexTable.begin();
-                        vertex_it != (*mesh_it)->getMesh()->m_VertexTable.end();
+                    for(auto vertex_it = (*mesh_it)->getMesh()->getVertexTable().begin();
+                        vertex_it != (*mesh_it)->getMesh()->getVertexTable().end();
                         vertex_it++)
                     {
                         // when we found a match
                         if(vertex_it->getGlobalBounds().contains(world_pos))
                         {
                             if(!keyboard::CTRL_SHIFT_ALT() &&
-                               (*mesh_it)->getMesh()->m_MeshShape != Mesh::Shape::Circle)
+                               (*mesh_it)->getMesh()->getMeshShape() != PointMesh::Shape::Circle)
                             {
                                 m_SelectedVertexTab.push_back(
-                                    (*mesh_it)->getMesh()->m_VertexTable.data() +
-                                    (vertex_it - (*mesh_it)->getMesh()->m_VertexTable.begin()));
+                                    (*mesh_it)->getMesh()->getVertexTable().data() +
+                                    (vertex_it - (*mesh_it)->getMesh()->getVertexTable().begin()));
                                 m_SelectedMesh = (*mesh_it);
 
                                 isDone         = true;
@@ -226,30 +226,33 @@ namespace nero
 
                             else if(keyboard::SHIFT())
                             {
-                                if((*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Line ||
-                                   (*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Chain)
+                                if((*mesh_it)->getMesh()->getMeshShape() ==
+                                       PointMesh::Shape::Line ||
+                                   (*mesh_it)->getMesh()->getMeshShape() == PointMesh::Shape::Chain)
                                 {
-                                    if(vertex_it == (*mesh_it)->getMesh()->m_VertexTable.begin())
+                                    if(vertex_it == (*mesh_it)->getMesh()->getVertexTable().begin())
                                     {
                                         (*mesh_it)->getMesh()->addVertex(vertex_it->getPosition(),
                                                                          0);
                                         m_SelectedVertexTab.push_back(
-                                            (*mesh_it)->getMesh()->m_VertexTable.data());
+                                            (*mesh_it)->getMesh()->getVertexTable().data());
                                     }
                                     else if(vertex_it ==
-                                            (*mesh_it)->getMesh()->m_VertexTable.end() - 1)
+                                            (*mesh_it)->getMesh()->getVertexTable().end() - 1)
                                     {
                                         (*mesh_it)->getMesh()->addVertex(vertex_it->getPosition());
                                         m_SelectedVertexTab.push_back(
-                                            (*mesh_it)->getMesh()->m_VertexTable.data() +
+                                            (*mesh_it)->getMesh()->getVertexTable().data() +
                                             (vertex_it + 1 -
-                                             (*mesh_it)->getMesh()->m_VertexTable.begin()));
+                                             (*mesh_it)->getMesh()->getVertexTable().begin()));
                                     }
 
-                                    (*mesh_it)->getMesh()->updateMesh(false, true);
+                                    (*mesh_it)->getMesh()->updateColor();
 
-                                    if((*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Line)
-                                        (*mesh_it)->getMesh()->m_MeshShape = Mesh::Shape::Chain;
+                                    if((*mesh_it)->getMesh()->getMeshShape() ==
+                                       PointMesh::Shape::Line)
+                                        (*mesh_it)->getMesh()->setMeshShape(
+                                            PointMesh::Shape::Chain);
 
                                     m_SelectedMesh = (*mesh_it);
 
@@ -266,28 +269,27 @@ namespace nero
                     // Click on line
                     // Move line : Line, Chain, Polygon
                     // Extrude line : Line, Chain, Polygon
-                    for(auto line_it = (*mesh_it)->getMesh()->m_LineTable.begin();
-                        line_it != (*mesh_it)->getMesh()->m_LineTable.end();
+                    for(auto line_it = (*mesh_it)->getMesh()->getLineTable().begin();
+                        line_it != (*mesh_it)->getMesh()->getLineTable().end();
                         line_it++)
                     {
                         // when we found a match
-                        if((*mesh_it)->getMesh()->m_MeshShape != Mesh::Shape::Circle)
+                        if((*mesh_it)->getMesh()->getMeshShape() != PointMesh::Shape::Circle)
                         {
                             bool is_polygon_last_line =
-                                ((*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Polygon &&
-                                 line_it == ((*mesh_it)->getMesh()->m_LineTable.end() - 1));
+                                ((*mesh_it)->getMesh()->getMeshShape() ==
+                                     PointMesh::Shape::Polygon &&
+                                 line_it == ((*mesh_it)->getMesh()->getLineTable().end() - 1));
 
                             Vertex* v1 =
-                                &(*mesh_it)
-                                     ->getMesh()
-                                     ->m_VertexTable[line_it -
-                                                     (*mesh_it)->getMesh()->m_LineTable.begin()];
+                                &(*mesh_it)->getMesh()->getVertexTable()
+                                     [line_it - (*mesh_it)->getMesh()->getLineTable().begin()];
                             Vertex* v2 =
-                                &(*mesh_it)->getMesh()->m_VertexTable
+                                &(*mesh_it)->getMesh()->getVertexTable()
                                      [is_polygon_last_line
                                           ? 0
-                                          : (line_it - (*mesh_it)->getMesh()->m_LineTable.begin() +
-                                             1)];
+                                          : (line_it -
+                                             (*mesh_it)->getMesh()->getLineTable().begin() + 1)];
 
                             // select the line of a polygon
                             if(math::distance(v1->getPosition(), v2->getPosition(), world_pos) <
@@ -305,20 +307,24 @@ namespace nero
                                 {
                                     deselectMesh(m_SelectedMesh);
 
-                                    if((*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Line ||
-                                       (*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Chain)
+                                    if((*mesh_it)->getMesh()->getMeshShape() ==
+                                           PointMesh::Shape::Line ||
+                                       (*mesh_it)->getMesh()->getMeshShape() ==
+                                           PointMesh::Shape::Chain)
                                     {
                                         for(auto vertex_it =
-                                                (*mesh_it)->getMesh()->m_VertexTable.begin();
-                                            vertex_it != (*mesh_it)->getMesh()->m_VertexTable.end();
+                                                (*mesh_it)->getMesh()->getVertexTable().begin();
+                                            vertex_it !=
+                                            (*mesh_it)->getMesh()->getVertexTable().end();
                                             vertex_it++)
                                             m_SelectedVertexTab.push_back(
                                                 &(*mesh_it)
                                                      ->getMesh()
-                                                     ->m_VertexTable[vertex_it -
-                                                                     (*mesh_it)
-                                                                         ->getMesh()
-                                                                         ->m_VertexTable.begin()]);
+                                                     ->getVertexTable()[vertex_it -
+                                                                        (*mesh_it)
+                                                                            ->getMesh()
+                                                                            ->getVertexTable()
+                                                                            .begin()]);
 
                                         m_SelectedMesh = (*mesh_it);
                                         m_SelectedMesh->setColor(
@@ -335,21 +341,23 @@ namespace nero
                                     {
                                         (*mesh_it)->getMesh()->addVertex(
                                             v2->getPosition(),
-                                            line_it - (*mesh_it)->getMesh()->m_LineTable.begin() +
-                                                1);
+                                            line_it -
+                                                (*mesh_it)->getMesh()->getLineTable().begin() + 1);
                                         (*mesh_it)->getMesh()->addVertex(
                                             v1->getPosition(),
-                                            line_it - (*mesh_it)->getMesh()->m_LineTable.begin() +
-                                                1);
+                                            line_it -
+                                                (*mesh_it)->getMesh()->getLineTable().begin() + 1);
 
                                         m_SelectedVertexTab.push_back(
-                                            &(*mesh_it)->getMesh()->m_VertexTable
+                                            &(*mesh_it)->getMesh()->getVertexTable()
                                                  [line_it -
-                                                  (*mesh_it)->getMesh()->m_LineTable.begin() + 1]);
+                                                  (*mesh_it)->getMesh()->getLineTable().begin() +
+                                                  1]);
                                         m_SelectedVertexTab.push_back(
-                                            &(*mesh_it)->getMesh()->m_VertexTable
+                                            &(*mesh_it)->getMesh()->getVertexTable()
                                                  [line_it -
-                                                  (*mesh_it)->getMesh()->m_LineTable.begin() + 2]);
+                                                  (*mesh_it)->getMesh()->getLineTable().begin() +
+                                                  2]);
                                     }
                                     else
                                     {
@@ -357,17 +365,19 @@ namespace nero
                                         (*mesh_it)->getMesh()->addVertex(v2->getPosition());
 
                                         m_SelectedVertexTab.push_back(
-                                            &(*mesh_it)->getMesh()->m_VertexTable
+                                            &(*mesh_it)->getMesh()->getVertexTable()
                                                  [line_it -
-                                                  (*mesh_it)->getMesh()->m_LineTable.end() - 1]);
+                                                  (*mesh_it)->getMesh()->getLineTable().end() - 1]);
                                         m_SelectedVertexTab.push_back(
-                                            &(*mesh_it)->getMesh()->m_VertexTable
+                                            &(*mesh_it)->getMesh()->getVertexTable()
                                                  [line_it -
-                                                  (*mesh_it)->getMesh()->m_LineTable.end() - 2]);
+                                                  (*mesh_it)->getMesh()->getLineTable().end() - 2]);
                                     }
 
-                                    if((*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Line)
-                                        (*mesh_it)->getMesh()->m_MeshShape = Mesh::Shape::Chain;
+                                    if((*mesh_it)->getMesh()->getMeshShape() ==
+                                       PointMesh::Shape::Line)
+                                        (*mesh_it)->getMesh()->setMeshShape(
+                                            PointMesh::Shape::Chain);
                                 }
 
                                 m_SelectedMesh = (*mesh_it);
@@ -387,9 +397,9 @@ namespace nero
                         break;
 
                     // Polygon only
-                    if((*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Polygon)
+                    if((*mesh_it)->getMesh()->getMeshShape() == PointMesh::Shape::Polygon)
                     {
-                        for(auto polygon_it = (*mesh_it)->getMesh()->m_PolygonTable.begin();
+                        /*for(auto polygon_it = (*mesh_it)->getMesh()->m_PolygonTable.begin();
                             polygon_it != (*mesh_it)->getMesh()->m_PolygonTable.end();
                             polygon_it++)
                         {
@@ -399,13 +409,13 @@ namespace nero
                                 if(!keyboard::CTRL_SHIFT_ALT())
                                 {
                                     for(auto vertex_it =
-                                            (*mesh_it)->getMesh()->m_VertexTable.begin();
-                                        vertex_it != (*mesh_it)->getMesh()->m_VertexTable.end();
+                                            (*mesh_it)->getMesh()->getVertexTable().begin();
+                                        vertex_it != (*mesh_it)->getMesh()->getVertexTable().end();
                                         vertex_it++)
                                         m_SelectedVertexTab.push_back(
-                                            &(*mesh_it)->getMesh()->m_VertexTable
+                                            &(*mesh_it)->getMesh()->getVertexTable()
                                                  [vertex_it -
-                                                  (*mesh_it)->getMesh()->m_VertexTable.begin()]);
+                                                  (*mesh_it)->getMesh()->getVertexTable().begin()]);
 
                                     m_SelectedMesh = (*mesh_it);
 
@@ -417,13 +427,13 @@ namespace nero
                                     deselectMesh(m_SelectedMesh);
 
                                     for(auto vertex_it =
-                                            (*mesh_it)->getMesh()->m_VertexTable.begin();
-                                        vertex_it != (*mesh_it)->getMesh()->m_VertexTable.end();
+                                            (*mesh_it)->getMesh()->getVertexTable().begin();
+                                        vertex_it != (*mesh_it)->getMesh()->getVertexTable().end();
                                         vertex_it++)
                                         m_SelectedVertexTab.push_back(
-                                            &(*mesh_it)->getMesh()->m_VertexTable
+                                            &(*mesh_it)->getMesh()->getVertexTable()
                                                  [vertex_it -
-                                                  (*mesh_it)->getMesh()->m_VertexTable.begin()]);
+                                                  (*mesh_it)->getMesh()->getVertexTable().begin()]);
 
                                     m_SelectedMesh = (*mesh_it);
                                     m_SelectedMesh->setColor(EngineConstant.COLOR_SELECTED_MESH);
@@ -432,28 +442,28 @@ namespace nero
                                     break;
                                 }
                             }
-                        }
+                        }*/
                     }
 
                     if(isDone)
                         break;
 
                     // Circle only
-                    if((*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Circle)
+                    if((*mesh_it)->getMesh()->getMeshShape() == PointMesh::Shape::Circle)
                     {
-                        if((*mesh_it)->getMesh()->m_CircleShape->getGlobalBounds().contains(
+                        /*if((*mesh_it)->getMesh()->m_CircleShape->getGlobalBounds().contains(
                                world_pos))
                         {
                             if(!keyboard::CTRL_SHIFT_ALT())
                             {
                                 m_SelectedVertexTab.push_back(
-                                    (*mesh_it)->getMesh()->m_VertexTable.data() +
-                                    ((*mesh_it)->getMesh()->m_VertexTable.begin() -
-                                     (*mesh_it)->getMesh()->m_VertexTable.begin()));
+                                    (*mesh_it)->getMesh()->getVertexTable().data() +
+                                    ((*mesh_it)->getMesh()->getVertexTable().begin() -
+                                     (*mesh_it)->getMesh()->getVertexTable().begin()));
                                 m_SelectedVertexTab.push_back(
-                                    (*mesh_it)->getMesh()->m_VertexTable.data() +
-                                    ((*mesh_it)->getMesh()->m_VertexTable.begin() + 1 -
-                                     (*mesh_it)->getMesh()->m_VertexTable.begin()));
+                                    (*mesh_it)->getMesh()->getVertexTable().data() +
+                                    ((*mesh_it)->getMesh()->getVertexTable().begin() + 1 -
+                                     (*mesh_it)->getMesh()->getVertexTable().begin()));
 
                                 m_SelectedMesh = (*mesh_it);
 
@@ -465,13 +475,13 @@ namespace nero
                                 deselectMesh(m_SelectedMesh);
 
                                 m_SelectedVertexTab.push_back(
-                                    (*mesh_it)->getMesh()->m_VertexTable.data() +
-                                    ((*mesh_it)->getMesh()->m_VertexTable.begin() -
-                                     (*mesh_it)->getMesh()->m_VertexTable.begin()));
+                                    (*mesh_it)->getMesh()->getVertexTable().data() +
+                                    ((*mesh_it)->getMesh()->getVertexTable().begin() -
+                                     (*mesh_it)->getMesh()->getVertexTable().begin()));
                                 m_SelectedVertexTab.push_back(
-                                    (*mesh_it)->getMesh()->m_VertexTable.data() +
-                                    ((*mesh_it)->getMesh()->m_VertexTable.begin() + 1 -
-                                     (*mesh_it)->getMesh()->m_VertexTable.begin()));
+                                    (*mesh_it)->getMesh()->getVertexTable().data() +
+                                    ((*mesh_it)->getMesh()->getVertexTable().begin() + 1 -
+                                     (*mesh_it)->getMesh()->getVertexTable().begin()));
 
                                 m_SelectedMesh = (*mesh_it);
                                 m_SelectedMesh->setColor(EngineConstant.COLOR_SELECTED_MESH);
@@ -479,7 +489,7 @@ namespace nero
                                 isDone = true;
                                 break;
                             }
-                        }
+                        }*/
                     }
 
                     if(isDone)
@@ -514,8 +524,8 @@ namespace nero
                 {
                     // Click on vertex
                     // Remove vertex : Chain, Polygon
-                    for(auto vertex_it = (*mesh_it)->getMesh()->m_VertexTable.begin();
-                        vertex_it != (*mesh_it)->getMesh()->m_VertexTable.end();
+                    for(auto vertex_it = (*mesh_it)->getMesh()->getVertexTable().begin();
+                        vertex_it != (*mesh_it)->getMesh()->getVertexTable().end();
                         vertex_it++)
                     {
                         // When we get a match
@@ -523,15 +533,16 @@ namespace nero
                         {
                             // Chain
                             if(!keyboard::CTRL_SHIFT_ALT() &&
-                               (*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Chain)
+                               (*mesh_it)->getMesh()->getMeshShape() == PointMesh::Shape::Chain)
                             {
                                 (*mesh_it)->getMesh()->deleteVertex(
-                                    vertex_it - (*mesh_it)->getMesh()->m_VertexTable.begin());
+                                    vertex_it - (*mesh_it)->getMesh()->getVertexTable().begin());
 
-                                if((*mesh_it)->getMesh()->m_VertexTable.size() == 2)
-                                    (*mesh_it)->getMesh()->m_MeshShape = Mesh::Shape::Line;
+                                if((*mesh_it)->getMesh()->getVertexTable().size() == 2)
+                                    (*mesh_it)->getMesh()->setMeshShape(PointMesh::Shape::Line);
 
-                                (*mesh_it)->getMesh()->updateMesh();
+                                (*mesh_it)->getMesh()->updateShape();
+                                (*mesh_it)->getMesh()->updateColor();
 
                                 m_SelectedMesh = (*mesh_it);
 
@@ -541,13 +552,15 @@ namespace nero
 
                             // Polygon
                             if(!keyboard::CTRL_SHIFT_ALT() &&
-                               (*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Polygon)
+                               (*mesh_it)->getMesh()->getMeshShape() == PointMesh::Shape::Polygon)
                             {
-                                if((*mesh_it)->getMesh()->m_VertexTable.size() > 3)
+                                if((*mesh_it)->getMesh()->getVertexTable().size() > 3)
                                 {
                                     (*mesh_it)->getMesh()->deleteVertex(
-                                        vertex_it - (*mesh_it)->getMesh()->m_VertexTable.begin());
-                                    (*mesh_it)->getMesh()->updateMesh();
+                                        vertex_it -
+                                        (*mesh_it)->getMesh()->getVertexTable().begin());
+                                    (*mesh_it)->getMesh()->updateShape();
+                                    (*mesh_it)->getMesh()->updateColor();
 
                                     m_SelectedMesh = (*mesh_it);
 
@@ -563,37 +576,39 @@ namespace nero
 
                     // Click on line
                     // Add vertex : Line, Chain, Polygon
-                    for(auto line_it = (*mesh_it)->getMesh()->m_LineTable.begin();
-                        line_it != (*mesh_it)->getMesh()->m_LineTable.end();
+                    for(auto line_it = (*mesh_it)->getMesh()->getLineTable().begin();
+                        line_it != (*mesh_it)->getMesh()->getLineTable().end();
                         line_it++)
                     {
                         bool is_polygon_last_line =
-                            ((*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Polygon &&
-                             line_it == ((*mesh_it)->getMesh()->m_LineTable.end() - 1));
+                            ((*mesh_it)->getMesh()->getMeshShape() == PointMesh::Shape::Polygon &&
+                             line_it == ((*mesh_it)->getMesh()->getLineTable().end() - 1));
 
                         Vertex* v1 =
                             &(*mesh_it)
                                  ->getMesh()
-                                 ->m_VertexTable[line_it -
-                                                 (*mesh_it)->getMesh()->m_LineTable.begin()];
+                                 ->getVertexTable()[line_it -
+                                                    (*mesh_it)->getMesh()->getLineTable().begin()];
                         Vertex* v2 =
-                            &(*mesh_it)->getMesh()->m_VertexTable
+                            &(*mesh_it)->getMesh()->getVertexTable()
                                  [is_polygon_last_line
                                       ? 0
-                                      : (line_it - (*mesh_it)->getMesh()->m_LineTable.begin() + 1)];
+                                      : (line_it - (*mesh_it)->getMesh()->getLineTable().begin() +
+                                         1)];
 
                         // select the line of a polygon
                         if(math::distance(v1->getPosition(), v2->getPosition(), world_pos) < 4.f)
                         {
                             // act only on line
                             if(!keyboard::CTRL_SHIFT_ALT() &&
-                               (*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Line)
+                               (*mesh_it)->getMesh()->getMeshShape() == PointMesh::Shape::Line)
                             {
                                 (*mesh_it)->getMesh()->addVertex(
                                     world_pos,
-                                    line_it - (*mesh_it)->getMesh()->m_LineTable.begin() + 1);
-                                (*mesh_it)->getMesh()->m_MeshShape = Mesh::Shape::Chain;
-                                (*mesh_it)->getMesh()->updateMesh();
+                                    line_it - (*mesh_it)->getMesh()->getLineTable().begin() + 1);
+                                (*mesh_it)->getMesh()->setMeshShape(PointMesh::Shape::Chain);
+                                (*mesh_it)->getMesh()->updateShape();
+                                (*mesh_it)->getMesh()->updateColor();
 
                                 m_SelectedMesh = (*mesh_it);
 
@@ -603,15 +618,17 @@ namespace nero
 
                             // act on chain
                             if(!keyboard::CTRL_SHIFT_ALT() &&
-                               (*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Chain)
+                               (*mesh_it)->getMesh()->getMeshShape() == PointMesh::Shape::Chain)
                             {
                                 (*mesh_it)->getMesh()->addVertex(
                                     world_pos,
-                                    line_it - (*mesh_it)->getMesh()->m_LineTable.begin() + 1);
-                                (*mesh_it)->getMesh()->updateMesh();
+                                    line_it - (*mesh_it)->getMesh()->getLineTable().begin() + 1);
+                                (*mesh_it)->getMesh()->updateShape();
+                                (*mesh_it)->getMesh()->updateColor();
 
                                 isDone = true;
-                                (*mesh_it)->getMesh()->updateMesh(false, true);
+                                (*mesh_it)->getMesh()->updateShape();
+                                (*mesh_it)->getMesh()->updateColor();
 
                                 m_SelectedMesh = (*mesh_it);
 
@@ -620,12 +637,14 @@ namespace nero
 
                             // act on polygon
                             if(!keyboard::CTRL_SHIFT_ALT() &&
-                               (*mesh_it)->getMesh()->m_MeshShape == Mesh::Shape::Polygon)
+                               (*mesh_it)->getMesh()->getMeshShape() == PointMesh::Shape::Polygon)
                             {
                                 (*mesh_it)->getMesh()->addVertex(
                                     world_pos,
-                                    line_it - (*mesh_it)->getMesh()->m_LineTable.begin() + 1);
-                                (*mesh_it)->getMesh()->updateMesh();
+                                    line_it - (*mesh_it)->getMesh()->getLineTable().begin() + 1);
+
+                                (*mesh_it)->getMesh()->updateShape();
+                                (*mesh_it)->getMesh()->updateColor();
 
                                 m_SelectedMesh = (*mesh_it);
 
@@ -672,7 +691,8 @@ else
                 for(auto vertex : m_SelectedVertexTab)
                     vertex->move(diff);
 
-                m_SelectedMesh->getMesh()->updateMesh();
+                m_SelectedMesh->getMesh()->updateShape();
+                m_SelectedMesh->getMesh()->updateColor();
 
                 m_LastMousePosition = world_pos;
             }

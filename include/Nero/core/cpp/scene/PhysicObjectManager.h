@@ -7,7 +7,7 @@
 ///////////////////////////HEADERS//////////////////////////
 // NERO
 #include <Nero/core/cpp/object/PhysicObject.h>
-#include <Nero/core/cpp/model/Mesh.h>
+#include <Nero/core/cpp/model/PointMesh.h>
 // BOX2D
 #include <Box2D/Dynamics/b2World.h>
 #include <Box2D/Dynamics/b2Fixture.h>

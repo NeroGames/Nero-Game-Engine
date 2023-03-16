@@ -21,8 +21,8 @@ namespace nero
         {
             const auto center = getPointCenter();
             const auto radius = 75.f;
-            addPoint(sf::Vector2f(center.x + radius, center.y));
-            addPoint(sf::Vector2f(center.x - radius, center.y));
+            addVertex(sf::Vector2f(center.x + radius, center.y));
+            addVertex(sf::Vector2f(center.x - radius, center.y));
 
             updateShape();
             updateColor();
@@ -164,7 +164,7 @@ namespace nero
         return line;
     }
 
-    void PointMesh::addPoint(const sf::Vector2f& point)
+    void PointMesh::addVertex(const sf::Vector2f& point)
     {
         m_VertexTable.push_back(createVertex(point));
 
@@ -180,7 +180,7 @@ namespace nero
         }
     }
 
-    void PointMesh::addPoint(const sf::Vector2f& position, const int& index)
+    void PointMesh::addVertex(const sf::Vector2f& position, const int& index)
     {
         sf::RectangleShape vertex;
 
@@ -198,7 +198,7 @@ namespace nero
         }
     }
 
-    void PointMesh::deletePoint(const int& index)
+    void PointMesh::deleteVertex(const int& index)
     {
         m_VertexTable.erase(m_VertexTable.begin() + index);
     }
@@ -241,6 +241,8 @@ namespace nero
     void PointMesh::setMeshType(const Type type)
     {
         m_MeshType = type;
+
+        updateColor();
     }
 
     void PointMesh::setMeshShape(const Shape shape)
@@ -278,6 +280,16 @@ namespace nero
     unsigned int PointMesh::getPointCount() const
     {
         return m_VertexTable.size();
+    }
+
+    VertexTable& PointMesh::getVertexTable()
+    {
+        return m_VertexTable;
+    }
+
+    LineTable& PointMesh::getLineTable()
+    {
+        return m_LineTable;
     }
 
     void PointMesh::moveMesh(const sf::Vector2f& offset)

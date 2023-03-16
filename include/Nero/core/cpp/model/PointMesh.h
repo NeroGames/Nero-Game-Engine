@@ -59,11 +59,13 @@ namespace nero
         Shape                  getMeshShape() const;
         bool                   meshValid() const;
 
-        void                   addPoint(const sf::Vector2f& point, const int& index);
-        void                   addPoint(const sf::Vector2f& point);
-        void                   deletePoint(const int& index);
+        void                   addVertex(const sf::Vector2f& point, const int& index);
+        void                   addVertex(const sf::Vector2f& point);
+        void                   deleteVertex(const int& index);
         void                   addLine(const sf::Vector2f& pointOne, const sf::Vector2f& pointTwo);
         PointTable             getPointTable() const;
+        VertexTable&           getVertexTable();
+        LineTable&             getLineTable();
         unsigned int           getPointCount() const;
         void                   updateColor();
         sf::Color              getColor() const;

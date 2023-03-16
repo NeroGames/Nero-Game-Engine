@@ -43,9 +43,9 @@ namespace nero
         void handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse,
                                      const bool&                        isPressed);
         void handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
-        void rotateMesh(Mesh* mesh, float speed = 0.1f);
-        void scaleMesh(Mesh* mesh, float scale = 0.1f);
-        void deselectMesh(MeshObject::Ptr mesh);
+        void rotateMesh(PointMesh::Ptr mesh, float speed = 0.1f);
+        void scaleMesh(PointMesh::Ptr mesh, float scale = 0.1f);
+        void deselectMesh(MeshObject::Ptr meshObject);
 
       private:
         MeshTab                                            m_MeshTab;
