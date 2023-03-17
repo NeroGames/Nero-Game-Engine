@@ -5,7 +5,7 @@
 #ifndef SCENE_UTIL_H
 #define SCENE_UTIL_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/core/cpp/camera/Camera.h>
 #include <Nero/core/cpp/object/Object.h>

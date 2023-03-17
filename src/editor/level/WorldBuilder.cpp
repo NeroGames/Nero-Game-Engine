@@ -3,7 +3,7 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/editor/level/WorldBuilder.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 #include <Nero/editor/icon/LightIcon.h>
@@ -624,8 +624,8 @@ namespace nero
             if((*it)->getId() == id)
             {
                 //(*it)->isVisible() ? m_UpdateLog("Hiding Layer [" + (*it)->getName() + "]",
-                // nero::Info) : m_UpdateLog("Showing Layer [" + (*it)->getName() + "]",
-                // nero::Info);
+                // Nero::Info) : m_UpdateLog("Showing Layer [" + (*it)->getName() + "]",
+                // Nero::Info);
 
                 (*it)->setIsVisible(!(*it)->isVisible());
 
@@ -735,7 +735,7 @@ namespace nero
         }
 
         // m_UpdateLog("copying Object [" + m_SelectedObject->getName() + "] " + pos_string,
-        // nero::Info);
+        // Nero::Info);
 
         Object::Ptr object = m_SelectedObject->clone(pos);
         object->setId(getNewId());
@@ -1009,7 +1009,7 @@ namespace nero
             case Object::Meshed_Object:
             {
                 // m_UpdateLog("adding Meshed Sprite Object with Sprite [" + label + "]",
-                // nero::Info);
+                // Nero::Info);
 
                 // Sprite Object
                 /*sf::Sprite  sprite;
@@ -1052,7 +1052,7 @@ namespace nero
             case Object::Animation_Object:
             {
                 // m_UpdateLog("adding Animation Object with Animation [" + label + "]",
-                // nero::Info);
+                // Nero::Info);
 
                 Animation animation;
                 auto sequenceMap = m_ResourceManager->getAnimationHolder()->getSequenceMap(label);
@@ -1092,7 +1092,7 @@ namespace nero
             case Object::Animation_Meshed_Object:
             {
                 // m_UpdateLog("adding Meshed Animation Object with Animation [" + label + "]",
-                // nero::Info);
+                // Nero::Info);
 
                 /*Animation animation;
                 auto sequenceMap = m_ResourceManager->getAnimationHolder()->getSequenceMap(label);
@@ -2409,7 +2409,7 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
         if(m_SelectedObject && m_SelectedObject->getFirstType() == Object::Text_Object)
         {
             // m_UpdateLog("changing text object [" + m_SelectedObject->getName() + "] font style",
-            // nero::Info);
+            // Nero::Info);
 
             TextObject::Cast(m_SelectedObject)->setStyle(bold, italic, underLined, strikeThrough);
         }

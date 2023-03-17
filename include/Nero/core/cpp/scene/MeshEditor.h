@@ -5,7 +5,7 @@
 #ifndef MESHEDITOR_H
 #define MESHEDITOR_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/MeshObject.h>
 #include <Nero/core/cpp/scene/SceneUtility.h>
 #include <SFML/Graphics/RenderTexture.hpp>

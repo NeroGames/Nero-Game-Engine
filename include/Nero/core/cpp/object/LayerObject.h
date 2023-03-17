@@ -5,7 +5,7 @@
 #ifndef LAYEROBJECT_H
 #define LAYEROBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/Object.h>
 // JSON
 #include <json/json.hpp>

@@ -5,7 +5,7 @@
 #ifndef LIGHTOBJECT_H
 #define LIGHTOBJECT_H
 ///////////////////////////HEADERS///////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/Object.h>
 // Lighting
 #include <ltbl/LightPointEmission.hpp>

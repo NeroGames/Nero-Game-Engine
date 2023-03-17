@@ -5,7 +5,7 @@
 #ifndef LOADINGSCREEN_H
 #define LOADINGSCREEN_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/engine/StartupScreen.h>
 // SFML
 #include <SFML/Graphics/Texture.hpp>

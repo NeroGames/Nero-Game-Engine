@@ -3,7 +3,7 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/resource/AnimationHolder.h>
 #include <Nero/core/cpp/utility/Utility.h>
 #include <experimental/filesystem>
@@ -80,7 +80,7 @@ namespace nero
                     m_SequenceMap[textureName][sequenceName] = std::vector<sf::IntRect>();
                 }
 
-                // nero_log("loaded : " + textureName + "-" + sequenceName + " " +
+                // Nero_log("loaded : " + textureName + "-" + sequenceName + " " +
                 // _s(frameBound.width) + " " + _s(frameBound.height));
                 m_SequenceMap[textureName][sequenceName].push_back(frameBound);
             }

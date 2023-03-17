@@ -5,7 +5,7 @@
 #ifndef PHYSICACTIONOBJECT_H
 #define PHYSICACTIONOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/PhysicObject.h>
 #include <Nero/core/cpp/model/Action.h>
 /////////////////////////////////////////////////////////////

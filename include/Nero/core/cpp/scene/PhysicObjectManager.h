@@ -5,7 +5,7 @@
 #ifndef PHYSICOBJECTMANAGER_H
 #define PHYSICOBJECTMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/PhysicObject.h>
 #include <Nero/core/cpp/model/PointMesh.h>
 // BOX2D

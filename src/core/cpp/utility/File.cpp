@@ -164,8 +164,8 @@ namespace nero
 
             if(!stream.is_open())
             {
-                // nero_log("failed to load json file : " + file);
-                // nero_log("file not found : " + file);
+                // Nero_log("failed to load json file : " + file);
+                // Nero_log("file not found : " + file);
                 return nlohmann::json();
             }
 
@@ -205,7 +205,7 @@ namespace nero
 
             if(!stream.is_open())
             {
-                // nero_log("failed to save file : " + fileName);
+                // Nero_log("failed to save file : " + fileName);
                 return;
             }
 
@@ -227,7 +227,7 @@ namespace nero
 
             if(!stream.is_open())
             {
-                // nero_log("failed to save file : " + fileName);
+                // Nero_log("failed to save file : " + fileName);
                 return;
             }
 

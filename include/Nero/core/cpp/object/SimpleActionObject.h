@@ -5,7 +5,7 @@
 #ifndef SIMPLEACTIONOBJECT_H
 #define SIMPLEACTIONOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/Object.h>
 #include <Nero/core/cpp/model/Action.h>
 // STD

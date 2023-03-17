@@ -5,7 +5,7 @@
 #ifndef MOTORJOINT_H
 #define MOTORJOINT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/model/PhysicJoint.h>
 // BOX2D
 #include <Box2D/Dynamics/Joints/b2MotorJoint.h>

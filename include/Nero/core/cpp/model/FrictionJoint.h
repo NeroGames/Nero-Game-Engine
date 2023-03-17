@@ -5,7 +5,7 @@
 #ifndef FRICTIONJOINT_H
 #define FRICTIONJOINT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/model/PhysicJoint.h>
 // BOX2D
 #include <Box2D/Dynamics/Joints/b2FrictionJoint.h>

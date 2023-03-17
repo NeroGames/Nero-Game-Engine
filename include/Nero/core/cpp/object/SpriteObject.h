@@ -5,7 +5,7 @@
 #ifndef SPRITEOBJECT_H
 #define SPRITEOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/Object.h>
 // SFML
 #include <SFML/Graphics/Sprite.hpp>

@@ -5,7 +5,7 @@
 #ifndef PRISMATICJOINT_H
 #define PRISMATICJOINT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/model/PhysicJoint.h>
 // BOX2D
 #include <Box2D/Dynamics/Joints/b2PrismaticJoint.h>

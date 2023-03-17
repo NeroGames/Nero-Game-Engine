@@ -5,7 +5,7 @@
 #ifndef BUTTONOBJECT_H
 #define BUTTONOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/UIObject.h>
 // STD
 #include <functional>

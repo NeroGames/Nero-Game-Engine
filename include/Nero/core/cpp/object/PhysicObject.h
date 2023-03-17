@@ -5,7 +5,7 @@
 #ifndef PHYSICOBJECT_H
 #define PHYSICOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/Object.h>
 // BOX2D
 #include <Box2D/Dynamics/b2Body.h>

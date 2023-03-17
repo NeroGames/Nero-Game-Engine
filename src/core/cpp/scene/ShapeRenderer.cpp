@@ -3,7 +3,7 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/scene/ShapeRenderer.h>
 #include <Nero/core/cpp/utility/Utility.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>

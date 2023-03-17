@@ -5,7 +5,7 @@
 #ifndef SPRITEACTIONOBJECT_H
 #define SPRITEACTIONOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/SpriteObject.h>
 #include <Nero/core/cpp/model/Action.h>
 /////////////////////////////////////////////////////////////

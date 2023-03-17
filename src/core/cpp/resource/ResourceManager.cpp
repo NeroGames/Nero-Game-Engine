@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////////////////
 
 ///////////////////////////HEADERS///////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/core/cpp/utility/File.h>
 #include <Nero/core/cpp/utility/Logging.h>

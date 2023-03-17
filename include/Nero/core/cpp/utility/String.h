@@ -25,15 +25,15 @@ namespace nero
         enum class Format // Input = Nero Game Engine
         {
             SNAKE_CASE,       // Nero_Game_Engine
-            SNAKE_CASE_LOWER, // nero_game_engine
-            SNAKE_CASE_UPPER, // NERO_GAME_ENGINE
-            CAMEL_CASE,       // neroGameEngine
+            SNAKE_CASE_LOWER, // Nero_game_engine
+            SNAKE_CASE_UPPER, // Nero_GAME_ENGINE
+            CAMEL_CASE,       // NeroGameEngine
             CAMEL_CASE_UPPER, // NeroGameEngine
             COMPACT,          // Nerogameengine
-            COMPACT_LOWER,    // nerogameengine
-            COMPACT_UPPER,    // NEROGAMEENGINE
-            UPPER_CASE,       // NERO GAME ENGINE
-            LOWER_CASE,       // nero game engine
+            COMPACT_LOWER,    // Nerogameengine
+            COMPACT_UPPER,    // NeroGAMEENGINE
+            UPPER_CASE,       // Nero GAME ENGINE
+            LOWER_CASE,       // Nero game engine
             TITLE_CASE,       // Nero Game Engine
             SENTENCE_CASE,    // Nero game engine
         };

@@ -5,7 +5,7 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/PhysicObject.h>
 // BOX2D
 #include <Box2D/Dynamics/Contacts/b2Contact.h>

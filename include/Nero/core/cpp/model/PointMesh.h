@@ -5,7 +5,7 @@
 #ifndef POINTMESH_H
 #define POINTMESH_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/utility/Utility.h>
 // SFML
 #include <SFML/Graphics/RectangleShape.hpp>

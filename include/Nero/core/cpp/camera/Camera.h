@@ -5,7 +5,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/utility/Utility.h>
 // SFML
 #include <SFML/Window/Event.hpp>

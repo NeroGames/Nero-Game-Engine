@@ -5,7 +5,7 @@
 #ifndef GRID_H
 #define GRID_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/utility/Utility.h>
 // SFML
 #include <SFML/Graphics/RectangleShape.hpp>

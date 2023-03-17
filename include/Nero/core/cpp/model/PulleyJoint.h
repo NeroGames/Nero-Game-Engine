@@ -5,7 +5,7 @@
 #ifndef PULLEYJOINT_H
 #define PULLEYJOINT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/model/PhysicJoint.h>
 // BOX2D
 #include <Box2D/Dynamics/Joints/b2PulleyJoint.h>

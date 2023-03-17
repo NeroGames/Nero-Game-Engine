@@ -5,7 +5,7 @@
 #ifndef PHYSICALMESHOBJECT_H
 #define PHYSICALMESHOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/Object.h>
 #include <Nero/core/cpp/model/PointMesh.h>
 // SFML

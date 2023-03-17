@@ -5,7 +5,7 @@
 #ifndef LAYERACTIONOBJECT_H
 #define LAYERACTIONOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/LayerObject.h>
 #include <Nero/core/cpp/model/Action.h>
 /////////////////////////////////////////////////////////////

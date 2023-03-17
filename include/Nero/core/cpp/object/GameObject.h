@@ -5,7 +5,7 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 ///////////////////////////HEADERS///////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/GenericObject.h>
 // STD
 #include <memory>

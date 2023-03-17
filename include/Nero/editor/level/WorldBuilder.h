@@ -5,7 +5,7 @@
 #ifndef WorldBuilder_H
 #define WorldBuilder_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/core/cpp/object/MeshObject.h>
 #include <Nero/core/cpp/object/SpriteObject.h>

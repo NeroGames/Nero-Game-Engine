@@ -5,7 +5,7 @@
 #ifndef TEXTOBJECT_H
 #define TEXTOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/Object.h>
 // SFML
 #include <SFML/Graphics/Text.hpp>

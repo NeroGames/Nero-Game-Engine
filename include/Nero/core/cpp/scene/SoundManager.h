@@ -5,7 +5,7 @@
 #ifndef SOUNDMANAGER_H
 #define SOUNDMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/resource/MusicHolder.h>
 #include <Nero/core/cpp/resource/SoundHolder.h>
 #include <Nero/core/cpp/scene/SceneUtility.h>

@@ -5,7 +5,7 @@
 #ifndef UIOBJECT_H
 #define UIOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/Object.h>
 // SFML
 #include <SFML/Window/Event.hpp>

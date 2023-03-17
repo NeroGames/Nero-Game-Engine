@@ -3,12 +3,8 @@
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/SpriteObject.h>
-#include <Nero/core/cpp/object/MeshObject.h>
-#include <Nero/core/cpp/object/PhysicObject.h>
-// BOX2D
-#include <Box2D/Dynamics/b2Body.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {

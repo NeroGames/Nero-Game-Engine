@@ -5,7 +5,7 @@
 #ifndef MOUSEJOINT_H
 #define MOUSEJOINT_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/model/PhysicJoint.h>
 // BOX2D
 #include <Box2D/Dynamics/Joints/b2MouseJoint.h>

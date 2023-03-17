@@ -5,7 +5,7 @@
 #ifndef LIGHTICON_H
 #define LIGHTICON_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/Object.h>
 // SFML
 #include <SFML/Graphics/Sprite.hpp>

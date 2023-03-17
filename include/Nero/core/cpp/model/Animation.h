@@ -5,7 +5,7 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/model/AnimationSequence.h>
 // SFML
 #include <SFML/Graphics/Drawable.hpp>

@@ -5,7 +5,7 @@
 #ifndef COLLISIONRULE_H
 #define COLLISIONRULE_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/Object.h>
 #include <Nero/core/cpp/object/PhysicObject.h>
 // STD

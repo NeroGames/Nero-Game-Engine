@@ -5,7 +5,7 @@
 #ifndef FRONTSCREEN_H
 #define FRONTSCREEN_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/Object.h>
 #include <Nero/core/cpp/object/UIObject.h>
 /////////////////////////////////////////////////////////////

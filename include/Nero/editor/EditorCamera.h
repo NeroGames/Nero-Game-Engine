@@ -5,7 +5,7 @@
 #ifndef ADVANCEDCAMERA_H
 #define ADVANCEDCAMERA_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/camera/Camera.h>
 // STD
 #include <memory>

@@ -5,7 +5,7 @@
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/utility/String.h>
 #include <Nero/core/cpp/resource/FontHolder.h>
 #include <Nero/core/cpp/resource/SoundHolder.h>

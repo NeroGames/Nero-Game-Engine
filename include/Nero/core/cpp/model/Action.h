@@ -5,7 +5,7 @@
 #ifndef ACTION_H
 #define ACTION_H
 ///////////////////////////HEADERS//////////////////////////
-// NERO
+// Nero
 #include <Nero/core/cpp/object/PhysicObject.h>
 #include <Nero/core/cpp/object/SpriteObject.h>
 #include <Nero/core/cpp/object/LayerObject.h>
