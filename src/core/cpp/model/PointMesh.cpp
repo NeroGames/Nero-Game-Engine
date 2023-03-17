@@ -411,10 +411,7 @@ namespace nero
 
     void PointMesh::updateShape()
     {
-        if(m_MeshShape == Shape::Polygon)
-            updateLine(true);
-        else
-            updateLine(false);
+        updateLine(false);
     }
 
     nlohmann::json PointMesh::toJson() const
