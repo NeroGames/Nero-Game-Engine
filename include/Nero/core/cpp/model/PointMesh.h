@@ -78,6 +78,10 @@ namespace nero
         virtual void           moveMesh(const sf::Vector2f& offset);
         virtual void           scaleMesh(const sf::Vector2f& scaleFactor);
         virtual void           rotateMesh(const float& angle);
+        void                   transform(const sf::Vector2f& position,
+                                         const sf::Vector2f& scale,
+                                         const float&        rotation);
+
         virtual nlohmann::json toJson() const;
 
       protected:
@@ -102,6 +106,10 @@ namespace nero
         bool            m_MeshValid;
         VertexTable     m_VertexTable;
         LineTable       m_LineTable;
+        // Transform
+        sf::Vector2f    m_Position;
+        sf::Vector2f    m_Scale;
+        float           m_Rotation;
     };
 } // namespace nero
 #endif // POINTMESH_H

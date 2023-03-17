@@ -15,6 +15,9 @@ namespace nero
         , m_MeshShape(shape)
         , m_MeshType(Type::Static)
         , m_MeshValid(false)
+        , m_Position(sf::Vector2f(0.f, 0.f))
+        , m_Scale(sf::Vector2f(1.f, 1.f))
+        , m_Rotation(0.f)
     {
         // Create the default Line/Chain with two vertices
         if(m_MeshShape == Shape::Line || m_MeshShape == Shape::Chain)
@@ -83,12 +86,12 @@ namespace nero
         // TODO move to circleMesh class
         if(m_MeshShape == Shape::Circle)
         {
-            sf::Vector2f pointOne = m_VertexTable[0].getPosition();
-            sf::Vector2f pointTwo = m_VertexTable[1].getPosition();
+            sf::Vector2f pointOne = m_VertexTable.front().getPosition();
+            sf::Vector2f pointTwo = m_VertexTable.back().getPosition();
             float        radius   = math::distance(pointOne, pointTwo);
 
             globalBound.left      = pointOne.x - radius - 5.f;
-            globalBound.top       = pointTwo.y - radius - 5.f;
+            globalBound.top       = pointOne.y - radius - 5.f;
             globalBound.height    = radius * 2.f + 10.f;
             globalBound.width     = radius * 2.f + 10.f;
 
@@ -154,7 +157,7 @@ namespace nero
         line.setOrigin(sf::Vector2f(line.getOrigin().x, m_VertexSize / 4.f));
         line.setSize(sf::Vector2f(lineLength, m_VertexSize / 2.f));
         line.setPosition(pointOne);
-        line.setFillColor(getColor());
+        line.setFillColor(graphics::getTransparentColor(getColor(), m_ColorAlpha));
 
         float xDelta = pointTwo.x - pointOne.x;
         float yDelta = pointTwo.y - pointOne.y;
@@ -447,5 +450,26 @@ namespace nero
     sf::String PointMesh::toSting() const
     {
         return toJson().dump(4);
+    }
+
+    void PointMesh::transform(const sf::Vector2f& position,
+                              const sf::Vector2f& scale,
+                              const float&        rotation)
+    {
+        if(scale != m_Scale)
+        {
+            scaleMesh(sf::Vector2f(scale.x / m_Scale.x, scale.y / m_Scale.y));
+            m_Scale = scale;
+        }
+        else if(rotation > m_Rotation || rotation < m_Rotation)
+        {
+            rotateMesh(rotation - m_Rotation);
+            m_Rotation = rotation;
+        }
+        else if(position != m_Position)
+        {
+            moveMesh(position - m_Position);
+            m_Position = position;
+        }
     }
 } // namespace nero

@@ -43,9 +43,8 @@ namespace nero
         virtual void drawObject(sf::RenderTarget& target, sf::RenderStates states) const;
 
       private:
-        sf::Sprite   m_Sprite;
-        sf::String   m_TextureName;
-        sf::Vector2f m_ParentLastPosition;
+        sf::Sprite m_Sprite;
+        sf::String m_TextureName;
     };
 } // namespace nero
 #endif // SPRITEOBJECT_H

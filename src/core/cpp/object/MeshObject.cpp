@@ -37,6 +37,22 @@ namespace nero
         target.draw(*m_Mesh, states);
     }
 
+    void MeshObject::updateObject(sf::Time timeStep)
+    {
+        sf::Vector2f position = getPosition();
+        sf::Vector2f scale    = getScale();
+        float        rotation = getRotation();
+        for(Object* parent = getParent(); parent != nullptr; parent = parent->getParent())
+        {
+            position += parent->getPosition();
+            scale.x  *= parent->getScale().x;
+            scale.y  *= parent->getScale().y;
+            rotation += parent->getRotation();
+        }
+
+        m_Mesh->transform(position, scale, rotation);
+    }
+
     sf::FloatRect MeshObject::getGlobalBounds() const
     {
         return m_Mesh->getGlobalBounds();

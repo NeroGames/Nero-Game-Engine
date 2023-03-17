@@ -15,7 +15,6 @@ namespace nero
     SpriteObject::SpriteObject()
         : Object()
         , m_TextureName("")
-        , m_ParentLastPosition(sf::Vector2f(0.f, 0.f))
     {
         setFirstType(Object::Sprite_Object);
         setSecondType(Object::Sprite_Object);

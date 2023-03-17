@@ -41,11 +41,10 @@ namespace nero
         virtual void drawObject(sf::RenderTarget& target, sf::RenderStates states) const override;
 
       private:
-        sf::Sprite   m_Sprite;
-        sf::String   m_LightmapName;
-        sf::Vector2f m_ParentLastPosition;
-        sf::Color    m_LightColor;
-        bool         m_LightEnabled;
+        sf::Sprite m_Sprite;
+        sf::String m_LightmapName;
+        sf::Color  m_LightColor;
+        bool       m_LightEnabled;
     };
 } // namespace nero
 #endif // LIGHTICON_H

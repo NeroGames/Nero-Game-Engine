@@ -37,6 +37,7 @@ namespace nero
 
       private:
         void drawObject(sf::RenderTarget& target, sf::RenderStates states) const;
+        void updateObject(sf::Time timeStep);
 
       private:
         PointMesh::Ptr m_Mesh;

@@ -11,7 +11,6 @@ namespace nero
     LightIcon::LightIcon()
         : Object()
         , m_LightmapName("")
-        , m_ParentLastPosition(sf::Vector2f(0.f, 0.f))
         , m_LightColor(sf::Color::White)
         , m_LightEnabled(true)
     {
