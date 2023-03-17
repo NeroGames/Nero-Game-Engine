@@ -1875,29 +1875,45 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
 
     PhysicalMeshObject::Ptr WorldBuilder::loadMesh(nlohmann::json& json)
     {
-        /*Mesh           mesh      = Mesh();
+        PointMesh::Ptr mesh     = nullptr;
+        nlohmann::json meshJson = json["mesh"];
 
-        nlohmann::json mesh_json = json["mesh"];
         // shape
-        if(mesh_json["shape"] == "polygon_mesh")
-            mesh.setShape(PointMesh::Shape::Polygon);
-        else if(mesh_json["shape"] == "circle_mesh")
-            mesh.setShape(PointMesh::Shape::Circle);
-        else if(mesh_json["shape"] == "line_mesh")
-            mesh.setShape(PointMesh::Shape::Line);
-        else if(mesh_json["shape"] == "chain_mesh")
-            mesh.setShape(PointMesh::Shape::Chain);
+        if(meshJson["shape"] == "polygon_mesh")
+        {
+            mesh = std::make_shared<PolygonMesh>();
+            mesh->getVertexTable().clear();
+        }
+        else if(meshJson["shape"] == "circle_mesh")
+        {
+            mesh = std::make_shared<CircleMesh>();
+            mesh->getVertexTable().clear();
+        }
+        else if(meshJson["shape"] == "line_mesh")
+        {
+            mesh = std::make_shared<PointMesh>(PointMesh::Line);
+            mesh->getVertexTable().clear();
+        }
+        else if(meshJson["shape"] == "chain_mesh")
+        {
+            mesh = std::make_shared<PointMesh>(PointMesh::Chain);
+            mesh->getVertexTable().clear();
+        }
+        else if(meshJson["shape"] == "none")
+        {
+            mesh = std::make_shared<PointMesh>(PointMesh::None);
+        }
 
         // type
-        if(mesh_json["type"] == "static_mesh")
-            mesh.setType(Mesh::Type::Static);
-        else if(mesh_json["type"] == "dynamic_mesh")
-            mesh.setType(Mesh::Type::Dynamic);
-        else if(mesh_json["type"] == "kinematic_mesh")
-            mesh.setType(Mesh::Type::Kinematic);
+        if(meshJson["type"] == "static_mesh")
+            mesh->setMeshType(PointMesh::Type::Static);
+        else if(meshJson["type"] == "dynamic_mesh")
+            mesh->setMeshType(PointMesh::Type::Dynamic);
+        else if(meshJson["type"] == "kinematic_mesh")
+            mesh->setMeshType(PointMesh::Type::Kinematic);
 
         // properties
-        mesh.setFixedRotation(mesh_json["fixed_rotation"]);
+        /*mesh.setFixedRotation(mesh_json["fixed_rotation"]);
         mesh.setIsSensor(mesh_json["is_sensor"]);
         mesh.setAllowSleep(mesh_json["allow_sleep"]);
         mesh.setDensity(mesh_json["density"]);
@@ -1905,34 +1921,32 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
         mesh.setRestitution(mesh_json["restitution"]);
         mesh.setGravityScale(mesh_json["gravity_scale"]);
         mesh.setIsValid(mesh_json["is_valid"]);
-        mesh.setMeshId(json["object_id"]);
+        mesh.setMeshId(json["object_id"]);*/
 
         // vertex
-        nlohmann::json vertex_table = mesh_json["vertex_table"];
+        nlohmann::json vertexTable = meshJson["vertex_table"];
 
-        for(auto& vertex : vertex_table)
-            mesh.addVertex(sf::Vector2f(vertex["x"], vertex["y"]));
+        for(const auto& vertex : vertexTable)
+            mesh->addVertex(sf::Vector2f(vertex["x"], vertex["y"]));
 
-        mesh.updateShape();
-        mesh.updateColor();
+        mesh->updateShape();
+        mesh->updateColor();
 
-        PhysicalMeshObject::Ptr mesh_object(new MeshObject());
+        PhysicalMeshObject::Ptr meshObject(new PhysicalMeshObject());
 
-        mesh_object->setMesh(mesh);
-        mesh_object->setId(json["object_id"]);
-        mesh_object->setName(json["name"].get<std::string>());
-        mesh_object->setCategory(json["category"].get<std::string>());
-        mesh_object->setSecondType(Object::Mesh_Object);
-        mesh_object->setIsVisible(json["is_visible"]);
-        mesh_object->setIsUpdateable(json["is_updateable"]);
-        mesh_object->setIsSelectable(json["is_selectable"]);
-        mesh_object->setIsSelected(json["is_selected"]);
+        meshObject->setMesh(mesh);
+        meshObject->setId(json["object_id"]);
+        meshObject->setName(json["name"].get<std::string>());
+        meshObject->setCategory(json["category"].get<std::string>());
+        meshObject->setSecondType(Object::Mesh_Object);
+        meshObject->setIsVisible(json["is_visible"]);
+        meshObject->setIsUpdateable(json["is_updateable"]);
+        meshObject->setIsSelectable(json["is_selectable"]);
+        meshObject->setIsSelected(json["is_selected"]);
 
-        m_MeshEditor->addMesh(mesh_object);
+        m_MeshEditor->addMesh(meshObject);
 
-        return mesh_object;*/
-
-        return nullptr;
+        return meshObject;
     }
 
     TextObject::Ptr WorldBuilder::loadText(nlohmann::json& json)
