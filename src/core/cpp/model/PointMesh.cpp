@@ -418,11 +418,41 @@ namespace nero
     {
         nlohmann::json mesh;
 
-        mesh["shape"]    = "TODO"; // String_Shape[getShape()];
-        mesh["type"]     = "TODO"; // String_Type[getType()];
+        switch(m_MeshShape)
+        {
+            case Shape::Line:
+                mesh["shape"] = "line_mesh";
+                break;
+            case Polygon:
+                mesh["shape"] = "polygon_mesh";
+                break;
+            case Circle:
+                mesh["shape"] = "circle_mesh";
+                break;
+            case Chain:
+                mesh["shape"] = "chain_mesh";
+                break;
+            case None:
+                mesh["shape"] = "none";
+                break;
+        }
+
+        switch(m_MeshType)
+        {
+            case Static:
+                mesh["type"] = "static_mesh";
+                break;
+            case Dynamic:
+                mesh["type"] = "dynamic_mesh";
+                break;
+            case Kinematic:
+                mesh["type"] = "kinematic_mesh";
+                break;
+        }
+
         mesh["is_valid"] = m_MeshValid;
 
-        std::vector<nlohmann::json> vertex_table;
+        std::vector<nlohmann::json> vertexTableJson;
 
         int                         i = 0;
         for(auto v : m_VertexTable)
@@ -435,10 +465,10 @@ namespace nero
             };
             vertex["order"] = i++;
 
-            vertex_table.push_back(vertex);
+            vertexTableJson.push_back(vertex);
         }
 
-        mesh["vertex_table"] = vertex_table;
+        mesh["vertex_table"] = vertexTableJson;
         mesh["vertex_count"] = i;
 
         return mesh;
