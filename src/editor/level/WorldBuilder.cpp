@@ -781,7 +781,7 @@ namespace nero
 
         if(object->getSecondType() == Object::Mesh_Object)
         {
-            MeshObject::Ptr mesh_object = MeshObject::Cast(object);
+            PhysicalMeshObject::Ptr mesh_object = PhysicalMeshObject::Cast(object);
             mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
             m_MeshEditor->addMesh(mesh_object);
         }
@@ -793,7 +793,7 @@ namespace nero
             Object::Ptr  child_object = m_SelectedObject->getFirstChild()->clone(posf);
             child_object->setId(getNewId());
 
-            MeshObject::Ptr mesh_object = MeshObject::Cast(child_object);
+            PhysicalMeshObject::Ptr mesh_object = PhysicalMeshObject::Cast(child_object);
             mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
             mesh_object->setIsSelectable(false);
 
@@ -917,7 +917,7 @@ namespace nero
 
                 mesh->setMeshId(getNewId());
 
-                MeshObject::Ptr meshObject = std::make_shared<MeshObject>();
+                PhysicalMeshObject::Ptr meshObject = std::make_shared<PhysicalMeshObject>();
                 meshObject->setId(mesh->getMeshId());
                 meshObject->setName("mesh " + toString(mesh->getMeshId()));
                 meshObject->setMesh(mesh);
@@ -945,7 +945,7 @@ namespace nero
 
                     mesh.setMeshId(getNewId());
 
-                    MeshObject::Ptr mesh_object(new MeshObject());
+                    PhysicalMeshObject::Ptr mesh_object(new MeshObject());
                     mesh_object->setId(mesh.getMeshId());
                     std::string object_name = "mesh " + toString(mesh.getMeshId());
                     mesh_object->setName(object_name);
@@ -1031,7 +1031,7 @@ namespace nero
                 // Mesh Object
                 Mesh mesh = Mesh(PointMesh::Shape::Polygon);
                 mesh.setMeshId(getNewId());
-                MeshObject::Ptr mesh_object(new MeshObject());
+                PhysicalMeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getMeshId());
                 object_name = "mesh " + toString(mesh.getMeshId());
                 mesh_object->setName(object_name);
@@ -1128,7 +1128,7 @@ namespace nero
                 // Mesh Object
                 Mesh mesh = Mesh(PointMesh::Shape::Polygon);
                 mesh.setMeshId(getNewId());
-                MeshObject::Ptr mesh_object(new MeshObject());
+                PhysicalMeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getMeshId());
                 object_name = "mesh " + toString(mesh.getMeshId());
                 mesh_object->setName(object_name);
@@ -1289,7 +1289,7 @@ namespace nero
         else if(label == "Dynamic")
             type = Mesh::Type::Dynamic;
 
-        MeshObject::Ptr mesh_object;
+        PhysicalMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1314,7 +1314,7 @@ namespace nero
         // flag ?  m_UpdateLog("enabling fix rotation", nero::Info) :  //m_UpdateLog("disabling fix
         // rotation", nero::Info);
 
-        MeshObject::Ptr mesh_object;
+        PhysicalMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1339,7 +1339,7 @@ namespace nero
         // flag ?  m_UpdateLog("enabling sensor mode", nero::Info) :  //m_UpdateLog("disabling
         // sensor mode", nero::Info);
 
-        MeshObject::Ptr mesh_object;
+        PhysicalMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1364,7 +1364,7 @@ namespace nero
         // flag ?  m_UpdateLog("enabling allow to sleeping", nero::Info) :  //m_UpdateLog("disabling
         // allow to sleeping", nero::Info);
 
-        MeshObject::Ptr mesh_object;
+        PhysicalMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1386,7 +1386,7 @@ namespace nero
            m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-        MeshObject::Ptr mesh_object;
+        PhysicalMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1408,7 +1408,7 @@ namespace nero
            m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-        MeshObject::Ptr mesh_object;
+        PhysicalMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1430,7 +1430,7 @@ namespace nero
            m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-        MeshObject::Ptr mesh_object;
+        PhysicalMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1452,7 +1452,7 @@ namespace nero
            m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-        MeshObject::Ptr mesh_object;
+        PhysicalMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1600,7 +1600,7 @@ namespace nero
             for(auto it = children->begin(); it != children->end(); it++)
             {
                 //convert into MeshObject
-                MeshObject::Ptr mesh_object = MeshObject::Cast(*it);
+                PhysicalMeshObject::Ptr mesh_object = MeshObject::Cast(*it);
 
                                         if(!mesh_object->getMesh()->isValid())
                                                 continue;
@@ -1666,7 +1666,7 @@ mesh_object->getMesh()->getPolygonTable())
             for(auto it = children->begin(); it != children->end(); it++)
             {
                 //convert into MeshObject
-                MeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
+                PhysicalMeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
 
                 if(!mesh_object->getMesh()->isValid())
                     break;
@@ -1704,7 +1704,7 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
             for(auto it = children->begin(); it != children->end(); it++)
             {
                 //Convert into MeshObject
-                MeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
+                PhysicalMeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
 
                 if(!mesh_object->getMesh()->isValid())
                     break;
@@ -1873,7 +1873,7 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
         return light_icon;
     }
 
-    MeshObject::Ptr WorldBuilder::loadMesh(nlohmann::json& json)
+    PhysicalMeshObject::Ptr WorldBuilder::loadMesh(nlohmann::json& json)
     {
         /*Mesh           mesh      = Mesh();
 
@@ -1916,7 +1916,7 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
         mesh.updateShape();
         mesh.updateColor();
 
-        MeshObject::Ptr mesh_object(new MeshObject());
+        PhysicalMeshObject::Ptr mesh_object(new MeshObject());
 
         mesh_object->setMesh(mesh);
         mesh_object->setId(json["object_id"]);
@@ -2110,8 +2110,8 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
 
                     for(auto& meshed : meshed_table)
                     {
-                        SpriteObject::Ptr sprite_object = loadSprite(meshed["sprite"]);
-                        MeshObject::Ptr   mesh_object   = loadMesh(meshed["mesh"]);
+                        SpriteObject::Ptr       sprite_object = loadSprite(meshed["sprite"]);
+                        PhysicalMeshObject::Ptr mesh_object   = loadMesh(meshed["mesh"]);
 
                         sprite_object->setSecondType(Object::Meshed_Object);
                         sprite_object->addChild(mesh_object);
@@ -2141,7 +2141,7 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
                     for(auto& meshed : meshed_table)
                     {
                         AnimationObject::Ptr animation_object = loadAnimation(meshed["animation"]);
-                        MeshObject::Ptr      mesh_object      = loadMesh(meshed["mesh"]);
+                        PhysicalMeshObject::Ptr mesh_object   = loadMesh(meshed["mesh"]);
 
                         animation_object->setSecondType(Object::Meshed_Object);
                         animation_object->addChild(mesh_object);

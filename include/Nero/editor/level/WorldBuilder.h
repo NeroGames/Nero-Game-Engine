@@ -7,7 +7,7 @@
 ///////////////////////////HEADERS//////////////////////////
 // Nero
 #include <Nero/core/cpp/resource/ResourceManager.h>
-#include <Nero/core/cpp/object/MeshObject.h>
+#include <Nero/core/cpp/object/PhysicalMeshObject.h>
 #include <Nero/core/cpp/object/SpriteObject.h>
 #include <Nero/core/cpp/object/ButtonObject.h>
 #include <Nero/core/cpp/object/AnimationObject.h>
@@ -159,7 +159,7 @@ namespace nero
       private:
         SpriteObject::Ptr    loadSprite(nlohmann::json& json);
         TextObject::Ptr      loadText(nlohmann::json& json);
-        MeshObject::Ptr      loadMesh(nlohmann::json& json);
+        PhysicalMeshObject::Ptr      loadMesh(nlohmann::json& json);
         AnimationObject::Ptr loadAnimation(nlohmann::json& json);
         LightIcon::Ptr       loadLight(nlohmann::json& json);
         int                  getNewId();

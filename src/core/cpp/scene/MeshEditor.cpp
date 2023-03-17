@@ -58,7 +58,7 @@ namespace nero
         }
     }
 
-    void MeshEditor::addMesh(MeshObject::Ptr mesh)
+    void MeshEditor::addMesh(PhysicalMeshObject::Ptr mesh)
     {
         m_MeshTab.push_back(mesh);
     }
@@ -101,7 +101,7 @@ namespace nero
         return m_MeshTab;
     }
 
-    void MeshEditor::deselectMesh(MeshObject::Ptr meshObject)
+    void MeshEditor::deselectMesh(PhysicalMeshObject::Ptr meshObject)
     {
         if(meshObject)
         {

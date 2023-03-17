@@ -6,7 +6,7 @@
 #define MESHEDITOR_H
 ///////////////////////////HEADERS//////////////////////////
 // Nero
-#include <Nero/core/cpp/object/MeshObject.h>
+#include <Nero/core/cpp/object/PhysicalMeshObject.h>
 #include <Nero/core/cpp/scene/SceneUtility.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 // STD
@@ -17,17 +17,17 @@ namespace nero
     class MeshEditor
     {
       public:
-        typedef std::shared_ptr<MeshEditor>        Ptr;
-        typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
-        typedef sf::RectangleShape                 Vertex;
-        typedef std::vector<MeshObject::Ptr>       MeshTab;
+        typedef std::shared_ptr<MeshEditor>          Ptr;
+        typedef std::shared_ptr<sf::RenderTexture>   RenderTexturePtr;
+        typedef sf::RectangleShape                   Vertex;
+        typedef std::vector<PhysicalMeshObject::Ptr> MeshTab;
 
         MeshEditor();
         virtual ~MeshEditor();
 
         void     handleEvent(const sf::Event& event);
 
-        void     addMesh(MeshObject::Ptr mesh);
+        void     addMesh(PhysicalMeshObject::Ptr mesh);
         void     deleteMesh(const int& id);
         void     destroyAllMesh();
         MeshTab& getMeshTab();
@@ -45,11 +45,11 @@ namespace nero
         void handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
         void rotateMesh(PointMesh::Ptr mesh, float speed = 0.1f);
         void scaleMesh(PointMesh::Ptr mesh, float scale = 0.1f);
-        void deselectMesh(MeshObject::Ptr meshObject);
+        void deselectMesh(PhysicalMeshObject::Ptr meshObject);
 
       private:
         MeshTab                                            m_MeshTab;
-        MeshObject::Ptr                                    m_SelectedMesh;
+        PhysicalMeshObject::Ptr                            m_SelectedMesh;
         std::vector<sf::RectangleShape*>                   m_SelectedVertexTab;
         int                                                m_MeshCount;
         RenderTexturePtr                                   m_RenderTexture;
