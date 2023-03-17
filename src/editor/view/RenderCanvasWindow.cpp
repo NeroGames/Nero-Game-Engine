@@ -182,34 +182,31 @@ namespace nero
         sf::Vector2f windowPosition = ImGui::GetWindowPos();
         sf::Vector2f windowSize     = ImGui::GetWindowSize();
         sf::Vector2f mousePosition  = ImGui::GetMousePos();
-        float        titleBarHeight = ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2;
         sf::Vector2f windowPadding  = ImGui::GetStyle().WindowPadding;
-
-        windowSize.y                -= 23.f;
+        float titleBarHeight = ImGui::GetFontSize() * 2 + ImGui::GetStyle().FramePadding.y * 4;
 
         RenderContext renderContext;
         renderContext.canvasPosition =
             sf::Vector2f(windowPosition.x + windowPadding.x,
-                         windowPosition.y + titleBarHeight + windowPadding.y + 22.f);
+                         windowPosition.y + windowPadding.y + titleBarHeight);
+
         renderContext.canvasSize =
             sf::Vector2f(windowSize.x - windowPadding.x * 2,
-                         windowSize.y - titleBarHeight - windowPadding.y * 2);
+                         windowSize.y - windowPadding.y * 2 - titleBarHeight);
+
+        if(renderContext.canvasSize.x < 100.f)
+            renderContext.canvasSize.x = 100.f;
+
+        if(renderContext.canvasSize.y < 100.f)
+            renderContext.canvasSize.y = 100.f;
+
         renderContext.mousePosition =
             sf::Vector2f(mousePosition.x - renderContext.canvasPosition.x,
                          mousePosition.y - renderContext.canvasPosition.y);
+
         renderContext.focus = ImGui::IsWindowFocused();
 
-        if(renderContext.canvasSize.x < 100.f)
-        {
-            renderContext.canvasSize.x = 100.f;
-        }
-
-        if(renderContext.canvasSize.y < 100.f)
-        {
-            renderContext.canvasSize.y = 100.f;
-        }
-
-        *m_RenderContext = renderContext;
+        *m_RenderContext    = renderContext;
     }
 
     void RenderCanvasWindow::prepareRenderTexture()
