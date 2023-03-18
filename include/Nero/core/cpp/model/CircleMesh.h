@@ -19,8 +19,10 @@ namespace nero
 
       public:
         CircleMesh();
-        virtual void updateShape() override;
-        virtual void updateColor() override;
+        virtual void           updateShape() override;
+        virtual void           updateColor() override;
+        sf::CircleShape&       getCircleShape();
+        static CircleMesh::Ptr Cast(PointMesh::Ptr pointMesh);
 
       private:
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

@@ -18,6 +18,7 @@ namespace nero
 
         m_CircleShape.setOutlineThickness(1.f);
 
+        m_MeshType = PointMesh::Dynamic;
         updateShape();
         updateColor();
     }
@@ -47,6 +48,19 @@ namespace nero
         PointMesh::updateColor();
         m_CircleShape.setFillColor(graphics::getTransparentColor(getColor(), m_ColorAlpha));
         m_CircleShape.setOutlineColor(getColor());
+    }
+
+    sf::CircleShape& CircleMesh::getCircleShape()
+    {
+        return m_CircleShape;
+    }
+
+    CircleMesh::Ptr CircleMesh::Cast(PointMesh::Ptr pointMesh)
+    {
+        if(pointMesh->getMeshShape() != PointMesh::Circle)
+            return nullptr;
+
+        return std::static_pointer_cast<CircleMesh>(pointMesh);
     }
 
 } // namespace nero

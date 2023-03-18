@@ -157,12 +157,12 @@ namespace nero
         Object::Ptr findObject(Object::Ptr object, int id);
 
       private:
-        SpriteObject::Ptr    loadSprite(nlohmann::json& json);
-        TextObject::Ptr      loadText(nlohmann::json& json);
-        PhysicalMeshObject::Ptr      loadMesh(nlohmann::json& json);
-        AnimationObject::Ptr loadAnimation(nlohmann::json& json);
-        LightIcon::Ptr       loadLight(nlohmann::json& json);
-        int                  getNewId();
+        SpriteObject::Ptr       loadSprite(nlohmann::json& json);
+        TextObject::Ptr         loadText(nlohmann::json& json);
+        PhysicalMeshObject::Ptr loadMesh(nlohmann::json& json);
+        AnimationObject::Ptr    loadAnimation(nlohmann::json& json);
+        LightIcon::Ptr          loadLight(nlohmann::json& json);
+        int                     getNewId();
 
       private:
         ResourceManager::Ptr                               m_ResourceManager;
@@ -181,7 +181,7 @@ namespace nero
         int                                                m_ObjectCount;
 
         MeshEditor::Ptr                                    m_MeshEditor;
-        PhysicObjectManager                                m_PhysicObjectManager;
+        PhysicObjectManager                                m_PhysicsObjectManager;
 
         b2World*                                           m_PhysicWorld;
 

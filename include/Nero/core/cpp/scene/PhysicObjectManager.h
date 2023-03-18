@@ -19,25 +19,26 @@ namespace nero
 {
     class PhysicObjectManager
     {
-        /*public:
-                        PhysicObjectManager();
-    virtual            ~PhysicObjectManager();
+      public:
+        PhysicObjectManager();
+        virtual ~PhysicObjectManager();
 
-    PhysicObject::Ptr   createObject(Mesh* mesh);
-    void                setWorld(b2World* world);
+        PhysicObject::Ptr createObject(PointMesh::Ptr mesh);
+        void              setWorld(b2World* world);
 
-private:
-    void                setupBodyDef(Mesh& mesh);
-    void                setupFixtureDef(Mesh& mesh);
-    void                setupVertexTab(b2Vec2* tab, Mesh& mesh);
-    void                computePolygonBody(b2Body* pBody, b2FixtureDef* pFixtureDef,
-std::vector<b2Vec2>* pVerticesVec, int scale);
+      private:
+        void setupBodyDef(PointMesh::Ptr mesh);
+        void setupFixtureDef(PointMesh::Ptr mesh);
+        void setupVertexTab(b2Vec2* tab, PointMesh::Ptr mesh);
+        void computePolygonBody(b2Body*              pBody,
+                                b2FixtureDef*        pFixtureDef,
+                                std::vector<b2Vec2>* pVerticesVec,
+                                int                  scale);
 
-private:
-    b2World*            m_World;
-
-    b2BodyDef           m_BodyDef;
-                b2FixtureDef        m_FixtureDef;*/
+      private:
+        b2World*     m_World;
+        b2BodyDef    m_BodyDef;
+        b2FixtureDef m_FixtureDef;
     };
 } // namespace nero
 #endif // PHYSICOBJECTMANAGER_H

@@ -21,8 +21,10 @@ namespace nero
 
       public:
         PolygonMesh();
-        virtual void updateShape() override;
-        virtual void updateColor() override;
+        virtual void            updateShape() override;
+        virtual void            updateColor() override;
+        PolygonTable&           getPolygonTable();
+        static PolygonMesh::Ptr Cast(PointMesh::Ptr pointMesh);
 
       private:
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

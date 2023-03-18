@@ -28,7 +28,7 @@ namespace nero
         // Object
         , m_SelectedObject(nullptr)
         , m_ObjectCount(0)
-        , m_PhysicObjectManager()
+        , m_PhysicsObjectManager()
         , m_PhysicWorld(nullptr)
         , m_RenderContext(nullptr)
         , m_RightSelection(false)
@@ -1575,6 +1575,72 @@ namespace nero
                     chunkRoot->addChild(layer_object);
                 }
                 break;
+
+                case Object::Mesh_Object:
+                {
+                    Object::Ptr layerObject = (*layer)->clone();
+                    layerObject->setSecondType(Object::Physic_Object);
+
+                    auto children = (*layer)->getAllChild();
+
+                    for(auto it = children->begin(); it != children->end(); it++)
+                    {
+                        // convert into MeshObject
+                        PhysicalMeshObject::Ptr meshObject = PhysicalMeshObject::Cast(*it);
+
+                        if(!meshObject->getMesh()->meshValid())
+                            continue;
+
+                        PhysicObject::Ptr physicObject =
+                            m_PhysicsObjectManager.createObject(meshObject->getMesh());
+                        physicObject->setName(meshObject->getName());
+                        physicObject->setCategory(meshObject->getCategory());
+                        physicObject->setId(meshObject->getObjectId());
+                        physicObject->setUserData((void*)physicObject->getId());
+
+                        if(lightManager &&
+                           meshObject->getMesh()->getMeshType() == PointMesh::Type::Static)
+                        {
+                            switch(meshObject->getMesh()->getMeshShape())
+                            {
+                                case PointMesh::Circle:
+                                {
+                                    lightManager->createLightShape(
+                                        CircleMesh::Cast(meshObject->getMesh())->getCircleShape());
+                                }
+                                break;
+
+                                case PointMesh::Line:
+                                case PointMesh::Chain:
+                                {
+
+                                    for(sf::RectangleShape shape :
+                                        meshObject->getMesh()->getLineTable())
+                                    {
+                                        lightManager->createLightShape(shape);
+                                    }
+                                }
+                                break;
+
+                                case PointMesh::Shape::Polygon:
+                                {
+
+                                    for(sf::ConvexShape shape :
+                                        PolygonMesh::Cast(meshObject->getMesh())->getPolygonTable())
+                                    {
+                                        lightManager->createLightShape(shape);
+                                    }
+                                }
+                                break;
+                            }
+                        }
+
+                        layerObject->addChild(physicObject);
+                    }
+
+                    chunkRoot->addChild(layerObject);
+                }
+                break;
             }
         }
 
@@ -1590,70 +1656,6 @@ namespace nero
 
     switch((*layer)->getSecondType())
     {
-        case Object::Mesh_Object:
-        {
-            Object::Ptr layer_object = (*layer)->clone();
-            layer_object->setSecondType(Object::Physic_Object);
-
-            auto children = (*layer)->getAllChild();
-
-            for(auto it = children->begin(); it != children->end(); it++)
-            {
-                //convert into MeshObject
-                PhysicalMeshObject::Ptr mesh_object = MeshObject::Cast(*it);
-
-                                        if(!mesh_object->getMesh()->isValid())
-                                                continue;
-
-                PhysicObject::Ptr physic_object =
-m_PhysicObjectManager.createObject(mesh_object->getMesh());
-                physic_object->setName(mesh_object->getName());
-                physic_object->setCategory(mesh_object->getCategory());
-                                        physic_object->setId(mesh_object->getObjectId());
-                physic_object->setUserData((void*)physic_object->getId());
-
-                                        if(m_LightManager && mesh_object->getMesh()->getType() ==
-Mesh::Type::Static)
-                                        {
-                                                switch(mesh_object->getMesh()->getShape())
-                                                {
-                                                        case Mesh::Circle_Mesh:
-                                                        {
-                                                                m_LightManager->createLightShape(mesh_object->getMesh()->getCircleShape());
-                                                        }break;
-
-                                                        case Mesh::Line_Mesh:
-                                                        case Mesh::Chain_Mesh:
-                                                        {
-
-                                                                for(sf::RectangleShape shape :
-mesh_object->getMesh()->getLineTable())
-                                                                {
-                                                                        m_LightManager->createLightShape(shape);
-                                                                }
-
-                                                        }break;
-
-                                                        case PointMesh::Shape::Polygon:
-                                                        {
-
-                                                                for(sf::ConvexShape shape :
-mesh_object->getMesh()->getPolygonTable())
-                                                                {
-                                                                        m_LightManager->createLightShape(shape);
-                                                                }
-
-                                                        }break;
-                                                }
-
-                                        }
-
-                layer_object->addChild(physic_object);
-            }
-
-            rootObject->addChild(layer_object);
-
-        }break;
 
         case Object::Meshed_Object:
         {
@@ -1672,7 +1674,7 @@ mesh_object->getMesh()->getPolygonTable())
                     break;
 
                 PhysicObject::Ptr physic_object =
-m_PhysicObjectManager.createObject(mesh_object->getMesh());
+m_PhysicsObjectManager.createObject(mesh_object->getMesh());
                 physic_object->setSecondType(Object::Solid_Object);
                 physic_object->setName(mesh_object->getName());
                 physic_object->setCategory(mesh_object->getCategory());
@@ -1710,7 +1712,7 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
                     break;
 
                 PhysicObject::Ptr physic_object =
-m_PhysicObjectManager.createObject(mesh_object->getMesh());
+m_PhysicsObjectManager.createObject(mesh_object->getMesh());
                 physic_object->setSecondType(Object::Animation_Solid_Object);
                 physic_object->setName(mesh_object->getName());
                 physic_object->setCategory(mesh_object->getCategory());
@@ -2212,7 +2214,7 @@ m_PhysicObjectManager.createObject(mesh_object->getMesh());
     void WorldBuilder::setPhysicWorld(b2World* world)
     {
         m_PhysicWorld = world;
-        // m_PhysicObjectManager.setWorld(world);
+        // m_PhysicsObjectManager.setWorld(world);
     }
 
     int WorldBuilder::getNewId()

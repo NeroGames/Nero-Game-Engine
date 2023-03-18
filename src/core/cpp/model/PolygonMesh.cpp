@@ -23,6 +23,7 @@ namespace nero
             addVertex(point);
         }
 
+        m_MeshType = PointMesh::Dynamic;
         updateShape();
         updateColor();
     }
@@ -100,6 +101,19 @@ namespace nero
         }
 
         return pointTable;
+    }
+
+    PolygonTable& PolygonMesh::getPolygonTable()
+    {
+        return m_PolygonTable;
+    }
+
+    PolygonMesh::Ptr PolygonMesh::Cast(PointMesh::Ptr pointMesh)
+    {
+        if(pointMesh->getMeshShape() != PointMesh::Polygon)
+            return nullptr;
+
+        return std::static_pointer_cast<PolygonMesh>(pointMesh);
     }
 
 } // namespace nero
