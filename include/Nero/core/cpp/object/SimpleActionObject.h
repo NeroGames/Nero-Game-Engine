@@ -8,7 +8,7 @@
 // Nero
 #include <Nero/core/cpp/object/Object.h>
 #include <Nero/core/cpp/model/Action.h>
-// STD
+// Std
 #include <map>
 /////////////////////////////////////////////////////////////
 namespace nero

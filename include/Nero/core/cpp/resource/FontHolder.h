@@ -11,7 +11,7 @@
 #include <SFML/Graphics/Font.hpp>
 // JSON
 #include <json/json.hpp>
-// STD
+// Std
 #include <memory>
 ////////////////////////////////////////////////////////////
 namespace nero

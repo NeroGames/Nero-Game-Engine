@@ -8,7 +8,7 @@
 // Nero
 #include <Nero/core/cpp/object/Object.h>
 #include <Nero/core/cpp/object/PhysicObject.h>
-// STD
+// Std
 #include <map>
 #include <unordered_set>
 #include <vector>

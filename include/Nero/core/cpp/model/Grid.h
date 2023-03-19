@@ -15,7 +15,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
-// STD
+// Std
 #include <deque>
 #include <memory>
 ////////////////////////////////////////////////////////////

@@ -9,7 +9,7 @@
 #include <Nero/core/cpp/object/Object.h>
 // SFML
 #include <SFML/Window/Event.hpp>
-// STD
+// Std
 #include <functional>
 /////////////////////////////////////////////////////////////
 namespace nero

@@ -13,7 +13,7 @@
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Listener.hpp>
-// STD
+// Std
 #include <memory>
 ////////////////////////////////////////////////////////////
 namespace nero

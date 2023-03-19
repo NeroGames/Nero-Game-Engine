@@ -11,7 +11,7 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 // Box2D
 #include <Box2D/Common/b2Draw.h>
-// STD
+// Std
 #include <memory>
 //////////////////// FORWARD DECLARATION ////////////////////
 struct b2AABB;

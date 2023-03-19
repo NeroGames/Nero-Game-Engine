@@ -16,7 +16,7 @@
 #include <json/json.hpp>
 // Boost
 #include <boost/function.hpp>
-// STD
+// Std
 #include <memory>
 /////////////////////////////////////////////////////////////
 namespace nero

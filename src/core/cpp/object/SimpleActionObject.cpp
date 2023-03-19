@@ -6,7 +6,7 @@
 // Nero
 #include <Nero/core/cpp/object/SimpleActionObject.h>
 #include <Nero/core/cpp/utility/Utility.h>
-// STD
+// Std
 #include <iostream>
 ////////////////////////////////////////////////////////////
 namespace nero

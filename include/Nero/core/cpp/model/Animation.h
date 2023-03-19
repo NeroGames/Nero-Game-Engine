@@ -14,7 +14,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
-// STD
+// Std
 #include <map>
 #include <vector>
 ////////////////////////////////////////////////////////////

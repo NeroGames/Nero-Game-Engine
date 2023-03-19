@@ -13,7 +13,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-// STD
+// Std
 #include <memory>
 ////////////////////////////////////////////////////////////
 namespace nero

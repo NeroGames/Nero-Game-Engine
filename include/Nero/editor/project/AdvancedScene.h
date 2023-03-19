@@ -12,7 +12,7 @@
 #include <Nero/editor/EditorCamera.h>
 #include <Nero/editor/level/LevelBuilder.h>
 #include <Nero/editor/screen/ScreenBuilder.h>
-// STD
+// Std
 #include <memory>
 #include <vector>
 ////////////////////////////////////////////////////////////

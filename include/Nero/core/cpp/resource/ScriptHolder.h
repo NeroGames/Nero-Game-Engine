@@ -9,7 +9,7 @@
 #include <Nero/core/cpp/resource/ResourceHolder.h>
 // JSON
 #include <json/json.hpp>
-// STD
+// Std
 #include <vector>
 #include <map>
 ////////////////////////////////////////////////////////////

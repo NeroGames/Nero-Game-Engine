@@ -9,7 +9,7 @@
 #include <Nero/core/cpp/object/Object.h>
 // Lighting
 #include <ltbl/LightPointEmission.hpp>
-// STD
+// Std
 #include <functional>
 /////////////////////////////////////////////////////////////
 namespace nero

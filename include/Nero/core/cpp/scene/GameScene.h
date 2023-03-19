@@ -13,7 +13,7 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
-// STD
+// Std
 #include <memory>
 #include <vector>
 /////////////////////////////////////////////////////////////

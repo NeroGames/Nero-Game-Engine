@@ -9,7 +9,7 @@
 #include <Nero/core/cpp/object/PhysicalMeshObject.h>
 #include <Nero/core/cpp/scene/SceneUtility.h>
 #include <SFML/Graphics/RenderTexture.hpp>
-// STD
+// Std
 #include <vector>
 ////////////////////////////////////////////////////////////
 namespace nero

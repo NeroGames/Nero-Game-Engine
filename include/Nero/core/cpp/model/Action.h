@@ -10,7 +10,7 @@
 #include <Nero/core/cpp/object/SpriteObject.h>
 #include <Nero/core/cpp/object/LayerObject.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
-// STD
+// Std
 #include <memory>
 ////////////////////////////////////////////////////////////
 namespace nero

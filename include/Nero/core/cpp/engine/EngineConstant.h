@@ -5,7 +5,7 @@
 #ifndef ENGINECONSTANT_H
 #define ENGINECONSTANT_H
 ///////////////////////////HEADERS//////////////////////////
-// STD
+// Std
 #include <string>
 // SFML
 #include <SFML/System/Time.hpp>

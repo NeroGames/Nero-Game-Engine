@@ -10,7 +10,7 @@
 // Boost
 #include <boost/dll.hpp>
 #include <boost/algorithm/string.hpp>
-// STD
+// Std
 #include <thread>
 /////////////////////////////////////////////////////////////
 

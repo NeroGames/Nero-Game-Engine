@@ -8,7 +8,7 @@
 // SFML
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Time.hpp>
-// STD
+// Std
 #include <string>
 #include <vector>
 ////////////////////////////////////////////////////////////

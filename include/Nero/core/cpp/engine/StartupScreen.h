@@ -9,7 +9,7 @@
 #include <Nero/core/cpp/resource/ResourceManager.h>
 // SFML
 #include <SFML/Graphics/RenderWindow.hpp>
-// STD
+// Std
 #include <memory>
 ////////////////////////////////////////////////////////////
 namespace nero

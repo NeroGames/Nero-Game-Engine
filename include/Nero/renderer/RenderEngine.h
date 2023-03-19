@@ -15,7 +15,7 @@
 // #include <Nero/core/cpp/object/PhysicScriptObject.h>
 // SFML
 #include <SFML/Window/WindowStyle.hpp>
-// STD
+// Std
 #include <future>
 // #include <map>
 /////////////////////////////////////////////////////////////

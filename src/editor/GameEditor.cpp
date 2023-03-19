@@ -10,7 +10,7 @@
 #include <Nero/editor/EditorConstant.h>
 #include <Nero/editor/EditorUI.h>
 #include <Nero/core/cpp/utility/File.h>
-// STD
+// Std
 #include <memory>
 ////////////////////////////////////////////////////////////
 namespace nero

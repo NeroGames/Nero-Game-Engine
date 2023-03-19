@@ -11,7 +11,7 @@
 #include <SFML/Audio/Music.hpp>
 // JSON
 #include <json/json.hpp>
-// STD
+// Std
 #include <string>
 #include <map>
 #include <vector>

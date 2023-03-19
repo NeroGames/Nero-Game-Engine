@@ -11,7 +11,7 @@
 #include <SFML/Graphics/Texture.hpp>
 // JSON
 #include <json/json.hpp>
-// STD
+// Std
 #include <memory>
 #include <vector>
 #include <map>
