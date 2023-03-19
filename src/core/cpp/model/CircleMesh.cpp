@@ -63,4 +63,19 @@ namespace nero
         return std::static_pointer_cast<CircleMesh>(pointMesh);
     }
 
+    sf::FloatRect CircleMesh::getRealGlobalBounds() const
+    {
+        sf::FloatRect globalBound;
+
+        sf::Vector2f  pointOne = m_VertexTable.front().getPosition();
+        sf::Vector2f  pointTwo = m_VertexTable.back().getPosition();
+        float         radius   = math::distance(pointOne, pointTwo);
+
+        globalBound.left       = pointOne.x - radius;
+        globalBound.top        = pointOne.y - radius;
+        globalBound.height     = radius * 2.f;
+        globalBound.width      = radius * 2.f;
+
+        return globalBound;
+    }
 } // namespace nero

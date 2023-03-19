@@ -15,7 +15,7 @@
 #include <Nero/core/cpp/object/TextObject.h>
 #include <Nero/core/cpp/object/UIObject.h>
 #include <Nero/core/cpp/scene/MeshEditor.h>
-#include <Nero/core/cpp/scene/PhysicObjectManager.h>
+#include <Nero/core/cpp/scene/PhysicsManager.h>
 #include <Nero/core/cpp/scene/SceneUtility.h>
 #include <Nero/core/cpp/object/LightObject.h>
 #include <Nero/editor/icon/LightIcon.h>
@@ -181,7 +181,7 @@ namespace nero
         int                                                m_ObjectCount;
 
         MeshEditor::Ptr                                    m_MeshEditor;
-        PhysicObjectManager                                m_PhysicsObjectManager;
+        PhysicsManager                                     m_PhysicsManager;
 
         b2World*                                           m_PhysicWorld;
 

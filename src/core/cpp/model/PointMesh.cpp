@@ -76,27 +76,12 @@ namespace nero
             it->setFillColor(graphics::getTransparentColor(color, m_ColorAlpha));
     }
 
-    sf::FloatRect PointMesh::getGlobalBounds() const
+    sf::FloatRect PointMesh::getRealGlobalBounds() const
     {
         sf::FloatRect globalBound;
 
         if(m_MeshShape == Shape::None)
             return globalBound;
-
-        // TODO move to circleMesh class
-        if(m_MeshShape == Shape::Circle)
-        {
-            sf::Vector2f pointOne = m_VertexTable.front().getPosition();
-            sf::Vector2f pointTwo = m_VertexTable.back().getPosition();
-            float        radius   = math::distance(pointOne, pointTwo);
-
-            globalBound.left      = pointOne.x - radius - 5.f;
-            globalBound.top       = pointOne.y - radius - 5.f;
-            globalBound.height    = radius * 2.f + 10.f;
-            globalBound.width     = radius * 2.f + 10.f;
-
-            return globalBound;
-        }
 
         const auto   pointTable = getPointTable();
 
@@ -125,15 +110,38 @@ namespace nero
         return globalBound;
     }
 
-    sf::Vector2f PointMesh::getPointCenter() const
+    sf::FloatRect PointMesh::getGlobalBounds() const
     {
-        sf::Vector2f  pointCenter;
-        sf::FloatRect globalBound = getGlobalBounds();
+        if(m_MeshShape == Shape::None)
+            return sf::FloatRect();
 
-        pointCenter.x             = globalBound.left + globalBound.width / 2.f;
-        pointCenter.y             = globalBound.top + globalBound.height / 2.f;
+        sf::FloatRect globalBound = getRealGlobalBounds();
+        const float   adjustment  = 5.f;
 
-        return pointCenter;
+        globalBound.left          -= adjustment;
+        globalBound.top           -= adjustment;
+        globalBound.height        += adjustment * 2.f;
+        globalBound.width         += adjustment * 2.f;
+
+        return globalBound;
+    }
+
+    sf::Vector2f PointMesh::getMeshSize() const
+    {
+        const auto globalBound = getRealGlobalBounds();
+
+        return sf::Vector2f(globalBound.width, globalBound.height);
+    }
+
+    sf::Vector2f PointMesh::getMassCenter() const
+    {
+        const auto   globalBound = getRealGlobalBounds();
+
+        sf::Vector2f massCenter;
+        massCenter.x = globalBound.left + globalBound.width / 2.f;
+        massCenter.y = globalBound.top + globalBound.height / 2.f;
+
+        return massCenter;
     }
 
     sf::RectangleShape PointMesh::createVertex(const sf::Vector2f& point) const

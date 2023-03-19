@@ -28,7 +28,7 @@ namespace nero
         // Object
         , m_SelectedObject(nullptr)
         , m_ObjectCount(0)
-        , m_PhysicsObjectManager()
+        , m_PhysicsManager()
         , m_PhysicWorld(nullptr)
         , m_RenderContext(nullptr)
         , m_RightSelection(false)
@@ -1592,7 +1592,7 @@ namespace nero
                             continue;
 
                         PhysicObject::Ptr physicObject =
-                            m_PhysicsObjectManager.createObject(meshObject->getMesh());
+                            m_PhysicsManager.createObject(meshObject->getMesh());
                         physicObject->setName(meshObject->getName());
                         physicObject->setCategory(meshObject->getCategory());
                         physicObject->setId(meshObject->getObjectId());

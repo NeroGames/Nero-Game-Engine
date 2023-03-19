@@ -71,8 +71,10 @@ namespace nero
         sf::Color              getColor() const;
         sf::String             toSting() const;
 
+        virtual sf::FloatRect  getRealGlobalBounds() const;
         virtual sf::FloatRect  getGlobalBounds() const;
-        virtual sf::Vector2f   getPointCenter() const;
+        virtual sf::Vector2f   getMeshSize() const;
+        virtual sf::Vector2f   getMassCenter() const;
         virtual void           updateShape();
         virtual void           updateColor();
         virtual void           moveMesh(const sf::Vector2f& offset);

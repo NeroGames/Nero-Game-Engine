@@ -2,8 +2,8 @@
 // Nero Game Engine
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
-#ifndef PHYSICOBJECTMANAGER_H
-#define PHYSICOBJECTMANAGER_H
+#ifndef PHYSICSMANAGER_H
+#define PHYSICSMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
 // Nero
 #include <Nero/core/cpp/object/PhysicObject.h>
@@ -17,28 +17,28 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class PhysicObjectManager
+    class PhysicsManager
     {
       public:
-        PhysicObjectManager();
-        virtual ~PhysicObjectManager();
+        PhysicsManager();
+        virtual ~PhysicsManager();
 
-        PhysicObject::Ptr createObject(PointMesh::Ptr mesh);
-        void              setWorld(b2World* world);
+        PhysicObject::Ptr createObject(PointMesh::Ptr pointMesh);
+        void              setWorld(b2World* physicsWorld);
 
       private:
-        void setupBodyDef(PointMesh::Ptr mesh);
-        void setupFixtureDef(PointMesh::Ptr mesh);
-        void setupVertexTab(b2Vec2* tab, PointMesh::Ptr mesh);
-        void computePolygonBody(b2Body*              pBody,
-                                b2FixtureDef*        pFixtureDef,
-                                std::vector<b2Vec2>* pVerticesVec,
+        void setupBodyDef(PointMesh::Ptr pointMesh);
+        void setupFixtureDef(PointMesh::Ptr pointMesh);
+        void setupVertexTable(b2Vec2* table, PointMesh::Ptr pointMesh);
+        void computePolygonBody(b2Body*              body,
+                                b2FixtureDef*        fixtureDef,
+                                std::vector<b2Vec2>* verticesVec,
                                 int                  scale);
 
       private:
-        b2World*     m_World;
+        b2World*     m_PhysicsWorld;
         b2BodyDef    m_BodyDef;
         b2FixtureDef m_FixtureDef;
     };
 } // namespace nero
-#endif // PHYSICOBJECTMANAGER_H
+#endif // PHYSICSMANAGER_H

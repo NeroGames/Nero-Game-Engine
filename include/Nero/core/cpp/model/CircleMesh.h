@@ -24,6 +24,8 @@ namespace nero
         sf::CircleShape&       getCircleShape();
         static CircleMesh::Ptr Cast(PointMesh::Ptr pointMesh);
 
+        virtual sf::FloatRect  getRealGlobalBounds() const override;
+
       private:
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
