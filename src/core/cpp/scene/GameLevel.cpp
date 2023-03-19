@@ -31,12 +31,18 @@ namespace nero
               m_LevelContext.levelSetting->getSetting("resource")))
         , m_LevelRoot(std::make_shared<Object>())
         , m_LightManager(std::make_shared<ltbl::LightSystem>(false))
+        // TODO get gravity from m_LevelContext.levelSetting
+        , m_PhysicWorld(std::make_shared<b2World>(b2Vec2(0.f, 9.8f)))
+        , m_ShapeRenderer(m_LevelContext.renderTexture)
     {
         m_LightManager->create({-1000.f, -1000.f, 2000.f, 2000.f},
                                m_LevelContext.renderTexture->getSize());
         // Add a sun light
         ltbl::LightDirectionEmission* sun = m_LightManager->createLightDirectionEmission();
         sun->setColor(sf::Color(0, 51, 102, 50));
+
+        // m_PhysicWorld->SetContactListener(m_ContactListener);
+        m_PhysicWorld->SetDebugDraw(&m_ShapeRenderer);
     }
 
     GameLevel::~GameLevel()
@@ -193,9 +199,14 @@ namespace nero
         return m_LevelRoot;
     }
 
-    std::shared_ptr<ltbl::LightSystem> GameLevel::getLightManager()
+    std::shared_ptr<ltbl::LightSystem> GameLevel::getLightManager() const
     {
         return m_LightManager;
+    }
+
+    std::shared_ptr<b2World> GameLevel::getPhysicsWorld() const
+    {
+        return m_PhysicWorld;
     }
 
 } // namespace nero

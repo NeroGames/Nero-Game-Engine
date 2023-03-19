@@ -11,7 +11,7 @@
 namespace nero
 {
     ObjectManager::ObjectManager(Object::Ptr               root_object,
-                                 b2World*                  world,
+                                 std::shared_ptr<b2World>  world,
                                  std::vector<Screen::Ptr>& screenTable)
         : m_RootObject(root_object)
         , m_PhysicWorld(world)
@@ -32,7 +32,6 @@ namespace nero
     ObjectManager::~ObjectManager()
     {
         m_PhysicWorld = nullptr;
-        delete m_PhysicWorld;
     }
 
     void ObjectManager::findObject(Object::Ptr object, sf::String name, Object::Ptr& result)
@@ -382,7 +381,7 @@ namespace nero
         m_DeadPhysicObject.clear();
     }
 
-    void ObjectManager::setPhysicWorld(b2World* world)
+    void ObjectManager::setPhysicWorld(std::shared_ptr<b2World> world)
     {
         m_PhysicWorld = world;
     }

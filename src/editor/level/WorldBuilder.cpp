@@ -9,7 +9,7 @@
 #include <Nero/editor/icon/LightIcon.h>
 #include <Nero/core/cpp/model/CircleMesh.h>
 #include <Nero/core/cpp/model/PolygonMesh.h>
-// STD
+// Std
 #include <fstream>
 #include <string>
 ////////////////////////////////////////////////////////////
@@ -1464,9 +1464,11 @@ namespace nero
         m_UpdateUndo();*/
     }
 
-    Object::Ptr WorldBuilder::buildScene(std::shared_ptr<ltbl::LightSystem> lightManager)
+    Object::Ptr WorldBuilder::buildScene(std::shared_ptr<ltbl::LightSystem> lightManager,
+                                         std::shared_ptr<b2World>                           physicsWorld)
     {
         Object::Ptr chunkRoot = std::make_shared<Object>();
+        m_PhysicsManager.setPhysicsWorld(physicsWorld);
 
         for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
         {
@@ -2211,7 +2213,7 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
         }
     }
 
-    void WorldBuilder::setPhysicWorld(b2World* world)
+    void WorldBuilder::setPhysicWorld(std::shared_ptr<b2World> world)
     {
         m_PhysicWorld = world;
         // m_PhysicsObjectManager.setWorld(world);

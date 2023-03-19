@@ -26,7 +26,7 @@ namespace nero
         m_PhysicsWorld = nullptr;
     }
 
-    void PhysicsManager::setWorld(b2World* physicsWorld)
+    void PhysicsManager::setPhysicsWorld(std::shared_ptr<b2World> physicsWorld)
     {
         m_PhysicsWorld = physicsWorld;
     }

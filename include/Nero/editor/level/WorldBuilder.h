@@ -24,7 +24,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
-// STD
+// Std
 #include <unordered_map>
 #include <memory>
 #include <Nero/core/cpp/scene/UndoManager.h>
@@ -113,7 +113,8 @@ namespace nero
         MeshEditor::Ptr  getMeshEditor();
         // Scene
         void             buildScene(Object::Ptr rootObject);
-        Object::Ptr      buildScene(std::shared_ptr<ltbl::LightSystem> lightManager);
+        Object::Ptr      buildScene(std::shared_ptr<ltbl::LightSystem> lightManager,
+                                    std::shared_ptr<b2World>           physicsWorld);
         void             destroyAllPhysicObject(Object::Ptr mainObject);
         void             updateLayerOrder();
         nlohmann::json   saveScene();
@@ -124,7 +125,7 @@ namespace nero
         void             setUpdateLog(std::function<void(const std::string&, int)> fn);
         void             setUpdateLogIf(std::function<void(const std::string&, bool, int)> fn);
 
-        void             setPhysicWorld(b2World* world);
+        void             setPhysicWorld(std::shared_ptr<b2World> world);
 
         void             buildUI(UIObject::Ptr rootObject);
 
@@ -183,7 +184,7 @@ namespace nero
         MeshEditor::Ptr                                    m_MeshEditor;
         PhysicsManager                                     m_PhysicsManager;
 
-        b2World*                                           m_PhysicWorld;
+        std::shared_ptr<b2World>                           m_PhysicWorld;
 
         SceneSetting                                       m_SceneSetting;
         sf::Color                                          m_CanvasColor;

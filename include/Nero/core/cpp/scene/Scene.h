@@ -22,7 +22,7 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 // Box2D
 #include <Box2D/Dynamics/b2World.h>
-// STD
+// Std
 #include <memory>
 #include <vector>
 //
@@ -156,7 +156,7 @@ namespace nero
         // game world
         Object::Ptr           m_GameWorld;
         // physic world
-        b2World*              m_PhysicWorld;
+        std::shared_ptr<b2World>              m_PhysicWorld;
         int32                 m_ContactPointCount;
         ContactPoint          m_ContactVectorTablele[MAX_CONTACT_POINT];
         // manager
@@ -180,7 +180,7 @@ namespace nero
         //
         std::map<std::string, boost::function<CreateCppGameLevelScript>>  m_CreateGameLevelMap;
         std::map<std::string, boost::function<CreateCppGameScreenScript>> m_CreateGameScreenMap;
-        // std::map<std::string, boost::function<CreateCppSimpleScript>>
+        // Std::map<std::string, boost::function<CreateCppSimpleScript>>
         // m_CreateGameScreenMap; std::map<std::string, boost::function<CreateCppPhysicScript>>
         // m_CreateGameScreenMap;
         //

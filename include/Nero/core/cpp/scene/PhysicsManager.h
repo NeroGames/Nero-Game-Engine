@@ -12,7 +12,7 @@
 #include <Box2D/Dynamics/b2World.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <Box2D/Dynamics/b2Body.h>
-// STD
+// Std
 #include <vector>
 /////////////////////////////////////////////////////////////
 namespace nero
@@ -24,7 +24,7 @@ namespace nero
         virtual ~PhysicsManager();
 
         PhysicObject::Ptr createObject(PointMesh::Ptr pointMesh);
-        void              setWorld(b2World* physicsWorld);
+        void              setPhysicsWorld(std::shared_ptr<b2World> physicsWorld);
 
       private:
         void setupBodyDef(PointMesh::Ptr pointMesh);
@@ -36,7 +36,7 @@ namespace nero
                                 int                  scale);
 
       private:
-        b2World*     m_PhysicsWorld;
+        std::shared_ptr<b2World>     m_PhysicsWorld;
         b2BodyDef    m_BodyDef;
         b2FixtureDef m_FixtureDef;
     };

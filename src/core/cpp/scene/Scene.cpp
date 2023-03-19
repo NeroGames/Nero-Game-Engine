@@ -95,8 +95,8 @@ namespace nero
         m_LevelSetting->setBool("enable_lighting", true);
         m_LevelSetting->setBool("lighting_on", true);
 
-        m_PhysicWorld = new b2World(b2Vec2(m_LevelSetting->getSetting("gravity").getFloat("x"),
-                                           m_LevelSetting->getSetting("gravity").getFloat("y")));
+        // m_PhysicWorld = new b2World(b2Vec2(m_LevelSetting->getSetting("gravity").getFloat("x"),
+        //                                    m_LevelSetting->getSetting("gravity").getFloat("y")));
         m_PhysicWorld->SetContactListener(this);
         m_PhysicWorld->SetDebugDraw(&m_ShapeRenderer);
     }

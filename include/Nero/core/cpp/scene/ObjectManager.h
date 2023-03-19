@@ -25,7 +25,7 @@
 #include <Nero/core/cpp/model/WheelJoint.h>
 // BOX2D
 #include <Box2D/Dynamics/b2World.h>
-// STD
+// Std
 #include <assert.h>
 /////////////////////////////////////////////////////////////
 namespace nero
@@ -39,7 +39,7 @@ namespace nero
 
       public:
         ObjectManager(Object::Ptr               root_object,
-                      b2World*                  world,
+                      std::shared_ptr<b2World>  world,
                       std::vector<Screen::Ptr>& screenTable);
         ~ObjectManager();
 
@@ -76,7 +76,7 @@ namespace nero
         //
         void        removeDeadPhysicObject();
 
-        void        setPhysicWorld(b2World* world);
+        void        setPhysicWorld(std::shared_ptr<b2World> world);
         //
         void        addSpriteObject(Object::Ptr object);
         void        addPhysicObject(Object::Ptr object);
@@ -126,7 +126,7 @@ namespace nero
 
       private:
         Object::Ptr                   m_RootObject;
-        b2World*                      m_PhysicWorld;
+        std::shared_ptr<b2World>      m_PhysicWorld;
         PhysicObjectTab               m_DeadPhysicObject;
         std::vector<Screen::Ptr>&     m_ScreenTable;
         LayerObject::Ptr              m_CustomLayer;

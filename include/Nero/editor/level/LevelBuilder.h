@@ -42,7 +42,9 @@ namespace nero
         bool                            isOpened() const;
         std::string                     getResourceDirectory() const;
         void                            render() const;
-        void                            buildLevel(Object::Ptr levelRoot, std::shared_ptr<ltbl::LightSystem> lightManager);
+        void                            buildLevel(Object::Ptr                        levelRoot,
+                                                   std::shared_ptr<ltbl::LightSystem> lightManager,
+                                                   std::shared_ptr<b2World>           physicsWorld);
         GameLevel::Context              getLevelContext() const;
 
       private:

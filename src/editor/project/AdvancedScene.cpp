@@ -356,7 +356,9 @@ namespace nero
             GameLevel::Ptr gameLevel =
                 m_CreateCppGameLevelCallbackMap.at(levelName)(m_LevelBuilder->getLevelContext());
 
-            m_LevelBuilder->buildLevel(gameLevel->getLevelRoot(), gameLevel->getLightManager());
+            m_LevelBuilder->buildLevel(gameLevel->getLevelRoot(),
+                                       gameLevel->getLightManager(),
+                                       gameLevel->getPhysicsWorld());
 
             m_GameScene->setGameLevel(gameLevel);
         }

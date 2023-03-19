@@ -6,6 +6,7 @@
 #define GAMELEVEL_H
 ///////////////////////////HEADERS///////////////////////////
 // Nero
+#include <Nero/core/cpp/scene/ShapeRenderer.h>
 #include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/core/cpp/utility/Keyboard.h>
 #include <Nero/core/cpp/model/Collision.h>
@@ -15,9 +16,11 @@
 // SFML
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Window/Event.hpp>
+// Box2d
+#include <Box2D/Dynamics/b2World.h>
 // Lighting
 #include <ltbl/LightSystem.hpp>
-// STD
+// Std
 #include <memory>
 /////////////////////////////////////////////////////////////
 namespace nero
@@ -104,7 +107,8 @@ namespace nero
         std::shared_ptr<sf::RenderTexture> getRenderTexture();
         Camera::Ptr                        getCamera();
         Object::Ptr                        getLevelRoot() const;
-        std::shared_ptr<ltbl::LightSystem> getLightManager();
+        std::shared_ptr<ltbl::LightSystem> getLightManager() const;
+        std::shared_ptr<b2World>           getPhysicsWorld() const;
 
       private:
         std::shared_ptr<sf::RenderTexture> m_RenderTexture;
@@ -114,6 +118,8 @@ namespace nero
         // LightEngine::Ptr                   m_LightEngine;
         Object::Ptr                        m_LevelRoot;
         std::shared_ptr<ltbl::LightSystem> m_LightManager;
+        std::shared_ptr<b2World>           m_PhysicWorld;
+        ShapeRenderer                      m_ShapeRenderer;
     };
 } // namespace nero
 
