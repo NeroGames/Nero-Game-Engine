@@ -223,12 +223,117 @@ namespace nero
             }
         }
 
-        if(ImGui::CollapsingHeader("Game Level"))
+        if(ImGui::CollapsingHeader("Game Level", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            auto advancedScene = m_EditorContext->getAdvancedScene();
+            auto levelBuilder = m_EditorContext->getLevelBuilder();
 
-            if(advancedScene)
+            if(levelBuilder)
             {
+                ImGui::BeginChild("game_level", ImVec2(0.f, 200.f), true);
+
+                bool enableLight = levelBuilder->getLevelSetting()->getBool("enable_light");
+                ImGui::Checkbox("Enable Light##level_enable_light", &enableLight);
+                if(ImGui::IsItemEdited())
+                {
+                    levelBuilder->getLevelSetting()->setBool("enable_light", enableLight);
+                }
+
+                ImGui::Dummy(ImVec2(0.0f, 2.f));
+
+                bool enablePhysics = levelBuilder->getLevelSetting()->getBool("enable_physics");
+                ImGui::Checkbox("Enable Physics##level_enable_physics", &enablePhysics);
+                if(ImGui::IsItemEdited())
+                {
+                    levelBuilder->getLevelSetting()->setBool("enable_physics", enablePhysics);
+                }
+
+                ImGui::Dummy(ImVec2(0.0f, 10.f));
+
+                if(enableLight &&
+                   ImGui::CollapsingHeader("Light Settings", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    ImGui::BeginChild("light_settings", ImVec2(0.f, 200.f), true);
+
+                    auto lightSetting = levelBuilder->getLevelSetting()->getSetting("lighting");
+
+                    // Ambient Color
+                    const auto ambientColor = lightSetting.getColor("ambient_color");
+                    ImVec4     tempColor(ambientColor.r / 255.f,
+                                     ambientColor.g / 255.f,
+                                     ambientColor.b / 255.f,
+                                     ambientColor.a / 255.f);
+
+                    if(tempColor.x != m_LightingAmbientColor.x ||
+                       tempColor.y != m_LightingAmbientColor.y ||
+                       tempColor.z != m_LightingAmbientColor.z ||
+                       tempColor.w != m_LightingAmbientColor.w)
+                    {
+                        m_LightingAmbientColor = tempColor;
+                    }
+
+                    const float wordingWidth = 80.f;
+                    ImGui::Text("Ambient");
+                    ImGui::SameLine(wordingWidth);
+                    ImGui::ColorEdit4("##ambient_color",
+                                      (float*)&m_LightingAmbientColor,
+                                      ImGuiColorEditFlags_AlphaBar |
+                                          ImGuiColorEditFlags_NoDragDrop);
+                    if(ImGui::IsItemEdited())
+                    {
+                        const auto color =
+                            sf::Color(static_cast<sf::Uint8>(m_LightingAmbientColor.x * 255),
+                                      static_cast<sf::Uint8>(m_LightingAmbientColor.y * 255),
+                                      static_cast<sf::Uint8>(m_LightingAmbientColor.z * 255),
+                                      static_cast<sf::Uint8>(m_LightingAmbientColor.w * 255));
+                        lightSetting.setColor("ambient_color", color);
+                    }
+
+                    // Clear Color
+                    const auto clearColor = lightSetting.getColor("clear_color");
+                    tempColor             = ImVec4(clearColor.r / 255.f,
+                                       clearColor.g / 255.f,
+                                       clearColor.b / 255.f,
+                                       clearColor.a / 255.f);
+
+                    if(tempColor.x != m_LightingClearColor.x ||
+                       tempColor.y != m_LightingClearColor.y ||
+                       tempColor.z != m_LightingClearColor.z ||
+                       tempColor.w != m_LightingClearColor.w)
+                    {
+                        m_LightingClearColor = tempColor;
+                    }
+
+                    ImGui::Dummy(ImVec2(0.f, 2.f));
+
+                    ImGui::Text("Clear");
+                    ImGui::SameLine(wordingWidth);
+                    ImGui::ColorEdit4("##clear_color",
+                                      (float*)&m_LightingClearColor,
+                                      ImGuiColorEditFlags_AlphaBar |
+                                          ImGuiColorEditFlags_NoDragDrop);
+                    if(ImGui::IsItemEdited())
+                    {
+                        const auto color =
+                            sf::Color(static_cast<sf::Uint8>(m_LightingClearColor.x * 255),
+                                      static_cast<sf::Uint8>(m_LightingClearColor.y * 255),
+                                      static_cast<sf::Uint8>(m_LightingClearColor.z * 255),
+                                      static_cast<sf::Uint8>(m_LightingClearColor.w * 255));
+                        lightSetting.setColor("clear_color", color);
+                    }
+
+                    ImGui::EndChild();
+                }
+
+                if(enablePhysics &&
+                   ImGui::CollapsingHeader("Physics Settings", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    ImGui::BeginChild("physics_settings", ImVec2(0.f, 200.f), true);
+
+                    ImGui::EndChild();
+                }
+
+                ImGui::EndChild();
+
                 /*ImGuiViewport* viewport = ImGui::GetMainViewport();
                 float window_height = viewport->Size.y * 0.25f;
                 viewport = nullptr;

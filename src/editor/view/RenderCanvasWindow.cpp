@@ -102,6 +102,7 @@ namespace nero
             if(advancedScene)
             {
                 advancedScene->render();
+                advancedScene->renderShape();
             }
         }
 
@@ -227,7 +228,8 @@ namespace nero
 
             if(levelBuilder && levelBuilder->getLevelSetting()->getBool("enable_light"))
             {
-                clearColor = sf::Color::White;
+                clearColor =
+                    levelBuilder->getLevelSetting()->getSetting("lighting").getColor("clear_color");
             }
         }
 

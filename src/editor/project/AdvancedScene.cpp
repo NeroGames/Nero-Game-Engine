@@ -123,9 +123,20 @@ namespace nero
         Setting setting;
         setting.setString("level_name", levelName);
         setting.setString("level_id", levelID);
-        setting.setBool("enable_physics", parameter.getBool("enable_physics"));
-        setting.setBool("enable_light", parameter.getBool("enable_light"));
         setting.setInt("chunk_count", 0);
+        setting.setBool("enable_light", parameter.getBool("enable_light"));
+        setting.setBool("enable_physics", parameter.getBool("enable_physics"));
+        // light setting
+        Setting lightSetting;
+        lightSetting.setColor("ambient_color", sf::Color(0, 51, 102, 50));
+        lightSetting.setColor("clear_color", sf::Color::White);
+        lightSetting.setVector("cast_direction", sf::Vector2f(0.f, 1.f));
+        lightSetting.setFloat("cast_angle", 90.f);
+        lightSetting.setFloat("source_distance", 100.f);
+        lightSetting.setFloat("source_radius", 5.f);
+        lightSetting.setBool("enable_ambient_light", true);
+        setting.setSetting("lighting", lightSetting);
+
         file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO),
                        setting.toString());
 

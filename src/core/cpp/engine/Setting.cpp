@@ -212,4 +212,42 @@ namespace nero
         updateSetting(local);
     }
 
+    void Setting::setColor(const std::string& setting, const sf::Color& value)
+    {
+        nlohmann::json local = nlohmann::json::object();
+        nlohmann::json colorJson;
+        colorJson["r"] = value.r;
+        colorJson["g"] = value.g;
+        colorJson["b"] = value.b;
+        colorJson["a"] = value.a;
+        local[setting] = colorJson;
+
+        updateSetting(local);
+    }
+
+    sf::Color Setting::getColor(const std::string& setting) const
+    {
+        const auto colorJson = getCurrentSetting()[setting];
+
+        return sf::Color(colorJson["r"], colorJson["g"], colorJson["b"], colorJson["a"]);
+    }
+
+    void Setting::setVector(const std::string& setting, const sf::Vector2f& value)
+    {
+        nlohmann::json local = nlohmann::json::object();
+        nlohmann::json vectorJson;
+        vectorJson["x"] = value.x;
+        vectorJson["y"] = value.y;
+        local[setting]  = vectorJson;
+
+        updateSetting(local);
+    }
+
+    sf::Vector2f Setting::getVector(const std::string& setting) const
+    {
+        const auto vectorJson = getCurrentSetting()[setting];
+
+        return sf::Vector2f(vectorJson["x"], vectorJson["y"]);
+    }
+
 } // namespace nero

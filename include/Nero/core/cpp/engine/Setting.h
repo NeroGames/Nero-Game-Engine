@@ -5,6 +5,9 @@
 #ifndef SETTING_H
 #define SETTING_H
 ///////////////////////////HEADERS///////////////////////////
+// SFML
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/Color.hpp>
 // Json
 #include <json/json.hpp>
 // Cpp
@@ -45,6 +48,9 @@ namespace nero
         bool                     getBool(const std::string& setting) const;
         std::string              getString(const std::string& setting) const;
         std::vector<std::string> getStringTable(const std::string& setting) const;
+        sf::Color                getColor(const std::string& setting) const;
+        sf::Vector2f             getVector(const std::string& setting) const;
+
         // set
         void                     setSetting(const std::string& name, const Setting& setting);
         void                     setFloat(const std::string& setting, const float value);
@@ -52,6 +58,8 @@ namespace nero
         void                     setUInt(const std::string& setting, const unsigned int value);
         void                     setBool(const std::string& setting, const bool value);
         void                     setString(const std::string& setting, const std::string& value);
+        void                     setColor(const std::string& setting, const sf::Color& value);
+        void                     setVector(const std::string& setting, const sf::Vector2f& value);
         void setStringTable(const std::string& setting, const std::vector<std::string>& value);
 
       private:

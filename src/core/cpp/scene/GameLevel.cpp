@@ -32,17 +32,23 @@ namespace nero
         , m_LevelRoot(std::make_shared<Object>())
         , m_LightManager(std::make_shared<ltbl::LightSystem>(false))
         // TODO get gravity from m_LevelContext.levelSetting
-        , m_PhysicWorld(std::make_shared<b2World>(b2Vec2(0.f, 9.8f)))
+        , m_PhysicsWorld(std::make_shared<b2World>(b2Vec2(0.f, 9.8f)))
         , m_ShapeRenderer(m_LevelContext.renderTexture)
     {
         m_LightManager->create({-1000.f, -1000.f, 2000.f, 2000.f},
                                m_LevelContext.renderTexture->getSize());
         // Add a sun light
-        ltbl::LightDirectionEmission* sun = m_LightManager->createLightDirectionEmission();
-        sun->setColor(sf::Color(0, 51, 102, 50));
+        auto lightSetting = m_LevelContext.levelSetting->getSetting("lighting");
+        ltbl::LightDirectionEmission* ambientLight = m_LightManager->createLightDirectionEmission();
+        ambientLight->setCastDirection(lightSetting.getVector("cast_direction"));
+        ambientLight->setCastAngle(lightSetting.getFloat("cast_angle"));
+        ambientLight->setSourceDistance(lightSetting.getFloat("source_distance"));
+        ambientLight->setColor(lightSetting.getColor("ambient_color"));
+        ambientLight->setSourceRadius(lightSetting.getFloat("source_radius"));
+        ambientLight->setTurnedOn(lightSetting.getBool("enable_ambient_light"));
 
-        // m_PhysicWorld->SetContactListener(m_ContactListener);
-        m_PhysicWorld->SetDebugDraw(&m_ShapeRenderer);
+        // m_PhysicsWorld->SetContactListener(m_ContactListener);
+        m_PhysicsWorld->SetDebugDraw(&m_ShapeRenderer);
     }
 
     GameLevel::~GameLevel()
@@ -64,6 +70,30 @@ namespace nero
 
     void GameLevel::update(const sf::Time& timeStep)
     {
+        const auto frequence       = 30.f;
+        float32    physicsTimeStep = frequence > 0.0f ? 1.f / frequence : float32(0.0f);
+
+        if(physicsTimeStep > 0.f)
+        {
+            physicsTimeStep = (physicsTimeStep * timeStep.asSeconds()) / 60.f;
+        }
+
+        uint32 flags = 0;
+        flags        += b2Draw::e_shapeBit;
+        flags        += b2Draw::e_jointBit;
+        flags        += b2Draw::e_aabbBit;
+        flags        += b2Draw::e_centerOfMassBit;
+
+        m_ShapeRenderer.SetFlags(flags);
+
+        m_PhysicsWorld->SetAllowSleeping(true);
+        m_PhysicsWorld->SetWarmStarting(true);
+        m_PhysicsWorld->SetContinuousPhysics(true);
+        m_PhysicsWorld->SetSubStepping(true);
+
+        const int velocityIterations = 8;
+        const int positionIterations = 3;
+        m_PhysicsWorld->Step(physicsTimeStep, velocityIterations, positionIterations);
     }
 
     void GameLevel::render()
@@ -72,11 +102,15 @@ namespace nero
 
     void GameLevel::renderShape()
     {
+        m_PhysicsWorld->DrawDebugData();
     }
 
     void GameLevel::renderLight()
     {
-        m_LightManager->render(*m_LevelContext.renderTexture.get());
+        if(m_LevelContext.levelSetting->getBool("enable_light"))
+        {
+            m_LightManager->render(*m_LevelContext.renderTexture.get());
+        }
     }
 
     void GameLevel::loadLevel()
@@ -206,7 +240,7 @@ namespace nero
 
     std::shared_ptr<b2World> GameLevel::getPhysicsWorld() const
     {
-        return m_PhysicWorld;
+        return m_PhysicsWorld;
     }
 
 } // namespace nero

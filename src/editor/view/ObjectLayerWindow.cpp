@@ -194,6 +194,9 @@ namespace nero
             case Object::Text_Object:
                 return {ImVec4(0.f, 0.834f, 0.790f, 1.f), ImVec4(0.f, 0.834f, 0.790f, 1.f)};
 
+            case Object::Mesh_Object:
+                return {ImVec4(0.009f, 0.751f, 0.f, 1.f), ImVec4(0.009f, 0.751f, 0.f, 1.f)};
+
             default:
                 return {ImGui::GetStyle().Colors[ImGuiCol_FrameBg],
                         ImGui::GetStyle().Colors[ImGuiCol_TextSelectedBg]};

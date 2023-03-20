@@ -18,6 +18,10 @@ namespace nero
 
         virtual void destroy() override;
         virtual void render() override;
+
+      private:
+        ImVec4 m_LightingAmbientColor;
+        ImVec4 m_LightingClearColor;
     };
 } // namespace nero
 #endif // SCENEGRAPHVIEW_H

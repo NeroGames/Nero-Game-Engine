@@ -74,6 +74,10 @@ namespace nero
 
     void GameScene::renderShape()
     {
+        if(m_GameLevel)
+        {
+            m_GameLevel->renderShape();
+        }
     }
 
     void GameScene::renderFrontScreen()
