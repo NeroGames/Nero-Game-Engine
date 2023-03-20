@@ -5,6 +5,7 @@
 ///////////////////////////HEADERS///////////////////////////
 // Nero
 #include <Nero/core/cpp/scene/GameLevel.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -71,17 +72,18 @@ namespace nero
     void GameLevel::update(const sf::Time& timeStep)
     {
         const auto frequence       = 30.f;
-        float32    physicsTimeStep = frequence > 0.0f ? 1.f / frequence : float32(0.0f);
+        float32    physicsTimeStep = frequence > 0.f ? 1.f / frequence : float32(0.0f);
 
         if(physicsTimeStep > 0.f)
         {
-            physicsTimeStep = (physicsTimeStep * timeStep.asSeconds()) / 60.f;
+            physicsTimeStep = (physicsTimeStep * timeStep.asSeconds()) /
+                              EngineConstant.TIME_PER_FRAME.asSeconds();
         }
 
         uint32 flags = 0;
         flags        += b2Draw::e_shapeBit;
         flags        += b2Draw::e_jointBit;
-        flags        += b2Draw::e_aabbBit;
+        // flags        += b2Draw::e_aabbBit;
         flags        += b2Draw::e_centerOfMassBit;
 
         m_ShapeRenderer.SetFlags(flags);
