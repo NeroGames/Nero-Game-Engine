@@ -119,7 +119,7 @@ namespace nero
         Object::Ptr                        m_LevelRoot;
         std::shared_ptr<ltbl::LightSystem> m_LightManager;
         std::shared_ptr<b2World>           m_PhysicsWorld;
-        ShapeRenderer                      m_ShapeRenderer;
+        ShapeRenderer::Ptr                 m_ShapeRenderer;
     };
 } // namespace nero
 

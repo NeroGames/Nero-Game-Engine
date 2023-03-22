@@ -22,7 +22,8 @@ namespace nero
     class ShapeRenderer : public b2Draw
     {
       public:
-        typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
+        using RenderTexturePtr = std::shared_ptr<sf::RenderTexture>;
+        using Ptr              = std::shared_ptr<ShapeRenderer>;
 
       public:
         ShapeRenderer(RenderTexturePtr renderTexture,

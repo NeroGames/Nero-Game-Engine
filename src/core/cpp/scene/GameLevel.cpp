@@ -34,7 +34,7 @@ namespace nero
         , m_LightManager(std::make_shared<ltbl::LightSystem>(false))
         // TODO get gravity from m_LevelContext.levelSetting
         , m_PhysicsWorld(std::make_shared<b2World>(b2Vec2(0.f, 9.8f)))
-        , m_ShapeRenderer(m_LevelContext.renderTexture)
+        , m_ShapeRenderer(std::make_shared<ShapeRenderer>(m_LevelContext.renderTexture))
     {
         m_LightManager->create({-1000.f, -1000.f, 2000.f, 2000.f},
                                m_LevelContext.renderTexture->getSize());
@@ -49,7 +49,7 @@ namespace nero
         ambientLight->setTurnedOn(lightSetting.getBool("enable_ambient_light"));
 
         // m_PhysicsWorld->SetContactListener(m_ContactListener);
-        m_PhysicsWorld->SetDebugDraw(&m_ShapeRenderer);
+        m_PhysicsWorld->SetDebugDraw(m_ShapeRenderer.get());
     }
 
     GameLevel::~GameLevel()
@@ -86,7 +86,7 @@ namespace nero
         // flags        += b2Draw::e_aabbBit;
         flags        += b2Draw::e_centerOfMassBit;
 
-        m_ShapeRenderer.SetFlags(flags);
+        m_ShapeRenderer->SetFlags(flags);
 
         m_PhysicsWorld->SetAllowSleeping(true);
         m_PhysicsWorld->SetWarmStarting(true);

@@ -36,19 +36,6 @@ namespace nero
         float32      separation;
     };
 
-    // query callback
-    class QueryCallback : public b2QueryCallback
-    {
-      public:
-        QueryCallback(const b2Vec2& point);
-        ~QueryCallback();
-
-        bool       ReportFixture(b2Fixture* fixture);
-
-        b2Vec2     m_Point;
-        b2Fixture* m_Fixture;
-    };
-
     // leve setting
     struct SceneSetting
     {

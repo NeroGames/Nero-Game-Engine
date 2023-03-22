@@ -8,47 +8,6 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    ////////////////////////////////////////////////////////////
-    // QueryCallback
-    QueryCallback::QueryCallback(const b2Vec2& point)
-    {
-        m_Point   = point;
-        m_Fixture = nullptr;
-    }
-
-    bool QueryCallback::ReportFixture(b2Fixture* fixture)
-    {
-        b2Body* body = fixture->GetBody();
-
-        if(body->GetType() == b2_dynamicBody)
-        {
-            bool inside = fixture->TestPoint(m_Point);
-
-            if(inside)
-            {
-                m_Fixture = fixture;
-
-                // Clean pointer
-                body      = nullptr;
-
-                // We are done, terminate the query.
-                return false;
-            }
-        }
-
-        // Clean pointer
-        body = nullptr;
-
-        // Continue the query.
-        return true;
-    }
-
-    QueryCallback::~QueryCallback()
-    {
-        m_Fixture = nullptr;
-    }
-
-    ////////////////////////////////////////////////////////////
     // SceneSetting
     SceneSetting::SceneSetting()
     {
