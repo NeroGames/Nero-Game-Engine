@@ -63,7 +63,7 @@ namespace nero
                         AdvancedCamera::Ptr                editorCamera);
         void update(const sf::Time& timeStep);
         void handleEvent(const sf::Event& event);
-        void renderDebugData();
+        void render();
 
         // Mouse
         void shiftMouseDown(const b2Vec2& position);

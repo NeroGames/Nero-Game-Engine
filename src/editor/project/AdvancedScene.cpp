@@ -326,7 +326,10 @@ namespace nero
     void AdvancedScene::render()
     {
         if(m_GameScene)
+        {
             m_GameScene->render();
+            m_PhysicsInteractor->render();
+        }
     }
 
     void AdvancedScene::renderShape()

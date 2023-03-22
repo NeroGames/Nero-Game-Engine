@@ -120,7 +120,7 @@ namespace nero
 
     void PhysicsInteractor::update(const sf::Time&)
     {
-        const auto frequence       = 30.f;
+        const auto frequence       = 40.f;
         float32    physicsTimeStep = frequence > 0.f ? 1.f / frequence : float32(0.0f);
 
         if(physicsTimeStep > 0.0f)
@@ -213,7 +213,7 @@ namespace nero
         mouseMove(p);
     }
 
-    void PhysicsInteractor::renderDebugData()
+    void PhysicsInteractor::render()
     {
         // bodies/contacts/joints
         int32   bodyCount    = m_PhysicsWorld->GetBodyCount();
