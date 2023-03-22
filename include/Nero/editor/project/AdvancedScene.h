@@ -12,6 +12,7 @@
 #include <Nero/editor/EditorCamera.h>
 #include <Nero/editor/level/LevelBuilder.h>
 #include <Nero/editor/screen/ScreenBuilder.h>
+#include <Nero/editor/PhysicsInteractor.h>
 // Std
 #include <memory>
 #include <vector>
@@ -73,6 +74,8 @@ namespace nero
         // DLL callback
         CreateCppGameSceneCallback                        m_CreateCppGameSceneCallback;
         std::map<std::string, CreateCppGameLevelCallback> m_CreateCppGameLevelCallbackMap;
+        // Physics
+        PhysicsInteractor::Ptr                            m_PhysicsInteractor;
     };
 } // namespace nero
 #endif // ADVANCEDSCENE_H

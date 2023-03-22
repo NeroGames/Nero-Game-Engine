@@ -245,4 +245,9 @@ namespace nero
         return m_PhysicsWorld;
     }
 
+    ShapeRenderer::Ptr GameLevel::getShapeRenderer() const
+    {
+        return m_ShapeRenderer;
+    }
+
 } // namespace nero

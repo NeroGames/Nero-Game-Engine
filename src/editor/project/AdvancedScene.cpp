@@ -15,6 +15,7 @@ namespace nero
         , m_RenderTexture(nullptr)
         , m_LevelBuilder(nullptr)
         , m_RegisteredLevelTable()
+        , m_PhysicsInteractor(std::make_shared<PhysicsInteractor>())
     {
     }
 
@@ -307,13 +308,19 @@ namespace nero
     void AdvancedScene::handleEvent(const sf::Event& event)
     {
         if(m_GameScene)
+        {
             m_GameScene->handleEvent(event);
+            m_PhysicsInteractor->handleEvent(event);
+        }
     }
 
     void AdvancedScene::update(const sf::Time& timeStep)
     {
         if(m_GameScene)
+        {
             m_GameScene->update(timeStep);
+            m_PhysicsInteractor->update(timeStep);
+        }
     }
 
     void AdvancedScene::render()
@@ -372,6 +379,12 @@ namespace nero
                                        gameLevel->getPhysicsWorld());
 
             m_GameScene->setGameLevel(gameLevel);
+
+            m_PhysicsInteractor->initialize(gameLevel->getPhysicsWorld(),
+                                            gameLevel->getShapeRenderer(),
+                                            m_RenderContext,
+                                            m_RenderTexture,
+                                            m_EditorCamera);
         }
     }
 

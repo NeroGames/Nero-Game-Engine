@@ -109,6 +109,7 @@ namespace nero
         Object::Ptr                        getLevelRoot() const;
         std::shared_ptr<ltbl::LightSystem> getLightManager() const;
         std::shared_ptr<b2World>           getPhysicsWorld() const;
+        ShapeRenderer::Ptr                 getShapeRenderer() const;
 
       private:
         std::shared_ptr<sf::RenderTexture> m_RenderTexture;

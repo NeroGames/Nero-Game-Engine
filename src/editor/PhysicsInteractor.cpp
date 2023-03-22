@@ -6,6 +6,8 @@
 // Nero
 #include <Nero/editor/PhysicsInteractor.h>
 #include <Nero/core/cpp/utility/String.h>
+#include <Nero/core/cpp/utility/Graphics.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
 // Box2d
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
@@ -85,6 +87,8 @@ namespace nero
         , m_StepCount(0)
         , m_MaxProfile()
         , m_TotalProfile()
+        , m_IsLeftShift(false)
+        , m_IsMouseRightButton(false)
     {
         m_DestructionListener.physicsInteractor = PhysicsInteractor::Ptr(this);
 
@@ -95,11 +99,17 @@ namespace nero
         memset(&m_TotalProfile, 0, sizeof(b2Profile));
     }
 
-    void PhysicsInteractor::initialize(std::shared_ptr<b2World> physicsWorld,
-                                       ShapeRenderer::Ptr       shapeRenderer)
+    void PhysicsInteractor::initialize(std::shared_ptr<b2World>           physicsWorld,
+                                       ShapeRenderer::Ptr                 shapeRenderer,
+                                       RenderContext::Ptr                 renderContext,
+                                       std::shared_ptr<sf::RenderTexture> renderTexture,
+                                       AdvancedCamera::Ptr                editorCamera)
     {
         m_PhysicsWorld  = physicsWorld;
         m_ShapeRenderer = shapeRenderer;
+        m_RenderContext = renderContext;
+        m_RenderTexture = renderTexture;
+        m_EditorCamera  = editorCamera;
 
         m_PhysicsWorld->SetDestructionListener(&m_DestructionListener);
 
@@ -119,6 +129,88 @@ namespace nero
         }
 
         m_Message = m_StatMessage + m_ProfileMessage;
+    }
+
+    void PhysicsInteractor::handleEvent(const sf::Event& event)
+    {
+        switch(event.type)
+        {
+            // Keyboard events
+            case sf::Event::KeyPressed:
+                handleKeyboardInput(event.key.code, true);
+                break;
+            case sf::Event::KeyReleased:
+                handleKeyboardInput(event.key.code, false);
+                break;
+
+                // Mouse buttons events
+            case sf::Event::MouseButtonPressed:
+                handleMouseButtonsInput(event.mouseButton, true);
+                break;
+            case sf::Event::MouseButtonReleased:
+                handleMouseButtonsInput(event.mouseButton, false);
+                break;
+
+                // Mouse mouvements event
+            case sf::Event::MouseMoved:
+                handleMouseMoveInput(event.mouseMove);
+                break;
+        }
+    }
+
+    void PhysicsInteractor::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
+    {
+        // Handle only key pressed inputs
+        if(isPressed)
+        {
+            if(key == sf::Keyboard::B)
+                launchBomb();
+        }
+
+        if(key == sf::Keyboard::LShift)
+            m_IsLeftShift = isPressed;
+    }
+
+    void PhysicsInteractor::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse,
+                                                    const bool&                        isPressed)
+    {
+        sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(
+            sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
+            m_RenderTexture->getView());
+
+        b2Vec2 p = graphics::sf_to_b2(world_pos, EngineConstant.SCALE);
+
+        if(mouse.button == sf::Mouse::Left && isPressed == true)
+        {
+            if(m_IsLeftShift)
+                shiftMouseDown(p);
+            else
+                mouseDown(p);
+        }
+        else if(mouse.button == sf::Mouse::Left && isPressed == false)
+        {
+            mouseUp(p);
+        }
+        else if(mouse.button == sf::Mouse::Right)
+        {
+            if(isPressed)
+            {
+                m_LastMousePosition = p;
+            }
+
+            m_IsMouseRightButton = isPressed;
+        }
+    }
+
+    void PhysicsInteractor::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
+    {
+        sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(
+            sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
+            m_RenderTexture->getView());
+
+        b2Vec2 p = graphics::sf_to_b2(world_pos, EngineConstant.SCALE);
+
+        mouseMove(p);
     }
 
     void PhysicsInteractor::renderDebugData()
@@ -331,14 +423,14 @@ namespace nero
 
     void PhysicsInteractor::launchBomb()
     {
-        /*sf::Vector2f spaw_pos =
-            sf::Vector2f(m_Context.camera->getPosition().x,
-                         m_Context.camera->getPosition().y -
-                             m_Context.renderCanvas->GetView().getSize().y / 2.f);
-        b2Vec2 p = sf_to_b2(spaw_pos, SCALE);
-        p.x      = p.x + randomFloat(-30.0f, 30.0f);
-        b2Vec2 v = -5.0f * b2Vec2(randomFloat(-15.0f, 15.0f), -30.0f);
-        launchBomb(p, v);*/
+        sf::Vector2f spaw_pos = sf::Vector2f(m_EditorCamera->getPosition().x,
+                                             m_EditorCamera->getPosition().y -
+                                                 m_RenderTexture->getView().getSize().y / 2.f);
+
+        b2Vec2       p        = graphics::sf_to_b2(spaw_pos, EngineConstant.SCALE);
+        p.x                   = p.x + math::randomFloat(-30.0f, 30.0f);
+        b2Vec2 v              = -5.0f * b2Vec2(math::randomFloat(-15.0f, 15.0f), -30.0f);
+        launchBomb(p, v);
     }
 
     void PhysicsInteractor::destroyBomb()

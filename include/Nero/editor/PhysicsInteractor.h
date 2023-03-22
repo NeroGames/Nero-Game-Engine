@@ -7,8 +7,11 @@
 ///////////////////////////HEADERS//////////////////////////
 // Nero
 #include <Nero/core/cpp/scene/ShapeRenderer.h>
+#include <Nero/core/cpp/scene/SceneUtility.h>
+#include <Nero/editor/EditorCamera.h>
 // SFML
 #include <SFML/System/Time.hpp>
+#include <SFML/Window/Event.hpp>
 // Box2d
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <Box2D/Common/b2Math.h>
@@ -53,8 +56,13 @@ namespace nero
       public:
         PhysicsInteractor();
 
-        void initialize(std::shared_ptr<b2World> physicsWorld, ShapeRenderer::Ptr shapeRenderer);
+        void initialize(std::shared_ptr<b2World>           physicsWorld,
+                        ShapeRenderer::Ptr                 shapeRenderer,
+                        RenderContext::Ptr                 renderContext,
+                        std::shared_ptr<sf::RenderTexture> renderTexture,
+                        AdvancedCamera::Ptr                editorCamera);
         void update(const sf::Time& timeStep);
+        void handleEvent(const sf::Event& event);
         void renderDebugData();
 
         // Mouse
@@ -72,26 +80,38 @@ namespace nero
         void jointDestroyed(b2Joint* joint);
 
       private:
+        void handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed);
+        void handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse,
+                                     const bool&                        isPressed);
+        void handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
+
+      private:
         friend class DestructionListener;
         friend class BoundaryListener;
         friend class ContactListener;
 
-        DestructionListener      m_DestructionListener;
-        std::string              m_Message;
-        std::string              m_StatMessage;
-        std::string              m_ProfileMessage;
-        b2Body*                  m_Bomb;
-        b2Vec2                   m_BombSpawnPoint;
-        bool                     m_BombSpawning;
-        b2Body*                  m_GroundBody;
-        b2AABB                   m_WorldAABB;
-        b2MouseJoint*            m_MouseJoint;
-        b2Vec2                   m_MouseWorld;
-        int32                    m_StepCount;
-        b2Profile                m_MaxProfile;
-        b2Profile                m_TotalProfile;
-        std::shared_ptr<b2World> m_PhysicsWorld;
-        ShapeRenderer::Ptr       m_ShapeRenderer;
+        DestructionListener                m_DestructionListener;
+        std::string                        m_Message;
+        std::string                        m_StatMessage;
+        std::string                        m_ProfileMessage;
+        b2Body*                            m_Bomb;
+        b2Vec2                             m_BombSpawnPoint;
+        bool                               m_BombSpawning;
+        b2Body*                            m_GroundBody;
+        b2AABB                             m_WorldAABB;
+        b2MouseJoint*                      m_MouseJoint;
+        b2Vec2                             m_MouseWorld;
+        int32                              m_StepCount;
+        b2Profile                          m_MaxProfile;
+        b2Profile                          m_TotalProfile;
+        std::shared_ptr<b2World>           m_PhysicsWorld;
+        ShapeRenderer::Ptr                 m_ShapeRenderer;
+        bool                               m_IsLeftShift;
+        bool                               m_IsMouseRightButton;
+        b2Vec2                             m_LastMousePosition;
+        RenderContext::Ptr                 m_RenderContext;
+        std::shared_ptr<sf::RenderTexture> m_RenderTexture;
+        AdvancedCamera::Ptr                m_EditorCamera;
     };
 } // namespace nero
 #endif // PHYSICSINTERACTOR_H
