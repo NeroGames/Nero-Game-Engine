@@ -11,16 +11,6 @@ namespace nero
     CircleMesh::CircleMesh()
         : PointMesh(PointMesh::Shape::Circle)
     {
-        const auto massCenter = sf::Vector2f(0.f, 0.f);
-        const auto radius     = 50.f;
-        addVertex(massCenter);
-        addVertex(sf::Vector2f(massCenter.x + radius, massCenter.y));
-
-        m_CircleShape.setOutlineThickness(1.f);
-
-        m_MeshType = PointMesh::Dynamic;
-        updateShape();
-        updateColor();
     }
 
     void CircleMesh::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -78,4 +68,54 @@ namespace nero
 
         return globalBound;
     }
+
+    void CircleMesh::generateDefaultShape()
+    {
+        const auto massCenter = sf::Vector2f(0.f, 0.f);
+        const auto radius     = 50.f;
+        addVertex(massCenter);
+        addVertex(sf::Vector2f(massCenter.x + radius, massCenter.y));
+
+        m_CircleShape.setOutlineThickness(1.f);
+
+        m_MeshType = PointMesh::Dynamic;
+        updateShape();
+        updateColor();
+    }
+
+    PointMesh::Ptr CircleMesh::clone() const
+    {
+        CircleMesh::Ptr circleMesh = std::make_shared<CircleMesh>();
+
+        for(const auto& point : getPointTable())
+            circleMesh->addVertex(point);
+
+        circleMesh->setMeshType(m_MeshType);
+        circleMesh->setScale(m_Scale);
+        circleMesh->setRotation(m_Rotation);
+        circleMesh->setPosition(m_Position);
+        circleMesh->updateShape();
+        circleMesh->updateColor();
+
+        return circleMesh;
+    }
+
+    void CircleMesh::scaleMesh(const sf::Vector2f& scaleFactor)
+    {
+        sf::Vector2f massCenter = m_VertexTable.front().getPosition();
+        sf::Vector2f pointTwo   = m_VertexTable.back().getPosition();
+        sf::Vector2f newPointTwo =
+            sf::Vector2f((pointTwo.x - massCenter.x) * scaleFactor.x + massCenter.x,
+                         (pointTwo.y - massCenter.y) * scaleFactor.y + massCenter.y);
+        m_VertexTable.back().setPosition(newPointTwo);
+    }
+
+    void CircleMesh::rotateMesh(const float& angle)
+    {
+        const auto newPointTwo = math::rotateVertex(m_VertexTable.front().getPosition(),
+                                                    angle,
+                                                    m_VertexTable.back().getPosition());
+        m_VertexTable.back().setPosition(newPointTwo);
+    }
+
 } // namespace nero

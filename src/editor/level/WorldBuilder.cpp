@@ -781,7 +781,7 @@ namespace nero
 
         if(object->getSecondType() == Object::Mesh_Object)
         {
-            PhysicalMeshObject::Ptr mesh_object = PhysicalMeshObject::Cast(object);
+            PhysicsMeshObject::Ptr mesh_object = PhysicsMeshObject::Cast(object);
             mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
             m_MeshEditor->addMesh(mesh_object);
         }
@@ -793,7 +793,7 @@ namespace nero
             Object::Ptr  child_object = m_SelectedObject->getFirstChild()->clone(posf);
             child_object->setId(getNewId());
 
-            PhysicalMeshObject::Ptr mesh_object = PhysicalMeshObject::Cast(child_object);
+            PhysicsMeshObject::Ptr mesh_object = PhysicsMeshObject::Cast(child_object);
             mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
             mesh_object->setIsSelectable(false);
 
@@ -916,8 +916,9 @@ namespace nero
                     mesh = std::make_shared<CircleMesh>();
 
                 mesh->setMeshId(getNewId());
+                mesh->generateDefaultShape();
 
-                PhysicalMeshObject::Ptr meshObject = std::make_shared<PhysicalMeshObject>();
+                PhysicsMeshObject::Ptr meshObject = std::make_shared<PhysicsMeshObject>();
                 meshObject->setId(mesh->getMeshId());
                 meshObject->setName("mesh " + toString(mesh->getMeshId()));
                 meshObject->setMesh(mesh);
@@ -945,7 +946,7 @@ namespace nero
 
                     mesh.setMeshId(getNewId());
 
-                    PhysicalMeshObject::Ptr mesh_object(new MeshObject());
+                    PhysicsMeshObject::Ptr mesh_object(new MeshObject());
                     mesh_object->setId(mesh.getMeshId());
                     std::string object_name = "mesh " + toString(mesh.getMeshId());
                     mesh_object->setName(object_name);
@@ -1031,7 +1032,7 @@ namespace nero
                 // Mesh Object
                 Mesh mesh = Mesh(PointMesh::Shape::Polygon);
                 mesh.setMeshId(getNewId());
-                PhysicalMeshObject::Ptr mesh_object(new MeshObject());
+                PhysicsMeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getMeshId());
                 object_name = "mesh " + toString(mesh.getMeshId());
                 mesh_object->setName(object_name);
@@ -1128,7 +1129,7 @@ namespace nero
                 // Mesh Object
                 Mesh mesh = Mesh(PointMesh::Shape::Polygon);
                 mesh.setMeshId(getNewId());
-                PhysicalMeshObject::Ptr mesh_object(new MeshObject());
+                PhysicsMeshObject::Ptr mesh_object(new MeshObject());
                 mesh_object->setId(mesh.getMeshId());
                 object_name = "mesh " + toString(mesh.getMeshId());
                 mesh_object->setName(object_name);
@@ -1289,7 +1290,7 @@ namespace nero
         else if(label == "Dynamic")
             type = Mesh::Type::Dynamic;
 
-        PhysicalMeshObject::Ptr mesh_object;
+        PhysicsMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1314,7 +1315,7 @@ namespace nero
         // flag ?  m_UpdateLog("enabling fix rotation", nero::Info) :  //m_UpdateLog("disabling fix
         // rotation", nero::Info);
 
-        PhysicalMeshObject::Ptr mesh_object;
+        PhysicsMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1339,7 +1340,7 @@ namespace nero
         // flag ?  m_UpdateLog("enabling sensor mode", nero::Info) :  //m_UpdateLog("disabling
         // sensor mode", nero::Info);
 
-        PhysicalMeshObject::Ptr mesh_object;
+        PhysicsMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1364,7 +1365,7 @@ namespace nero
         // flag ?  m_UpdateLog("enabling allow to sleeping", nero::Info) :  //m_UpdateLog("disabling
         // allow to sleeping", nero::Info);
 
-        PhysicalMeshObject::Ptr mesh_object;
+        PhysicsMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1386,7 +1387,7 @@ namespace nero
            m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-        PhysicalMeshObject::Ptr mesh_object;
+        PhysicsMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1408,7 +1409,7 @@ namespace nero
            m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-        PhysicalMeshObject::Ptr mesh_object;
+        PhysicsMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1430,7 +1431,7 @@ namespace nero
            m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-        PhysicalMeshObject::Ptr mesh_object;
+        PhysicsMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1452,7 +1453,7 @@ namespace nero
            m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
             return;
 
-        PhysicalMeshObject::Ptr mesh_object;
+        PhysicsMeshObject::Ptr mesh_object;
 
         if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
             mesh_object = MeshObject::Cast(m_SelectedObject);
@@ -1465,7 +1466,7 @@ namespace nero
     }
 
     Object::Ptr WorldBuilder::buildScene(std::shared_ptr<ltbl::LightSystem> lightManager,
-                                         std::shared_ptr<b2World>                           physicsWorld)
+                                         std::shared_ptr<b2World>           physicsWorld)
     {
         Object::Ptr chunkRoot = std::make_shared<Object>();
         m_PhysicsManager.setPhysicsWorld(physicsWorld);
@@ -1588,7 +1589,7 @@ namespace nero
                     for(auto it = children->begin(); it != children->end(); it++)
                     {
                         // convert into MeshObject
-                        PhysicalMeshObject::Ptr meshObject = PhysicalMeshObject::Cast(*it);
+                        PhysicsMeshObject::Ptr meshObject = PhysicsMeshObject::Cast(*it);
 
                         if(!meshObject->getMesh()->meshValid())
                             continue;
@@ -1670,7 +1671,7 @@ namespace nero
             for(auto it = children->begin(); it != children->end(); it++)
             {
                 //convert into MeshObject
-                PhysicalMeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
+                PhysicsMeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
 
                 if(!mesh_object->getMesh()->isValid())
                     break;
@@ -1708,7 +1709,7 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
             for(auto it = children->begin(); it != children->end(); it++)
             {
                 //Convert into MeshObject
-                PhysicalMeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
+                PhysicsMeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
 
                 if(!mesh_object->getMesh()->isValid())
                     break;
@@ -1877,7 +1878,7 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
         return light_icon;
     }
 
-    PhysicalMeshObject::Ptr WorldBuilder::loadMesh(nlohmann::json& json)
+    PhysicsMeshObject::Ptr WorldBuilder::loadMesh(nlohmann::json& json)
     {
         PointMesh::Ptr mesh     = nullptr;
         nlohmann::json meshJson = json["mesh"];
@@ -1886,22 +1887,18 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
         if(meshJson["shape"] == "polygon_mesh")
         {
             mesh = std::make_shared<PolygonMesh>();
-            mesh->getVertexTable().clear();
         }
         else if(meshJson["shape"] == "circle_mesh")
         {
             mesh = std::make_shared<CircleMesh>();
-            mesh->getVertexTable().clear();
         }
         else if(meshJson["shape"] == "line_mesh")
         {
             mesh = std::make_shared<PointMesh>(PointMesh::Line);
-            mesh->getVertexTable().clear();
         }
         else if(meshJson["shape"] == "chain_mesh")
         {
             mesh = std::make_shared<PointMesh>(PointMesh::Chain);
-            mesh->getVertexTable().clear();
         }
         else if(meshJson["shape"] == "none")
         {
@@ -1936,7 +1933,7 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
         mesh->updateShape();
         mesh->updateColor();
 
-        PhysicalMeshObject::Ptr meshObject(new PhysicalMeshObject());
+        PhysicsMeshObject::Ptr meshObject(new PhysicsMeshObject());
 
         meshObject->setMesh(mesh);
         meshObject->setId(json["object_id"]);
@@ -2129,7 +2126,7 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
                     for(auto& meshed : meshed_table)
                     {
                         SpriteObject::Ptr       sprite_object = loadSprite(meshed["sprite"]);
-                        PhysicalMeshObject::Ptr mesh_object   = loadMesh(meshed["mesh"]);
+                        PhysicsMeshObject::Ptr mesh_object   = loadMesh(meshed["mesh"]);
 
                         sprite_object->setSecondType(Object::Meshed_Object);
                         sprite_object->addChild(mesh_object);
@@ -2159,7 +2156,7 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
                     for(auto& meshed : meshed_table)
                     {
                         AnimationObject::Ptr animation_object = loadAnimation(meshed["animation"]);
-                        PhysicalMeshObject::Ptr mesh_object   = loadMesh(meshed["mesh"]);
+                        PhysicsMeshObject::Ptr mesh_object   = loadMesh(meshed["mesh"]);
 
                         animation_object->setSecondType(Object::Meshed_Object);
                         animation_object->addChild(mesh_object);

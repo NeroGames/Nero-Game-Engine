@@ -19,17 +19,6 @@ namespace nero
         , m_Scale(sf::Vector2f(1.f, 1.f))
         , m_Rotation(0.f)
     {
-        // Create the default Line/Chain with two vertices
-        if(m_MeshShape == Shape::Line || m_MeshShape == Shape::Chain)
-        {
-            const auto center = sf::Vector2f(0.f, 0.f);
-            const auto radius = 75.f;
-            addVertex(sf::Vector2f(center.x + radius, center.y));
-            addVertex(sf::Vector2f(center.x - radius, center.y));
-
-            updateShape();
-            updateColor();
-        }
     }
 
     void PointMesh::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -332,16 +321,7 @@ namespace nero
             m_VertexTable.front().setPosition(newPointOne);
             m_VertexTable.back().setPosition(newPointTwo);
         }
-        else if(m_MeshShape == Shape::Circle)
-        {
-            sf::Vector2f massCenter = m_VertexTable.front().getPosition();
-            sf::Vector2f pointTwo   = m_VertexTable.back().getPosition();
-            sf::Vector2f newPointTwo =
-                sf::Vector2f((pointTwo.x - massCenter.x) * scaleFactor.x + massCenter.x,
-                             (pointTwo.y - massCenter.y) * scaleFactor.y + massCenter.y);
-            m_VertexTable.back().setPosition(newPointTwo);
-        }
-        else
+        else // Chain and Polygon
         {
             PointTable   pointTable = getPointTable();
             sf::Vector2f massCenter = math::getPolygonCenter(pointTable);
@@ -371,14 +351,7 @@ namespace nero
             m_VertexTable.back().setPosition(
                 math::rotateVertex(center, angle, m_VertexTable.back().getPosition()));
         }
-        else if(m_MeshShape == Shape::Circle)
-        {
-            m_VertexTable.back().setPosition(
-                math::rotateVertex(m_VertexTable.front().getPosition(),
-                                   angle,
-                                   m_VertexTable.back().getPosition()));
-        }
-        else
+        else // Chain and Polygon
         {
             PointTable   pointTable = getPointTable();
             sf::Vector2f massCenter = math::getPolygonCenter(pointTable);
@@ -507,4 +480,41 @@ namespace nero
             m_Position = position;
         }
     }
+
+    void PointMesh::generateDefaultShape()
+    {
+        // Create the default Line/Chain with two vertices
+        if(m_MeshShape != Shape::Line && m_MeshShape != Shape::Chain)
+            return;
+
+        const auto center = sf::Vector2f(0.f, 0.f);
+        const auto radius = 75.f;
+        addVertex(sf::Vector2f(center.x + radius, center.y));
+        addVertex(sf::Vector2f(center.x - radius, center.y));
+
+        updateShape();
+        updateColor();
+    }
+
+    PointMesh::Ptr PointMesh::clone() const
+    {
+        // Create the default Line/Chain with two vertices
+        if(m_MeshShape != Shape::Line && m_MeshShape != Shape::Chain)
+            return nullptr;
+
+        PointMesh::Ptr pointMesh = std::make_shared<PointMesh>(m_MeshShape);
+
+        for(const auto& point : getPointTable())
+            pointMesh->addVertex(point);
+
+        pointMesh->setMeshType(m_MeshType);
+        pointMesh->setScale(m_Scale);
+        pointMesh->setRotation(m_Rotation);
+        pointMesh->setPosition(m_Position);
+        pointMesh->updateShape();
+        pointMesh->updateColor();
+
+        return pointMesh;
+    }
+
 } // namespace nero

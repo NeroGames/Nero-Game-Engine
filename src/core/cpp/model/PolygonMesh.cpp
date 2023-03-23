@@ -11,21 +11,6 @@ namespace nero
     PolygonMesh::PolygonMesh()
         : PointMesh(PointMesh::Shape::Polygon)
     {
-
-        const auto                massCenter = sf::Vector2f(0.f, 0.f);
-        const auto                pointCount = 4;
-        const auto                radius     = 50.f;
-        std::vector<sf::Vector2f> pointTable =
-            generateRegularPolygon(massCenter, pointCount, radius);
-
-        for(const sf::Vector2f& point : pointTable)
-        {
-            addVertex(point);
-        }
-
-        m_MeshType = PointMesh::Dynamic;
-        updateShape();
-        updateColor();
     }
 
     void PolygonMesh::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -114,6 +99,41 @@ namespace nero
             return nullptr;
 
         return std::static_pointer_cast<PolygonMesh>(pointMesh);
+    }
+
+    void PolygonMesh::generateDefaultShape()
+    {
+        const auto                massCenter = sf::Vector2f(0.f, 0.f);
+        const auto                pointCount = 4;
+        const auto                radius     = 50.f;
+        std::vector<sf::Vector2f> pointTable =
+            generateRegularPolygon(massCenter, pointCount, radius);
+
+        for(const sf::Vector2f& point : pointTable)
+        {
+            addVertex(point);
+        }
+
+        m_MeshType = PointMesh::Dynamic;
+        updateShape();
+        updateColor();
+    }
+
+    PointMesh::Ptr PolygonMesh::clone() const
+    {
+        PolygonMesh::Ptr polygonMesh = std::make_shared<PolygonMesh>();
+
+        for(const auto& point : getPointTable())
+            polygonMesh->addVertex(point);
+
+        polygonMesh->setMeshType(m_MeshType);
+        polygonMesh->setScale(m_Scale);
+        polygonMesh->setRotation(m_Rotation);
+        polygonMesh->setPosition(m_Position);
+        polygonMesh->updateShape();
+        polygonMesh->updateColor();
+
+        return polygonMesh;
     }
 
 } // namespace nero

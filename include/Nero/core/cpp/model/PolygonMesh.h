@@ -23,6 +23,8 @@ namespace nero
         PolygonMesh();
         virtual void            updateShape() override;
         virtual void            updateColor() override;
+        virtual void            generateDefaultShape() override;
+        virtual PointMesh::Ptr  clone() const override;
         PolygonTable&           getPolygonTable();
         static PolygonMesh::Ptr Cast(PointMesh::Ptr pointMesh);
 

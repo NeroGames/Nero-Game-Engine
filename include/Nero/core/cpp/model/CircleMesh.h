@@ -21,10 +21,13 @@ namespace nero
         CircleMesh();
         virtual void           updateShape() override;
         virtual void           updateColor() override;
+        virtual void           scaleMesh(const sf::Vector2f& scaleFactor) override;
+        virtual void           rotateMesh(const float& angle) override;
+        virtual sf::FloatRect  getRealGlobalBounds() const override;
+        virtual void           generateDefaultShape() override;
+        virtual PointMesh::Ptr clone() const override;
         sf::CircleShape&       getCircleShape();
         static CircleMesh::Ptr Cast(PointMesh::Ptr pointMesh);
-
-        virtual sf::FloatRect  getRealGlobalBounds() const override;
 
       private:
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

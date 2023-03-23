@@ -100,8 +100,8 @@ namespace nero
 
                                     float wording_width = 70.f;
                                     float input_width = ImGui::GetWindowContentRegionWidth() - 70.f;
-                                    PhysicalMeshObject::Ptr meshObject =
-                                        PhysicalMeshObject::Cast(component);
+                                    PhysicsMeshObject::Ptr meshObject =
+                                        PhysicsMeshObject::Cast(component);
 
                                     ImGui::Text("Shape");
                                     ImGui::SameLine(wording_width);
@@ -131,8 +131,8 @@ namespace nero
                                 {
                                     ImGui::BeginChild("physics_data", ImVec2(0.f, 100.f), true);
 
-                                    PhysicalMeshObject::Ptr meshObject =
-                                        PhysicalMeshObject::Cast(component);
+                                    PhysicsMeshObject::Ptr meshObject =
+                                        PhysicsMeshObject::Cast(component);
 
                                     ImGui::EndChild();
                                 }

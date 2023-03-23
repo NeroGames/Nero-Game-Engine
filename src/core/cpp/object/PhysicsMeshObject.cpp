@@ -4,13 +4,13 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 // Nero
-#include <Nero/core/cpp/object/PhysicalMeshObject.h>
+#include <Nero/core/cpp/object/PhysicsMeshObject.h>
 // EASYLOG
 // #include <easyloggingpp/easylogging++.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    PhysicalMeshObject::PhysicalMeshObject()
+    PhysicsMeshObject::PhysicsMeshObject()
         : Object()
         , m_PointMesh(nullptr)
     {
@@ -18,26 +18,26 @@ namespace nero
         setSecondType(Object::Mesh_Object);
     }
 
-    PhysicalMeshObject::~PhysicalMeshObject()
+    PhysicsMeshObject::~PhysicsMeshObject()
     {
     }
 
-    void PhysicalMeshObject::setMesh(const PointMesh::Ptr& pointMesh)
+    void PhysicsMeshObject::setMesh(const PointMesh::Ptr& pointMesh)
     {
         m_PointMesh = pointMesh;
     }
 
-    PointMesh::Ptr PhysicalMeshObject::getMesh()
+    PointMesh::Ptr PhysicsMeshObject::getMesh()
     {
         return m_PointMesh;
     }
 
-    void PhysicalMeshObject::drawObject(sf::RenderTarget& target, sf::RenderStates states) const
+    void PhysicsMeshObject::drawObject(sf::RenderTarget& target, sf::RenderStates states) const
     {
         target.draw(*m_PointMesh, states);
     }
 
-    void PhysicalMeshObject::updateObject(sf::Time)
+    void PhysicsMeshObject::updateObject(sf::Time)
     {
         sf::Vector2f position = getPosition();
         sf::Vector2f scale    = getScale();
@@ -53,17 +53,17 @@ namespace nero
         m_PointMesh->transform(position, scale, rotation);
     }
 
-    sf::FloatRect PhysicalMeshObject::getGlobalBounds() const
+    sf::FloatRect PhysicsMeshObject::getGlobalBounds() const
     {
         return m_PointMesh->getGlobalBounds();
     }
 
-    void PhysicalMeshObject::setMeshType(PointMesh::Type type)
+    void PhysicsMeshObject::setMeshType(PointMesh::Type type)
     {
         m_PointMesh->setMeshType(type);
     }
 
-    nlohmann::json PhysicalMeshObject::toJson() const
+    nlohmann::json PhysicsMeshObject::toJson() const
     {
         nlohmann::json mesh_json;
 
@@ -73,26 +73,18 @@ namespace nero
         return mesh_json;
     }
 
-    Object::Ptr PhysicalMeshObject::clone() const
+    Object::Ptr PhysicsMeshObject::clone() const
     {
-        auto meshObject = std::make_shared<PhysicalMeshObject>();
-        Object::clone<PhysicalMeshObject::Ptr>(meshObject);
-
-        PointMesh::Ptr mesh = std::make_shared<PointMesh>();
-        mesh->setMeshShape(m_PointMesh->getMeshShape());
-        mesh->setMeshType(m_PointMesh->getMeshType());
-        for(const auto& point : m_PointMesh->getPointTable())
-        {
-            mesh->addVertex(point);
-        }
-        meshObject->setMesh(mesh);
+        auto meshObject = std::make_shared<PhysicsMeshObject>();
+        Object::clone<PhysicsMeshObject::Ptr>(meshObject);
+        meshObject->setMesh(m_PointMesh->clone());
 
         return meshObject;
     }
 
-    Object::Ptr PhysicalMeshObject::clone(sf::Vector2f& position) const
+    Object::Ptr PhysicsMeshObject::clone(sf::Vector2f& position) const
     {
-        PhysicalMeshObject::Ptr meshObject = Cast(clone());
+        PhysicsMeshObject::Ptr meshObject = Cast(clone());
 
         meshObject->setId(-1);
         meshObject->getMesh()->setMeshId(-1);
@@ -101,12 +93,12 @@ namespace nero
         return meshObject;
     }
 
-    PhysicalMeshObject::Ptr PhysicalMeshObject::Cast(Object::Ptr object)
+    PhysicsMeshObject::Ptr PhysicsMeshObject::Cast(Object::Ptr object)
     {
         if(object->getFirstType() != Object::Mesh_Object)
             return nullptr;
 
-        return std::static_pointer_cast<PhysicalMeshObject>(object);
+        return std::static_pointer_cast<PhysicsMeshObject>(object);
     }
 
 } // namespace nero

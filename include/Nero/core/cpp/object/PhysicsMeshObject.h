@@ -14,15 +14,15 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class PhysicalMeshObject : public Object
+    class PhysicsMeshObject : public Object
     {
       public:
-        using Ptr = std::shared_ptr<PhysicalMeshObject>;
+        using Ptr = std::shared_ptr<PhysicsMeshObject>;
         static Ptr Cast(Object::Ptr object);
 
       public:
-        PhysicalMeshObject();
-        virtual ~PhysicalMeshObject() override;
+        PhysicsMeshObject();
+        virtual ~PhysicsMeshObject() override;
 
         void                   setMesh(const PointMesh::Ptr& pointMesh);
         PointMesh::Ptr         getMesh();

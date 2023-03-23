@@ -67,9 +67,11 @@ namespace nero
         VertexTable&           getVertexTable();
         LineTable&             getLineTable();
         unsigned int           getPointCount() const;
-
         sf::Color              getColor() const;
         sf::String             toSting() const;
+        void                   transform(const sf::Vector2f& position,
+                                         const sf::Vector2f& scale,
+                                         const float&        rotation);
 
         virtual sf::FloatRect  getRealGlobalBounds() const;
         virtual sf::FloatRect  getGlobalBounds() const;
@@ -80,10 +82,8 @@ namespace nero
         virtual void           moveMesh(const sf::Vector2f& offset);
         virtual void           scaleMesh(const sf::Vector2f& scaleFactor);
         virtual void           rotateMesh(const float& angle);
-        void                   transform(const sf::Vector2f& position,
-                                         const sf::Vector2f& scale,
-                                         const float&        rotation);
-
+        virtual void           generateDefaultShape();
+        virtual PointMesh::Ptr clone() const;
         virtual nlohmann::json toJson() const;
 
       protected:

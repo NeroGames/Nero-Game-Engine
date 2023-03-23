@@ -6,7 +6,7 @@
 #define MESHEDITOR_H
 ///////////////////////////HEADERS//////////////////////////
 // Nero
-#include <Nero/core/cpp/object/PhysicalMeshObject.h>
+#include <Nero/core/cpp/object/PhysicsMeshObject.h>
 #include <Nero/core/cpp/scene/SceneUtility.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 // Std
@@ -20,14 +20,14 @@ namespace nero
         typedef std::shared_ptr<MeshEditor>          Ptr;
         typedef std::shared_ptr<sf::RenderTexture>   RenderTexturePtr;
         typedef sf::RectangleShape                   Vertex;
-        typedef std::vector<PhysicalMeshObject::Ptr> MeshTab;
+        typedef std::vector<PhysicsMeshObject::Ptr> MeshTab;
 
         MeshEditor();
         virtual ~MeshEditor();
 
         void     handleEvent(const sf::Event& event);
 
-        void     addMesh(PhysicalMeshObject::Ptr mesh);
+        void     addMesh(PhysicsMeshObject::Ptr mesh);
         void     deleteMesh(const int& id);
         void     destroyAllMesh();
         MeshTab& getMeshTab();
@@ -45,11 +45,11 @@ namespace nero
         void handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
         void rotateMesh(PointMesh::Ptr mesh, float speed = 0.1f);
         void scaleMesh(PointMesh::Ptr mesh, float scale = 0.1f);
-        void deselectMesh(PhysicalMeshObject::Ptr meshObject);
+        void deselectMesh(PhysicsMeshObject::Ptr meshObject);
 
       private:
         MeshTab                                            m_MeshTab;
-        PhysicalMeshObject::Ptr                            m_SelectedMesh;
+        PhysicsMeshObject::Ptr                            m_SelectedMesh;
         std::vector<sf::RectangleShape*>                   m_SelectedVertexTab;
         int                                                m_MeshCount;
         RenderTexturePtr                                   m_RenderTexture;
