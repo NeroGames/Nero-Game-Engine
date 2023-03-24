@@ -78,7 +78,9 @@ namespace nero
         auto meshObject = std::make_shared<PhysicsMeshObject>();
         Object::clone<PhysicsMeshObject::Ptr>(meshObject);
         meshObject->setMesh(m_PointMesh->clone());
-
+        meshObject->setPosition(getPosition());
+        meshObject->setScale(getScale());
+        meshObject->setRotation(getRotation());
         return meshObject;
     }
 
@@ -88,8 +90,7 @@ namespace nero
 
         meshObject->setId(-1);
         meshObject->getMesh()->setMeshId(-1);
-        meshObject->setPosition(position);
-
+        meshObject->move(position);
         return meshObject;
     }
 

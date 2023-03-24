@@ -31,8 +31,8 @@ namespace nero
 
         void                   setMeshType(PointMesh::Type type);
 
-        Object::Ptr            clone(sf::Vector2f& position) const override;
-        Object::Ptr            clone() const override;
+        virtual Object::Ptr    clone(sf::Vector2f& position) const override;
+        virtual Object::Ptr    clone() const override;
         virtual nlohmann::json toJson() const override;
 
       private:

@@ -508,9 +508,9 @@ namespace nero
             pointMesh->addVertex(point);
 
         pointMesh->setMeshType(m_MeshType);
-        pointMesh->setScale(m_Scale);
-        pointMesh->setRotation(m_Rotation);
-        pointMesh->setPosition(m_Position);
+        pointMesh->m_Scale    = m_Scale;
+        pointMesh->m_Rotation = m_Rotation;
+        pointMesh->m_Position = m_Position;
         pointMesh->updateShape();
         pointMesh->updateColor();
 

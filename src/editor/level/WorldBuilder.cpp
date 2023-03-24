@@ -2125,7 +2125,7 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
 
                     for(auto& meshed : meshed_table)
                     {
-                        SpriteObject::Ptr       sprite_object = loadSprite(meshed["sprite"]);
+                        SpriteObject::Ptr      sprite_object = loadSprite(meshed["sprite"]);
                         PhysicsMeshObject::Ptr mesh_object   = loadMesh(meshed["mesh"]);
 
                         sprite_object->setSecondType(Object::Meshed_Object);
@@ -2156,7 +2156,7 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
                     for(auto& meshed : meshed_table)
                     {
                         AnimationObject::Ptr animation_object = loadAnimation(meshed["animation"]);
-                        PhysicsMeshObject::Ptr mesh_object   = loadMesh(meshed["mesh"]);
+                        PhysicsMeshObject::Ptr mesh_object    = loadMesh(meshed["mesh"]);
 
                         animation_object->setSecondType(Object::Meshed_Object);
                         animation_object->addChild(mesh_object);

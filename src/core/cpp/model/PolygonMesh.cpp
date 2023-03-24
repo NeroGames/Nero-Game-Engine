@@ -127,9 +127,9 @@ namespace nero
             polygonMesh->addVertex(point);
 
         polygonMesh->setMeshType(m_MeshType);
-        polygonMesh->setScale(m_Scale);
-        polygonMesh->setRotation(m_Rotation);
-        polygonMesh->setPosition(m_Position);
+        polygonMesh->m_Scale    = m_Scale;
+        polygonMesh->m_Rotation = m_Rotation;
+        polygonMesh->m_Position = m_Position;
         polygonMesh->updateShape();
         polygonMesh->updateColor();
 

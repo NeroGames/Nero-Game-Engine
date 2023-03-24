@@ -11,6 +11,7 @@ namespace nero
     CircleMesh::CircleMesh()
         : PointMesh(PointMesh::Shape::Circle)
     {
+        m_CircleShape.setOutlineThickness(1.f);
     }
 
     void CircleMesh::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -76,8 +77,6 @@ namespace nero
         addVertex(massCenter);
         addVertex(sf::Vector2f(massCenter.x + radius, massCenter.y));
 
-        m_CircleShape.setOutlineThickness(1.f);
-
         m_MeshType = PointMesh::Dynamic;
         updateShape();
         updateColor();
@@ -91,9 +90,9 @@ namespace nero
             circleMesh->addVertex(point);
 
         circleMesh->setMeshType(m_MeshType);
-        circleMesh->setScale(m_Scale);
-        circleMesh->setRotation(m_Rotation);
-        circleMesh->setPosition(m_Position);
+        circleMesh->m_Scale    = m_Scale;
+        circleMesh->m_Rotation = m_Rotation;
+        circleMesh->m_Position = m_Position;
         circleMesh->updateShape();
         circleMesh->updateColor();
 
@@ -108,6 +107,8 @@ namespace nero
             sf::Vector2f((pointTwo.x - massCenter.x) * scaleFactor.x + massCenter.x,
                          (pointTwo.y - massCenter.y) * scaleFactor.y + massCenter.y);
         m_VertexTable.back().setPosition(newPointTwo);
+
+        updateShape();
     }
 
     void CircleMesh::rotateMesh(const float& angle)
@@ -116,6 +117,8 @@ namespace nero
                                                     angle,
                                                     m_VertexTable.back().getPosition());
         m_VertexTable.back().setPosition(newPointTwo);
+
+        updateShape();
     }
 
 } // namespace nero
