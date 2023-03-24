@@ -72,6 +72,9 @@ namespace nero
         void                   transform(const sf::Vector2f& position,
                                          const sf::Vector2f& scale,
                                          const float&        rotation);
+        void                   loadTransform(const sf::Vector2f& position,
+                                             const sf::Vector2f& scale,
+                                             const float&        rotation);
 
         virtual sf::FloatRect  getRealGlobalBounds() const;
         virtual sf::FloatRect  getGlobalBounds() const;

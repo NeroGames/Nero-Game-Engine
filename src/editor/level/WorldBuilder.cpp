@@ -1924,12 +1924,16 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
         mesh.setIsValid(mesh_json["is_valid"]);
         mesh.setMeshId(json["object_id"]);*/
 
+        const auto     position    = sf::Vector2f(json["position"]["x"], json["position"]["y"]);
+        const auto     rotation    = float(json["rotation"]);
+        const auto     scale       = sf::Vector2f(json["scale"]["x"], json["scale"]["y"]);
+
         // vertex
         nlohmann::json vertexTable = meshJson["vertex_table"];
-
         for(const auto& vertex : vertexTable)
             mesh->addVertex(sf::Vector2f(vertex["x"], vertex["y"]));
 
+        mesh->loadTransform(position, scale, rotation);
         mesh->updateShape();
         mesh->updateColor();
 
@@ -1944,6 +1948,9 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
         meshObject->setIsUpdateable(json["is_updateable"]);
         meshObject->setIsSelectable(json["is_selectable"]);
         meshObject->setIsSelected(json["is_selected"]);
+        meshObject->setPosition(position);
+        meshObject->setScale(scale);
+        meshObject->setRotation(rotation);
 
         m_MeshEditor->addMesh(meshObject);
 

@@ -65,12 +65,20 @@ namespace nero
 
     nlohmann::json PhysicsMeshObject::toJson() const
     {
-        nlohmann::json mesh_json;
+        nlohmann::json meshJson;
 
-        mesh_json         = Object::toJson();
-        mesh_json["mesh"] = m_PointMesh->toJson();
-
-        return mesh_json;
+        meshJson             = Object::toJson();
+        meshJson["mesh"]     = m_PointMesh->toJson();
+        meshJson["rotation"] = getRotation();
+        meshJson["position"] = {
+            {"x", getPosition().x},
+            {"y", getPosition().y}
+        };
+        meshJson["scale"] = {
+            {"x", getScale().x},
+            {"y", getScale().y}
+        };
+        return meshJson;
     }
 
     Object::Ptr PhysicsMeshObject::clone() const

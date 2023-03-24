@@ -397,44 +397,43 @@ namespace nero
 
     nlohmann::json PointMesh::toJson() const
     {
-        nlohmann::json mesh;
+        nlohmann::json meshJson;
 
         switch(m_MeshShape)
         {
             case Shape::Line:
-                mesh["shape"] = "line_mesh";
+                meshJson["shape"] = "line_mesh";
                 break;
             case Polygon:
-                mesh["shape"] = "polygon_mesh";
+                meshJson["shape"] = "polygon_mesh";
                 break;
             case Circle:
-                mesh["shape"] = "circle_mesh";
+                meshJson["shape"] = "circle_mesh";
                 break;
             case Chain:
-                mesh["shape"] = "chain_mesh";
+                meshJson["shape"] = "chain_mesh";
                 break;
             case None:
-                mesh["shape"] = "none";
+                meshJson["shape"] = "none";
                 break;
         }
 
         switch(m_MeshType)
         {
             case Static:
-                mesh["type"] = "static_mesh";
+                meshJson["type"] = "static_mesh";
                 break;
             case Dynamic:
-                mesh["type"] = "dynamic_mesh";
+                meshJson["type"] = "dynamic_mesh";
                 break;
             case Kinematic:
-                mesh["type"] = "kinematic_mesh";
+                meshJson["type"] = "kinematic_mesh";
                 break;
         }
 
-        mesh["is_valid"] = m_MeshValid;
+        meshJson["is_valid"] = m_MeshValid;
 
         std::vector<nlohmann::json> vertexTableJson;
-
         int                         i = 0;
         for(auto v : m_VertexTable)
         {
@@ -449,10 +448,10 @@ namespace nero
             vertexTableJson.push_back(vertex);
         }
 
-        mesh["vertex_table"] = vertexTableJson;
-        mesh["vertex_count"] = i;
+        meshJson["vertex_table"] = vertexTableJson;
+        meshJson["vertex_count"] = m_VertexTable.size();
 
-        return mesh;
+        return meshJson;
     }
 
     sf::String PointMesh::toSting() const
@@ -479,6 +478,15 @@ namespace nero
             moveMesh(position - m_Position);
             m_Position = position;
         }
+    }
+
+    void PointMesh::loadTransform(const sf::Vector2f& position,
+                                  const sf::Vector2f& scale,
+                                  const float&        rotation)
+    {
+        m_Position = position;
+        m_Scale    = scale;
+        m_Rotation = rotation;
     }
 
     void PointMesh::generateDefaultShape()
