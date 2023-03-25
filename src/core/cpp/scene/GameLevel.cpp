@@ -35,7 +35,9 @@ namespace nero
         // TODO get gravity from m_LevelContext.levelSetting
         , m_PhysicsWorld(std::make_shared<b2World>(b2Vec2(0.f, 9.8f)))
         , m_ShapeRenderer(std::make_shared<ShapeRenderer>(m_LevelContext.renderTexture))
-        , m_ContactListener(std::make_shared<ContactListener>(nullptr))
+        , m_ObjectManager(
+              std::make_shared<ObjectManager>(m_LevelRoot, m_PhysicsWorld, m_ScreenTable))
+        , m_ContactListener(std::make_shared<ContactListener>(m_ObjectManager))
     {
         m_LightManager->create({-1000.f, -1000.f, 2000.f, 2000.f},
                                m_LevelContext.renderTexture->getSize());

@@ -13,6 +13,7 @@
 #include <Nero/core/cpp/scene/PhysicalWorld.h> //TODO delete
 #include <Nero/core/cpp/scene/LightEngine.h>
 #include <Nero/core/cpp/scene/ContactListener.h>
+#include <Nero/core/cpp/scene/ObjectManager.h>
 #include <Nero/core/cpp/camera/Camera.h>
 // SFML
 #include <SFML/Graphics/RenderTexture.hpp>
@@ -122,7 +123,9 @@ namespace nero
         std::shared_ptr<ltbl::LightSystem> m_LightManager;
         std::shared_ptr<b2World>           m_PhysicsWorld;
         ShapeRenderer::Ptr                 m_ShapeRenderer;
+        ObjectManager::Ptr                 m_ObjectManager;
         ContactListener::Ptr               m_ContactListener;
+        std::vector<Screen::Ptr>           m_ScreenTable;
     };
 } // namespace nero
 

@@ -38,8 +38,8 @@ namespace nero
         typedef std::shared_ptr<ObjectManager> Ptr;
 
       public:
-        ObjectManager(Object::Ptr               root_object,
-                      std::shared_ptr<b2World>  world,
+        ObjectManager(Object::Ptr               levelRoot,
+                      std::shared_ptr<b2World>  physicsWorld,
                       std::vector<Screen::Ptr>& screenTable);
         ~ObjectManager();
 
@@ -125,11 +125,10 @@ namespace nero
         bool        removeChildObject(Object::Ptr object, Object::Ptr child);
 
       private:
-        Object::Ptr                   m_RootObject;
-        std::shared_ptr<b2World>      m_PhysicWorld;
+        Object::Ptr                   m_LevelRoot;
+        std::shared_ptr<b2World>      m_PhysicsWorld;
         PhysicObjectTab               m_DeadPhysicObject;
         std::vector<Screen::Ptr>&     m_ScreenTable;
-        LayerObject::Ptr              m_CustomLayer;
         int                           m_JointCount;
         int                           m_ObjectCount;
         std::vector<PhysicJoint::Ptr> m_PhysicJointTable;
