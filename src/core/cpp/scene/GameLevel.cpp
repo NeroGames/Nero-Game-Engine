@@ -35,6 +35,7 @@ namespace nero
         // TODO get gravity from m_LevelContext.levelSetting
         , m_PhysicsWorld(std::make_shared<b2World>(b2Vec2(0.f, 9.8f)))
         , m_ShapeRenderer(std::make_shared<ShapeRenderer>(m_LevelContext.renderTexture))
+        , m_ContactListener(std::make_shared<ContactListener>(nullptr))
     {
         m_LightManager->create({-1000.f, -1000.f, 2000.f, 2000.f},
                                m_LevelContext.renderTexture->getSize());
@@ -48,8 +49,21 @@ namespace nero
         ambientLight->setSourceRadius(lightSetting.getFloat("source_radius"));
         ambientLight->setTurnedOn(lightSetting.getBool("enable_ambient_light"));
 
-        // m_PhysicsWorld->SetContactListener(m_ContactListener);
+        m_PhysicsWorld->SetContactListener(m_ContactListener.get());
         m_PhysicsWorld->SetDebugDraw(m_ShapeRenderer.get());
+
+        m_ContactListener->registerCallback(
+            "beginContact",
+            std::bind(&GameLevel::onCollisionContactBegin, this, std::placeholders::_1));
+        m_ContactListener->registerCallback(
+            "endContact",
+            std::bind(&GameLevel::onCollisionContactEnd, this, std::placeholders::_1));
+        m_ContactListener->registerCallback(
+            "preSolveContact",
+            std::bind(&GameLevel::onCollisionPreSolveContact, this, std::placeholders::_1));
+        m_ContactListener->registerCallback(
+            "postSolveContact",
+            std::bind(&GameLevel::onCollisionPostSolveContact, this, std::placeholders::_1));
     }
 
     GameLevel::~GameLevel()

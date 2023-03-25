@@ -23,20 +23,6 @@ namespace nero
     // constant
     const int32 MAX_CONTACT_POINT = 2048;
 
-    // contact point
-    struct ContactPoint
-    {
-        b2Fixture*   fixtureA;
-        b2Fixture*   fixtureB;
-        b2Vec2       normal;
-        b2Vec2       position;
-        b2PointState state;
-        float32      normalImpulse;
-        float32      tangentImpulse;
-        float32      separation;
-    };
-
-    // leve setting
     struct SceneSetting
     {
         // Constructor

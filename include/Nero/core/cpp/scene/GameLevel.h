@@ -10,8 +10,9 @@
 #include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/core/cpp/utility/Keyboard.h>
 #include <Nero/core/cpp/model/Collision.h>
-#include <Nero/core/cpp/scene/PhysicalWorld.h>
+#include <Nero/core/cpp/scene/PhysicalWorld.h> //TODO delete
 #include <Nero/core/cpp/scene/LightEngine.h>
+#include <Nero/core/cpp/scene/ContactListener.h>
 #include <Nero/core/cpp/camera/Camera.h>
 // SFML
 #include <SFML/Graphics/RenderTexture.hpp>
@@ -121,6 +122,7 @@ namespace nero
         std::shared_ptr<ltbl::LightSystem> m_LightManager;
         std::shared_ptr<b2World>           m_PhysicsWorld;
         ShapeRenderer::Ptr                 m_ShapeRenderer;
+        ContactListener::Ptr               m_ContactListener;
     };
 } // namespace nero
 

@@ -304,7 +304,7 @@ namespace nero
 
         for(int32 i = 0; i < manifold->pointCount && m_ContactPointCount < MAX_CONTACT_POINT; ++i)
         {
-            ContactPoint* cp   = m_ContactVectorTablele + m_ContactPointCount;
+            /*ContactPoint* cp   = m_ContactVectorTablele + m_ContactPointCount;
             cp->fixtureA       = fixtureA;
             cp->fixtureB       = fixtureB;
             cp->position       = worldManifold.points[i];
@@ -313,7 +313,7 @@ namespace nero
             cp->normalImpulse  = manifold->points[i].normalImpulse;
             cp->tangentImpulse = manifold->points[i].tangentImpulse;
             cp->separation     = worldManifold.separations[i];
-            ++m_ContactPointCount;
+            ++m_ContactPointCount;*/
         }
 
         /*Collision collision(contact, oldManifold, nullptr);

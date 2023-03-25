@@ -158,7 +158,7 @@ namespace nero
         // physic world
         std::shared_ptr<b2World>              m_PhysicWorld;
         int32                 m_ContactPointCount;
-        ContactPoint          m_ContactVectorTablele[MAX_CONTACT_POINT];
+        //ContactPoint          m_ContactVectorTablele[MAX_CONTACT_POINT];
         // manager
         ShapeRenderer         m_ShapeRenderer;
         ObjectManager::Ptr    m_ObjectManager;
