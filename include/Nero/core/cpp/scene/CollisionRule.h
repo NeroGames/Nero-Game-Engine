@@ -7,7 +7,7 @@
 ///////////////////////////HEADERS//////////////////////////
 // Nero
 #include <Nero/core/cpp/object/Object.h>
-#include <Nero/core/cpp/object/PhysicObject.h>
+#include <Nero/core/cpp/object/PhysicsObject.h>
 // Std
 #include <map>
 #include <unordered_set>
@@ -30,7 +30,7 @@ namespace nero
         void               fullCollision(Object::Ptr root);
         void               noCollision(Object::Ptr root);
 
-        PhysicObject::Rule getCollisionData(std::string category);
+        PhysicsObject::Rule getCollisionData(std::string category);
 
       private:
         void updateCategoryBit();

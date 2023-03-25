@@ -6,7 +6,7 @@
 #define COLLISION_H
 ///////////////////////////HEADERS//////////////////////////
 // Nero
-#include <Nero/core/cpp/object/PhysicObject.h>
+#include <Nero/core/cpp/object/PhysicsObject.h>
 // BOX2D
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
@@ -21,11 +21,11 @@ namespace nero
                   const b2ContactImpulse* m_ContactImpulse);
         ~Collision();
         // Initialize Collision
-        void                      setObjectA(PhysicObject::Ptr objectA);
-        void                      setObjectB(PhysicObject::Ptr objectB);
+        void                      setObjectA(PhysicsObject::Ptr objectA);
+        void                      setObjectB(PhysicsObject::Ptr objectB);
 
-        PhysicObject::Ptr         getObjectA();
-        PhysicObject::Ptr         getObjectB();
+        PhysicsObject::Ptr         getObjectA();
+        PhysicsObject::Ptr         getObjectB();
 
         // Contact
         float                     getFriction();
@@ -72,15 +72,15 @@ namespace nero
         bool                      isObjectCollising(sf::String nameA);
         bool                      isObjectCollising(sf::String nameA, sf::String nameB);
 
-        PhysicObject::Ptr         getObject(sf::String indicator);
+        PhysicsObject::Ptr         getObject(sf::String indicator);
 
       private:
         b2Contact*              m_Contact;
         b2WorldManifold*        m_WorldManifold;
         const b2Manifold*       m_OldManifold;
         const b2ContactImpulse* m_ContactImpulse;
-        PhysicObject::Ptr       m_ObjectA;
-        PhysicObject::Ptr       m_ObjectB;
+        PhysicsObject::Ptr       m_ObjectA;
+        PhysicsObject::Ptr       m_ObjectB;
     };
 } // namespace nero
 #endif // COLLIION_H

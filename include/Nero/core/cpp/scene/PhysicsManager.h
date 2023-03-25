@@ -6,7 +6,7 @@
 #define PHYSICSMANAGER_H
 ///////////////////////////HEADERS//////////////////////////
 // Nero
-#include <Nero/core/cpp/object/PhysicObject.h>
+#include <Nero/core/cpp/object/PhysicsObject.h>
 #include <Nero/core/cpp/model/PointMesh.h>
 // BOX2D
 #include <Box2D/Dynamics/b2World.h>
@@ -23,7 +23,7 @@ namespace nero
         PhysicsManager();
         virtual ~PhysicsManager();
 
-        PhysicObject::Ptr createObject(PointMesh::Ptr pointMesh);
+        PhysicsObject::Ptr createObject(PointMesh::Ptr pointMesh);
         void              setPhysicsWorld(std::shared_ptr<b2World> physicsWorld);
 
       private:

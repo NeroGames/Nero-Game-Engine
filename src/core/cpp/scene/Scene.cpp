@@ -321,8 +321,8 @@ namespace nero
         int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
         int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-        auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
-        auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+        auto objectA = PhysicsObject::Cast(m_ObjectManager->findObject(id_A));
+        auto objectB = PhysicsObject::Cast(m_ObjectManager->findObject(id_B));
 
         if(!objectA || !objectB)
           return;
@@ -344,8 +344,8 @@ namespace nero
         int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
         int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-        auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
-        auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+        auto objectA = PhysicsObject::Cast(m_ObjectManager->findObject(id_A));
+        auto objectB = PhysicsObject::Cast(m_ObjectManager->findObject(id_B));
 
         if(!objectA || !objectB)
           return;
@@ -367,8 +367,8 @@ namespace nero
         int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
         int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-        auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
-        auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+        auto objectA = PhysicsObject::Cast(m_ObjectManager->findObject(id_A));
+        auto objectB = PhysicsObject::Cast(m_ObjectManager->findObject(id_B));
 
         if(!objectA || !objectB)
           return;
@@ -390,8 +390,8 @@ namespace nero
         int id_A = (int)contact->GetFixtureA()->GetBody()->GetUserData();
         int id_B = (int)contact->GetFixtureB()->GetBody()->GetUserData();
 
-        auto objectA = PhysicObject::Cast(m_ObjectManager->findObject(id_A));
-        auto objectB = PhysicObject::Cast(m_ObjectManager->findObject(id_B));
+        auto objectA = PhysicsObject::Cast(m_ObjectManager->findObject(id_A));
+        auto objectB = PhysicsObject::Cast(m_ObjectManager->findObject(id_B));
 
         if(!objectA || !objectB)
           return;

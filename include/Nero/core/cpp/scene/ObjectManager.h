@@ -8,7 +8,7 @@
 #include <Nero/core/cpp/object/Object.h>
 #include <Nero/core/cpp/object/UIObject.h>
 #include <Nero/core/cpp/object/ButtonObject.h>
-#include <Nero/core/cpp/object/PhysicObject.h>
+#include <Nero/core/cpp/object/PhysicsObject.h>
 #include <Nero/core/cpp/object/LayerObject.h>
 #include <Nero/core/cpp/model/FrontScreen.h>
 #include <Nero/core/cpp/model/JointProperty.h>
@@ -34,7 +34,7 @@ namespace nero
     {
       public:
         typedef std::vector<Object::Ptr>       ObjectTab;
-        typedef std::vector<PhysicObject::Ptr> PhysicObjectTab;
+        typedef std::vector<PhysicsObject::Ptr> PhysicObjectTab;
         typedef std::shared_ptr<ObjectManager> Ptr;
 
       public:

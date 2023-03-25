@@ -2,8 +2,8 @@
 // Nero Game Engine
 // Copyright (c) 2016-2023 Sanou A. K. Landry
 /////////////////////////////////////////////////////////////
-#ifndef PHYSICOBJECT_H
-#define PHYSICOBJECT_H
+#ifndef PHYSICSOBJECT_H
+#define PHYSICSOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
 // Nero
 #include <Nero/core/cpp/object/Object.h>
@@ -12,11 +12,11 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    class PhysicObject : public Object
+    class PhysicsObject : public Object
     {
       public:
-        typedef std::shared_ptr<PhysicObject> Ptr;
-        static Ptr                            Cast(Object::Ptr object);
+        typedef std::shared_ptr<PhysicsObject> Ptr;
+        static Ptr                             Cast(Object::Ptr object);
 
         struct Rule
         {
@@ -25,8 +25,8 @@ namespace nero
         };
 
       public:
-        PhysicObject(b2Body* body);
-        virtual ~PhysicObject();
+        PhysicsObject(b2Body* body);
+        virtual ~PhysicsObject();
 
         b2Body*      getBody();
         void         setUserData(void* userData);
@@ -44,7 +44,7 @@ namespace nero
         sf::Vector2f getLocalCenter() const;
         sf::Vector2f getPosition() const;
         sf::Vector2f getWorldCenter() const;
-        sf::Vector2f getCenter() const;
+        sf::Vector2f getCenter() const override;
         bool         isActive() const;
         bool         isAwake() const;
         bool         isBullet() const;
@@ -92,10 +92,10 @@ namespace nero
 
         void                  setSize(const sf::Vector2f& size);
         sf::Vector2f          getSize();
-        virtual sf::FloatRect getGlobalBounds() const;
+        virtual sf::FloatRect getGlobalBounds() const override;
 
       private:
-        void updateObject(sf::Time time_step);
+        void updateObject(sf::Time time_step) override;
 
       protected:
         b2Body*      m_Body;
@@ -103,4 +103,4 @@ namespace nero
         sf::Vector2f m_Size;
     };
 } // namespace nero
-#endif // PHYSICOBJECT_H
+#endif // PHYSICSOBJECT_H

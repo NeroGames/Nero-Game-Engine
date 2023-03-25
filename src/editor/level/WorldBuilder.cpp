@@ -1594,7 +1594,7 @@ namespace nero
                         if(!meshObject->getMesh()->meshValid())
                             continue;
 
-                        PhysicObject::Ptr physicObject =
+                        PhysicsObject::Ptr physicObject =
                             m_PhysicsManager.createObject(meshObject->getMesh());
                         physicObject->setName(meshObject->getName());
                         physicObject->setCategory(meshObject->getCategory());
@@ -1676,7 +1676,7 @@ namespace nero
                 if(!mesh_object->getMesh()->isValid())
                     break;
 
-                PhysicObject::Ptr physic_object =
+                PhysicsObject::Ptr physic_object =
 m_PhysicsObjectManager.createObject(mesh_object->getMesh());
                 physic_object->setSecondType(Object::Solid_Object);
                 physic_object->setName(mesh_object->getName());
@@ -1714,7 +1714,7 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
                 if(!mesh_object->getMesh()->isValid())
                     break;
 
-                PhysicObject::Ptr physic_object =
+                PhysicsObject::Ptr physic_object =
 m_PhysicsObjectManager.createObject(mesh_object->getMesh());
                 physic_object->setSecondType(Object::Animation_Solid_Object);
                 physic_object->setName(mesh_object->getName());
@@ -1752,7 +1752,7 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
 
                 for(auto it = layer_children->begin(); it != layer_children->end(); it++)
                 {
-                    PhysicObject::Ptr physic_object = PhysicObject::Cast((*it));
+                    PhysicsObject::Ptr physic_object = PhysicsObject::Cast((*it));
                     m_PhysicWorld->DestroyBody(physic_object->getBody());
                 }
             }

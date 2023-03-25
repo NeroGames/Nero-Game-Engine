@@ -28,12 +28,12 @@ namespace nero
         // empty
     }
 
-    void Collision::setObjectA(PhysicObject::Ptr objectA)
+    void Collision::setObjectA(PhysicsObject::Ptr objectA)
     {
         m_ObjectA = objectA;
     }
 
-    void Collision::setObjectB(PhysicObject::Ptr objectB)
+    void Collision::setObjectB(PhysicsObject::Ptr objectB)
     {
         m_ObjectB = objectB;
     }
@@ -218,12 +218,12 @@ namespace nero
         return separations;
     }
 
-    PhysicObject::Ptr Collision::getObjectA()
+    PhysicsObject::Ptr Collision::getObjectA()
     {
         return m_ObjectA;
     }
 
-    PhysicObject::Ptr Collision::getObjectB()
+    PhysicsObject::Ptr Collision::getObjectB()
     {
         return m_ObjectB;
     }
@@ -253,7 +253,7 @@ namespace nero
                (getObjectA()->getName() == nameB && getObjectB()->getName() == nameA);
     }
 
-    PhysicObject::Ptr Collision::getObject(sf::String indicator)
+    PhysicsObject::Ptr Collision::getObject(sf::String indicator)
     {
         if(getObjectA()->getCategory() == indicator)
             return getObjectA();

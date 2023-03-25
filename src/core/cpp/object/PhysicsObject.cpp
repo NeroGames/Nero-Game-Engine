@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 // Nero
-#include <Nero/core/cpp/object/PhysicObject.h>
+#include <Nero/core/cpp/object/PhysicsObject.h>
 #include <Nero/core/cpp/utility/Utility.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 // BOX2D
@@ -12,7 +12,7 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    PhysicObject::PhysicObject(b2Body* body)
+    PhysicsObject::PhysicsObject(b2Body* body)
         : m_Body(body)
         , m_Dead(false)
         , m_Size(sf::Vector2f(0.f, 0.f))
@@ -21,28 +21,28 @@ namespace nero
         setSecondType(Object::Physic_Object);
     }
 
-    PhysicObject::~PhysicObject()
+    PhysicsObject::~PhysicsObject()
     {
         m_Body = nullptr;
     }
 
-    b2Body* PhysicObject::getBody()
+    b2Body* PhysicsObject::getBody()
     {
         return m_Body;
     }
 
-    void PhysicObject::updateObject(sf::Time time_step)
+    void PhysicsObject::updateObject(sf::Time time_step)
     {
         setPosition(graphics::b2_to_sf(m_Body->GetPosition(), EngineConstant.SCALE));
         setRotation(math::toDegree(m_Body->GetAngle()));
     }
 
-    void PhysicObject::setUserData(void* userData)
+    void PhysicsObject::setUserData(void* userData)
     {
         m_Body->SetUserData(userData);
     }
 
-    void PhysicObject::setCollisionRule(const Rule& rule)
+    void PhysicsObject::setCollisionRule(const Rule& rule)
     {
         for(b2Fixture* fixture = m_Body->GetFixtureList(); fixture; fixture = fixture->GetNext())
         {
@@ -54,201 +54,201 @@ namespace nero
         }
     }
 
-    PhysicObject::Ptr PhysicObject::Cast(Object::Ptr object)
+    PhysicsObject::Ptr PhysicsObject::Cast(Object::Ptr object)
     {
         if(!object || object->getFirstType() != Object::Physic_Object)
             return nullptr;
 
-        return std::static_pointer_cast<PhysicObject>(object);
+        return std::static_pointer_cast<PhysicsObject>(object);
     }
 
-    float PhysicObject::getAngle() const
+    float PhysicsObject::getAngle() const
     {
         return math::toDegree(m_Body->GetAngle());
     }
 
-    float PhysicObject::getAngularDamping() const
+    float PhysicsObject::getAngularDamping() const
     {
         return m_Body->GetAngularDamping();
     }
 
-    float PhysicObject::getAngularVelocity() const
+    float PhysicsObject::getAngularVelocity() const
     {
         return math::toDegree(m_Body->GetAngularVelocity());
     }
 
-    float PhysicObject::getGravityScale() const
+    float PhysicsObject::getGravityScale() const
     {
         return m_Body->GetGravityScale();
     }
 
-    float PhysicObject::getLinearDamping() const
+    float PhysicsObject::getLinearDamping() const
     {
         return m_Body->GetLinearDamping();
     }
 
-    sf::Vector2f PhysicObject::getLinearVelocity() const
+    sf::Vector2f PhysicsObject::getLinearVelocity() const
     {
         return graphics::b2_to_sf(m_Body->GetLinearVelocity(), EngineConstant.SCALE);
     }
 
-    sf::Vector2f PhysicObject::getLocalCenter() const
+    sf::Vector2f PhysicsObject::getLocalCenter() const
     {
         return graphics::b2_to_sf(m_Body->GetLocalCenter(), EngineConstant.SCALE);
     }
 
-    float PhysicObject::getMass() const
+    float PhysicsObject::getMass() const
     {
         return m_Body->GetMass();
     }
 
-    sf::Vector2f PhysicObject::getPosition() const
+    sf::Vector2f PhysicsObject::getPosition() const
     {
         return graphics::b2_to_sf(m_Body->GetPosition(), EngineConstant.SCALE);
     }
 
-    sf::Vector2f PhysicObject::getWorldCenter() const
+    sf::Vector2f PhysicsObject::getWorldCenter() const
     {
         return graphics::b2_to_sf(m_Body->GetWorldCenter(), EngineConstant.SCALE);
     }
 
-    sf::Vector2f PhysicObject::getCenter() const
+    sf::Vector2f PhysicsObject::getCenter() const
     {
         return getWorldCenter();
     }
 
-    void PhysicObject::applyAngularImpulse(float impulse, bool wake)
+    void PhysicsObject::applyAngularImpulse(float impulse, bool wake)
     {
         m_Body->ApplyAngularImpulse(impulse, wake);
     }
 
-    void PhysicObject::applyForce(const sf::Vector2f& force, const sf::Vector2f& origin, bool wake)
+    void PhysicsObject::applyForce(const sf::Vector2f& force, const sf::Vector2f& origin, bool wake)
     {
         m_Body->ApplyForce(graphics::sf_to_b2(force, EngineConstant.SCALE),
                            graphics::sf_to_b2(origin, EngineConstant.SCALE),
                            wake);
     }
 
-    void PhysicObject::applyForceToCenter(const sf::Vector2f& force, bool wake)
+    void PhysicsObject::applyForceToCenter(const sf::Vector2f& force, bool wake)
     {
         m_Body->ApplyForceToCenter(graphics::sf_to_b2(force, EngineConstant.SCALE), wake);
     }
 
-    void PhysicObject::applyLinearImpulse(const sf::Vector2f& impulse,
-                                          const sf::Vector2f& origin,
-                                          bool                wake)
+    void PhysicsObject::applyLinearImpulse(const sf::Vector2f& impulse,
+                                           const sf::Vector2f& origin,
+                                           bool                wake)
     {
         m_Body->ApplyLinearImpulse(graphics::sf_to_b2(impulse, EngineConstant.SCALE),
                                    graphics::sf_to_b2(origin, EngineConstant.SCALE),
                                    wake);
     }
 
-    void PhysicObject::applyTorque(float torque, bool wake)
+    void PhysicsObject::applyTorque(float torque, bool wake)
     {
         m_Body->ApplyTorque(torque, wake);
     }
 
-    float PhysicObject::getInertia() const
+    float PhysicsObject::getInertia() const
     {
         return m_Body->GetInertia();
     }
 
-    bool PhysicObject::isActive() const
+    bool PhysicsObject::isActive() const
     {
         return m_Body->IsActive();
     }
 
-    bool PhysicObject::isAwake() const
+    bool PhysicsObject::isAwake() const
     {
         return m_Body->IsAwake();
     }
 
-    bool PhysicObject::isBullet() const
+    bool PhysicsObject::isBullet() const
     {
         return m_Body->IsBullet();
     }
 
-    bool PhysicObject::isFixedRotation() const
+    bool PhysicsObject::isFixedRotation() const
     {
         return m_Body->IsFixedRotation();
     }
 
-    bool PhysicObject::isSleepingAllowed() const
+    bool PhysicsObject::isSleepingAllowed() const
     {
         return m_Body->IsSleepingAllowed();
     }
 
-    void PhysicObject::setActive(bool flag)
+    void PhysicsObject::setActive(bool flag)
     {
         m_Body->SetActive(flag);
     }
 
-    void PhysicObject::setAngularDamping(float angular_damping)
+    void PhysicsObject::setAngularDamping(float angular_damping)
     {
         m_Body->SetAngularDamping(angular_damping);
     }
 
-    void PhysicObject::setAngularVelocity(float angle)
+    void PhysicsObject::setAngularVelocity(float angle)
     {
         m_Body->SetAngularVelocity(math::toRadian(angle));
     }
 
-    void PhysicObject::setAwake(bool flag)
+    void PhysicsObject::setAwake(bool flag)
     {
         m_Body->SetAwake(flag);
     }
 
-    void PhysicObject::setBullet(bool flag)
+    void PhysicsObject::setBullet(bool flag)
     {
         m_Body->SetBullet(flag);
     }
 
-    void PhysicObject::setFixedRotation(bool flag)
+    void PhysicsObject::setFixedRotation(bool flag)
     {
         m_Body->SetFixedRotation(flag);
     }
 
-    void PhysicObject::setGravityScale(float scale)
+    void PhysicsObject::setGravityScale(float scale)
     {
         m_Body->SetGravityScale(scale);
     }
 
-    void PhysicObject::setLinearDamping(float linear_damping)
+    void PhysicsObject::setLinearDamping(float linear_damping)
     {
         m_Body->SetLinearDamping(linear_damping);
     }
 
-    void PhysicObject::setLinearVelocity(const sf::Vector2f& velocity)
+    void PhysicsObject::setLinearVelocity(const sf::Vector2f& velocity)
     {
         m_Body->SetLinearVelocity(graphics::sf_to_b2(velocity, EngineConstant.SCALE));
     }
 
-    void PhysicObject::setSleepingAllowed(bool flag)
+    void PhysicsObject::setSleepingAllowed(bool flag)
     {
         m_Body->SetSleepingAllowed(flag);
     }
 
-    bool PhysicObject::isSensor() const
+    bool PhysicsObject::isSensor() const
     {
         return m_Body->GetFixtureList()->IsSensor();
     }
 
-    float PhysicObject::getDensity() const
+    float PhysicsObject::getDensity() const
     {
         return m_Body->GetFixtureList()->GetDensity();
     }
 
-    float PhysicObject::getFriction() const
+    float PhysicsObject::getFriction() const
     {
         return m_Body->GetFixtureList()->GetFriction() * 10.f;
     }
 
-    float PhysicObject::getRestitution() const
+    float PhysicsObject::getRestitution() const
     {
         return m_Body->GetFixtureList()->GetRestitution() * 10.f;
     }
 
-    void PhysicObject::setDensity(float density)
+    void PhysicsObject::setDensity(float density)
     {
         for(b2Fixture* fixture = m_Body->GetFixtureList(); fixture; fixture = fixture->GetNext())
         {
@@ -256,7 +256,7 @@ namespace nero
         }
     }
 
-    void PhysicObject::setFriction(float friction)
+    void PhysicsObject::setFriction(float friction)
     {
         for(b2Fixture* fixture = m_Body->GetFixtureList(); fixture; fixture = fixture->GetNext())
         {
@@ -264,7 +264,7 @@ namespace nero
         }
     }
 
-    void PhysicObject::setRestitution(float restitution)
+    void PhysicsObject::setRestitution(float restitution)
     {
         for(b2Fixture* fixture = m_Body->GetFixtureList(); fixture; fixture = fixture->GetNext())
         {
@@ -272,7 +272,7 @@ namespace nero
         }
     }
 
-    void PhysicObject::setSensor(bool flag)
+    void PhysicsObject::setSensor(bool flag)
     {
         for(b2Fixture* fixture = m_Body->GetFixtureList(); fixture; fixture = fixture->GetNext())
         {
@@ -280,13 +280,13 @@ namespace nero
         }
     }
 
-    void PhysicObject::clearForce()
+    void PhysicsObject::clearForce()
     {
         setLinearVelocity(sf::Vector2f(0.f, 0.f));
         setAngularVelocity(0.f);
     }
 
-    void PhysicObject::setAngle(float angle)
+    void PhysicsObject::setAngle(float angle)
     {
         bool was_fixedRotation = isFixedRotation();
 
@@ -302,7 +302,7 @@ namespace nero
         }
     }
 
-    sf::Vector2f PhysicObject::getAxis_x() const
+    sf::Vector2f PhysicsObject::getAxis_x() const
     {
         b2Transform t = m_Body->GetTransform();
         t.p           = m_Body->GetWorldCenter();
@@ -313,7 +313,7 @@ namespace nero
         return math::unitVector(graphics::b2_to_sf(p2 - p1));
     }
 
-    sf::Vector2f PhysicObject::getAxis_y() const
+    sf::Vector2f PhysicsObject::getAxis_y() const
     {
         b2Transform t = m_Body->GetTransform();
         t.p           = m_Body->GetWorldCenter();
@@ -324,47 +324,47 @@ namespace nero
         return math::unitVector(graphics::b2_to_sf(p2 - p1));
     }
 
-    void PhysicObject::clearVelocity()
+    void PhysicsObject::clearVelocity()
     {
         setLinearVelocity(sf::Vector2f(0.f, 0.f));
     }
 
-    void PhysicObject::clearHorizontalVelocity()
+    void PhysicsObject::clearHorizontalVelocity()
     {
         setLinearVelocity(sf::Vector2f(0.f, getLinearVelocity().y));
     }
 
-    void PhysicObject::clearVerticalVelocity()
+    void PhysicsObject::clearVerticalVelocity()
     {
         setLinearVelocity(sf::Vector2f(getLinearVelocity().x, 0.f));
     }
 
-    void PhysicObject::clearAngularVelocity()
+    void PhysicsObject::clearAngularVelocity()
     {
         setAngularVelocity(0.f);
     }
 
-    bool PhysicObject::isDead() const
+    bool PhysicsObject::isDead() const
     {
         return m_Dead;
     }
 
-    void PhysicObject::setDead(bool flag)
+    void PhysicsObject::setDead(bool flag)
     {
         m_Dead = flag;
     }
 
-    void PhysicObject::setSize(const sf::Vector2f& size)
+    void PhysicsObject::setSize(const sf::Vector2f& size)
     {
         m_Size = size;
     }
 
-    sf::Vector2f PhysicObject::getSize()
+    sf::Vector2f PhysicsObject::getSize()
     {
         return m_Size;
     }
 
-    sf::FloatRect PhysicObject::getGlobalBounds() const
+    sf::FloatRect PhysicsObject::getGlobalBounds() const
     {
         sf::FloatRect bound;
 

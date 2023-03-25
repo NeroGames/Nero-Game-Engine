@@ -314,7 +314,7 @@ namespace nero
                     object->getSecondType() == Object::Animation_Solid_Object) &&
                    (*it)->getSecondType() != Object::None)
                 {
-                    PhysicObject::Ptr physic_Object = PhysicObject::Cast(*it);
+                    PhysicsObject::Ptr physic_Object = PhysicsObject::Cast(*it);
                     physic_Object->setSensor(true);
                     physic_Object->setDead(true);
                     physic_Object->setSecondType(Object::None);
@@ -416,8 +416,8 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2DistanceJointDef jointDef;
-        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicsObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
         jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
@@ -445,8 +445,8 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2FrictionJointDef jointDef;
-        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicsObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
         jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
@@ -473,8 +473,8 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2MotorJointDef jointDef;
-        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicsObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
         jointDef.linearOffset     = graphics::sf_to_b2(property.linearOffset, EngineConstant.SCALE);
@@ -502,8 +502,8 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2MouseJointDef jointDef;
-        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicsObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
         jointDef.target           = graphics::sf_to_b2(property.target, EngineConstant.SCALE);
@@ -530,8 +530,8 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2RopeJointDef jointDef;
-        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicsObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
         jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
@@ -557,8 +557,8 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2WeldJointDef jointDef;
-        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicsObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
         jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
@@ -586,8 +586,8 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2WheelJointDef jointDef;
-        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicsObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
         jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
@@ -618,8 +618,8 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2PulleyJointDef jointDef;
-        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicsObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
         jointDef.groundAnchorA = graphics::sf_to_b2(property.groundAnchorA, EngineConstant.SCALE);
@@ -649,8 +649,8 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2PrismaticJointDef jointDef;
-        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicsObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
         jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
@@ -683,8 +683,8 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2RevoluteJointDef jointDef;
-        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicsObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
         jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant.SCALE);
@@ -726,8 +726,8 @@ namespace nero
         joint->setJointId(++m_JointCount);
 
         b2GearJointDef jointDef;
-        jointDef.bodyA            = PhysicObject::Cast(objectA)->getBody();
-        jointDef.bodyB            = PhysicObject::Cast(objectB)->getBody();
+        jointDef.bodyA            = PhysicsObject::Cast(objectA)->getBody();
+        jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
         jointDef.joint1           = jointA->getType() == PhysicJoint::Prismatic_Joint

@@ -6,7 +6,7 @@
 #define ACTION_H
 ///////////////////////////HEADERS//////////////////////////
 // Nero
-#include <Nero/core/cpp/object/PhysicObject.h>
+#include <Nero/core/cpp/object/PhysicsObject.h>
 #include <Nero/core/cpp/object/SpriteObject.h>
 #include <Nero/core/cpp/object/LayerObject.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
@@ -38,7 +38,7 @@ namespace nero
     struct PhysicAction
     {
         typedef std::unique_ptr<PhysicAction> Ptr;
-        virtual void                          call(PhysicObject::Ptr object,
+        virtual void                          call(PhysicsObject::Ptr object,
                                                    sf::Time          time_step = EngineConstant.TIME_PER_FRAME){};
     };
 } // namespace nero

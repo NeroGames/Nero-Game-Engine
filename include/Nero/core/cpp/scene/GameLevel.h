@@ -10,7 +10,6 @@
 #include <Nero/core/cpp/resource/ResourceManager.h>
 #include <Nero/core/cpp/utility/Keyboard.h>
 #include <Nero/core/cpp/model/Collision.h>
-#include <Nero/core/cpp/scene/PhysicalWorld.h> //TODO delete
 #include <Nero/core/cpp/scene/LightEngine.h>
 #include <Nero/core/cpp/scene/ContactListener.h>
 #include <Nero/core/cpp/scene/ObjectManager.h>
@@ -117,8 +116,6 @@ namespace nero
         std::shared_ptr<sf::RenderTexture> m_RenderTexture;
         Context                            m_LevelContext;
         ResourceManager::Ptr               m_ResourceManager;
-        PhysicalWorld::Ptr                 m_PhysicalWorld;
-        // LightEngine::Ptr                   m_LightEngine;
         Object::Ptr                        m_LevelRoot;
         std::shared_ptr<ltbl::LightSystem> m_LightManager;
         std::shared_ptr<b2World>           m_PhysicsWorld;

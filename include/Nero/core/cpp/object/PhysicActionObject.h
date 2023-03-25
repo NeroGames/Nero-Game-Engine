@@ -6,7 +6,7 @@
 #define PHYSICACTIONOBJECT_H
 ///////////////////////////HEADERS//////////////////////////
 // Nero
-#include <Nero/core/cpp/object/PhysicObject.h>
+#include <Nero/core/cpp/object/PhysicsObject.h>
 #include <Nero/core/cpp/model/Action.h>
 /////////////////////////////////////////////////////////////
 namespace nero
@@ -22,13 +22,13 @@ namespace nero
         void                    dropAction(sf::String name);
         void                    callAction(sf::String name);
         void                    setObject(Object::Ptr object);
-        PhysicObject::Ptr       getObject();
+        PhysicsObject::Ptr       getObject();
 
       private:
         virtual void updateObject(sf::Time time_step);
 
       protected:
-        PhysicObject::Ptr                       m_PhysicObject;
+        PhysicsObject::Ptr                       m_PhysicObject;
         sf::Time                                m_TimeStep;
         std::map<sf::String, PhysicAction::Ptr> m_ActionTable;
     };

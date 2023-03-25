@@ -31,15 +31,15 @@ namespace nero
         m_PhysicsWorld = physicsWorld;
     }
 
-    PhysicObject::Ptr PhysicsManager::createObject(PointMesh::Ptr pointMesh)
+    PhysicsObject::Ptr PhysicsManager::createObject(PointMesh::Ptr pointMesh)
     {
         if(pointMesh->getMeshShape() == PointMesh::None)
             return nullptr;
 
         setupBodyDef(pointMesh);
 
-        PhysicObject::Ptr physicObject =
-            std::make_shared<PhysicObject>(m_PhysicsWorld->CreateBody(&m_BodyDef));
+        PhysicsObject::Ptr physicObject =
+            std::make_shared<PhysicsObject>(m_PhysicsWorld->CreateBody(&m_BodyDef));
 
         switch(pointMesh->getMeshShape())
         {

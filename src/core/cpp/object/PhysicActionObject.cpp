@@ -17,7 +17,7 @@ namespace nero
 
     void PhysicActionObject::setObject(Object::Ptr object)
     {
-        m_PhysicObject = PhysicObject::Cast(object);
+        m_PhysicObject = PhysicsObject::Cast(object);
     }
 
     void PhysicActionObject::dropAction(sf::String name)
@@ -30,7 +30,7 @@ namespace nero
         m_ActionTable[name]->call(m_PhysicObject, m_TimeStep);
     }
 
-    PhysicObject::Ptr PhysicActionObject::getObject()
+    PhysicsObject::Ptr PhysicActionObject::getObject()
     {
         return m_PhysicObject;
     }
