@@ -13,6 +13,7 @@ namespace nero
         : UIComponent(std::move(editorContext))
         , m_GameObjectColor(1.f, 1.f, 1.f, 1.f)
         , m_TextOutlineColor(1.f, 1.f, 1.f, 1.f)
+        , m_SelectedMeshType(0)
     {
     }
 
@@ -96,30 +97,82 @@ namespace nero
                                                            ImGuiTreeNodeFlags_DefaultOpen |
                                                                ImGuiWindowFlags_NoScrollWithMouse))
                                 {
-                                    ImGui::BeginChild("mesh_object", ImVec2(0.f, 100.f), true);
+                                    ImGui::BeginChild("mesh_object", ImVec2(0.f, 70.f), true);
 
                                     float wording_width = 70.f;
                                     float input_width = ImGui::GetWindowContentRegionWidth() - 70.f;
                                     PhysicsMeshObject::Ptr meshObject =
                                         PhysicsMeshObject::Cast(component);
 
+                                    std::string meshShape;
+                                    switch(meshObject->getMesh()->getMeshShape())
+                                    {
+                                        case PointMesh::Polygon:
+                                            meshShape = "Polygon";
+                                            break;
+                                        case PointMesh::Circle:
+                                            meshShape = "Circle";
+                                            break;
+                                        case PointMesh::Chain:
+                                            meshShape = "Chain";
+                                            break;
+                                        case PointMesh::Line:
+                                            meshShape = "Line";
+                                            break;
+                                        case PointMesh::None:
+                                            meshShape = "None";
+                                            break;
+                                    }
+
+                                    char meshShapeChar[100];
+                                    string::fillCharArray(meshShapeChar,
+                                                          sizeof(meshShapeChar),
+                                                          meshShape);
                                     ImGui::Text("Shape");
                                     ImGui::SameLine(wording_width);
                                     ImGui::SetNextItemWidth(input_width);
-                                    char* object_sprite = "";
                                     ImGui::InputText("##mesh_shape",
-                                                     object_sprite,
-                                                     sizeof(object_sprite),
+                                                     meshShapeChar,
+                                                     sizeof(meshShapeChar),
                                                      ImGuiInputTextFlags_ReadOnly);
                                     ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+                                    const char* meshTypeTable[] = {"Static",
+                                                                   "Dynamic",
+                                                                   "Kinematic"};
                                     ImGui::Text("Type");
                                     ImGui::SameLine(wording_width);
                                     ImGui::SetNextItemWidth(input_width);
-                                    char* sprite_texture = "";
-                                    ImGui::InputText("##mesh_type",
-                                                     object_sprite,
-                                                     sizeof(sprite_texture),
-                                                     ImGuiInputTextFlags_ReadOnly);
+                                    int meshType;
+                                    switch(meshObject->getMesh()->getMeshType())
+                                    {
+                                        case PointMesh::Static:
+                                            meshType = 0;
+                                            break;
+                                        case PointMesh::Dynamic:
+                                            meshType = 1;
+                                            break;
+                                        case PointMesh::Kinematic:
+                                            meshType = 2;
+                                            break;
+                                    }
+
+                                    if(meshType != m_SelectedMeshType)
+                                    {
+                                        m_SelectedMeshType = meshType;
+                                    }
+                                    const auto onCombo = ImGui::Combo("##mesh_type",
+                                                                      &m_SelectedMeshType,
+                                                                      meshTypeTable,
+                                                                      IM_ARRAYSIZE(meshTypeTable));
+                                    if(onCombo)
+                                    {
+                                        meshObject->getMesh()->setMeshType(
+                                            m_SelectedMeshType == 0
+                                                ? PointMesh::Static
+                                                : (m_SelectedMeshType == 1 ? PointMesh::Dynamic
+                                                                           : PointMesh::Kinematic));
+                                    }
                                     ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
                                     ImGui::EndChild();

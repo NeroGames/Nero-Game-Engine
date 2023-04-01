@@ -34,6 +34,7 @@ namespace nero
       private:
         ImVec4 m_GameObjectColor;
         ImVec4 m_TextOutlineColor;
+        int    m_SelectedMeshType;
     };
 } // namespace nero
 #endif // GAMEOBJECTPROPERTYVIEW_H
