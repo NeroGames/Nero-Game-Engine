@@ -31,12 +31,13 @@ namespace nero
         m_PhysicsWorld = physicsWorld;
     }
 
-    PhysicsObject::Ptr PhysicsManager::createObject(PointMesh::Ptr pointMesh)
+    PhysicsObject::Ptr PhysicsManager::createObject(PointMesh::Ptr        pointMesh,
+                                                    const PhysicsPoperty& physics)
     {
         if(pointMesh->getMeshShape() == PointMesh::None)
             return nullptr;
 
-        setupBodyDef(pointMesh);
+        setupBodyDef(pointMesh, physics);
 
         PhysicsObject::Ptr physicObject =
             std::make_shared<PhysicsObject>(m_PhysicsWorld->CreateBody(&m_BodyDef));
@@ -50,7 +51,7 @@ namespace nero
                 setupVertexTable(vertexTable, pointMesh);
                 shape.Set(vertexTable[0], vertexTable[1]);
 
-                setupFixtureDef(pointMesh);
+                setupFixtureDef(physics);
                 m_FixtureDef.shape = &shape;
                 physicObject->getBody()->CreateFixture(&m_FixtureDef);
 
@@ -66,7 +67,7 @@ namespace nero
                 b2CircleShape shape;
                 shape.m_radius = pointMesh->getMeshSize().x / 2.f / EngineConstant.SCALE;
 
-                setupFixtureDef(pointMesh);
+                setupFixtureDef(physics);
                 m_FixtureDef.shape = &shape;
                 physicObject->getBody()->CreateFixture(&m_FixtureDef);
 
@@ -88,7 +89,7 @@ namespace nero
                     vertexTableVector.push_back(vertexTable[i]);
                 }
 
-                setupFixtureDef(pointMesh);
+                setupFixtureDef(physics);
 
                 computePolygonBody(physicObject->getBody(),
                                    &m_FixtureDef,
@@ -109,7 +110,7 @@ namespace nero
                 setupVertexTable(vertexTable, pointMesh);
                 shape.CreateChain(vertexTable, pointMesh->getPointCount());
 
-                setupFixtureDef(pointMesh);
+                setupFixtureDef(physics);
                 m_FixtureDef.shape = &shape;
                 physicObject->getBody()->CreateFixture(&m_FixtureDef);
 
@@ -124,7 +125,7 @@ namespace nero
         return physicObject;
     }
 
-    void PhysicsManager::setupBodyDef(PointMesh::Ptr pointMesh)
+    void PhysicsManager::setupBodyDef(PointMesh::Ptr pointMesh, const PhysicsPoperty& physics)
     {
         switch(pointMesh->getMeshType())
         {
@@ -143,11 +144,9 @@ namespace nero
 
         m_BodyDef.position      = b2Vec2(0.f, 0.f);
         m_BodyDef.angle         = 0.f;
-        m_BodyDef.allowSleep    = true;
-        m_BodyDef.fixedRotation = false;
-        // TODO mesh.getFixedRotation();
-        m_BodyDef.gravityScale  = 3.f;
-        // TODO mesh.getGravityScale();
+        m_BodyDef.allowSleep    = physics.allowSleep;
+        m_BodyDef.fixedRotation = physics.fixedRotation;
+        m_BodyDef.gravityScale  = physics.gravityScale;
     }
 
     void PhysicsManager::setupVertexTable(b2Vec2* table, PointMesh::Ptr pointMesh)
@@ -161,17 +160,13 @@ namespace nero
         }
     }
 
-    void PhysicsManager::setupFixtureDef(PointMesh::Ptr pointMesh)
+    void PhysicsManager::setupFixtureDef(const PhysicsPoperty& physics)
     {
-        m_FixtureDef.density     = 1.f;
-        // pointMesh->getDensity();
-        m_FixtureDef.isSensor    = false;
-        // TODO mesh.getIsSensor();
-        m_FixtureDef.friction    = 0.1f;
-        // pointMesh->getFriction();
-        m_FixtureDef.restitution = 0.1f;
-        // pointMesh->getRestitution();
-    }
+        m_FixtureDef.density     = physics.density;
+        m_FixtureDef.isSensor    = physics.sensor;
+        m_FixtureDef.friction    = physics.friction;
+        m_FixtureDef.restitution = physics.restitution;
+    };
 
     void PhysicsManager::computePolygonBody(b2Body*              body,
                                             b2FixtureDef*        fixtureDef,

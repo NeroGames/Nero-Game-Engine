@@ -8,6 +8,7 @@
 // Nero
 #include <Nero/core/cpp/object/PhysicsObject.h>
 #include <Nero/core/cpp/model/PointMesh.h>
+#include <Nero/core/cpp/scene/PhysicsUtility.h>
 // BOX2D
 #include <Box2D/Dynamics/b2World.h>
 #include <Box2D/Dynamics/b2Fixture.h>
@@ -23,12 +24,12 @@ namespace nero
         PhysicsManager();
         virtual ~PhysicsManager();
 
-        PhysicsObject::Ptr createObject(PointMesh::Ptr pointMesh);
-        void              setPhysicsWorld(std::shared_ptr<b2World> physicsWorld);
+        PhysicsObject::Ptr createObject(PointMesh::Ptr pointMesh, const PhysicsPoperty& physics);
+        void               setPhysicsWorld(std::shared_ptr<b2World> physicsWorld);
 
       private:
-        void setupBodyDef(PointMesh::Ptr pointMesh);
-        void setupFixtureDef(PointMesh::Ptr pointMesh);
+        void setupBodyDef(PointMesh::Ptr pointMesh, const PhysicsPoperty& physics);
+        void setupFixtureDef(const PhysicsPoperty& physics);
         void setupVertexTable(b2Vec2* table, PointMesh::Ptr pointMesh);
         void computePolygonBody(b2Body*              body,
                                 b2FixtureDef*        fixtureDef,
@@ -36,9 +37,9 @@ namespace nero
                                 int                  scale);
 
       private:
-        std::shared_ptr<b2World>     m_PhysicsWorld;
-        b2BodyDef    m_BodyDef;
-        b2FixtureDef m_FixtureDef;
+        std::shared_ptr<b2World> m_PhysicsWorld;
+        b2BodyDef                m_BodyDef;
+        b2FixtureDef             m_FixtureDef;
     };
 } // namespace nero
 #endif // PHYSICSMANAGER_H

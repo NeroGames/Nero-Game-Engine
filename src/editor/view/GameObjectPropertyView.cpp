@@ -184,8 +184,34 @@ namespace nero
                                 {
                                     ImGui::BeginChild("physics_data", ImVec2(0.f, 100.f), true);
 
+                                    float wordingWidth = 70.f;
+                                    float inputWidth = ImGui::GetWindowContentRegionWidth() - 70.f;
+
                                     PhysicsMeshObject::Ptr meshObject =
                                         PhysicsMeshObject::Cast(component);
+
+                                    bool fixedRotation =
+                                        meshObject->getBoolProperty("fixed_rotation");
+                                    ImGui::Checkbox("Fixed Rotation##fixed_rotation",
+                                                    &fixedRotation);
+                                    if(ImGui::IsItemEdited())
+                                    {
+                                        meshObject->setProperty("fixed_rotation", fixedRotation);
+                                    }
+
+                                    bool sensor = meshObject->getBoolProperty("sensor");
+                                    ImGui::Checkbox("Sensor##sensor", &sensor);
+                                    if(ImGui::IsItemEdited())
+                                    {
+                                        meshObject->setProperty("sensor", sensor);
+                                    }
+
+                                    bool allowSleep = meshObject->getBoolProperty("allow_sleep");
+                                    ImGui::Checkbox("Allow Sleep##allow_sleep", &allowSleep);
+                                    if(ImGui::IsItemEdited())
+                                    {
+                                        meshObject->setProperty("allow_sleep", allowSleep);
+                                    }
 
                                     ImGui::EndChild();
                                 }

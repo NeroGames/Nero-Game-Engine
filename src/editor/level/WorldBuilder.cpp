@@ -1595,7 +1595,8 @@ namespace nero
                             continue;
 
                         PhysicsObject::Ptr physicObject =
-                            m_PhysicsManager.createObject(meshObject->getMesh());
+                            m_PhysicsManager.createObject(meshObject->getMesh(),
+                                                          meshObject->getPhysicsPoperty());
                         physicObject->setName(meshObject->getName());
                         physicObject->setCategory(meshObject->getCategory());
                         physicObject->setId(meshObject->getObjectId());

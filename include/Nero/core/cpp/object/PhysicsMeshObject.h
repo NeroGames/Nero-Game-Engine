@@ -8,6 +8,7 @@
 // Nero
 #include <Nero/core/cpp/object/Object.h>
 #include <Nero/core/cpp/model/PointMesh.h>
+#include <Nero/core/cpp/scene/PhysicsUtility.h>
 // SFML
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -29,28 +30,21 @@ namespace nero
 
         virtual sf::FloatRect  getGlobalBounds() const override;
 
-        void                   setMeshType(PointMesh::Type type);
-
         virtual Object::Ptr    clone(sf::Vector2f& position) const override;
         virtual Object::Ptr    clone() const override;
         virtual nlohmann::json toJson() const override;
+
+        void                   setProperty(const std::string& name, const bool value);
+        void                   setProperty(const std::string& name, const float& value);
+        bool                   getBoolProperty(const std::string& name);
+        float                  getFloatProperty(const std::string& name);
+        const PhysicsPoperty   getPhysicsPoperty() const;
 
       private:
         void drawObject(sf::RenderTarget& target, sf::RenderStates states) const override;
         void updateObject(sf::Time timeStep) override;
 
       private:
-        struct PhysicsPoperty
-        {
-            bool  fixedRotation;
-            bool  isSensor;
-            bool  allowSleep;
-            float density;
-            float friction;
-            float restitution;
-            float gravityScale;
-        };
-
         PointMesh::Ptr m_PointMesh;
         PhysicsPoperty m_PhysicsPoperty;
     };

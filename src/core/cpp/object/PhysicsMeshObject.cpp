@@ -13,6 +13,7 @@ namespace nero
     PhysicsMeshObject::PhysicsMeshObject()
         : Object()
         , m_PointMesh(nullptr)
+        , m_PhysicsPoperty{false, false, true, 1.f, 0.1f, 0.1f, 3.f}
     {
         setFirstType(Object::Mesh_Object);
         setSecondType(Object::Mesh_Object);
@@ -56,11 +57,6 @@ namespace nero
     sf::FloatRect PhysicsMeshObject::getGlobalBounds() const
     {
         return m_PointMesh->getGlobalBounds();
-    }
-
-    void PhysicsMeshObject::setMeshType(PointMesh::Type type)
-    {
-        m_PointMesh->setMeshType(type);
     }
 
     nlohmann::json PhysicsMeshObject::toJson() const
@@ -108,6 +104,59 @@ namespace nero
             return nullptr;
 
         return std::static_pointer_cast<PhysicsMeshObject>(object);
+    }
+
+    void PhysicsMeshObject::setProperty(const std::string& name, const bool value)
+    {
+        if(name == "fixed_rotation")
+            m_PhysicsPoperty.fixedRotation = value;
+        else if(name == "sensor")
+            m_PhysicsPoperty.sensor = value;
+        else if(name == "allow_sleep")
+            m_PhysicsPoperty.allowSleep = value;
+    }
+
+    bool PhysicsMeshObject::getBoolProperty(const std::string& name)
+    {
+        if(name == "fixed_rotation")
+            return m_PhysicsPoperty.fixedRotation;
+        else if(name == "sensor")
+            return m_PhysicsPoperty.sensor;
+        else if(name == "allow_sleep")
+            return m_PhysicsPoperty.allowSleep;
+
+        throw std::exception();
+    }
+
+    void PhysicsMeshObject::setProperty(const std::string& name, const float& value)
+    {
+        if(name == "density")
+            m_PhysicsPoperty.density = value;
+        else if(name == "friction")
+            m_PhysicsPoperty.friction = value;
+        else if(name == "restitution")
+            m_PhysicsPoperty.restitution = value;
+        else if(name == "gravity_scale")
+            m_PhysicsPoperty.gravityScale = value;
+    }
+
+    float PhysicsMeshObject::getFloatProperty(const std::string& name)
+    {
+        if(name == "density")
+            return m_PhysicsPoperty.density;
+        else if(name == "friction")
+            return m_PhysicsPoperty.friction;
+        else if(name == "restitution")
+            return m_PhysicsPoperty.restitution;
+        else if(name == "gravity_scale")
+            return m_PhysicsPoperty.gravityScale;
+
+        throw std::exception();
+    }
+
+    const PhysicsPoperty PhysicsMeshObject::getPhysicsPoperty() const
+    {
+        return m_PhysicsPoperty;
     }
 
 } // namespace nero
