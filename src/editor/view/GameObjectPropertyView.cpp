@@ -72,187 +72,7 @@ namespace nero
                     renderColorProperty(selectedObject);
                 }
 
-                if(selectedObject)
-                {
-                    std::vector<Object::Ptr> componentTable = getComponentTable(selectedObject);
-                    for(Object::Ptr component : componentTable)
-                    {
-                        switch(component->getFirstType())
-                        {
-                            case Object::Sprite_Object:
-                            {
-                                ImGui::SetCursorPosX(10.f);
-                                if(ImGui::CollapsingHeader("Sprite",
-                                                           ImGuiTreeNodeFlags_DefaultOpen |
-                                                               ImGuiWindowFlags_NoScrollWithMouse))
-                                {
-                                    renderSpriteProperty(SpriteObject::Cast(component));
-                                }
-                            }
-                            break;
-
-                            case Object::Mesh_Object:
-                            {
-                                if(ImGui::CollapsingHeader("Mesh",
-                                                           ImGuiTreeNodeFlags_DefaultOpen |
-                                                               ImGuiWindowFlags_NoScrollWithMouse))
-                                {
-                                    ImGui::BeginChild("mesh_object", ImVec2(0.f, 70.f), true);
-
-                                    float wording_width = 70.f;
-                                    float input_width = ImGui::GetWindowContentRegionWidth() - 70.f;
-                                    PhysicsMeshObject::Ptr meshObject =
-                                        PhysicsMeshObject::Cast(component);
-
-                                    std::string meshShape;
-                                    switch(meshObject->getMesh()->getMeshShape())
-                                    {
-                                        case PointMesh::Polygon:
-                                            meshShape = "Polygon";
-                                            break;
-                                        case PointMesh::Circle:
-                                            meshShape = "Circle";
-                                            break;
-                                        case PointMesh::Chain:
-                                            meshShape = "Chain";
-                                            break;
-                                        case PointMesh::Line:
-                                            meshShape = "Line";
-                                            break;
-                                        case PointMesh::None:
-                                            meshShape = "None";
-                                            break;
-                                    }
-
-                                    char meshShapeChar[100];
-                                    string::fillCharArray(meshShapeChar,
-                                                          sizeof(meshShapeChar),
-                                                          meshShape);
-                                    ImGui::Text("Shape");
-                                    ImGui::SameLine(wording_width);
-                                    ImGui::SetNextItemWidth(input_width);
-                                    ImGui::InputText("##mesh_shape",
-                                                     meshShapeChar,
-                                                     sizeof(meshShapeChar),
-                                                     ImGuiInputTextFlags_ReadOnly);
-                                    ImGui::Dummy(ImVec2(0.0f, 1.0f));
-
-                                    const char* meshTypeTable[] = {"Static",
-                                                                   "Dynamic",
-                                                                   "Kinematic"};
-                                    ImGui::Text("Type");
-                                    ImGui::SameLine(wording_width);
-                                    ImGui::SetNextItemWidth(input_width);
-                                    int meshType;
-                                    switch(meshObject->getMesh()->getMeshType())
-                                    {
-                                        case PointMesh::Static:
-                                            meshType = 0;
-                                            break;
-                                        case PointMesh::Dynamic:
-                                            meshType = 1;
-                                            break;
-                                        case PointMesh::Kinematic:
-                                            meshType = 2;
-                                            break;
-                                    }
-
-                                    if(meshType != m_SelectedMeshType)
-                                    {
-                                        m_SelectedMeshType = meshType;
-                                    }
-                                    const auto onCombo = ImGui::Combo("##mesh_type",
-                                                                      &m_SelectedMeshType,
-                                                                      meshTypeTable,
-                                                                      IM_ARRAYSIZE(meshTypeTable));
-                                    if(onCombo)
-                                    {
-                                        meshObject->getMesh()->setMeshType(
-                                            m_SelectedMeshType == 0
-                                                ? PointMesh::Static
-                                                : (m_SelectedMeshType == 1 ? PointMesh::Dynamic
-                                                                           : PointMesh::Kinematic));
-                                    }
-                                    ImGui::Dummy(ImVec2(0.0f, 1.0f));
-
-                                    ImGui::EndChild();
-                                }
-
-                                if(ImGui::CollapsingHeader("Physics",
-                                                           ImGuiTreeNodeFlags_DefaultOpen |
-                                                               ImGuiWindowFlags_NoScrollWithMouse))
-                                {
-                                    ImGui::BeginChild("physics_data", ImVec2(0.f, 100.f), true);
-
-                                    float wordingWidth = 70.f;
-                                    float inputWidth = ImGui::GetWindowContentRegionWidth() - 70.f;
-
-                                    PhysicsMeshObject::Ptr meshObject =
-                                        PhysicsMeshObject::Cast(component);
-
-                                    bool fixedRotation =
-                                        meshObject->getBoolProperty("fixed_rotation");
-                                    ImGui::Checkbox("Fixed Rotation##fixed_rotation",
-                                                    &fixedRotation);
-                                    if(ImGui::IsItemEdited())
-                                    {
-                                        meshObject->setProperty("fixed_rotation", fixedRotation);
-                                    }
-
-                                    bool sensor = meshObject->getBoolProperty("sensor");
-                                    ImGui::Checkbox("Sensor##sensor", &sensor);
-                                    if(ImGui::IsItemEdited())
-                                    {
-                                        meshObject->setProperty("sensor", sensor);
-                                    }
-
-                                    bool allowSleep = meshObject->getBoolProperty("allow_sleep");
-                                    ImGui::Checkbox("Allow Sleep##allow_sleep", &allowSleep);
-                                    if(ImGui::IsItemEdited())
-                                    {
-                                        meshObject->setProperty("allow_sleep", allowSleep);
-                                    }
-
-                                    ImGui::EndChild();
-                                }
-                            }
-                            break;
-
-                            case Object::Animation_Object:
-                            {
-                                if(ImGui::CollapsingHeader("Animation",
-                                                           ImGuiTreeNodeFlags_DefaultOpen |
-                                                               ImGuiWindowFlags_NoScrollWithMouse))
-                                {
-                                    renderAnimationProperty(AnimationObject::Cast(component));
-                                }
-                            }
-                            break;
-
-                            case Object::Text_Object:
-                            {
-                                if(ImGui::CollapsingHeader("Text",
-                                                           ImGuiTreeNodeFlags_DefaultOpen |
-                                                               ImGuiWindowFlags_NoScrollWithMouse))
-                                {
-                                    renderTextProperty(TextObject::Cast(component));
-                                }
-                            }
-                            break;
-
-                            case Object::Light_Object:
-                            {
-                                if(ImGui::CollapsingHeader("Light",
-                                                           ImGuiTreeNodeFlags_DefaultOpen |
-                                                               ImGuiWindowFlags_NoScrollWithMouse))
-                                {
-                                    renderLightProperty(LightIcon::Cast(component));
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
+                renderComponentProperty(selectedObject);
 
                 ImGui::EndChild();
             }
@@ -456,6 +276,249 @@ namespace nero
         }
 
         ImGui::EndChild();
+    }
+
+    void GameObjectPropertyView::renderComponentProperty(Object::Ptr selectedObject)
+    {
+        if(!selectedObject)
+            return;
+
+        std::vector<Object::Ptr> componentTable = getComponentTable(selectedObject);
+        for(Object::Ptr component : componentTable)
+        {
+            switch(component->getFirstType())
+            {
+                case Object::Sprite_Object:
+                {
+                    ImGui::SetCursorPosX(10.f);
+                    if(ImGui::CollapsingHeader("Sprite",
+                                               ImGuiTreeNodeFlags_DefaultOpen |
+                                                   ImGuiWindowFlags_NoScrollWithMouse))
+                    {
+                        renderSpriteProperty(SpriteObject::Cast(component));
+                    }
+                }
+                break;
+
+                case Object::Mesh_Object:
+                {
+                    if(ImGui::CollapsingHeader("Mesh",
+                                               ImGuiTreeNodeFlags_DefaultOpen |
+                                                   ImGuiWindowFlags_NoScrollWithMouse))
+                    {
+                        ImGui::BeginChild("mesh_object", ImVec2(0.f, 70.f), true);
+
+                        float wording_width = 70.f;
+                        float input_width   = ImGui::GetWindowContentRegionWidth() - 70.f;
+                        PhysicsMeshObject::Ptr meshObject = PhysicsMeshObject::Cast(component);
+
+                        std::string            meshShape;
+                        switch(meshObject->getMesh()->getMeshShape())
+                        {
+                            case PointMesh::Polygon:
+                                meshShape = "Polygon";
+                                break;
+                            case PointMesh::Circle:
+                                meshShape = "Circle";
+                                break;
+                            case PointMesh::Chain:
+                                meshShape = "Chain";
+                                break;
+                            case PointMesh::Line:
+                                meshShape = "Line";
+                                break;
+                            case PointMesh::None:
+                                meshShape = "None";
+                                break;
+                        }
+
+                        char meshShapeChar[100];
+                        string::fillCharArray(meshShapeChar, sizeof(meshShapeChar), meshShape);
+                        ImGui::Text("Shape");
+                        ImGui::SameLine(wording_width);
+                        ImGui::SetNextItemWidth(input_width);
+                        ImGui::InputText("##mesh_shape",
+                                         meshShapeChar,
+                                         sizeof(meshShapeChar),
+                                         ImGuiInputTextFlags_ReadOnly);
+                        ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+                        const char* meshTypeTable[] = {"Static", "Dynamic", "Kinematic"};
+                        ImGui::Text("Type");
+                        ImGui::SameLine(wording_width);
+                        ImGui::SetNextItemWidth(input_width);
+                        int meshType;
+                        switch(meshObject->getMesh()->getMeshType())
+                        {
+                            case PointMesh::Static:
+                                meshType = 0;
+                                break;
+                            case PointMesh::Dynamic:
+                                meshType = 1;
+                                break;
+                            case PointMesh::Kinematic:
+                                meshType = 2;
+                                break;
+                        }
+
+                        if(meshType != m_SelectedMeshType)
+                        {
+                            m_SelectedMeshType = meshType;
+                        }
+                        const auto onCombo = ImGui::Combo("##mesh_type",
+                                                          &m_SelectedMeshType,
+                                                          meshTypeTable,
+                                                          IM_ARRAYSIZE(meshTypeTable));
+                        if(onCombo)
+                        {
+                            meshObject->getMesh()->setMeshType(m_SelectedMeshType == 0
+                                                                   ? PointMesh::Static
+                                                                   : (m_SelectedMeshType == 1
+                                                                          ? PointMesh::Dynamic
+                                                                          : PointMesh::Kinematic));
+                        }
+                        ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+                        ImGui::EndChild();
+                    }
+
+                    if(ImGui::CollapsingHeader("Physics",
+                                               ImGuiTreeNodeFlags_DefaultOpen |
+                                                   ImGuiWindowFlags_NoScrollWithMouse))
+                    {
+                        ImGui::BeginChild("physics_data", ImVec2(0.f, 190.f), true);
+
+                        float wordingWidth = 100.f;
+                        float inputWidth   = ImGui::GetWindowContentRegionWidth() - wordingWidth;
+
+                        PhysicsMeshObject::Ptr meshObject = PhysicsMeshObject::Cast(component);
+
+                        bool fixedRotation = meshObject->getBoolProperty("fixed_rotation");
+                        ImGui::Checkbox("Fixed Rotation##fixed_rotation", &fixedRotation);
+                        if(ImGui::IsItemEdited())
+                        {
+                            meshObject->setProperty("fixed_rotation", fixedRotation);
+                        }
+
+                        bool sensor = meshObject->getBoolProperty("sensor");
+                        ImGui::Checkbox("Sensor##sensor", &sensor);
+                        if(ImGui::IsItemEdited())
+                        {
+                            meshObject->setProperty("sensor", sensor);
+                        }
+
+                        bool allowSleep = meshObject->getBoolProperty("allow_sleep");
+                        ImGui::Checkbox("Allow Sleep##allow_sleep", &allowSleep);
+                        if(ImGui::IsItemEdited())
+                        {
+                            meshObject->setProperty("allow_sleep", allowSleep);
+                        }
+
+                        ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+                        ImGui::Text("Friction");
+                        ImGui::SameLine(wordingWidth);
+                        ImGui::SetNextItemWidth(inputWidth);
+                        float friction = meshObject->getFloatProperty("friction");
+                        ImGui::InputFloat("##friction", &friction, 0.01f, 0.1f, "%.3f");
+                        if(ImGui::IsItemEdited())
+                        {
+                            // clamp
+                            if(friction < 0.f)
+                                friction = 0.f;
+                            else if(friction > 1.f)
+                                friction = 1.f;
+
+                            meshObject->setProperty("friction", friction);
+                        }
+
+                        ImGui::Text("Restitution");
+                        ImGui::SameLine(wordingWidth);
+                        ImGui::SetNextItemWidth(inputWidth);
+                        float restitution = meshObject->getFloatProperty("restitution");
+                        ImGui::InputFloat("##restitution", &restitution, 0.01f, 0.1f, "%.3f");
+                        if(ImGui::IsItemEdited())
+                        {
+                            // clamp
+                            if(restitution < 0.f)
+                                restitution = 0.f;
+                            else if(restitution > 1.f)
+                                restitution = 1.f;
+
+                            meshObject->setProperty("restitution", restitution);
+                        }
+
+                        ImGui::Text("Density");
+                        ImGui::SameLine(wordingWidth);
+                        ImGui::SetNextItemWidth(inputWidth);
+                        float density = meshObject->getFloatProperty("density");
+                        ImGui::InputFloat("##density", &density, 0.1f, 1.f, "%.3f");
+                        if(ImGui::IsItemEdited())
+                        {
+                            // clamp
+                            if(density < 0.f)
+                                density = 0.f;
+                            else if(density > 100.f)
+                                density = 100.f;
+
+                            meshObject->setProperty("density", density);
+                        }
+
+                        ImGui::Text("G Scale");
+                        ImGui::SameLine(wordingWidth);
+                        ImGui::SetNextItemWidth(inputWidth);
+                        float gravityScale = meshObject->getFloatProperty("gravity_scale");
+                        ImGui::InputFloat("##gravity_scale", &gravityScale, 0.1f, 1.f, "%.3f");
+                        if(ImGui::IsItemEdited())
+                        {
+                            // clamp
+                            if(gravityScale < 0.f)
+                                gravityScale = 0.f;
+                            else if(gravityScale > 100.f)
+                                gravityScale = 100.f;
+
+                            meshObject->setProperty("gravity_scale", gravityScale);
+                        }
+
+                        ImGui::EndChild();
+                    }
+                }
+                break;
+
+                case Object::Animation_Object:
+                {
+                    if(ImGui::CollapsingHeader("Animation",
+                                               ImGuiTreeNodeFlags_DefaultOpen |
+                                                   ImGuiWindowFlags_NoScrollWithMouse))
+                    {
+                        renderAnimationProperty(AnimationObject::Cast(component));
+                    }
+                }
+                break;
+
+                case Object::Text_Object:
+                {
+                    if(ImGui::CollapsingHeader("Text",
+                                               ImGuiTreeNodeFlags_DefaultOpen |
+                                                   ImGuiWindowFlags_NoScrollWithMouse))
+                    {
+                        renderTextProperty(TextObject::Cast(component));
+                    }
+                }
+                break;
+
+                case Object::Light_Object:
+                {
+                    if(ImGui::CollapsingHeader("Light",
+                                               ImGuiTreeNodeFlags_DefaultOpen |
+                                                   ImGuiWindowFlags_NoScrollWithMouse))
+                    {
+                        renderLightProperty(LightIcon::Cast(component));
+                    }
+                }
+                break;
+            }
+        }
     }
 
     void GameObjectPropertyView::renderSpriteProperty(SpriteObject::Ptr spriteObject)

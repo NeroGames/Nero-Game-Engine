@@ -26,6 +26,7 @@ namespace nero
         void renderGeneralProperty(Object::Ptr selectedObject);
         void renderTransformProperty(Object::Ptr selectedObject);
         void renderColorProperty(Object::Ptr selectedObject);
+        void renderComponentProperty(Object::Ptr selectedObject);
         void renderSpriteProperty(SpriteObject::Ptr spriteObject);
         void renderTextProperty(TextObject::Ptr textObject);
         void renderAnimationProperty(AnimationObject::Ptr animationObject);
