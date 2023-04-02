@@ -783,7 +783,7 @@ namespace nero
         {
             PhysicsMeshObject::Ptr mesh_object = PhysicsMeshObject::Cast(object);
             mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
-            m_MeshEditor->addMesh(mesh_object);
+            m_MeshEditor->addMesh(mesh_object->getMesh());
         }
 
         else if(object->getSecondType() == Object::Meshed_Object ||
@@ -800,7 +800,7 @@ namespace nero
             object->setIsUpdateable(true);
             object->addChild(child_object);
 
-            m_MeshEditor->addMesh(mesh_object);
+            m_MeshEditor->addMesh(mesh_object->getMesh());
         }
 
         m_SelectedObject = object;
@@ -927,7 +927,7 @@ namespace nero
                 sf::FloatRect globalBound = meshObject->getGlobalBounds();
                 meshObject->setOrigin(globalBound.width / 2.f, globalBound.height / 2.f);
 
-                m_MeshEditor->addMesh(meshObject);
+                m_MeshEditor->addMesh(meshObject->getMesh());
 
                 object = meshObject;
 
@@ -956,7 +956,7 @@ namespace nero
                     sf::FloatRect bound = mesh_object->getGlobalBounds();
                     mesh_object->setOrigin(bound.width / 2.f, bound.height / 2.f);
 
-                    m_MeshEditor->addMesh(mesh_object);
+                    m_MeshEditor->addMesh(mesh_object->getMesh());
 
                     object = mesh_object;
                 }
@@ -989,7 +989,7 @@ namespace nero
                     mesh_object->setName(m_SelectedObject->getName());
                     mesh_object->setCategory(m_SelectedObject->getCategory());
 
-                    m_MeshEditor->addMesh(mesh_object);
+                    m_MeshEditor->addMesh(mesh_object->getMesh());
 
                     m_SelectedObject->addChild(mesh_object);
 
@@ -1040,7 +1040,7 @@ namespace nero
                 mesh_object->setSecondType(Object::Mesh_Object);
                 mesh_object->setIsSelectable(false);
 
-                m_MeshEditor->addMesh(mesh_object);
+                m_MeshEditor->addMesh(mesh_object->getMesh());
                 sprite_object->addChild(mesh_object);
 
                 // update one time
@@ -1137,7 +1137,7 @@ namespace nero
                 mesh_object->setSecondType(Object::Mesh_Object);
                 mesh_object->setIsSelectable(false);
 
-                m_MeshEditor->addMesh(mesh_object);
+                m_MeshEditor->addMesh(mesh_object->getMesh());
                 animation_object->addChild(mesh_object);
 
                 // update one time
@@ -1952,15 +1952,13 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
         meshObject->setProperty("restitution", json["restitution"].get<float>());
         meshObject->setProperty("gravity_scale", json["gravity_scale"].get<float>());
 
-        m_MeshEditor->addMesh(meshObject);
+        m_MeshEditor->addMesh(meshObject->getMesh());
 
         return meshObject;
     }
 
     TextObject::Ptr WorldBuilder::loadText(nlohmann::json& json)
     {
-        nero_log("loading text");
-
         sf::Text text;
         text.setFont(m_ResourceManager->getFontHolder()->getFont(json["font"].get<std::string>()));
         text.setString(json["content"].get<std::string>());
@@ -1969,8 +1967,6 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
         // text.setLineSpacing(json["line_spacing"]);
         text.setOutlineThickness(json["outline_thickness"]);
         text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
-
-        nero_log("loading text 1");
 
         TextObject::Ptr text_object(new TextObject());
         text_object->setText(text);
@@ -1986,8 +1982,6 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
                                                json["outline_color"]["b"],
                                                json["outline_color"]["a"]));
 
-        nero_log("loading text 2");
-
         text_object->setFont(json["font"].get<std::string>());
         text_object->setContent(json["content"].get<std::string>());
         text_object->setFontSize(json["font_size"]);
@@ -1998,8 +1992,6 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
                               json["style"]["italic"],
                               json["style"]["underlined"],
                               json["style"]["strike_through"]);
-
-        nero_log("loading text 3");
 
         text_object->setId(json["object_id"]);
         text_object->setName(json["name"].get<std::string>());
