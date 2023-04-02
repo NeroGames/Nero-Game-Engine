@@ -431,8 +431,6 @@ namespace nero
                 break;
         }
 
-        meshJson["is_valid"] = m_MeshValid;
-
         std::vector<nlohmann::json> vertexTableJson;
         int                         i = 0;
         for(auto v : m_VertexTable)

@@ -74,6 +74,15 @@ namespace nero
             {"x", getScale().x},
             {"y", getScale().y}
         };
+
+        meshJson["density"]        = m_PhysicsPoperty.density;
+        meshJson["friction"]       = m_PhysicsPoperty.friction;
+        meshJson["restitution"]    = m_PhysicsPoperty.restitution;
+        meshJson["fixed_rotation"] = m_PhysicsPoperty.fixedRotation;
+        meshJson["sensor"]         = m_PhysicsPoperty.sensor;
+        meshJson["allow_sleep"]    = m_PhysicsPoperty.allowSleep;
+        meshJson["gravity_scale"]  = m_PhysicsPoperty.gravityScale;
+
         return meshJson;
     }
 

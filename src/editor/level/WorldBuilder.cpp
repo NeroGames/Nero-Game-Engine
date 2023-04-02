@@ -1914,17 +1914,6 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
         else if(meshJson["type"] == "kinematic_mesh")
             mesh->setMeshType(PointMesh::Type::Kinematic);
 
-        // properties
-        /*mesh.setFixedRotation(mesh_json["fixed_rotation"]);
-        mesh.setIsSensor(mesh_json["is_sensor"]);
-        mesh.setAllowSleep(mesh_json["allow_sleep"]);
-        mesh.setDensity(mesh_json["density"]);
-        mesh.setFriction(mesh_json["friction"]);
-        mesh.setRestitution(mesh_json["restitution"]);
-        mesh.setGravityScale(mesh_json["gravity_scale"]);
-        mesh.setIsValid(mesh_json["is_valid"]);
-        mesh.setMeshId(json["object_id"]);*/
-
         const auto     position    = sf::Vector2f(json["position"]["x"], json["position"]["y"]);
         const auto     rotation    = float(json["rotation"]);
         const auto     scale       = sf::Vector2f(json["scale"]["x"], json["scale"]["y"]);
@@ -1937,6 +1926,8 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
         mesh->loadTransform(position, scale, rotation);
         mesh->updateShape();
         mesh->updateColor();
+
+        mesh->setMeshId(json["object_id"]);
 
         PhysicsMeshObject::Ptr meshObject(new PhysicsMeshObject());
 
@@ -1952,6 +1943,14 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
         meshObject->setPosition(position);
         meshObject->setScale(scale);
         meshObject->setRotation(rotation);
+
+        meshObject->setProperty("fixed_rotation", json["fixed_rotation"].get<bool>());
+        meshObject->setProperty("sensor", json["sensor"].get<bool>());
+        meshObject->setProperty("allow_sleep", json["allow_sleep"].get<bool>());
+        meshObject->setProperty("density", json["density"].get<float>());
+        meshObject->setProperty("friction", json["friction"].get<float>());
+        meshObject->setProperty("restitution", json["restitution"].get<float>());
+        meshObject->setProperty("gravity_scale", json["gravity_scale"].get<float>());
 
         m_MeshEditor->addMesh(meshObject);
 
