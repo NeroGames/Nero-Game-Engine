@@ -5,6 +5,8 @@
 ///////////////////////////HEADERS//////////////////////////
 // Nero
 #include <Nero/core/cpp/scene/MeshEditor.h>
+#include <Nero/core/cpp/model/PolygonMesh.h>
+#include <Nero/core/cpp/model/CircleMesh.h>
 #include <Nero/core/cpp/engine/EngineConstant.h>
 ////////////////////////////////////////////////////////////
 namespace nero
@@ -14,6 +16,8 @@ namespace nero
         , m_MeshCount(0)
         , m_RenderContext(nullptr)
         , m_LastMousePosition(0.f, 0.f)
+        // 1.f equals PointMesh::m_MinVertexDistance
+        , m_Epsilon(1.f, 1.f)
     {
         m_UpdateUndo = []()
         {
@@ -65,24 +69,20 @@ namespace nero
 
     void MeshEditor::deleteMesh(const int& id)
     {
-        for(auto mesh_it = m_MeshTable.begin(); mesh_it != m_MeshTable.end(); mesh_it++)
+        for(auto meshIt = m_MeshTable.begin(); meshIt != m_MeshTable.end(); ++meshIt)
         {
-            if((*mesh_it)->getMeshId() == id)
+            if((*meshIt)->getMeshId() == id)
             {
-                *mesh_it = nullptr;
-                m_MeshTable.erase(mesh_it);
+                *meshIt = nullptr;
+                m_MeshTable.erase(meshIt);
                 break;
             }
         }
     }
 
-    void MeshEditor::destroyAllMesh()
+    void MeshEditor::clearMeshTable()
     {
-        for(auto mesh : m_MeshTable)
-            mesh = nullptr;
-
         m_MeshTable.clear();
-
         m_SelectedMesh = nullptr;
     }
 
@@ -96,22 +96,13 @@ namespace nero
         mesh->rotateMesh(angle);
     }
 
-    MeshEditor::MeshTable& MeshEditor::getMeshTab()
-    {
-        return m_MeshTable;
-    }
-
-    void MeshEditor::deselectMesh(PointMesh::Ptr meshObject)
+    void MeshEditor::unselectMesh(PointMesh::Ptr meshObject)
     {
         if(meshObject)
         {
             meshObject->updateColor();
 
-            for(auto vertex : m_SelectedVertexTab)
-                vertex = nullptr;
-
-            m_SelectedVertexTab.clear();
-
+            m_SelectedVertexTable.clear();
             m_SelectedMesh = nullptr;
         }
     }
@@ -147,7 +138,7 @@ namespace nero
                 m_SelectedMesh->scale(sf::Vector2f(0.9f, 0.9f));
 
             if(key == sf::Keyboard::Escape && keyboard::CTRL())
-                deselectMesh(m_SelectedMesh);
+                unselectMesh(m_SelectedMesh);
 
             m_SelectedMesh->updateShape();
         }
@@ -182,302 +173,319 @@ namespace nero
         }
     }
 
-    void MeshEditor::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse,
-                                             const bool&                        isPressed)
+    sf::Vector2f MeshEditor::getMouseWorldPosition() const
     {
-        // Get the mouse position in the world
-        sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(
+        return m_RenderTexture->mapPixelToCoords(
             sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
             m_RenderTexture->getView());
+    }
 
-        // Handle pressing left click
-        // Left click is use mostly to drag things
-        // It is also use for selection
-        if(mouse.button == sf::Mouse::Left && isPressed)
+    bool MeshEditor::handleLeftClickPressOnVertex(PointMesh::Ptr pointMesh)
+    {
+        // No operation on CircleMesh vertex
+        if(pointMesh->getMeshShape() == PointMesh::Shape::Circle)
+            return false;
+
+        const auto mousePosition = getMouseWorldPosition();
+        auto&      vertexTable   = pointMesh->getVertexTable();
+
+        // Move vertex : Line, Chain, Polygon, Circle
+        // Extrude vertex : Line vertex, Chain edge vertex
+        for(auto vertexIt = vertexTable.begin(); vertexIt != vertexTable.end(); ++vertexIt)
         {
-            try
+            auto bound = vertexIt->getGlobalBounds();
+            if(vertexIt->getGlobalBounds().contains(mousePosition))
             {
-                bool isDone         = false;
-                m_LastMousePosition = world_pos;
-
-                for(auto mesh_it = m_MeshTable.rbegin(); mesh_it != m_MeshTable.rend(); mesh_it++)
+                // When no modifier is pressed,
+                // Select the vertex for move operation
+                // Cannot select CircleMesh vertex
+                if(!keyboard::CTRL_SHIFT_ALT())
                 {
-                    // Click on vertex
-                    // Move vertex : Line, Chain, Polygon, Circle
-                    // Extrude vertex : Line vertex, Chain edge vertex
-                    for(auto vertex_it = (*mesh_it)->getVertexTable().begin();
-                        vertex_it != (*mesh_it)->getVertexTable().end();
-                        vertex_it++)
+                    m_SelectedVertexTable.push_back(vertexTable.data() +
+                                                    (vertexIt - vertexTable.begin()));
+
+                    m_SelectedMesh = pointMesh;
+
+                    // Complete action
+                    return true;
+                }
+
+                // When Shift modifier is pressed
+                // Add new vertices and select new vertices for extrusion
+                // Cannot select CircleMesh vertex
+                else if(keyboard::SHIFT())
+                {
+                    // First vertex
+                    if(vertexIt == vertexTable.begin())
                     {
-                        // when we found a match
-                        if(vertex_it->getGlobalBounds().contains(world_pos))
-                        {
-                            if(!keyboard::CTRL_SHIFT_ALT() &&
-                               (*mesh_it)->getMeshShape() != PointMesh::Shape::Circle)
-                            {
-                                m_SelectedVertexTab.push_back(
-                                    (*mesh_it)->getVertexTable().data() +
-                                    (vertex_it - (*mesh_it)->getVertexTable().begin()));
-                                m_SelectedMesh = (*mesh_it);
-
-                                isDone         = true;
-                                break;
-                            }
-
-                            else if(keyboard::SHIFT())
-                            {
-                                if((*mesh_it)->getMeshShape() == PointMesh::Shape::Line ||
-                                   (*mesh_it)->getMeshShape() == PointMesh::Shape::Chain)
-                                {
-                                    if(vertex_it == (*mesh_it)->getVertexTable().begin())
-                                    {
-                                        (*mesh_it)->addVertex(vertex_it->getPosition(), 0);
-                                        m_SelectedVertexTab.push_back(
-                                            (*mesh_it)->getVertexTable().data());
-                                    }
-                                    else if(vertex_it == (*mesh_it)->getVertexTable().end() - 1)
-                                    {
-                                        (*mesh_it)->addVertex(vertex_it->getPosition());
-                                        m_SelectedVertexTab.push_back(
-                                            (*mesh_it)->getVertexTable().data() +
-                                            (vertex_it + 1 - (*mesh_it)->getVertexTable().begin()));
-                                    }
-
-                                    (*mesh_it)->updateColor();
-
-                                    if((*mesh_it)->getMeshShape() == PointMesh::Shape::Line)
-                                        (*mesh_it)->setMeshShape(PointMesh::Shape::Chain);
-
-                                    m_SelectedMesh = (*mesh_it);
-
-                                    isDone         = true;
-                                    break;
-                                }
-                            }
-                        }
+                        pointMesh->addVertex(vertexIt->getPosition() + m_Epsilon, 0);
+                        m_SelectedVertexTable.push_back(vertexTable.data());
+                    }
+                    // Last vertex
+                    else if(vertexIt == vertexTable.end() - 1)
+                    {
+                        pointMesh->addVertex(vertexIt->getPosition() + m_Epsilon);
+                        m_SelectedVertexTable.push_back(vertexTable.data() +
+                                                        (vertexIt + 1 - vertexTable.begin()));
+                    }
+                    // Middle vertex
+                    else
+                    {
+                        auto index = vertexIt - vertexTable.begin() + 1;
+                        pointMesh->addVertex(vertexIt->getPosition() + m_Epsilon, index);
+                        m_SelectedVertexTable.push_back(vertexTable.data() + index);
                     }
 
-                    if(isDone)
-                        break;
+                    pointMesh->updateShape();
+                    pointMesh->updateColor();
 
-                    // Click on line
-                    // Move line : Line, Chain, Polygon
-                    // Extrude line : Line, Chain, Polygon
-                    for(auto line_it = (*mesh_it)->getLineTable().begin();
-                        line_it != (*mesh_it)->getLineTable().end();
-                        line_it++)
+                    // After extrusion a Line becomes a Chain
+                    if(pointMesh->getMeshShape() == PointMesh::Shape::Line)
+                        pointMesh->setMeshShape(PointMesh::Shape::Chain);
+
+                    m_SelectedMesh = pointMesh;
+
+                    // Complete operation
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    bool MeshEditor::handleLeftClickPressOnLine()
+    {
+        // Click on line
+        // Move line : Line, Chain, Polygon
+        // Extrude line : Line, Chain, Polygon
+        /*for(auto line_it = (*meshIt)->getLineTable().begin();
+            line_it != (*meshIt)->getLineTable().end();
+            line_it++)
+        {
+            // when we found a match
+            if((*meshIt)->getMeshShape() != PointMesh::Shape::Circle)
+            {
+                bool is_polygon_last_line =
+                    ((*meshIt)->getMeshShape() == PointMesh::Shape::Polygon &&
+                     line_it == ((*meshIt)->getLineTable().end() - 1));
+
+                Vertex* v1 =
+                    &(*meshIt)->getVertexTable()[line_it - (*meshIt)->getLineTable().begin()];
+                Vertex* v2 =
+                    &(*meshIt)->getVertexTable()[is_polygon_last_line
+                                                     ? 0
+                                                     : (line_it -
+                                                        (*meshIt)->getLineTable().begin() + 1)];
+
+                // select the line of a polygon
+                if(math::distance(v1->getPosition(), v2->getPosition(), worldPos) < 4.f)
+                {
+                    // Normal selection
+                    if(!keyboard::CTRL_SHIFT_ALT())
                     {
-                        // when we found a match
-                        if((*mesh_it)->getMeshShape() != PointMesh::Shape::Circle)
+                        m_SelectedVertexTable.push_back(v1);
+                        m_SelectedVertexTable.push_back(v2);
+                    }
+
+                    // Select entire mesh with line : Line, Chain
+                    if(keyboard::CTRL())
+                    {
+                        unselectMesh(m_SelectedMesh);
+
+                        if((*meshIt)->getMeshShape() == PointMesh::Shape::Line ||
+                           (*meshIt)->getMeshShape() == PointMesh::Shape::Chain)
                         {
-                            bool is_polygon_last_line =
-                                ((*mesh_it)->getMeshShape() == PointMesh::Shape::Polygon &&
-                                 line_it == ((*mesh_it)->getLineTable().end() - 1));
+                            for(auto vertex_it = (*meshIt)->getVertexTable().begin();
+                                vertex_it != (*meshIt)->getVertexTable().end();
+                                vertex_it++)
+                                m_SelectedVertexTable.push_back(
+                                    &(*meshIt)
 
-                            Vertex* v1 =
-                                &(*mesh_it)->getVertexTable()[line_it -
-                                                              (*mesh_it)->getLineTable().begin()];
-                            Vertex* v2 =
-                                &(*mesh_it)->getVertexTable()
-                                     [is_polygon_last_line
-                                          ? 0
-                                          : (line_it - (*mesh_it)->getLineTable().begin() + 1)];
-
-                            // select the line of a polygon
-                            if(math::distance(v1->getPosition(), v2->getPosition(), world_pos) <
-                               4.f)
-                            {
-                                // Normal selection
-                                if(!keyboard::CTRL_SHIFT_ALT())
-                                {
-                                    m_SelectedVertexTab.push_back(v1);
-                                    m_SelectedVertexTab.push_back(v2);
-                                }
-
-                                // Select entire mesh with line : Line, Chain
-                                if(keyboard::CTRL())
-                                {
-                                    deselectMesh(m_SelectedMesh);
-
-                                    if((*mesh_it)->getMeshShape() == PointMesh::Shape::Line ||
-                                       (*mesh_it)->getMeshShape() == PointMesh::Shape::Chain)
-                                    {
-                                        for(auto vertex_it = (*mesh_it)->getVertexTable().begin();
-                                            vertex_it != (*mesh_it)->getVertexTable().end();
-                                            vertex_it++)
-                                            m_SelectedVertexTab.push_back(
-                                                &(*mesh_it)
-
-                                                     ->getVertexTable()[vertex_it -
-                                                                        (*mesh_it)
+                                         ->getVertexTable()[vertex_it - (*meshIt)
 
                                                                             ->getVertexTable()
                                                                             .begin()]);
 
-                                        m_SelectedMesh = (*mesh_it);
-                                        // m_SelectedMesh->setColor(
-                                        // EngineConstant.COLOR_SELECTED_MESH);
+                            m_SelectedMesh = (*meshIt);
+                            // m_SelectedMesh->setColor(
+                            // EngineConstant.COLOR_SELECTED_MESH);
 
-                                        isDone         = true;
-                                        break;
-                                    }
-                                }
-
-                                else if(keyboard::SHIFT())
-                                {
-                                    if(!is_polygon_last_line)
-                                    {
-                                        (*mesh_it)->addVertex(
-                                            v2->getPosition(),
-                                            line_it - (*mesh_it)->getLineTable().begin() + 1);
-                                        (*mesh_it)->addVertex(
-                                            v1->getPosition(),
-                                            line_it - (*mesh_it)->getLineTable().begin() + 1);
-
-                                        m_SelectedVertexTab.push_back(
-                                            &(*mesh_it)->getVertexTable()
-                                                 [line_it - (*mesh_it)->getLineTable().begin() +
-                                                  1]);
-                                        m_SelectedVertexTab.push_back(
-                                            &(*mesh_it)->getVertexTable()
-                                                 [line_it - (*mesh_it)->getLineTable().begin() +
-                                                  2]);
-                                    }
-                                    else
-                                    {
-                                        (*mesh_it)->addVertex(v1->getPosition());
-                                        (*mesh_it)->addVertex(v2->getPosition());
-
-                                        m_SelectedVertexTab.push_back(
-                                            &(*mesh_it)->getVertexTable()
-                                                 [line_it - (*mesh_it)->getLineTable().end() - 1]);
-                                        m_SelectedVertexTab.push_back(
-                                            &(*mesh_it)->getVertexTable()
-                                                 [line_it - (*mesh_it)->getLineTable().end() - 2]);
-                                    }
-
-                                    if((*mesh_it)->getMeshShape() == PointMesh::Shape::Line)
-                                        (*mesh_it)->setMeshShape(PointMesh::Shape::Chain);
-                                }
-
-                                m_SelectedMesh = (*mesh_it);
-
-                                v1             = nullptr;
-                                v2             = nullptr;
-                                delete v1;
-                                delete v2;
-
-                                isDone = true;
-                                break;
-                            }
+                            isDone         = true;
+                            break;
                         }
                     }
 
-                    if(isDone)
-                        break;
-
-                    // Polygon only
-                    if((*mesh_it)->getMeshShape() == PointMesh::Shape::Polygon)
+                    else if(keyboard::SHIFT())
                     {
-                        /*for(auto polygon_it = (*mesh_it)->m_PolygonTable.begin();
-                            polygon_it != (*mesh_it)->m_PolygonTable.end();
-                            polygon_it++)
+                        if(!is_polygon_last_line)
                         {
-                            // when we found a match
-                            if(polygon_it->getGlobalBounds().contains(world_pos))
-                            {
-                                if(!keyboard::CTRL_SHIFT_ALT())
-                                {
-                                    for(auto vertex_it =
-                                            (*mesh_it)->getVertexTable().begin();
-                                        vertex_it != (*mesh_it)->getVertexTable().end();
-                                        vertex_it++)
-                                        m_SelectedVertexTab.push_back(
-                                            &(*mesh_it)->getVertexTable()
-                                                 [vertex_it -
-                                                  (*mesh_it)->getVertexTable().begin()]);
+                            (*meshIt)->addVertex(v2->getPosition(),
+                                                 line_it - (*meshIt)->getLineTable().begin() + 1);
+                            (*meshIt)->addVertex(v1->getPosition(),
+                                                 line_it - (*meshIt)->getLineTable().begin() + 1);
 
-                                    m_SelectedMesh = (*mesh_it);
+                            m_SelectedVertexTable.push_back(
+                                &(*meshIt)
+                                     ->getVertexTable()[line_it -
+                                                        (*meshIt)->getLineTable().begin() + 1]);
+                            m_SelectedVertexTable.push_back(
+                                &(*meshIt)
+                                     ->getVertexTable()[line_it -
+                                                        (*meshIt)->getLineTable().begin() + 2]);
+                        }
+                        else
+                        {
+                            (*meshIt)->addVertex(v1->getPosition());
+                            (*meshIt)->addVertex(v2->getPosition());
 
-                                    isDone         = true;
-                                    break;
-                                }
-                                else if(keyboard::CTRL())
-                                {
-                                    deselectMesh(m_SelectedMesh);
+                            m_SelectedVertexTable.push_back(
+                                &(*meshIt)->getVertexTable()[line_it -
+                                                             (*meshIt)->getLineTable().end() - 1]);
+                            m_SelectedVertexTable.push_back(
+                                &(*meshIt)->getVertexTable()[line_it -
+                                                             (*meshIt)->getLineTable().end() - 2]);
+                        }
 
-                                    for(auto vertex_it =
-                                            (*mesh_it)->getVertexTable().begin();
-                                        vertex_it != (*mesh_it)->getVertexTable().end();
-                                        vertex_it++)
-                                        m_SelectedVertexTab.push_back(
-                                            &(*mesh_it)->getVertexTable()
-                                                 [vertex_it -
-                                                  (*mesh_it)->getVertexTable().begin()]);
-
-                                    m_SelectedMesh = (*mesh_it);
-                                    m_SelectedMesh->setColor(EngineConstant.COLOR_SELECTED_MESH);
-
-                                    isDone = true;
-                                    break;
-                                }
-                            }
-                        }*/
+                        if((*meshIt)->getMeshShape() == PointMesh::Shape::Line)
+                            (*meshIt)->setMeshShape(PointMesh::Shape::Chain);
                     }
 
-                    if(isDone)
-                        break;
+                    m_SelectedMesh = (*meshIt);
 
-                    // Circle only
-                    if((*mesh_it)->getMeshShape() == PointMesh::Shape::Circle)
-                    {
-                        /*if((*mesh_it)->m_CircleShape->getGlobalBounds().contains(
-                               world_pos))
-                        {
-                            if(!keyboard::CTRL_SHIFT_ALT())
-                            {
-                                m_SelectedVertexTab.push_back(
-                                    (*mesh_it)->getVertexTable().data() +
-                                    ((*mesh_it)->getVertexTable().begin() -
-                                     (*mesh_it)->getVertexTable().begin()));
-                                m_SelectedVertexTab.push_back(
-                                    (*mesh_it)->getVertexTable().data() +
-                                    ((*mesh_it)->getVertexTable().begin() + 1 -
-                                     (*mesh_it)->getVertexTable().begin()));
+                    v1             = nullptr;
+                    v2             = nullptr;
+                    delete v1;
+                    delete v2;
 
-                                m_SelectedMesh = (*mesh_it);
-
-                                isDone         = true;
-                                break;
-                            }
-                            else if(keyboard::CTRL())
-                            {
-                                deselectMesh(m_SelectedMesh);
-
-                                m_SelectedVertexTab.push_back(
-                                    (*mesh_it)->getVertexTable().data() +
-                                    ((*mesh_it)->getVertexTable().begin() -
-                                     (*mesh_it)->getVertexTable().begin()));
-                                m_SelectedVertexTab.push_back(
-                                    (*mesh_it)->getVertexTable().data() +
-                                    ((*mesh_it)->getVertexTable().begin() + 1 -
-                                     (*mesh_it)->getVertexTable().begin()));
-
-                                m_SelectedMesh = (*mesh_it);
-                                m_SelectedMesh->setColor(EngineConstant.COLOR_SELECTED_MESH);
-
-                                isDone = true;
-                                break;
-                            }
-                        }*/
-                    }
-
-                    if(isDone)
-                        break;
+                    isDone = true;
+                    break;
                 }
             }
-            catch(const std::exception& e)
+        }
+        */
+    }
+
+    bool MeshEditor::handleLeftClickPressOnPolygon()
+    {
+        /* auto polygonMesh = PolygonMesh::Cast((*meshIt));
+         for(auto polygon_it = polygonMesh->getPolygonTable().begin();
+             polygon_it != polygonMesh->getPolygonTable().end();
+             polygon_it++)
+         {
+             // when we found a match
+             if(polygon_it->getGlobalBounds().contains(worldPos))
+             {
+                 if(!keyboard::CTRL_SHIFT_ALT())
+                 {
+                     for(auto vertex_it = (*meshIt)->getVertexTable().begin();
+                         vertex_it != (*meshIt)->getVertexTable().end();
+                         vertex_it++)
+                         m_SelectedVertexTable.push_back(
+                             &(*meshIt)->getVertexTable()[vertex_it -
+                                                          (*meshIt)->getVertexTable().begin()]);
+
+                     m_SelectedMesh = (*meshIt);
+
+                     isDone         = true;
+                     break;
+                 }
+                 else if(keyboard::CTRL())
+                 {
+                     unselectMesh(m_SelectedMesh);
+
+                     for(auto vertex_it = (*meshIt)->getVertexTable().begin();
+                         vertex_it != (*meshIt)->getVertexTable().end();
+                         vertex_it++)
+                         m_SelectedVertexTable.push_back(
+                             &(*meshIt)->getVertexTable()[vertex_it -
+                                                          (*meshIt)->getVertexTable().begin()]);
+
+                     m_SelectedMesh = (*meshIt);
+                     // m_SelectedMesh->setColor(EngineConstant.COLOR_SELECTED_MESH);
+
+                     isDone         = true;
+                     break;
+                 }
+             }
+         }*/
+    }
+
+    bool MeshEditor::handleLeftClickPressOnCircle()
+    {
+        /* auto circleMesh = CircleMesh::Cast((*meshIt));
+
+        if(circleMesh->getCircleShape().getGlobalBounds().contains(worldPos))
+        {
+            if(!keyboard::CTRL_SHIFT_ALT())
             {
+                m_SelectedVertexTable.push_back(
+                    (*meshIt)->getVertexTable().data() +
+                    ((*meshIt)->getVertexTable().begin() - (*meshIt)->getVertexTable().begin()));
+                m_SelectedVertexTable.push_back((*meshIt)->getVertexTable().data() +
+                                                ((*meshIt)->getVertexTable().begin() + 1 -
+                                                 (*meshIt)->getVertexTable().begin()));
+
+                m_SelectedMesh = (*meshIt);
+
+                isDone         = true;
+                break;
+            }
+            else if(keyboard::CTRL())
+            {
+                unselectMesh(m_SelectedMesh);
+
+                m_SelectedVertexTable.push_back(
+                    (*meshIt)->getVertexTable().data() +
+                    ((*meshIt)->getVertexTable().begin() - (*meshIt)->getVertexTable().begin()));
+                m_SelectedVertexTable.push_back((*meshIt)->getVertexTable().data() +
+                                                ((*meshIt)->getVertexTable().begin() + 1 -
+                                                 (*meshIt)->getVertexTable().begin()));
+
+                m_SelectedMesh = (*meshIt);
+                // m_SelectedMesh->setColor(EngineConstant.COLOR_SELECTED_MESH);
+
+                isDone         = true;
+                break;
+            }
+        }*/
+    }
+
+    void MeshEditor::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse,
+                                             const bool&                        isPressed)
+    {
+        // Get the mouse position in the world
+        sf::Vector2f worldPos = getMouseWorldPosition();
+
+        // Handle vertex selection, whole mesh selection and extrusion
+        if(mouse.button == sf::Mouse::Left && isPressed)
+        {
+
+            m_LastMousePosition = worldPos;
+
+            for(auto meshIt = m_MeshTable.rbegin(); meshIt != m_MeshTable.rend(); ++meshIt)
+            {
+                auto pointMesh = (*meshIt);
+
+                if(handleLeftClickPressOnVertex(*meshIt))
+                    break;
+
+                // if(handleLeftClickPressOnLine())
+                // break;
+
+                // Polygon only
+                if(pointMesh->getMeshShape() == PointMesh::Shape::Polygon)
+                {
+                    // if(handleLeftClickPressOnPolygon())
+                    // break;
+                }
+
+                // Circle only
+                if(pointMesh->getMeshShape() == PointMesh::Shape::Circle)
+                {
+                    // if(handleLeftClickPressOnCircle())
+                    // break;
+                }
             }
         }
 
@@ -485,8 +493,7 @@ namespace nero
         {
             if(!keyboard::CTRL())
             {
-                deselectMesh(m_SelectedMesh);
-                m_SelectedMesh = nullptr;
+                unselectMesh(m_SelectedMesh);
             }
 
             m_UpdateUndo();
@@ -500,31 +507,31 @@ namespace nero
                 bool isDone = false;
 
                 // Iterate through Meshes
-                for(auto mesh_it = m_MeshTable.begin(); mesh_it != m_MeshTable.end(); mesh_it++)
+                for(auto meshIt = m_MeshTable.begin(); meshIt != m_MeshTable.end(); meshIt++)
                 {
                     // Click on vertex
                     // Remove vertex : Chain, Polygon
-                    for(auto vertex_it = (*mesh_it)->getVertexTable().begin();
-                        vertex_it != (*mesh_it)->getVertexTable().end();
+                    for(auto vertex_it = (*meshIt)->getVertexTable().begin();
+                        vertex_it != (*meshIt)->getVertexTable().end();
                         vertex_it++)
                     {
                         // When we get a match
-                        if(vertex_it->getGlobalBounds().contains(world_pos))
+                        if(vertex_it->getGlobalBounds().contains(worldPos))
                         {
                             // Chain
                             if(!keyboard::CTRL_SHIFT_ALT() &&
-                               (*mesh_it)->getMeshShape() == PointMesh::Shape::Chain)
+                               (*meshIt)->getMeshShape() == PointMesh::Shape::Chain)
                             {
-                                (*mesh_it)->deleteVertex(vertex_it -
-                                                         (*mesh_it)->getVertexTable().begin());
+                                (*meshIt)->deleteVertex(vertex_it -
+                                                        (*meshIt)->getVertexTable().begin());
 
-                                if((*mesh_it)->getVertexTable().size() == 2)
-                                    (*mesh_it)->setMeshShape(PointMesh::Shape::Line);
+                                if((*meshIt)->getVertexTable().size() == 2)
+                                    (*meshIt)->setMeshShape(PointMesh::Shape::Line);
 
-                                (*mesh_it)->updateShape();
-                                (*mesh_it)->updateColor();
+                                (*meshIt)->updateShape();
+                                (*meshIt)->updateColor();
 
-                                m_SelectedMesh = (*mesh_it);
+                                m_SelectedMesh = (*meshIt);
 
                                 isDone         = true;
                                 break;
@@ -532,16 +539,16 @@ namespace nero
 
                             // Polygon
                             if(!keyboard::CTRL_SHIFT_ALT() &&
-                               (*mesh_it)->getMeshShape() == PointMesh::Shape::Polygon)
+                               (*meshIt)->getMeshShape() == PointMesh::Shape::Polygon)
                             {
-                                if((*mesh_it)->getVertexTable().size() > 3)
+                                if((*meshIt)->getVertexTable().size() > 3)
                                 {
-                                    (*mesh_it)->deleteVertex(vertex_it -
-                                                             (*mesh_it)->getVertexTable().begin());
-                                    (*mesh_it)->updateShape();
-                                    (*mesh_it)->updateColor();
+                                    (*meshIt)->deleteVertex(vertex_it -
+                                                            (*meshIt)->getVertexTable().begin());
+                                    (*meshIt)->updateShape();
+                                    (*meshIt)->updateColor();
 
-                                    m_SelectedMesh = (*mesh_it);
+                                    m_SelectedMesh = (*meshIt);
 
                                     isDone         = true;
                                     break;
@@ -555,40 +562,40 @@ namespace nero
 
                     // Click on line
                     // Add vertex : Line, Chain, Polygon
-                    for(auto line_it = (*mesh_it)->getLineTable().begin();
-                        line_it != (*mesh_it)->getLineTable().end();
+                    for(auto line_it = (*meshIt)->getLineTable().begin();
+                        line_it != (*meshIt)->getLineTable().end();
                         line_it++)
                     {
                         bool is_polygon_last_line =
-                            ((*mesh_it)->getMeshShape() == PointMesh::Shape::Polygon &&
-                             line_it == ((*mesh_it)->getLineTable().end() - 1));
+                            ((*meshIt)->getMeshShape() == PointMesh::Shape::Polygon &&
+                             line_it == ((*meshIt)->getLineTable().end() - 1));
 
                         Vertex* v1 =
-                            &(*mesh_it)
+                            &(*meshIt)
 
-                                 ->getVertexTable()[line_it - (*mesh_it)->getLineTable().begin()];
+                                 ->getVertexTable()[line_it - (*meshIt)->getLineTable().begin()];
                         Vertex* v2 =
-                            &(*mesh_it)
+                            &(*meshIt)
                                  ->getVertexTable()[is_polygon_last_line
                                                         ? 0
                                                         : (line_it -
-                                                           (*mesh_it)->getLineTable().begin() + 1)];
+                                                           (*meshIt)->getLineTable().begin() + 1)];
 
                         // select the line of a polygon
-                        if(math::distance(v1->getPosition(), v2->getPosition(), world_pos) < 4.f)
+                        if(math::distance(v1->getPosition(), v2->getPosition(), worldPos) < 4.f)
                         {
                             // act only on line
                             if(!keyboard::CTRL_SHIFT_ALT() &&
-                               (*mesh_it)->getMeshShape() == PointMesh::Shape::Line)
+                               (*meshIt)->getMeshShape() == PointMesh::Shape::Line)
                             {
-                                (*mesh_it)->addVertex(world_pos,
-                                                      line_it - (*mesh_it)->getLineTable().begin() +
-                                                          1);
-                                (*mesh_it)->setMeshShape(PointMesh::Shape::Chain);
-                                (*mesh_it)->updateShape();
-                                (*mesh_it)->updateColor();
+                                (*meshIt)->addVertex(worldPos,
+                                                     line_it - (*meshIt)->getLineTable().begin() +
+                                                         1);
+                                (*meshIt)->setMeshShape(PointMesh::Shape::Chain);
+                                (*meshIt)->updateShape();
+                                (*meshIt)->updateColor();
 
-                                m_SelectedMesh = (*mesh_it);
+                                m_SelectedMesh = (*meshIt);
 
                                 isDone         = true;
                                 break;
@@ -596,35 +603,35 @@ namespace nero
 
                             // act on chain
                             if(!keyboard::CTRL_SHIFT_ALT() &&
-                               (*mesh_it)->getMeshShape() == PointMesh::Shape::Chain)
+                               (*meshIt)->getMeshShape() == PointMesh::Shape::Chain)
                             {
-                                (*mesh_it)->addVertex(world_pos,
-                                                      line_it - (*mesh_it)->getLineTable().begin() +
-                                                          1);
-                                (*mesh_it)->updateShape();
-                                (*mesh_it)->updateColor();
+                                (*meshIt)->addVertex(worldPos,
+                                                     line_it - (*meshIt)->getLineTable().begin() +
+                                                         1);
+                                (*meshIt)->updateShape();
+                                (*meshIt)->updateColor();
 
                                 isDone = true;
-                                (*mesh_it)->updateShape();
-                                (*mesh_it)->updateColor();
+                                (*meshIt)->updateShape();
+                                (*meshIt)->updateColor();
 
-                                m_SelectedMesh = (*mesh_it);
+                                m_SelectedMesh = (*meshIt);
 
                                 break;
                             }
 
                             // act on polygon
                             if(!keyboard::CTRL_SHIFT_ALT() &&
-                               (*mesh_it)->getMeshShape() == PointMesh::Shape::Polygon)
+                               (*meshIt)->getMeshShape() == PointMesh::Shape::Polygon)
                             {
-                                (*mesh_it)->addVertex(world_pos,
-                                                      line_it - (*mesh_it)->getLineTable().begin() +
-                                                          1);
+                                (*meshIt)->addVertex(worldPos,
+                                                     line_it - (*meshIt)->getLineTable().begin() +
+                                                         1);
 
-                                (*mesh_it)->updateShape();
-                                (*mesh_it)->updateColor();
+                                (*meshIt)->updateShape();
+                                (*meshIt)->updateColor();
 
-                                m_SelectedMesh = (*mesh_it);
+                                m_SelectedMesh = (*meshIt);
 
                                 isDone         = true;
                                 break;
@@ -650,29 +657,21 @@ namespace nero
 
     void MeshEditor::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
     {
-        sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(
-            sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
-            m_RenderTexture->getView());
+        sf::Vector2f worldPos = getMouseWorldPosition();
 
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            sf::Vector2f diff = world_pos - m_LastMousePosition;
+            sf::Vector2f diff = worldPos - m_LastMousePosition;
 
-            /* //was commented
-            if(std::abs(diff.x) > std::abs(diff.y))
-    diff.y = 0.f;
-else
-                    diff.x = 0.f;*/
-
-            if(!m_SelectedVertexTab.empty() && m_SelectedMesh)
+            if(!m_SelectedVertexTable.empty() && m_SelectedMesh)
             {
-                for(auto vertex : m_SelectedVertexTab)
+                for(auto vertex : m_SelectedVertexTable)
                     vertex->move(diff);
 
                 m_SelectedMesh->updateShape();
                 m_SelectedMesh->updateColor();
 
-                m_LastMousePosition = world_pos;
+                m_LastMousePosition = worldPos;
             }
         }
     }

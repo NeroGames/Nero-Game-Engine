@@ -906,22 +906,22 @@ namespace nero
 
             case Object::Mesh_Object:
             {
-                PointMesh::Ptr mesh;
+                PointMesh::Ptr pointMesh;
 
                 if(label == "Line")
-                    mesh = std::make_shared<PointMesh>(PointMesh::Shape::Line);
+                    pointMesh = std::make_shared<PointMesh>(PointMesh::Shape::Line);
                 else if(label == "Polygon")
-                    mesh = std::make_shared<PolygonMesh>();
+                    pointMesh = std::make_shared<PolygonMesh>();
                 else if(label == "Circle")
-                    mesh = std::make_shared<CircleMesh>();
+                    pointMesh = std::make_shared<CircleMesh>();
 
-                mesh->setMeshId(getNewId());
-                mesh->generateDefaultShape();
+                pointMesh->setMeshId(getNewId());
+                pointMesh->generateDefaultShape();
 
                 PhysicsMeshObject::Ptr meshObject = std::make_shared<PhysicsMeshObject>();
-                meshObject->setId(mesh->getMeshId());
-                meshObject->setName("mesh " + toString(mesh->getMeshId()));
-                meshObject->setMesh(mesh);
+                meshObject->setId(pointMesh->getMeshId());
+                meshObject->setName("mesh " + toString(pointMesh->getMeshId()));
+                meshObject->setMesh(pointMesh);
                 meshObject->setPosition(position);
                 meshObject->setSecondType(Object::Mesh_Object);
                 sf::FloatRect globalBound = meshObject->getGlobalBounds();
@@ -2046,7 +2046,7 @@ m_PhysicsObjectManager.createObject(mesh_object->getMesh());
         nero_log("loading scene");
 
         m_LayerTable.clear();
-        m_MeshEditor->destroyAllMesh();
+        m_MeshEditor->clearMeshTable();
         m_SelectedObject           = nullptr;
 
         m_LayerCount               = scene["layer_count"];
