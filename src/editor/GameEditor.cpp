@@ -291,6 +291,7 @@ namespace nero
 
         nero_log("--> Loading dockspace settings");
         m_EditorSetting->loadSetting(file::getPath({"setting", "dockspace"}));
+        m_EditorSetting->getSetting("dockspace").setBool("build_layout", true);
         m_EditorSetting->getSetting("dockspace")
             .setBool("imgui_setting_exist",
                      file::fileExist(file::getPath({"setting", EditorConstant.FILE_IMGUI_SETTING},

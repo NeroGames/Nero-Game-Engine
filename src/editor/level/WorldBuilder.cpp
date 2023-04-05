@@ -1617,8 +1617,7 @@ namespace nero
                                 case PointMesh::Line:
                                 case PointMesh::Chain:
                                 {
-
-                                    for(sf::RectangleShape shape :
+                                    for(const sf::RectangleShape& shape :
                                         meshObject->getMesh()->getLineTable())
                                     {
                                         lightManager->createLightShape(shape);
@@ -1629,7 +1628,7 @@ namespace nero
                                 case PointMesh::Shape::Polygon:
                                 {
 
-                                    for(sf::ConvexShape shape :
+                                    for(const sf::ConvexShape& shape :
                                         PolygonMesh::Cast(meshObject->getMesh())->getPolygonTable())
                                     {
                                         lightManager->createLightShape(shape);

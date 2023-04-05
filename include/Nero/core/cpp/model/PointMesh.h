@@ -62,7 +62,6 @@ namespace nero
         void                   addVertex(const sf::Vector2f& point, const int& index);
         void                   addVertex(const sf::Vector2f& point);
         void                   deleteVertex(const int& index);
-        void                   addLine(const sf::Vector2f& pointOne, const sf::Vector2f& pointTwo);
         PointTable             getPointTable() const;
         VertexTable&           getVertexTable();
         LineTable&             getLineTable();
@@ -75,6 +74,7 @@ namespace nero
         void                   loadTransform(const sf::Vector2f& position,
                                              const sf::Vector2f& scale,
                                              const float&        rotation);
+        void                   setMeshSelected(const bool selected);
 
         virtual sf::FloatRect  getRealGlobalBounds() const;
         virtual sf::FloatRect  getGlobalBounds() const;
@@ -111,6 +111,7 @@ namespace nero
         bool            m_MeshValid;
         VertexTable     m_VertexTable;
         LineTable       m_LineTable;
+        bool            m_MeshSelected;
         // Transform
         sf::Vector2f    m_Position;
         sf::Vector2f    m_Scale;

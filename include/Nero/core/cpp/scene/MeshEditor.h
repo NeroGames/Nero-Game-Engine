@@ -44,11 +44,12 @@ namespace nero
         void         handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
         void         rotateMesh(PointMesh::Ptr mesh, float speed = 0.1f);
         void         scaleMesh(PointMesh::Ptr mesh, float scale = 0.1f);
-        void         unselectMesh(PointMesh::Ptr meshObject);
+        void         selectMesh(PointMesh::Ptr pointMesh);
+        void         unselectMesh(PointMesh::Ptr pointMesh);
         sf::Vector2f getMouseWorldPosition() const;
         //
-        bool         handleLeftClickPressOnVertex(PointMesh::Ptr pointMesh);
-        bool         handleLeftClickPressOnLine();
+        bool         handleLeftClickPressOnVertex(const PointMesh::Ptr& pointMesh);
+        bool         handleLeftClickPressOnLine(const PointMesh::Ptr& pointMesh);
         bool         handleLeftClickPressOnPolygon();
         bool         handleLeftClickPressOnCircle();
         bool         handleReleaseLeftClick(const sf::Event::MouseButtonEvent& mouse);

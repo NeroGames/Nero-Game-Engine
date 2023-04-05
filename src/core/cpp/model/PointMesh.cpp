@@ -18,6 +18,7 @@ namespace nero
         , m_Position(sf::Vector2f(0.f, 0.f))
         , m_Scale(sf::Vector2f(1.f, 1.f))
         , m_Rotation(0.f)
+        , m_MeshSelected(false)
     {
     }
 
@@ -42,6 +43,9 @@ namespace nero
     {
         if(!m_MeshValid)
             return EngineConstant.COLOR_INVALIDE_MESH;
+
+        if(m_MeshSelected)
+            return EngineConstant.COLOR_SELECTED_MESH;
 
         switch(m_MeshType)
         {
@@ -182,42 +186,20 @@ namespace nero
 
     void PointMesh::addVertex(const sf::Vector2f& position, const int& index)
     {
-        sf::RectangleShape vertex;
-
-        vertex.setOrigin(sf::Vector2f(m_VertexSize / 2.f, m_VertexSize / 2.f));
-        vertex.setSize(sf::Vector2f(m_VertexSize, m_VertexSize));
-        vertex.setPosition(position);
-
         if(index < 0)
         {
-            m_VertexTable.push_back(vertex);
+            // should not happen
+            m_VertexTable.emplace_back(createVertex(position));
         }
         else
         {
-            m_VertexTable.insert(m_VertexTable.begin() + index, vertex);
+            m_VertexTable.insert(m_VertexTable.begin() + index, createVertex(position));
         }
     }
 
     void PointMesh::deleteVertex(const int& index)
     {
         m_VertexTable.erase(m_VertexTable.begin() + index);
-    }
-
-    void PointMesh::addLine(const sf::Vector2f& point1, const sf::Vector2f& point2)
-    {
-        sf::RectangleShape line;
-
-        float              length = math::distance(point1, point2);
-        line.setOrigin(sf::Vector2f(line.getOrigin().x, m_VertexSize / 4.f));
-        line.setSize(sf::Vector2f(length, m_VertexSize / 2.f));
-        line.setPosition(point1);
-
-        float delta_x = point2.x - point1.x;
-        float delta_y = point2.y - point1.y;
-        float angle   = atan2(delta_y, delta_x);
-        line.setRotation(math::toDegree(angle));
-
-        m_LineTable.push_back(line);
     }
 
     void PointMesh::validateMesh(const sf::Vector2f& pointOne, const sf::Vector2f& pointTwo)
@@ -271,7 +253,7 @@ namespace nero
 
         for(auto vertex : m_VertexTable)
         {
-            vectorTable.push_back(vertex.getPosition());
+            vectorTable.emplace_back(vertex.getPosition());
         }
 
         return vectorTable;
@@ -443,7 +425,7 @@ namespace nero
             };
             vertex["order"] = i++;
 
-            vertexTableJson.push_back(vertex);
+            vertexTableJson.emplace_back(vertex);
         }
 
         meshJson["vertex_table"] = vertexTableJson;
@@ -521,6 +503,11 @@ namespace nero
         pointMesh->updateColor();
 
         return pointMesh;
+    }
+
+    void PointMesh::setMeshSelected(const bool selected)
+    {
+        m_MeshSelected = selected;
     }
 
 } // namespace nero
