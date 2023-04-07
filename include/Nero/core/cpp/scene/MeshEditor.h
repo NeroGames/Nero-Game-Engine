@@ -6,7 +6,7 @@
 #define MESHEDITOR_H
 ///////////////////////////HEADERS//////////////////////////
 // Nero
-#include <Nero/core/cpp/model/PointMesh.h>
+#include <Nero/core/cpp/object/PhysicsMeshObject.h>
 #include <Nero/core/cpp/model/PolygonMesh.h>
 #include <Nero/core/cpp/model/CircleMesh.h>
 #include <Nero/core/cpp/scene/SceneUtility.h>
@@ -19,17 +19,17 @@ namespace nero
     class MeshEditor
     {
       public:
-        typedef std::shared_ptr<MeshEditor>        Ptr;
-        typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
-        typedef sf::RectangleShape                 Vertex;
-        typedef std::vector<PointMesh::Ptr>        MeshTable;
+        typedef std::shared_ptr<MeshEditor>         Ptr;
+        typedef std::shared_ptr<sf::RenderTexture>  RenderTexturePtr;
+        typedef sf::RectangleShape                  Vertex;
+        typedef std::vector<PhysicsMeshObject::Ptr> MeshTable;
 
         MeshEditor();
         virtual ~MeshEditor();
 
         void handleEvent(const sf::Event& event);
 
-        void addMesh(PointMesh::Ptr mesh);
+        void addMesh(const PhysicsMeshObject::Ptr& meshObject);
         void deleteMesh(const int& id);
         void clearMeshTable();
 
@@ -44,25 +44,23 @@ namespace nero
         void         handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse,
                                              const bool&                        isPressed);
         void         handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse);
-        void         rotateMesh(PointMesh::Ptr mesh, float speed = 0.1f);
-        void         scaleMesh(PointMesh::Ptr mesh, float scale = 0.1f);
-        void         selectMesh(PointMesh::Ptr pointMesh);
-        void         unselectMesh(PointMesh::Ptr pointMesh);
+        void         selectMesh(const PhysicsMeshObject::Ptr& meshObject);
+        void         unselectMesh(const PhysicsMeshObject::Ptr& meshObject);
         sf::Vector2f getMouseWorldPosition() const;
         //
-        bool         handleLeftClickPressOnVertex(const PointMesh::Ptr& pointMesh);
-        bool         handleLeftClickPressOnLine(const PointMesh::Ptr& pointMesh);
-        bool         handleLeftClickPressOnPolygon(const PolygonMesh::Ptr& polygonMesh);
-        bool         handleLeftClickPressOnCircle(const CircleMesh::Ptr& circleMesh);
+        bool         handleLeftClickPressOnVertex(const PhysicsMeshObject::Ptr& meshObject);
+        bool         handleLeftClickPressOnLine(const PhysicsMeshObject::Ptr& meshObject);
+        bool         handleLeftClickPressOnPolygon(const PhysicsMeshObject::Ptr& meshObject);
+        bool         handleLeftClickPressOnCircle(const PhysicsMeshObject::Ptr& meshObject);
         bool         handleReleaseLeftClick(const sf::Event::MouseButtonEvent&);
-        bool         handleRightClickPressOnVertex(const PointMesh::Ptr& pointMesh);
-        bool         handleRightClickPressOnLine(const PointMesh::Ptr& pointMesh);
+        bool         handleRightClickPressOnVertex(const PhysicsMeshObject::Ptr& meshObject);
+        bool         handleRightClickPressOnLine(const PhysicsMeshObject::Ptr& meshObject);
         void         handleLeftClickRelease();
         void         handleRightClickRelease();
 
       private:
         MeshTable                                          m_MeshTable;
-        PointMesh::Ptr                                     m_SelectedMesh;
+        PhysicsMeshObject::Ptr                             m_SelectedMesh;
         std::vector<sf::RectangleShape*>                   m_SelectedVertexTable;
         int                                                m_MeshCount;
         RenderTexturePtr                                   m_RenderTexture;

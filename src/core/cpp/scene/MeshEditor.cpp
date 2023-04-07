@@ -63,16 +63,16 @@ namespace nero
         }
     }
 
-    void MeshEditor::addMesh(PointMesh::Ptr mesh)
+    void MeshEditor::addMesh(const PhysicsMeshObject::Ptr& meshObject)
     {
-        m_MeshTable.push_back(mesh);
+        m_MeshTable.push_back(meshObject);
     }
 
     void MeshEditor::deleteMesh(const int& id)
     {
         for(auto meshIt = m_MeshTable.begin(); meshIt != m_MeshTable.end(); ++meshIt)
         {
-            if((*meshIt)->getMeshId() == id)
+            if((*meshIt)->getMesh()->getMeshId() == id)
             {
                 *meshIt = nullptr;
                 m_MeshTable.erase(meshIt);
@@ -87,31 +87,23 @@ namespace nero
         m_SelectedMesh = nullptr;
     }
 
-    void MeshEditor::scaleMesh(PointMesh::Ptr mesh, float factor)
+    void MeshEditor::selectMesh(const PhysicsMeshObject::Ptr& meshObject)
     {
-        mesh->scaleMesh(sf::Vector2f(factor, factor));
-    }
-
-    void MeshEditor::rotateMesh(PointMesh::Ptr mesh, float angle)
-    {
-        mesh->rotateMesh(angle);
-    }
-
-    void MeshEditor::selectMesh(PointMesh::Ptr pointMesh)
-    {
-        if(!pointMesh)
+        if(!meshObject)
             return;
 
+        auto pointMesh = meshObject->getMesh();
         pointMesh->setMeshSelected(true);
         pointMesh->updateColor();
-        m_SelectedMesh = pointMesh;
+        m_SelectedMesh = meshObject;
     }
 
-    void MeshEditor::unselectMesh(PointMesh::Ptr pointMesh)
+    void MeshEditor::unselectMesh(const PhysicsMeshObject::Ptr& meshObject)
     {
-        if(!pointMesh)
+        if(!meshObject)
             return;
 
+        auto pointMesh = meshObject->getMesh();
         pointMesh->setMeshSelected(false);
         pointMesh->updateColor();
 
@@ -126,36 +118,60 @@ namespace nero
     {
         if(isPressed && m_SelectedMesh)
         {
+            const float offset = 0.1f;
+            const float scale  = 0.05f;
+
             if(key == sf::Keyboard::Numpad8 && keyboard::CTRL())
-                m_SelectedMesh->move(sf::Vector2f(0.f, -5.f));
+            {
+                m_SelectedMesh->move(sf::Vector2f(0.f, -offset));
+                m_SelectedMesh->update(sf::Time());
+            }
 
             if(key == sf::Keyboard::Numpad2 && keyboard::CTRL())
-                m_SelectedMesh->move(sf::Vector2f(0.f, 5.f));
+            {
+                m_SelectedMesh->move(sf::Vector2f(0.f, offset));
+                m_SelectedMesh->update(sf::Time());
+            }
 
             if(key == sf::Keyboard::Numpad4 && keyboard::CTRL())
-                m_SelectedMesh->move(sf::Vector2f(-5.f, 0.f));
+            {
+                m_SelectedMesh->move(sf::Vector2f(-offset, 0.f));
+                m_SelectedMesh->update(sf::Time());
+            }
 
             if(key == sf::Keyboard::Numpad6 && keyboard::CTRL())
-                m_SelectedMesh->move(sf::Vector2f(5.f, 0.f));
+            {
+                m_SelectedMesh->move(sf::Vector2f(offset, 0.f));
+                m_SelectedMesh->update(sf::Time());
+            }
 
             // Rotation
             if(key == sf::Keyboard::Numpad9 && keyboard::CTRL())
-                m_SelectedMesh->rotate(5.f);
+            {
+                m_SelectedMesh->rotate(offset);
+                m_SelectedMesh->update(sf::Time());
+            }
 
             else if(key == sf::Keyboard::Numpad7 && keyboard::CTRL())
-                m_SelectedMesh->rotate(-5.f);
+            {
+                m_SelectedMesh->rotate(-offset);
+                m_SelectedMesh->update(sf::Time());
+            }
 
             // Zoom
             else if(key == sf::Keyboard::Add && keyboard::CTRL())
-                m_SelectedMesh->scale(sf::Vector2f(1.1f, 1.1f));
+            {
+                m_SelectedMesh->scale(sf::Vector2f(1.f + scale, 1.f + scale));
+                m_SelectedMesh->update(sf::Time());
+            }
 
             else if(key == sf::Keyboard::Subtract && keyboard::CTRL())
-                m_SelectedMesh->scale(sf::Vector2f(0.9f, 0.9f));
+            {
+                m_SelectedMesh->scale(sf::Vector2f(1.f - scale, 1.f - scale));
+                m_SelectedMesh->update(sf::Time());
+            }
 
-            if(key == sf::Keyboard::Escape && keyboard::CTRL())
-                unselectMesh(m_SelectedMesh);
-
-            m_SelectedMesh->updateShape();
+            m_SelectedMesh->getMesh()->updateShape();
         }
 
         if(!isPressed)
@@ -196,8 +212,10 @@ namespace nero
             m_RenderTexture->getView());
     }
 
-    bool MeshEditor::handleLeftClickPressOnVertex(const PointMesh::Ptr& pointMesh)
+    bool MeshEditor::handleLeftClickPressOnVertex(const PhysicsMeshObject::Ptr& meshObject)
     {
+        auto pointMesh = meshObject->getMesh();
+
         // No operation on CircleMesh vertex
         if(pointMesh->getMeshShape() == PointMesh::Shape::Circle)
             return false;
@@ -219,7 +237,7 @@ namespace nero
                     const auto index = vertexIt - vertexTable.begin();
                     m_SelectedVertexTable.push_back(vertexTable.data() + index);
 
-                    m_SelectedMesh  = pointMesh;
+                    m_SelectedMesh  = meshObject;
                     m_LeftSelection = true;
                     // Complete action
                     return true;
@@ -254,7 +272,7 @@ namespace nero
                     pointMesh->updateShape();
                     pointMesh->updateColor();
 
-                    m_SelectedMesh  = pointMesh;
+                    m_SelectedMesh  = meshObject;
                     m_LeftSelection = true;
 
                     // Complete operation
@@ -266,8 +284,10 @@ namespace nero
         return false;
     }
 
-    bool MeshEditor::handleLeftClickPressOnLine(const PointMesh::Ptr& pointMesh)
+    bool MeshEditor::handleLeftClickPressOnLine(const PhysicsMeshObject::Ptr& meshObject)
     {
+        auto pointMesh = meshObject->getMesh();
+
         // No operation on CircleMesh line
         if(pointMesh->getMeshShape() == PointMesh::Shape::Circle)
             return false;
@@ -301,7 +321,7 @@ namespace nero
                     for(auto& vertex : vertexTable)
                         m_SelectedVertexTable.push_back(&vertex);
 
-                    selectMesh(pointMesh);
+                    selectMesh(meshObject);
 
                     return true;
                 }
@@ -343,7 +363,7 @@ namespace nero
                     pointMesh->updateColor();
                 }
 
-                m_SelectedMesh = pointMesh;
+                m_SelectedMesh = meshObject;
 
                 v1             = nullptr;
                 v2             = nullptr;
@@ -355,8 +375,9 @@ namespace nero
         return false;
     }
 
-    bool MeshEditor::handleLeftClickPressOnPolygon(const PolygonMesh::Ptr& polygonMesh)
+    bool MeshEditor::handleLeftClickPressOnPolygon(const PhysicsMeshObject::Ptr& meshObject)
     {
+        auto       polygonMesh   = PolygonMesh::Cast(meshObject->getMesh());
         const auto mousePosition = getMouseWorldPosition();
         auto&      vertexTable   = polygonMesh->getVertexTable();
         auto&      polygonTable  = polygonMesh->getPolygonTable();
@@ -372,7 +393,7 @@ namespace nero
                     for(auto& vertex : vertexTable)
                         m_SelectedVertexTable.push_back(&vertex);
 
-                    m_SelectedMesh  = polygonMesh;
+                    m_SelectedMesh  = meshObject;
                     m_LeftSelection = true;
 
                     return true;
@@ -384,7 +405,7 @@ namespace nero
                     for(auto& vertex : vertexTable)
                         m_SelectedVertexTable.push_back(&vertex);
 
-                    selectMesh(polygonMesh);
+                    selectMesh(meshObject);
                     m_LeftSelection = true;
 
                     return true;
@@ -395,8 +416,9 @@ namespace nero
         return false;
     }
 
-    bool MeshEditor::handleLeftClickPressOnCircle(const CircleMesh::Ptr& circleMesh)
+    bool MeshEditor::handleLeftClickPressOnCircle(const PhysicsMeshObject::Ptr& meshObject)
     {
+        auto       circleMesh    = CircleMesh::Cast(meshObject->getMesh());
         const auto mousePosition = getMouseWorldPosition();
         auto&      vertexTable   = circleMesh->getVertexTable();
 
@@ -407,7 +429,7 @@ namespace nero
                 for(auto& vertex : vertexTable)
                     m_SelectedVertexTable.push_back(&vertex);
 
-                m_SelectedMesh  = circleMesh;
+                m_SelectedMesh  = meshObject;
                 m_LeftSelection = true;
 
                 return true;
@@ -419,7 +441,7 @@ namespace nero
                 for(auto& vertex : vertexTable)
                     m_SelectedVertexTable.push_back(&vertex);
 
-                selectMesh(circleMesh);
+                selectMesh(meshObject);
                 m_LeftSelection = true;
 
                 return true;
@@ -443,7 +465,7 @@ namespace nero
                 m_SelectedVertexTable[i] = nullptr;
 
             m_SelectedVertexTable.clear();
-            m_SelectedMesh->setMeshSelected(false);
+            m_SelectedMesh->getMesh()->setMeshSelected(false);
             m_SelectedMesh = nullptr;
         }
 
@@ -459,8 +481,14 @@ namespace nero
         }
     }
 
-    bool MeshEditor::handleRightClickPressOnVertex(const PointMesh::Ptr& pointMesh)
+    bool MeshEditor::handleRightClickPressOnVertex(const PhysicsMeshObject::Ptr& meshObject)
     {
+        auto pointMesh = meshObject->getMesh();
+
+        // No operation on CircleMesh line
+        if(pointMesh->getMeshShape() == PointMesh::Shape::Circle)
+            return false;
+
         const auto mousePosition = getMouseWorldPosition();
         auto&      vertexTable   = pointMesh->getVertexTable();
 
@@ -480,14 +508,12 @@ namespace nero
                     pointMesh->updateShape();
                     pointMesh->updateColor();
 
-                    m_SelectedMesh = pointMesh;
-
-                    return true;
+                    m_SelectedMesh = meshObject;
                 }
 
                 // Polygon
-                if(!keyboard::CTRL_SHIFT_ALT() &&
-                   pointMesh->getMeshShape() == PointMesh::Shape::Polygon)
+                else if(!keyboard::CTRL_SHIFT_ALT() &&
+                        pointMesh->getMeshShape() == PointMesh::Shape::Polygon)
                 {
                     // Cannot remove vertex when only three left
                     if(vertexTable.size() > 3)
@@ -497,19 +523,25 @@ namespace nero
                         pointMesh->updateShape();
                         pointMesh->updateColor();
 
-                        m_SelectedMesh = pointMesh;
-
-                        return true;
+                        m_SelectedMesh = meshObject;
                     }
                 }
+
+                return true;
             }
         }
 
         return false;
     }
 
-    bool MeshEditor::handleRightClickPressOnLine(const PointMesh::Ptr& pointMesh)
+    bool MeshEditor::handleRightClickPressOnLine(const PhysicsMeshObject::Ptr& meshObject)
     {
+        auto pointMesh = meshObject->getMesh();
+
+        // No operation on CircleMesh line
+        if(pointMesh->getMeshShape() == PointMesh::Shape::Circle)
+            return false;
+
         const auto mousePosition = getMouseWorldPosition();
         auto&      vertexTable   = pointMesh->getVertexTable();
         auto&      lineTable     = pointMesh->getLineTable();
@@ -536,7 +568,7 @@ namespace nero
                     pointMesh->updateShape();
                     pointMesh->updateColor();
 
-                    m_SelectedMesh = pointMesh;
+                    m_SelectedMesh = meshObject;
 
                     return true;
                 }
@@ -562,25 +594,25 @@ namespace nero
 
             for(auto meshIt = m_MeshTable.rbegin(); meshIt != m_MeshTable.rend(); ++meshIt)
             {
-                auto pointMesh = (*meshIt);
+                auto meshObject = (*meshIt);
 
-                if(handleLeftClickPressOnVertex(pointMesh))
+                if(handleLeftClickPressOnVertex(meshObject))
                     break;
 
                 // if(handleLeftClickPressOnLine(pointMesh))
                 // break;
 
                 // Polygon only
-                if(pointMesh->getMeshShape() == PointMesh::Shape::Polygon)
+                if(meshObject->getMesh()->getMeshShape() == PointMesh::Shape::Polygon)
                 {
-                    if(handleLeftClickPressOnPolygon(PolygonMesh::Cast(pointMesh)))
+                    if(handleLeftClickPressOnPolygon(meshObject))
                         break;
                 }
 
                 // Circle only
-                if(pointMesh->getMeshShape() == PointMesh::Shape::Circle)
+                if(meshObject->getMesh()->getMeshShape() == PointMesh::Shape::Circle)
                 {
-                    if(handleLeftClickPressOnCircle(CircleMesh::Cast(pointMesh)))
+                    if(handleLeftClickPressOnCircle(meshObject))
                         break;
                 }
             }
@@ -595,12 +627,12 @@ namespace nero
         {
             for(auto meshIt = m_MeshTable.rbegin(); meshIt != m_MeshTable.rend(); ++meshIt)
             {
-                auto pointMesh = (*meshIt);
+                auto meshObject = (*meshIt);
 
-                if(handleRightClickPressOnVertex(pointMesh))
+                if(handleRightClickPressOnVertex(meshObject))
                     break;
 
-                if(handleRightClickPressOnLine(pointMesh))
+                if(handleRightClickPressOnLine(meshObject))
                     break;
             }
         }
@@ -623,8 +655,9 @@ namespace nero
                 for(auto vertex : m_SelectedVertexTable)
                     vertex->move(moveDistance);
 
-                m_SelectedMesh->updateShape();
-                m_SelectedMesh->updateColor();
+                auto pointMesh = m_SelectedMesh->getMesh();
+                pointMesh->updateShape();
+                pointMesh->updateColor();
 
                 m_LastMousePosition = mousePosition;
             }
