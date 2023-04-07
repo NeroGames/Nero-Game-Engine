@@ -118,7 +118,10 @@ namespace nero
 
         ImGui::Image(flipTexture(m_RenderTexture->getTexture()));
 
-        renderCanvasMenu();
+        if(m_EditorContext->getBuilderMode() != BuilderMode::Mesh)
+        {
+            renderCanvasMenu();
+        }
 
         ImGui::End();
     }
