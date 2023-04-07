@@ -55,7 +55,6 @@ namespace nero
         int                    getMeshId() const;
         void                   setMeshType(const Type type);
         Type                   getMeshType() const;
-        void                   setMeshShape(const Shape shape);
         Shape                  getMeshShape() const;
         bool                   meshValid() const;
 
@@ -75,6 +74,7 @@ namespace nero
                                              const sf::Vector2f& scale,
                                              const float&        rotation);
         void                   setMeshSelected(const bool selected);
+        bool                   getMeshSelected() const;
 
         virtual sf::FloatRect  getRealGlobalBounds() const;
         virtual sf::FloatRect  getGlobalBounds() const;

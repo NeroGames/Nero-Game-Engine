@@ -18,6 +18,7 @@ namespace nero
         , m_LastMousePosition(0.f, 0.f)
         // 1.f equals PointMesh::m_MinVertexDistance
         , m_Epsilon(1.f, 1.f)
+        , m_LeftSelection(false)
     {
         m_UpdateUndo = []()
         {
@@ -113,6 +114,9 @@ namespace nero
 
         pointMesh->setMeshSelected(false);
         pointMesh->updateColor();
+
+        for(unsigned int i = 0; i < m_SelectedVertexTable.size(); ++i)
+            m_SelectedVertexTable[i] = nullptr;
 
         m_SelectedVertexTable.clear();
         m_SelectedMesh = nullptr;
@@ -212,11 +216,11 @@ namespace nero
                 // Cannot select CircleMesh vertex
                 if(!keyboard::CTRL_SHIFT_ALT())
                 {
-                    m_SelectedVertexTable.push_back(vertexTable.data() +
-                                                    (vertexIt - vertexTable.begin()));
+                    const auto index = vertexIt - vertexTable.begin();
+                    m_SelectedVertexTable.push_back(vertexTable.data() + index);
 
-                    m_SelectedMesh = pointMesh;
-
+                    m_SelectedMesh  = pointMesh;
+                    m_LeftSelection = true;
                     // Complete action
                     return true;
                 }
@@ -247,14 +251,11 @@ namespace nero
                         m_SelectedVertexTable.push_back(vertexTable.data() + index);
                     }
 
-                    // After extrusion a Line becomes a Chain
-                    if(pointMesh->getMeshShape() == PointMesh::Shape::Line)
-                        pointMesh->setMeshShape(PointMesh::Shape::Chain);
-
                     pointMesh->updateShape();
                     pointMesh->updateColor();
 
-                    m_SelectedMesh = pointMesh;
+                    m_SelectedMesh  = pointMesh;
+                    m_LeftSelection = true;
 
                     // Complete operation
                     return true;
@@ -338,10 +339,6 @@ namespace nero
                             &vertexTable[lineIt - vertexTable.begin() + 2]);*/
                     }
 
-                    // After extrusion a Line becomes a Chain
-                    if(pointMesh->getMeshShape() == PointMesh::Shape::Line)
-                        pointMesh->setMeshShape(PointMesh::Shape::Chain);
-
                     pointMesh->updateShape();
                     pointMesh->updateColor();
                 }
@@ -375,12 +372,12 @@ namespace nero
                     for(auto& vertex : vertexTable)
                         m_SelectedVertexTable.push_back(&vertex);
 
-                    m_SelectedMesh = polygonMesh;
+                    m_SelectedMesh  = polygonMesh;
+                    m_LeftSelection = true;
 
                     return true;
                 }
-
-                if(keyboard::CTRL())
+                else if(keyboard::CTRL())
                 {
                     unselectMesh(m_SelectedMesh);
 
@@ -388,6 +385,7 @@ namespace nero
                         m_SelectedVertexTable.push_back(&vertex);
 
                     selectMesh(polygonMesh);
+                    m_LeftSelection = true;
 
                     return true;
                 }
@@ -409,7 +407,8 @@ namespace nero
                 for(auto& vertex : vertexTable)
                     m_SelectedVertexTable.push_back(&vertex);
 
-                m_SelectedMesh = circleMesh;
+                m_SelectedMesh  = circleMesh;
+                m_LeftSelection = true;
 
                 return true;
             }
@@ -421,6 +420,7 @@ namespace nero
                     m_SelectedVertexTable.push_back(&vertex);
 
                 selectMesh(circleMesh);
+                m_LeftSelection = true;
 
                 return true;
             }
@@ -431,9 +431,20 @@ namespace nero
 
     void MeshEditor::handleLeftClickRelease()
     {
-        if(!keyboard::CTRL())
+        if(!m_SelectedMesh)
+            return;
+
+        // Normal release, perform a unselect
+        // When CTRL is pressed there will be no unselect
+        if(!keyboard::CTRL_SHIFT_ALT())
         {
-            unselectMesh(m_SelectedMesh);
+            // clear selected vertices
+            for(unsigned int i = 0; i < m_SelectedVertexTable.size(); ++i)
+                m_SelectedVertexTable[i] = nullptr;
+
+            m_SelectedVertexTable.clear();
+            m_SelectedMesh->setMeshSelected(false);
+            m_SelectedMesh = nullptr;
         }
 
         m_UpdateUndo();
@@ -465,10 +476,6 @@ namespace nero
                    pointMesh->getMeshShape() == PointMesh::Shape::Chain)
                 {
                     pointMesh->deleteVertex(vertexIt - vertexTable.begin());
-
-                    // With 2 vertecies a Chain become a Line
-                    if(vertexTable.size() == 2)
-                        pointMesh->setMeshShape(PointMesh::Shape::Line);
 
                     pointMesh->updateShape();
                     pointMesh->updateColor();
@@ -526,10 +533,6 @@ namespace nero
                 {
                     pointMesh->addVertex(mousePosition, lineIt - lineTable.begin() + 1);
 
-                    // After added a vertex a Line becomes a Chain
-                    if(pointMesh->getMeshShape() == PointMesh::Shape::Line)
-                        pointMesh->setMeshShape(PointMesh::Shape::Chain);
-
                     pointMesh->updateShape();
                     pointMesh->updateColor();
 
@@ -552,6 +555,9 @@ namespace nero
         // Handle vertex selection, whole mesh selection and extrusion
         if(mouse.button == sf::Mouse::Left && isPressed)
         {
+            if(m_SelectedMesh)
+                unselectMesh(m_SelectedMesh);
+
             m_LastMousePosition = mousePosition;
 
             for(auto meshIt = m_MeshTable.rbegin(); meshIt != m_MeshTable.rend(); ++meshIt)
@@ -561,8 +567,8 @@ namespace nero
                 if(handleLeftClickPressOnVertex(pointMesh))
                     break;
 
-                if(handleLeftClickPressOnLine(pointMesh))
-                    break;
+                // if(handleLeftClickPressOnLine(pointMesh))
+                // break;
 
                 // Polygon only
                 if(pointMesh->getMeshShape() == PointMesh::Shape::Polygon)
@@ -579,8 +585,10 @@ namespace nero
                 }
             }
         }
-        else if(mouse.button == sf::Mouse::Left && !isPressed && m_SelectedMesh)
+        else if(mouse.button == sf::Mouse::Left && !isPressed)
         {
+            m_LeftSelection = false;
+
             handleLeftClickRelease();
         }
         else if(mouse.button == sf::Mouse::Right && isPressed)
@@ -605,21 +613,20 @@ namespace nero
 
     void MeshEditor::handleMouseMoveInput(const sf::Event::MouseMoveEvent&)
     {
-        sf::Vector2f worldPos = getMouseWorldPosition();
-
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        if(m_LeftSelection)
         {
-            sf::Vector2f diff = worldPos - m_LastMousePosition;
+            sf::Vector2f mousePosition = getMouseWorldPosition();
+            sf::Vector2f moveDistance  = mousePosition - m_LastMousePosition;
 
             if(!m_SelectedVertexTable.empty() && m_SelectedMesh)
             {
                 for(auto vertex : m_SelectedVertexTable)
-                    vertex->move(diff);
+                    vertex->move(moveDistance);
 
                 m_SelectedMesh->updateShape();
                 m_SelectedMesh->updateColor();
 
-                m_LastMousePosition = worldPos;
+                m_LastMousePosition = mousePosition;
             }
         }
     }

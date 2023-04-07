@@ -33,6 +33,7 @@ namespace nero
         , m_RenderContext(nullptr)
         , m_RightSelection(false)
         , m_ClickedObject(false)
+        , m_LeftSelection(false)
     {
         m_MeshEditor = MeshEditor::Ptr(new MeshEditor());
 
@@ -335,13 +336,14 @@ namespace nero
 
             if(selectedObject)
             {
+                m_LeftSelection  = true;
                 m_SelectedObject = selectedObject;
                 m_RightSelection = false;
             }
         }
 
-        if(mouse.button == sf::Mouse::Right && isPressed && m_SelectedLayer &&
-           m_SelectedLayer->isVisible())
+        else if(mouse.button == sf::Mouse::Right && isPressed && m_SelectedLayer &&
+                m_SelectedLayer->isVisible())
         {
             auto founded = findObject(m_SelectedLayer, world_pos);
 
@@ -355,13 +357,15 @@ namespace nero
                 m_UpdateUI();
         }
 
-        if(mouse.button == sf::Mouse::Left && !isPressed && m_SelectedLayer && m_SelectedObject)
+        else if(mouse.button == sf::Mouse::Left && !isPressed)
         {
-            // if(!m_RightSelection)
-            //{
-            m_SelectedObject = nullptr;
-            m_UpdateUndo();
-            //}
+            m_LeftSelection = false;
+
+            if(m_SelectedLayer && m_SelectedObject /*&& !m_RightSelection*/)
+            {
+                m_SelectedObject = nullptr;
+                m_UpdateUndo();
+            }
         }
     }
 
@@ -371,8 +375,7 @@ namespace nero
             sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
             m_RenderTexture->getView());
 
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && m_SelectedLayer &&
-           m_SelectedLayer->isVisible() && m_SelectedObject)
+        if(m_LeftSelection && m_SelectedLayer && m_SelectedLayer->isVisible() && m_SelectedObject)
         {
             if(m_ClickedObject)
             {

@@ -227,11 +227,6 @@ namespace nero
         updateColor();
     }
 
-    void PointMesh::setMeshShape(const Shape shape)
-    {
-        m_MeshShape = shape;
-    }
-
     PointMesh::Type PointMesh::getMeshType() const
     {
         return m_MeshType;
@@ -374,6 +369,11 @@ namespace nero
 
     void PointMesh::updateShape()
     {
+        if(m_MeshShape == PointMesh::Shape::Line && m_VertexTable.size() > 2)
+            m_MeshShape = PointMesh::Shape::Chain;
+        else if(m_MeshShape == PointMesh::Shape::Chain && m_VertexTable.size() == 2)
+            m_MeshShape = PointMesh::Shape::Line;
+
         updateLine(false);
     }
 
@@ -508,6 +508,11 @@ namespace nero
     void PointMesh::setMeshSelected(const bool selected)
     {
         m_MeshSelected = selected;
+    }
+
+    bool PointMesh::getMeshSelected() const
+    {
+        return m_MeshSelected;
     }
 
 } // namespace nero

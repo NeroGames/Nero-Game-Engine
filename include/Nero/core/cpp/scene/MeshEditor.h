@@ -72,6 +72,7 @@ namespace nero
         std::function<void(const std::string&, int)>       m_UpdateLog;
         std::function<void(const std::string&, bool, int)> m_UpdateLogIf;
         sf::Vector2f                                       m_Epsilon;
+        bool                                               m_LeftSelection;
     };
 } // namespace nero
 #endif // MESHEDITOR_H

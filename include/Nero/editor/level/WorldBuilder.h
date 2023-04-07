@@ -158,12 +158,12 @@ namespace nero
         Object::Ptr findObject(Object::Ptr object, int id);
 
       private:
-        SpriteObject::Ptr       loadSprite(nlohmann::json& json);
-        TextObject::Ptr         loadText(nlohmann::json& json);
+        SpriteObject::Ptr      loadSprite(nlohmann::json& json);
+        TextObject::Ptr        loadText(nlohmann::json& json);
         PhysicsMeshObject::Ptr loadMesh(nlohmann::json& json);
-        AnimationObject::Ptr    loadAnimation(nlohmann::json& json);
-        LightIcon::Ptr          loadLight(nlohmann::json& json);
-        int                     getNewId();
+        AnimationObject::Ptr   loadAnimation(nlohmann::json& json);
+        LightIcon::Ptr         loadLight(nlohmann::json& json);
+        int                    getNewId();
 
       private:
         ResourceManager::Ptr                               m_ResourceManager;
@@ -194,6 +194,7 @@ namespace nero
         bool                                               m_RightSelection;
         bool                                               m_ClickedObject;
         sf::Texture                                        m_LightTexture;
+        bool                                               m_LeftSelection;
 
         std::function<void()>                              m_UpdateUI;
         std::function<void()>                              m_UpdateUndo;
