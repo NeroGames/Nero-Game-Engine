@@ -7,6 +7,8 @@
 ///////////////////////////HEADERS//////////////////////////
 // Nero
 #include <Nero/core/cpp/model/PointMesh.h>
+#include <Nero/core/cpp/model/PolygonMesh.h>
+#include <Nero/core/cpp/model/CircleMesh.h>
 #include <Nero/core/cpp/scene/SceneUtility.h>
 #include <SFML/Graphics/RenderTexture.hpp>
 // Std
@@ -50,9 +52,13 @@ namespace nero
         //
         bool         handleLeftClickPressOnVertex(const PointMesh::Ptr& pointMesh);
         bool         handleLeftClickPressOnLine(const PointMesh::Ptr& pointMesh);
-        bool         handleLeftClickPressOnPolygon();
-        bool         handleLeftClickPressOnCircle();
-        bool         handleReleaseLeftClick(const sf::Event::MouseButtonEvent& mouse);
+        bool         handleLeftClickPressOnPolygon(const PolygonMesh::Ptr& polygonMesh);
+        bool         handleLeftClickPressOnCircle(const CircleMesh::Ptr& circleMesh);
+        bool         handleReleaseLeftClick(const sf::Event::MouseButtonEvent&);
+        bool         handleRightClickPressOnVertex(const PointMesh::Ptr& pointMesh);
+        bool         handleRightClickPressOnLine(const PointMesh::Ptr& pointMesh);
+        void         handleLeftClickRelease();
+        void         handleRightClickRelease();
 
       private:
         MeshTable                                          m_MeshTable;

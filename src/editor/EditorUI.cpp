@@ -343,18 +343,6 @@ namespace nero
                 // TODO
                 // m_EditorProxy->renderGameScene();
             }
-
-            if(key == sf::Keyboard::Up)
-            {
-                m_EditorContext->getNotificationManager()->notify("I'm a Notifcation :)");
-            }
-
-            if(key == sf::Keyboard::Down)
-            {
-                m_EditorContext->getNotificationManager()->notify(
-                    "I'm aaaaaaaaaaaaaaaaaaa Verrrrrrrrrrrrrrrrrrrrryyyyyyyyyyyyyyyy "
-                    "Looooooooooonnnnnnnnnnnnng Notifcation :)");
-            }
         }
     }
 
