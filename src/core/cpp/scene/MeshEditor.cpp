@@ -544,35 +544,49 @@ namespace nero
 
         const auto mousePosition = getMouseWorldPosition();
         auto&      vertexTable   = pointMesh->getVertexTable();
-        auto&      lineTable     = pointMesh->getLineTable();
 
         // Click on line
         // Add vertex : Line, Chain, Polygon
-        for(auto lineIt = lineTable.begin(); lineIt != lineTable.end(); ++lineIt)
+        for(auto vertexIt = vertexTable.begin(); vertexIt != vertexTable.end(); ++vertexIt)
         {
-            const bool polygonLastLine = (pointMesh->getMeshShape() == PointMesh::Shape::Polygon &&
-                                          lineIt == (vertexTable.end() - 1));
+            // Last vertex
+            const bool lastVertex = (vertexIt == (vertexTable.end() - 1));
 
-            const auto index1          = lineIt - lineTable.begin();
-            const auto index2          = polygonLastLine ? 0 : (lineIt - lineTable.begin() + 1);
-            Vertex*    v1              = vertexTable.data() + index1;
-            Vertex*    v2              = vertexTable.data() + index2;
+            // Line or Chain + Last vertex
+            if(pointMesh->getMeshShape() != PointMesh::Shape::Polygon && lastVertex)
+                continue;
+
+            const bool polygonLastLine =
+                (pointMesh->getMeshShape() == PointMesh::Shape::Polygon && lastVertex);
+
+            const auto index1 = vertexIt - vertexTable.begin();
+            const auto index2 = polygonLastLine ? 0 : (vertexIt - vertexTable.begin() + 1);
+            Vertex*    v1     = vertexTable.data() + index1;
+            Vertex*    v2     = vertexTable.data() + index2;
 
             // Select if mouse close to the line
             if(math::distance(v1->getPosition(), v2->getPosition(), mousePosition) < 4.f)
             {
                 if(!keyboard::CTRL_SHIFT_ALT())
                 {
-                    pointMesh->addVertex(mousePosition, lineIt - lineTable.begin() + 1);
+                    polygonLastLine
+                        ? pointMesh->addVertex(mousePosition)
+                        : pointMesh->addVertex(mousePosition, vertexIt - vertexTable.begin() + 1);
 
                     pointMesh->updateShape();
                     pointMesh->updateColor();
 
                     m_SelectedMesh = meshObject;
 
+                    v1             = nullptr;
+                    v2             = nullptr;
+
                     return true;
                 }
             }
+
+            v1 = nullptr;
+            v2 = nullptr;
         }
 
         return false;
@@ -599,8 +613,8 @@ namespace nero
                 if(handleLeftClickPressOnVertex(meshObject))
                     break;
 
-                // if(handleLeftClickPressOnLine(pointMesh))
-                // break;
+                if(handleLeftClickPressOnLine(meshObject))
+                    break;
 
                 // Polygon only
                 if(meshObject->getMesh()->getMeshShape() == PointMesh::Shape::Polygon)
