@@ -348,43 +348,41 @@ namespace nero
 
                     return true;
                 }
-
-                // Select line for extrusion operation
-                /*else if(keyboard::SHIFT())
+                else if(keyboard::SHIFT())
                 {
+                    const auto position1 = v1->getPosition();
+                    const auto position2 = v2->getPosition();
+
                     if(polygonLastLine)
                     {
-                        pointMesh->addVertex(v1->getPosition() + m_Epsilon);
-                        pointMesh->addVertex(v2->getPosition() + m_Epsilon);
+                        pointMesh->addVertex(position1 + m_Epsilon);
+                        pointMesh->addVertex(position2 + m_Epsilon);
 
-                        m_SelectedVertexTable.push_back(
-                            &vertexTable[vertexIt - vertexTable.end() - 1]);
-                        m_SelectedVertexTable.push_back(
-                            &vertexTable[vertexIt - vertexTable.end() - 2]);
+                        const auto index = vertexTable.size() - 1;
+                        m_SelectedVertexTable.push_back(vertexTable.data() + index);
+                        m_SelectedVertexTable.push_back(vertexTable.data() + index - 1);
                     }
                     else
                     {
-                        pointMesh->addVertex(v2->getPosition() + m_Epsilon,
-                                             vertexIt - vertexTable.begin() + 1);
-                        pointMesh->addVertex(v1->getPosition() + m_Epsilon,
-                                             vertexIt - vertexTable.begin() + 1);
+                        const auto index = vertexIt - vertexTable.begin() + 1;
+                        pointMesh->addVertex(position1 + m_Epsilon, index);
+                        pointMesh->addVertex(position2 + m_Epsilon, index + 1);
 
-                        m_SelectedVertexTable.push_back(
-                            &vertexTable[vertexIt - vertexTable.begin() + 1]);
-                        m_SelectedVertexTable.push_back(
-                            &vertexTable[vertexIt - vertexTable.begin() + 2]);
+                        m_SelectedVertexTable.push_back(vertexTable.data() + index);
+                        m_SelectedVertexTable.push_back(vertexTable.data() + index + 1);
                     }
-                }*/
 
-                /*pointMesh->updateShape();
-                pointMesh->updateColor();
+                    pointMesh->updateShape();
+                    pointMesh->updateColor();
 
-                m_SelectedMesh = meshObject;
+                    m_SelectedMesh  = meshObject;
+                    m_LeftSelection = true;
 
-                v1             = nullptr;
-                v2             = nullptr;
+                    v1              = nullptr;
+                    v2              = nullptr;
 
-                return true;*/
+                    return true;
+                }
             }
 
             v1 = nullptr;
