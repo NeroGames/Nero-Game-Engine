@@ -331,11 +331,9 @@ namespace nero
 
                     return true;
                 }
-
-                // When Ctrl modifier is pressed
-                // Select entire mesh with line : Line, Chain
-                /*if(keyboard::CTRL() && (pointMesh->getMeshShape() == PointMesh::Shape::Line ||
-                                        pointMesh->getMeshShape() == PointMesh::Shape::Chain))
+                // Selected entire mesh
+                // Only for Line and Chain
+                else if(keyboard::CTRL() && pointMesh->getMeshShape() != PointMesh::Shape::Polygon)
                 {
                     unselectMesh(m_SelectedMesh);
 
@@ -343,12 +341,13 @@ namespace nero
                         m_SelectedVertexTable.push_back(&vertex);
 
                     selectMesh(meshObject);
+                    m_LeftSelection = true;
 
-                    v1 = nullptr;
-                    v2 = nullptr;
+                    v1              = nullptr;
+                    v2              = nullptr;
 
                     return true;
-                }*/
+                }
 
                 // Select line for extrusion operation
                 /*else if(keyboard::SHIFT())
@@ -659,6 +658,9 @@ namespace nero
         }
         else if(mouse.button == sf::Mouse::Right && isPressed)
         {
+            if(m_SelectedMesh)
+                unselectMesh(m_SelectedMesh);
+
             for(auto meshIt = m_MeshTable.rbegin(); meshIt != m_MeshTable.rend(); ++meshIt)
             {
                 auto meshObject = (*meshIt);
