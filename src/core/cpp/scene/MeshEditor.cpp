@@ -251,21 +251,24 @@ namespace nero
                     // First vertex
                     if(vertexIt == vertexTable.begin())
                     {
-                        pointMesh->addVertex(vertexIt->getPosition() + m_Epsilon, 0);
+                        const auto position = vertexIt->getPosition();
+                        pointMesh->addVertex(position + m_Epsilon, 0);
                         m_SelectedVertexTable.push_back(vertexTable.data());
                     }
                     // Last vertex
                     else if(vertexIt == vertexTable.end() - 1)
                     {
-                        pointMesh->addVertex(vertexIt->getPosition() + m_Epsilon);
-                        m_SelectedVertexTable.push_back(vertexTable.data() +
-                                                        (vertexIt + 1 - vertexTable.begin()));
+                        const auto position = vertexIt->getPosition();
+                        const auto index    = vertexIt - vertexTable.begin() + 1;
+                        pointMesh->addVertex(position + m_Epsilon);
+                        m_SelectedVertexTable.push_back(vertexTable.data() + index);
                     }
                     // Middle vertex
                     else
                     {
-                        auto index = vertexIt - vertexTable.begin() + 1;
-                        pointMesh->addVertex(vertexIt->getPosition() + m_Epsilon, index);
+                        const auto position = vertexIt->getPosition();
+                        const auto index    = vertexIt - vertexTable.begin() + 1;
+                        pointMesh->addVertex(position + m_Epsilon, index);
                         m_SelectedVertexTable.push_back(vertexTable.data() + index);
                     }
 
