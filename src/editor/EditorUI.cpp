@@ -244,7 +244,12 @@ namespace nero
             }
         }
 
-        m_EditorProxy->autoSave();
+        if(levelBuilder && (m_EditorContext->getEditorMode() == EditorMode::World_Builder ||
+                            m_EditorContext->getEditorMode() == EditorMode::Screen_Builder ||
+                            m_EditorContext->getEditorMode() == EditorMode::Factory))
+        {
+            m_EditorProxy->autoSave();
+        }
 
         m_NotificationManager->update(timeStep);
 

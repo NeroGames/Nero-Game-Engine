@@ -65,14 +65,14 @@ namespace nero
 
         meshJson             = Object::toJson();
         meshJson["mesh"]     = m_PointMesh->toJson();
-        meshJson["rotation"] = getRotation();
+        meshJson["rotation"] = m_PointMesh->getMeshRotation();
         meshJson["position"] = {
-            {"x", getPosition().x},
-            {"y", getPosition().y}
+            {"x", m_PointMesh->getMeshPosition().x},
+            {"y", m_PointMesh->getMeshPosition().y}
         };
         meshJson["scale"] = {
-            {"x", getScale().x},
-            {"y", getScale().y}
+            {"x", m_PointMesh->getMeshScale().x},
+            {"y", m_PointMesh->getMeshScale().y}
         };
 
         meshJson["density"]        = m_PhysicsPoperty.density;

@@ -1924,7 +1924,18 @@ namespace nero
                         PhysicsMeshObject::Ptr mesh_object   = loadMesh(meshed["mesh"]);
 
                         sprite_object->setSecondType(Object::Meshed_Object);
+
+                        // reset mesh transform
+                        const auto  position = sf::Vector2f(0.f, 0.f);
+                        const auto  scale    = sf::Vector2f(1.f, 1.f);
+                        const float rotation = 0.f;
+                        mesh_object->setPosition(position);
+                        mesh_object->setScale(scale);
+                        mesh_object->setRotation(rotation);
+                        mesh_object->update(sf::Time());
+
                         sprite_object->addChild(mesh_object);
+                        sprite_object->update(sf::Time());
 
                         layer_object->addChild(sprite_object);
                     }
@@ -1954,7 +1965,18 @@ namespace nero
                         PhysicsMeshObject::Ptr mesh_object    = loadMesh(meshed["mesh"]);
 
                         animation_object->setSecondType(Object::Meshed_Object);
+
+                        // reset mesh transform
+                        const auto  position = sf::Vector2f(0.f, 0.f);
+                        const auto  scale    = sf::Vector2f(1.f, 1.f);
+                        const float rotation = 0.f;
+                        mesh_object->setPosition(position);
+                        mesh_object->setScale(scale);
+                        mesh_object->setRotation(rotation);
+                        mesh_object->update(sf::Time());
+
                         animation_object->addChild(mesh_object);
+                        animation_object->update(sf::Time());
 
                         layer_object->addChild(animation_object);
                     }
