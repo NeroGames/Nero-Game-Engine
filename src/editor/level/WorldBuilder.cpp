@@ -325,7 +325,7 @@ namespace nero
         {
             auto selectedObject = findObject(m_SelectedLayer, world_pos);
 
-            if(selectedObject && keyboard::ALT())
+            if(keyboard::ALT() && selectedObject && !selectedObject->isSelectable())
             {
                 deleteObject(selectedObject);
             }
@@ -334,7 +334,7 @@ namespace nero
 
             m_ClickedObject     = selectedObject ? true : false;
 
-            if(selectedObject)
+            if(selectedObject && selectedObject->isSelectable())
             {
                 m_LeftSelection  = true;
                 m_SelectedObject = selectedObject;
