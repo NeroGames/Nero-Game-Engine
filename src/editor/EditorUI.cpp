@@ -611,6 +611,9 @@ namespace nero
 
         m_EditorProxy->m_RemoveGameLevelCallback = [this](const std::string levelName)
         {
+            if(levelName.empty())
+                return;
+
             auto advancedScene = m_EditorContext->getAdvancedScene();
 
             // Advanced Scene not available

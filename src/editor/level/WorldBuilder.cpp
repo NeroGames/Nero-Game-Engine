@@ -1016,7 +1016,7 @@ namespace nero
                 // Nero::Info);
 
                 // Sprite Object
-                /*sf::Sprite  sprite;
+                sf::Sprite  sprite;
                 sf::IntRect rect = m_ResourceManager->getTextureHolder()->getSpriteBound(label);
                 sprite.setTextureRect(rect);
                 sprite.setTexture(m_ResourceManager->getTextureHolder()->getSpriteTexture(label));
@@ -1033,23 +1033,25 @@ namespace nero
                 sprite_object->setIsUpdateable(true);
 
                 // Mesh Object
-                Mesh mesh = Mesh(PointMesh::Shape::Polygon);
-                mesh.setMeshId(getNewId());
-                PhysicsMeshObject::Ptr mesh_object(new MeshObject());
-                mesh_object->setId(mesh.getMeshId());
-                object_name = "mesh " + toString(mesh.getMeshId());
-                mesh_object->setName(object_name);
-                mesh_object->setMesh(mesh);
-                mesh_object->setSecondType(Object::Mesh_Object);
-                mesh_object->setIsSelectable(false);
+                PointMesh::Ptr pointMesh = std::make_shared<PolygonMesh>();
+                pointMesh->setMeshId(getNewId());
+                pointMesh->generateDefaultShape();
 
-                m_MeshEditor->addMesh(mesh_object);
-                sprite_object->addChild(mesh_object);
+                PhysicsMeshObject::Ptr meshObject = std::make_shared<PhysicsMeshObject>();
+                meshObject->setId(pointMesh->getMeshId());
+                meshObject->setName("mesh " + toString(pointMesh->getMeshId()));
+                meshObject->setMesh(pointMesh);
+                meshObject->setPosition(sf::Vector2f(0.f, 0.f));
+                meshObject->setSecondType(Object::Mesh_Object);
+                sf::FloatRect globalBound = meshObject->getGlobalBounds();
+                meshObject->setOrigin(globalBound.width / 2.f, globalBound.height / 2.f);
+                meshObject->setIsSelectable(false);
 
-                // update one time
-                sprite_object->update(EngineConstant.TIME_PER_FRAME);
+                m_MeshEditor->addMesh(meshObject);
 
-                object = sprite_object;*/
+                sprite_object->addChild(meshObject);
+
+                object = sprite_object;
             }
             break;
 

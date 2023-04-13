@@ -120,6 +120,9 @@ namespace nero
 
     void PhysicsInteractor::update(const sf::Time&)
     {
+        if(!m_PhysicsWorld)
+            return;
+
         const auto frequence       = 40.f;
         float32    physicsTimeStep = frequence > 0.f ? 1.f / frequence : float32(0.0f);
 
@@ -133,6 +136,9 @@ namespace nero
 
     void PhysicsInteractor::handleEvent(const sf::Event& event)
     {
+        if(!m_PhysicsWorld)
+            return;
+
         switch(event.type)
         {
             // Keyboard events
@@ -215,6 +221,9 @@ namespace nero
 
     void PhysicsInteractor::render()
     {
+        if(!m_PhysicsWorld)
+            return;
+
         // bodies/contacts/joints
         int32   bodyCount    = m_PhysicsWorld->GetBodyCount();
         int32   contactCount = m_PhysicsWorld->GetContactCount();
