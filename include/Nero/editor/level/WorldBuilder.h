@@ -100,15 +100,6 @@ namespace nero
         void             updateTextColor(const sf::Color& color);
         void             updateOutlineTextColor(const sf::Color& color);
         sf::Color        getLayerColor();
-        // Mesh
-        void             setMeshType(const sf::String& label);
-        void             setMeshFixedRotation(bool tag);
-        void             setMeshSensor(bool tag);
-        void             setMeshAllowSleep(bool tag);
-        void             setMeshDensity(float density);
-        void             setMeshFriction(float friction);
-        void             setMeshRestitution(float restitution);
-        void             setMeshGravityScale(float gravityScale);
         //
         MeshEditor::Ptr  getMeshEditor();
         // Scene

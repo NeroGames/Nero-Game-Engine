@@ -35,7 +35,7 @@ namespace nero
         , m_SelectedResourceType(ResourceType::None)
         , m_FrameRate(0.f)
         , m_FrameTime(0.f)
-        , m_AutoSaveEnabled(false)
+        , m_AutoSaveEnabled(true)
     {
     }
 

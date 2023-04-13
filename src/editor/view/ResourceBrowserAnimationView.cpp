@@ -66,9 +66,18 @@ namespace nero
                     auto worldBuilder =
                         m_EditorContext->getLevelBuilder()->getSelectedChunk()->getWorldBuilder();
 
-                    worldBuilder->addObject(Object::Animation_Object,
-                                            animationTable[i],
-                                            m_EditorContext->getNewGameObjectPosition());
+                    if(keyboard::CTRL())
+                    {
+                        worldBuilder->addObject(Object::Animation_Meshed_Object,
+                                                animationTable[i],
+                                                m_EditorContext->getNewGameObjectPosition());
+                    }
+                    else
+                    {
+                        worldBuilder->addObject(Object::Animation_Object,
+                                                animationTable[i],
+                                                m_EditorContext->getNewGameObjectPosition());
+                    }
                 }
             }
 

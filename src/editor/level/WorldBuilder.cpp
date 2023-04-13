@@ -1098,9 +1098,9 @@ namespace nero
             case Object::Animation_Meshed_Object:
             {
                 // m_UpdateLog("adding Meshed Animation Object with Animation [" + label + "]",
-                // Nero::Info);
+                //           Nero::Info);
 
-                /*Animation animation;
+                Animation animation;
                 auto sequenceMap = m_ResourceManager->getAnimationHolder()->getSequenceMap(label);
 
                 for(auto it = sequenceMap.begin(); it != sequenceMap.end(); it++)
@@ -1123,32 +1123,34 @@ namespace nero
                 animation.setSequence(
                     m_ResourceManager->getAnimationHolder()->getDefaultSequence(label));
 
-                AnimationObject::Ptr animation_object(new AnimationObject());
-                animation_object->setAnimation(animation);
-                animation_object->setSecondType(Object::Animation_Meshed_Object);
-                animation_object->setPosition(position);
-                animation_object->setId(getNewId());
-                std::string object_name = "animation " + toString(animation_object->getId());
-                animation_object->setName(object_name);
+                AnimationObject::Ptr animationObject(new AnimationObject());
+                animationObject->setAnimation(animation);
+                animationObject->setSecondType(Object::Animation_Object);
+                animationObject->setPosition(position);
+                animationObject->setId(getNewId());
+                std::string objectName = "animation " + toString(animationObject->getId());
+                animationObject->setName(objectName);
 
                 // Mesh Object
-                Mesh mesh = Mesh(PointMesh::Shape::Polygon);
-                mesh.setMeshId(getNewId());
-                PhysicsMeshObject::Ptr mesh_object(new MeshObject());
-                mesh_object->setId(mesh.getMeshId());
-                object_name = "mesh " + toString(mesh.getMeshId());
-                mesh_object->setName(object_name);
-                mesh_object->setMesh(mesh);
-                mesh_object->setSecondType(Object::Mesh_Object);
-                mesh_object->setIsSelectable(false);
+                PointMesh::Ptr pointMesh = std::make_shared<PolygonMesh>();
+                pointMesh->setMeshId(getNewId());
+                pointMesh->generateDefaultShape();
 
-                m_MeshEditor->addMesh(mesh_object);
-                animation_object->addChild(mesh_object);
+                PhysicsMeshObject::Ptr meshObject = std::make_shared<PhysicsMeshObject>();
+                meshObject->setId(pointMesh->getMeshId());
+                meshObject->setName("mesh " + toString(pointMesh->getMeshId()));
+                meshObject->setMesh(pointMesh);
+                meshObject->setPosition(sf::Vector2f(0.f, 0.f));
+                meshObject->setSecondType(Object::Mesh_Object);
+                sf::FloatRect globalBound = meshObject->getGlobalBounds();
+                meshObject->setOrigin(globalBound.width / 2.f, globalBound.height / 2.f);
+                meshObject->setIsSelectable(false);
 
-                // update one time
-                animation_object->update(EngineConstant.TIME_PER_FRAME);
+                m_MeshEditor->addMesh(meshObject);
 
-                object = animation_object;*/
+                animationObject->addChild(meshObject);
+
+                object = animationObject;
             }
             break;
 
@@ -1226,8 +1228,6 @@ namespace nero
         if(m_SelectedLayer->getSecondType() == type)
         {
             m_SelectedLayer->addChild(object);
-            if(type == Object::Mesh_Object)
-                object->update(EngineConstant.TIME_PER_FRAME);
             m_UpdateUndo();
             return false;
         }
@@ -1235,8 +1235,6 @@ namespace nero
         {
             m_SelectedLayer->setSecondType(type);
             m_SelectedLayer->addChild(object);
-            if(type == Object::Mesh_Object)
-                object->update(EngineConstant.TIME_PER_FRAME);
             m_UpdateUndo();
             return true;
         }
@@ -1246,8 +1244,6 @@ namespace nero
             addLayer();
             m_SelectedLayer->setSecondType(type);
             m_SelectedLayer->addChild(object);
-            if(type == Object::Mesh_Object)
-                object->update(EngineConstant.TIME_PER_FRAME);
             m_UpdateUndo();
             return true;
         }
@@ -1272,202 +1268,6 @@ namespace nero
         m_SelectedObject = nullptr;
 
         m_UpdateUndo();
-    }
-
-    void WorldBuilder::setMeshType(const sf::String& label)
-    {
-        /*if(!m_SelectedObject)
-            return;
-
-        if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
-           m_SelectedObject->getSecondType() != Object::Meshed_Object &&
-           m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
-            return;
-
-        // m_UpdateLog("changing Mesh Type to : " + toString(label) + " Mesh", nero::Info);
-
-        Mesh::Type type;
-
-        if(label == "Static")
-            type = Mesh::Type::Static;
-        else if(label == "Kinematic")
-            type = Mesh::Type::Kinematic;
-        else if(label == "Dynamic")
-            type = Mesh::Type::Dynamic;
-
-        PhysicsMeshObject::Ptr mesh_object;
-
-        if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
-            mesh_object = MeshObject::Cast(m_SelectedObject);
-        else
-            mesh_object = MeshObject::Cast(m_SelectedObject->getFirstChild());
-
-        mesh_object->setMeshType(type);
-
-        m_UpdateUndo();*/
-    }
-
-    void WorldBuilder::setMeshFixedRotation(bool flag)
-    {
-        /*if(!m_SelectedObject)
-            return;
-
-        if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
-           m_SelectedObject->getSecondType() != Object::Meshed_Object &&
-           m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
-            return;
-
-        // flag ?  m_UpdateLog("enabling fix rotation", nero::Info) :  //m_UpdateLog("disabling fix
-        // rotation", nero::Info);
-
-        PhysicsMeshObject::Ptr mesh_object;
-
-        if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
-            mesh_object = MeshObject::Cast(m_SelectedObject);
-        else
-            mesh_object = MeshObject::Cast(m_SelectedObject->getFirstChild());
-
-        mesh_object->setMeshFixedRotation(flag);
-
-        m_UpdateUndo();*/
-    }
-
-    void WorldBuilder::setMeshSensor(bool flag)
-    {
-        /*if(!m_SelectedObject)
-            return;
-
-        if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
-           m_SelectedObject->getSecondType() != Object::Meshed_Object &&
-           m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
-            return;
-
-        // flag ?  m_UpdateLog("enabling sensor mode", nero::Info) :  //m_UpdateLog("disabling
-        // sensor mode", nero::Info);
-
-        PhysicsMeshObject::Ptr mesh_object;
-
-        if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
-            mesh_object = MeshObject::Cast(m_SelectedObject);
-        else
-            mesh_object = MeshObject::Cast(m_SelectedObject->getFirstChild());
-
-        mesh_object->setMeshSensor(flag);
-
-        m_UpdateUndo();*/
-    }
-
-    void WorldBuilder::setMeshAllowSleep(bool flag)
-    {
-        /*if(!m_SelectedObject)
-            return;
-
-        if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
-           m_SelectedObject->getSecondType() != Object::Meshed_Object &&
-           m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
-            return;
-
-        // flag ?  m_UpdateLog("enabling allow to sleeping", nero::Info) :  //m_UpdateLog("disabling
-        // allow to sleeping", nero::Info);
-
-        PhysicsMeshObject::Ptr mesh_object;
-
-        if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
-            mesh_object = MeshObject::Cast(m_SelectedObject);
-        else
-            mesh_object = MeshObject::Cast(m_SelectedObject->getFirstChild());
-
-        mesh_object->setMeshAllowSleep(flag);
-
-        m_UpdateUndo();*/
-    }
-
-    void WorldBuilder::setMeshDensity(float density)
-    {
-        /*if(!m_SelectedObject)
-            return;
-
-        if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
-           m_SelectedObject->getSecondType() != Object::Meshed_Object &&
-           m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
-            return;
-
-        PhysicsMeshObject::Ptr mesh_object;
-
-        if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
-            mesh_object = MeshObject::Cast(m_SelectedObject);
-        else
-            mesh_object = MeshObject::Cast(m_SelectedObject->getFirstChild());
-
-        mesh_object->setMeshDensity(density);
-
-        m_UpdateUndo();*/
-    }
-
-    void WorldBuilder::setMeshFriction(float friction)
-    {
-        /*if(!m_SelectedObject)
-            return;
-
-        if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
-           m_SelectedObject->getSecondType() != Object::Meshed_Object &&
-           m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
-            return;
-
-        PhysicsMeshObject::Ptr mesh_object;
-
-        if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
-            mesh_object = MeshObject::Cast(m_SelectedObject);
-        else
-            mesh_object = MeshObject::Cast(m_SelectedObject->getFirstChild());
-
-        mesh_object->setMeshFriction(friction);
-
-        m_UpdateUndo();*/
-    }
-
-    void WorldBuilder::setMeshRestitution(float restitution)
-    {
-        /*if(!m_SelectedObject)
-            return;
-
-        if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
-           m_SelectedObject->getSecondType() != Object::Meshed_Object &&
-           m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
-            return;
-
-        PhysicsMeshObject::Ptr mesh_object;
-
-        if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
-            mesh_object = MeshObject::Cast(m_SelectedObject);
-        else
-            mesh_object = MeshObject::Cast(m_SelectedObject->getFirstChild());
-
-        mesh_object->setMeshRestitution(restitution);
-
-        m_UpdateUndo();*/
-    }
-
-    void WorldBuilder::setMeshGravityScale(float gravityScale)
-    {
-        /*if(!m_SelectedObject)
-            return;
-
-        if(m_SelectedObject->getSecondType() != Object::Mesh_Object &&
-           m_SelectedObject->getSecondType() != Object::Meshed_Object &&
-           m_SelectedObject->getSecondType() != Object::Animation_Meshed_Object)
-            return;
-
-        PhysicsMeshObject::Ptr mesh_object;
-
-        if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
-            mesh_object = MeshObject::Cast(m_SelectedObject);
-        else
-            mesh_object = MeshObject::Cast(m_SelectedObject->getFirstChild());
-
-        mesh_object->setMeshGravityScale(gravityScale);
-
-        m_UpdateUndo();*/
     }
 
     Object::Ptr WorldBuilder::buildScene(std::shared_ptr<ltbl::LightSystem> lightManager,
@@ -1690,60 +1490,50 @@ namespace nero
                     chunkRoot->addChild(layerObject);
                 }
                 break;
+
+                case Object::Animation_Meshed_Object:
+                {
+                    Object::Ptr layerObject = (*layer)->clone();
+
+                    layerObject->setSecondType(Object::Animation_Solid_Object);
+
+                    auto children = (*layer)->getAllChild();
+
+                    for(auto it = children->begin(); it != children->end(); it++)
+                    {
+                        // convert into MeshObject
+                        PhysicsMeshObject::Ptr meshObject =
+                            PhysicsMeshObject::Cast((*it)->getFirstChild());
+
+                        if(!meshObject->getMesh()->meshValid())
+                            break;
+
+                        PhysicsObject::Ptr physicObject =
+                            m_PhysicsManager.createObject(meshObject->getMesh(),
+                                                          meshObject->getPhysicsPoperty());
+                        physicObject->setSecondType(Object::Solid_Object);
+                        physicObject->setName(meshObject->getName());
+                        physicObject->setCategory(meshObject->getCategory());
+                        physicObject->setId(meshObject->getObjectId());
+                        physicObject->setUserData((void*)physicObject->getId());
+
+                        Object::Ptr animationObject = (*it)->clone();
+                        animationObject->setSecondType(Object::Animation_Object);
+                        animationObject->setPosition(animationObject->getPosition() -
+                                                     meshObject->getMesh()->getMassCenter());
+
+                        physicObject->addChild(animationObject);
+
+                        layerObject->addChild(physicObject);
+                    }
+
+                    chunkRoot->addChild(layerObject);
+                }
+                break;
             }
         }
 
         return chunkRoot;
-    }
-
-    void WorldBuilder::buildScene(Object::Ptr rootObject)
-    {
-        /*for(auto layer = m_LayerTable.begin(); layer != m_LayerTable.end(); layer++)
-{
-    if(!(*layer)->isVisible())
-        continue;
-
-    switch((*layer)->getSecondType())
-    {
-         case Object::Animation_Meshed_Object:
-        {
-            Object::Ptr layer_object = (*layer)->clone();
-
-            layer_object->setSecondType(Object::Animation_Solid_Object);
-
-            auto children = (*layer)->getAllChild();
-
-            for(auto it = children->begin(); it != children->end(); it++)
-            {
-                //Convert into MeshObject
-                PhysicsMeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
-
-                if(!mesh_object->getMesh()->isValid())
-                    break;
-
-                PhysicsObject::Ptr physic_object =
-m_PhysicsObjectManager.createObject(mesh_object->getMesh());
-                physic_object->setSecondType(Object::Animation_Solid_Object);
-                physic_object->setName(mesh_object->getName());
-                physic_object->setCategory(mesh_object->getCategory());
-                                        physic_object->setId(mesh_object->getObjectId());
-                physic_object->setUserData((void*)physic_object->getId());
-
-
-                Object::Ptr animation_object = (*it)->clone();
-                animation_object->setSecondType(Object::Animation_Object);
-                animation_object->setPosition(animation_object->getPosition()-mesh_object->getMesh()->getCenter());
-
-                physic_object->addChild(animation_object);
-
-                layer_object->addChild(physic_object);
-            }
-
-            rootObject->addChild(layer_object);
-
-        }break;
-    }
-        }*/
     }
 
     void WorldBuilder::destroyAllPhysicObject(Object::Ptr rootObject)
