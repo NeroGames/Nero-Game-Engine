@@ -75,6 +75,9 @@ namespace nero
                                              const float&        rotation);
         void                   setMeshSelected(const bool selected);
         bool                   getMeshSelected() const;
+        sf::Vector2f           getMeshPosition() const;
+        sf::Vector2f           getMeshScale() const;
+        float                  getMeshRotation() const;
 
         virtual sf::FloatRect  getRealGlobalBounds() const;
         virtual sf::FloatRect  getGlobalBounds() const;

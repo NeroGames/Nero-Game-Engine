@@ -515,4 +515,19 @@ namespace nero
         return m_MeshSelected;
     }
 
+    sf::Vector2f PointMesh::getMeshPosition() const
+    {
+        return m_Position;
+    }
+
+    sf::Vector2f PointMesh::getMeshScale() const
+    {
+        return m_Scale;
+    }
+
+    float PointMesh::getMeshRotation() const
+    {
+        return m_Rotation;
+    }
+
 } // namespace nero

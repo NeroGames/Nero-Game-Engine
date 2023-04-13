@@ -347,7 +347,7 @@ namespace nero
         {
             auto founded = findObject(m_SelectedLayer, world_pos);
 
-            if(founded)
+            if(founded && founded->isSelectable())
             {
                 m_SelectedObject = founded;
                 m_RightSelection = true;

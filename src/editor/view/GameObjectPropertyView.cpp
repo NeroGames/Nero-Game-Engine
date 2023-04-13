@@ -306,7 +306,7 @@ namespace nero
                                                ImGuiTreeNodeFlags_DefaultOpen |
                                                    ImGuiWindowFlags_NoScrollWithMouse))
                     {
-                        ImGui::BeginChild("mesh_object", ImVec2(0.f, 70.f), true);
+                        ImGui::BeginChild("mesh_object", ImVec2(0.f, 200.f), true);
 
                         float wording_width = 70.f;
                         float input_width   = ImGui::GetWindowContentRegionWidth() - 70.f;
@@ -378,6 +378,39 @@ namespace nero
                                                                           : PointMesh::Kinematic));
                         }
                         ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+                        ImGui::Text("Position");
+                        ImGui::SameLine(wording_width);
+                        ImGui::Text(" x ");
+                        ImGui::SameLine(wording_width + 30.f);
+                        ImGui::SetNextItemWidth(input_width - 30.f);
+                        ImGui::Text(toString(meshObject->getMesh()->getMeshPosition().x).c_str());
+                        ImGui::Text("");
+                        ImGui::SameLine(wording_width);
+                        ImGui::Text(" y ");
+                        ImGui::SameLine(wording_width + 30.f);
+                        ImGui::SetNextItemWidth(input_width - 30.f);
+                        ImGui::Text(toString(meshObject->getMesh()->getMeshPosition().y).c_str());
+                        ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+                        ImGui::Text("Scale");
+                        ImGui::SameLine(wording_width);
+                        ImGui::Text(" x ");
+                        ImGui::SameLine(wording_width + 30.f);
+                        ImGui::SetNextItemWidth(input_width - 30.f);
+                        ImGui::Text(toString(meshObject->getMesh()->getMeshScale().x).c_str());
+                        ImGui::Text("");
+                        ImGui::SameLine(wording_width);
+                        ImGui::Text(" y ");
+                        ImGui::SameLine(wording_width + 30.f);
+                        ImGui::SetNextItemWidth(input_width - 30.f);
+                        ImGui::Text(toString(meshObject->getMesh()->getMeshScale().y).c_str());
+                        ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+                        ImGui::Text("Rotation");
+                        ImGui::SameLine(wording_width + 30.f);
+                        ImGui::SetNextItemWidth(input_width - 30.f);
+                        ImGui::Text(toString(meshObject->getMesh()->getMeshRotation()).c_str());
 
                         ImGui::EndChild();
                     }
