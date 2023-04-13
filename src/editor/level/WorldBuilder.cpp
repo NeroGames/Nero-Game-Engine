@@ -1649,6 +1649,47 @@ namespace nero
                     chunkRoot->addChild(layerObject);
                 }
                 break;
+
+                case Object::Meshed_Object:
+                {
+                    Object::Ptr layerObject = (*layer)->clone();
+
+                    layerObject->setSecondType(Object::Solid_Object);
+
+                    auto children = (*layer)->getAllChild();
+
+                    for(auto it = children->begin(); it != children->end(); it++)
+                    {
+                        // convert into MeshObject
+                        PhysicsMeshObject::Ptr meshObject =
+                            PhysicsMeshObject::Cast((*it)->getFirstChild());
+
+                        if(!meshObject->getMesh()->meshValid())
+                            break;
+
+                        PhysicsObject::Ptr physicObject =
+                            m_PhysicsManager.createObject(meshObject->getMesh(),
+                                                          meshObject->getPhysicsPoperty());
+                        physicObject->setSecondType(Object::Solid_Object);
+                        physicObject->setName(meshObject->getName());
+                        physicObject->setCategory(meshObject->getCategory());
+                        physicObject->setId(meshObject->getObjectId());
+                        physicObject->setUserData((void*)physicObject->getId());
+
+                        Object::Ptr spriteObject = (*it)->clone();
+                        spriteObject->setSecondType(Object::Sprite_Object);
+                        spriteObject->setIsUpdateable(true);
+                        spriteObject->setPosition(spriteObject->getPosition() -
+                                                  meshObject->getMesh()->getMassCenter());
+
+                        physicObject->addChild(spriteObject);
+
+                        layerObject->addChild(physicObject);
+                    }
+
+                    chunkRoot->addChild(layerObject);
+                }
+                break;
             }
         }
 
@@ -1664,45 +1705,6 @@ namespace nero
 
     switch((*layer)->getSecondType())
     {
-
-        case Object::Meshed_Object:
-        {
-            Object::Ptr layer_object = (*layer)->clone();
-
-            layer_object->setSecondType(Object::Solid_Object);
-
-            auto children = (*layer)->getAllChild();
-
-            for(auto it = children->begin(); it != children->end(); it++)
-            {
-                //convert into MeshObject
-                PhysicsMeshObject::Ptr mesh_object = MeshObject::Cast((*it)->getFirstChild());
-
-                if(!mesh_object->getMesh()->isValid())
-                    break;
-
-                PhysicsObject::Ptr physic_object =
-m_PhysicsObjectManager.createObject(mesh_object->getMesh());
-                physic_object->setSecondType(Object::Solid_Object);
-                physic_object->setName(mesh_object->getName());
-                physic_object->setCategory(mesh_object->getCategory());
-                                        physic_object->setId(mesh_object->getObjectId());
-                physic_object->setUserData((void*)physic_object->getId());
-
-                Object::Ptr sprite_object = (*it)->clone();
-                sprite_object->setSecondType(Object::Sprite_Object);
-                sprite_object->setIsUpdateable(true);
-                sprite_object->setPosition(sprite_object->getPosition()-mesh_object->getMesh()->getCenter());
-
-                physic_object->addChild(sprite_object);
-
-                layer_object->addChild(physic_object);
-            }
-
-            rootObject->addChild(layer_object);
-
-        }break;
-
          case Object::Animation_Meshed_Object:
         {
             Object::Ptr layer_object = (*layer)->clone();
