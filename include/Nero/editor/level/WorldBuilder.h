@@ -82,7 +82,7 @@ namespace nero
             Down_Right
         };
 
-        bool             addObject(Object::Type      type,
+        void             addObject(Object::Type      type,
                                    const sf::String& label,
                                    sf::Vector2f      position = sf::Vector2f(0.f, 0.f));
         void             copyObject(const Position& position);

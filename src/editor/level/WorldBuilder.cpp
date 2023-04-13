@@ -878,7 +878,7 @@ namespace nero
         return m_MeshEditor;
     }
 
-    bool WorldBuilder::addObject(Object::Type type, const sf::String& label, sf::Vector2f position)
+    void WorldBuilder::addObject(Object::Type type, const sf::String& label, sf::Vector2f position)
     {
         Object::Ptr object = nullptr;
 
@@ -921,47 +921,20 @@ namespace nero
                 pointMesh->setMeshId(getNewId());
                 pointMesh->generateDefaultShape();
 
-                PhysicsMeshObject::Ptr meshObject = std::make_shared<PhysicsMeshObject>();
-                meshObject->setId(pointMesh->getMeshId());
-                meshObject->setName("mesh " + toString(pointMesh->getMeshId()));
-                meshObject->setMesh(pointMesh);
-                meshObject->setPosition(position);
-                meshObject->setSecondType(Object::Mesh_Object);
-                sf::FloatRect globalBound = meshObject->getGlobalBounds();
-                meshObject->setOrigin(globalBound.width / 2.f, globalBound.height / 2.f);
-
-                m_MeshEditor->addMesh(meshObject);
-
-                object = meshObject;
-
-                /*if(!m_SelectedObject)
+                if(!m_SelectedObject)
                 {
-                    // m_UpdateLog("adding Mesh Object of Type [" + label + "]", nero::Info);
+                    PhysicsMeshObject::Ptr meshObject = std::make_shared<PhysicsMeshObject>();
+                    meshObject->setId(pointMesh->getMeshId());
+                    meshObject->setName("mesh " + toString(pointMesh->getMeshId()));
+                    meshObject->setMesh(pointMesh);
+                    meshObject->setPosition(position);
+                    meshObject->setSecondType(Object::Mesh_Object);
+                    sf::FloatRect globalBound = meshObject->getGlobalBounds();
+                    meshObject->setOrigin(globalBound.width / 2.f, globalBound.height / 2.f);
 
-                    PointMesh::Ptr mesh;
+                    m_MeshEditor->addMesh(meshObject);
 
-                    if(label == "Polygon")
-                        mesh = Mesh(PointMesh::Shape::Polygon);
-                    else if(label == "Circle")
-                        mesh = Mesh(PointMesh::Shape::Circle);
-                    else if(label == "Line")
-                        mesh = Mesh(PointMesh::Shape::Line);
-
-                    mesh.setMeshId(getNewId());
-
-                    PhysicsMeshObject::Ptr mesh_object(new MeshObject());
-                    mesh_object->setId(mesh.getMeshId());
-                    std::string object_name = "mesh " + toString(mesh.getMeshId());
-                    mesh_object->setName(object_name);
-                    mesh_object->setMesh(mesh);
-                    mesh_object->setPosition(position);
-                    mesh_object->setSecondType(Object::Mesh_Object);
-                    sf::FloatRect bound = mesh_object->getGlobalBounds();
-                    mesh_object->setOrigin(bound.width / 2.f, bound.height / 2.f);
-
-                    m_MeshEditor->addMesh(mesh_object);
-
-                    object = mesh_object;
+                    object = meshObject;
                 }
                 else if(m_SelectedObject &&
                         (m_SelectedObject->getSecondType() == Object::Meshed_Object ||
@@ -974,39 +947,25 @@ namespace nero
                     m_MeshEditor->deleteMesh(m_SelectedObject->getFirstChild()->getId());
                     m_SelectedObject->removeFirstChild();
 
-                    Mesh mesh;
+                    PhysicsMeshObject::Ptr meshObject = std::make_shared<PhysicsMeshObject>();
+                    meshObject->setId(pointMesh->getMeshId());
+                    meshObject->setMesh(pointMesh);
+                    meshObject->setPosition(sf::Vector2f(0.f, 0.f));
+                    meshObject->setSecondType(Object::Mesh_Object);
+                    sf::FloatRect globalBound = meshObject->getGlobalBounds();
+                    meshObject->setOrigin(globalBound.width / 2.f, globalBound.height / 2.f);
 
-                    if(label == "Polygon")
-                        mesh = Mesh(PointMesh::Shape::Polygon);
-                    else if(label == "Circle")
-                        mesh = Mesh(PointMesh::Shape::Circle);
-                    else if(label == "Line")
-                        mesh = Mesh(PointMesh::Shape::Line);
+                    meshObject->setIsSelectable(false);
+                    meshObject->setSecondType(Object::Mesh_Object);
+                    meshObject->setName(m_SelectedObject->getName());
+                    meshObject->setCategory(m_SelectedObject->getCategory());
 
-                    mesh.setMeshId(getNewId());
-                    std::shared_ptr<MeshObject> mesh_object(new MeshObject());
-                    mesh_object->setId(mesh.getMeshId());
-                    mesh_object->setMesh(mesh);
-                    mesh_object->setIsSelectable(false);
-                    mesh_object->setSecondType(Object::Mesh_Object);
-                    mesh_object->setName(m_SelectedObject->getName());
-                    mesh_object->setCategory(m_SelectedObject->getCategory());
-
-                    m_MeshEditor->addMesh(mesh_object);
-
-                    m_SelectedObject->addChild(mesh_object);
-
-                    m_SelectedObject->update(EngineConstant.TIME_PER_FRAME);
+                    m_MeshEditor->addMesh(meshObject);
+                    m_SelectedObject->addChild(meshObject);
 
                     nero_log("change animation mesh");
                     m_UpdateUndo();
-
-                    return false;
                 }
-                else
-                {
-                    return false;
-                }*/
             }
             break;
 
@@ -1125,7 +1084,7 @@ namespace nero
 
                 AnimationObject::Ptr animationObject(new AnimationObject());
                 animationObject->setAnimation(animation);
-                animationObject->setSecondType(Object::Animation_Object);
+                animationObject->setSecondType(Object::Animation_Meshed_Object);
                 animationObject->setPosition(position);
                 animationObject->setId(getNewId());
                 std::string objectName = "animation " + toString(animationObject->getId());
@@ -1225,18 +1184,19 @@ namespace nero
             break;
         }
 
+        if(!object)
+            return;
+
         if(m_SelectedLayer->getSecondType() == type)
         {
             m_SelectedLayer->addChild(object);
             m_UpdateUndo();
-            return false;
         }
         else if(m_SelectedLayer->getSecondType() == Object::None || m_SelectedLayer->isEmpty())
         {
             m_SelectedLayer->setSecondType(type);
             m_SelectedLayer->addChild(object);
             m_UpdateUndo();
-            return true;
         }
         else if(m_SelectedLayer->getSecondType() != type &&
                 m_SelectedLayer->getSecondType() != Object::None)
@@ -1245,7 +1205,6 @@ namespace nero
             m_SelectedLayer->setSecondType(type);
             m_SelectedLayer->addChild(object);
             m_UpdateUndo();
-            return true;
         }
     }
 

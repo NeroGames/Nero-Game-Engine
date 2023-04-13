@@ -306,10 +306,10 @@ namespace nero
                                                ImGuiTreeNodeFlags_DefaultOpen |
                                                    ImGuiWindowFlags_NoScrollWithMouse))
                     {
-                        ImGui::BeginChild("mesh_object", ImVec2(0.f, 200.f), true);
+                        ImGui::BeginChild("mesh_object", ImVec2(0.f, 135.f), true);
 
-                        float wording_width = 70.f;
-                        float input_width   = ImGui::GetWindowContentRegionWidth() - 70.f;
+                        float wording_width = 85.f;
+                        float input_width   = ImGui::GetWindowContentRegionWidth() - wording_width;
                         PhysicsMeshObject::Ptr meshObject = PhysicsMeshObject::Cast(component);
 
                         std::string            meshShape;
@@ -377,40 +377,31 @@ namespace nero
                                                                           ? PointMesh::Dynamic
                                                                           : PointMesh::Kinematic));
                         }
-                        ImGui::Dummy(ImVec2(0.0f, 1.0f));
+                        ImGui::Dummy(ImVec2(0.0f, 3.0f));
 
                         ImGui::Text("Position");
                         ImGui::SameLine(wording_width);
-                        ImGui::Text(" x ");
-                        ImGui::SameLine(wording_width + 30.f);
-                        ImGui::SetNextItemWidth(input_width - 30.f);
-                        ImGui::Text(toString(meshObject->getMesh()->getMeshPosition().x).c_str());
-                        ImGui::Text("");
-                        ImGui::SameLine(wording_width);
-                        ImGui::Text(" y ");
-                        ImGui::SameLine(wording_width + 30.f);
-                        ImGui::SetNextItemWidth(input_width - 30.f);
-                        ImGui::Text(toString(meshObject->getMesh()->getMeshPosition().y).c_str());
+                        const auto        position = meshObject->getMesh()->getMeshPosition();
+                        const std::string positionText =
+                            "(" + toString(position.x) + " , " + toString(position.y) + ")";
+                        ImGui::Text("%s", positionText.c_str());
+
                         ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
                         ImGui::Text("Scale");
                         ImGui::SameLine(wording_width);
-                        ImGui::Text(" x ");
-                        ImGui::SameLine(wording_width + 30.f);
-                        ImGui::SetNextItemWidth(input_width - 30.f);
-                        ImGui::Text(toString(meshObject->getMesh()->getMeshScale().x).c_str());
-                        ImGui::Text("");
-                        ImGui::SameLine(wording_width);
-                        ImGui::Text(" y ");
-                        ImGui::SameLine(wording_width + 30.f);
-                        ImGui::SetNextItemWidth(input_width - 30.f);
-                        ImGui::Text(toString(meshObject->getMesh()->getMeshScale().y).c_str());
+                        const auto        scale = meshObject->getMesh()->getMeshScale();
+                        const std::string scaleText =
+                            "(" + toString(scale.x) + " , " + toString(scale.y) + ")";
+                        ImGui::Text("%s", scaleText.c_str());
+
                         ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
                         ImGui::Text("Rotation");
-                        ImGui::SameLine(wording_width + 30.f);
-                        ImGui::SetNextItemWidth(input_width - 30.f);
-                        ImGui::Text(toString(meshObject->getMesh()->getMeshRotation()).c_str());
+                        ImGui::SameLine(wording_width);
+                        const auto rotation     = meshObject->getMesh()->getMeshRotation();
+                        const auto rotationText = "(" + toString(rotation) + ")";
+                        ImGui::Text(rotationText.c_str());
 
                         ImGui::EndChild();
                     }
@@ -706,7 +697,7 @@ namespace nero
 
         for(auto it = sequenceMap.begin(); it != sequenceMap.end(); it++)
         {
-            ImGui::BeginChild(it->first.c_str(), ImVec2(0.f, 120.f), true);
+            ImGui::BeginChild(it->first.c_str(), ImVec2(0.f, 115.f), true);
 
             // Sequence Name
             ImGui::Text("Sequence");
