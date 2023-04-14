@@ -93,6 +93,7 @@ namespace nero
         if(ImGui::Button("Save", buttonSize))
         {
             m_EditorContext->getEditorProxy()->saveProject();
+            m_EditorContext->getNotificationManager()->notify("Project Saved");
         }
 
         ImGui::SameLine();

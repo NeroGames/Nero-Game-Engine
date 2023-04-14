@@ -701,38 +701,51 @@ namespace nero
         sf::Vector2f pos;
         std::string  pos_string = "";
 
+        sf::Vector2f objectSize;
+        if(m_SelectedObject->getSecondType() == Object::Mesh_Object)
+        {
+            auto       meshObject = PhysicsMeshObject::Cast(m_SelectedObject);
+            const auto bound      = meshObject->getMesh()->getRealGlobalBounds();
+            objectSize            = sf::Vector2f(bound.width, bound.height);
+        }
+        else
+        {
+            objectSize = sf::Vector2f(m_SelectedObject->getGlobalBounds().width,
+                                      m_SelectedObject->getGlobalBounds().height);
+        }
+
         switch(position)
         {
             case Up:
-                pos        = sf::Vector2f(0.f, -m_SelectionRect.getSize().y);
+                pos        = sf::Vector2f(0.f, -objectSize.y);
                 pos_string = "Up";
                 break;
             case Down:
-                pos        = sf::Vector2f(0.f, m_SelectionRect.getSize().y);
+                pos        = sf::Vector2f(0.f, objectSize.y);
                 pos_string = "Down";
                 break;
             case Left:
-                pos        = sf::Vector2f(-m_SelectionRect.getSize().x, 0.f);
+                pos        = sf::Vector2f(-objectSize.x, 0.f);
                 pos_string = "Left";
                 break;
             case Right:
-                pos        = sf::Vector2f(m_SelectionRect.getSize().x, 0.f);
+                pos        = sf::Vector2f(objectSize.x, 0.f);
                 pos_string = "Right";
                 break;
             case Up_Left:
-                pos = sf::Vector2f(-m_SelectionRect.getSize().x, -m_SelectionRect.getSize().y);
+                pos        = sf::Vector2f(-objectSize.x, -objectSize.y);
                 pos_string = "Up_Left";
                 break;
             case Up_Right:
-                pos = sf::Vector2f(m_SelectionRect.getSize().x, -m_SelectionRect.getSize().y);
+                pos        = sf::Vector2f(objectSize.x, -objectSize.y);
                 pos_string = "Up_Right";
                 break;
             case Down_Left:
-                pos = sf::Vector2f(-m_SelectionRect.getSize().x, m_SelectionRect.getSize().y);
+                pos        = sf::Vector2f(-objectSize.x, objectSize.y);
                 pos_string = "Down_Left";
                 break;
             case Down_Right:
-                pos        = sf::Vector2f(m_SelectionRect.getSize().x, m_SelectionRect.getSize().y);
+                pos        = sf::Vector2f(objectSize.x, objectSize.y);
                 pos_string = "Down_Right";
                 break;
         }

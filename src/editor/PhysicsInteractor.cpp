@@ -105,6 +105,9 @@ namespace nero
                                        std::shared_ptr<sf::RenderTexture> renderTexture,
                                        AdvancedCamera::Ptr                editorCamera)
     {
+        m_Bomb          = nullptr;
+        m_GroundBody    = nullptr;
+        m_MouseJoint    = nullptr;
         m_PhysicsWorld  = physicsWorld;
         m_ShapeRenderer = shapeRenderer;
         m_RenderContext = renderContext;
