@@ -1391,7 +1391,6 @@ namespace nero
 
                                 case PointMesh::Shape::Polygon:
                                 {
-
                                     for(const sf::ConvexShape& shape :
                                         PolygonMesh::Cast(meshObject->getMesh())->getPolygonTable())
                                     {

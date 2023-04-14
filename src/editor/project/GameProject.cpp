@@ -235,7 +235,8 @@ namespace nero
 
         backgroundTask->nextStep();
         backgroundTask->addMessage("Step 1/3 - Cleaning Project");
-        cmd::Process cleanProcess = cmd::runCommand(mingw32, {"-C", buildPath, "-k", "clean"});
+        cmd::Process cleanProcess =
+            cmd::runCommand(mingw32, {"-C", buildPath, "-k", "clean", "-d"});
         backgroundTask->setErrorCode(cleanProcess.getExistCode());
         nero_log("clean project exit code = " + toString(cleanProcess.getExistCode()));
 
@@ -254,13 +255,15 @@ namespace nero
                              "-D",
                              "CMAKE_C_COMPILER=" + file::getPath(gcc),
                              "-D",
-                             "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32)});
+                             "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32),
+                             "--debug-output",
+                             "--trace"});
         backgroundTask->setErrorCode(configProcess.getExistCode());
         nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
 
         backgroundTask->nextStep();
         backgroundTask->addMessage("Step 3/3 - Building Project");
-        cmd::Process buildProcess = cmd::runCommand(mingw32, {"-C", buildPath});
+        cmd::Process buildProcess = cmd::runCommand(mingw32, {"-C", buildPath, "-d"});
         backgroundTask->setErrorCode(buildProcess.getExistCode());
         nero_log("build project exit code = " + toString(buildProcess.getExistCode()));
 
