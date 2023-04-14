@@ -813,8 +813,18 @@ namespace nero
             mesh_object->getMesh()->setMeshId(mesh_object->getObjectId());
             mesh_object->setIsSelectable(false);
 
+            // reset mesh transform
+            const auto  position = sf::Vector2f(0.f, 0.f);
+            const auto  scale    = sf::Vector2f(1.f, 1.f);
+            const float rotation = 0.f;
+            mesh_object->setPosition(position);
+            mesh_object->setScale(scale);
+            mesh_object->setRotation(rotation);
+            mesh_object->update(sf::Time());
+
             object->setIsUpdateable(true);
             object->addChild(child_object);
+            object->update(sf::Time());
 
             m_MeshEditor->addMesh(mesh_object);
         }
