@@ -125,7 +125,9 @@ namespace nero
 
             case ResourceType::Lightmap:
             {
-                return m_LightmapHolder->loadFile(fileTable);
+                const auto result = m_LightmapHolder->loadFile(fileTable);
+                m_LightmapHolder->smoothAllTexture();
+                return result;
             }
         }
 

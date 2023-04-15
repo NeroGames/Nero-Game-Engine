@@ -129,8 +129,8 @@ namespace nero
         setting.setBool("enable_physics", parameter.getBool("enable_physics"));
         // light setting
         Setting lightSetting;
-        lightSetting.setColor("ambient_color", sf::Color(0, 51, 102, 50));
-        lightSetting.setColor("clear_color", sf::Color::White);
+        lightSetting.setColor("ambient_color", sf::Color(0, 0, 0, 255));
+        lightSetting.setColor("clear_color", sf::Color(50, 50, 50, 255));
         lightSetting.setVector("cast_direction", sf::Vector2f(0.f, 1.f));
         lightSetting.setFloat("cast_angle", 90.f);
         lightSetting.setFloat("source_distance", 100.f);
