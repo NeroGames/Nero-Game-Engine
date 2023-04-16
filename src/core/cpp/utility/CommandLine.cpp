@@ -203,29 +203,15 @@ namespace nero
 
         void showApplication(const std::string& name)
         {
-            std::string NERO_GAME_HOME =
+            const std::string NERO_GAME_HOME =
                 getenv("NERO_GAME_HOME") ? std::string(getenv("NERO_GAME_HOME")) : StringPool.BLANK;
 
-            std::string windowmode = file::escapeSpace(
+            const std::string windowmode = file::escapeSpace(
                 file::getWindowsPath(NERO_GAME_HOME + "/Tools/Script/windowmode.bat"));
-            std::string sendkeys = file::escapeSpace(
-                file::getWindowsPath(NERO_GAME_HOME + "/Tools/Script/sendkeys.bat"));
 
-            // std::string cmd1 = windowmode + " -pid " + proccessId + " -mode restore";
-            std::string cmd1 = "call " + windowmode + " -title " + name + " -mode maximized";
-            std::string cmd2 = "call " + sendkeys + " " + name + "  \"\"";
+            const std::string cmd = "call " + windowmode + " -title " + name + " -mode maximized";
 
-            // cmd::runCommand("call", {windowmode, "-pid", proccessId, "-mode", "restore"}, false);
-            // usleep(100);
-            // cmd::runCommand("call", {sendkeys, " ", name, "\"\""}, false);
-
-            // WinExec(cmd1.c_str(), SW_HIDE);
-            // usleep(100);
-            // WinExec(cmd2.c_str(), SW_HIDE);
-
-            system(cmd1.c_str());
-            usleep(100);
-            system(cmd2.c_str());
+            system(cmd.c_str());
         }
 
     } // namespace cmd

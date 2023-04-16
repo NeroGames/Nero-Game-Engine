@@ -114,7 +114,7 @@ namespace nero
                 nero_log("Game Level Class Loaded - " + levelName);
             }
 
-            // TODO Loag Game Screen
+            // TODO Load Game Screen
 
             nero_log("DLL loaded successfully");
         }
@@ -165,7 +165,7 @@ namespace nero
 
             m_CodeEditorProcessId = cmd::findProcessId("qtcreator");
 
-            usleep(100);
+            sleep(4);
             cmd::showApplication(m_ProjectSetting->getString("project_name"));
         }
     }

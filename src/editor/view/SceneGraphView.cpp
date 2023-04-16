@@ -247,10 +247,10 @@ namespace nero
                     levelBuilder->getLevelSetting()->setBool("enable_physics", enablePhysics);
                 }
 
-                ImGui::Dummy(ImVec2(0.0f, 10.f));
+                ImGui::Dummy(ImVec2(0.0f, 5.f));
 
                 if(enableLight &&
-                   ImGui::CollapsingHeader("Light Settings", ImGuiTreeNodeFlags_DefaultOpen))
+                   ImGui::CollapsingHeader("Ambient Light", ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     ImGui::BeginChild("light_settings", ImVec2(0.f, 200.f), true);
 
@@ -272,6 +272,8 @@ namespace nero
                     }
 
                     const float wordingWidth = 80.f;
+                    const float inputWidth   = ImGui::GetWindowContentRegionWidth() - wordingWidth;
+
                     ImGui::Text("Ambient");
                     ImGui::SameLine(wordingWidth);
                     ImGui::ColorEdit4("##ambient_color",
@@ -319,6 +321,124 @@ namespace nero
                                       static_cast<sf::Uint8>(m_LightingClearColor.z * 255),
                                       static_cast<sf::Uint8>(m_LightingClearColor.w * 255));
                         lightSetting.setColor("clear_color", color);
+                    }
+
+                    ImGui::Dummy(ImVec2(0.f, 2.f));
+
+                    ImGui::Text("Direction");
+                    ImGui::SameLine(wordingWidth);
+                    ImGui::Text(" x ");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    float positionx = lightSetting.getVector("cast_direction").x;
+                    ImGui::InputFloat("##cast_position_x", &positionx, 1.f, 1.0f, "%.3f");
+                    bool posxchanged = ImGui::IsItemEdited();
+                    ImGui::Text("");
+                    ImGui::SameLine(wordingWidth);
+                    ImGui::Text(" y ");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    float positiony = lightSetting.getVector("cast_direction").y;
+                    ImGui::InputFloat("##cast_position_y", &positiony, 1.f, 1.0f, "%.3f");
+                    bool posychanged = ImGui::IsItemEdited();
+                    ImGui::Dummy(ImVec2(0.0f, 1.0f));
+                    if((posxchanged || posychanged))
+                    {
+                        lightSetting.setVector("cast_direction",
+                                               sf::Vector2f(positionx, positiony));
+                    }
+
+                    ImGui::Text("Angle");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    float angle = lightSetting.getFloat("cast_angle");
+                    ImGui::InputFloat("##cast_angle", &angle, 1.f, 1.0f, "%.3f");
+                    if(ImGui::IsItemEdited())
+                    {
+                        // Angle rotation
+                        if(angle > 360)
+                            angle = 0;
+                        else if(angle < 0)
+                            angle = 360;
+
+                        lightSetting.setFloat("cast_angle", angle);
+                    }
+
+                    ImGui::Text("Distance");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    float distance = lightSetting.getFloat("source_distance");
+                    ImGui::InputFloat("##source_distance", &distance, 1.f, 1.0f, "%.3f");
+                    if(ImGui::IsItemEdited())
+                    {
+                        lightSetting.setFloat("source_distance", distance);
+                    }
+
+                    ImGui::Text("Radius");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    float radius = lightSetting.getFloat("source_radius");
+                    ImGui::InputFloat("##source_radius", &radius, 1.f, 1.0f, "%.3f");
+                    if(ImGui::IsItemEdited())
+                    {
+                        lightSetting.setFloat("source_radius", radius);
+                    }
+
+                    ImGui::EndChild();
+                }
+
+                if(enableLight &&
+                   ImGui::CollapsingHeader("Light Boundary", ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    ImGui::BeginChild("light_boundary", ImVec2(0.f, 200.f), true);
+
+                    const float wordingWidth = 80.f;
+                    const float inputWidth   = ImGui::GetWindowContentRegionWidth() - wordingWidth;
+                    auto lightSetting = levelBuilder->getLevelSetting()->getSetting("lighting");
+
+                    ImGui::Text("Root Region");
+                    ImGui::SameLine(wordingWidth);
+                    ImGui::Text(" x ");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    float rootRegionx = lightSetting.getVector("root_region").x;
+                    ImGui::InputFloat("##root_position_x", &rootRegionx, 1.f, 1.0f, "%.3f");
+                    bool rootRegionxChanged = ImGui::IsItemEdited();
+                    ImGui::Text("");
+                    ImGui::SameLine(wordingWidth);
+                    ImGui::Text(" y ");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    float rootRegiony = lightSetting.getVector("root_region").y;
+                    ImGui::InputFloat("##root_position_y", &rootRegiony, 1.f, 1.0f, "%.3f");
+                    bool rootRegionyChanged = ImGui::IsItemEdited();
+                    ImGui::Dummy(ImVec2(0.0f, 1.0f));
+                    if((rootRegionxChanged || rootRegionyChanged))
+                    {
+                        lightSetting.setVector("root_region",
+                                               sf::Vector2f(rootRegionx, rootRegiony));
+                    }
+
+                    ImGui::Text("Image Size");
+                    ImGui::SameLine(wordingWidth);
+                    ImGui::Text(" x ");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    float xImageSize = lightSetting.getVector("image_size").x;
+                    ImGui::InputFloat("##cast_position_x", &xImageSize, 1.f, 1.0f, "%.3f");
+                    bool xImageSizeChanged = ImGui::IsItemEdited();
+                    ImGui::Text("");
+                    ImGui::SameLine(wordingWidth);
+                    ImGui::Text(" y ");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    float yImageSize = lightSetting.getVector("image_size").y;
+                    ImGui::InputFloat("##cast_position_y", &yImageSize, 1.f, 1.0f, "%.3f");
+                    bool yImageSizeChanged = ImGui::IsItemEdited();
+                    ImGui::Dummy(ImVec2(0.0f, 1.0f));
+                    if((xImageSizeChanged || yImageSizeChanged))
+                    {
+                        lightSetting.setVector("image_size", sf::Vector2f(xImageSize, yImageSize));
                     }
 
                     ImGui::EndChild();

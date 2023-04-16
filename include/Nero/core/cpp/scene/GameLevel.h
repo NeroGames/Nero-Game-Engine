@@ -123,6 +123,7 @@ namespace nero
         ObjectManager::Ptr                 m_ObjectManager;
         ContactListener::Ptr               m_ContactListener;
         std::vector<Screen::Ptr>           m_ScreenTable;
+        ltbl::LightDirectionEmission*      m_AmbientLight;
     };
 } // namespace nero
 

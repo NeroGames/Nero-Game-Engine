@@ -27,6 +27,7 @@ namespace nero
     {
         m_LevelContext.resourceManager->loadDirectory(
             file::getPath({m_LevelContext.levelDirectory, "resource"}));
+        m_LevelContext.resourceManager->getLightmapHolder()->smoothAllTexture();
     }
 
     ResourceManager::Ptr LevelBuilder::getResourceManager()

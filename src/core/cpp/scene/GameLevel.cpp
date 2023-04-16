@@ -39,17 +39,19 @@ namespace nero
               std::make_shared<ObjectManager>(m_LevelRoot, m_PhysicsWorld, m_ScreenTable))
         , m_ContactListener(std::make_shared<ContactListener>(m_ObjectManager))
     {
-        m_LightManager->create({-1000.f, -1000.f, 2000.f, 2000.f},
+        auto       lightSetting = m_LevelContext.levelSetting->getSetting("lighting");
+        const auto rootRegion   = lightSetting.getVector("root_region");
+        const auto imageSize    = lightSetting.getVector("image_size");
+        m_LightManager->create({rootRegion.x, rootRegion.y, imageSize.x, imageSize.y},
                                m_LevelContext.renderTexture->getSize());
         // Add a sun light
-        auto lightSetting = m_LevelContext.levelSetting->getSetting("lighting");
-        ltbl::LightDirectionEmission* ambientLight = m_LightManager->createLightDirectionEmission();
-        ambientLight->setCastDirection(lightSetting.getVector("cast_direction"));
-        ambientLight->setCastAngle(lightSetting.getFloat("cast_angle"));
-        ambientLight->setSourceDistance(lightSetting.getFloat("source_distance"));
-        ambientLight->setColor(lightSetting.getColor("ambient_color"));
-        ambientLight->setSourceRadius(lightSetting.getFloat("source_radius"));
-        ambientLight->setTurnedOn(lightSetting.getBool("enable_ambient_light"));
+        m_AmbientLight = m_LightManager->createLightDirectionEmission();
+        m_AmbientLight->setCastDirection(lightSetting.getVector("cast_direction"));
+        m_AmbientLight->setCastAngle(lightSetting.getFloat("cast_angle"));
+        m_AmbientLight->setSourceDistance(lightSetting.getFloat("source_distance"));
+        m_AmbientLight->setColor(lightSetting.getColor("ambient_color"));
+        m_AmbientLight->setSourceRadius(lightSetting.getFloat("source_radius"));
+        m_AmbientLight->setTurnedOn(lightSetting.getBool("enable_ambient_light"));
 
         m_PhysicsWorld->SetContactListener(m_ContactListener.get());
         m_PhysicsWorld->SetDebugDraw(m_ShapeRenderer.get());
@@ -87,6 +89,13 @@ namespace nero
 
     void GameLevel::update(const sf::Time& timeStep)
     {
+        auto lightSetting = m_LevelContext.levelSetting->getSetting("lighting");
+        m_AmbientLight->setCastDirection(lightSetting.getVector("cast_direction"));
+        m_AmbientLight->setCastAngle(lightSetting.getFloat("cast_angle"));
+        m_AmbientLight->setSourceDistance(lightSetting.getFloat("source_distance"));
+        m_AmbientLight->setColor(lightSetting.getColor("ambient_color"));
+        m_AmbientLight->setSourceRadius(lightSetting.getFloat("source_radius"));
+
         const auto frequence       = 40.f;
         float32    physicsTimeStep = frequence > 0.f ? 1.f / frequence : float32(0.0f);
 

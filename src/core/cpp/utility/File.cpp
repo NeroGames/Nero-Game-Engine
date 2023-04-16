@@ -4,12 +4,16 @@
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 // Nero
-#include <Nero/core/cpp/utility/File.h>
-#include <Nero/core/cpp/engine/EngineConstant.h>
 #include <Nero/core/cpp/utility/Logging.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
+#include <Nero/core/cpp/utility/File.h>
+#include <Nero/core/cpp/utility/CommandLine.h>
 // Cpp
 #include <fstream>
 #include <vector>
+#ifdef NERO_OS_WINDOW
+#include <shellapi.h>
+#endif
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -251,17 +255,20 @@ namespace nero
 
         bool removeDirectory(const std::string& name, bool recursive)
         {
+            if(!directoryExist(name))
+                return true;
+
             using namespace std::experimental::filesystem;
 
             if(recursive)
             {
-                std::error_code error;
-                remove_all(path(name), error);
-                nero_log(error.message());
+                const std::string cmd = std::string("rmdir /s /q ") + "\"" + name + "\"";
+                system(cmd.c_str());
             }
             else
             {
-                return remove(path(name));
+                const std::string cmd = std::string("rmdir /q ") + "\"" + name + "\"";
+                system(cmd.c_str());
             }
 
             return true;
