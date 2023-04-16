@@ -12,6 +12,7 @@
 #include <boost/algorithm/string.hpp>
 // Std
 #include <thread>
+#include <future>
 /////////////////////////////////////////////////////////////
 
 namespace nero
@@ -262,16 +263,41 @@ namespace nero
 
         backgroundTask->nextStep();
         backgroundTask->addMessage("Step 3/3 - Building Project");
-        cmd::Process buildProcess = cmd::runCommand(mingw32, {"-C", buildPath, "-d"});
-        backgroundTask->setErrorCode(buildProcess.getExistCode());
-        nero_log("build project exit code = " + toString(buildProcess.getExistCode()));
+        cmd::Process buildProcess = cmd::runCommandWithoutStream(mingw32, {"-C", buildPath}, false);
+        int          existCode    = -999;
+        auto         compilationFuture = std::async(std::launch::async,
+                                            [&buildProcess, &existCode]()
+                                            {
+                                                existCode = buildProcess.waitCompletion();
+                                            });
+        // wait
+        compilationFuture.wait_for(std::chrono::seconds(30));
 
-        backgroundTask->nextStep();
-        backgroundTask->addMessage("Finished Compiling Project - " + projectName);
+        if(cmd::processRunning(toString(buildProcess.getProcessId())))
+        {
+            buildProcess.killProcess();
+            backgroundTask->setErrorCode(existCode);
+            nero_log("build project exit code = " + toString(existCode));
+            backgroundTask->nextStep();
+            backgroundTask->addMessage("Compilation Failed !");
 
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+            backgroundTask->setFailed(true);
+            std::this_thread::sleep_for(std::chrono::seconds(4));
+            backgroundTask->setCompleted(true);
+        }
+        else
+        {
+            existCode = 0;
+            backgroundTask->setErrorCode(existCode);
+            nero_log("build project exit code = " + toString(existCode));
 
-        backgroundTask->setCompleted(true);
+            backgroundTask->nextStep();
+            backgroundTask->addMessage("Finished Compiling Project - " + projectName);
+
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+
+            backgroundTask->setCompleted(true);
+        }
     }
 
     AdvancedScene::Ptr GameProject::getAdvancedScene()

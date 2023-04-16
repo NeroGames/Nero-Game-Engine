@@ -40,6 +40,9 @@ namespace nero
             friend Process runCommand(const std::string&              command,
                                       const std::vector<std::string>& argument,
                                       bool                            waitCompletion);
+            friend Process runCommandWithoutStream(const std::string&              command,
+                                                   const std::vector<std::string>& argument,
+                                                   bool                            waitCompletion);
 
           private:
             Poco::Pipe          m_OutPipe;
@@ -51,6 +54,10 @@ namespace nero
         Process     runCommand(const std::string&              command,
                                const std::vector<std::string>& argument       = {},
                                bool                            waitCompletion = true);
+        Process     runCommandWithoutStream(const std::string&              command,
+                                            const std::vector<std::string>& argument       = {},
+                                            bool                            waitCompletion = true);
+
         std::string launchApplication(const std::string& path,
                                       const std::string& processName = StringPool.BLANK);
         void        launchBrowser(const std::string& url);

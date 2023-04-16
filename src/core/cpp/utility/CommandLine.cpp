@@ -68,12 +68,38 @@ namespace nero
             Poco::PipeInputStream outStream(outPipe);
             Poco::PipeInputStream errorStream(errorPipe);
             // string stream
-            Poco::StreamCopier::copyStream(outStream, nero::logging::Logger::getStringStream());
-            Poco::StreamCopier::copyStream(errorStream, nero::logging::Logger::getStringStream());
+            Poco::StreamCopier::copyStreamUnbuffered(outStream,
+                                                     nero::logging::Logger::getStringStream());
+            Poco::StreamCopier::copyStreamUnbuffered(errorStream,
+                                                     nero::logging::Logger::getStringStream());
             // standard output
             Poco::StreamCopier::copyStream(outStream, std::cout);
             Poco::StreamCopier::copyStream(errorStream, std::cout);
             // logging file
+
+            process.m_OutPipe   = outPipe;
+            process.m_ErrorPipe = errorPipe;
+
+            if(waitCompletion)
+            {
+                process.m_ExitCode = process.m_Handle.wait();
+            }
+            else
+            {
+                process.m_ExitCode = 0; // NO_EXIT_CODE;
+            }
+
+            return process;
+        }
+
+        Process runCommandWithoutStream(const std::string&              command,
+                                        const std::vector<std::string>& argument,
+                                        bool                            waitCompletion)
+        {
+
+            Poco::Pipe outPipe, errorPipe;
+            Process    process(
+                Poco::Process::launch(command, argument, nullptr, &outPipe, &errorPipe));
 
             process.m_OutPipe   = outPipe;
             process.m_ErrorPipe = errorPipe;
