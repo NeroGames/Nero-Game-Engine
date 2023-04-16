@@ -51,6 +51,11 @@ namespace nero
             return m_ExitCode;
         }
 
+        Poco::ProcessHandle& Process::getHandle()
+        {
+            return m_Handle;
+        }
+
         void Process::killProcess()
         {
             Poco::Process::kill(m_Handle);

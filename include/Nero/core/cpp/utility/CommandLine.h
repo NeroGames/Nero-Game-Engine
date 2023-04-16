@@ -28,12 +28,13 @@ namespace nero
         class Process
         {
           public:
-            Poco::Pipe&  getOutPipe();
-            Poco::Pipe&  getErrorPipe();
-            unsigned int getProcessId();
-            int          getExistCode();
-            int          waitCompletion();
-            void         killProcess();
+            Poco::Pipe&          getOutPipe();
+            Poco::Pipe&          getErrorPipe();
+            unsigned int         getProcessId();
+            int                  getExistCode();
+            int                  waitCompletion();
+            void                 killProcess();
+            Poco::ProcessHandle& getHandle();
 
           private:
             Process(Poco::ProcessHandle handle);

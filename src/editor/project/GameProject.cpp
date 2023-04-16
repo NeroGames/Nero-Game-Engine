@@ -236,8 +236,7 @@ namespace nero
 
         backgroundTask->nextStep();
         backgroundTask->addMessage("Step 1/3 - Cleaning Project");
-        cmd::Process cleanProcess =
-            cmd::runCommand(mingw32, {"-C", buildPath, "-k", "clean", "-d"});
+        cmd::Process cleanProcess = cmd::runCommand(mingw32, {"-C", buildPath, "-k", "clean"});
         backgroundTask->setErrorCode(cleanProcess.getExistCode());
         nero_log("clean project exit code = " + toString(cleanProcess.getExistCode()));
 
@@ -256,8 +255,8 @@ namespace nero
                              "-D",
                              "CMAKE_C_COMPILER=" + file::getPath(gcc),
                              "-D",
-                             "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32),
-                             "--debug-output"});
+                             "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32)});
+
         backgroundTask->setErrorCode(configProcess.getExistCode());
         nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
 
@@ -276,6 +275,10 @@ namespace nero
         if(cmd::processRunning(toString(buildProcess.getProcessId())))
         {
             buildProcess.killProcess();
+            Poco::PipeInputStream errorStream(buildProcess.getErrorPipe());
+            Poco::StreamCopier::copyStreamUnbuffered(errorStream,
+                                                     nero::logging::Logger::getStringStream());
+            Poco::StreamCopier::copyStream(errorStream, std::cout);
             backgroundTask->setErrorCode(existCode);
             nero_log("build project exit code = " + toString(existCode));
             backgroundTask->nextStep();
@@ -287,6 +290,16 @@ namespace nero
         }
         else
         {
+            Poco::PipeInputStream outStream(buildProcess.getOutPipe());
+            Poco::PipeInputStream errorStream(buildProcess.getErrorPipe());
+            Poco::StreamCopier::copyStreamUnbuffered(outStream,
+                                                     nero::logging::Logger::getStringStream());
+            Poco::StreamCopier::copyStreamUnbuffered(errorStream,
+                                                     nero::logging::Logger::getStringStream());
+            // standard output
+            Poco::StreamCopier::copyStream(outStream, std::cout);
+            Poco::StreamCopier::copyStream(errorStream, std::cout);
+
             existCode = 0;
             backgroundTask->setErrorCode(existCode);
             nero_log("build project exit code = " + toString(existCode));
