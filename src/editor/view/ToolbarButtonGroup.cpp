@@ -6,6 +6,7 @@
 // Nero
 #include <Nero/editor/view/ToolbarButtonGroup.h>
 #include <Nero/editor/EditorConstant.h>
+#include <Nero/core/cpp/engine/BackgroundTaskManager.h>
 // Iconfont
 #include <iconfont/IconsFontAwesome5.h>
 ////////////////////////////////////////////////////////////
@@ -203,9 +204,20 @@ namespace nero
 
             ImGui::SameLine();
 
+            if(BTManager::BuildFailed)
+            {
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.f, 0.f, 0.f, 1.f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.f, 0.f, 0.f, 1.f));
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.f, 1.f, 1.f, 1.f));
+            }
             if(ImGui::Button(ICON_FA_COGS, ImVec2(45.f, 28.f)))
             {
                 m_EditorContext->getEditorProxy()->compileProject();
+            }
+            if(BTManager::BuildFailed)
+            {
+                ImGui::PopStyleColor(4);
             }
 
             ImGui::SameLine();

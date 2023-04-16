@@ -7,6 +7,7 @@
 #include <Nero/editor/project/GameProject.h>
 #include <Nero/core/cpp/utility/File.h>
 #include <Nero/core/cpp/utility/DateTime.h>
+#include <Nero/core/cpp/engine/BackgroundTaskManager.h>
 // Boost
 #include <boost/dll.hpp>
 #include <boost/algorithm/string.hpp>
@@ -210,6 +211,8 @@ namespace nero
     void GameProject::compileProject(const std::string&        projectDirectory,
                                      const BackgroundTask::Ptr backgroundTask)
     {
+        BTManager::CompilingProject = true;
+
         // TODO : prevent multiple compilation at the same time
 
         Parameter parameter;
@@ -272,9 +275,14 @@ namespace nero
         // wait
         compilationFuture.wait_for(std::chrono::seconds(30));
 
-        if(cmd::processRunning(toString(buildProcess.getProcessId())))
+        const auto buildProcessRunning = cmd::processRunning(toString(buildProcess.getProcessId()));
+        if(existCode != 0 || buildProcessRunning)
         {
-            buildProcess.killProcess();
+            if(buildProcessRunning)
+            {
+                buildProcess.killProcess();
+            }
+
             Poco::PipeInputStream errorStream(buildProcess.getErrorPipe());
             Poco::StreamCopier::copyStreamUnbuffered(errorStream,
                                                      nero::logging::Logger::getStringStream());
@@ -285,6 +293,7 @@ namespace nero
             backgroundTask->addMessage("Compilation Failed !");
 
             backgroundTask->setFailed(true);
+            BTManager::BuildFailed = true;
             std::this_thread::sleep_for(std::chrono::seconds(4));
             backgroundTask->setCompleted(true);
         }
@@ -307,10 +316,12 @@ namespace nero
             backgroundTask->nextStep();
             backgroundTask->addMessage("Finished Compiling Project - " + projectName);
 
+            BTManager::BuildFailed = false;
             std::this_thread::sleep_for(std::chrono::seconds(2));
-
             backgroundTask->setCompleted(true);
         }
+
+        BTManager::CompilingProject = false;
     }
 
     AdvancedScene::Ptr GameProject::getAdvancedScene()

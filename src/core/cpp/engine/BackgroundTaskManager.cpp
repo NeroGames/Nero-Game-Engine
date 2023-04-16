@@ -13,7 +13,9 @@ namespace nero
         std::vector<BackgroundTask::Ptr>();
     std::map<std::string, std::shared_future<int>> BackgroundTaskManager::m_FutureMap =
         std::map<std::string, std::shared_future<int>>();
-    int BackgroundTaskManager::m_CountTask = 0;
+    int  BackgroundTaskManager::m_CountTask      = 0;
+    bool BackgroundTaskManager::BuildFailed      = false;
+    bool BackgroundTaskManager::CompilingProject = false;
 
     BackgroundTaskManager::BackgroundTaskManager()
     {

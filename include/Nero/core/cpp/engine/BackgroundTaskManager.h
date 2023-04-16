@@ -71,6 +71,10 @@ namespace nero
 
         static bool allTaskCompleted();
 
+      public:
+        static bool BuildFailed;
+        static bool CompilingProject;
+
       private:
         BackgroundTaskManager();
         static BackgroundTask::Ptr createTask(const std::string& taskName,

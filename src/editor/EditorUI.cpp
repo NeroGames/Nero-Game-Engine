@@ -644,6 +644,9 @@ namespace nero
 
         m_EditorProxy->m_CompileProjectCallback = [this]()
         {
+            if(BTManager::CompilingProject)
+                return;
+
             auto gameProject = m_EditorContext->getGameProject();
 
             if(gameProject)
