@@ -256,8 +256,7 @@ namespace nero
                              "CMAKE_C_COMPILER=" + file::getPath(gcc),
                              "-D",
                              "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32),
-                             "--debug-output",
-                             "--trace"});
+                             "--debug-output"});
         backgroundTask->setErrorCode(configProcess.getExistCode());
         nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
 
