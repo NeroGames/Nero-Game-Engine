@@ -42,7 +42,7 @@ namespace nero
         , m_EditorSoundHolder(soundHolder)
         , m_EditorSetting(setting)
         // Main paramater
-        , m_ProjectManager(std::make_shared<ProjectManager>(m_EditorSetting))
+        , m_ProjectManager(std::make_shared<ProjectManager>(m_EditorSetting, m_EditorFontHolder))
         , m_NotificationManager(std::make_shared<NotificationManager>())
         , m_EditorProxy(std::make_shared<EditorProxy>())
         , m_RenderTexture(std::make_shared<sf::RenderTexture>())
@@ -212,7 +212,7 @@ namespace nero
                 m_EditorProxy->closeEditor();
                 break;
 
-            // Keyboard
+                // Keyboard
             case sf::Event::KeyPressed:
                 handleKeyboardInput(event.key.code, true);
                 break;

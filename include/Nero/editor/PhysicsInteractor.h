@@ -12,6 +12,7 @@
 // SFML
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/Text.hpp>
 // Box2d
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <Box2D/Common/b2Math.h>
@@ -54,7 +55,7 @@ namespace nero
         using Ptr = std::shared_ptr<PhysicsInteractor>;
 
       public:
-        PhysicsInteractor();
+        PhysicsInteractor(const FontHolder::Ptr& editorFontHolder);
 
         void initialize(std::shared_ptr<b2World>           physicsWorld,
                         ShapeRenderer::Ptr                 shapeRenderer,
@@ -64,6 +65,7 @@ namespace nero
         void update(const sf::Time& timeStep);
         void handleEvent(const sf::Event& event);
         void render();
+        void renderFrontScreen();
 
         // Mouse
         void shiftMouseDown(const b2Vec2& position);
@@ -112,6 +114,8 @@ namespace nero
         RenderContext::Ptr                 m_RenderContext;
         std::shared_ptr<sf::RenderTexture> m_RenderTexture;
         AdvancedCamera::Ptr                m_EditorCamera;
+        sf::Text                           m_PhysicsDataText;
+        FontHolder::Ptr                    m_EditorFontHolder;
     };
 } // namespace nero
 #endif // PHYSICSINTERACTOR_H

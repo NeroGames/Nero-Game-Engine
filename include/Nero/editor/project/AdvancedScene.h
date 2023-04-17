@@ -30,7 +30,7 @@ namespace nero
         using CreateCppGameLevelCallback = boost::function<CreateCppGameLevel>;
 
       public:
-        AdvancedScene(Setting::Ptr projectSetting);
+        AdvancedScene(Setting::Ptr projectSetting, const FontHolder::Ptr& editorFontHolder);
 
         void                     init();
         void                     clear();
@@ -51,6 +51,7 @@ namespace nero
         void                     update(const sf::Time& timeStep);
         void                     render();
         void                     renderShape();
+        void                     renderFrontScreen();
         //
         void                     clearLoadedObject();
         void                     buildGameScene();

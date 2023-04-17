@@ -14,6 +14,7 @@
 #include <Nero/core/cpp/engine/BackgroundTask.h>
 #include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/editor/EditorCamera.h>
+#include <Nero/core/cpp/resource/FontHolder.h>
 // Json
 #include <json/json.hpp>
 // Boost
@@ -31,7 +32,7 @@ namespace nero
 
       public:
         // Constructor
-        ProjectManager(Setting::Ptr editorSetting = nullptr);
+        ProjectManager(Setting::Ptr editorSetting, FontHolder::Ptr editorFontHolder);
         ~ProjectManager();
 
         // Game Project
@@ -67,6 +68,7 @@ namespace nero
       private:
         Setting::Ptr     m_EditorSetting;
         GameProject::Ptr m_GameProject;
+        FontHolder::Ptr  m_EditorFontHolder;
     };
 } // namespace nero
 

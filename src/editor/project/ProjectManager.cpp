@@ -20,9 +20,10 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    ProjectManager::ProjectManager(Setting::Ptr editorSetting)
+    ProjectManager::ProjectManager(Setting::Ptr editorSetting, FontHolder::Ptr editorFontHolder)
         : m_EditorSetting(std::move(editorSetting))
         , m_GameProject(nullptr)
+        , m_EditorFontHolder(std::move(editorFontHolder))
     {
     }
 
@@ -371,13 +372,7 @@ namespace nero
         // Step 3 : compile the project
         GameProject::compileProject(projectDirectory, backgroundTask);
 
-        /*if(backgroundTask->getErrorCode() != 0)
-        {
-                backgroundTask->addMessage("Failed to create project");
-                return;
-        }*/
-
-        // compplet
+        // complet
         backgroundTask->nextStep();
         backgroundTask->setCompleted(true);
     }
@@ -530,7 +525,8 @@ namespace nero
         projectSetting->setString("workspace_directory",
                                   file::getParentDirectory(projectDirectory, 2));
 
-        m_GameProject = std::make_shared<GameProject>(projectSetting);
+        m_GameProject = std::make_shared<GameProject>(projectSetting, m_EditorFontHolder);
+
         m_GameProject->init();
 
         updateRecentProject(projectDirectory);

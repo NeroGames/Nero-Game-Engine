@@ -11,6 +11,7 @@
 #include <Nero/core/cpp/scene/GameScene.h>
 #include <Nero/core/lua/scene/LuaScene.h>
 #include <Nero/core/cpp/engine/BackgroundTask.h>
+#include <Nero/core/cpp/resource/FontHolder.h>
 #include <Nero/editor/EditorCamera.h>
 // Json
 #include <json/json.hpp>
@@ -27,7 +28,7 @@ namespace nero
         using Ptr = std::shared_ptr<GameProject>;
 
       public:
-        GameProject(Setting::Ptr projectSetting = nullptr);
+        GameProject(Setting::Ptr projectSetting, FontHolder::Ptr editorFontHolder);
 
         void               init();
         bool               loadLibrary();
@@ -50,6 +51,7 @@ namespace nero
         AdvancedScene::Ptr m_AdvancedScene;
         Setting::Ptr       m_ProjectSetting;
         std::string        m_CodeEditorProcessId;
+        FontHolder::Ptr    m_EditorFontHolder;
     };
 } // namespace nero
 

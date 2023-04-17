@@ -72,7 +72,7 @@ namespace nero
         m_Fixture = nullptr;
     }
 
-    PhysicsInteractor::PhysicsInteractor()
+    PhysicsInteractor::PhysicsInteractor(const FontHolder::Ptr& editorFontHolder)
         : m_DestructionListener()
         , m_Message("")
         , m_StatMessage("")
@@ -89,6 +89,8 @@ namespace nero
         , m_TotalProfile()
         , m_IsLeftShift(false)
         , m_IsMouseRightButton(false)
+        , m_EditorFontHolder(editorFontHolder)
+        , m_PhysicsDataText()
     {
         m_DestructionListener.physicsInteractor = PhysicsInteractor::Ptr(this);
 
@@ -97,6 +99,12 @@ namespace nero
         // (interpreted as an unsigned char).
         memset(&m_MaxProfile, 0, sizeof(b2Profile));
         memset(&m_TotalProfile, 0, sizeof(b2Profile));
+
+        // Physics Data Text
+        m_PhysicsDataText.setFont(m_EditorFontHolder->getDefaultFont());
+        m_PhysicsDataText.setCharacterSize(18.f);
+        m_PhysicsDataText.setFillColor(sf::Color::White);
+        m_PhysicsDataText.setPosition(sf::Vector2f(60.f, 20.f));
     }
 
     void PhysicsInteractor::initialize(std::shared_ptr<b2World>           physicsWorld,
@@ -135,6 +143,7 @@ namespace nero
         }
 
         m_Message = m_StatMessage + m_ProfileMessage;
+        m_PhysicsDataText.setString(m_Message);
     }
 
     void PhysicsInteractor::handleEvent(const sf::Event& event)
@@ -220,6 +229,11 @@ namespace nero
         b2Vec2 p = graphics::sf_to_b2(world_pos, EngineConstant.SCALE);
 
         mouseMove(p);
+    }
+
+    void PhysicsInteractor::renderFrontScreen()
+    {
+        m_RenderTexture->draw(m_PhysicsDataText);
     }
 
     void PhysicsInteractor::render()

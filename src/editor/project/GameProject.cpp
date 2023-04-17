@@ -18,8 +18,9 @@
 
 namespace nero
 {
-    GameProject::GameProject(Setting::Ptr projectSetting)
+    GameProject::GameProject(Setting::Ptr projectSetting, FontHolder::Ptr editorFontHolder)
         : m_ProjectSetting(std::move(projectSetting))
+        , m_EditorFontHolder(std::move(editorFontHolder))
     {
     }
 
@@ -49,7 +50,7 @@ namespace nero
         m_ProjectSetting->setString("library_file_copy", libraryFileCopy);
 
         // create advanced scene
-        m_AdvancedScene = std::make_shared<AdvancedScene>(m_ProjectSetting);
+        m_AdvancedScene = std::make_shared<AdvancedScene>(m_ProjectSetting, m_EditorFontHolder);
     }
 
     bool GameProject::loadLibrary()

@@ -9,13 +9,14 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    AdvancedScene::AdvancedScene(Setting::Ptr projectSetting)
+    AdvancedScene::AdvancedScene(Setting::Ptr           projectSetting,
+                                 const FontHolder::Ptr& editorFontHolder)
         : m_ProjectSetting(projectSetting)
         , m_RenderContext(nullptr)
         , m_RenderTexture(nullptr)
         , m_LevelBuilder(nullptr)
         , m_RegisteredLevelTable()
-        , m_PhysicsInteractor(std::make_shared<PhysicsInteractor>())
+        , m_PhysicsInteractor(std::make_shared<PhysicsInteractor>(editorFontHolder))
     {
     }
 
@@ -139,6 +140,13 @@ namespace nero
         lightSetting.setFloat("source_radius", 5.f);
         lightSetting.setBool("enable_ambient_light", true);
         setting.setSetting("lighting", lightSetting);
+        // physics setting
+        Setting physicsSetting;
+        physicsSetting.setBool("draw_axis", false);
+        physicsSetting.setBool("draw_shape", true);
+        physicsSetting.setBool("draw_joint", false);
+        physicsSetting.setBool("draw_aabb", false);
+        setting.setSetting("physics", physicsSetting);
 
         file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO),
                        setting.toString());
@@ -338,6 +346,14 @@ namespace nero
     {
         if(m_GameScene)
             m_GameScene->renderShape();
+    }
+
+    void AdvancedScene::renderFrontScreen()
+    {
+        if(m_GameScene)
+        {
+            m_PhysicsInteractor->renderFrontScreen();
+        }
     }
 
     void AdvancedScene::clearLoadedObject()
