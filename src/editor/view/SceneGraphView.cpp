@@ -229,7 +229,7 @@ namespace nero
 
             if(levelBuilder)
             {
-                ImGui::BeginChild("game_level", ImVec2(0.f, 200.f), true);
+                ImGui::BeginChild("game_level", ImVec2(0.f, 250.f), true);
 
                 bool enableLight = levelBuilder->getLevelSetting()->getBool("enable_light");
                 ImGui::Checkbox("Enable Light##level_enable_light", &enableLight);
@@ -518,10 +518,33 @@ namespace nero
                         physicsSetting.setInt("position_iterations", positionIters);
                     }
 
-                    // physicsSetting.setBool("allow_sleeping", true);
-                    // physicsSetting.setBool("warm_starting", true);
-                    // physicsSetting.setBool("continuous_physics", true);
-                    // physicsSetting.setBool("sub_stepping", true);
+                    bool allowSleeping = physicsSetting.getBool("allow_sleeping");
+                    ImGui::Checkbox("Allow Sleeping##allow_sleeping", &allowSleeping);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("allow_sleeping", allowSleeping);
+                    }
+
+                    bool warmStarting = physicsSetting.getBool("warm_starting");
+                    ImGui::Checkbox("Warm Starting##warm_starting", &warmStarting);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("warm_starting", warmStarting);
+                    }
+
+                    bool continuousPhysics = physicsSetting.getBool("continuous_physics");
+                    ImGui::Checkbox("Continuous Physics##continuous_physics", &continuousPhysics);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("continuous_physics", continuousPhysics);
+                    }
+
+                    bool subStepping = physicsSetting.getBool("sub_stepping");
+                    ImGui::Checkbox("Sub Stepping##sub_stepping", &subStepping);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("sub_stepping", subStepping);
+                    }
 
                     ImGui::Text("Draw");
                     ImGui::Separator();
@@ -535,7 +558,7 @@ namespace nero
                     }
 
                     bool drawAxis = physicsSetting.getBool("draw_axis");
-                    ImGui::Checkbox("Axis##draw_axis", &drawAxis);
+                    ImGui::Checkbox("Center of Mass##draw_axis", &drawAxis);
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_axis", drawAxis);
@@ -562,6 +585,35 @@ namespace nero
                         physicsSetting.setBool("draw_pairbit", drawPairbit);
                     }
 
+                    bool drawContactPoint = physicsSetting.getBool("draw_contact_point");
+                    ImGui::Checkbox("Contact Point##draw_contact_point", &drawContactPoint);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("draw_contact_point", drawContactPoint);
+                    }
+
+                    bool drawContactNormal = physicsSetting.getBool("draw_contact_normal");
+                    ImGui::Checkbox("Contact Normal##draw_contact_normal", &drawContactNormal);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("draw_contact_normal", drawContactNormal);
+                    }
+
+                    bool drawContactImpulse = physicsSetting.getBool("draw_contact_impulse");
+                    ImGui::Checkbox("Contact Impulse##draw_contact_impulse", &drawContactImpulse);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("draw_contact_impulse", drawContactImpulse);
+                    }
+
+                    bool drawFrictionImpulse = physicsSetting.getBool("draw_friction_impulse");
+                    ImGui::Checkbox("Friction Impulse##draw_friction_impulse",
+                                    &drawFrictionImpulse);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("draw_friction_impulse", drawFrictionImpulse);
+                    }
+
                     bool drawProfile = physicsSetting.getBool("draw_profile");
                     ImGui::Checkbox("Profile##draw_profile", &drawProfile);
                     if(ImGui::IsItemEdited())
@@ -580,96 +632,6 @@ namespace nero
                 }
 
                 ImGui::EndChild();
-
-                /*ImGuiViewport* viewport = ImGui::GetMainViewport();
-                float window_height = viewport->Size.y * 0.25f;
-                viewport = nullptr;
-
-                ImGui::BeginChild("game_level", ImVec2(0.f, window_height), true);
-
-                    auto gameLevel = m_AdvancedScene->getSelectedGameLevel();
-
-                    ImGui::Text("Lighting");
-                    ImGui::Separator();
-                    ImGui::Dummy(ImVec2(0.f, 5.f));
-                    static bool enable_lighting =
-                gameLevel->levelSetting->getBool("enable_lighting"); ImGui::Checkbox("Enable
-                Lighting##enable_lighting", &enable_lighting);
-                    gameLevel->levelSetting->setBool("enable_lighting", enable_lighting);
-
-                    ImGui::ColorEdit4("Ambient Light", &ambient_light.x,
-                ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_NoDragDrop);
-
-                    ImGui::Dummy(ImVec2(0.f, 5.f));
-
-                    ImGui::Text("Draw");
-                    ImGui::Separator();
-                    ImGui::Dummy(ImVec2(0.f, 5.f));
-
-                    static bool draw_axis = gameLevel->levelSetting->getBool("draw_axis");
-                    ImGui::Checkbox("Draw Axis##draw_axis", &draw_axis);
-                    gameLevel->levelSetting->setBool("draw_axis", draw_axis);
-
-                    static bool draw_grid = gameLevel->levelSetting->getBool("draw_grid");
-                    ImGui::Checkbox("Draw Grid##draw_grid", &draw_grid);
-                    gameLevel->levelSetting->setBool("draw_grid", draw_grid);
-
-                    static bool draw_shape = gameLevel->levelSetting->getBool("draw_shape");
-                    ImGui::Checkbox("Draw Shape##draw_shape", &draw_shape);
-                    gameLevel->levelSetting->setBool("draw_shape", draw_shape);
-
-                    static bool draw_joint = gameLevel->levelSetting->getBool("draw_joint");
-                    ImGui::Checkbox("Draw Joint##draw_joint", &draw_joint);
-                    gameLevel->levelSetting->setBool("draw_joint", draw_joint);
-
-                    static bool draw_aabb = gameLevel->levelSetting->getBool("draw_aabb");
-                    ImGui::Checkbox("Draw AABB##draw_aabb", &draw_aabb);
-                    gameLevel->levelSetting->setBool("draw_aabb", draw_aabb);
-
-                    static bool draw_contact_point =
-                gameLevel->levelSetting->getBool("draw_contact_point"); ImGui::Checkbox("Draw
-                Contact Point##draw_contact_point", &draw_contact_point);
-                    gameLevel->levelSetting->setBool("draw_contact_point", draw_contact_point);
-
-                    static bool draw_contact_normal =
-                gameLevel->levelSetting->getBool("draw_contact_normal"); ImGui::Checkbox("Draw
-                Contact Normal##draw_contact_normal", &draw_contact_normal);
-                    gameLevel->levelSetting->setBool("draw_contact_normal", draw_contact_normal);
-
-                    static bool draw_contact_impulse =
-                gameLevel->levelSetting->getBool("draw_contact_impulse"); ImGui::Checkbox("Draw
-                Contact Impulse##draw_contact_impulse", &draw_contact_impulse);
-                    gameLevel->levelSetting->setBool("draw_contact_impulse", draw_contact_impulse);
-
-                    static bool draw_friction_impulse =
-                gameLevel->levelSetting->getBool("draw_friction_impulse"); ImGui::Checkbox("Draw
-                Friction Impulse##draw_friction_impulse", &draw_friction_impulse);
-                    gameLevel->levelSetting->setBool("draw_friction_impulse",
-                draw_friction_impulse);
-
-                    static bool draw_center_of_mass =
-                gameLevel->levelSetting->getBool("draw_center_of_mass"); ImGui::Checkbox("Draw
-                Centroid##draw_center_of_mass", &draw_center_of_mass);
-                    gameLevel->levelSetting->setBool("draw_center_of_mass", draw_center_of_mass);
-
-                    static bool draw_statistic = gameLevel->levelSetting->getBool("draw_statistic");
-                    ImGui::Checkbox("Draw Statistic##draw_statistic", &draw_statistic);
-                    gameLevel->levelSetting->setBool("draw_statistic", draw_statistic);
-
-                    static bool draw_profile = gameLevel->levelSetting->getBool("draw_profile");
-                    ImGui::Checkbox("Draw Profile##draw_profile", &draw_profile);
-                    gameLevel->levelSetting->setBool("draw_profile", draw_profile);
-
-                    //
-                    //levelSetting->setBool("enable_warm_starting", true);
-                    //levelSetting->setBool("enable_continous", true);
-                    //levelSetting->setBool("enable_sub_stepping", false);
-                    //levelSetting->setBool("enable_sleep", true);
-                    //
-                    //levelSetting->setBool("pause_level", false);
-                    //levelSetting->setBool("single_step", false);
-
-                ImGui::EndChild();*/
             }
         }
 

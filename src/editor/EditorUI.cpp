@@ -696,13 +696,16 @@ namespace nero
 
         m_EditorProxy->m_AutoSaveCallback = [this]()
         {
-            if(m_EditorContext->autoSaveEnabled() && m_EditorContext->getGameProject() &&
+            if(m_EditorContext->getGameProject() &&
                m_AutoSaveClock.getElapsedTime() > sf::seconds(m_AutoSaveTimeInterval))
             {
-                m_EditorProxy->saveProject();
                 m_AutoSaveClock.restart();
 
-                m_EditorContext->getNotificationManager()->notify("Project auto saved");
+                if(m_EditorContext->autoSaveEnabled())
+                {
+                    m_EditorProxy->saveProject();
+                    m_EditorContext->getNotificationManager()->notify("Project auto saved");
+                }
             }
         };
     }

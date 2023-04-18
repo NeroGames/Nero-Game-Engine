@@ -128,6 +128,7 @@ namespace nero
         setting.setInt("chunk_count", 0);
         setting.setBool("enable_light", parameter.getBool("enable_light"));
         setting.setBool("enable_physics", parameter.getBool("enable_physics"));
+        setting.setBool("level_paused", false);
         // light setting
         Setting lightSetting;
         lightSetting.setVector("root_region", sf::Vector2f(-1000.f, -1000.f));
@@ -152,6 +153,7 @@ namespace nero
         physicsSetting.setBool("warm_starting", true);
         physicsSetting.setBool("continuous_physics", true);
         physicsSetting.setBool("sub_stepping", true);
+        physicsSetting.setBool("single_step", false);
         // draw
         physicsSetting.setBool("draw_shape", true);
         physicsSetting.setBool("draw_joint", false);
@@ -160,6 +162,11 @@ namespace nero
         physicsSetting.setBool("draw_pairbit", false);
         physicsSetting.setBool("draw_statistics", false);
         physicsSetting.setBool("draw_profile", false);
+        physicsSetting.setBool("draw_contact_point", false);
+        physicsSetting.setBool("draw_contact_normal", false);
+        physicsSetting.setBool("draw_contact_impulse", false);
+        physicsSetting.setBool("draw_friction_impulse", false);
+
         setting.setSetting("physics", physicsSetting);
 
         file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO),
