@@ -449,6 +449,50 @@ namespace nero
                 {
                     ImGui::BeginChild("physics_settings", ImVec2(0.f, 200.f), true);
 
+                    auto physicsSetting = levelBuilder->getLevelSetting()->getSetting("physics");
+
+                    bool drawShape      = physicsSetting.getBool("draw_shape");
+                    ImGui::Checkbox("Draw Shape##draw_shape", &drawShape);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("draw_shape", drawShape);
+                    }
+
+                    bool drawAxis = physicsSetting.getBool("draw_axis");
+                    ImGui::Checkbox("Draw Axis##draw_axis", &drawAxis);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("draw_axis", drawAxis);
+                    }
+
+                    bool drawJoint = physicsSetting.getBool("draw_joint");
+                    ImGui::Checkbox("Draw Join##draw_joint", &drawJoint);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("draw_joint", drawJoint);
+                    }
+
+                    bool drawAabb = physicsSetting.getBool("draw_aabb");
+                    ImGui::Checkbox("Draw AABB##draw_aabb", &drawAabb);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("draw_aabb", drawAabb);
+                    }
+
+                    bool drawProfile = physicsSetting.getBool("draw_profile");
+                    ImGui::Checkbox("Draw Profile##draw_profile", &drawProfile);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("draw_profile", drawProfile);
+                    }
+
+                    bool drawStatistics = physicsSetting.getBool("draw_statistics");
+                    ImGui::Checkbox("Draw Statistics##draw_statistics", &drawStatistics);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("draw_statistics", drawStatistics);
+                    }
+
                     ImGui::EndChild();
                 }
 

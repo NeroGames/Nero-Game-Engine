@@ -142,10 +142,13 @@ namespace nero
         setting.setSetting("lighting", lightSetting);
         // physics setting
         Setting physicsSetting;
-        physicsSetting.setBool("draw_axis", false);
         physicsSetting.setBool("draw_shape", true);
         physicsSetting.setBool("draw_joint", false);
         physicsSetting.setBool("draw_aabb", false);
+        physicsSetting.setBool("draw_axis", false);
+        physicsSetting.setBool("draw_pairbit", false);
+        physicsSetting.setBool("draw_profile", false);
+        physicsSetting.setBool("draw_statistics", false);
         setting.setSetting("physics", physicsSetting);
 
         file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO),
