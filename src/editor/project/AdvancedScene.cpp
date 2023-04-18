@@ -149,6 +149,12 @@ namespace nero
         physicsSetting.setBool("draw_pairbit", false);
         physicsSetting.setBool("draw_profile", false);
         physicsSetting.setBool("draw_statistics", false);
+        physicsSetting.setBool("allow_sleeping", true);
+        physicsSetting.setBool("warm_starting", true);
+        physicsSetting.setBool("continuous_physics", true);
+        physicsSetting.setBool("sub_stepping", true);
+        physicsSetting.setInt("velocity_iterations", 8);
+        physicsSetting.setInt("position_iterations", 3);
         setting.setSetting("physics", physicsSetting);
 
         file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO),
@@ -406,6 +412,7 @@ namespace nero
 
             m_PhysicsInteractor->initialize(gameLevel->getPhysicsWorld(),
                                             gameLevel->getShapeRenderer(),
+                                            gameLevel->getSetting(),
                                             m_RenderContext,
                                             m_RenderTexture,
                                             m_EditorCamera);

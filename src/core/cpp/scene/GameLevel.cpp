@@ -105,21 +105,32 @@ namespace nero
                               EngineConstant.TIME_PER_FRAME.asSeconds();
         }
 
-        uint32 flags = 0;
-        flags        += b2Draw::e_shapeBit;
-        flags        += b2Draw::e_jointBit;
-        // flags        += b2Draw::e_aabbBit;
-        flags        += b2Draw::e_centerOfMassBit;
+        auto   physicsSetting = m_LevelContext.levelSetting->getSetting("physics");
+        uint32 flags          = 0;
+        if(physicsSetting.getBool("draw_shape"))
+            flags += b2Draw::e_shapeBit;
+
+        if(physicsSetting.getBool("draw_joint"))
+            flags += b2Draw::e_jointBit;
+
+        if(physicsSetting.getBool("draw_aabb"))
+            flags += b2Draw::e_aabbBit;
+
+        if(physicsSetting.getBool("draw_axis"))
+            flags += b2Draw::e_centerOfMassBit;
+
+        if(physicsSetting.getBool("draw_pairbit"))
+            flags += b2Draw::e_pairBit;
 
         m_ShapeRenderer->SetFlags(flags);
 
-        m_PhysicsWorld->SetAllowSleeping(true);
-        m_PhysicsWorld->SetWarmStarting(true);
-        m_PhysicsWorld->SetContinuousPhysics(true);
-        m_PhysicsWorld->SetSubStepping(true);
+        m_PhysicsWorld->SetAllowSleeping(physicsSetting.getBool("allow_sleeping"));
+        m_PhysicsWorld->SetWarmStarting(physicsSetting.getBool("warm_starting"));
+        m_PhysicsWorld->SetContinuousPhysics(physicsSetting.getBool("continuous_physics"));
+        m_PhysicsWorld->SetSubStepping(physicsSetting.getBool("sub_stepping"));
 
-        const int velocityIterations = 8;
-        const int positionIterations = 3;
+        const int velocityIterations = physicsSetting.getInt("velocity_iterations");
+        const int positionIterations = physicsSetting.getInt("position_iterations");
         m_PhysicsWorld->Step(physicsTimeStep, velocityIterations, positionIterations);
     }
 

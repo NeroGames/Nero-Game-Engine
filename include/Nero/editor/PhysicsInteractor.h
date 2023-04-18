@@ -59,6 +59,7 @@ namespace nero
 
         void initialize(std::shared_ptr<b2World>           physicsWorld,
                         ShapeRenderer::Ptr                 shapeRenderer,
+                        Setting::Ptr                       levelSetting,
                         RenderContext::Ptr                 renderContext,
                         std::shared_ptr<sf::RenderTexture> renderTexture,
                         AdvancedCamera::Ptr                editorCamera);
@@ -116,6 +117,7 @@ namespace nero
         AdvancedCamera::Ptr                m_EditorCamera;
         sf::Text                           m_PhysicsDataText;
         FontHolder::Ptr                    m_EditorFontHolder;
+        Setting::Ptr                       m_LevelSetting;
     };
 } // namespace nero
 #endif // PHYSICSINTERACTOR_H

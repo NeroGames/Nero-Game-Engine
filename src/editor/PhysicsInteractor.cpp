@@ -109,6 +109,7 @@ namespace nero
 
     void PhysicsInteractor::initialize(std::shared_ptr<b2World>           physicsWorld,
                                        ShapeRenderer::Ptr                 shapeRenderer,
+                                       Setting::Ptr                       levelSetting,
                                        RenderContext::Ptr                 renderContext,
                                        std::shared_ptr<sf::RenderTexture> renderTexture,
                                        AdvancedCamera::Ptr                editorCamera)
@@ -121,6 +122,7 @@ namespace nero
         m_RenderContext = renderContext;
         m_RenderTexture = renderTexture;
         m_EditorCamera  = editorCamera;
+        m_LevelSetting  = levelSetting;
 
         m_PhysicsWorld->SetDestructionListener(&m_DestructionListener);
 
@@ -241,23 +243,32 @@ namespace nero
         if(!m_PhysicsWorld)
             return;
 
-        // bodies/contacts/joints
-        int32   bodyCount    = m_PhysicsWorld->GetBodyCount();
-        int32   contactCount = m_PhysicsWorld->GetContactCount();
-        int32   jointCount   = m_PhysicsWorld->GetJointCount();
+        auto physicsSetting = m_LevelSetting->getSetting("physics");
 
-        // proxies/height/balance/quality
-        int32   proxyCount   = m_PhysicsWorld->GetProxyCount();
-        int32   height       = m_PhysicsWorld->GetTreeHeight();
-        int32   balance      = m_PhysicsWorld->GetTreeBalance();
-        float32 quality      = m_PhysicsWorld->GetTreeQuality();
+        if(physicsSetting.getBool("draw_statistics"))
+        {
+            // bodies/contacts/joints
+            int32   bodyCount    = m_PhysicsWorld->GetBodyCount();
+            int32   contactCount = m_PhysicsWorld->GetContactCount();
+            int32   jointCount   = m_PhysicsWorld->GetJointCount();
 
-        m_StatMessage        = "body/contact/joint = " + toString(bodyCount) + " / " +
-                        toString(contactCount) + " / " + toString(jointCount) +
-                        "\n"
-                        "proxy/height/balance/quality = " +
-                        toString(proxyCount) + " / " + toString(height) + " / " +
-                        toString(balance) + " / " + toString(quality) + "\n";
+            // proxies/height/balance/quality
+            int32   proxyCount   = m_PhysicsWorld->GetProxyCount();
+            int32   height       = m_PhysicsWorld->GetTreeHeight();
+            int32   balance      = m_PhysicsWorld->GetTreeBalance();
+            float32 quality      = m_PhysicsWorld->GetTreeQuality();
+
+            m_StatMessage        = "body/contact/joint = " + toString(bodyCount) + " / " +
+                            toString(contactCount) + " / " + toString(jointCount) +
+                            "\n"
+                            "proxy/height/balance/quality = " +
+                            toString(proxyCount) + " / " + toString(height) + " / " +
+                            toString(balance) + " / " + toString(quality) + "\n";
+        }
+        else
+        {
+            m_StatMessage = "";
+        }
 
         // Profile data
         {
@@ -282,56 +293,63 @@ namespace nero
             m_TotalProfile.broadphase    += p.broadphase;
         }
 
-        const b2Profile& p = m_PhysicsWorld->GetProfile();
-
-        b2Profile        aveProfile;
-        memset(&aveProfile, 0, sizeof(b2Profile));
-
-        if(m_StepCount > 0)
+        if(physicsSetting.getBool("draw_profile"))
         {
-            float32 scale            = 1.0f / m_StepCount;
+            const b2Profile& p = m_PhysicsWorld->GetProfile();
 
-            aveProfile.step          = scale * m_TotalProfile.step;
-            aveProfile.collide       = scale * m_TotalProfile.collide;
-            aveProfile.solve         = scale * m_TotalProfile.solve;
-            aveProfile.solveInit     = scale * m_TotalProfile.solveInit;
-            aveProfile.solveVelocity = scale * m_TotalProfile.solveVelocity;
-            aveProfile.solvePosition = scale * m_TotalProfile.solvePosition;
-            aveProfile.solveTOI      = scale * m_TotalProfile.solveTOI;
-            aveProfile.broadphase    = scale * m_TotalProfile.broadphase;
+            b2Profile        aveProfile;
+            memset(&aveProfile, 0, sizeof(b2Profile));
+
+            if(m_StepCount > 0)
+            {
+                float32 scale            = 1.0f / m_StepCount;
+
+                aveProfile.step          = scale * m_TotalProfile.step;
+                aveProfile.collide       = scale * m_TotalProfile.collide;
+                aveProfile.solve         = scale * m_TotalProfile.solve;
+                aveProfile.solveInit     = scale * m_TotalProfile.solveInit;
+                aveProfile.solveVelocity = scale * m_TotalProfile.solveVelocity;
+                aveProfile.solvePosition = scale * m_TotalProfile.solvePosition;
+                aveProfile.solveTOI      = scale * m_TotalProfile.solveTOI;
+                aveProfile.broadphase    = scale * m_TotalProfile.broadphase;
+            }
+
+            m_ProfileMessage =
+                "step [ave] (max) = " + toString(p.step) + " [" + toString(aveProfile.step) + "]" +
+                "(" + toString(m_MaxProfile.step) + ") " +
+                "\n"
+                "collide [ave] (max) = " +
+                toString(p.collide) + " [" + toString(aveProfile.collide) + "]" + "(" +
+                toString(m_MaxProfile.collide) + ")" +
+                "\n"
+                "solve [ave] (max) = " +
+                toString(p.solve) + " [" + toString(aveProfile.solve) + "]" + "(" +
+                toString(m_MaxProfile.solve) + ")" +
+                "\n"
+                "solve init [ave] (max) = " +
+                toString(p.solveInit) + " [" + toString(aveProfile.solveInit) + "]" + "(" +
+                toString(m_MaxProfile.solveInit) + ")" +
+                "\n"
+                "solve velocity [ave] (max) = " +
+                toString(p.solveVelocity) + " [" + toString(aveProfile.solveVelocity) + "]" + "(" +
+                toString(m_MaxProfile.solveVelocity) + ")" +
+                "\n"
+                "solve position [ave] (max) = " +
+                toString(p.solvePosition) + " [" + toString(aveProfile.solvePosition) + "]" + "(" +
+                toString(m_MaxProfile.solvePosition) + ")" +
+                "\n"
+                "solveTOI [ave] (max) = " +
+                toString(p.solveTOI) + " [" + toString(aveProfile.solveTOI) + "]" + "(" +
+                toString(m_MaxProfile.solveTOI) + ")" +
+                "\n"
+                "broad-phase [ave] (max) = " +
+                toString(p.broadphase) + " [" + toString(aveProfile.broadphase) + "]" + "(" +
+                toString(m_MaxProfile.broadphase) + ")" + "\n";
         }
-
-        m_ProfileMessage = "step [ave] (max) = " + toString(p.step) + " [" +
-                           toString(aveProfile.step) + "]" + "(" + toString(m_MaxProfile.step) +
-                           ") " +
-                           "\n"
-                           "collide [ave] (max) = " +
-                           toString(p.collide) + " [" + toString(aveProfile.collide) + "]" + "(" +
-                           toString(m_MaxProfile.collide) + ")" +
-                           "\n"
-                           "solve [ave] (max) = " +
-                           toString(p.solve) + " [" + toString(aveProfile.solve) + "]" + "(" +
-                           toString(m_MaxProfile.solve) + ")" +
-                           "\n"
-                           "solve init [ave] (max) = " +
-                           toString(p.solveInit) + " [" + toString(aveProfile.solveInit) + "]" +
-                           "(" + toString(m_MaxProfile.solveInit) + ")" +
-                           "\n"
-                           "solve velocity [ave] (max) = " +
-                           toString(p.solveVelocity) + " [" + toString(aveProfile.solveVelocity) +
-                           "]" + "(" + toString(m_MaxProfile.solveVelocity) + ")" +
-                           "\n"
-                           "solve position [ave] (max) = " +
-                           toString(p.solvePosition) + " [" + toString(aveProfile.solvePosition) +
-                           "]" + "(" + toString(m_MaxProfile.solvePosition) + ")" +
-                           "\n"
-                           "solveTOI [ave] (max) = " +
-                           toString(p.solveTOI) + " [" + toString(aveProfile.solveTOI) + "]" + "(" +
-                           toString(m_MaxProfile.solveTOI) + ")" +
-                           "\n"
-                           "broad-phase [ave] (max) = " +
-                           toString(p.broadphase) + " [" + toString(aveProfile.broadphase) + "]" +
-                           "(" + toString(m_MaxProfile.broadphase) + ")" + "\n";
+        else
+        {
+            m_ProfileMessage = "";
+        }
 
         if(m_MouseJoint)
         {
