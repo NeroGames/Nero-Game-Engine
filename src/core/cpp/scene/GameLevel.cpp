@@ -107,20 +107,11 @@ namespace nero
 
         auto   physicsSetting = m_LevelContext.levelSetting->getSetting("physics");
         uint32 flags          = 0;
-        if(physicsSetting.getBool("draw_shape"))
-            flags += b2Draw::e_shapeBit;
-
-        if(physicsSetting.getBool("draw_joint"))
-            flags += b2Draw::e_jointBit;
-
-        if(physicsSetting.getBool("draw_aabb"))
-            flags += b2Draw::e_aabbBit;
-
-        if(physicsSetting.getBool("draw_axis"))
-            flags += b2Draw::e_centerOfMassBit;
-
-        if(physicsSetting.getBool("draw_pairbit"))
-            flags += b2Draw::e_pairBit;
+        flags                 += physicsSetting.getBool("draw_shape") * b2Draw::e_shapeBit;
+        flags                 += physicsSetting.getBool("draw_joint") * b2Draw::e_jointBit;
+        flags                 += physicsSetting.getBool("draw_aabb") * b2Draw::e_aabbBit;
+        flags                 += physicsSetting.getBool("draw_axis") * b2Draw::e_centerOfMassBit;
+        flags                 += physicsSetting.getBool("draw_pairbit") * b2Draw::e_pairBit;
 
         m_ShapeRenderer->SetFlags(flags);
 
