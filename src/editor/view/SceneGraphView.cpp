@@ -342,7 +342,7 @@ namespace nero
                     ImGui::InputFloat("##cast_position_y", &positiony, 1.f, 1.0f, "%.3f");
                     bool posychanged = ImGui::IsItemEdited();
                     ImGui::Dummy(ImVec2(0.0f, 1.0f));
-                    if((posxchanged || posychanged))
+                    if(posxchanged || posychanged)
                     {
                         lightSetting.setVector("cast_direction",
                                                sf::Vector2f(positionx, positiony));
@@ -390,7 +390,7 @@ namespace nero
                 if(enableLight &&
                    ImGui::CollapsingHeader("Light Boundary", ImGuiTreeNodeFlags_DefaultOpen))
                 {
-                    ImGui::BeginChild("light_boundary", ImVec2(0.f, 200.f), true);
+                    ImGui::BeginChild("light_boundary", ImVec2(0.f, 120.f), true);
 
                     const float wordingWidth = 80.f;
                     const float inputWidth   = ImGui::GetWindowContentRegionWidth() - wordingWidth;
@@ -451,43 +451,126 @@ namespace nero
 
                     auto physicsSetting = levelBuilder->getLevelSetting()->getSetting("physics");
 
-                    bool drawShape      = physicsSetting.getBool("draw_shape");
-                    ImGui::Checkbox("Draw Shape##draw_shape", &drawShape);
+                    const float wordingWidth = 80.f;
+                    const float inputWidth   = ImGui::GetWindowContentRegionWidth() - wordingWidth;
+                    ImGui::Text("Gravity");
+                    ImGui::Separator();
+                    ImGui::Dummy(ImVec2(0.f, 2.f));
+
+                    ImGui::Text("x");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    float xGravity = physicsSetting.getVector("gravity").x;
+                    ImGui::InputFloat("##gravity_x", &xGravity, 1.f, 1.0f, "%.3f");
+                    bool xGravityChanged = ImGui::IsItemEdited();
+                    ImGui::Text("y");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    float yGravity = physicsSetting.getVector("gravity").y;
+                    ImGui::InputFloat("##gravity_y", &yGravity, 1.f, 1.0f, "%.3f");
+                    bool yGravityChanged = ImGui::IsItemEdited();
+                    ImGui::Dummy(ImVec2(0.0f, 1.0f));
+                    if(xGravityChanged || yGravityChanged)
+                    {
+                        physicsSetting.setVector("gravity", sf::Vector2f(xGravity, yGravity));
+                    }
+
+                    ImGui::Text("Stepping");
+                    ImGui::Separator();
+                    ImGui::Dummy(ImVec2(0.f, 2.f));
+
+                    ImGui::Text("Frequency");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    float frequency = physicsSetting.getFloat("frequency");
+                    ImGui::InputFloat("##frequency", &frequency, 1.f, 1.0f, "%.3f");
+                    if(ImGui::IsItemEdited())
+                    {
+                        if(frequency < 0)
+                            frequency = 0;
+
+                        physicsSetting.setFloat("frequency", frequency);
+                    }
+
+                    ImGui::Text("Velocity Iters");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    int velocityIters = physicsSetting.getInt("velocity_iterations");
+                    ImGui::InputInt("##velocity_iterations", &velocityIters);
+                    if(ImGui::IsItemEdited())
+                    {
+                        if(velocityIters < 0)
+                            velocityIters = 0;
+
+                        physicsSetting.setInt("velocity_iterations", velocityIters);
+                    }
+
+                    ImGui::Text("Position Iters");
+                    ImGui::SameLine(wordingWidth + 30.f);
+                    ImGui::SetNextItemWidth(inputWidth - 30.f);
+                    int positionIters = physicsSetting.getInt("position_iterations");
+                    ImGui::InputInt("##position_iterations", &positionIters);
+                    if(ImGui::IsItemEdited())
+                    {
+                        if(positionIters < 0)
+                            positionIters = 0;
+
+                        physicsSetting.setInt("position_iterations", positionIters);
+                    }
+
+                    // physicsSetting.setBool("allow_sleeping", true);
+                    // physicsSetting.setBool("warm_starting", true);
+                    // physicsSetting.setBool("continuous_physics", true);
+                    // physicsSetting.setBool("sub_stepping", true);
+
+                    ImGui::Text("Draw");
+                    ImGui::Separator();
+                    ImGui::Dummy(ImVec2(0.f, 2.f));
+
+                    bool drawShape = physicsSetting.getBool("draw_shape");
+                    ImGui::Checkbox("Shape##draw_shape", &drawShape);
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_shape", drawShape);
                     }
 
                     bool drawAxis = physicsSetting.getBool("draw_axis");
-                    ImGui::Checkbox("Draw Axis##draw_axis", &drawAxis);
+                    ImGui::Checkbox("Axis##draw_axis", &drawAxis);
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_axis", drawAxis);
                     }
 
                     bool drawJoint = physicsSetting.getBool("draw_joint");
-                    ImGui::Checkbox("Draw Join##draw_joint", &drawJoint);
+                    ImGui::Checkbox("Join##draw_joint", &drawJoint);
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_joint", drawJoint);
                     }
 
                     bool drawAabb = physicsSetting.getBool("draw_aabb");
-                    ImGui::Checkbox("Draw AABB##draw_aabb", &drawAabb);
+                    ImGui::Checkbox("AABB##draw_aabb", &drawAabb);
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_aabb", drawAabb);
                     }
 
+                    bool drawPairbit = physicsSetting.getBool("draw_pairbit");
+                    ImGui::Checkbox("Pair Bit##draw_pairbit", &drawPairbit);
+                    if(ImGui::IsItemEdited())
+                    {
+                        physicsSetting.setBool("draw_pairbit", drawPairbit);
+                    }
+
                     bool drawProfile = physicsSetting.getBool("draw_profile");
-                    ImGui::Checkbox("Draw Profile##draw_profile", &drawProfile);
+                    ImGui::Checkbox("Profile##draw_profile", &drawProfile);
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_profile", drawProfile);
                     }
 
                     bool drawStatistics = physicsSetting.getBool("draw_statistics");
-                    ImGui::Checkbox("Draw Statistics##draw_statistics", &drawStatistics);
+                    ImGui::Checkbox("Statistics##draw_statistics", &drawStatistics);
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_statistics", drawStatistics);

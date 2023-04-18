@@ -142,19 +142,24 @@ namespace nero
         setting.setSetting("lighting", lightSetting);
         // physics setting
         Setting physicsSetting;
+        // gravity
+        physicsSetting.setVector("gravity", sf::Vector2f(0.f, 9.8f));
+        // stepping
+        physicsSetting.setFloat("frequency", 30);
+        physicsSetting.setInt("velocity_iterations", 8);
+        physicsSetting.setInt("position_iterations", 3);
+        physicsSetting.setBool("allow_sleeping", true);
+        physicsSetting.setBool("warm_starting", true);
+        physicsSetting.setBool("continuous_physics", true);
+        physicsSetting.setBool("sub_stepping", true);
+        // draw
         physicsSetting.setBool("draw_shape", true);
         physicsSetting.setBool("draw_joint", false);
         physicsSetting.setBool("draw_aabb", false);
         physicsSetting.setBool("draw_axis", false);
         physicsSetting.setBool("draw_pairbit", false);
-        physicsSetting.setBool("draw_profile", false);
         physicsSetting.setBool("draw_statistics", false);
-        physicsSetting.setBool("allow_sleeping", true);
-        physicsSetting.setBool("warm_starting", true);
-        physicsSetting.setBool("continuous_physics", true);
-        physicsSetting.setBool("sub_stepping", true);
-        physicsSetting.setInt("velocity_iterations", 8);
-        physicsSetting.setInt("position_iterations", 3);
+        physicsSetting.setBool("draw_profile", false);
         setting.setSetting("physics", physicsSetting);
 
         file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO),
