@@ -626,6 +626,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_contact_point", drawContactPoint);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "draw_flags");
                     }
 
                     bool drawContactNormal = physicsSetting.getBool("draw_contact_normal");
@@ -633,6 +635,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_contact_normal", drawContactNormal);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "draw_flags");
                     }
 
                     bool drawContactImpulse = physicsSetting.getBool("draw_contact_impulse");
@@ -640,6 +644,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_contact_impulse", drawContactImpulse);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "draw_flags");
                     }
 
                     bool drawFrictionImpulse = physicsSetting.getBool("draw_friction_impulse");
@@ -648,6 +654,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_friction_impulse", drawFrictionImpulse);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "draw_flags");
                     }
 
                     bool drawProfile = physicsSetting.getBool("draw_profile");

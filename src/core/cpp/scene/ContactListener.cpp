@@ -155,4 +155,20 @@ namespace nero
 
         m_PostSolveContactCallback(collision);
     }
+
+    unsigned int ContactListener::getContactPointCount() const
+    {
+        return m_PointCount;
+    }
+
+    ContactPoint* ContactListener::getContactPointTable()
+    {
+        return m_PointTable;
+    }
+
+    void ContactListener::resetContactPointCount()
+    {
+        m_PointCount = 0;
+    }
+
 } // namespace nero

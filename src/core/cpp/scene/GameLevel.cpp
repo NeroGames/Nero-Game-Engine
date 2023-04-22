@@ -85,12 +85,58 @@ namespace nero
 
     void GameLevel::update(const sf::Time& timeStep)
     {
-        float32 physicsTimeStep =
-            m_PhysicsFrequency > 0.f ? 1.f / m_PhysicsFrequency : float32(0.0f);
-
-        m_PhysicsWorld->Step(physicsTimeStep, m_VelocityIterations, m_PositionIterations);
+        m_PhysicsWorld->Step(timeStep.asSeconds(), m_VelocityIterations, m_PositionIterations);
     }
 
+    void GameLevel::drawContactPoints()
+    {
+        auto physicsSetting = m_LevelContext.levelSetting->getSetting("physics");
+
+        if(m_DrawContactPoint)
+        {
+            const float32 k_impulseScale = 0.1f;
+            const float32 k_axisScale    = 0.3f;
+
+            for(int32 i = 0; i < m_ContactListener->getContactPointCount(); ++i)
+            {
+                ContactPoint* point = m_ContactListener->getContactPointTable() + i;
+
+                if(point->state == b2_addState)
+                {
+                    // Add
+                    m_ShapeRenderer->DrawPoint(point->position, 10.0f, b2Color(0.3f, 0.95f, 0.3f));
+                }
+                else if(point->state == b2_persistState)
+                {
+                    // Persist
+                    m_ShapeRenderer->DrawPoint(point->position, 5.0f, b2Color(0.3f, 0.3f, 0.95f));
+                }
+
+                if(m_DrawContactNormal)
+                {
+                    b2Vec2 p1 = point->position;
+                    b2Vec2 p2 = p1 + k_axisScale * point->normal;
+                    m_ShapeRenderer->DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.9f));
+                }
+                else if(m_DrawContactImpulse)
+                {
+                    b2Vec2 p1 = point->position;
+                    b2Vec2 p2 = p1 + k_impulseScale * point->normalImpulse * point->normal;
+                    m_ShapeRenderer->DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+                }
+
+                if(m_DrawFrictionImpulse)
+                {
+                    b2Vec2 tangent = b2Cross(point->normal, 1.0f);
+                    b2Vec2 p1      = point->position;
+                    b2Vec2 p2      = p1 + k_impulseScale * point->tangentImpulse * tangent;
+                    m_ShapeRenderer->DrawSegment(p1, p2, b2Color(0.9f, 0.9f, 0.3f));
+                }
+            }
+
+            m_ContactListener->resetContactPointCount();
+        }
+    }
     void GameLevel::notifyUpdate(const std::string& update)
     {
         if(update == "physics_iterations")
@@ -137,8 +183,12 @@ namespace nero
         flags                 += physicsSetting.getBool("draw_aabb") * b2Draw::e_aabbBit;
         flags                 += physicsSetting.getBool("draw_axis") * b2Draw::e_centerOfMassBit;
         flags                 += physicsSetting.getBool("draw_pairbit") * b2Draw::e_pairBit;
-
         m_ShapeRenderer->SetFlags(flags);
+
+        m_DrawContactPoint    = physicsSetting.getBool("draw_contact_point");
+        m_DrawContactNormal   = physicsSetting.getBool("draw_contact_normal");
+        m_DrawContactImpulse  = physicsSetting.getBool("draw_contact_impulse");
+        m_DrawFrictionImpulse = physicsSetting.getBool("draw_friction_impulse");
     }
 
     void GameLevel::updateAmbientLight()
@@ -160,6 +210,7 @@ namespace nero
     void GameLevel::renderShape()
     {
         m_PhysicsWorld->DrawDebugData();
+        drawContactPoints();
     }
 
     void GameLevel::renderLight()

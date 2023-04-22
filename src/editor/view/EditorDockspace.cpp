@@ -61,10 +61,6 @@ namespace nero
         viewport                 = nullptr;
         Setting dockspaceSetting = m_EditorContext->getEditorSetting()->getSetting("dockspace");
 
-        // build dockspace layout : this is done only once, when the editor is launched the first
-        // time if(dockspaceSetting.getBool("build_layout") &&
-        // !file::fileExist(file::getPath({"setting", EditorConstant.FILE_IMGUI_SETTING},
-        // StringPool.EXT_INI)))
         if(dockspaceSetting.getBool("build_layout") &&
            !dockspaceSetting.getBool("imgui_setting_exist"))
         {

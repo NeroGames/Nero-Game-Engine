@@ -114,6 +114,9 @@ namespace nero
         void                               notifyUpdate(const std::string& update);
 
       private:
+        void drawContactPoints();
+
+      private:
         void updatePhysicsIterations();
         void updatePhysicsStepping();
         void updateDrawFlags();
@@ -134,6 +137,10 @@ namespace nero
         int                                m_VelocityIterations;
         int                                m_PositionIterations;
         float                              m_PhysicsFrequency;
+        bool                               m_DrawContactPoint;
+        bool                               m_DrawContactNormal;
+        bool                               m_DrawContactImpulse;
+        bool                               m_DrawFrictionImpulse;
     };
 } // namespace nero
 

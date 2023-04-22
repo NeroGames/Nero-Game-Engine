@@ -29,7 +29,7 @@ namespace nero
         ImGui::Begin("Resource", nullptr, flags);
         bool        selected       = false;
 
-        int         resourceCount  = 3; // TODO
+        int         resourceCount  = 5;
         int         count          = 0;
         ImGuiStyle& style          = ImGui::GetStyle();
         float       xWindowVisible = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
@@ -61,6 +61,7 @@ namespace nero
             m_EditorContext->setSelectedResourceType(ResourceType::Animation);
         }
         popResourceStyle(selected);
+
         printSameLine();
 
         selected = selectedResourceType == ResourceType::Mesh;
@@ -80,6 +81,7 @@ namespace nero
             m_EditorContext->setSelectedResourceType(ResourceType::Lightmap);
         }
         popResourceStyle(selected);
+
         printSameLine();
 
         selected = selectedResourceType == ResourceType::Font;

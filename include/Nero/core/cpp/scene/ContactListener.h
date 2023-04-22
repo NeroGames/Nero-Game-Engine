@@ -40,6 +40,10 @@ namespace nero
         virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
         void registerCallback(const std::string& name, std::function<void(Collision)> callback);
 
+        unsigned int  getContactPointCount() const;
+        ContactPoint* getContactPointTable();
+        void          resetContactPointCount();
+
       private:
         ObjectManager::Ptr             m_ObjectManager;
         unsigned int                   m_MaxContactPoint;
