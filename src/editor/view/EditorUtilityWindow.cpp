@@ -125,10 +125,11 @@ namespace nero
                     m_EditorContext->getGameProject()->getProjectDirectory();
                 file::saveFile(file::getPath({projectDirectory, "Setting", "compilation"},
                                              StringPool.EXT_JSON),
-                               compilationSetting.toString());
+                               compilationSetting.toString(),
+                               true);
             }
 
-            const float wordingWidth = 50.f;
+            const float wordingWidth = 30.f;
             const float inputWidth   = ImGui::GetWindowContentRegionWidth() - wordingWidth;
             ImGui::Text("Timeout");
             ImGui::SameLine(wordingWidth + 30.f);
@@ -142,7 +143,8 @@ namespace nero
                     m_EditorContext->getGameProject()->getProjectDirectory();
                 file::saveFile(file::getPath({projectDirectory, "Setting", "compilation"},
                                              StringPool.EXT_JSON),
-                               compilationSetting.toString());
+                               compilationSetting.toString(),
+                               true);
             }
 
             ImGui::EndChild();
