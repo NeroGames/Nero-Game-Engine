@@ -99,4 +99,14 @@ namespace nero
         m_GameLevel = gameLevel;
         m_SceneRoot->addChild(m_GameLevel->getLevelRoot());
     }
+
+    void GameScene::notifyUpdate(const std::string& component, const std::string& update)
+    {
+        if(component == "game_level")
+        {
+            if(m_GameLevel)
+                m_GameLevel->notifyUpdate(update);
+        }
+    }
+
 } // namespace nero

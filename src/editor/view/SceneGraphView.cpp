@@ -288,6 +288,8 @@ namespace nero
                                       static_cast<sf::Uint8>(m_LightingAmbientColor.z * 255),
                                       static_cast<sf::Uint8>(m_LightingAmbientColor.w * 255));
                         lightSetting.setColor("ambient_color", color);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "ambient_light");
                     }
 
                     // Clear Color
@@ -321,6 +323,8 @@ namespace nero
                                       static_cast<sf::Uint8>(m_LightingClearColor.z * 255),
                                       static_cast<sf::Uint8>(m_LightingClearColor.w * 255));
                         lightSetting.setColor("clear_color", color);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "ambient_light");
                     }
 
                     ImGui::Dummy(ImVec2(0.f, 2.f));
@@ -346,6 +350,8 @@ namespace nero
                     {
                         lightSetting.setVector("cast_direction",
                                                sf::Vector2f(positionx, positiony));
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "ambient_light");
                     }
 
                     ImGui::Text("Angle");
@@ -362,6 +368,8 @@ namespace nero
                             angle = 360;
 
                         lightSetting.setFloat("cast_angle", angle);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "ambient_light");
                     }
 
                     ImGui::Text("Distance");
@@ -372,6 +380,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         lightSetting.setFloat("source_distance", distance);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "ambient_light");
                     }
 
                     ImGui::Text("Radius");
@@ -382,6 +392,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         lightSetting.setFloat("source_radius", radius);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "ambient_light");
                     }
 
                     ImGui::EndChild();
@@ -490,6 +502,8 @@ namespace nero
                             frequency = 0;
 
                         physicsSetting.setFloat("frequency", frequency);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "physics_iterations");
                     }
 
                     ImGui::Text("Velocity Iters");
@@ -503,6 +517,8 @@ namespace nero
                             velocityIters = 0;
 
                         physicsSetting.setInt("velocity_iterations", velocityIters);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "physics_iterations");
                     }
 
                     ImGui::Text("Position Iters");
@@ -516,6 +532,8 @@ namespace nero
                             positionIters = 0;
 
                         physicsSetting.setInt("position_iterations", positionIters);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "physics_iterations");
                     }
 
                     bool allowSleeping = physicsSetting.getBool("allow_sleeping");
@@ -523,6 +541,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("allow_sleeping", allowSleeping);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "physics_stepping");
                     }
 
                     bool warmStarting = physicsSetting.getBool("warm_starting");
@@ -530,6 +550,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("warm_starting", warmStarting);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "physics_stepping");
                     }
 
                     bool continuousPhysics = physicsSetting.getBool("continuous_physics");
@@ -537,6 +559,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("continuous_physics", continuousPhysics);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "physics_stepping");
                     }
 
                     bool subStepping = physicsSetting.getBool("sub_stepping");
@@ -544,6 +568,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("sub_stepping", subStepping);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "physics_stepping");
                     }
 
                     ImGui::Text("Draw");
@@ -555,6 +581,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_shape", drawShape);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "draw_flags");
                     }
 
                     bool drawAxis = physicsSetting.getBool("draw_axis");
@@ -562,6 +590,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_axis", drawAxis);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "draw_flags");
                     }
 
                     bool drawJoint = physicsSetting.getBool("draw_joint");
@@ -569,6 +599,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_joint", drawJoint);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "draw_flags");
                     }
 
                     bool drawAabb = physicsSetting.getBool("draw_aabb");
@@ -576,6 +608,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_aabb", drawAabb);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "draw_flags");
                     }
 
                     bool drawPairbit = physicsSetting.getBool("draw_pairbit");
@@ -583,6 +617,8 @@ namespace nero
                     if(ImGui::IsItemEdited())
                     {
                         physicsSetting.setBool("draw_pairbit", drawPairbit);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "draw_flags");
                     }
 
                     bool drawContactPoint = physicsSetting.getBool("draw_contact_point");

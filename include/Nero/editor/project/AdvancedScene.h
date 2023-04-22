@@ -60,6 +60,7 @@ namespace nero
         void                     setCreateSceneCallback(CreateCppGameSceneCallback callback);
         void                     registerCreateLevelCallback(const std::string          levelName,
                                                              CreateCppGameLevelCallback callback);
+        void notifyUpdate(const std::string& component, const std::string& update);
 
       private:
         Setting::Ptr                                      m_ProjectSetting;

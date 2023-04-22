@@ -78,6 +78,7 @@ namespace nero
         std::shared_ptr<sf::RenderTexture> getRenderTexture();
         Camera::Ptr                        getCamera();
         void                               setGameLevel(const GameLevel::Ptr& gameLevel);
+        void notifyUpdate(const std::string& component, const std::string& update);
 
       private:
         Context                    m_SceneContext;

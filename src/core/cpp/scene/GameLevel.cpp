@@ -32,7 +32,6 @@ namespace nero
               m_LevelContext.levelSetting->getSetting("resource")))
         , m_LevelRoot(std::make_shared<Object>())
         , m_LightManager(std::make_shared<ltbl::LightSystem>(false))
-        // TODO get gravity from m_LevelContext.levelSetting
         , m_PhysicsWorld(std::make_shared<b2World>(b2Vec2(0.f, 9.8f)))
         , m_ShapeRenderer(std::make_shared<ShapeRenderer>(m_LevelContext.renderTexture))
         , m_ObjectManager(
@@ -44,14 +43,11 @@ namespace nero
         const auto imageSize    = lightSetting.getVector("image_size");
         m_LightManager->create({rootRegion.x, rootRegion.y, imageSize.x, imageSize.y},
                                m_LevelContext.renderTexture->getSize());
-        // Add a sun light
-        m_AmbientLight = m_LightManager->createLightDirectionEmission();
-        m_AmbientLight->setCastDirection(lightSetting.getVector("cast_direction"));
-        m_AmbientLight->setCastAngle(lightSetting.getFloat("cast_angle"));
-        m_AmbientLight->setSourceDistance(lightSetting.getFloat("source_distance"));
-        m_AmbientLight->setColor(lightSetting.getColor("ambient_color"));
-        m_AmbientLight->setSourceRadius(lightSetting.getFloat("source_radius"));
-        m_AmbientLight->setTurnedOn(lightSetting.getBool("enable_ambient_light"));
+
+        updateAmbientLight();
+        updatePhysicsIterations();
+        updatePhysicsStepping();
+        updateDrawFlags();
 
         m_PhysicsWorld->SetContactListener(m_ContactListener.get());
         m_PhysicsWorld->SetDebugDraw(m_ShapeRenderer.get());
@@ -89,22 +85,51 @@ namespace nero
 
     void GameLevel::update(const sf::Time& timeStep)
     {
-        auto lightSetting = m_LevelContext.levelSetting->getSetting("lighting");
-        m_AmbientLight->setCastDirection(lightSetting.getVector("cast_direction"));
-        m_AmbientLight->setCastAngle(lightSetting.getFloat("cast_angle"));
-        m_AmbientLight->setSourceDistance(lightSetting.getFloat("source_distance"));
-        m_AmbientLight->setColor(lightSetting.getColor("ambient_color"));
-        m_AmbientLight->setSourceRadius(lightSetting.getFloat("source_radius"));
+        float32 physicsTimeStep =
+            m_PhysicsFrequency > 0.f ? 1.f / m_PhysicsFrequency : float32(0.0f);
 
-        const auto frequence       = 40.f;
-        float32    physicsTimeStep = frequence > 0.f ? 1.f / frequence : float32(0.0f);
+        m_PhysicsWorld->Step(physicsTimeStep, m_VelocityIterations, m_PositionIterations);
+    }
 
-        if(physicsTimeStep > 0.f)
+    void GameLevel::notifyUpdate(const std::string& update)
+    {
+        if(update == "physics_iterations")
         {
-            physicsTimeStep = (physicsTimeStep * timeStep.asSeconds()) /
-                              EngineConstant.TIME_PER_FRAME.asSeconds();
+            updatePhysicsIterations();
         }
+        else if(update == "physics_stepping")
+        {
+            updatePhysicsStepping();
+        }
+        else if(update == "draw_flags")
+        {
+            updateDrawFlags();
+        }
+        else if(update == "ambient_light")
+        {
+            updateAmbientLight();
+        }
+    }
 
+    void GameLevel::updatePhysicsIterations()
+    {
+        auto physicsSetting  = m_LevelContext.levelSetting->getSetting("physics");
+        m_VelocityIterations = physicsSetting.getInt("velocity_iterations");
+        m_PositionIterations = physicsSetting.getInt("position_iterations");
+        m_PhysicsFrequency   = physicsSetting.getFloat("frequency");
+    }
+
+    void GameLevel::updatePhysicsStepping()
+    {
+        auto physicsSetting = m_LevelContext.levelSetting->getSetting("physics");
+        m_PhysicsWorld->SetAllowSleeping(physicsSetting.getBool("allow_sleeping"));
+        m_PhysicsWorld->SetWarmStarting(physicsSetting.getBool("warm_starting"));
+        m_PhysicsWorld->SetContinuousPhysics(physicsSetting.getBool("continuous_physics"));
+        m_PhysicsWorld->SetSubStepping(physicsSetting.getBool("sub_stepping"));
+    }
+
+    void GameLevel::updateDrawFlags()
+    {
         auto   physicsSetting = m_LevelContext.levelSetting->getSetting("physics");
         uint32 flags          = 0;
         flags                 += physicsSetting.getBool("draw_shape") * b2Draw::e_shapeBit;
@@ -114,15 +139,18 @@ namespace nero
         flags                 += physicsSetting.getBool("draw_pairbit") * b2Draw::e_pairBit;
 
         m_ShapeRenderer->SetFlags(flags);
+    }
 
-        m_PhysicsWorld->SetAllowSleeping(physicsSetting.getBool("allow_sleeping"));
-        m_PhysicsWorld->SetWarmStarting(physicsSetting.getBool("warm_starting"));
-        m_PhysicsWorld->SetContinuousPhysics(physicsSetting.getBool("continuous_physics"));
-        m_PhysicsWorld->SetSubStepping(physicsSetting.getBool("sub_stepping"));
-
-        const int velocityIterations = physicsSetting.getInt("velocity_iterations");
-        const int positionIterations = physicsSetting.getInt("position_iterations");
-        m_PhysicsWorld->Step(physicsTimeStep, velocityIterations, positionIterations);
+    void GameLevel::updateAmbientLight()
+    {
+        auto lightSetting = m_LevelContext.levelSetting->getSetting("lighting");
+        m_AmbientLight    = m_LightManager->createLightDirectionEmission();
+        m_AmbientLight->setCastDirection(lightSetting.getVector("cast_direction"));
+        m_AmbientLight->setCastAngle(lightSetting.getFloat("cast_angle"));
+        m_AmbientLight->setSourceDistance(lightSetting.getFloat("source_distance"));
+        m_AmbientLight->setColor(lightSetting.getColor("ambient_color"));
+        m_AmbientLight->setSourceRadius(lightSetting.getFloat("source_radius"));
+        m_AmbientLight->setTurnedOn(lightSetting.getBool("enable_ambient_light"));
     }
 
     void GameLevel::render()

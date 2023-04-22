@@ -108,7 +108,7 @@ namespace nero
         if(m_EditorContext->getGameProject())
         {
 
-            ImGui::BeginChild("##compilation", ImVec2(0.f, 85.f), true);
+            ImGui::BeginChild("##compilation", ImVec2(0.f, 90.f), true);
             ImGui::Text("Compilation Setting");
             ImGui::Separator();
 
@@ -129,7 +129,9 @@ namespace nero
                                true);
             }
 
-            const float wordingWidth = 30.f;
+            ImGui::Dummy(ImVec2(0.f, 1.f));
+
+            const float wordingWidth = 35.f;
             const float inputWidth   = ImGui::GetWindowContentRegionWidth() - wordingWidth;
             ImGui::Text("Timeout");
             ImGui::SameLine(wordingWidth + 30.f);

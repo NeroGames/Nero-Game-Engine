@@ -33,7 +33,7 @@ namespace nero
         const unsigned int ENGINE_WINDOW_WIDTH  = 800;
         const unsigned int ENGINE_WINDOW_HEIGHT = 600;
         // time step
-        const sf::Time     TIME_PER_FRAME       = sf::seconds(1.f / 60.f);
+        const sf::Time     TIME_PER_FRAME       = sf::seconds(1.f / 30.f);
         // canvas color
         const sf::Color    COLOR_CANVAS         = sf::Color::Black;
         // document type

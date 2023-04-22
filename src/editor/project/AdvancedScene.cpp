@@ -431,4 +431,10 @@ namespace nero
         }
     }
 
+    void AdvancedScene::notifyUpdate(const std::string& component, const std::string& update)
+    {
+        if(m_GameScene)
+            m_GameScene->notifyUpdate(component, update);
+    }
+
 } // namespace nero

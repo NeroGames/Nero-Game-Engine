@@ -104,13 +104,20 @@ namespace nero
         ResourceManager::Ptr               getResourceManager() const;
         Setting::Ptr                       getSetting() const;
         std::string                        getLevelDirectory() const;
-
         std::shared_ptr<sf::RenderTexture> getRenderTexture();
         Camera::Ptr                        getCamera();
         Object::Ptr                        getLevelRoot() const;
         std::shared_ptr<ltbl::LightSystem> getLightManager() const;
         std::shared_ptr<b2World>           getPhysicsWorld() const;
         ShapeRenderer::Ptr                 getShapeRenderer() const;
+        //
+        void                               notifyUpdate(const std::string& update);
+
+      private:
+        void updatePhysicsIterations();
+        void updatePhysicsStepping();
+        void updateDrawFlags();
+        void updateAmbientLight();
 
       private:
         std::shared_ptr<sf::RenderTexture> m_RenderTexture;
@@ -124,6 +131,9 @@ namespace nero
         ContactListener::Ptr               m_ContactListener;
         std::vector<Screen::Ptr>           m_ScreenTable;
         ltbl::LightDirectionEmission*      m_AmbientLight;
+        int                                m_VelocityIterations;
+        int                                m_PositionIterations;
+        float                              m_PhysicsFrequency;
     };
 } // namespace nero
 
