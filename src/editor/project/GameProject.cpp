@@ -214,8 +214,6 @@ namespace nero
     {
         BTManager::CompilingProject = true;
 
-        // TODO : prevent multiple compilation at the same time
-
         Parameter parameter;
         parameter.loadJson(file::loadJson(file::getPath({projectDirectory, ".project"}), true));
         const std::string projectName    = parameter.getString("project_name");
@@ -227,7 +225,12 @@ namespace nero
 
         if(NERO_GAME_HOME == StringPool.BLANK)
         {
-            // TODO error, stop compilation process
+            const auto exitCode = -2;
+            backgroundTask->setErrorCode(exitCode);
+            nero_log("compilation exit code = " + toString(exitCode));
+            backgroundTask->nextStep();
+            backgroundTask->addMessage("Compilation Failed !");
+            return;
         }
 
         const std::string mingw32 = NERO_GAME_HOME + "/Compiler/bin/mingw32-make.exe";
@@ -238,14 +241,41 @@ namespace nero
         backgroundTask->addMessage("Compiling Project - " + projectName);
         nero_log("compiling project " + projectName);
 
-        backgroundTask->nextStep();
-        backgroundTask->addMessage("Step 1/3 - Cleaning Project");
-        cmd::Process cleanProcess = cmd::runCommand(mingw32, {"-C", buildPath, "-k", "clean"});
-        backgroundTask->setErrorCode(cleanProcess.getExistCode());
-        nero_log("clean project exit code = " + toString(cleanProcess.getExistCode()));
+        // Load compilation settings
+        Setting     compilationSetting;
+        std::string settingPath =
+            file::getPath({projectDirectory, "setting", "compilation"}, StringPool.EXT_JSON);
 
+        if(!file::fileExist(settingPath))
+        {
+            compilationSetting.setBool("clean", false);
+            compilationSetting.setInt("timeout", 30);
+            file::saveFile(
+                file::getPath({projectDirectory, "Setting", "compilation"}, StringPool.EXT_JSON),
+                compilationSetting.toString());
+        }
+        else
+        {
+            compilationSetting.loadSetting(settingPath, true, true);
+        }
+
+        const auto maxStep     = compilationSetting.getBool("clean") ? 3 : 2;
+        auto       currentStep = 1;
+
+        if(compilationSetting.getBool("clean"))
+        {
+            backgroundTask->nextStep();
+            const std::string stepCount =
+                "Step " + toString(currentStep++) + "/" + toString(maxStep);
+            backgroundTask->addMessage(stepCount + " - Cleaning Project");
+            cmd::Process cleanProcess = cmd::runCommand(mingw32, {"-C", buildPath, "-k", "clean"});
+            backgroundTask->setErrorCode(cleanProcess.getExitCode());
+            nero_log("clean project exit code = " + toString(cleanProcess.getExitCode()));
+        }
+
+        std::string stepCount = "Step " + toString(currentStep++) + "/" + toString(maxStep);
         backgroundTask->nextStep();
-        backgroundTask->addMessage("Step 2/3 - Configuring Project");
+        backgroundTask->addMessage(stepCount + " - Configuring Project");
         cmd::Process configProcess =
             cmd::runCommand(cmake,
                             {"-G",
@@ -261,23 +291,25 @@ namespace nero
                              "-D",
                              "CMAKE_MAKE_PROGRAM=" + file::getPath(mingw32)});
 
-        backgroundTask->setErrorCode(configProcess.getExistCode());
-        nero_log("configure project exit code = " + toString(configProcess.getExistCode()));
+        backgroundTask->setErrorCode(configProcess.getExitCode());
+        nero_log("configure project exit code = " + toString(configProcess.getExitCode()));
 
+        stepCount = "Step " + toString(currentStep++) + "/" + toString(maxStep);
         backgroundTask->nextStep();
-        backgroundTask->addMessage("Step 3/3 - Building Project");
+        backgroundTask->addMessage(stepCount + " - Building Project");
         cmd::Process buildProcess = cmd::runCommandWithoutStream(mingw32, {"-C", buildPath}, false);
-        int          existCode    = -999;
+        int          exitCode     = -1;
         auto         compilationFuture = std::async(std::launch::async,
-                                            [&buildProcess, &existCode]()
+                                            [&buildProcess, &exitCode]()
                                             {
-                                                existCode = buildProcess.waitCompletion();
+                                                exitCode = buildProcess.waitCompletion();
                                             });
         // wait
-        compilationFuture.wait_for(std::chrono::seconds(30));
+        const int64_t timeout          = compilationSetting.getInt("timeout");
+        compilationFuture.wait_for(std::chrono::seconds(timeout));
 
         const auto buildProcessRunning = cmd::processRunning(toString(buildProcess.getProcessId()));
-        if(existCode != 0 || buildProcessRunning)
+        if(exitCode != 0 || buildProcessRunning)
         {
             if(buildProcessRunning)
             {
@@ -288,8 +320,8 @@ namespace nero
             Poco::StreamCopier::copyStreamUnbuffered(errorStream,
                                                      nero::logging::Logger::getStringStream());
             Poco::StreamCopier::copyStream(errorStream, std::cout);
-            backgroundTask->setErrorCode(existCode);
-            nero_log("build project exit code = " + toString(existCode));
+            backgroundTask->setErrorCode(exitCode);
+            nero_log("build project exit code = " + toString(exitCode));
             backgroundTask->nextStep();
             backgroundTask->addMessage("Compilation Failed !");
 
@@ -310,9 +342,9 @@ namespace nero
             Poco::StreamCopier::copyStream(outStream, std::cout);
             Poco::StreamCopier::copyStream(errorStream, std::cout);
 
-            existCode = 0;
-            backgroundTask->setErrorCode(existCode);
-            nero_log("build project exit code = " + toString(existCode));
+            exitCode = 0;
+            backgroundTask->setErrorCode(exitCode);
+            nero_log("build project exit code = " + toString(exitCode));
 
             backgroundTask->nextStep();
             backgroundTask->addMessage("Finished Compiling Project - " + projectName);

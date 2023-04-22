@@ -215,6 +215,7 @@ namespace nero
         file::createDirectory(file::getPath({projectDirectory, "Scene", "level"}));
         file::createDirectory(file::getPath({projectDirectory, "Scene", "screen"}));
         file::createDirectory(file::getPath({projectDirectory, "Scene", "factory"}));
+        file::createDirectory(file::getPath({projectDirectory, "Setting"}));
 
         // Step 1-2 : Create project document
         Setting document;
@@ -362,12 +363,20 @@ namespace nero
                           StringPool.EXT_CPP),
             screen_source_template);
         // scene
-        Setting scene_setting;
-        scene_setting.setStringTable("level_table", std::vector<std::string>());
-        scene_setting.setStringTable("screen_table", std::vector<std::string>());
-        scene_setting.setStringTable("object_table", std::vector<std::string>());
+        Setting sceneSetting;
+        sceneSetting.setStringTable("level_table", std::vector<std::string>());
+        sceneSetting.setStringTable("screen_table", std::vector<std::string>());
+        sceneSetting.setStringTable("object_table", std::vector<std::string>());
         file::saveFile(file::getPath({projectDirectory, "Scene", "scene"}, StringPool.EXT_NERO),
-                       scene_setting.toString());
+                       sceneSetting.toString());
+
+        // Setting
+        Setting compilationSetting;
+        compilationSetting.setBool("clean", false);
+        compilationSetting.setInt("timeout", 30);
+        file::saveFile(
+            file::getPath({projectDirectory, "Setting", "compilation"}, StringPool.EXT_JSON),
+            compilationSetting.toString());
 
         // Step 3 : compile the project
         GameProject::compileProject(projectDirectory, backgroundTask);

@@ -46,7 +46,7 @@ namespace nero
             return m_Handle.wait();
         }
 
-        int Process::getExistCode()
+        int Process::getExitCode()
         {
             return m_ExitCode;
         }

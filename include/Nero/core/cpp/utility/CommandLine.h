@@ -31,7 +31,7 @@ namespace nero
             Poco::Pipe&          getOutPipe();
             Poco::Pipe&          getErrorPipe();
             unsigned int         getProcessId();
-            int                  getExistCode();
+            int                  getExitCode();
             int                  waitCompletion();
             void                 killProcess();
             Poco::ProcessHandle& getHandle();
