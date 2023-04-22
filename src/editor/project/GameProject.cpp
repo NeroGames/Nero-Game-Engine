@@ -18,45 +18,50 @@
 
 namespace nero
 {
-    GameProject::GameProject(Setting::Ptr projectSetting, FontHolder::Ptr editorFontHolder)
-        : m_ProjectSetting(std::move(projectSetting))
+    GameProject::GameProject(Setting::Ptr projectDocument, FontHolder::Ptr editorFontHolder)
+        : m_ProjectDocument(std::move(projectDocument))
+        , m_ProjectSetting(std::make_shared<Setting>())
         , m_EditorFontHolder(std::move(editorFontHolder))
     {
     }
 
     void GameProject::init()
     {
-        m_ProjectSetting->setString(
+        m_ProjectDocument->setString(
             "source_directory",
             file::getPath(
-                {getProjectDirectory(), "Source", m_ProjectSetting->getString("project_name")}));
-        m_ProjectSetting->setString("build_directory",
-                                    file::getPath({getProjectDirectory(), "Build"}));
-        m_ProjectSetting->setString(
+                {getProjectDirectory(), "Source", m_ProjectDocument->getString("project_name")}));
+        m_ProjectDocument->setString("build_directory",
+                                     file::getPath({getProjectDirectory(), "Build"}));
+        m_ProjectDocument->setString(
             "cmake_file",
-            file::getPath({m_ProjectSetting->getString("source_directory"), "CMakeLists"},
+            file::getPath({m_ProjectDocument->getString("source_directory"), "CMakeLists"},
                           StringPool.EXT_TEXT));
 
-        std::string library     = string::formatString(m_ProjectSetting->getString("project_name"),
+        std::string library     = string::formatString(m_ProjectDocument->getString("project_name"),
                                                    string::Format::COMPACT_LOWER);
         std::string libraryFile = file::getPath(
-            {m_ProjectSetting->getString("build_directory"), "libnerogame-" + library},
+            {m_ProjectDocument->getString("build_directory"), "libnerogame-" + library},
             StringPool.EXT_DLL);
         std::string libraryFileCopy = file::getPath(
-            {m_ProjectSetting->getString("build_directory"), "libnerogame-" + library + "-copy"},
+            {m_ProjectDocument->getString("build_directory"), "libnerogame-" + library + "-copy"},
             StringPool.EXT_DLL);
 
-        m_ProjectSetting->setString("library_file", libraryFile);
-        m_ProjectSetting->setString("library_file_copy", libraryFileCopy);
+        m_ProjectDocument->setString("library_file", libraryFile);
+        m_ProjectDocument->setString("library_file_copy", libraryFileCopy);
 
         // create advanced scene
-        m_AdvancedScene = std::make_shared<AdvancedScene>(m_ProjectSetting, m_EditorFontHolder);
+        m_AdvancedScene = std::make_shared<AdvancedScene>(m_ProjectDocument, m_EditorFontHolder);
+
+        // Load project setting
+        std::string settingPath = file::getPath({getProjectDirectory(), "setting", "compilation"});
+        m_ProjectSetting->loadSetting(settingPath);
     }
 
     bool GameProject::loadLibrary()
     {
-        const std::string libraryFile     = m_ProjectSetting->getString("library_file");
-        const std::string libraryFileCopy = m_ProjectSetting->getString("library_file_copy");
+        const std::string libraryFile     = m_ProjectDocument->getString("library_file");
+        const std::string libraryFileCopy = m_ProjectDocument->getString("library_file_copy");
 
         if(!file::fileExist(libraryFile))
         {
@@ -132,7 +137,7 @@ namespace nero
 
     void GameProject::openEditor()
     {
-        std::string codeEditor = m_ProjectSetting->getString("code_editor");
+        std::string codeEditor = m_ProjectDocument->getString("code_editor");
 
         if(codeEditor == "Qt Creator")
         {
@@ -162,14 +167,14 @@ namespace nero
         {
 
             std::string qt_creator = file::escapeSpace(file::getWindowsPath(QT_CREATOR));
-            std::string cmake_file = file::escapeSpace(m_ProjectSetting->getString("cmake_file"));
+            std::string cmake_file = file::escapeSpace(m_ProjectDocument->getString("cmake_file"));
             std::string cmd        = "START /B \"\" " + qt_creator + " " + cmake_file;
             system(cmd.c_str());
 
             m_CodeEditorProcessId = cmd::findProcessId("qtcreator");
 
             sleep(4);
-            cmd::showApplication(m_ProjectSetting->getString("project_name"));
+            cmd::showApplication(m_ProjectDocument->getString("project_name"));
         }
     }
 
@@ -193,7 +198,7 @@ namespace nero
                 std::string cmd =
                     "START \"\" " + file::escapeSpace(file::getWindowsPath(VISUAL_STUDIO));
                 cmd += " \"" +
-                       file::getWindowsPath(m_ProjectSetting->getString("source_directory")) +
+                       file::getWindowsPath(m_ProjectDocument->getString("source_directory")) +
                        "\"" + " /Edit";
                 system(cmd.c_str());
 
@@ -364,12 +369,12 @@ namespace nero
 
     std::string GameProject::getProjectName() const
     {
-        return m_ProjectSetting->getString("project_name");
+        return m_ProjectDocument->getString("project_name");
     }
 
     std::string GameProject::getProjectDirectory() const
     {
-        return m_ProjectSetting->getString("project_directory");
+        return m_ProjectDocument->getString("project_directory");
     }
 
     void GameProject::closeProject()
@@ -381,5 +386,10 @@ namespace nero
         }
 
         m_AdvancedScene->clearLoadedObject();
+    }
+
+    Setting::Ptr GameProject::getProjectSetting()
+    {
+        return m_ProjectSetting;
     }
 } // namespace nero

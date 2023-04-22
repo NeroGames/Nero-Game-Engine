@@ -28,7 +28,7 @@ namespace nero
         using Ptr = std::shared_ptr<GameProject>;
 
       public:
-        GameProject(Setting::Ptr projectSetting, FontHolder::Ptr editorFontHolder);
+        GameProject(Setting::Ptr projectDocument, FontHolder::Ptr editorFontHolder);
 
         void               init();
         bool               loadLibrary();
@@ -38,6 +38,7 @@ namespace nero
         AdvancedScene::Ptr getAdvancedScene();
         std::string        getProjectName() const;
         std::string        getProjectDirectory() const;
+        Setting::Ptr       getProjectSetting();
 
         // Static
         static void        compileProject(const std::string&        projectDirectory,
@@ -49,6 +50,7 @@ namespace nero
 
       private:
         AdvancedScene::Ptr m_AdvancedScene;
+        Setting::Ptr       m_ProjectDocument;
         Setting::Ptr       m_ProjectSetting;
         std::string        m_CodeEditorProcessId;
         FontHolder::Ptr    m_EditorFontHolder;

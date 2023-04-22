@@ -528,13 +528,13 @@ namespace nero
     {
         nero_log("openning project " + projectDirectory);
 
-        Setting::Ptr projectSetting = std::make_shared<Setting>();
-        projectSetting->loadSetting(file::getPath({projectDirectory, ".project"}), true, true);
-        projectSetting->setString("project_directory", projectDirectory);
-        projectSetting->setString("workspace_directory",
-                                  file::getParentDirectory(projectDirectory, 2));
+        Setting::Ptr projectDocument = std::make_shared<Setting>();
+        projectDocument->loadSetting(file::getPath({projectDirectory, ".project"}), true, true);
+        projectDocument->setString("project_directory", projectDirectory);
+        projectDocument->setString("workspace_directory",
+                                   file::getParentDirectory(projectDirectory, 2));
 
-        m_GameProject = std::make_shared<GameProject>(projectSetting, m_EditorFontHolder);
+        m_GameProject = std::make_shared<GameProject>(projectDocument, m_EditorFontHolder);
 
         m_GameProject->init();
 
