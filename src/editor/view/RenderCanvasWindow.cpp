@@ -126,7 +126,7 @@ namespace nero
         m_RenderTexture->draw(m_CanvasXAxis);
         m_RenderTexture->draw(m_CanvasYAxis);
 
-        ImGui::Image(flipTexture(m_RenderTexture->getTexture()));
+        ImGui::Image(*m_RenderTexture);
 
         if(m_EditorContext->getBuilderMode() != BuilderMode::Mesh)
         {
@@ -350,13 +350,5 @@ namespace nero
             default:
                 return "Game Editor";
         }
-    }
-
-    sf::Sprite RenderCanvasWindow::flipTexture(const sf::Texture& texture)
-    {
-        sf::Vector2u size = texture.getSize();
-        sf::Sprite   sprite(texture, sf::IntRect(0, size.y, size.x, -size.y));
-
-        return sprite;
     }
 } // namespace nero

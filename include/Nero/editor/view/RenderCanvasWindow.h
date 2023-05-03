@@ -30,7 +30,6 @@ namespace nero
         void        renderCamera();
         void        renderGameModeInfo();
         std::string getString(const EditorMode& editorMode);
-        sf::Sprite  flipTexture(const sf::Texture& texture);
 
       private:
         RenderTexturePtr    m_RenderTexture;
