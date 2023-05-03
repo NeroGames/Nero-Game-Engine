@@ -5,6 +5,8 @@
 ///////////////////////////HEADERS//////////////////////////
 // Nero
 #include <Nero/core/cpp/engine/CoreEngine.h>
+// Easy profiler
+#include <easy/profiler.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -42,49 +44,49 @@ namespace nero
 
         while(m_RenderWindow.isOpen())
         {
-            EASY_BLOCK("Game Loop");
+            EASY_BLOCK("CoreEngine::GameLoop")
 
             // Accumulate the time elapsed at each loop
             sf::Time elapsedTime = clock.restart();
             timeSinceLastUpdate  += elapsedTime;
 
-            // When the time comes over the value of "TIME_PER_FRAME" do --> 1 --> 2 then do --> 2
-            // --> 3 TIME_PER_FRAME is constant with a value of 1/60 second (the game is update 60
-            // time per second)
+            // Update as many times as neccessary
             while(timeSinceLastUpdate > EngineConstant.TIME_PER_FRAME)
             {
-                EASY_VALUE("TIME_SINCE_LAST_UPDATE", timeSinceLastUpdate.asMilliseconds());
+                EASY_BLOCK("CoreEngine::Event-And-Update")
 
                 // retrieve 1/60 second in the accumulated time
                 timeSinceLastUpdate -= EngineConstant.TIME_PER_FRAME;
 
                 // 1... handle user inputs
-                EASY_BLOCK("Handle Event");
+                EASY_BLOCK("CoreEngine::HandleEvent")
                 handleEvent();
                 EASY_END_BLOCK
 
                 // 2... update the game
-                EASY_BLOCK("Update Game");
+                EASY_BLOCK("CoreEngine::Update")
                 update(EngineConstant.TIME_PER_FRAME);
-                EASY_END_BLOCK;
+                EASY_END_BLOCK
+
+                EASY_END_BLOCK
             }
 
             // 3... render the game
-            EASY_BLOCK("Render Game");
+            EASY_BLOCK("CoreEngine::Render")
             render();
-            EASY_END_BLOCK; // render
+            EASY_END_BLOCK
 
             // 4... Compute Frame rate
+            EASY_BLOCK("CoreEngine::ComputeFrameRate")
             computeFrameRate(elapsedTime);
+            EASY_END_BLOCK
 
-            EASY_END_BLOCK; // game loop
+            EASY_END_BLOCK
         }
     }
 
     void CoreEngine::computeFrameRate(sf::Time timeStep)
     {
-        EASY_FUNCTION(profiler::colors::Mint);
-
         // Accumulate data for on 1 second
         m_ElapsedTime += timeStep;
         m_FrameCount  += 1;
