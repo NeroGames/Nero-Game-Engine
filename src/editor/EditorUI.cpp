@@ -257,6 +257,8 @@ namespace nero
         {
             m_EditorContext->getAdvancedScene()->update(timeStep);
         }
+
+        m_RenderCanvasWindow.update(timeStep);
     }
 
     void EditorUI::render()

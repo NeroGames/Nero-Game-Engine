@@ -8,10 +8,11 @@
 // Imgui
 #include <imgui/imgui.h>
 #include <imgui/imgui-SFML.h>
-#include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 // Nero
 #include <Nero/editor/EditorContext.h>
+// SFML
+#include <SFML/System/Time.hpp>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -23,6 +24,7 @@ namespace nero
 
         virtual void destroy() = 0;
         virtual void render()  = 0;
+        virtual void update(const sf::Time& timeStep);
 
       protected:
         EditorContext::Ptr m_EditorContext;

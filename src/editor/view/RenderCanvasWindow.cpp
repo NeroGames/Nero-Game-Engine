@@ -15,6 +15,10 @@ namespace nero
         , m_RenderContext(m_EditorContext->getRenderContext())
         , m_EditorCamera(m_EditorContext->getEditorCamera())
         , m_MousePositionString("Mouse Position")
+        , m_AdvancedScene(nullptr)
+        , m_LevelBuilder(nullptr)
+        , m_RenderLevelBuilder(false)
+        , m_RenderAdvancedScene(false)
     {
         m_CameraXAxis.setSize(sf::Vector2f(20.f, -2.f));
         m_CameraXAxis.setFillColor(sf::Color::Red);
@@ -42,6 +46,9 @@ namespace nero
         m_GameBuilderInfo.setFont(m_EditorContext->getFontHolder()->getDefaultFont());
         m_GameBuilderInfo.setCharacterSize(18.f);
         m_GameBuilderInfo.setFillColor(sf::Color::White);
+
+        m_WindowPadding  = ImGui::GetStyle().WindowPadding;
+        m_TitleBarHeight = ImGui::GetFontSize() * 2 + ImGui::GetStyle().FramePadding.y * 4;
     }
 
     RenderCanvasWindow::~RenderCanvasWindow()
@@ -53,217 +60,40 @@ namespace nero
     {
     }
 
-    void RenderCanvasWindow::render()
+    void RenderCanvasWindow::update(const sf::Time&)
     {
-        ImGui::Begin(EditorConstant.WINDOW_GAME_SCENE.c_str());
+        updateRenderContext();
 
-        buildRenderContext();
-
-        ImGui::SameLine();
-
-        if(mouseOnCanvas() && ImGui::IsWindowFocused())
+        if(mouseOnCanvas() && m_RenderContext->focus)
         {
-            sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(
+            sf::Vector2f worldPosition = m_RenderTexture->mapPixelToCoords(
                 sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
                 m_RenderTexture->getView());
 
-            std::string canvas_pos_string =
+            std::string canvasPositionString =
                 "Canvas x = " + toString(m_RenderContext->mousePosition.x) +
                 " y = " + toString(m_RenderContext->mousePosition.y);
-            std::string wrold_pos_string =
-                "World x = " + toString(world_pos.x) + " y = " + toString(world_pos.y);
-            std::string camera_pos_string =
+
+            std::string worldPositionString =
+                "World x = " + toString(worldPosition.x) + " y = " + toString(worldPosition.y);
+
+            std::string cameraPositionString =
                 "Camera x = " + toString(m_EditorCamera->getPosition().x) +
                 " y = " + toString(m_EditorCamera->getPosition().y);
 
             m_MousePositionString =
-                canvas_pos_string + " | " + wrold_pos_string + " | " + camera_pos_string;
+                canvasPositionString + " | " + worldPositionString + " | " + cameraPositionString;
         }
-        float start = (ImGui::GetWindowContentRegionWidth() -
-                       ImGui::CalcTextSize(m_MousePositionString.c_str()).x) /
-                      2.f;
-        ImGui::SetCursorPosX(start);
-        ImGui::Text(m_MousePositionString.c_str());
-
-        prepareRenderTexture();
 
         const auto editorMode = m_EditorContext->getEditorMode();
-        if(editorMode == EditorMode::World_Builder)
-        {
-            auto levelBuilder = m_EditorContext->getLevelBuilder();
-            if(levelBuilder)
-            {
-                levelBuilder->render();
-            }
-        }
-        else if(editorMode == EditorMode::Play_Game)
-        {
-            auto advancedScene = m_EditorContext->getAdvancedScene();
-            if(advancedScene)
-            {
-                advancedScene->render();
-                advancedScene->renderShape();
-            }
-        }
+        m_LevelBuilder        = m_EditorContext->getLevelBuilder();
+        m_AdvancedScene       = m_EditorContext->getAdvancedScene();
+        m_RenderLevelBuilder  = (editorMode == EditorMode::World_Builder) && m_LevelBuilder;
+        m_RenderAdvancedScene = (editorMode == EditorMode::Play_Game) && m_AdvancedScene;
 
-        // Render on Front Screen
-        m_RenderTexture->setView(m_RenderTexture->getDefaultView());
-        // TODO render Game Screen here
+        m_CameraXAxis.setRotation(m_EditorCamera->getView().getRotation());
+        m_CameraYAxis.setRotation(m_EditorCamera->getView().getRotation() + 90.f);
 
-        if(editorMode == EditorMode::Play_Game)
-        {
-            auto advancedScene = m_EditorContext->getAdvancedScene();
-            if(advancedScene)
-            {
-                advancedScene->renderFrontScreen();
-            }
-        }
-
-        renderCamera();
-        renderGameModeInfo();
-        m_RenderTexture->setView(m_EditorCamera->getView());
-
-        m_RenderTexture->draw(m_CanvasXAxis);
-        m_RenderTexture->draw(m_CanvasYAxis);
-
-        ImGui::Image(*m_RenderTexture);
-
-        if(m_EditorContext->getBuilderMode() != BuilderMode::Mesh)
-        {
-            renderCanvasMenu();
-        }
-
-        ImGui::End();
-    }
-
-    void RenderCanvasWindow::renderCanvasMenu()
-    {
-        if(ImGui::BeginPopupCanvasWindow())
-        {
-            if(ImGui::BeginMenu("Editor Mode"))
-            {
-                // ImGui::MenuItem("(choose editor mode)", NULL, false, false);
-
-                if(ImGui::MenuItem("World Builder"))
-                {
-                    m_EditorContext->setEditorMode(EditorMode::World_Builder);
-                }
-
-                if(ImGui::MenuItem("Screen Builder"))
-                {
-                    m_EditorContext->setEditorMode(EditorMode::Screen_Builder);
-                }
-
-                if(ImGui::MenuItem("Object Builder"))
-                {
-                    m_EditorContext->setEditorMode(EditorMode::Factory);
-                }
-
-                ImGui::EndMenu();
-            }
-
-            ImGui::Separator();
-
-            if(ImGui::BeginMenu("Website"))
-            {
-                // ImGui::MenuItem("(useful links)", NULL, false, false);
-
-                if(ImGui::MenuItem("Learn"))
-                {
-                }
-
-                if(ImGui::MenuItem("Forum"))
-                {
-                }
-
-                if(ImGui::MenuItem("Code Snippet"))
-                {
-                }
-
-                if(ImGui::MenuItem("Engine API"))
-                {
-                }
-
-                ImGui::EndMenu();
-            }
-
-            ImGui::EndPopup();
-        }
-    }
-
-    void RenderCanvasWindow::buildRenderContext()
-    {
-        sf::Vector2f windowPosition = ImGui::GetWindowPos();
-        sf::Vector2f windowSize     = ImGui::GetWindowSize();
-        sf::Vector2f mousePosition  = ImGui::GetMousePos();
-        sf::Vector2f windowPadding  = ImGui::GetStyle().WindowPadding;
-        float titleBarHeight = ImGui::GetFontSize() * 2 + ImGui::GetStyle().FramePadding.y * 4;
-
-        RenderContext renderContext;
-        renderContext.canvasPosition =
-            sf::Vector2f(windowPosition.x + windowPadding.x,
-                         windowPosition.y + windowPadding.y + titleBarHeight);
-
-        renderContext.canvasSize =
-            sf::Vector2f(windowSize.x - windowPadding.x * 2,
-                         windowSize.y - windowPadding.y * 2 - titleBarHeight);
-
-        if(renderContext.canvasSize.x < 100.f)
-            renderContext.canvasSize.x = 100.f;
-
-        if(renderContext.canvasSize.y < 100.f)
-            renderContext.canvasSize.y = 100.f;
-
-        renderContext.mousePosition =
-            sf::Vector2f(mousePosition.x - renderContext.canvasPosition.x,
-                         mousePosition.y - renderContext.canvasPosition.y);
-
-        renderContext.focus = ImGui::IsWindowFocused();
-
-        *m_RenderContext    = renderContext;
-    }
-
-    void RenderCanvasWindow::prepareRenderTexture()
-    {
-        if(m_RenderTexture->getSize().x != m_RenderContext->canvasSize.x ||
-           m_RenderTexture->getSize().y != m_RenderContext->canvasSize.y)
-        {
-            m_RenderTexture->create(m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y);
-            m_EditorCamera->updateView(
-                sf::Vector2f(m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y));
-        }
-
-        sf::Color clearColor = sf::Color::Black;
-
-        if(m_EditorContext->getEditorMode() == EditorMode::Play_Game)
-        {
-            auto levelBuilder = m_EditorContext->getLevelBuilder();
-
-            if(levelBuilder && levelBuilder->getLevelSetting()->getBool("enable_light"))
-            {
-                clearColor =
-                    levelBuilder->getLevelSetting()->getSetting("lighting").getColor("clear_color");
-            }
-        }
-
-        m_RenderTexture->clear(clearColor);
-        m_RenderTexture->setView(m_EditorCamera->getView());
-    }
-
-    bool RenderCanvasWindow::mouseOnCanvas()
-    {
-        sf::Rect<float> canvas(m_RenderContext->canvasPosition.x,
-                               m_RenderContext->canvasPosition.y,
-                               m_RenderContext->canvasSize.x,
-                               m_RenderContext->canvasSize.y);
-
-        sf::Vector2i    mousePosition = ImGui::GetMousePos();
-
-        return canvas.contains(mousePosition.x, mousePosition.y);
-    }
-
-    void RenderCanvasWindow::renderGameModeInfo()
-    {
         std::string gameMode  = getString(m_EditorContext->getEditorMode());
         std::string frameRate = toString(m_EditorContext->getFrameRate()) + " fps";
         std::string frameTime = toString(m_EditorContext->getFrameTime() * 1000.f) + " ms";
@@ -278,20 +108,115 @@ namespace nero
         position.y = m_RenderTexture->getSize().y - m_GameModeInfo.getLocalBounds().height - 20.f;
 
         m_GameModeInfo.setPosition(position);
-
         m_GameBuilderInfo.setPosition(sf::Vector2f(20.f, position.y));
 
-        m_RenderTexture->draw(m_GameModeInfo);
-        m_RenderTexture->draw(m_GameBuilderInfo);
+        if(m_RenderTexture->getSize().x != m_RenderContext->canvasSize.x ||
+           m_RenderTexture->getSize().y != m_RenderContext->canvasSize.y)
+        {
+            m_RenderTexture->create(m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y);
+            m_EditorCamera->updateView(
+                sf::Vector2f(m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y));
+        }
+
+        m_ClearColor = sf::Color::Black;
+
+        if(editorMode == EditorMode::Play_Game && m_LevelBuilder)
+        {
+            auto lightSetting = m_LevelBuilder->getLevelSetting()->getSetting("lighting");
+
+            // TODO
+            // if(lightSetting.getBool("enable_light"))
+            //{
+            // m_ClearColor = lightSetting.getColor("clear_color");
+            //}
+        }
     }
 
-    void RenderCanvasWindow::renderCamera()
+    void RenderCanvasWindow::render()
     {
-        m_CameraXAxis.setRotation(m_EditorCamera->getView().getRotation());
-        m_CameraYAxis.setRotation(m_EditorCamera->getView().getRotation() + 90.f);
+        ImGui::Begin(EditorConstant.WINDOW_GAME_SCENE.c_str());
+
+        // Get current window and mouse position
+        m_CanvasPosition       = ImGui::GetWindowPos();
+        m_CanvasSize           = ImGui::GetWindowSize();
+        m_MousePosition        = ImGui::GetMousePos();
+        m_RenderContext->focus = ImGui::IsWindowFocused();
+
+        ImGui::SameLine();
+
+        const float textPosition = (ImGui::GetWindowContentRegionWidth() -
+                                    ImGui::CalcTextSize(m_MousePositionString.c_str()).x) /
+                                   2.f;
+        ImGui::SetCursorPosX(textPosition);
+        ImGui::Text("%s", m_MousePositionString.c_str());
+
+        m_RenderTexture->clear(m_ClearColor);
+        m_RenderTexture->setView(m_EditorCamera->getView());
+
+        if(m_RenderLevelBuilder)
+        {
+            m_LevelBuilder->render();
+        }
+        else if(m_RenderAdvancedScene)
+        {
+            m_AdvancedScene->render();
+            m_AdvancedScene->renderShape();
+        }
+
+        m_RenderTexture->draw(m_CanvasXAxis);
+        m_RenderTexture->draw(m_CanvasYAxis);
+
+        // Front Screen
+        m_RenderTexture->setView(m_RenderTexture->getDefaultView());
+
+        if(m_RenderAdvancedScene)
+        {
+            m_AdvancedScene->renderFrontScreen();
+        }
 
         m_RenderTexture->draw(m_CameraXAxis);
         m_RenderTexture->draw(m_CameraYAxis);
+        m_RenderTexture->draw(m_GameModeInfo);
+        m_RenderTexture->draw(m_GameBuilderInfo);
+
+        m_RenderTexture->setView(m_EditorCamera->getView());
+
+        ImGui::Image(*m_RenderTexture);
+
+        ImGui::End();
+    }
+
+    void RenderCanvasWindow::updateRenderContext()
+    {
+        m_RenderContext->canvasPosition =
+            sf::Vector2f(m_CanvasPosition.x + m_WindowPadding.x,
+                         m_CanvasPosition.y + m_WindowPadding.y + m_TitleBarHeight);
+
+        m_RenderContext->canvasSize =
+            sf::Vector2f(m_CanvasSize.x - m_WindowPadding.x * 2,
+                         m_CanvasSize.y - m_WindowPadding.y * 2 - m_TitleBarHeight);
+
+        if(m_RenderContext->canvasSize.x < 100.f)
+            m_RenderContext->canvasSize.x = 100.f;
+
+        if(m_RenderContext->canvasSize.y < 100.f)
+            m_RenderContext->canvasSize.y = 100.f;
+
+        m_RenderContext->mousePosition =
+            sf::Vector2f(m_MousePosition.x - m_RenderContext->canvasPosition.x,
+                         m_MousePosition.y - m_RenderContext->canvasPosition.y);
+    }
+
+    bool RenderCanvasWindow::mouseOnCanvas()
+    {
+        sf::Rect<float> canvas(m_RenderContext->canvasPosition.x,
+                               m_RenderContext->canvasPosition.y,
+                               m_RenderContext->canvasSize.x,
+                               m_RenderContext->canvasSize.y);
+
+        sf::Vector2i    mousePosition = ImGui::GetMousePos();
+
+        return canvas.contains(mousePosition.x, mousePosition.y);
     }
 
     std::string RenderCanvasWindow::getString(const EditorMode& editorMode)

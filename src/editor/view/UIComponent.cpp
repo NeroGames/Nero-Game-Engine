@@ -16,4 +16,8 @@ namespace nero
     UIComponent::~UIComponent()
     {
     }
+
+    void UIComponent::update(const sf::Time& timeStep)
+    {
+    }
 } // namespace nero
