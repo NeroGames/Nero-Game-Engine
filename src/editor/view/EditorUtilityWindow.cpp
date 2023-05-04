@@ -28,7 +28,7 @@ namespace nero
     {
         ImGui::Begin(EditorConstant.WINDOW_UTILITY.c_str());
 
-        ImGui::BeginChild("##builder_mode", ImVec2(0.f, 105.f), true);
+        ImGui::BeginChild("##builder_mode", ImVec2(0.f, 80.f), true);
         ImGui::Text("Choose Builder Mode");
         ImGui::Separator();
 
@@ -66,11 +66,12 @@ namespace nero
                 m_EditorContext->setBuilderMode(BuilderMode::Mesh);
             }
 
-            ImGui::RadioButton("Joint", &builderModeIndex, 2);
+            // TODO
+            /*ImGui::RadioButton("Joint", &builderModeIndex, 2);
             if(ImGui::IsItemEdited() && builderMode != BuilderMode::None)
             {
                 m_EditorContext->setBuilderMode(BuilderMode::Joint);
-            }
+            }*/
         }
 
         ImGui::EndChild();

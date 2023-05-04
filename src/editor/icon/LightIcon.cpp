@@ -13,10 +13,11 @@ namespace nero
         , m_LightmapName("")
         , m_LightColor(sf::Color::White)
         , m_LightEnabled(true)
+        , m_LightScale(1.f, 1.f)
     {
         setFirstType(Object::Light_Object);
         setSecondType(Object::Light_Object);
-        setIsUpdateable(false);
+        setIsUpdateable(true);
     }
 
     void LightIcon::drawObject(sf::RenderTarget& target, sf::RenderStates states) const
@@ -24,11 +25,50 @@ namespace nero
         states.transform = sf::Transform::Identity;
         states.transform.translate(getPosition());
         target.draw(m_Sprite, states);
+        target.draw(m_LightRing, states);
+    }
+
+    void LightIcon::updateObject(sf::Time)
+    {
+        const auto scale = getScale();
+        // bring x and y to same value
+        if(m_LightScale.x != scale.x)
+        {
+            setScale(scale.x, scale.x);
+            m_LightScale = scale;
+        }
+        else if(m_LightScale.y != scale.y)
+        {
+            setScale(scale.y, scale.y);
+            m_LightScale = scale;
+        }
+
+        if(scale != getScale())
+        {
+            const auto currentScale = getScale().x;
+            float      scaleFactor  = 1.f;
+
+            if(currentScale < 1.f)
+            {
+                scaleFactor -= currentScale / 10.f;
+            }
+            else
+            {
+                scaleFactor += currentScale / 10.f;
+            }
+            m_LightRing.setScale(scaleFactor, scaleFactor);
+        }
     }
 
     void LightIcon::setSprite(const sf::Sprite& sprite)
     {
-        m_Sprite = sprite;
+        m_Sprite           = sprite;
+        const float radius = m_Sprite.getLocalBounds().height;
+        m_LightRing.setRadius(radius);
+        m_LightRing.setFillColor(sf::Color::Transparent);
+        m_LightRing.setOutlineThickness(5.f);
+        m_LightRing.setOutlineColor(m_LightColor);
+        m_LightRing.setOrigin(radius, radius);
     }
 
     const sf::Sprite& LightIcon::getSprite() const
@@ -85,6 +125,7 @@ namespace nero
     void LightIcon::setColor(const sf::Color& color)
     {
         m_LightColor = color;
+        m_LightRing.setOutlineColor(m_LightColor);
     }
 
     const sf::Color& LightIcon::getColor() const

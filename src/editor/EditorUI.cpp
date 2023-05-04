@@ -384,16 +384,18 @@ namespace nero
                 {
                     if(!keyboard::CTRL_SHIFT_ALT())
                         m_EditorContext->setBuilderMode(BuilderMode::Mesh);
-                    else if(keyboard::CTRL())
-                        m_EditorContext->setBuilderMode(BuilderMode::Joint);
+                    // TODO
+                    /*else if(keyboard::CTRL())
+                        m_EditorContext->setBuilderMode(BuilderMode::Joint);*/
                 }
                 break;
                 case BuilderMode::Mesh:
                 {
                     if(!keyboard::CTRL_SHIFT_ALT())
                         m_EditorContext->setBuilderMode(BuilderMode::Object);
-                    else if(keyboard::CTRL())
-                        m_EditorContext->setBuilderMode(BuilderMode::Joint);
+                    // TODO
+                    /*else if(keyboard::CTRL())
+                        m_EditorContext->setBuilderMode(BuilderMode::Joint);*/
                 }
                 break;
                 case BuilderMode::Joint:

@@ -57,6 +57,8 @@ namespace nero
         const sf::Color COLOR_KINEMATIC_MESH  = sf::Color(0.5f * 255.f, 0.5f * 255.f, 0.9f * 255.f);
         const sf::Color COLOR_SELECTED_MESH   = sf::Color(255, 140, 0);
         const sf::Color COLOR_INVALIDE_MESH   = sf::Color(255, 0, 0);
+        const int       DEFAULT_ALPHA         = 255;
+        const int       MESH_MODE_ALPHA       = 100;
     } EngineConstant;
 } // namespace nero
 #endif // ENGINECONSTANT_H

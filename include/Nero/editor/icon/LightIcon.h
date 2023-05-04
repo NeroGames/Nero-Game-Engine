@@ -12,6 +12,8 @@
 #include <SFML/System/String.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+//
+#include <SFML/Graphics/CircleShape.hpp>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -39,12 +41,15 @@ namespace nero
 
       private:
         virtual void drawObject(sf::RenderTarget& target, sf::RenderStates states) const override;
+        virtual void updateObject(sf::Time time_step) override;
 
       private:
-        sf::Sprite m_Sprite;
-        sf::String m_LightmapName;
-        sf::Color  m_LightColor;
-        bool       m_LightEnabled;
+        sf::Sprite      m_Sprite;
+        sf::String      m_LightmapName;
+        sf::Color       m_LightColor;
+        bool            m_LightEnabled;
+        sf::CircleShape m_LightRing;
+        sf::Vector2f    m_LightScale;
     };
 } // namespace nero
 #endif // LIGHTICON_H

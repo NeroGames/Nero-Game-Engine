@@ -5,6 +5,7 @@
 ///////////////////////////HEADERS//////////////////////////
 // Nero
 #include <Nero/editor/EditorContext.h>
+#include <Nero/core/cpp/engine/EngineConstant.h>
 ////////////////////////////////////////////////////////////
 namespace nero
 {
@@ -141,7 +142,16 @@ namespace nero
 
     void EditorContext::setBuilderMode(const BuilderMode& builderMode)
     {
-        m_BuilderMode = builderMode;
+        m_BuilderMode     = builderMode;
+
+        auto levelBuilder = getLevelBuilder();
+        if(levelBuilder)
+        {
+            auto       worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
+            const auto alpha = builderMode == BuilderMode::Mesh ? EngineConstant.MESH_MODE_ALPHA
+                                                                : EngineConstant.DEFAULT_ALPHA;
+            worldBuilder->updateAllLayerAlpha(alpha);
+        }
     }
 
     void EditorContext::setSelectedGameLevelName(const std::string& levelName)
