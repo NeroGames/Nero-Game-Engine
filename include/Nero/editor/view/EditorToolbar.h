@@ -22,6 +22,7 @@ namespace nero
 
         virtual void destroy() override;
         virtual void render() override;
+        virtual void update(const sf::Time& timeStep) override;
 
       private:
         void renderToolbarContent();

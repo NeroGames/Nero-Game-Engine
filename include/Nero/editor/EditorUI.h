@@ -151,6 +151,9 @@ namespace nero
         NodeEditorWindow                        m_NodeEditorWindow;
         // Callback
         std::function<void(const std::string&)> m_WindowTitleCallback;
+        //
+        EditorMode                              m_EditorMode;
+        BuilderMode                             m_BuilderMode;
     };
 } // namespace nero
 

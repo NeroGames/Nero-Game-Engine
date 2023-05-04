@@ -14,6 +14,7 @@ namespace nero
 {
     ToolbarButtonGroup::ToolbarButtonGroup(EditorContext::Ptr editorContext)
         : UIComponent(std::move(editorContext))
+        , m_PlayGameLevel(false)
     {
     }
 
@@ -24,6 +25,20 @@ namespace nero
 
     void ToolbarButtonGroup::destroy()
     {
+    }
+
+    void ToolbarButtonGroup::update(const sf::Time& timeStep)
+    {
+        if(m_PlayGameLevel)
+        {
+            m_PlayGameFuture = std::async(std::launch::async,
+                                          [this]
+                                          {
+                                              m_EditorContext->getEditorProxy()->playGameScene();
+                                              return 0;
+                                          });
+            m_PlayGameLevel  = false;
+        }
     }
 
     void ToolbarButtonGroup::render()
@@ -102,7 +117,7 @@ namespace nero
         // play
         if(ImGui::Button(ICON_FA_PLAY, ImVec2(45.f, 28.f)))
         {
-            m_EditorContext->getEditorProxy()->playGameScene();
+            m_PlayGameLevel = true;
         }
 
         ImGui::SameLine();

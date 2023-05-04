@@ -35,6 +35,11 @@ namespace nero
     {
     }
 
+    void EditorToolbar::update(const sf::Time& timeStep)
+    {
+        m_ToolbarButtonGroup.update(timeStep);
+    }
+
     void EditorToolbar::render()
     {
         // Begin toolbar window

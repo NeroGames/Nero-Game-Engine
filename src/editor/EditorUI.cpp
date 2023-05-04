@@ -228,52 +228,51 @@ namespace nero
     {
         m_EditorCamera->update(timeStep);
 
-        const auto editorMode   = m_EditorContext->getEditorMode();
-        const auto builderMode  = m_EditorContext->getBuilderMode();
+        const auto m_EditorMode  = m_EditorContext->getEditorMode();
+        const auto m_BuilderMode = m_EditorContext->getBuilderMode();
 
-        auto       levelBuilder = m_EditorContext->getLevelBuilder();
+        auto       levelBuilder  = m_EditorContext->getLevelBuilder();
 
         if(levelBuilder)
         {
             auto worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
 
-            if(editorMode == EditorMode::World_Builder && builderMode == BuilderMode::Object &&
+            if(m_EditorMode == EditorMode::World_Builder && m_BuilderMode == BuilderMode::Object &&
                worldBuilder)
             {
                 worldBuilder->update(timeStep);
             }
         }
 
-        if(levelBuilder && (m_EditorContext->getEditorMode() == EditorMode::World_Builder ||
-                            m_EditorContext->getEditorMode() == EditorMode::Screen_Builder ||
-                            m_EditorContext->getEditorMode() == EditorMode::Factory))
+        if(levelBuilder &&
+           (m_EditorMode == EditorMode::World_Builder ||
+            m_EditorMode == EditorMode::Screen_Builder || m_EditorMode == EditorMode::Factory))
         {
             m_EditorProxy->autoSave();
         }
 
         m_NotificationManager->update(timeStep);
 
-        if(editorMode == EditorMode::Play_Game)
+        if(m_EditorMode == EditorMode::Play_Game)
         {
             m_EditorContext->getAdvancedScene()->update(timeStep);
         }
 
         m_RenderCanvasWindow.update(timeStep);
+        m_GameLevelWindow.update(timeStep);
+        m_EditorToolbar.update(timeStep);
     }
 
     void EditorUI::render()
     {
-        const auto editorMode = m_EditorContext->getEditorMode();
-
-        EASY_FUNCTION(profiler::colors::Red)
-
         ImGui::SFML::Update(m_RenderWindow, EngineConstant.TIME_PER_FRAME);
 
         m_EditorDockspace.render();
 
+        m_RenderCanvasWindow.render();
+
         m_EditorToolbar.render();
 
-        m_RenderCanvasWindow.render();
         m_GameProjectWindow.render();
         m_GameSettingWindow.render();
         m_NodeEditorWindow.render();
@@ -290,7 +289,7 @@ namespace nero
             m_WorldChunkWindow.render();
         }
 
-        if(editorMode != EditorMode::World_Builder)
+        if(m_EditorMode != EditorMode::World_Builder)
         {
             // m_GameScreenWindow.render();
         }
@@ -304,18 +303,19 @@ namespace nero
         m_EngineHelpWindow.render();
         m_ResourceBrowserWindow.render();
 
-        m_LoggerWindow.render();
-        m_ConsoleWindow.render();
-
-        ImGui::ShowDemoWindow();
-
-        // First Draw Setup
         editorInitialDraw();
 
         // Notification & Background task
         m_NotificationWindow.render();
 
         // Startup Popup
+
+        m_LoggerWindow.render();
+        m_ConsoleWindow.render();
+
+        ImGui::ShowDemoWindow();
+
+        // First Draw Setup
         if(m_EditorSetup->initiateSetup())
             m_EditorSetupPopup.render();
 
