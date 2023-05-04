@@ -485,7 +485,7 @@ namespace nero
                 if(enablePhysics &&
                    ImGui::CollapsingHeader("Physics Settings", ImGuiTreeNodeFlags_DefaultOpen))
                 {
-                    viewHeight = isPlayGameMode ? 590.f : 200.f;
+                    viewHeight = isPlayGameMode ? 580.f : 200.f;
                     ImGui::BeginChild("physics_settings", ImVec2(0.f, viewHeight), true);
 
                     auto physicsSetting = levelBuilder->getLevelSetting()->getSetting("physics");
