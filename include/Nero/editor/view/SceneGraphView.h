@@ -21,10 +21,14 @@ namespace nero
         virtual void update(const sf::Time&) override;
 
       private:
+        void renderSceneGraph();
+        void renderLevelProperty();
+        void renderWorldChunkProperty();
+
+      private:
         ImVec4     m_LightingAmbientColor;
         ImVec4     m_LightingClearColor;
         EditorMode m_EditorMode;
-        bool       m_IsEditorPlayMode;
     };
 } // namespace nero
 #endif // SCENEGRAPHVIEW_H

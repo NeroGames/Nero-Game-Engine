@@ -25,6 +25,11 @@ namespace nero
     {
     }
 
+    void SceneExplorerWindow::update(const sf::Time& timeStep)
+    {
+        m_SceneGraphView.update(timeStep);
+    }
+
     void SceneExplorerWindow::render()
     {
         ImGui::Begin(EditorConstant.WINDOW_EXPLORER.c_str());

@@ -15,7 +15,6 @@ namespace nero
 {
     SceneGraphView::SceneGraphView(EditorContext::Ptr editorContext)
         : UIComponent(std::move(editorContext))
-        , m_IsEditorPlayMode(false)
     {
     }
 
@@ -30,11 +29,25 @@ namespace nero
 
     void SceneGraphView::update(const sf::Time&)
     {
-        m_EditorMode       = m_EditorContext->getEditorMode();
-        m_IsEditorPlayMode = (m_EditorMode == EditorMode::Play_Game);
+        m_EditorMode = m_EditorContext->getEditorMode();
     }
 
     void SceneGraphView::render()
+    {
+        if(m_EditorMode != EditorMode::Play_Game)
+        {
+            renderSceneGraph();
+        }
+
+        renderLevelProperty();
+
+        if(m_EditorMode != EditorMode::Play_Game)
+        {
+            renderWorldChunkProperty();
+        }
+    }
+
+    void SceneGraphView::renderSceneGraph()
     {
         if(ImGui::CollapsingHeader("Scene",
                                    m_EditorContext->getAdvancedScene()
@@ -229,14 +242,19 @@ namespace nero
                 ImGui::EndChild();
             }
         }
+    }
 
+    void SceneGraphView::renderLevelProperty()
+    {
+        const auto parentHeight = ImGui::GetWindowHeight() - 60.f;
         if(ImGui::CollapsingHeader("Game Level", ImGuiTreeNodeFlags_DefaultOpen))
         {
             auto levelBuilder = m_EditorContext->getLevelBuilder();
 
             if(levelBuilder)
             {
-                const float viewHeight = m_IsEditorPlayMode ? 500.f : 250.f;
+                const auto isPlayGameMode = m_EditorMode == EditorMode::Play_Game;
+                float      viewHeight     = isPlayGameMode ? parentHeight : 250.f;
                 ImGui::BeginChild("game_level", ImVec2(0.f, viewHeight), true);
 
                 bool enableLight = levelBuilder->getLevelSetting()->getBool("enable_light");
@@ -260,7 +278,7 @@ namespace nero
                 if(enableLight &&
                    ImGui::CollapsingHeader("Ambient Light", ImGuiTreeNodeFlags_DefaultOpen))
                 {
-                    ImGui::BeginChild("light_settings", ImVec2(0.f, 200.f), true);
+                    ImGui::BeginChild("light_settings", ImVec2(0.f, 195.f), true);
 
                     auto lightSetting = levelBuilder->getLevelSetting()->getSetting("lighting");
 
@@ -410,7 +428,7 @@ namespace nero
                 if(enableLight &&
                    ImGui::CollapsingHeader("Light Boundary", ImGuiTreeNodeFlags_DefaultOpen))
                 {
-                    ImGui::BeginChild("light_boundary", ImVec2(0.f, 120.f), true);
+                    ImGui::BeginChild("light_boundary", ImVec2(0.f, 115.f), true);
 
                     const float wordingWidth = 80.f;
                     const float inputWidth   = ImGui::GetWindowContentRegionWidth() - wordingWidth;
@@ -467,7 +485,8 @@ namespace nero
                 if(enablePhysics &&
                    ImGui::CollapsingHeader("Physics Settings", ImGuiTreeNodeFlags_DefaultOpen))
                 {
-                    ImGui::BeginChild("physics_settings", ImVec2(0.f, 200.f), true);
+                    viewHeight = isPlayGameMode ? 590.f : 200.f;
+                    ImGui::BeginChild("physics_settings", ImVec2(0.f, viewHeight), true);
 
                     auto physicsSetting = levelBuilder->getLevelSetting()->getSetting("physics");
 
@@ -495,6 +514,7 @@ namespace nero
                         physicsSetting.setVector("gravity", sf::Vector2f(xGravity, yGravity));
                     }
 
+                    ImGui::Dummy(ImVec2(0.f, 5.f));
                     ImGui::Text("Stepping");
                     ImGui::Separator();
                     ImGui::Dummy(ImVec2(0.f, 2.f));
@@ -580,6 +600,7 @@ namespace nero
                                                                           "physics_stepping");
                     }
 
+                    ImGui::Dummy(ImVec2(0.f, 5.f));
                     ImGui::Text("Draw");
                     ImGui::Separator();
                     ImGui::Dummy(ImVec2(0.f, 2.f));
@@ -686,7 +707,9 @@ namespace nero
                 ImGui::EndChild();
             }
         }
-
+    }
+    void SceneGraphView::renderWorldChunkProperty()
+    {
         if(ImGui::CollapsingHeader("World Chunk", ImGuiTreeNodeFlags_DefaultOpen))
         {
             auto levelBuilder = m_EditorContext->getLevelBuilder();
