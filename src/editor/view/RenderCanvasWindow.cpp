@@ -119,13 +119,12 @@ namespace nero
 
         if(editorMode == EditorMode::Play_Game && m_LevelBuilder)
         {
-            auto lightSetting = m_LevelBuilder->getLevelSetting()->getSetting("lighting");
+            auto levelSetting = m_LevelBuilder->getLevelSetting();
 
-            // TODO
-            // if(lightSetting.getBool("enable_light"))
-            //{
-            // m_ClearColor = lightSetting.getColor("clear_color");
-            //}
+            if(levelSetting->getBool("enable_light"))
+            {
+                m_ClearColor = levelSetting->getSetting("lighting").getColor("clear_color");
+            }
         }
     }
 
