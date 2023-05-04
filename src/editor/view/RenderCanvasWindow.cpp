@@ -46,9 +46,6 @@ namespace nero
         m_GameBuilderInfo.setFont(m_EditorContext->getFontHolder()->getDefaultFont());
         m_GameBuilderInfo.setCharacterSize(18.f);
         m_GameBuilderInfo.setFillColor(sf::Color::White);
-
-        m_WindowPadding  = ImGui::GetStyle().WindowPadding;
-        m_TitleBarHeight = ImGui::GetFontSize() * 2 + ImGui::GetStyle().FramePadding.y * 4;
     }
 
     RenderCanvasWindow::~RenderCanvasWindow()
@@ -188,6 +185,9 @@ namespace nero
 
     void RenderCanvasWindow::updateRenderContext()
     {
+        m_WindowPadding  = ImGui::GetStyle().WindowPadding;
+        m_TitleBarHeight = ImGui::GetFontSize() * 2 + ImGui::GetStyle().FramePadding.y * 4;
+
         m_RenderContext->canvasPosition =
             sf::Vector2f(m_CanvasPosition.x + m_WindowPadding.x,
                          m_CanvasPosition.y + m_WindowPadding.y + m_TitleBarHeight);

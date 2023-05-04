@@ -31,13 +31,8 @@ namespace nero
     {
         if(m_PlayGameLevel)
         {
-            m_PlayGameFuture = std::async(std::launch::async,
-                                          [this]
-                                          {
-                                              m_EditorContext->getEditorProxy()->playGameScene();
-                                              return 0;
-                                          });
-            m_PlayGameLevel  = false;
+            m_EditorContext->getEditorProxy()->playGameScene();
+            m_PlayGameLevel = false;
         }
     }
 

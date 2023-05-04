@@ -55,10 +55,10 @@ namespace nero
 
     void GameScene::update(const sf::Time& timeStep)
     {
-        m_SceneRoot->update(timeStep);
-
         if(m_GameLevel)
+        {
             m_GameLevel->update(timeStep);
+        }
     }
 
     void GameScene::render()

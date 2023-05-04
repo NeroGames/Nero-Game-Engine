@@ -267,22 +267,23 @@ namespace nero
     {
         ImGui::SFML::Update(m_RenderWindow, EngineConstant.TIME_PER_FRAME);
 
+        // Head
         m_EditorDockspace.render();
-
-        m_RenderCanvasWindow.render();
-
         m_EditorToolbar.render();
 
+        // Center
+        m_RenderCanvasWindow.render();
         m_GameProjectWindow.render();
-        m_GameSettingWindow.render();
-        m_NodeEditorWindow.render();
         m_ResourceSelectionWindow.render();
-        m_EditorUtilityWindow.render();
+        m_LoggerWindow.render();
 
         if(m_EditorContext->getAdvancedScene())
         {
             m_GameLevelWindow.render();
         }
+
+        // Left
+        m_EditorUtilityWindow.render();
 
         if(m_EditorContext->getLevelBuilder())
         {
@@ -299,23 +300,17 @@ namespace nero
             m_ObjectLayerWindow.render();
         }
 
+        // Far left
         m_SceneExplorerWindow.render();
-        m_EngineHelpWindow.render();
         m_ResourceBrowserWindow.render();
 
+        // First Draw Setup
         editorInitialDraw();
 
         // Notification & Background task
         m_NotificationWindow.render();
 
         // Startup Popup
-
-        m_LoggerWindow.render();
-        m_ConsoleWindow.render();
-
-        ImGui::ShowDemoWindow();
-
-        // First Draw Setup
         if(m_EditorSetup->initiateSetup())
             m_EditorSetupPopup.render();
 

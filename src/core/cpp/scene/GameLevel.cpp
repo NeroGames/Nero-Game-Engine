@@ -85,7 +85,11 @@ namespace nero
 
     void GameLevel::update(const sf::Time& timeStep)
     {
-        m_PhysicsWorld->Step(timeStep.asSeconds(), m_VelocityIterations, m_PositionIterations);
+        float32 frameTime = m_PhysicsFrequency > 0.0f ? 1.0f / m_PhysicsFrequency : float32(0.0f);
+
+        m_PhysicsWorld->Step(frameTime, m_VelocityIterations, m_PositionIterations);
+
+        m_LevelRoot->update(sf::seconds(frameTime));
     }
 
     void GameLevel::drawContactPoints()
