@@ -29,8 +29,10 @@ namespace nero
         void renderRightButtonGroup();
 
       private:
-        bool             m_PlayGameLevel;
-        std::future<int> m_PlayGameFuture;
+        bool              m_PlayGameLevel;
+        std::future<int>  m_PlayGameFuture;
+        LevelBuilder::Ptr m_LevelBuilder;
+        EditorMode        m_EditorMode;
     };
 } // namespace nero
 #endif // TOOLBARBUTTONGROUP_H

@@ -31,7 +31,10 @@ namespace nero
 
         m_SceneGraphView.render();
 
-        m_GameObjectPropertyView.render();
+        if(m_EditorContext->getEditorMode() != EditorMode::Play_Game)
+        {
+            m_GameObjectPropertyView.render();
+        }
 
         ImGui::End();
     }

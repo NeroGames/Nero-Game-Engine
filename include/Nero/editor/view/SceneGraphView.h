@@ -18,10 +18,13 @@ namespace nero
 
         virtual void destroy() override;
         virtual void render() override;
+        virtual void update(const sf::Time&) override;
 
       private:
-        ImVec4 m_LightingAmbientColor;
-        ImVec4 m_LightingClearColor;
+        ImVec4     m_LightingAmbientColor;
+        ImVec4     m_LightingClearColor;
+        EditorMode m_EditorMode;
+        bool       m_IsEditorPlayMode;
     };
 } // namespace nero
 #endif // SCENEGRAPHVIEW_H

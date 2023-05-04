@@ -15,6 +15,7 @@ namespace nero
     ToolbarButtonGroup::ToolbarButtonGroup(EditorContext::Ptr editorContext)
         : UIComponent(std::move(editorContext))
         , m_PlayGameLevel(false)
+        , m_LevelBuilder(nullptr)
     {
     }
 
@@ -29,9 +30,23 @@ namespace nero
 
     void ToolbarButtonGroup::update(const sf::Time& timeStep)
     {
+        m_LevelBuilder = m_EditorContext->getLevelBuilder();
+        m_EditorMode   = m_EditorContext->getEditorMode();
+
         if(m_PlayGameLevel)
         {
-            m_EditorContext->getEditorProxy()->playGameScene();
+            if(m_EditorMode != EditorMode::Play_Game)
+            {
+                m_EditorContext->getEditorProxy()->playGameScene();
+            }
+            else if(m_EditorMode == EditorMode::Play_Game && m_LevelBuilder)
+            {
+                auto leveSetting = m_LevelBuilder->getLevelSetting();
+                leveSetting->setBool("level_paused", false);
+                m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                  "physics_iterations");
+            }
+
             m_PlayGameLevel = false;
         }
     }
@@ -48,12 +63,10 @@ namespace nero
         if(!m_EditorContext->getGameProject())
             return;
 
-        const auto editorMode = m_EditorContext->getEditorMode();
-
-        if(editorMode == EditorMode::Play_Game || editorMode == EditorMode::Render_Game)
+        if(m_EditorMode == EditorMode::Play_Game || m_EditorMode == EditorMode::Render_Game)
             return;
 
-        pushGameLevelStyle(false, editorMode == EditorMode::World_Builder);
+        pushGameLevelStyle(false, m_EditorMode == EditorMode::World_Builder);
         if(ImGui::Button(ICON_FA_GLOBE_AFRICA " World", ImVec2(105.f, 28.f)))
         {
             m_EditorContext->setEditorMode(EditorMode::World_Builder);
@@ -63,7 +76,7 @@ namespace nero
 
         ImGui::SameLine();
 
-        pushGameLevelStyle(false, editorMode == EditorMode::Screen_Builder);
+        pushGameLevelStyle(false, m_EditorMode == EditorMode::Screen_Builder);
         if(ImGui::Button(ICON_FA_SQUARE " Screen", ImVec2(105.f, 28.f)))
         {
             m_EditorContext->setEditorMode(EditorMode::Screen_Builder);
@@ -73,7 +86,7 @@ namespace nero
 
         ImGui::SameLine();
 
-        pushGameLevelStyle(false, editorMode == EditorMode::Factory);
+        pushGameLevelStyle(false, m_EditorMode == EditorMode::Factory);
         if(ImGui::Button(ICON_FA_WAREHOUSE " Factory", ImVec2(105.f, 28.f)))
         {
             m_EditorContext->setEditorMode(EditorMode::Factory);
@@ -87,9 +100,8 @@ namespace nero
         if(!m_EditorContext->getGameProject())
             return;
 
-        const auto editorMode = m_EditorContext->getEditorMode();
         const bool gamePlaying =
-            editorMode == EditorMode::Play_Game || editorMode == EditorMode::Render_Game;
+            m_EditorMode == EditorMode::Play_Game || m_EditorMode == EditorMode::Render_Game;
 
         float offSet = ImGui::GetWindowContentRegionWidth();
         if(gamePlaying)
@@ -120,6 +132,13 @@ namespace nero
         // pause
         if(ImGui::Button(ICON_FA_PAUSE, ImVec2(45.f, 28.f)))
         {
+            if(m_EditorMode == EditorMode::Play_Game && m_LevelBuilder)
+            {
+                auto leveSetting = m_LevelBuilder->getLevelSetting();
+                leveSetting->setBool("level_paused", true);
+                m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                  "physics_iterations");
+            }
         }
 
         ImGui::SameLine();
@@ -127,6 +146,14 @@ namespace nero
         // step
         if(ImGui::Button(ICON_FA_STEP_FORWARD, ImVec2(45.f, 28.f)))
         {
+            if(m_EditorMode == EditorMode::Play_Game && m_LevelBuilder)
+            {
+                auto physicsSetting = m_LevelBuilder->getLevelSetting()->getSetting("physics");
+
+                physicsSetting.setBool("single_step", !physicsSetting.getBool("single_step"));
+                m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                  "physics_iterations");
+            }
         }
 
         ImGui::SameLine();

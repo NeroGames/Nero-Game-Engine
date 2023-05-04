@@ -15,6 +15,7 @@ namespace nero
 {
     SceneGraphView::SceneGraphView(EditorContext::Ptr editorContext)
         : UIComponent(std::move(editorContext))
+        , m_IsEditorPlayMode(false)
     {
     }
 
@@ -25,6 +26,12 @@ namespace nero
 
     void SceneGraphView::destroy()
     {
+    }
+
+    void SceneGraphView::update(const sf::Time&)
+    {
+        m_EditorMode       = m_EditorContext->getEditorMode();
+        m_IsEditorPlayMode = (m_EditorMode == EditorMode::Play_Game);
     }
 
     void SceneGraphView::render()
@@ -229,7 +236,8 @@ namespace nero
 
             if(levelBuilder)
             {
-                ImGui::BeginChild("game_level", ImVec2(0.f, 250.f), true);
+                const float viewHeight = m_IsEditorPlayMode ? 500.f : 250.f;
+                ImGui::BeginChild("game_level", ImVec2(0.f, viewHeight), true);
 
                 bool enableLight = levelBuilder->getLevelSetting()->getBool("enable_light");
                 ImGui::Checkbox("Enable Light##level_enable_light", &enableLight);

@@ -81,15 +81,27 @@ namespace nero
 
     void GameLevel::handleEvent(const sf::Event& event)
     {
+        if(!m_LevelPaused)
+        {
+        }
     }
 
-    void GameLevel::update(const sf::Time& timeStep)
+    void GameLevel::update(const sf::Time&)
     {
         float32 frameTime = m_PhysicsFrequency > 0.0f ? 1.0f / m_PhysicsFrequency : float32(0.0f);
 
-        m_PhysicsWorld->Step(frameTime, m_VelocityIterations, m_PositionIterations);
+        if(!m_LevelPaused || m_SingleStepEnabled)
+        {
+            m_LevelRoot->update(sf::seconds(frameTime));
+            m_PhysicsWorld->Step(frameTime, m_VelocityIterations, m_PositionIterations);
+        }
 
-        m_LevelRoot->update(sf::seconds(frameTime));
+        if(m_LevelPaused && m_SingleStepEnabled)
+        {
+            m_SingleStepEnabled = false;
+            auto physicsSetting = m_LevelContext.levelSetting->getSetting("physics");
+            physicsSetting.setBool("single_step", false);
+        }
     }
 
     void GameLevel::drawContactPoints()
@@ -167,6 +179,8 @@ namespace nero
         m_VelocityIterations = physicsSetting.getInt("velocity_iterations");
         m_PositionIterations = physicsSetting.getInt("position_iterations");
         m_PhysicsFrequency   = physicsSetting.getFloat("frequency");
+        m_SingleStepEnabled  = physicsSetting.getBool("single_step");
+        m_LevelPaused        = m_LevelContext.levelSetting->getBool("level_paused");
     }
 
     void GameLevel::updatePhysicsStepping()

@@ -141,6 +141,8 @@ namespace nero
         bool                               m_DrawContactNormal;
         bool                               m_DrawContactImpulse;
         bool                               m_DrawFrictionImpulse;
+        bool                               m_SingleStepEnabled;
+        bool                               m_LevelPaused;
     };
 } // namespace nero
 

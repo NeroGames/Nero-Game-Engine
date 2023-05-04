@@ -228,10 +228,10 @@ namespace nero
     {
         m_EditorCamera->update(timeStep);
 
-        const auto m_EditorMode  = m_EditorContext->getEditorMode();
-        const auto m_BuilderMode = m_EditorContext->getBuilderMode();
+        m_EditorMode      = m_EditorContext->getEditorMode();
+        m_BuilderMode     = m_EditorContext->getBuilderMode();
 
-        auto       levelBuilder  = m_EditorContext->getLevelBuilder();
+        auto levelBuilder = m_EditorContext->getLevelBuilder();
 
         if(levelBuilder)
         {
@@ -261,6 +261,7 @@ namespace nero
         m_RenderCanvasWindow.update(timeStep);
         m_GameLevelWindow.update(timeStep);
         m_EditorToolbar.update(timeStep);
+        m_SceneExplorerWindow.update(timeStep);
     }
 
     void EditorUI::render()
@@ -274,35 +275,41 @@ namespace nero
         // Center
         m_RenderCanvasWindow.render();
         m_GameProjectWindow.render();
-        m_ResourceSelectionWindow.render();
         m_LoggerWindow.render();
 
-        if(m_EditorContext->getAdvancedScene())
+        if(m_EditorMode != EditorMode::Play_Game)
         {
-            m_GameLevelWindow.render();
+
+            m_ResourceSelectionWindow.render();
+
+            if(m_EditorContext->getAdvancedScene())
+            {
+                m_GameLevelWindow.render();
+            }
+
+            // Left
+            m_EditorUtilityWindow.render();
+
+            if(m_EditorContext->getLevelBuilder())
+            {
+                m_WorldChunkWindow.render();
+            }
+
+            if(m_EditorMode != EditorMode::World_Builder)
+            {
+                // m_GameScreenWindow.render();
+            }
+
+            if(m_EditorContext->getLevelBuilder())
+            {
+                m_ObjectLayerWindow.render();
+            }
+
+            // Far left
+            m_ResourceBrowserWindow.render();
         }
 
-        // Left
-        m_EditorUtilityWindow.render();
-
-        if(m_EditorContext->getLevelBuilder())
-        {
-            m_WorldChunkWindow.render();
-        }
-
-        if(m_EditorMode != EditorMode::World_Builder)
-        {
-            // m_GameScreenWindow.render();
-        }
-
-        if(m_EditorContext->getLevelBuilder())
-        {
-            m_ObjectLayerWindow.render();
-        }
-
-        // Far left
         m_SceneExplorerWindow.render();
-        m_ResourceBrowserWindow.render();
 
         // First Draw Setup
         editorInitialDraw();
