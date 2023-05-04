@@ -182,20 +182,26 @@ namespace nero
     {
         switch(type)
         {
-            case Object::Sprite_Object:
-                return {ImVec4(0.f, 0.698f, 1.f, 1.f), ImVec4(0.f, 0.698f, 1.f, 1.f)};
+            case Object::Mesh_Object:
+                return {ImVec4(0.f, 0.402f, 0.095f, 1.f), ImVec4(0.f, 0.402f, 0.095f, 1.f)};
 
-            case Object::Light_Object:
-                return {ImVec4(1.f, 0.497f, 0.f, 1.f), ImVec4(1.f, 0.497f, 0.f, 1.f)};
+            case Object::Sprite_Object:
+                return {ImVec4(0.f, 0.393f, 0.562f, 1.f), ImVec4(0.f, 0.393f, 0.562f, 1.f)};
+
+            case Object::Meshed_Object:
+                return {ImVec4(0.f, 0.158f, 0.462f, 1.f), ImVec4(0.f, 0.158f, 0.462f, 1.f)};
 
             case Object::Animation_Object:
                 return {ImVec4(0.630f, 0.234f, 0.692f, 1.f), ImVec4(0.630f, 0.234f, 0.692f, 1.f)};
 
-            case Object::Text_Object:
-                return {ImVec4(0.f, 0.834f, 0.790f, 1.f), ImVec4(0.f, 0.834f, 0.790f, 1.f)};
+            case Object::Animation_Meshed_Object:
+                return {ImVec4(0.213f, 0.f, 0.391f, 1.f), ImVec4(0.213f, 0.f, 0.391f, 1.f)};
 
-            case Object::Mesh_Object:
-                return {ImVec4(0.009f, 0.751f, 0.f, 1.f), ImVec4(0.009f, 0.751f, 0.f, 1.f)};
+            case Object::Light_Object:
+                return {ImVec4(1.f, 0.462f, 0.f, 1.f), ImVec4(1.f, 0.462f, 0.f, 1.f)};
+
+            case Object::Text_Object:
+                return {ImVec4(0.f, 0.f, 0.f, 1.f), ImVec4(0.f, 0.f, 0.f, 1.f)};
 
             default:
                 return {ImGui::GetStyle().Colors[ImGuiCol_FrameBg],
