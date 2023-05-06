@@ -143,6 +143,7 @@ namespace nero
         bool                               m_DrawFrictionImpulse;
         bool                               m_SingleStepEnabled;
         bool                               m_LevelPaused;
+        unsigned int                       m_LightFactor;
     };
 } // namespace nero
 

@@ -46,13 +46,17 @@ namespace ltbl
         update(imageSize);
     }
 
-    void LightSystem::render(sf::RenderTarget& target)
+    void LightSystem::render(sf::RenderTarget& target, unsigned int lightFactor)
     {
-        sf::View view = target.getView();
+        auto textureSize = target.getSize();
+        textureSize.x    = float(textureSize.x) / float(lightFactor);
+        textureSize.y    = float(textureSize.y) / float(lightFactor);
 
-        if(target.getSize() != mLightTempTexture.getSize())
+        sf::View view    = target.getView();
+
+        if(textureSize != mLightTempTexture.getSize())
         {
-            update(target.getSize());
+            update(textureSize);
         }
 
         mLightShapeQuadtree.update();
@@ -154,8 +158,11 @@ namespace ltbl
 
         mCompositionTexture.display();
 
+        sf::Sprite renderSprite(mCompositionTexture.getTexture());
+        renderSprite.scale(lightFactor, lightFactor);
+
         target.setView(target.getDefaultView());
-        target.draw(sf::Sprite(mCompositionTexture.getTexture()), sf::BlendMultiply);
+        target.draw(renderSprite, sf::BlendMultiply);
         target.setView(view);
     }
 

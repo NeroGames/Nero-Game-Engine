@@ -167,7 +167,7 @@ TEST(Lighting, LightSystem)
         window.draw(circle1);
 
         // Render the lights
-        ls.render(window);
+        ls.render(window, 1.f);
 
         window.display();
     }

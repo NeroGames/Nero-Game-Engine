@@ -37,6 +37,7 @@ namespace nero
         , m_ObjectManager(
               std::make_shared<ObjectManager>(m_LevelRoot, m_PhysicsWorld, m_ScreenTable))
         , m_ContactListener(std::make_shared<ContactListener>(m_ObjectManager))
+        , m_LightFactor(5)
     {
         auto       lightSetting = m_LevelContext.levelSetting->getSetting("lighting");
         const auto rootRegion   = lightSetting.getVector("root_region");
@@ -236,7 +237,7 @@ namespace nero
     {
         if(m_LevelContext.levelSetting->getBool("enable_light"))
         {
-            m_LightManager->render(*m_LevelContext.renderTexture.get());
+            m_LightManager->render(*m_LevelContext.renderTexture.get(), m_LightFactor);
         }
     }
 
