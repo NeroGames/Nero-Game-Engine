@@ -131,8 +131,8 @@ namespace nero
         setting.setBool("level_paused", false);
         // light setting
         Setting lightSetting;
-        lightSetting.setVector("root_region", sf::Vector2f(-1000.f, -1000.f));
-        lightSetting.setVector("image_size", sf::Vector2f(2000.f, 2000.f));
+        lightSetting.setVector("root_region", sf::Vector2f(-10.f, -10.f));
+        lightSetting.setFloat("texture_factor", 7.f);
         lightSetting.setColor("ambient_color", sf::Color(0, 0, 0, 255));
         lightSetting.setColor("clear_color", sf::Color(50, 50, 50, 255));
         lightSetting.setVector("cast_direction", sf::Vector2f(0.f, 1.f));
@@ -151,8 +151,8 @@ namespace nero
         physicsSetting.setInt("position_iterations", 3);
         physicsSetting.setBool("allow_sleeping", true);
         physicsSetting.setBool("warm_starting", true);
-        physicsSetting.setBool("continuous_physics", true);
-        physicsSetting.setBool("sub_stepping", true);
+        physicsSetting.setBool("continuous_physics", false);
+        physicsSetting.setBool("sub_stepping", false);
         physicsSetting.setBool("single_step", false);
         // draw
         physicsSetting.setBool("draw_shape", true);

@@ -37,16 +37,16 @@ namespace nero
         , m_ObjectManager(
               std::make_shared<ObjectManager>(m_LevelRoot, m_PhysicsWorld, m_ScreenTable))
         , m_ContactListener(std::make_shared<ContactListener>(m_ObjectManager))
-        , m_LightFactor(5)
+        , m_LightTextureFactor(5)
     {
         auto       lightSetting = m_LevelContext.levelSetting->getSetting("lighting");
         const auto rootRegion   = lightSetting.getVector("root_region");
-        const auto imageSize    = lightSetting.getVector("image_size");
         const auto textureSize  = m_LevelContext.renderTexture->getSize();
-        m_LightManager->create({rootRegion.x, rootRegion.y, imageSize.x, imageSize.y},
+        m_LightManager->create({rootRegion.x, rootRegion.y, textureSize.x, textureSize.x},
                                sf::Vector2u(textureSize.x / 10.f, textureSize.y / 10.f));
         m_AmbientLight = m_LightManager->createLightDirectionEmission();
 
+        updateLightTexture();
         updateAmbientLight();
         updatePhysicsIterations();
         updatePhysicsStepping();
@@ -166,14 +166,35 @@ namespace nero
         {
             updatePhysicsStepping();
         }
-        else if(update == "draw_flags")
+        else if(update == "physics_gravity")
         {
-            updateDrawFlags();
+            updatePhysicsGravity();
+        }
+        else if(update == "light_texture")
+        {
+            updateLightTexture();
         }
         else if(update == "ambient_light")
         {
             updateAmbientLight();
         }
+        else if(update == "draw_flags")
+        {
+            updateDrawFlags();
+        }
+    }
+
+    void GameLevel::updatePhysicsGravity()
+    {
+        auto       physicsSetting = m_LevelContext.levelSetting->getSetting("physics");
+        const auto gravity        = physicsSetting.getVector("gravity");
+        m_PhysicsWorld->SetGravity(b2Vec2(gravity.x, gravity.y));
+    }
+
+    void GameLevel::updateLightTexture()
+    {
+        auto lightSetting = m_LevelContext.levelSetting->getSetting("lighting");
+        m_LightManager->setTextureFactor(lightSetting.getFloat("texture_factor"));
     }
 
     void GameLevel::updatePhysicsIterations()
@@ -237,7 +258,7 @@ namespace nero
     {
         if(m_LevelContext.levelSetting->getBool("enable_light"))
         {
-            m_LightManager->render(*m_LevelContext.renderTexture.get(), m_LightFactor);
+            m_LightManager->render(*m_LevelContext.renderTexture.get());
         }
     }
 

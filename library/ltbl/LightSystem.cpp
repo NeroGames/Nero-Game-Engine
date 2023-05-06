@@ -1,4 +1,4 @@
-#include <ltbl/LightSystem.hpp>
+#include "ltbl/LightSystem.hpp"
 
 namespace ltbl
 {
@@ -22,6 +22,7 @@ namespace ltbl
         , mDirectionEmissionRadiusMultiplier(1.1f)
         , mAmbientColor(sf::Color(16, 16, 16))
         , mUseNormals(useNormals)
+        , mTextureFactor(1.f)
     {
         // Load Texture
         mPenumbraTexture.loadFromMemory(
@@ -46,11 +47,11 @@ namespace ltbl
         update(imageSize);
     }
 
-    void LightSystem::render(sf::RenderTarget& target, unsigned int lightFactor)
+    void LightSystem::render(sf::RenderTarget& target)
     {
         auto textureSize = target.getSize();
-        textureSize.x    = float(textureSize.x) / float(lightFactor);
-        textureSize.y    = float(textureSize.y) / float(lightFactor);
+        textureSize.x    = float(textureSize.x) / float(mTextureFactor);
+        textureSize.y    = float(textureSize.y) / float(mTextureFactor);
 
         sf::View view    = target.getView();
 
@@ -159,7 +160,7 @@ namespace ltbl
         mCompositionTexture.display();
 
         sf::Sprite renderSprite(mCompositionTexture.getTexture());
-        renderSprite.scale(lightFactor, lightFactor);
+        renderSprite.scale(mTextureFactor, mTextureFactor);
 
         target.setView(target.getDefaultView());
         target.draw(renderSprite, sf::BlendMultiply);
@@ -387,4 +388,8 @@ namespace ltbl
         return mNormalsShader;
     }
 
+    void LightSystem::setTextureFactor(float textureFactor)
+    {
+        mTextureFactor = textureFactor;
+    }
 } // namespace ltbl

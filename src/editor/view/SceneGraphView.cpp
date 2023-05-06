@@ -434,49 +434,48 @@ namespace nero
                     const float inputWidth   = ImGui::GetWindowContentRegionWidth() - wordingWidth;
                     auto lightSetting = levelBuilder->getLevelSetting()->getSetting("lighting");
 
-                    ImGui::Text("Root Region");
-                    ImGui::SameLine(wordingWidth);
-                    ImGui::Text(" x ");
-                    ImGui::SameLine(wordingWidth + 30.f);
-                    ImGui::SetNextItemWidth(inputWidth - 30.f);
-                    float rootRegionx = lightSetting.getVector("root_region").x;
-                    ImGui::InputFloat("##root_position_x", &rootRegionx, 1.f, 1.0f, "%.3f");
-                    bool rootRegionxChanged = ImGui::IsItemEdited();
-                    ImGui::Text("");
-                    ImGui::SameLine(wordingWidth);
-                    ImGui::Text(" y ");
-                    ImGui::SameLine(wordingWidth + 30.f);
-                    ImGui::SetNextItemWidth(inputWidth - 30.f);
-                    float rootRegiony = lightSetting.getVector("root_region").y;
-                    ImGui::InputFloat("##root_position_y", &rootRegiony, 1.f, 1.0f, "%.3f");
-                    bool rootRegionyChanged = ImGui::IsItemEdited();
-                    ImGui::Dummy(ImVec2(0.0f, 1.0f));
-                    if((rootRegionxChanged || rootRegionyChanged))
+                    if(m_EditorMode != EditorMode::Play_Game)
                     {
-                        lightSetting.setVector("root_region",
-                                               sf::Vector2f(rootRegionx, rootRegiony));
+
+                        ImGui::Text("Root Region");
+                        ImGui::SameLine(wordingWidth);
+                        ImGui::Text(" x ");
+                        ImGui::SameLine(wordingWidth + 30.f);
+                        ImGui::SetNextItemWidth(inputWidth - 30.f);
+                        float rootRegionx = lightSetting.getVector("root_region").x;
+                        ImGui::InputFloat("##root_position_x", &rootRegionx, 1.f, 1.0f, "%.3f");
+                        bool rootRegionxChanged = ImGui::IsItemEdited();
+                        ImGui::Text("");
+                        ImGui::SameLine(wordingWidth);
+                        ImGui::Text(" y ");
+                        ImGui::SameLine(wordingWidth + 30.f);
+                        ImGui::SetNextItemWidth(inputWidth - 30.f);
+                        float rootRegiony = lightSetting.getVector("root_region").y;
+                        ImGui::InputFloat("##root_position_y", &rootRegiony, 1.f, 1.0f, "%.3f");
+                        bool rootRegionyChanged = ImGui::IsItemEdited();
+                        ImGui::Dummy(ImVec2(0.0f, 1.0f));
+                        if((rootRegionxChanged || rootRegionyChanged))
+                        {
+                            lightSetting.setVector("root_region",
+                                                   sf::Vector2f(rootRegionx, rootRegiony));
+                        }
                     }
 
-                    ImGui::Text("Image Size");
-                    ImGui::SameLine(wordingWidth);
-                    ImGui::Text(" x ");
+                    ImGui::Text("Texture Factor");
                     ImGui::SameLine(wordingWidth + 30.f);
                     ImGui::SetNextItemWidth(inputWidth - 30.f);
-                    float xImageSize = lightSetting.getVector("image_size").x;
-                    ImGui::InputFloat("##cast_position_x", &xImageSize, 1.f, 1.0f, "%.3f");
-                    bool xImageSizeChanged = ImGui::IsItemEdited();
-                    ImGui::Text("");
-                    ImGui::SameLine(wordingWidth);
-                    ImGui::Text(" y ");
-                    ImGui::SameLine(wordingWidth + 30.f);
-                    ImGui::SetNextItemWidth(inputWidth - 30.f);
-                    float yImageSize = lightSetting.getVector("image_size").y;
-                    ImGui::InputFloat("##cast_position_y", &yImageSize, 1.f, 1.0f, "%.3f");
-                    bool yImageSizeChanged = ImGui::IsItemEdited();
-                    ImGui::Dummy(ImVec2(0.0f, 1.0f));
-                    if((xImageSizeChanged || yImageSizeChanged))
+                    float textureFactor = lightSetting.getFloat("texture_factor");
+                    ImGui::InputFloat("##texture_factor", &textureFactor, 1.f, 1.0f, "%.3f");
+                    if(ImGui::IsItemEdited())
                     {
-                        lightSetting.setVector("image_size", sf::Vector2f(xImageSize, yImageSize));
+                        if(textureFactor < 1.f)
+                        {
+                            textureFactor = 1.f;
+                        }
+
+                        lightSetting.setFloat("texture_factor", textureFactor);
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "light_texture");
                     }
 
                     ImGui::EndChild();
@@ -512,6 +511,8 @@ namespace nero
                     if(xGravityChanged || yGravityChanged)
                     {
                         physicsSetting.setVector("gravity", sf::Vector2f(xGravity, yGravity));
+                        m_EditorContext->getAdvancedScene()->notifyUpdate("game_level",
+                                                                          "physics_gravity");
                     }
 
                     ImGui::Dummy(ImVec2(0.f, 5.f));

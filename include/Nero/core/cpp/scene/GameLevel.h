@@ -117,10 +117,12 @@ namespace nero
         void drawContactPoints();
 
       private:
+        void updatePhysicsGravity();
         void updatePhysicsIterations();
         void updatePhysicsStepping();
         void updateDrawFlags();
         void updateAmbientLight();
+        void updateLightTexture();
 
       private:
         std::shared_ptr<sf::RenderTexture> m_RenderTexture;
@@ -143,7 +145,7 @@ namespace nero
         bool                               m_DrawFrictionImpulse;
         bool                               m_SingleStepEnabled;
         bool                               m_LevelPaused;
-        unsigned int                       m_LightFactor;
+        unsigned int                       m_LightTextureFactor;
     };
 } // namespace nero
 

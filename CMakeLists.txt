@@ -119,7 +119,8 @@ add_custom_command(TARGET CoreEngine
         COMMAND ${CMAKE_COMMAND} -E make_directory      "${NERO_GAME_HOME}/Nerolib/include/Nero/core"
         COMMAND ${CMAKE_COMMAND} -E make_directory      "${NERO_GAME_HOME}/Nerolib/lib/"
         COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:CoreEngine>" "${NERO_GAME_HOME}/Nerolib/lib/"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/include/Nero/core" "${NERO_GAME_HOME}/Nerolib/include/Nero/core")
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/include/Nero/core" "${NERO_GAME_HOME}/Nerolib/include/Nero/core"
+        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/setting/imgui.ini" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/setting/imgui.ini")
 #]]
 # Nero Game Render Engine (Desktop)
 #----------------------------------------------------------------------------------#

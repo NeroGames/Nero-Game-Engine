@@ -620,7 +620,7 @@ namespace nero
 
     void Scene::renderLighting()
     {
-        m_LightManager->render(*m_SceneContext.renderTexture, 5);
+        m_LightManager->render(*m_SceneContext.renderTexture);
     }
 
     ResourceManager::Ptr Scene::getResourceHolder()
