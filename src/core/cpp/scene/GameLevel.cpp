@@ -41,8 +41,10 @@ namespace nero
         auto       lightSetting = m_LevelContext.levelSetting->getSetting("lighting");
         const auto rootRegion   = lightSetting.getVector("root_region");
         const auto imageSize    = lightSetting.getVector("image_size");
+        const auto textureSize  = m_LevelContext.renderTexture->getSize();
         m_LightManager->create({rootRegion.x, rootRegion.y, imageSize.x, imageSize.y},
-                               m_LevelContext.renderTexture->getSize());
+                               sf::Vector2u(textureSize.x / 10.f, textureSize.y / 10.f));
+        m_AmbientLight = m_LightManager->createLightDirectionEmission();
 
         updateAmbientLight();
         updatePhysicsIterations();
@@ -212,7 +214,6 @@ namespace nero
     void GameLevel::updateAmbientLight()
     {
         auto lightSetting = m_LevelContext.levelSetting->getSetting("lighting");
-        m_AmbientLight    = m_LightManager->createLightDirectionEmission();
         m_AmbientLight->setCastDirection(lightSetting.getVector("cast_direction"));
         m_AmbientLight->setCastAngle(lightSetting.getFloat("cast_angle"));
         m_AmbientLight->setSourceDistance(lightSetting.getFloat("source_distance"));
