@@ -30,20 +30,23 @@ namespace nero
 
     void LightIcon::updateObject(sf::Time)
     {
-        const auto scale = getScale();
+        const auto scale      = getScale();
+        bool       updateRing = false;
         // bring x and y to same value
         if(m_LightScale.x != scale.x)
         {
             setScale(scale.x, scale.x);
             m_LightScale = scale;
+            updateRing   = true;
         }
         else if(m_LightScale.y != scale.y)
         {
             setScale(scale.y, scale.y);
             m_LightScale = scale;
+            updateRing   = true;
         }
 
-        if(scale != getScale())
+        if(updateRing)
         {
             const auto currentScale = getScale().x;
             float      scaleFactor  = 1.f;
@@ -66,7 +69,7 @@ namespace nero
         const float radius = m_Sprite.getLocalBounds().height;
         m_LightRing.setRadius(radius);
         m_LightRing.setFillColor(sf::Color::Transparent);
-        m_LightRing.setOutlineThickness(5.f);
+        m_LightRing.setOutlineThickness(4.f);
         m_LightRing.setOutlineColor(m_LightColor);
         m_LightRing.setOrigin(radius, radius);
     }
@@ -89,37 +92,37 @@ namespace nero
     sf::FloatRect LightIcon::getGlobalBounds() const
     {
         sf::FloatRect bound;
-        bound.height     = m_Sprite.getTextureRect().height;
-        bound.width      = m_Sprite.getTextureRect().width;
-        sf::Vector2f pos = getWorldPosition();
-        bound.left       = pos.x - bound.width / 2.f;
-        bound.top        = pos.y - bound.height / 2.f;
+        bound.height   = m_Sprite.getTextureRect().height;
+        bound.width    = m_Sprite.getTextureRect().width;
+        const auto pos = getWorldPosition();
+        bound.left     = pos.x - bound.width / 2.f;
+        bound.top      = pos.y - bound.height / 2.f;
 
         return bound;
     }
 
     Object::Ptr LightIcon::clone(sf::Vector2f& position) const
     {
-        LightIcon::Ptr sprite_object = Cast(clone());
-        sprite_object->move(position);
-        sprite_object->setId(-1);
+        LightIcon::Ptr lightProb = Cast(clone());
+        lightProb->move(position);
+        lightProb->setId(-1);
 
-        return sprite_object;
+        return lightProb;
     }
 
     Object::Ptr LightIcon::clone() const
     {
-        LightIcon::Ptr light_icon(new LightIcon());
-        Object::clone<LightIcon::Ptr>(light_icon);
+        LightIcon::Ptr lightProb(new LightIcon());
+        Object::clone<LightIcon::Ptr>(lightProb);
         sf::Sprite sprite = m_Sprite;
 
-        light_icon->setSprite(sprite);
-        light_icon->setLightmapName(getLightmapName());
-        light_icon->setPosition(getPosition());
-        light_icon->setRotation(getRotation());
-        light_icon->setScale(getScale());
+        lightProb->setSprite(sprite);
+        lightProb->setLightmapName(getLightmapName());
+        lightProb->setPosition(getPosition());
+        lightProb->setRotation(getRotation());
+        lightProb->setScale(getScale());
 
-        return light_icon;
+        return lightProb;
     }
 
     void LightIcon::setColor(const sf::Color& color)
