@@ -327,7 +327,7 @@ namespace nero
 
     void EditorUI::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
     {
-        const bool mouseHoverCanvas = mouseOnCanvas();
+        const bool mouseHoverCanvas = mouseOnCanvas() && m_RenderContext->focus;
 
         if(isPressed)
         {
