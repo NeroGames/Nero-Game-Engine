@@ -101,7 +101,7 @@ namespace nero
         typedef std::shared_ptr<RenderContext> Ptr;
 
         sf::Vector2f                           canvasPosition;
-        sf::Vector2f                           canvasSize;
+        sf::Vector2u                           canvasSize;
         sf::Vector2f                           mousePosition;
         bool                                   canvasOnFocus;
         float                                  textureFactor;

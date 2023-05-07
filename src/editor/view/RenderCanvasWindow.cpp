@@ -64,7 +64,8 @@ namespace nero
         if(mouseOnCanvas() && m_RenderContext->canvasOnFocus)
         {
             sf::Vector2f worldPosition = m_RenderTexture->mapPixelToCoords(
-                sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
+                sf::Vector2i(int(m_RenderContext->mousePosition.x),
+                             int(m_RenderContext->mousePosition.y)),
                 m_RenderTexture->getView());
 
             std::string canvasPositionString =
@@ -101,8 +102,10 @@ namespace nero
         m_GameBuilderInfo.setString(m_EditorContext->getOpengedGameLevelName());
 
         sf::Vector2f position;
-        position.x = m_RenderTexture->getSize().x - m_GameModeInfo.getLocalBounds().width - 20.f;
-        position.y = m_RenderTexture->getSize().y - m_GameModeInfo.getLocalBounds().height - 20.f;
+        position.x =
+            float(m_RenderTexture->getSize().x) - m_GameModeInfo.getLocalBounds().width - 20.f;
+        position.y =
+            float(m_RenderTexture->getSize().y) - m_GameModeInfo.getLocalBounds().height - 20.f;
 
         m_GameModeInfo.setPosition(position);
         m_GameBuilderInfo.setPosition(sf::Vector2f(20.f, position.y));
@@ -111,8 +114,8 @@ namespace nero
            m_RenderTexture->getSize().y != m_RenderContext->canvasSize.y)
         {
             m_RenderTexture->create(m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y);
-            m_EditorCamera->updateView(
-                sf::Vector2f(m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y));
+            m_EditorCamera->updateView(sf::Vector2f(float(m_RenderContext->canvasSize.x),
+                                                    float(m_RenderContext->canvasSize.y)));
         }
 
         m_ClearColor = sf::Color::Black;
@@ -187,19 +190,25 @@ namespace nero
         m_WindowPadding  = ImGui::GetStyle().WindowPadding;
         m_TitleBarHeight = ImGui::GetFontSize() * 2 + ImGui::GetStyle().FramePadding.y * 4;
 
+        m_RenderContext->textureFactor = 2.f;
+
         m_RenderContext->canvasPosition =
             sf::Vector2f(m_CanvasPosition.x + m_WindowPadding.x,
                          m_CanvasPosition.y + m_WindowPadding.y + m_TitleBarHeight);
 
-        m_RenderContext->canvasSize =
-            sf::Vector2f(m_CanvasSize.x - m_WindowPadding.x * 2,
-                         m_CanvasSize.y - m_WindowPadding.y * 2 - m_TitleBarHeight);
+        auto textureSize = sf::Vector2f(m_CanvasSize.x - m_WindowPadding.x * 2,
+                                        m_CanvasSize.y - m_WindowPadding.y * 2 - m_TitleBarHeight);
 
-        if(m_RenderContext->canvasSize.x < 100.f)
-            m_RenderContext->canvasSize.x = 100.f;
+        if(textureSize.x < 100.f)
+            textureSize.x = 100.f;
 
-        if(m_RenderContext->canvasSize.y < 100.f)
-            m_RenderContext->canvasSize.y = 100.f;
+        if(textureSize.y < 100.f)
+            textureSize.y = 100.f;
+
+        textureSize.x               /= m_RenderContext->textureFactor;
+        textureSize.y               /= m_RenderContext->textureFactor;
+
+        m_RenderContext->canvasSize = sf::Vector2u(textureSize.x, textureSize.y);
 
         m_RenderContext->mousePosition =
             sf::Vector2f(m_MousePosition.x - m_RenderContext->canvasPosition.x,
