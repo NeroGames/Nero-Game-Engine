@@ -19,6 +19,7 @@ namespace nero
         , m_LevelBuilder(nullptr)
         , m_RenderLevelBuilder(false)
         , m_RenderAdvancedScene(false)
+        , m_FontSize(18)
     {
         m_CameraXAxis.setSize(sf::Vector2f(20.f, -2.f));
         m_CameraXAxis.setFillColor(sf::Color::Red);
@@ -40,11 +41,11 @@ namespace nero
         m_CanvasYAxis.setRotation(90.f);
 
         m_GameModeInfo.setFont(m_EditorContext->getFontHolder()->getDefaultFont());
-        m_GameModeInfo.setCharacterSize(18.f);
+        m_GameModeInfo.setCharacterSize(m_FontSize);
         m_GameModeInfo.setFillColor(sf::Color::White);
 
         m_GameBuilderInfo.setFont(m_EditorContext->getFontHolder()->getDefaultFont());
-        m_GameBuilderInfo.setCharacterSize(18.f);
+        m_GameBuilderInfo.setCharacterSize(m_FontSize);
         m_GameBuilderInfo.setFillColor(sf::Color::White);
     }
 
@@ -60,6 +61,17 @@ namespace nero
     void RenderCanvasWindow::update(const sf::Time&)
     {
         updateRenderContext();
+
+        m_FontSize = static_cast<unsigned int>(18.f / (0.7f * m_RenderContext->textureFactor));
+        if(m_FontSize != m_GameModeInfo.getCharacterSize())
+        {
+            m_GameModeInfo.setCharacterSize(m_FontSize);
+        }
+
+        if(m_FontSize != m_GameBuilderInfo.getCharacterSize())
+        {
+            m_GameModeInfo.setCharacterSize(m_FontSize);
+        }
 
         if(mouseOnCanvas() && m_RenderContext->canvasOnFocus)
         {
@@ -180,7 +192,7 @@ namespace nero
 
         m_RenderTexture->setView(m_EditorCamera->getView());
 
-        ImGui::Image(*m_RenderTexture);
+        ImGui::Image(*m_RenderTexture, m_RenderContext->textureFactor);
 
         ImGui::End();
     }
@@ -210,21 +222,25 @@ namespace nero
 
         m_RenderContext->canvasSize = sf::Vector2u(textureSize.x, textureSize.y);
 
-        m_RenderContext->mousePosition =
-            sf::Vector2f(m_MousePosition.x - m_RenderContext->canvasPosition.x,
-                         m_MousePosition.y - m_RenderContext->canvasPosition.y);
+        auto mosuePosition = sf::Vector2f(m_MousePosition.x - m_RenderContext->canvasPosition.x,
+                                          m_MousePosition.y - m_RenderContext->canvasPosition.y);
+
+        mosuePosition.x    *= m_RenderContext->textureFactor;
+        mosuePosition.y    *= m_RenderContext->textureFactor;
+        m_RenderContext->mousePosition = mosuePosition;
     }
 
     bool RenderCanvasWindow::mouseOnCanvas()
     {
-        sf::Rect<float> canvas(m_RenderContext->canvasPosition.x,
-                               m_RenderContext->canvasPosition.y,
-                               m_RenderContext->canvasSize.x,
-                               m_RenderContext->canvasSize.y);
+        sf::Rect<float> canvas(
+            m_RenderContext->canvasPosition.x,
+            m_RenderContext->canvasPosition.y,
+            float(m_RenderContext->canvasSize.x) * m_RenderContext->textureFactor,
+            float(m_RenderContext->canvasSize.y) * m_RenderContext->textureFactor);
 
-        sf::Vector2i    mousePosition = ImGui::GetMousePos();
+        sf::Vector2i mousePosition = ImGui::GetMousePos();
 
-        return canvas.contains(mousePosition.x, mousePosition.y);
+        return canvas.contains(float(mousePosition.x), float(mousePosition.y));
     }
 
     std::string RenderCanvasWindow::getString(const EditorMode& editorMode)

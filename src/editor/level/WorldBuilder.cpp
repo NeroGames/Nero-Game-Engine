@@ -316,21 +316,23 @@ namespace nero
     void WorldBuilder::handleMouseButtonsInput(const sf::Event::MouseButtonEvent& mouse,
                                                const bool&                        isPressed)
     {
-        sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(
+        sf::Vector2f worldPos = m_RenderTexture->mapPixelToCoords(
             sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
             m_RenderTexture->getView());
+        worldPos.x *= m_RenderContext->textureFactor;
+        worldPos.y *= m_RenderContext->textureFactor;
 
         if(mouse.button == sf::Mouse::Left && isPressed && m_SelectedLayer &&
            m_SelectedLayer->isVisible())
         {
-            auto selectedObject = findObject(m_SelectedLayer, world_pos);
+            auto selectedObject = findObject(m_SelectedLayer, worldPos);
 
             if(keyboard::ALT() && selectedObject && !selectedObject->isSelectable())
             {
                 deleteObject(selectedObject);
             }
 
-            m_LastMousePosition = world_pos;
+            m_LastMousePosition = worldPos;
 
             m_ClickedObject     = selectedObject ? true : false;
 
@@ -345,7 +347,7 @@ namespace nero
         else if(mouse.button == sf::Mouse::Right && isPressed && m_SelectedLayer &&
                 m_SelectedLayer->isVisible())
         {
-            auto founded = findObject(m_SelectedLayer, world_pos);
+            auto founded = findObject(m_SelectedLayer, worldPos);
 
             if(founded && founded->isSelectable())
             {
@@ -371,15 +373,17 @@ namespace nero
 
     void WorldBuilder::handleMouseMoveInput(const sf::Event::MouseMoveEvent& mouse)
     {
-        sf::Vector2f world_pos = m_RenderTexture->mapPixelToCoords(
+        sf::Vector2f worldPos = m_RenderTexture->mapPixelToCoords(
             sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
             m_RenderTexture->getView());
+        worldPos.x *= m_RenderContext->textureFactor;
+        worldPos.y *= m_RenderContext->textureFactor;
 
         if(m_LeftSelection && m_SelectedLayer && m_SelectedLayer->isVisible() && m_SelectedObject)
         {
             if(m_ClickedObject)
             {
-                sf::Vector2f diff = world_pos - m_LastMousePosition;
+                sf::Vector2f diff = worldPos - m_LastMousePosition;
 
                 if(!keyboard::CTRL_SHIFT_ALT())
                     m_SelectedObject->move(diff);
@@ -398,7 +402,7 @@ namespace nero
                     m_SelectedObject->scale(
                         sf::Vector2f(1.f - m_ZoomingRatio, 1.f - m_ZoomingRatio));
 
-                m_LastMousePosition = world_pos;
+                m_LastMousePosition = worldPos;
             }
         }
     }

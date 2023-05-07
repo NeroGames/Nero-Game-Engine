@@ -357,14 +357,15 @@ namespace nero
 
     bool EditorUI::mouseOnCanvas()
     {
-        sf::Rect<float> canvas(m_RenderContext->canvasPosition.x,
-                               m_RenderContext->canvasPosition.y,
-                               m_RenderContext->canvasSize.x,
-                               m_RenderContext->canvasSize.y);
+        sf::Rect<float> canvas(
+            m_RenderContext->canvasPosition.x,
+            m_RenderContext->canvasPosition.y,
+            float(m_RenderContext->canvasSize.x) * m_RenderContext->textureFactor,
+            float(m_RenderContext->canvasSize.y) * m_RenderContext->textureFactor);
 
-        sf::Vector2i    mousePosition = ImGui::GetMousePos();
+        sf::Vector2i mousePosition = ImGui::GetMousePos();
 
-        return canvas.contains(mousePosition.x, mousePosition.y);
+        return canvas.contains(float(mousePosition.x), float(mousePosition.y));
     }
 
     void EditorUI::updateFrameRate(const float& frameRate, const float& frameTime)

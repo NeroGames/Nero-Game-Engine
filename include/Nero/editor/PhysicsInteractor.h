@@ -118,6 +118,7 @@ namespace nero
         sf::Text                           m_PhysicsDataText;
         FontHolder::Ptr                    m_EditorFontHolder;
         Setting::Ptr                       m_LevelSetting;
+        unsigned int                       m_FontSize;
     };
 } // namespace nero
 #endif // PHYSICSINTERACTOR_H

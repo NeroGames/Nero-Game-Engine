@@ -89,8 +89,9 @@ namespace nero
         , m_TotalProfile()
         , m_IsLeftShift(false)
         , m_IsMouseRightButton(false)
-        , m_EditorFontHolder(editorFontHolder)
         , m_PhysicsDataText()
+        , m_EditorFontHolder(editorFontHolder)
+        , m_FontSize(18)
     {
         m_DestructionListener.physicsInteractor = PhysicsInteractor::Ptr(this);
 
@@ -102,7 +103,7 @@ namespace nero
 
         // Physics Data Text
         m_PhysicsDataText.setFont(m_EditorFontHolder->getDefaultFont());
-        m_PhysicsDataText.setCharacterSize(18.f);
+        m_PhysicsDataText.setCharacterSize(m_FontSize);
         m_PhysicsDataText.setFillColor(sf::Color::White);
         m_PhysicsDataText.setPosition(sf::Vector2f(60.f, 20.f));
     }
@@ -135,6 +136,12 @@ namespace nero
     {
         if(!m_PhysicsWorld)
             return;
+
+        m_FontSize = static_cast<unsigned int>(18.f / (0.7f * m_RenderContext->textureFactor));
+        if(m_FontSize != m_PhysicsDataText.getCharacterSize())
+        {
+            m_PhysicsDataText.setCharacterSize(m_FontSize);
+        }
 
         const auto frequence       = 40.f;
         float32    physicsTimeStep = frequence > 0.f ? 1.f / frequence : float32(0.0f);

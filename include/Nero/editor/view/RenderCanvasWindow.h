@@ -52,6 +52,7 @@ namespace nero
         bool                m_RenderLevelBuilder;
         bool                m_RenderAdvancedScene;
         sf::Color           m_ClearColor;
+        unsigned int        m_FontSize;
     };
 } // namespace nero
 #endif // RENDERCANVASWINDOW_H
