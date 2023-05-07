@@ -72,8 +72,9 @@ namespace ImGui
 
     // Image overloads for sf::RenderTexture
     void Image(const sf::RenderTexture& texture,
-               const sf::Color&         tintColor   = sf::Color::White,
-               const sf::Color&         borderColor = sf::Color::Transparent);
+               const float&             textureFactor = 1.f,
+               const sf::Color&         tintColor     = sf::Color::White,
+               const sf::Color&         borderColor   = sf::Color::Transparent);
     void Image(const sf::RenderTexture& texture,
                const sf::Vector2f&      size,
                const sf::Color&         tintColor   = sf::Color::White,

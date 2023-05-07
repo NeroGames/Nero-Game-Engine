@@ -556,10 +556,14 @@ namespace ImGui
     }
 
     void Image(const sf::RenderTexture& texture,
+               const float&             textureFactor,
                const sf::Color&         tintColor,
                const sf::Color&         borderColor)
     {
-        Image(texture, static_cast<sf::Vector2f>(texture.getSize()), tintColor, borderColor);
+        auto textureSize = sf::Vector2f(texture.getSize());
+        textureSize.x    *= textureFactor;
+        textureSize.y    *= textureFactor;
+        Image(texture, static_cast<sf::Vector2f>(textureSize), tintColor, borderColor);
     }
 
     void Image(const sf::RenderTexture& texture,
