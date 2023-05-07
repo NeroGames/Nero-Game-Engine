@@ -103,7 +103,8 @@ namespace nero
         sf::Vector2f                           canvasPosition;
         sf::Vector2f                           canvasSize;
         sf::Vector2f                           mousePosition;
-        bool                                   focus;
+        bool                                   canvasOnFocus;
+        float                                  textureFactor;
     };
 } // namespace nero
 #endif // SCENE_UTIL_H

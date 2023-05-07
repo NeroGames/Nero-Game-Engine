@@ -61,7 +61,7 @@ namespace nero
     {
         updateRenderContext();
 
-        if(mouseOnCanvas() && m_RenderContext->focus)
+        if(mouseOnCanvas() && m_RenderContext->canvasOnFocus)
         {
             sf::Vector2f worldPosition = m_RenderTexture->mapPixelToCoords(
                 sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
@@ -133,10 +133,10 @@ namespace nero
         ImGui::Begin(EditorConstant.WINDOW_GAME_SCENE.c_str());
 
         // Get current window and mouse position
-        m_CanvasPosition       = ImGui::GetWindowPos();
-        m_CanvasSize           = ImGui::GetWindowSize();
-        m_MousePosition        = ImGui::GetMousePos();
-        m_RenderContext->focus = ImGui::IsWindowFocused();
+        m_CanvasPosition               = ImGui::GetWindowPos();
+        m_CanvasSize                   = ImGui::GetWindowSize();
+        m_MousePosition                = ImGui::GetMousePos();
+        m_RenderContext->canvasOnFocus = ImGui::IsWindowFocused();
 
         ImGui::SameLine();
 
