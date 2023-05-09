@@ -225,8 +225,8 @@ namespace nero
         auto mosuePosition = sf::Vector2f(m_MousePosition.x - m_RenderContext->canvasPosition.x,
                                           m_MousePosition.y - m_RenderContext->canvasPosition.y);
 
-        mosuePosition.x    *= m_RenderContext->textureFactor;
-        mosuePosition.y    *= m_RenderContext->textureFactor;
+        mosuePosition.x    /= m_RenderContext->textureFactor;
+        mosuePosition.y    /= m_RenderContext->textureFactor;
         m_RenderContext->mousePosition = mosuePosition;
     }
 

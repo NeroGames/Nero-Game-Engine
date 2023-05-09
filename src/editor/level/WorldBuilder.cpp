@@ -319,8 +319,6 @@ namespace nero
         sf::Vector2f worldPos = m_RenderTexture->mapPixelToCoords(
             sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
             m_RenderTexture->getView());
-        worldPos.x *= m_RenderContext->textureFactor;
-        worldPos.y *= m_RenderContext->textureFactor;
 
         if(mouse.button == sf::Mouse::Left && isPressed && m_SelectedLayer &&
            m_SelectedLayer->isVisible())
@@ -376,8 +374,6 @@ namespace nero
         sf::Vector2f worldPos = m_RenderTexture->mapPixelToCoords(
             sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
             m_RenderTexture->getView());
-        worldPos.x *= m_RenderContext->textureFactor;
-        worldPos.y *= m_RenderContext->textureFactor;
 
         if(m_LeftSelection && m_SelectedLayer && m_SelectedLayer->isVisible() && m_SelectedObject)
         {
