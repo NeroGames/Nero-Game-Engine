@@ -114,6 +114,7 @@ namespace nero
         {
             m_RenderTexture->create(m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y);
             m_FrontScreenTexture->create(m_FrontScreenSize.x, m_FrontScreenSize.y);
+
             m_EditorCamera->updateView(sf::Vector2f(float(m_RenderContext->canvasSize.x),
                                                     float(m_RenderContext->canvasSize.y)));
         }

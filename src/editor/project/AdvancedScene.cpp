@@ -442,6 +442,8 @@ namespace nero
                                             m_RenderTexture,
                                             m_FrontScreenTexture,
                                             m_EditorCamera);
+
+            m_EditorCamera->reinitialize();
         }
     }
 

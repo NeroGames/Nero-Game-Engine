@@ -296,6 +296,9 @@ namespace nero
     void Camera::updateView(const sf::Vector2f& size)
     {
         m_View.setSize(size);
+        const auto zoom = m_Zoom;
+        m_Zoom          = 1.f;
+        setZoom(zoom);
     }
 } // namespace nero
 ////////////////////////////////////////////////////////////

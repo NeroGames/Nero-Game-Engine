@@ -329,27 +329,30 @@ namespace nero
 
     void EditorUI::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
     {
-        const bool mouseHoverCanvas = mouseOnCanvas() && m_RenderContext->canvasOnFocus;
+        const auto mouseHoverCanvas        = mouseOnCanvas();
+        const bool mouseHoverCanvasFocused = mouseHoverCanvas && m_RenderContext->canvasOnFocus;
 
         if(isPressed)
         {
             // Switch between Builder Modes
-            if(key == sf::Keyboard::Space && mouseHoverCanvas)
+            if(key == sf::Keyboard::Space && mouseHoverCanvasFocused)
             {
                 switchBuilderMode();
             }
             // Play Game
-            else if(key == sf::Keyboard::Enter && !keyboard::CTRL_SHIFT_ALT() && mouseHoverCanvas)
+            else if(key == sf::Keyboard::Enter && !keyboard::CTRL_SHIFT_ALT() &&
+                    mouseHoverCanvasFocused)
             {
                 m_EditorProxy->playGameScene();
             }
             // Stop Play Game
-            else if(key == sf::Keyboard::Escape && !keyboard::CTRL_SHIFT_ALT() && mouseHoverCanvas)
+            else if(key == sf::Keyboard::Escape && !keyboard::CTRL_SHIFT_ALT() &&
+                    mouseHoverCanvasFocused)
             {
                 m_EditorProxy->stopPlayGameScene();
             }
             // Render Game
-            else if(key == sf::Keyboard::Enter && keyboard::CTRL() && mouseHoverCanvas)
+            else if(key == sf::Keyboard::Enter && keyboard::CTRL() && mouseHoverCanvasFocused)
             {
                 // TODO
                 // m_EditorProxy->renderGameScene();
