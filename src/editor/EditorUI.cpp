@@ -354,6 +354,33 @@ namespace nero
                 // TODO
                 // m_EditorProxy->renderGameScene();
             }
+            else if(key == sf::Keyboard::Numpad5 && !keyboard::CTRL_SHIFT_ALT())
+            {
+                if(mouseHoverCanvas)
+                {
+                    m_EditorCamera->reinitialize();
+                }
+            }
+            else if(key == sf::Keyboard::Numpad5 && keyboard::CTRL())
+            {
+                if(mouseHoverCanvas)
+                {
+                    const auto levelBuilder = m_EditorContext->getLevelBuilder();
+                    if(levelBuilder)
+                    {
+                        m_EditorCamera->setDefaultPosition(m_EditorCamera->getPosition());
+                        m_EditorCamera->setDefaultRotation(m_EditorCamera->getRotation());
+                        m_EditorCamera->setDefaultZoom(m_EditorCamera->getZoom());
+
+                        auto cameraSetting = levelBuilder->getLevelSetting()->getSetting("camera");
+                        cameraSetting.setVector("default_position", m_EditorCamera->getPosition());
+                        cameraSetting.setFloat("default_rotation", m_EditorCamera->getRotation());
+                        cameraSetting.setInt("default_zoom", m_EditorCamera->getZoom());
+
+                        m_EditorContext->getNotificationManager()->notify("Camera Saved");
+                    }
+                }
+            }
         }
     }
 
@@ -521,6 +548,11 @@ namespace nero
             auto levelBuilder = m_EditorContext->getLevelBuilder();
             if(levelBuilder)
             {
+                // save current camera
+                auto cameraSetting = levelBuilder->getLevelSetting()->getSetting("camera");
+                cameraSetting.setVector("position", m_EditorCamera->getPosition());
+                cameraSetting.setInt("zoom", m_EditorCamera->getZoom());
+                cameraSetting.setFloat("rotation", m_EditorCamera->getRotation());
                 levelBuilder->saveGameLevel();
             }
         };
@@ -622,6 +654,14 @@ namespace nero
             }
             advancedScene->openLevel(levelName);
             m_EditorContext->setOpenedGameLevelName(levelName);
+            levelBuilder       = advancedScene->getLevelBuilder();
+            auto cameraSetting = levelBuilder->getLevelSetting()->getSetting("camera");
+            m_EditorCamera->setDefaultPosition(cameraSetting.getVector("default_position"), false);
+            m_EditorCamera->setDefaultRotation(cameraSetting.getFloat("default_rotation"), false);
+            m_EditorCamera->setDefaultZoom(cameraSetting.getInt("default_zoom"), false);
+            m_EditorCamera->setPosition(cameraSetting.getVector("position"));
+            m_EditorCamera->setRotation(cameraSetting.getFloat("rotation"));
+            m_EditorCamera->setZoom(cameraSetting.getInt("zoom"));
         };
 
         m_EditorProxy->m_RemoveGameLevelCallback = [this](const std::string levelName)

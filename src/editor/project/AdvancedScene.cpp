@@ -166,8 +166,16 @@ namespace nero
         physicsSetting.setBool("draw_contact_normal", false);
         physicsSetting.setBool("draw_contact_impulse", false);
         physicsSetting.setBool("draw_friction_impulse", false);
-
         setting.setSetting("physics", physicsSetting);
+        // Camera Setting
+        Setting cameraSetting;
+        cameraSetting.setVector("default_position", sf::Vector2f(0.f, 0.f));
+        cameraSetting.setInt("default_zoom", -20);
+        cameraSetting.setFloat("default_rotation", 0.f);
+        cameraSetting.setVector("position", sf::Vector2f(0.f, 0.f));
+        cameraSetting.setInt("zoom", 20);
+        cameraSetting.setFloat("rotation", 0.f);
+        setting.setSetting("camera", cameraSetting);
 
         file::saveFile(file::getPath({levelDirectory, "setting"}, StringPool.EXT_NERO),
                        setting.toString());
