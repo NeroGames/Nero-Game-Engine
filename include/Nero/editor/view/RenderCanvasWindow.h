@@ -30,6 +30,7 @@ namespace nero
 
       private:
         RenderTexturePtr    m_RenderTexture;
+        RenderTexturePtr    m_FrontScreenTexture;
         RenderContext::Ptr  m_RenderContext;
         AdvancedCamera::Ptr m_EditorCamera;
         std::string         m_MousePositionString;
@@ -45,6 +46,7 @@ namespace nero
         float               m_TitleBarHeight;
         sf::Vector2f        m_CanvasPosition;
         sf::Vector2f        m_CanvasSize;
+        sf::Vector2f        m_FrontScreenSize;
         sf::Vector2f        m_MousePosition;
         // Rendering Level Builder and Game Level
         AdvancedScene::Ptr  m_AdvancedScene;
@@ -52,7 +54,6 @@ namespace nero
         bool                m_RenderLevelBuilder;
         bool                m_RenderAdvancedScene;
         sf::Color           m_ClearColor;
-        unsigned int        m_FontSize;
     };
 } // namespace nero
 #endif // RENDERCANVASWINDOW_H

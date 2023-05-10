@@ -12,6 +12,7 @@ namespace nero
     RenderCanvasWindow::RenderCanvasWindow(EditorContext::Ptr editorContext)
         : UIComponent(std::move(editorContext))
         , m_RenderTexture(m_EditorContext->getRenderTexture())
+        , m_FrontScreenTexture(std::make_shared<sf::RenderTexture>())
         , m_RenderContext(m_EditorContext->getRenderContext())
         , m_EditorCamera(m_EditorContext->getEditorCamera())
         , m_MousePositionString("Mouse Position")
@@ -19,7 +20,6 @@ namespace nero
         , m_LevelBuilder(nullptr)
         , m_RenderLevelBuilder(false)
         , m_RenderAdvancedScene(false)
-        , m_FontSize(18)
     {
         m_CameraXAxis.setSize(sf::Vector2f(20.f, -2.f));
         m_CameraXAxis.setFillColor(sf::Color::Red);
@@ -41,11 +41,11 @@ namespace nero
         m_CanvasYAxis.setRotation(90.f);
 
         m_GameModeInfo.setFont(m_EditorContext->getFontHolder()->getDefaultFont());
-        m_GameModeInfo.setCharacterSize(m_FontSize);
+        m_GameModeInfo.setCharacterSize(18.f);
         m_GameModeInfo.setFillColor(sf::Color::White);
 
         m_GameBuilderInfo.setFont(m_EditorContext->getFontHolder()->getDefaultFont());
-        m_GameBuilderInfo.setCharacterSize(m_FontSize);
+        m_GameBuilderInfo.setCharacterSize(18.f);
         m_GameBuilderInfo.setFillColor(sf::Color::White);
     }
 
@@ -62,18 +62,7 @@ namespace nero
     {
         updateRenderContext();
 
-        m_FontSize = static_cast<unsigned int>(18.f / (0.7f * m_RenderContext->textureFactor));
-        if(m_FontSize != m_GameModeInfo.getCharacterSize())
-        {
-            m_GameModeInfo.setCharacterSize(m_FontSize);
-        }
-
-        if(m_FontSize != m_GameBuilderInfo.getCharacterSize())
-        {
-            m_GameModeInfo.setCharacterSize(m_FontSize);
-        }
-
-        if(mouseOnCanvas() && m_RenderContext->canvasOnFocus)
+        if(mouseOnCanvas())
         {
             sf::Vector2f worldPosition = m_RenderTexture->mapPixelToCoords(
                 sf::Vector2i(int(m_RenderContext->mousePosition.x),
@@ -114,10 +103,8 @@ namespace nero
         m_GameBuilderInfo.setString(m_EditorContext->getOpengedGameLevelName());
 
         sf::Vector2f position;
-        position.x =
-            float(m_RenderTexture->getSize().x) - m_GameModeInfo.getLocalBounds().width - 20.f;
-        position.y =
-            float(m_RenderTexture->getSize().y) - m_GameModeInfo.getLocalBounds().height - 20.f;
+        position.x = float(m_FrontScreenSize.x) - m_GameModeInfo.getLocalBounds().width - 20.f;
+        position.y = float(m_FrontScreenSize.y) - m_GameModeInfo.getLocalBounds().height - 20.f;
 
         m_GameModeInfo.setPosition(position);
         m_GameBuilderInfo.setPosition(sf::Vector2f(20.f, position.y));
@@ -126,6 +113,7 @@ namespace nero
            m_RenderTexture->getSize().y != m_RenderContext->canvasSize.y)
         {
             m_RenderTexture->create(m_RenderContext->canvasSize.x, m_RenderContext->canvasSize.y);
+            m_FrontScreenTexture->create(m_FrontScreenSize.x, m_FrontScreenSize.y);
             m_EditorCamera->updateView(sf::Vector2f(float(m_RenderContext->canvasSize.x),
                                                     float(m_RenderContext->canvasSize.y)));
         }
@@ -163,6 +151,7 @@ namespace nero
 
         m_RenderTexture->clear(m_ClearColor);
         m_RenderTexture->setView(m_EditorCamera->getView());
+        m_FrontScreenTexture->clear(sf::Color::Transparent);
 
         if(m_RenderLevelBuilder)
         {
@@ -179,20 +168,21 @@ namespace nero
 
         // Front Screen
         m_RenderTexture->setView(m_RenderTexture->getDefaultView());
-
         if(m_RenderAdvancedScene)
         {
             m_AdvancedScene->renderFrontScreen();
         }
-
-        m_RenderTexture->draw(m_CameraXAxis);
-        m_RenderTexture->draw(m_CameraYAxis);
-        m_RenderTexture->draw(m_GameModeInfo);
-        m_RenderTexture->draw(m_GameBuilderInfo);
-
         m_RenderTexture->setView(m_EditorCamera->getView());
 
+        m_FrontScreenTexture->draw(m_CameraXAxis);
+        m_FrontScreenTexture->draw(m_CameraYAxis);
+        m_FrontScreenTexture->draw(m_GameModeInfo);
+        m_FrontScreenTexture->draw(m_GameBuilderInfo);
+
+        const auto imagePosition = ImGui::GetCursorPos();
         ImGui::Image(*m_RenderTexture, m_RenderContext->textureFactor);
+        ImGui::SetCursorPos(imagePosition);
+        ImGui::Image(*m_FrontScreenTexture);
 
         ImGui::End();
     }
@@ -202,7 +192,7 @@ namespace nero
         m_WindowPadding  = ImGui::GetStyle().WindowPadding;
         m_TitleBarHeight = ImGui::GetFontSize() * 2 + ImGui::GetStyle().FramePadding.y * 4;
 
-        m_RenderContext->textureFactor = 2.f;
+        m_RenderContext->textureFactor = 2.5f;
 
         m_RenderContext->canvasPosition =
             sf::Vector2f(m_CanvasPosition.x + m_WindowPadding.x,
@@ -216,6 +206,8 @@ namespace nero
 
         if(textureSize.y < 100.f)
             textureSize.y = 100.f;
+
+        m_FrontScreenSize           = textureSize;
 
         textureSize.x               /= m_RenderContext->textureFactor;
         textureSize.y               /= m_RenderContext->textureFactor;
