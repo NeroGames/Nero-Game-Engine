@@ -426,9 +426,10 @@ namespace nero
                 }
 
                 if(enableLight &&
-                   ImGui::CollapsingHeader("Light Boundary", ImGuiTreeNodeFlags_DefaultOpen))
+                   ImGui::CollapsingHeader("Light Texture", ImGuiTreeNodeFlags_DefaultOpen))
                 {
-                    ImGui::BeginChild("light_boundary", ImVec2(0.f, 115.f), true);
+                    viewHeight = isPlayGameMode ? 35.f : 85.f;
+                    ImGui::BeginChild("light_texture", ImVec2(0.f, viewHeight), true);
 
                     const float wordingWidth = 80.f;
                     const float inputWidth   = ImGui::GetWindowContentRegionWidth() - wordingWidth;

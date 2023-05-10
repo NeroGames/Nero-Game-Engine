@@ -372,7 +372,7 @@ namespace nero
 
         // Setting
         Setting compilationSetting;
-        compilationSetting.setBool("clean", false);
+        compilationSetting.setBool("clean", true);
         compilationSetting.setInt("timeout", 30);
         file::saveFile(
             file::getPath({projectDirectory, "Setting", "compilation"}, StringPool.EXT_JSON),

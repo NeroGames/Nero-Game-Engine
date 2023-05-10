@@ -146,7 +146,7 @@ namespace nero
         // gravity
         physicsSetting.setVector("gravity", sf::Vector2f(0.f, 9.8f));
         // stepping
-        physicsSetting.setFloat("frequency", 30);
+        physicsSetting.setFloat("frequency", 35.f);
         physicsSetting.setInt("velocity_iterations", 8);
         physicsSetting.setInt("position_iterations", 3);
         physicsSetting.setBool("allow_sleeping", true);
