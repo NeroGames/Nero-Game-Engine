@@ -62,6 +62,7 @@ namespace nero
                         Setting::Ptr                       levelSetting,
                         RenderContext::Ptr                 renderContext,
                         std::shared_ptr<sf::RenderTexture> renderTexture,
+                        std::shared_ptr<sf::RenderTexture> frontScreenTexture,
                         AdvancedCamera::Ptr                editorCamera);
         void update(const sf::Time& timeStep);
         void handleEvent(const sf::Event& event);
@@ -114,6 +115,7 @@ namespace nero
         b2Vec2                             m_LastMousePosition;
         RenderContext::Ptr                 m_RenderContext;
         std::shared_ptr<sf::RenderTexture> m_RenderTexture;
+        std::shared_ptr<sf::RenderTexture> m_FrontScreenTexture;
         AdvancedCamera::Ptr                m_EditorCamera;
         sf::Text                           m_PhysicsDataText;
         FontHolder::Ptr                    m_EditorFontHolder;

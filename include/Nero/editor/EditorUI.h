@@ -120,6 +120,7 @@ namespace nero
         NotificationManager::Ptr                m_NotificationManager;
         EditorProxy::Ptr                        m_EditorProxy;
         RenderTexturePtr                        m_RenderTexture;
+        RenderTexturePtr                        m_FrontScreenTexture;
         RenderContext::Ptr                      m_RenderContext;
         EditorContext::Ptr                      m_EditorContext;
         EditorSetup::Ptr                        m_EditorSetup;

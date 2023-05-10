@@ -46,6 +46,7 @@ namespace nero
         , m_NotificationManager(std::make_shared<NotificationManager>())
         , m_EditorProxy(std::make_shared<EditorProxy>())
         , m_RenderTexture(std::make_shared<sf::RenderTexture>())
+        , m_FrontScreenTexture(std::make_shared<sf::RenderTexture>())
         , m_RenderContext(std::make_shared<RenderContext>())
         , m_EditorContext(std::make_shared<EditorContext>(m_EditorProxy,
                                                           m_ProjectManager,
@@ -54,6 +55,7 @@ namespace nero
                                                           m_EditorFontHolder,
                                                           m_EditorSetting,
                                                           m_RenderTexture,
+                                                          m_FrontScreenTexture,
                                                           m_RenderContext,
                                                           m_EditorCamera))
         , m_EditorSetup(std::make_shared<EditorSetup>(m_EditorContext))
@@ -484,6 +486,7 @@ namespace nero
             auto gameProject   = m_EditorContext->getGameProject();
             auto advancedScene = gameProject->getAdvancedScene();
             advancedScene->setRenderTexture(m_RenderTexture);
+            advancedScene->setFrontScreenTexture(m_FrontScreenTexture);
             advancedScene->setRenderContext(m_RenderContext);
             advancedScene->setEditorCamera(m_EditorCamera);
             advancedScene->init();

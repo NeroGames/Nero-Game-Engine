@@ -113,17 +113,19 @@ namespace nero
                                        Setting::Ptr                       levelSetting,
                                        RenderContext::Ptr                 renderContext,
                                        std::shared_ptr<sf::RenderTexture> renderTexture,
+                                       std::shared_ptr<sf::RenderTexture> frontScreenTexture,
                                        AdvancedCamera::Ptr                editorCamera)
     {
-        m_Bomb          = nullptr;
-        m_GroundBody    = nullptr;
-        m_MouseJoint    = nullptr;
-        m_PhysicsWorld  = physicsWorld;
-        m_ShapeRenderer = shapeRenderer;
-        m_RenderContext = renderContext;
-        m_RenderTexture = renderTexture;
-        m_EditorCamera  = editorCamera;
-        m_LevelSetting  = levelSetting;
+        m_Bomb               = nullptr;
+        m_GroundBody         = nullptr;
+        m_MouseJoint         = nullptr;
+        m_PhysicsWorld       = physicsWorld;
+        m_ShapeRenderer      = shapeRenderer;
+        m_RenderContext      = renderContext;
+        m_RenderTexture      = renderTexture;
+        m_FrontScreenTexture = frontScreenTexture;
+        m_EditorCamera       = editorCamera;
+        m_LevelSetting       = levelSetting;
 
         m_PhysicsWorld->SetDestructionListener(&m_DestructionListener);
 
@@ -242,7 +244,7 @@ namespace nero
 
     void PhysicsInteractor::renderFrontScreen()
     {
-        m_RenderTexture->draw(m_PhysicsDataText);
+        m_FrontScreenTexture->draw(m_PhysicsDataText);
     }
 
     void PhysicsInteractor::render()

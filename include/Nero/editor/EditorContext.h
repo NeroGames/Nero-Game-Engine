@@ -30,6 +30,7 @@ namespace nero
                       FontHolder::Ptr          fontHolder,
                       Setting::Ptr             editorSetting,
                       RenderTexturePtr         renderTexture,
+                      RenderTexturePtr         frontScreenTexture,
                       RenderContext::Ptr       renderContext,
                       AdvancedCamera::Ptr      editorCamara,
                       const EditorMode&        editorMode  = EditorMode::None,
@@ -54,6 +55,7 @@ namespace nero
         ResourceManager::Ptr     getCurrentResourceManager() const;
         sf::Vector2f             getNewGameObjectPosition() const;
         RenderTexturePtr         getRenderTexture() const;
+        RenderTexturePtr         getFrontScreenTexture() const;
         RenderContext::Ptr       getRenderContext() const;
         AdvancedCamera::Ptr      getEditorCamera() const;
         float                    getFrameRate() const;
@@ -78,6 +80,7 @@ namespace nero
         FontHolder::Ptr          m_FontHolder;
         Setting::Ptr             m_EditorSetting;
         RenderTexturePtr         m_RenderTexture;
+        RenderTexturePtr         m_FrontScreenTexture;
         RenderContext::Ptr       m_RenderContext;
         AdvancedCamera::Ptr      m_EditorCamera;
         EditorMode               m_EditorMode;

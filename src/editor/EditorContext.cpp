@@ -16,6 +16,7 @@ namespace nero
                                  FontHolder::Ptr          fontHolder,
                                  Setting::Ptr             editorSetting,
                                  RenderTexturePtr         renderTexture,
+                                 RenderTexturePtr         frontScreenTexture,
                                  RenderContext::Ptr       renderContext,
                                  AdvancedCamera::Ptr      editorCamara,
                                  const EditorMode&        editorMode,
@@ -27,6 +28,7 @@ namespace nero
         , m_FontHolder(fontHolder)
         , m_EditorSetting(editorSetting)
         , m_RenderTexture(renderTexture)
+        , m_FrontScreenTexture(frontScreenTexture)
         , m_RenderContext(renderContext)
         , m_EditorCamera(editorCamara)
         , m_EditorMode(editorMode)
@@ -193,6 +195,11 @@ namespace nero
     EditorContext::RenderTexturePtr EditorContext::getRenderTexture() const
     {
         return m_RenderTexture;
+    }
+
+    EditorContext::RenderTexturePtr EditorContext::getFrontScreenTexture() const
+    {
+        return m_FrontScreenTexture;
     }
 
     RenderContext::Ptr EditorContext::getRenderContext() const

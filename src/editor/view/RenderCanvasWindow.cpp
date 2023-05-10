@@ -12,7 +12,7 @@ namespace nero
     RenderCanvasWindow::RenderCanvasWindow(EditorContext::Ptr editorContext)
         : UIComponent(std::move(editorContext))
         , m_RenderTexture(m_EditorContext->getRenderTexture())
-        , m_FrontScreenTexture(std::make_shared<sf::RenderTexture>())
+        , m_FrontScreenTexture(m_EditorContext->getFrontScreenTexture())
         , m_RenderContext(m_EditorContext->getRenderContext())
         , m_EditorCamera(m_EditorContext->getEditorCamera())
         , m_MousePositionString("Mouse Position")

@@ -326,6 +326,11 @@ namespace nero
         m_RenderTexture = renderTexture;
     }
 
+    void AdvancedScene::setFrontScreenTexture(const std::shared_ptr<sf::RenderTexture>& texture)
+    {
+        m_FrontScreenTexture = texture;
+    }
+
     void AdvancedScene::setEditorCamera(const AdvancedCamera::Ptr& editorCamera)
     {
         m_EditorCamera = editorCamera;
@@ -427,6 +432,7 @@ namespace nero
                                             gameLevel->getSetting(),
                                             m_RenderContext,
                                             m_RenderTexture,
+                                            m_FrontScreenTexture,
                                             m_EditorCamera);
         }
     }
