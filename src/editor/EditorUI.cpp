@@ -75,6 +75,7 @@ namespace nero
         , m_SceneExplorerWindow(m_EditorContext)
         , m_EngineHelpWindow(m_EditorContext)
         , m_EditorUtilityWindow(m_EditorContext)
+        , m_QuickSettingWindow(m_EditorContext)
         , m_WorldChunkWindow(m_EditorContext)
         , m_ObjectLayerWindow(m_EditorContext)
         , m_GameLevelWindow(m_EditorContext)
@@ -86,6 +87,7 @@ namespace nero
         , m_NotificationWindow(m_EditorContext)
         , m_NodeEditorWindow(m_EditorContext, m_NodeEditorContext)
     {
+        m_RenderContext->textureFactor = 2.f;
         setupEditorProxy();
     }
 
@@ -291,6 +293,7 @@ namespace nero
 
             // Left
             m_EditorUtilityWindow.render();
+            m_QuickSettingWindow.render();
 
             if(m_EditorContext->getLevelBuilder())
             {

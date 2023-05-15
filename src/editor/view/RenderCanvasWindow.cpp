@@ -193,8 +193,6 @@ namespace nero
         m_WindowPadding  = ImGui::GetStyle().WindowPadding;
         m_TitleBarHeight = ImGui::GetFontSize() * 2 + ImGui::GetStyle().FramePadding.y * 4;
 
-        m_RenderContext->textureFactor = 2.5f;
-
         m_RenderContext->canvasPosition =
             sf::Vector2f(m_CanvasPosition.x + m_WindowPadding.x,
                          m_CanvasPosition.y + m_WindowPadding.y + m_TitleBarHeight);

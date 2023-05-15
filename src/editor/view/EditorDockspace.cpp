@@ -100,6 +100,8 @@ namespace nero
             // upper left
             ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_UTILITY.c_str(),
                                          upperLeftDockspaceID);
+            ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_QUICK_SETTING.c_str(),
+                                         upperLeftDockspaceID);
             // ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_SCREEN.c_str(),
             // upperLeftDockspaceID); lower left
             ImGui::DockBuilderDockWindow(EditorConstant.WINDOW_CHUNCK.c_str(),

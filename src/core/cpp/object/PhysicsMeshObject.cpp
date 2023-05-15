@@ -94,6 +94,14 @@ namespace nero
         meshObject->setPosition(getPosition());
         meshObject->setScale(getScale());
         meshObject->setRotation(getRotation());
+        meshObject->setProperty("fixed_rotation", m_PhysicsPoperty.fixedRotation);
+        meshObject->setProperty("sensor", m_PhysicsPoperty.sensor);
+        meshObject->setProperty("allow_sleep", m_PhysicsPoperty.allowSleep);
+        meshObject->setProperty("density", m_PhysicsPoperty.density);
+        meshObject->setProperty("friction", m_PhysicsPoperty.friction);
+        meshObject->setProperty("restitution", m_PhysicsPoperty.restitution);
+        meshObject->setProperty("gravity_scale", m_PhysicsPoperty.gravityScale);
+
         return meshObject;
     }
 

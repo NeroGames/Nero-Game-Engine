@@ -325,7 +325,7 @@ namespace nero
         {
             auto selectedObject = findObject(m_SelectedLayer, worldPos);
 
-            if(keyboard::ALT() && selectedObject && !selectedObject->isSelectable())
+            if(keyboard::ALT() && selectedObject && selectedObject->isSelectable())
             {
                 deleteObject(selectedObject);
             }

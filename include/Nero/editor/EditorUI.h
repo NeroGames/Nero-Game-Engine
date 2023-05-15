@@ -32,6 +32,7 @@
 #include <Nero/editor/view/SceneExplorerWindow.h>
 #include <Nero/editor/view/EngineHelpWindow.h>
 #include <Nero/editor/view/EditorUtilityWindow.h>
+#include <Nero/editor/view/QuickSettingWindow.h>
 #include <Nero/editor/view/WorldChunkWindow.h>
 #include <Nero/editor/view/ObjectLayerWindow.h>
 #include <Nero/editor/view/GameLevelWindow.h>
@@ -140,6 +141,7 @@ namespace nero
         SceneExplorerWindow                     m_SceneExplorerWindow;
         EngineHelpWindow                        m_EngineHelpWindow;
         EditorUtilityWindow                     m_EditorUtilityWindow;
+        QuickSettingWindow                      m_QuickSettingWindow;
         WorldChunkWindow                        m_WorldChunkWindow;
         ObjectLayerWindow                       m_ObjectLayerWindow;
         GameLevelWindow                         m_GameLevelWindow;
