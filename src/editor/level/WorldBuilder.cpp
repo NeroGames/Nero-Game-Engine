@@ -41,16 +41,7 @@ namespace nero
         m_SelectionRect.setOutlineColor(sf::Color::Green);
         m_SelectionRect.setOutlineThickness(-3.f);
 
-        m_UpdateUI = []()
-        {
-        };
         m_UpdateUndo = []()
-        {
-        };
-        m_UpdateLog = [](const std::string&, int)
-        {
-        };
-        m_UpdateLogIf = [](const std::string&, bool, int)
         {
         };
 
@@ -352,9 +343,6 @@ namespace nero
                 m_SelectedObject = founded;
                 m_RightSelection = true;
             }
-
-            if(m_SelectedObject)
-                m_UpdateUI();
         }
 
         else if(mouse.button == sf::Mouse::Left && !isPressed)
@@ -1537,27 +1525,10 @@ namespace nero
         }
     }
 
-    void WorldBuilder::setUpdateUI(std::function<void()> fn)
-    {
-        m_UpdateUI = fn;
-    }
-
     void WorldBuilder::setUpdateUndo(std::function<void()> fn)
     {
         m_UpdateUndo = fn;
-        // m_MeshEditor->setUpdateUndo(fn);
-    }
-
-    void WorldBuilder::setUpdateLog(std::function<void(const std::string&, int)> fn)
-    {
-        m_UpdateLog = fn;
-        // m_MeshEditor->setUpdateLog(fn);
-    }
-
-    void WorldBuilder::setUpdateLogIf(std::function<void(const std::string&, bool, int)> fn)
-    {
-        m_UpdateLogIf = fn;
-        // m_MeshEditor->setUpdateLogIf(fn);
+        m_MeshEditor->setUpdateUndo(fn);
     }
 
     Object::Ptr WorldBuilder::getSelectedObject()

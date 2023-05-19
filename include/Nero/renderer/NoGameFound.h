@@ -6,18 +6,18 @@
 #define NOGAMEFOUND_H
 ///////////////////////////HEADERS///////////////////////////
 // Nero
-#include <Nero/core/cpp/scene/Scene.h>
+#include <Nero/core/cpp/scene/GameScene.h>
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class NoGameFound : public Scene
+    class NoGameFound : public GameScene
     {
       public: // Utility
         typedef std::shared_ptr<NoGameFound> Ptr;
 
       public:
         // Constructor & Destructor
-        NoGameFound(Scene::Context context);
+        NoGameFound(GameScene::Context context);
         virtual ~NoGameFound() override;
         // Main Methods
         virtual void handleEvent(const sf::Event& event) override;

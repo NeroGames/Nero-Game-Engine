@@ -34,8 +34,6 @@ namespace nero
         void clearMeshTable();
 
         void setUpdateUndo(std::function<void()> fn);
-        void setUpdateLog(std::function<void(const std::string&, int)> fn);
-        void setUpdateLogIf(std::function<void(const std::string&, bool, int)> fn);
         void setRenderContext(const RenderContext::Ptr& renderContext);
         void setRenderTexture(const RenderTexturePtr& renderTexture);
 
@@ -59,18 +57,16 @@ namespace nero
         void         handleRightClickRelease();
 
       private:
-        MeshTable                                          m_MeshTable;
-        PhysicsMeshObject::Ptr                             m_SelectedMesh;
-        std::vector<sf::RectangleShape*>                   m_SelectedVertexTable;
-        int                                                m_MeshCount;
-        RenderTexturePtr                                   m_RenderTexture;
-        RenderContext::Ptr                                 m_RenderContext;
-        sf::Vector2f                                       m_LastMousePosition;
-        std::function<void()>                              m_UpdateUndo;
-        std::function<void(const std::string&, int)>       m_UpdateLog;
-        std::function<void(const std::string&, bool, int)> m_UpdateLogIf;
-        sf::Vector2f                                       m_Epsilon;
-        bool                                               m_LeftSelection;
+        MeshTable                        m_MeshTable;
+        PhysicsMeshObject::Ptr           m_SelectedMesh;
+        std::vector<sf::RectangleShape*> m_SelectedVertexTable;
+        int                              m_MeshCount;
+        RenderTexturePtr                 m_RenderTexture;
+        RenderContext::Ptr               m_RenderContext;
+        sf::Vector2f                     m_LastMousePosition;
+        sf::Vector2f                     m_Epsilon;
+        bool                             m_LeftSelection;
+        std::function<void()>            m_UpdateUndo;
     };
 } // namespace nero
 #endif // MESHEDITOR_H

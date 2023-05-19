@@ -111,10 +111,7 @@ namespace nero
         nlohmann::json   saveScene();
         void             loadScene(nlohmann::json scene);
 
-        void             setUpdateUI(std::function<void()> fn);
         void             setUpdateUndo(std::function<void()> fn);
-        void             setUpdateLog(std::function<void(const std::string&, int)> fn);
-        void             setUpdateLogIf(std::function<void(const std::string&, bool, int)> fn);
 
         void             setPhysicWorld(std::shared_ptr<b2World> world);
 
@@ -157,40 +154,36 @@ namespace nero
         int                    getNewId();
 
       private:
-        ResourceManager::Ptr                               m_ResourceManager;
-        sf::RectangleShape                                 m_SelectionRect;
-        sf::Vector2f                                       m_LastMousePosition;
+        ResourceManager::Ptr     m_ResourceManager;
+        sf::RectangleShape       m_SelectionRect;
+        sf::Vector2f             m_LastMousePosition;
 
-        float                                              m_PanningSpeed;
-        float                                              m_RotationSpeed;
-        float                                              m_ZoomingRatio;
+        float                    m_PanningSpeed;
+        float                    m_RotationSpeed;
+        float                    m_ZoomingRatio;
 
-        LayerObject::Tab                                   m_LayerTable;
-        LayerObject::Ptr                                   m_SelectedLayer;
-        int                                                m_LayerCount;
+        LayerObject::Tab         m_LayerTable;
+        LayerObject::Ptr         m_SelectedLayer;
+        int                      m_LayerCount;
 
-        Object::Ptr                                        m_SelectedObject;
-        int                                                m_ObjectCount;
+        Object::Ptr              m_SelectedObject;
+        int                      m_ObjectCount;
 
-        MeshEditor::Ptr                                    m_MeshEditor;
-        PhysicsManager                                     m_PhysicsManager;
+        MeshEditor::Ptr          m_MeshEditor;
+        PhysicsManager           m_PhysicsManager;
 
-        std::shared_ptr<b2World>                           m_PhysicWorld;
+        std::shared_ptr<b2World> m_PhysicWorld;
 
-        SceneSetting                                       m_SceneSetting;
-        sf::Color                                          m_CanvasColor;
+        SceneSetting             m_SceneSetting;
+        sf::Color                m_CanvasColor;
 
-        RenderTexturePtr                                   m_RenderTexture;
-        RenderContext::Ptr                                 m_RenderContext;
-        bool                                               m_RightSelection;
-        bool                                               m_ClickedObject;
-        sf::Texture                                        m_LightTexture;
-        bool                                               m_LeftSelection;
-
-        std::function<void()>                              m_UpdateUI;
-        std::function<void()>                              m_UpdateUndo;
-        std::function<void(const std::string&, int)>       m_UpdateLog;
-        std::function<void(const std::string&, bool, int)> m_UpdateLogIf;
+        RenderTexturePtr         m_RenderTexture;
+        RenderContext::Ptr       m_RenderContext;
+        bool                     m_RightSelection;
+        bool                     m_ClickedObject;
+        sf::Texture              m_LightTexture;
+        bool                     m_LeftSelection;
+        std::function<void()>    m_UpdateUndo;
     };
 } // namespace nero
 #endif // WorldBuilder_H

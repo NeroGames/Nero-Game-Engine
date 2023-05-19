@@ -1,6 +1,5 @@
 /*#ifndef LUASCENE_H
 #define LUASCENE_H
-#include <Nero/core/cpp/scene/Scene.h>
 #include <memory>
 #include <lua/lua.hpp>
 #include <sol/sol.hpp>

@@ -8,7 +8,6 @@
 // Nero
 #include <Nero/core/cpp/engine/CoreEngine.h>
 #include <Nero/core/cpp/engine/StartupScreen.h>
-#include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/object/GameLevelScriptObject.h>
 #include <Nero/core/cpp/object/GameScreenScriptObject.h>
 // #include <Nero/core/cpp/object/SimpleScriptObject.h>
@@ -21,7 +20,7 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    class RenderEngine : public CoreEngine
+    /*class RenderEngine : public CoreEngine
     {
       public:
         typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
@@ -71,7 +70,7 @@ namespace nero
         // Load Cpp Class
         boost::function<CreateCppScene>         m_CreateCppScene;
         boost::function<CreateCppStartupScreen> m_CreateCppStartupScreen;
-    };
+    };*/
 
 } // namespace nero
 

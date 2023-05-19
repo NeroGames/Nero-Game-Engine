@@ -8,8 +8,8 @@
 /////////////////////////////////////////////////////////////
 namespace nero
 {
-    NoGameFound::NoGameFound(Scene::Context context)
-        : Scene(context)
+    NoGameFound::NoGameFound(GameScene::Context context)
+        : GameScene(context)
     {
     }
 
@@ -22,14 +22,14 @@ namespace nero
         switch(event.type)
         {
             case sf::Event::Closed:
-                quitScene();
+                // TODO quiScene()
                 break;
 
             case sf::Event::MouseButtonPressed:
-                handleMouseButtonInput(event.mouseButton, true);
+                // TODO handleMouseButtonInput(event.mouseButton, true);
                 break;
             case sf::Event::MouseButtonReleased:
-                handleMouseButtonInput(event.mouseButton, false);
+                // TODO handleMouseButtonInput(event.mouseButton, false);
                 break;
         }
     }

@@ -16,10 +16,10 @@ int main()
     profiler::startListen();
 
     // Instantiate the Game
-    nero::RenderEngine game;
+    // nero::RenderEngine game;
 
     // Launch the editor
-    game.run();
+    // game.run();
 
     return 0;
 }

@@ -8,7 +8,6 @@
 // Poco
 #include <Poco/Logger.h>
 // Nero
-#include <Nero/core/cpp/scene/Scene.h>
 #include <Nero/core/cpp/engine/Parameter.h>
 #include <Nero/core/lua/scene/LuaScene.h>
 #include <Nero/editor/project/GameProject.h>

@@ -23,12 +23,6 @@ namespace nero
         m_UpdateUndo = []()
         {
         };
-        m_UpdateLog = [](const std::string&, int)
-        {
-        };
-        m_UpdateLogIf = [](const std::string&, bool, int)
-        {
-        };
     }
 
     MeshEditor::~MeshEditor()
@@ -704,16 +698,6 @@ namespace nero
     void MeshEditor::setUpdateUndo(std::function<void()> fn)
     {
         m_UpdateUndo = fn;
-    }
-
-    void MeshEditor::setUpdateLog(std::function<void(const std::string&, int)> fn)
-    {
-        m_UpdateLog = fn;
-    }
-
-    void MeshEditor::setUpdateLogIf(std::function<void(const std::string&, bool, int)> fn)
-    {
-        m_UpdateLogIf = fn;
     }
 
     void MeshEditor::setRenderContext(const RenderContext::Ptr& renderContext)
