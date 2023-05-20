@@ -111,8 +111,6 @@ namespace nero
         nlohmann::json   saveScene();
         void             loadScene(nlohmann::json scene);
 
-        void             setUpdateUndo(std::function<void()> fn);
-
         void             setPhysicWorld(std::shared_ptr<b2World> world);
 
         void             buildUI(UIObject::Ptr rootObject);
@@ -133,6 +131,9 @@ namespace nero
         void             setRenderContext(const RenderContext::Ptr& renderContext);
         void             setRenderTexture(const RenderTexturePtr& renderTexture);
         void             setResourceManager(const ResourceManager::Ptr& resourceManager);
+        void             undo();
+        void             redo();
+        void             registerUndo();
 
       private:
         Object::Ptr findObject(Object::Ptr object, sf::Vector2f pos);
@@ -183,7 +184,8 @@ namespace nero
         bool                     m_ClickedObject;
         sf::Texture              m_LightTexture;
         bool                     m_LeftSelection;
-        std::function<void()>    m_UpdateUndo;
+        std::function<void()>    m_RegisterUndo;
+        UndoManager::Ptr         m_UndoManager;
     };
 } // namespace nero
 #endif // WorldBuilder_H

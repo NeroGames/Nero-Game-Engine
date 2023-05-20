@@ -34,16 +34,19 @@ namespace nero
         , m_RightSelection(false)
         , m_ClickedObject(false)
         , m_LeftSelection(false)
+        , m_MeshEditor(std::make_shared<MeshEditor>())
+        , m_UndoManager(std::make_shared<UndoManager>())
     {
-        m_MeshEditor = MeshEditor::Ptr(new MeshEditor());
-
         m_SelectionRect.setFillColor(sf::Color::Transparent);
         m_SelectionRect.setOutlineColor(sf::Color::Green);
         m_SelectionRect.setOutlineThickness(-3.f);
 
-        m_UpdateUndo = []()
+        m_RegisterUndo = [this]()
         {
+            m_UndoManager->add(this->saveScene());
         };
+
+        m_MeshEditor->setUpdateUndo(m_RegisterUndo);
 
         // TODO
         m_LightTexture.loadFromFile("resource/editor/texture/bubble_light.png");
@@ -120,6 +123,14 @@ namespace nero
 
     void WorldBuilder::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
     {
+        // Undo/Redo
+        if(isPressed)
+        {
+            if(key == sf::Keyboard::Z && keyboard::CTRL())
+                undo();
+            else if(key == sf::Keyboard::Y && keyboard::CTRL())
+                redo();
+        }
         // Object
         if(isPressed && m_SelectedLayer && m_SelectedObject)
         {
@@ -227,80 +238,80 @@ namespace nero
         if(!isPressed)
         {
             if(key == sf::Keyboard::Numpad8 && keyboard::CTRL())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             if(key == sf::Keyboard::Numpad2 && keyboard::CTRL())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             if(key == sf::Keyboard::Numpad4 && keyboard::CTRL())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             if(key == sf::Keyboard::Numpad6 && keyboard::CTRL())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             // Rotate
             if(key == sf::Keyboard::Numpad7 && keyboard::CTRL())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad9 && keyboard::CTRL())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Divide && keyboard::CTRL())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Multiply && keyboard::CTRL())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             // Zoom
             if(key == sf::Keyboard::Add && keyboard::CTRL())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Subtract && keyboard::CTRL())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             // Flip
             if(key == sf::Keyboard::Numpad1 && keyboard::CTRL())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad3 && keyboard::CTRL())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             // copy sprite
             if(key == sf::Keyboard::Numpad8 && keyboard::ALT())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad2 && keyboard::ALT())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad4 && keyboard::ALT())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad6 && keyboard::ALT())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad7 && keyboard::ALT())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad9 && keyboard::ALT())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad1 && keyboard::ALT())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad3 && keyboard::ALT())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad8 && keyboard::CTRL_ALT())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad2 && keyboard::CTRL_ALT())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad4 && keyboard::CTRL_ALT())
-                m_UpdateUndo();
+                m_RegisterUndo();
 
             else if(key == sf::Keyboard::Numpad6 && keyboard::CTRL_ALT())
-                m_UpdateUndo();
+                m_RegisterUndo();
         }
     }
 
@@ -352,7 +363,7 @@ namespace nero
             if(m_SelectedLayer && m_SelectedObject /*&& !m_RightSelection*/)
             {
                 m_SelectedObject = nullptr;
-                m_UpdateUndo();
+                m_RegisterUndo();
             }
         }
     }
@@ -481,7 +492,7 @@ namespace nero
         m_SelectedLayer  = Layer_object;
         m_SelectedObject = nullptr;
 
-        m_UpdateUndo();
+        m_RegisterUndo();
 
         return m_LayerTable.back();
     }
@@ -501,7 +512,7 @@ namespace nero
 
                 m_LayerTable.erase(it);
 
-                m_UpdateUndo();
+                m_RegisterUndo();
 
                 break;
             }
@@ -519,7 +530,7 @@ namespace nero
                 std::iter_swap(it, it - 1);
                 selectLayer((*(it - 1))->getId());
 
-                m_UpdateUndo();
+                m_RegisterUndo();
 
                 break;
             }
@@ -537,7 +548,7 @@ namespace nero
                 std::iter_swap(it, it + 1);
                 selectLayer((*(it + 1))->getId());
 
-                m_UpdateUndo();
+                m_RegisterUndo();
 
                 break;
             }
@@ -564,7 +575,7 @@ namespace nero
 
                     m_LayerTable.erase(it);
 
-                    m_UpdateUndo();
+                    m_RegisterUndo();
 
                     return true;
                 }
@@ -596,7 +607,7 @@ namespace nero
 
                     m_LayerTable.erase(it);
 
-                    m_UpdateUndo();
+                    m_RegisterUndo();
 
                     return true;
                 }
@@ -620,7 +631,7 @@ namespace nero
 
                 (*it)->setIsVisible(!(*it)->isVisible());
 
-                m_UpdateUndo();
+                m_RegisterUndo();
 
                 break;
             }
@@ -635,7 +646,7 @@ namespace nero
             {
                 (*it)->setName(name);
 
-                m_UpdateUndo();
+                m_RegisterUndo();
 
                 break;
             }
@@ -657,7 +668,7 @@ namespace nero
                 m_SelectedLayer->setIsSelected(true);
                 m_SelectedObject = nullptr;
 
-                m_UpdateUndo();
+                m_RegisterUndo();
 
                 break;
             }
@@ -975,7 +986,7 @@ namespace nero
                     m_SelectedObject->addChild(meshObject);
 
                     nero_log("change animation mesh");
-                    m_UpdateUndo();
+                    m_RegisterUndo();
                 }
             }
             break;
@@ -1201,13 +1212,13 @@ namespace nero
         if(m_SelectedLayer->getSecondType() == type)
         {
             m_SelectedLayer->addChild(object);
-            m_UpdateUndo();
+            m_RegisterUndo();
         }
         else if(m_SelectedLayer->getSecondType() == Object::None || m_SelectedLayer->isEmpty())
         {
             m_SelectedLayer->setSecondType(type);
             m_SelectedLayer->addChild(object);
-            m_UpdateUndo();
+            m_RegisterUndo();
         }
         else if(m_SelectedLayer->getSecondType() != type &&
                 m_SelectedLayer->getSecondType() != Object::None)
@@ -1215,7 +1226,7 @@ namespace nero
             addLayer();
             m_SelectedLayer->setSecondType(type);
             m_SelectedLayer->addChild(object);
-            m_UpdateUndo();
+            m_RegisterUndo();
         }
     }
 
@@ -1237,7 +1248,7 @@ namespace nero
 
         m_SelectedObject = nullptr;
 
-        m_UpdateUndo();
+        m_RegisterUndo();
     }
 
     Object::Ptr WorldBuilder::buildScene(std::shared_ptr<ltbl::LightSystem> lightManager,
@@ -1525,12 +1536,6 @@ namespace nero
         }
     }
 
-    void WorldBuilder::setUpdateUndo(std::function<void()> fn)
-    {
-        m_UpdateUndo = fn;
-        m_MeshEditor->setUpdateUndo(fn);
-    }
-
     Object::Ptr WorldBuilder::getSelectedObject()
     {
         return m_SelectedObject;
@@ -1546,7 +1551,7 @@ namespace nero
         if(m_SelectedObject->getSecondType() == Object::Meshed_Object)
             m_SelectedObject->getFirstChild()->setName(name);
 
-        m_UpdateUndo();
+        m_RegisterUndo();
     }
 
     void WorldBuilder::setObjectCategory(const sf::String& category)
@@ -1559,7 +1564,7 @@ namespace nero
         if(m_SelectedObject->getSecondType() == Object::Meshed_Object)
             m_SelectedObject->getFirstChild()->setCategory(category);
 
-        m_UpdateUndo();
+        m_RegisterUndo();
     }
 
     SpriteObject::Ptr WorldBuilder::loadSprite(nlohmann::json& json)
@@ -2062,7 +2067,7 @@ namespace nero
             if((*it)->getId() == m_SelectedObject->getId() && it != (childTable->end() - 1))
             {
                 std::iter_swap(it, it + 1);
-                m_UpdateUndo();
+                m_RegisterUndo();
 
                 break;
             }
@@ -2083,7 +2088,7 @@ namespace nero
             if((*it)->getId() == m_SelectedObject->getId() && it != childTable->begin())
             {
                 std::iter_swap(it, it - 1);
-                m_UpdateUndo();
+                m_RegisterUndo();
 
                 break;
             }
@@ -2236,5 +2241,28 @@ namespace nero
     LayerObject::Ptr WorldBuilder::getSelectedLayer()
     {
         return m_SelectedLayer;
+    }
+
+    void WorldBuilder::undo()
+    {
+        const auto undoData = m_UndoManager->undo();
+        if(!undoData.empty())
+        {
+            loadScene(undoData);
+        }
+    }
+
+    void WorldBuilder::redo()
+    {
+        const auto redoData = m_UndoManager->redo();
+        if(!redoData.empty())
+        {
+            loadScene(redoData);
+        }
+    }
+
+    void WorldBuilder::registerUndo()
+    {
+        m_RegisterUndo();
     }
 } // namespace nero

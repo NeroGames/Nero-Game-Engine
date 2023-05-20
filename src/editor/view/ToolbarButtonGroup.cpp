@@ -16,6 +16,8 @@ namespace nero
         : UIComponent(std::move(editorContext))
         , m_PlayGameLevel(false)
         , m_LevelBuilder(nullptr)
+        , m_UndoAction(false)
+        , m_RedoAction(false)
     {
     }
 
@@ -33,7 +35,27 @@ namespace nero
         m_LevelBuilder = m_EditorContext->getLevelBuilder();
         m_EditorMode   = m_EditorContext->getEditorMode();
 
-        if(m_PlayGameLevel)
+        if(m_UndoAction)
+        {
+            if(m_LevelBuilder)
+            {
+                auto worldBuilder = m_LevelBuilder->getSelectedChunk()->getWorldBuilder();
+                worldBuilder->undo();
+            }
+
+            m_UndoAction = false;
+        }
+        else if(m_RedoAction)
+        {
+            if(m_LevelBuilder)
+            {
+                auto worldBuilder = m_LevelBuilder->getSelectedChunk()->getWorldBuilder();
+                worldBuilder->redo();
+            }
+
+            m_RedoAction = false;
+        }
+        else if(m_PlayGameLevel)
         {
             if(m_EditorMode != EditorMode::Play_Game)
             {
@@ -116,6 +138,7 @@ namespace nero
         {
             if(ImGui::Button(ICON_FA_UNDO_ALT, ImVec2(45.f, 28.f)))
             {
+                m_UndoAction = true;
             }
 
             ImGui::SameLine(0.f, 24.f);
@@ -181,6 +204,7 @@ namespace nero
 
             if(ImGui::Button(ICON_FA_REDO_ALT, ImVec2(45.f, 28.f)))
             {
+                m_RedoAction = true;
             }
         }
     }

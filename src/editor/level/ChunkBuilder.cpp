@@ -101,5 +101,6 @@ namespace nero
         m_LoadWithLevel = chunkSaved["load_with_level"];
 
         m_WorldBuilder->loadScene(chunkSaved["game_world"]);
+        m_WorldBuilder->registerUndo();
     }
 } // namespace nero

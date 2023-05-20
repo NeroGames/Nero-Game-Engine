@@ -33,6 +33,8 @@ namespace nero
         std::future<int>  m_PlayGameFuture;
         LevelBuilder::Ptr m_LevelBuilder;
         EditorMode        m_EditorMode;
+        bool              m_UndoAction;
+        bool              m_RedoAction;
     };
 } // namespace nero
 #endif // TOOLBARBUTTONGROUP_H
