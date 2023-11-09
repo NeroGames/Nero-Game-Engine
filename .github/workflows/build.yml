@@ -1,0 +1,26 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is build the Nero Game Engine 🚀
+on: [push]
+env:
+  NERO_GAME_HOME: D:\NeroGames
+jobs:
+  Build-Engine:
+    runs-on: windows-2022
+    steps:
+      - run: dir "env:"
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - run: New-Item -Path "D:\" -Name "NeroGames" -ItemType "directory"
+      - run: curl https://nero-games.com/resource/download/engine/Nero-Game-Engine-r1.0.7.7z --output package.7z
+      - run: New-Item -Path "D:\" -Name "Build" -ItemType "directory"
+      - run: cmake -G "Unix Makefiles" ${{ github.workspace }}
+        working-directory: D:\Build
+      - run: mingw32-make
+        working-directory: D:\Build
+

@@ -222,6 +222,7 @@ target_link_libraries(TestLab ${TEST_LABORATORY_DEP})
 file(GLOB_RECURSE DESIGN_DOCUMENTATION_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/designdoc/*.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/designdoc/*.drawio"
+    "${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/*.yml"
     "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/.clang-format"
     "${CMAKE_CURRENT_SOURCE_DIR}/.gitignore"
