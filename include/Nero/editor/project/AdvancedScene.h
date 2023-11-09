@@ -46,7 +46,7 @@ namespace nero
         void                     setRenderContext(const RenderContext::Ptr& renderContext);
         void                     setRenderTexture(const RenderTexturePtr& renderTexture);
         void                     setFrontScreenTexture(const RenderTexturePtr& texture);
-        void                     setEditorCamera(const AdvancedCamera::Ptr& editorCamera);
+        void                     setEditorCamera(const EditorCamera::Ptr& editorCamera);
         // Game Scene
         void                     handleEvent(const sf::Event& event);
         void                     update(const sf::Time& timeStep);
@@ -68,7 +68,7 @@ namespace nero
         GameScene::Context                                m_SceneContext;
         GameScene::Ptr                                    m_GameScene;
         // Rendering
-        AdvancedCamera::Ptr                               m_EditorCamera;
+        EditorCamera::Ptr                               m_EditorCamera;
         RenderContext::Ptr                                m_RenderContext;
         std::shared_ptr<sf::RenderTexture>                m_RenderTexture;
         std::shared_ptr<sf::RenderTexture>                m_FrontScreenTexture;

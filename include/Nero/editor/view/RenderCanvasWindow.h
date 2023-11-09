@@ -32,7 +32,7 @@ namespace nero
         RenderTexturePtr    m_RenderTexture;
         RenderTexturePtr    m_FrontScreenTexture;
         RenderContext::Ptr  m_RenderContext;
-        AdvancedCamera::Ptr m_EditorCamera;
+        EditorCamera::Ptr m_EditorCamera;
         std::string         m_MousePositionString;
         sf::RectangleShape  m_CameraXAxis;
         sf::RectangleShape  m_CameraYAxis;

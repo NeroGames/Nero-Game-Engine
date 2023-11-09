@@ -29,7 +29,7 @@
 namespace nero
 {
     EditorUI::EditorUI(sf::RenderWindow&   window,
-                       AdvancedCamera::Ptr camera,
+                       EditorCamera::Ptr camera,
                        TextureHolder::Ptr  textureHolder,
                        FontHolder::Ptr     fontHolder,
                        SoundHolder::Ptr    soundHolder,

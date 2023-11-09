@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////
 // Nero Game Engine
-// Copyright (c) 2016-2023 Sanou A. K. Landry
+// Copyright (c) 2024 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
 // Nero
@@ -10,18 +10,18 @@
 ////////////////////////////////////////////////////////////
 int main()
 {
-    // Start Profiler
+    // Start profiler
     EASY_PROFILER_ENABLE
     EASY_MAIN_THREAD
     profiler::startListen();
 
-    // Instantiate Editor
-    nero::GameEditor editor;
+    // Create game editor
+    nero::GameEditor gameEditor;
 
-    // Launch Editor
-    editor.run();
+    // Run editor
+    gameEditor.run();
 
-    // Stop Profiler
+    // Stop profiler
     profiler::stopCapture();
     profiler::stopListen();
 

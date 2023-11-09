@@ -69,7 +69,7 @@ namespace nero
 
       public:
         EditorUI(sf::RenderWindow&   window,
-                 AdvancedCamera::Ptr camera,
+                 EditorCamera::Ptr camera,
                  TextureHolder::Ptr  textureHolder,
                  FontHolder::Ptr     fontHolder,
                  SoundHolder::Ptr    soundHolder,
@@ -110,7 +110,7 @@ namespace nero
         friend class GameEditor;
         // Constructor paramater
         sf::RenderWindow&                       m_RenderWindow;
-        AdvancedCamera::Ptr                     m_EditorCamera;
+        EditorCamera::Ptr                     m_EditorCamera;
         TextureHolder::Ptr                      m_EditorTextureHolder;
         FontHolder::Ptr                         m_EditorFontHolder;
         SoundHolder::Ptr                        m_EditorSoundHolder;

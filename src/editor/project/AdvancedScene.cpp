@@ -339,7 +339,7 @@ namespace nero
         m_FrontScreenTexture = texture;
     }
 
-    void AdvancedScene::setEditorCamera(const AdvancedCamera::Ptr& editorCamera)
+    void AdvancedScene::setEditorCamera(const EditorCamera::Ptr& editorCamera)
     {
         m_EditorCamera = editorCamera;
     }

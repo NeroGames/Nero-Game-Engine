@@ -92,8 +92,28 @@ namespace nero
         }
         popResourceStyle(selected);
 
+        printSameLine();
+
+        selected = selectedResourceType == ResourceType::Sound;
+        pushResourceStyle(selected);
+        if(ImGui::Button("Sound##browse_sound_resource", ImVec2(100.f, 100.f)))
+        {
+            m_EditorContext->setSelectedResourceType(ResourceType::Sound);
+        }
+        popResourceStyle(selected);
+
+        printSameLine();
+
+        selected = selectedResourceType == ResourceType::Music;
+        pushResourceStyle(selected);
+        if(ImGui::Button("Sound##browse_sound_resource", ImVec2(100.f, 100.f)))
+        {
+            m_EditorContext->setSelectedResourceType(ResourceType::Music);
+        }
+        popResourceStyle(selected);
+
         // TODO
-        //  Shape, Particle, Composite, Sound, Music, LuaScript, Spawner, Factory, CPPScript,
+        //  Shape, Particle, Composite, LuaScript, Spawner, Factory, CPPScript,
         //  EmptyObject
 
         ImGui::End();

@@ -18,7 +18,7 @@ namespace nero
                                  RenderTexturePtr         renderTexture,
                                  RenderTexturePtr         frontScreenTexture,
                                  RenderContext::Ptr       renderContext,
-                                 AdvancedCamera::Ptr      editorCamara,
+                                 EditorCamera::Ptr      editorCamara,
                                  const EditorMode&        editorMode,
                                  const BuilderMode&       builderMode)
         : m_EditorProxy(editorProxy)
@@ -207,7 +207,7 @@ namespace nero
         return m_RenderContext;
     }
 
-    AdvancedCamera::Ptr EditorContext::getEditorCamera() const
+    EditorCamera::Ptr EditorContext::getEditorCamera() const
     {
         return m_EditorCamera;
     }

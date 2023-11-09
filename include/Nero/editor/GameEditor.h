@@ -21,21 +21,22 @@ namespace nero
       public:
         GameEditor();
         virtual ~GameEditor() override;
-        void destroy();
 
       private:
-        // game loop
+        // Clean up
+        void destroy();
+        // Game loop
         void handleEvent() override;
         void update(const sf::Time& timeStep) override;
         void render() override;
-        // startup
+        // Startup
         void initLogging();
         void initSetting();
         void createRenderWindow();
         void createLoadingScreen();
         void backgroundStartup();
         int  startEngine(bool& editorStarted, const int duration);
-        // background startup
+        // Background startup
         void buildDirectory();
         void loadSetting();
         void checkEnvironmentVariable();
@@ -47,15 +48,15 @@ namespace nero
         void checkRecentProject();
 
       private:
-        // background startup
+        // Background startup
         std::future<int>    m_StartupFuture;
         bool                m_EditorStarted;
-        // loading screen
+        // Loading screen
         LoadingScreen::Ptr  m_LoadingScreen;
-        // editor interface
+        // Editor interface
         EditorUI::Ptr       m_EditorUI;
-        // advanced camera
-        AdvancedCamera::Ptr m_EditorCamera;
+        // Advanced camera
+        EditorCamera::Ptr m_EditorCamera;
         // editor settings
         Setting::Ptr        m_EditorSetting;
         // editor resource

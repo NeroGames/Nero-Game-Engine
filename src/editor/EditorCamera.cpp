@@ -10,10 +10,10 @@
 namespace nero
 {
     ////////////////////////////////////////////////////////////
-    AdvancedCamera::AdvancedCamera(const sf::Vector2f& defaultPos,
-                                   const float&        panSpeed,
-                                   const float&        rotSpeed,
-                                   const float&        zRatio)
+    EditorCamera::EditorCamera(const sf::Vector2f& defaultPos,
+                               const float&        panSpeed,
+                               const float&        rotSpeed,
+                               const float&        zRatio)
         : Camera(defaultPos, panSpeed, rotSpeed, zRatio)
         , m_IsPanningUp(false)
         , m_IsPanningDown(false)
@@ -27,16 +27,16 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    AdvancedCamera::AdvancedCamera(const sf::Vector2f& viewSize,
-                                   const sf::Vector2f& defaultPos,
-                                   const float&        panSpeed,
-                                   const float&        rotSpeed,
-                                   const float&        zRatio)
+    EditorCamera::EditorCamera(const sf::Vector2f& viewSize,
+                               const sf::Vector2f& defaultPos,
+                               const float&        panSpeed,
+                               const float&        rotSpeed,
+                               const float&        zRatio)
         : Camera(viewSize, defaultPos, panSpeed, rotSpeed, zRatio)
+        , m_IsPanningUp(false)
         , m_IsPanningDown(false)
         , m_IsPanningLeft(false)
         , m_IsPanningRight(false)
-        , m_IsPanningUp(false)
         , m_IsRotatingLeft(false)
         , m_IsRotatingRight(false)
         , m_IsZoomingIn(false)
@@ -45,13 +45,13 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    AdvancedCamera::~AdvancedCamera()
+    EditorCamera::~EditorCamera()
     {
         // Empty
     }
 
     ////////////////////////////////////////////////////////////
-    void AdvancedCamera::update(const sf::Time& deltaTime)
+    void EditorCamera::update(const sf::Time& deltaTime)
     {
         // panning
         if(m_IsPanningUp)
@@ -91,7 +91,7 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    void AdvancedCamera::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
+    void EditorCamera::handleKeyboardInput(const sf::Keyboard::Key& key, const bool& isPressed)
     {
         // Handle key pressing
         if(isPressed)
@@ -155,7 +155,7 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    void AdvancedCamera::handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse)
+    void EditorCamera::handleMouseWheelInput(const sf::Event::MouseWheelScrollEvent& mouse)
     {
         if(mouse.wheel == sf::Mouse::VerticalWheel)
         {
@@ -242,7 +242,7 @@ namespace nero
     }
 
     ////////////////////////////////////////////////////////////
-    void AdvancedCamera::cancelAction()
+    void EditorCamera::cancelAction()
     {
         m_IsPanningUp     = false;
         m_IsPanningDown   = false;

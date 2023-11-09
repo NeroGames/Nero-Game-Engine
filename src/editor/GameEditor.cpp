@@ -440,7 +440,7 @@ namespace nero
 
     void GameEditor::createCamera()
     {
-        m_EditorCamera = std::make_shared<AdvancedCamera>();
+        m_EditorCamera = std::make_shared<EditorCamera>();
     }
 
     void GameEditor::createEditorInterface()
