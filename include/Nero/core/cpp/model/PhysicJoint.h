@@ -9,6 +9,7 @@
 #include <Box2D/Dynamics/Joints/b2Joint.h>
 // Std
 #include <memory>
+#include <string>
 ////////////////////////////////////////////////////////////
 namespace nero
 {

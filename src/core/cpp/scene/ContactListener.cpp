@@ -42,11 +42,11 @@ namespace nero
     {
         Collision collision(contact, nullptr, nullptr);
 
-        int       idA     = (int)contact->GetFixtureA()->GetBody()->GetUserData();
-        int       idB     = (int)contact->GetFixtureB()->GetBody()->GetUserData();
+        int idA = reinterpret_cast<std::intptr_t>(contact->GetFixtureA()->GetBody()->GetUserData());
+        int idB = reinterpret_cast<std::intptr_t>(contact->GetFixtureB()->GetBody()->GetUserData());
 
-        auto      objectA = PhysicsObject::Cast(m_ObjectManager->findObject(idA));
-        auto      objectB = PhysicsObject::Cast(m_ObjectManager->findObject(idB));
+        auto objectA = PhysicsObject::Cast(m_ObjectManager->findObject(idA));
+        auto objectB = PhysicsObject::Cast(m_ObjectManager->findObject(idB));
 
         if(!objectA || !objectB)
             return;
@@ -64,11 +64,11 @@ namespace nero
     {
         Collision collision(contact, nullptr, nullptr);
 
-        int       idA     = (int)contact->GetFixtureA()->GetBody()->GetUserData();
-        int       idB     = (int)contact->GetFixtureB()->GetBody()->GetUserData();
+        int idA = reinterpret_cast<std::intptr_t>(contact->GetFixtureA()->GetBody()->GetUserData());
+        int idB = reinterpret_cast<std::intptr_t>(contact->GetFixtureB()->GetBody()->GetUserData());
 
-        auto      objectA = PhysicsObject::Cast(m_ObjectManager->findObject(idA));
-        auto      objectB = PhysicsObject::Cast(m_ObjectManager->findObject(idB));
+        auto objectA = PhysicsObject::Cast(m_ObjectManager->findObject(idA));
+        auto objectB = PhysicsObject::Cast(m_ObjectManager->findObject(idB));
 
         if(!objectA || !objectB)
             return;
@@ -116,11 +116,11 @@ namespace nero
 
         Collision collision(contact, oldManifold, nullptr);
 
-        int       idA     = (int)contact->GetFixtureA()->GetBody()->GetUserData();
-        int       idB     = (int)contact->GetFixtureB()->GetBody()->GetUserData();
+        int idA = reinterpret_cast<std::intptr_t>(contact->GetFixtureA()->GetBody()->GetUserData());
+        int idB = reinterpret_cast<std::intptr_t>(contact->GetFixtureB()->GetBody()->GetUserData());
 
-        auto      objectA = PhysicsObject::Cast(m_ObjectManager->findObject(idA));
-        auto      objectB = PhysicsObject::Cast(m_ObjectManager->findObject(idB));
+        auto objectA = PhysicsObject::Cast(m_ObjectManager->findObject(idA));
+        auto objectB = PhysicsObject::Cast(m_ObjectManager->findObject(idB));
 
         if(!objectA || !objectB)
             return;
@@ -138,11 +138,11 @@ namespace nero
     {
         Collision collision(contact, nullptr, impulse);
 
-        int       idA     = (int)contact->GetFixtureA()->GetBody()->GetUserData();
-        int       idB     = (int)contact->GetFixtureB()->GetBody()->GetUserData();
+        int idA = reinterpret_cast<std::intptr_t>(contact->GetFixtureA()->GetBody()->GetUserData());
+        int idB = reinterpret_cast<std::intptr_t>(contact->GetFixtureB()->GetBody()->GetUserData());
 
-        auto      objectA = PhysicsObject::Cast(m_ObjectManager->findObject(idA));
-        auto      objectB = PhysicsObject::Cast(m_ObjectManager->findObject(idB));
+        auto objectA = PhysicsObject::Cast(m_ObjectManager->findObject(idA));
+        auto objectB = PhysicsObject::Cast(m_ObjectManager->findObject(idB));
 
         if(!objectA || !objectB)
             return;

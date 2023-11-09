@@ -1,9 +1,15 @@
-![alt text](https://www.nero-game.com/resource/artwork/github/github_readme_header_02.png)
-![alt text](https://www.nero-game.com/resource/artwork/github/github_readme_engine_v2.png)
+## Build Status
+- **Master** ![Windows Build](https://github.com/NeroGames/Nero-Game-Engine/actions/workflows/build.yml/badge.svg?branch=master&event=push)
+- **Engine/v2** ![Windows Build](https://github.com/NeroGames/Nero-Game-Engine/actions/workflows/build.yml/badge.svg?branch=engine%2Fv2&event=push)
+- **Develop/v2** ![Windows Build](https://github.com/NeroGames/Nero-Game-Engine/actions/workflows/build.yml/badge.svg?branch=develop%2Fv2&event=push)
+
 
 ## Nero Game Engine r2.x
 
 The Nero Game Engine version II, is a Professional 2D Game Engine built around SFML and Box2D.
+
+![alt text](https://www.nero-games.com/resource/artwork/github/github_readme_header_02.png)
+![alt text](https://www.nero-games.com/resource/artwork/github/github_readme_engine_v2.png)
 
 ## Links
 - [Website](https://www.nero-game.com/) 	Download the Engine and learn how to use it

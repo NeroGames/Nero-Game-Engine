@@ -7,17 +7,35 @@ jobs:
   Build-Engine:
     runs-on: windows-2022
     steps:
-      - run: dir "env:" | Format-Table -Wrap -AutoSize
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - run: echo "🔎 The name of the branch is ${{ github.ref }} and the repository is ${{ github.repository }}."
+      - run: dir "env:" | Format-Table -Wrap -AutoSize
+      - run: Rename-Item -path "C:\mingw64" -NewName "mingw64_unused"
+      - run: Rename-Item -path "C:\mingw32" -NewName "mingw32_unused"
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
       - run: New-Item -Path "D:\" -Name "NeroGames" -ItemType "directory"
-      - run: curl https://nero-games.com/resource/download/engine/Nero-Game-Engine-r1.0.7.7z --output package.7z
+      - run: curl https://nero-games.com/resource/ci/Tools.7z --output Tools.7z
+        working-directory: D:\NeroGames
+      - run: curl https://nero-games.com/resource/ci/Library.7z --output Library.7z
+        working-directory: D:\NeroGames
+      - run: curl https://nero-games.com/resource/ci/MinGW.7z --output MinGW.7z
+        working-directory: D:\NeroGames
+      - run: 7z x Tools.7z
+        working-directory: D:\NeroGames
+      - run: 7z x Library.7z
+        working-directory: D:\NeroGames
+      - run: 7z x D:\NeroGames\MinGW.7z
+        working-directory: C:\
+      - run: Rename-Item -path "C:\MinGW" -NewName "mingw64"
+      - run: g++ -v
+      - run: dir C:\
+      - run: dir C:\mingw64\bin
+      - run: dir "env:" | Format-Table -Wrap -AutoSize
       - run: New-Item -Path "D:\" -Name "Build" -ItemType "directory"
       - run: cmake -G "Unix Makefiles" ${{ github.workspace }}
         working-directory: D:\Build
