@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: Windows Build
 run-name: ${{ github.actor }} is build the Nero Game Engine 🚀
 on: [push]
 env:
