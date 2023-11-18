@@ -2,10 +2,8 @@
 
 namespace ng2
 {
-    SecondAdventure::SecondAdventure(nero::Scene::Context context):
-        nero::LuaScene(context )
+    SecondAdventure::SecondAdventure(nero::Scene::Context context)
+        : nero::LuaScene(context)
     {
-
     }
-}
-
+} // namespace ng2

@@ -7,10 +7,9 @@ namespace ng2
 {
     class SecondAdventure : public nero::LuaScene
     {
-    public:
+      public:
         SecondAdventure(nero::Scene::Context context);
     };
-}
-
+} // namespace ng2
 
 #endif // SECONDADVENTURE_H

@@ -113,7 +113,7 @@ namespace nero
                                        RenderContext::Ptr                 renderContext,
                                        std::shared_ptr<sf::RenderTexture> renderTexture,
                                        std::shared_ptr<sf::RenderTexture> frontScreenTexture,
-                                       EditorCamera::Ptr                editorCamera)
+                                       EditorCamera::Ptr                  editorCamera)
     {
         m_Bomb               = nullptr;
         m_GroundBody         = nullptr;

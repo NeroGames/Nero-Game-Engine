@@ -39,7 +39,7 @@ namespace nero
     {
         typedef std::unique_ptr<PhysicAction> Ptr;
         virtual void                          call(PhysicsObject::Ptr object,
-                                                   sf::Time          time_step = EngineConstant.TIME_PER_FRAME){};
+                                                   sf::Time           time_step = EngineConstant.TIME_PER_FRAME){};
     };
 } // namespace nero
 #endif // ACTION_H

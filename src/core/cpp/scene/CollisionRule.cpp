@@ -134,7 +134,7 @@ namespace nero
                 {
                     PhysicsObject::Ptr  physic_object = PhysicsObject::Cast((*it));
 
-                    std::string        category      = physic_object->getCategory();
+                    std::string         category      = physic_object->getCategory();
 
                     PhysicsObject::Rule rule;
                     rule.categoryBits = m_CollisionRuleMap[category].first;
@@ -160,9 +160,10 @@ namespace nero
 
                 for(auto it = objectTab->begin(); it != objectTab->end(); it++)
                 {
-                    PhysicsObject::Ptr physic_object = std::static_pointer_cast<PhysicsObject>((*it));
+                    PhysicsObject::Ptr physic_object =
+                        std::static_pointer_cast<PhysicsObject>((*it));
 
-                    std::string       category      = physic_object->getCategory();
+                    std::string         category = physic_object->getCategory();
 
                     PhysicsObject::Rule rule;
                     rule.categoryBits = m_CatecotryBitTab[17];
@@ -188,7 +189,8 @@ namespace nero
 
                 for(auto it = objectTab->begin(); it != objectTab->end(); it++)
                 {
-                    PhysicsObject::Ptr physic_object = std::static_pointer_cast<PhysicsObject>((*it));
+                    PhysicsObject::Ptr physic_object =
+                        std::static_pointer_cast<PhysicsObject>((*it));
 
                     PhysicsObject::Rule rule;
                     rule.categoryBits = m_CatecotryBitTab[0];

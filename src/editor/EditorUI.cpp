@@ -28,12 +28,12 @@
 ////////////////////////////////////////////////////////////
 namespace nero
 {
-    EditorUI::EditorUI(sf::RenderWindow&   window,
-                       EditorCamera::Ptr camera,
-                       TextureHolder::Ptr  textureHolder,
-                       FontHolder::Ptr     fontHolder,
-                       SoundHolder::Ptr    soundHolder,
-                       Setting::Ptr        setting)
+    EditorUI::EditorUI(sf::RenderWindow&  window,
+                       EditorCamera::Ptr  camera,
+                       TextureHolder::Ptr textureHolder,
+                       FontHolder::Ptr    fontHolder,
+                       SoundHolder::Ptr   soundHolder,
+                       Setting::Ptr       setting)
         // Constructor paramater
         : m_RenderWindow(window)
         , m_EditorCamera(camera)
