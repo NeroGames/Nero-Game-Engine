@@ -225,6 +225,7 @@ file(GLOB_RECURSE PROJECT_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/*.yml"
     "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/.clang-format"
+    "${CMAKE_CURRENT_SOURCE_DIR}/.clang-format-ignore"
     "${CMAKE_CURRENT_SOURCE_DIR}/.gitignore"
     "${CMAKE_CURRENT_SOURCE_DIR}/copyright.txt"
     "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
