@@ -216,10 +216,10 @@ set(TEST_LABORATORY_DEP CoreEngine ${NERO_GAME_CORE_DEP} ${GTEST} ${OPENSSL_LIBS
 add_executable(TestLab ${TEST_LABORATORY_SOURCES})
 target_link_libraries(TestLab ${TEST_LABORATORY_DEP})
 
-# Design Document
+# Project Files
 #----------------------------------------------------------------------------------#
-# Design Document Files
-file(GLOB_RECURSE DESIGN_DOCUMENTATION_FILES
+# Projects Files
+file(GLOB_RECURSE PROJECT_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/designdoc/*.md"
     "${CMAKE_CURRENT_SOURCE_DIR}/designdoc/*.drawio"
     "${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/*.yml"
@@ -228,5 +228,5 @@ file(GLOB_RECURSE DESIGN_DOCUMENTATION_FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/.gitignore"
     "${CMAKE_CURRENT_SOURCE_DIR}/copyright.txt"
     "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-add_custom_target(ProjectDoc
-    SOURCES ${DESIGN_DOCUMENTATION_FILES})
+add_custom_target(ProjectFiles
+    SOURCES ${PROJECT_FILES})

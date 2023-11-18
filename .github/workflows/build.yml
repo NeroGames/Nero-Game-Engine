@@ -4,8 +4,21 @@ on: [push]
 env:
   NERO_GAME_HOME: D:\NeroGames
 jobs:
-  Build-Engine:
+  Clang-Format:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.14
+      with:
+        source: 'src include'
+        exclude: 'none'
+        extensions: 'h,cpp'
+        clangFormatVersion: 15
+        style: file
+        inplace: False
+  Build-Windows:
     runs-on: windows-2022
+    needs: Clang-Format
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
