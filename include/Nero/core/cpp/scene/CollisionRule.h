@@ -21,14 +21,14 @@ namespace nero
         CollisionRule();
         virtual ~CollisionRule();
 
-        void               canCollide(std::string categoryA, std::string categoryB);
-        void               print();
-        void               printBit();
-        void               printCategoryTab();
-        void               apply(Object::Ptr root);
+        void                canCollide(std::string categoryA, std::string categoryB);
+        void                print();
+        void                printBit();
+        void                printCategoryTab();
+        void                apply(Object::Ptr root);
 
-        void               fullCollision(Object::Ptr root);
-        void               noCollision(Object::Ptr root);
+        void                fullCollision(Object::Ptr root);
+        void                noCollision(Object::Ptr root);
 
         PhysicsObject::Rule getCollisionData(std::string category);
 

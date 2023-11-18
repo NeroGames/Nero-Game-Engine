@@ -63,7 +63,7 @@ namespace nero
                         RenderContext::Ptr                 renderContext,
                         std::shared_ptr<sf::RenderTexture> renderTexture,
                         std::shared_ptr<sf::RenderTexture> frontScreenTexture,
-                        EditorCamera::Ptr                editorCamera);
+                        EditorCamera::Ptr                  editorCamera);
         void update(const sf::Time& timeStep);
         void handleEvent(const sf::Event& event);
         void render();
@@ -116,7 +116,7 @@ namespace nero
         RenderContext::Ptr                 m_RenderContext;
         std::shared_ptr<sf::RenderTexture> m_RenderTexture;
         std::shared_ptr<sf::RenderTexture> m_FrontScreenTexture;
-        EditorCamera::Ptr                m_EditorCamera;
+        EditorCamera::Ptr                  m_EditorCamera;
         sf::Text                           m_PhysicsDataText;
         FontHolder::Ptr                    m_EditorFontHolder;
         Setting::Ptr                       m_LevelSetting;

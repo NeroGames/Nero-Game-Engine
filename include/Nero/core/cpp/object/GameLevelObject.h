@@ -19,12 +19,12 @@ namespace nero
 
       public:
         GameLevelObject();
-        void     init(const Parameter& parameter);
+        void                     init(const Parameter& parameter);
         std::shared_ptr<b2World> getPhysicWorld();
 
       private:
-        std::shared_ptr<b2World>  m_PhysicWorld;
-        Parameter m_Parameter;
+        std::shared_ptr<b2World> m_PhysicWorld;
+        Parameter                m_Parameter;
     };
 
 } // namespace nero

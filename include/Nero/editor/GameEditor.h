@@ -49,20 +49,20 @@ namespace nero
 
       private:
         // Background startup
-        std::future<int>    m_StartupFuture;
-        bool                m_EditorStarted;
+        std::future<int>   m_StartupFuture;
+        bool               m_EditorStarted;
         // Loading screen
-        LoadingScreen::Ptr  m_LoadingScreen;
+        LoadingScreen::Ptr m_LoadingScreen;
         // Editor interface
-        EditorUI::Ptr       m_EditorUI;
+        EditorUI::Ptr      m_EditorUI;
         // Advanced camera
-        EditorCamera::Ptr m_EditorCamera;
+        EditorCamera::Ptr  m_EditorCamera;
         // editor settings
-        Setting::Ptr        m_EditorSetting;
+        Setting::Ptr       m_EditorSetting;
         // editor resource
-        TextureHolder::Ptr  m_EditorTextureHolder;
-        FontHolder::Ptr     m_EditorFontHolder;
-        SoundHolder::Ptr    m_EditorSoundHolder;
+        TextureHolder::Ptr m_EditorTextureHolder;
+        FontHolder::Ptr    m_EditorFontHolder;
+        SoundHolder::Ptr   m_EditorSoundHolder;
     };
 } // namespace nero
 

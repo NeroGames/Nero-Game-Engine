@@ -68,7 +68,7 @@ namespace nero
         GameScene::Context                                m_SceneContext;
         GameScene::Ptr                                    m_GameScene;
         // Rendering
-        EditorCamera::Ptr                               m_EditorCamera;
+        EditorCamera::Ptr                                 m_EditorCamera;
         RenderContext::Ptr                                m_RenderContext;
         std::shared_ptr<sf::RenderTexture>                m_RenderTexture;
         std::shared_ptr<sf::RenderTexture>                m_FrontScreenTexture;

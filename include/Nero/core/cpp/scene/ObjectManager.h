@@ -33,9 +33,9 @@ namespace nero
     class ObjectManager
     {
       public:
-        typedef std::vector<Object::Ptr>       ObjectTab;
+        typedef std::vector<Object::Ptr>        ObjectTab;
         typedef std::vector<PhysicsObject::Ptr> PhysicObjectTab;
-        typedef std::shared_ptr<ObjectManager> Ptr;
+        typedef std::shared_ptr<ObjectManager>  Ptr;
 
       public:
         ObjectManager(Object::Ptr               levelRoot,

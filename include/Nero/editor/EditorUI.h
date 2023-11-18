@@ -68,12 +68,12 @@ namespace nero
         typedef std::shared_ptr<sf::RenderTexture> RenderTexturePtr;
 
       public:
-        EditorUI(sf::RenderWindow&   window,
-                 EditorCamera::Ptr camera,
-                 TextureHolder::Ptr  textureHolder,
-                 FontHolder::Ptr     fontHolder,
-                 SoundHolder::Ptr    soundHolder,
-                 Setting::Ptr        setting);
+        EditorUI(sf::RenderWindow&  window,
+                 EditorCamera::Ptr  camera,
+                 TextureHolder::Ptr textureHolder,
+                 FontHolder::Ptr    fontHolder,
+                 SoundHolder::Ptr   soundHolder,
+                 Setting::Ptr       setting);
         ~EditorUI();
         void destroy();
 
@@ -110,7 +110,7 @@ namespace nero
         friend class GameEditor;
         // Constructor paramater
         sf::RenderWindow&                       m_RenderWindow;
-        EditorCamera::Ptr                     m_EditorCamera;
+        EditorCamera::Ptr                       m_EditorCamera;
         TextureHolder::Ptr                      m_EditorTextureHolder;
         FontHolder::Ptr                         m_EditorFontHolder;
         SoundHolder::Ptr                        m_EditorSoundHolder;

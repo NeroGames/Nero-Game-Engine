@@ -32,7 +32,7 @@ namespace nero
                       RenderTexturePtr         renderTexture,
                       RenderTexturePtr         frontScreenTexture,
                       RenderContext::Ptr       renderContext,
-                      EditorCamera::Ptr      editorCamara,
+                      EditorCamera::Ptr        editorCamara,
                       const EditorMode&        editorMode  = EditorMode::None,
                       const BuilderMode&       builderMode = BuilderMode::None);
         virtual ~EditorContext();
@@ -57,7 +57,7 @@ namespace nero
         RenderTexturePtr         getRenderTexture() const;
         RenderTexturePtr         getFrontScreenTexture() const;
         RenderContext::Ptr       getRenderContext() const;
-        EditorCamera::Ptr      getEditorCamera() const;
+        EditorCamera::Ptr        getEditorCamera() const;
         float                    getFrameRate() const;
         float                    getFrameTime() const;
         bool                     autoSaveEnabled() const;
@@ -82,7 +82,7 @@ namespace nero
         RenderTexturePtr         m_RenderTexture;
         RenderTexturePtr         m_FrontScreenTexture;
         RenderContext::Ptr       m_RenderContext;
-        EditorCamera::Ptr      m_EditorCamera;
+        EditorCamera::Ptr        m_EditorCamera;
         EditorMode               m_EditorMode;
         BuilderMode              m_BuilderMode;
         // Game Level

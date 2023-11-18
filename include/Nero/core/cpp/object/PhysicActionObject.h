@@ -22,13 +22,13 @@ namespace nero
         void                    dropAction(sf::String name);
         void                    callAction(sf::String name);
         void                    setObject(Object::Ptr object);
-        PhysicsObject::Ptr       getObject();
+        PhysicsObject::Ptr      getObject();
 
       private:
         virtual void updateObject(sf::Time time_step);
 
       protected:
-        PhysicsObject::Ptr                       m_PhysicObject;
+        PhysicsObject::Ptr                      m_PhysicObject;
         sf::Time                                m_TimeStep;
         std::map<sf::String, PhysicAction::Ptr> m_ActionTable;
     };

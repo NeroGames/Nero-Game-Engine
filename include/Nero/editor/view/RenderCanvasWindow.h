@@ -29,31 +29,31 @@ namespace nero
         std::string getString(const EditorMode& editorMode);
 
       private:
-        RenderTexturePtr    m_RenderTexture;
-        RenderTexturePtr    m_FrontScreenTexture;
-        RenderContext::Ptr  m_RenderContext;
-        EditorCamera::Ptr m_EditorCamera;
-        std::string         m_MousePositionString;
-        sf::RectangleShape  m_CameraXAxis;
-        sf::RectangleShape  m_CameraYAxis;
-        sf::RectangleShape  m_CanvasXAxis;
-        sf::RectangleShape  m_CanvasYAxis;
-        sf::View            m_CanvasFrontView;
-        sf::Text            m_GameModeInfo;
-        sf::Text            m_GameBuilderInfo;
+        RenderTexturePtr   m_RenderTexture;
+        RenderTexturePtr   m_FrontScreenTexture;
+        RenderContext::Ptr m_RenderContext;
+        EditorCamera::Ptr  m_EditorCamera;
+        std::string        m_MousePositionString;
+        sf::RectangleShape m_CameraXAxis;
+        sf::RectangleShape m_CameraYAxis;
+        sf::RectangleShape m_CanvasXAxis;
+        sf::RectangleShape m_CanvasYAxis;
+        sf::View           m_CanvasFrontView;
+        sf::Text           m_GameModeInfo;
+        sf::Text           m_GameBuilderInfo;
         // Mouse and Camara Position
-        sf::Vector2f        m_WindowPadding;
-        float               m_TitleBarHeight;
-        sf::Vector2f        m_CanvasPosition;
-        sf::Vector2f        m_CanvasSize;
-        sf::Vector2f        m_FrontScreenSize;
-        sf::Vector2f        m_MousePosition;
+        sf::Vector2f       m_WindowPadding;
+        float              m_TitleBarHeight;
+        sf::Vector2f       m_CanvasPosition;
+        sf::Vector2f       m_CanvasSize;
+        sf::Vector2f       m_FrontScreenSize;
+        sf::Vector2f       m_MousePosition;
         // Rendering Level Builder and Game Level
-        AdvancedScene::Ptr  m_AdvancedScene;
-        LevelBuilder::Ptr   m_LevelBuilder;
-        bool                m_RenderLevelBuilder;
-        bool                m_RenderAdvancedScene;
-        sf::Color           m_ClearColor;
+        AdvancedScene::Ptr m_AdvancedScene;
+        LevelBuilder::Ptr  m_LevelBuilder;
+        bool               m_RenderLevelBuilder;
+        bool               m_RenderAdvancedScene;
+        sf::Color          m_ClearColor;
     };
 } // namespace nero
 #endif // RENDERCANVASWINDOW_H

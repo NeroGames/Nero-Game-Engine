@@ -24,8 +24,8 @@ namespace nero
         void                      setObjectA(PhysicsObject::Ptr objectA);
         void                      setObjectB(PhysicsObject::Ptr objectB);
 
-        PhysicsObject::Ptr         getObjectA();
-        PhysicsObject::Ptr         getObjectB();
+        PhysicsObject::Ptr        getObjectA();
+        PhysicsObject::Ptr        getObjectB();
 
         // Contact
         float                     getFriction();
@@ -72,15 +72,15 @@ namespace nero
         bool                      isObjectCollising(sf::String nameA);
         bool                      isObjectCollising(sf::String nameA, sf::String nameB);
 
-        PhysicsObject::Ptr         getObject(sf::String indicator);
+        PhysicsObject::Ptr        getObject(sf::String indicator);
 
       private:
         b2Contact*              m_Contact;
         b2WorldManifold*        m_WorldManifold;
         const b2Manifold*       m_OldManifold;
         const b2ContactImpulse* m_ContactImpulse;
-        PhysicsObject::Ptr       m_ObjectA;
-        PhysicsObject::Ptr       m_ObjectB;
+        PhysicsObject::Ptr      m_ObjectA;
+        PhysicsObject::Ptr      m_ObjectB;
     };
 } // namespace nero
 #endif // COLLIION_H
