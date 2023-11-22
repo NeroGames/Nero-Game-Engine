@@ -3,11 +3,11 @@
 // Copyright (c) 2023 Sanou A. K. Landry
 ////////////////////////////////////////////////////////////
 ///////////////////////////HEADERS//////////////////////////
-//GTest
+// GTest
 #include <gtest/gtest.h>
 ////////////////////////////////////////////////////////////
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
