@@ -7,7 +7,7 @@ jobs:
   Clang-Format:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: DoozyX/clang-format-lint-action@v0.15
       with:
         source: '.'
@@ -44,15 +44,12 @@ jobs:
       - run: 7z x D:\NeroGames\MinGW.7z
         working-directory: C:\
       - run: Rename-Item -path "C:\MinGW" -NewName "mingw64"
-      - run: g++ -v
-      - run: dir C:\
-      - run: dir C:\mingw64\bin
-      - run: dir "env:" | Format-Table -Wrap -AutoSize
       - run: New-Item -Path "D:\" -Name "Build" -ItemType "directory"
       - run: cmake -G "Unix Makefiles" ${{ github.workspace }}
         working-directory: D:\Build
       - run: mingw32-make
         working-directory: D:\Build
-      - run: ./bin/UnitTest.exe
+      - run: Get-Childitem –Path D:\NeroGames\Library\bin  -Include ".dll" -File -Recurse | Copy-Item  -Destination D:\Build\bin
+      - run: bin\UnitTest.exe
         working-directory: D:\Build
 
