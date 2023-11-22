@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <git2/git2.h>
-#include <iostream>
 
 TEST(Git, Clone)
 {

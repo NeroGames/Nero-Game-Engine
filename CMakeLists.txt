@@ -216,6 +216,21 @@ set(TEST_LABORATORY_DEP CoreEngine ${NERO_GAME_CORE_DEP} ${GTEST} ${OPENSSL_LIBS
 add_executable(TestLab ${TEST_LABORATORY_SOURCES})
 target_link_libraries(TestLab ${TEST_LABORATORY_DEP})
 
+# Unit Tests
+#----------------------------------------------------------------------------------#
+# Enable Testing
+enable_testing()
+
+# Unit Tests Source Files
+file(GLOB_RECURSE UNIT_TESTS_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/unittest/*")
+
+# Dependencies
+set(UNIT_TESTS_DEP CoreEngine ${NERO_GAME_CORE_DEP} ${GTEST} ${OPENSSL_LIBS} ${LIBSSH2_LIBS} ${LIBGIT2_LIBS})
+# Build Test Laboratory
+add_executable(UnitTest ${UNIT_TESTS_SOURCES})
+target_link_libraries(UnitTest ${UNIT_TESTS_DEP})
+add_test(UnitTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/UnitTest)
 
 # Examples
 #----------------------------------------------------------------------------------#

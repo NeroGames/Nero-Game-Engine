@@ -53,4 +53,6 @@ jobs:
         working-directory: D:\Build
       - run: mingw32-make
         working-directory: D:\Build
+      - run: ./bin/UnitTest.exe
+        working-directory: D:\Build
 
