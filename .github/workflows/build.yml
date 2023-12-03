@@ -1,6 +1,10 @@
 name: Windows Build
 run-name: ${{ github.actor }} is build the Nero Game Engine 🚀
-on: [push]
+on:
+  push:
+    paths:
+      - '**.h'
+      - '**.cpp'
 env:
   NERO_GAME_HOME: D:\NeroGames
 jobs:

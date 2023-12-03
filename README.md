@@ -12,10 +12,10 @@ The Nero Game Engine version II, is a Professional 2D Game Engine built around S
 ![alt text](https://www.nero-games.com/resource/artwork/github/github_readme_engine_v2.png)
 
 ## Links
-- [Website](https://www.nero-game.com/) 	Download the Engine and learn how to use it
+- [Website](https://www.nero-games.com/) 	Download the Engine and learn how to use it
 - [Twitter](https://twitter.com/nerogameengine) Don't miss any news
 - [Youtube](https://www.youtube.com/channel/UCIR0nDUMGzJ3Pkpa3gDCUeQ?view_as=subscriber) Find some videos tutorial here
-- [Forum](https://www.nero-game.com/forum/) Ask any questions here
+- [Forum](https://www.nero-games.com/forum/) Ask any questions here
 
 
 ## Support the Project
