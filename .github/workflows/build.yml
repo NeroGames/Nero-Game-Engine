@@ -5,6 +5,7 @@ on:
     paths:
       - '**.h'
       - '**.cpp'
+      - '**build.yml'
       - 'CMakeLists.txt'
 env:
   NERO_GAME_HOME: D:\NeroGames
