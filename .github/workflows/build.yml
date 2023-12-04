@@ -19,7 +19,14 @@ jobs:
         extensions: 'h,cpp'
         clangFormatVersion: 15
         style: file
-        inplace: False
+        inplace: True
+    - uses: EndBug/add-and-commit@v9
+      with:
+        author_name: Clang Robot
+        author_email: github@nero-games.com
+        message: 'auto clang format'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   Build-Windows:
     runs-on: windows-2022
     needs: Clang-Format
