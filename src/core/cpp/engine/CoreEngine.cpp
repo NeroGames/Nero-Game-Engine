@@ -25,10 +25,10 @@ namespace nero
 
     void CoreEngine::createEngineWindow()
     {
-        m_RenderWindow.create(
-            sf::VideoMode(EngineConstant::ENGINE_WINDOW_WIDTH, EngineConstant::ENGINE_WINDOW_HEIGHT),
-            EngineConstant::ENGINE_WINDOW_TITLE,
-            sf::Style::Default);
+        m_RenderWindow.create(sf::VideoMode(EngineConstant::ENGINE_WINDOW_WIDTH,
+                                            EngineConstant::ENGINE_WINDOW_HEIGHT),
+                              EngineConstant::ENGINE_WINDOW_TITLE,
+                              sf::Style::Default);
     }
 
     CoreEngine::~CoreEngine()

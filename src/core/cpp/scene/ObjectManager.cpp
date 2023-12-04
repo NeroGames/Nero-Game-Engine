@@ -420,11 +420,11 @@ namespace nero
         jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
-        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
-        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
-        jointDef.length           = property.length / EngineConstant::SCALE;
-        jointDef.frequencyHz      = property.frequencyHz;
-        jointDef.dampingRatio     = property.dampingRatio;
+        jointDef.localAnchorA = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
+        jointDef.localAnchorB = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
+        jointDef.length       = property.length / EngineConstant::SCALE;
+        jointDef.frequencyHz  = property.frequencyHz;
+        jointDef.dampingRatio = property.dampingRatio;
 
         joint->setJoint((b2DistanceJoint*)m_PhysicsWorld->CreateJoint(&jointDef));
 
@@ -449,10 +449,10 @@ namespace nero
         jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
-        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
-        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
-        jointDef.maxForce         = property.maxForce;
-        jointDef.maxTorque        = property.maxTorque;
+        jointDef.localAnchorA = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
+        jointDef.localAnchorB = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
+        jointDef.maxForce     = property.maxForce;
+        jointDef.maxTorque    = property.maxTorque;
 
         joint->setJoint((b2FrictionJoint*)m_PhysicsWorld->CreateJoint(&jointDef));
 
@@ -477,10 +477,10 @@ namespace nero
         jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
-        jointDef.linearOffset     = graphics::sf_to_b2(property.linearOffset, EngineConstant::SCALE);
-        jointDef.angularOffset    = math::toRadian(property.angularOffset);
-        jointDef.maxForce         = property.maxForce;
-        jointDef.maxTorque        = property.maxTorque;
+        jointDef.linearOffset  = graphics::sf_to_b2(property.linearOffset, EngineConstant::SCALE);
+        jointDef.angularOffset = math::toRadian(property.angularOffset);
+        jointDef.maxForce      = property.maxForce;
+        jointDef.maxTorque     = property.maxTorque;
         jointDef.correctionFactor = property.correctionFactor;
 
         joint->setJoint((b2MotorJoint*)m_PhysicsWorld->CreateJoint(&jointDef));
@@ -534,9 +534,9 @@ namespace nero
         jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
-        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
-        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
-        jointDef.maxLength        = property.maxLength / EngineConstant::SCALE;
+        jointDef.localAnchorA = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
+        jointDef.localAnchorB = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
+        jointDef.maxLength    = property.maxLength / EngineConstant::SCALE;
 
         joint->setJoint((b2RopeJoint*)m_PhysicsWorld->CreateJoint(&jointDef));
 
@@ -561,11 +561,11 @@ namespace nero
         jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
-        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
-        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
-        jointDef.referenceAngle   = math::toRadian(property.referenceAngle);
-        jointDef.frequencyHz      = property.frequencyHz;
-        jointDef.dampingRatio     = property.dampingRatio;
+        jointDef.localAnchorA   = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
+        jointDef.localAnchorB   = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
+        jointDef.referenceAngle = math::toRadian(property.referenceAngle);
+        jointDef.frequencyHz    = property.frequencyHz;
+        jointDef.dampingRatio   = property.dampingRatio;
 
         joint->setJoint((b2WeldJoint*)m_PhysicsWorld->CreateJoint(&jointDef));
 
@@ -590,14 +590,14 @@ namespace nero
         jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
-        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
-        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
-        jointDef.localAxisA       = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
-        jointDef.enableMotor      = property.enableMotor;
-        jointDef.maxMotorTorque   = property.maxMotorForce;
-        jointDef.motorSpeed       = property.motorSpeed;
-        jointDef.frequencyHz      = property.frequencyHz;
-        jointDef.dampingRatio     = property.dampingRatio;
+        jointDef.localAnchorA   = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
+        jointDef.localAnchorB   = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
+        jointDef.localAxisA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
+        jointDef.enableMotor    = property.enableMotor;
+        jointDef.maxMotorTorque = property.maxMotorForce;
+        jointDef.motorSpeed     = property.motorSpeed;
+        jointDef.frequencyHz    = property.frequencyHz;
+        jointDef.dampingRatio   = property.dampingRatio;
 
         joint->setJoint((b2WheelJoint*)m_PhysicsWorld->CreateJoint(&jointDef));
 
@@ -653,11 +653,11 @@ namespace nero
         jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
-        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
-        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
-        jointDef.localAxisA       = graphics::sf_to_b2(property.localAxisA, EngineConstant::SCALE);
-        jointDef.referenceAngle   = math::toRadian(property.referenceAngle);
-        jointDef.enableLimit      = property.enableLimit;
+        jointDef.localAnchorA   = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
+        jointDef.localAnchorB   = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
+        jointDef.localAxisA     = graphics::sf_to_b2(property.localAxisA, EngineConstant::SCALE);
+        jointDef.referenceAngle = math::toRadian(property.referenceAngle);
+        jointDef.enableLimit    = property.enableLimit;
         jointDef.lowerTranslation = property.lowerTranslation / EngineConstant::SCALE;
         jointDef.upperTranslation = property.upperTranslation / EngineConstant::SCALE;
         jointDef.enableMotor      = property.enableMotor;
@@ -687,15 +687,15 @@ namespace nero
         jointDef.bodyB            = PhysicsObject::Cast(objectB)->getBody();
         jointDef.collideConnected = property.collideConnected;
         jointDef.userData         = (void*)joint->getJointId();
-        jointDef.localAnchorA     = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
-        jointDef.localAnchorB     = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
-        jointDef.referenceAngle   = math::toRadian(property.referenceAngle);
-        jointDef.enableLimit      = property.enableLimit;
-        jointDef.lowerAngle       = math::toRadian(property.lowerAngle);
-        jointDef.upperAngle       = math::toRadian(property.upperAngle);
-        jointDef.enableMotor      = property.enableMotor;
-        jointDef.motorSpeed       = property.motorSpeed;
-        jointDef.maxMotorTorque   = property.maxMotorForce;
+        jointDef.localAnchorA   = graphics::sf_to_b2(property.localAnchorA, EngineConstant::SCALE);
+        jointDef.localAnchorB   = graphics::sf_to_b2(property.localAnchorB, EngineConstant::SCALE);
+        jointDef.referenceAngle = math::toRadian(property.referenceAngle);
+        jointDef.enableLimit    = property.enableLimit;
+        jointDef.lowerAngle     = math::toRadian(property.lowerAngle);
+        jointDef.upperAngle     = math::toRadian(property.upperAngle);
+        jointDef.enableMotor    = property.enableMotor;
+        jointDef.motorSpeed     = property.motorSpeed;
+        jointDef.maxMotorTorque = property.maxMotorForce;
 
         joint->setJoint((b2RevoluteJoint*)m_PhysicsWorld->CreateJoint(&jointDef));
 

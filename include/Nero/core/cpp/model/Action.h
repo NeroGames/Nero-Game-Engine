@@ -18,7 +18,8 @@ namespace nero
     struct ObjectAction
     {
         typedef std::unique_ptr<ObjectAction> Ptr;
-        virtual void call(Object::Ptr object, sf::Time time_step = EngineConstant::TIME_PER_FRAME){};
+        virtual void                          call(Object::Ptr object,
+                                                   sf::Time    time_step = EngineConstant::TIME_PER_FRAME){};
     };
 
     struct LayerAction

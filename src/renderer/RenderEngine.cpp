@@ -47,9 +47,8 @@ namespace nero
     {
         // create window
         m_RenderWindow.create(
-            sf::VideoMode(EngineConstant::ENGINE_WINDOW_WIDTH, EngineConstant::ENGINE_WINDOW_HEIGHT),
-            EngineConstant::NO_GAME_FOUND,
-            sf::Style::Close);
+            sf::VideoMode(EngineConstant::ENGINE_WINDOW_WIDTH,
+EngineConstant::ENGINE_WINDOW_HEIGHT), EngineConstant::NO_GAME_FOUND, sf::Style::Close);
 
         // build NoGameScene
         m_GameScene =

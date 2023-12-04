@@ -17,7 +17,7 @@ namespace nero
     namespace EngineConstant
     {
         // Engine name
-        inline const std::string ENGINE_NAME = "Nero Game Engine";
+        inline const std::string ENGINE_NAME      = "Nero Game Engine";
         inline const std::string ENGINE_COPYRIGHT = "Copyright (C) Nero Games. All rights reserved";
         inline const std::string ENGINE_WEBSITE   = "https://nero-games.com";
         inline const std::string LEARN_MORE_MESSAGE =
