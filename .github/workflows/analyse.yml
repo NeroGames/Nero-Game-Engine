@@ -1,12 +1,6 @@
 name: Static analysis
 run-name: ${{ github.actor }} is analysing the Nero Game Engine source code 🚀
-on:
-  push:
-    paths:
-      - '**.h'
-      - '**.cpp'
-      - '**analyse.yml'
-      - 'CMakeLists.txt'
+on: workflow_dispatch
 jobs:
   Code-Analysis:
     runs-on: ubuntu-latest
