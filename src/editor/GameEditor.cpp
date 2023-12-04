@@ -103,7 +103,7 @@ namespace nero
         else
         {
             // render interface
-            m_RenderWindow.clear(EngineConstant.COLOR_CANVAS);
+            m_RenderWindow.clear(EngineConstant::COLOR_CANVAS);
             m_EditorUI->render();
             m_RenderWindow.display();
         }
@@ -115,8 +115,8 @@ namespace nero
         // TODO load and use logger settings
         logging::Logger::init();
 
-        nero_log(EngineConstant.ENGINE_NAME + StringPool.SPACE + EngineConstant.ENGINE_VERSION);
-        nero_log(EngineConstant.ENGINE_COPYRIGHT) nero_log(EngineConstant.LEARN_MORE_MESSAGE);
+        nero_log(EngineConstant::ENGINE_NAME + StringPool.SPACE + EngineConstant::ENGINE_VERSION);
+        nero_log(EngineConstant::ENGINE_COPYRIGHT) nero_log(EngineConstant::LEARN_MORE_MESSAGE);
         nero_log("---") nero_log("Nero Game Editor starting");
     }
 
@@ -154,7 +154,7 @@ namespace nero
         const auto windowSetting = m_EditorSetting->getSetting("window");
         m_RenderWindow.create(
             sf::VideoMode(windowSetting.getUInt("width"), windowSetting.getUInt("height")),
-            EngineConstant.ENGINE_WINDOW_TITLE,
+            EngineConstant::ENGINE_WINDOW_TITLE,
             sf::Style::Default);
         m_RenderWindow.setPosition(
             sf::Vector2i(windowSetting.getInt("position_x"), windowSetting.getInt("position_y")));
@@ -458,7 +458,7 @@ namespace nero
         m_EditorUI->setUpdateWindowTitleCallback(
             [this](const std::string& title)
             {
-                setWindowTitle(EngineConstant.ENGINE_NAME + " - " + title);
+                setWindowTitle(EngineConstant::ENGINE_NAME + " - " + title);
             });
 
         m_EditorUI->init();

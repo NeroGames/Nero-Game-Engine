@@ -95,12 +95,12 @@ namespace nero
 
     sf::Vector2f Collision::getLocalNormal()
     {
-        return graphics::b2_to_sf(m_Contact->GetManifold()->localNormal, EngineConstant.SCALE);
+        return graphics::b2_to_sf(m_Contact->GetManifold()->localNormal, EngineConstant::SCALE);
     }
 
     sf::Vector2f Collision::getLocalPoint()
     {
-        return graphics::b2_to_sf(m_Contact->GetManifold()->localPoint, EngineConstant.SCALE);
+        return graphics::b2_to_sf(m_Contact->GetManifold()->localPoint, EngineConstant::SCALE);
     }
 
     int Collision::getPointCount()
@@ -121,7 +121,7 @@ namespace nero
     sf::Vector2f Collision::getOldLocalNormal()
     {
         if(m_OldManifold)
-            return graphics::b2_to_sf(m_OldManifold->localNormal, EngineConstant.SCALE);
+            return graphics::b2_to_sf(m_OldManifold->localNormal, EngineConstant::SCALE);
 
         return getLocalNormal();
     }
@@ -129,7 +129,7 @@ namespace nero
     sf::Vector2f Collision::getOldLocalPoint()
     {
         if(m_OldManifold)
-            return graphics::b2_to_sf(m_OldManifold->localPoint, EngineConstant.SCALE);
+            return graphics::b2_to_sf(m_OldManifold->localPoint, EngineConstant::SCALE);
 
         return getLocalPoint();
     }
@@ -194,7 +194,7 @@ namespace nero
 
     sf::Vector2f Collision::getNormal()
     {
-        return graphics::b2_to_sf(m_WorldManifold->normal, EngineConstant.SCALE);
+        return graphics::b2_to_sf(m_WorldManifold->normal, EngineConstant::SCALE);
     }
 
     std::vector<sf::Vector2f> Collision::getPoints()
@@ -203,7 +203,7 @@ namespace nero
 
         for(int i = 0; i < getPointCount(); i++)
             vectorTable.push_back(
-                graphics::b2_to_sf(m_WorldManifold->points[i], EngineConstant.SCALE));
+                graphics::b2_to_sf(m_WorldManifold->points[i], EngineConstant::SCALE));
 
         return vectorTable;
     }

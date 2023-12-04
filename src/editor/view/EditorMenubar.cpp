@@ -180,27 +180,27 @@ namespace nero
             {
                 if(ImGui::MenuItem("Learn", "Alt+L", nullptr))
                 {
-                    cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/learn");
+                    cmd::launchBrowser(EngineConstant::ENGINE_WEBSITE + "/learn");
                 }
 
                 if(ImGui::MenuItem("Snippet", "Alt+S", nullptr))
                 {
-                    cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/snippet");
+                    cmd::launchBrowser(EngineConstant::ENGINE_WEBSITE + "/snippet");
                 }
 
                 if(ImGui::MenuItem("Forum", "Alt+F", nullptr))
                 {
-                    cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/forum/index.php");
+                    cmd::launchBrowser(EngineConstant::ENGINE_WEBSITE + "/forum/index.php");
                 }
 
                 if(ImGui::MenuItem("Engine API", "Alt+A", nullptr))
                 {
-                    cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/engine-v2/api");
+                    cmd::launchBrowser(EngineConstant::ENGINE_WEBSITE + "/engine-v2/api");
                 }
 
                 if(ImGui::MenuItem("Website", "Alt+W", nullptr))
                 {
-                    cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE);
+                    cmd::launchBrowser(EngineConstant::ENGINE_WEBSITE);
                 }
 
                 ImGui::Separator();

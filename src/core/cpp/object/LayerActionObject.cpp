@@ -11,7 +11,7 @@ namespace nero
     LayerActionObject::LayerActionObject()
         : m_LayerObject(nullptr)
         , m_ActionTable()
-        , m_TimeStep(EngineConstant.TIME_PER_FRAME)
+        , m_TimeStep(EngineConstant::TIME_PER_FRAME)
     {
     }
 

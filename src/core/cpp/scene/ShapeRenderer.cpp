@@ -38,7 +38,7 @@ namespace nero
         polygon.setPointCount(vertexCount);
         for(int32 i = 0; i < vertexCount; i++)
         {
-            polygon.setPoint(i, graphics::b2_to_sf(vertices[i], EngineConstant.SCALE));
+            polygon.setPoint(i, graphics::b2_to_sf(vertices[i], EngineConstant::SCALE));
         }
 
         m_RenderTexture->draw(polygon);
@@ -57,7 +57,7 @@ namespace nero
         solidPolygon.setPointCount(vertexCount);
         for(int32 i = 0; i < vertexCount; i++)
         {
-            solidPolygon.setPoint(i, graphics::b2_to_sf(vertices[i], EngineConstant.SCALE));
+            solidPolygon.setPoint(i, graphics::b2_to_sf(vertices[i], EngineConstant::SCALE));
         }
 
         m_RenderTexture->draw(solidPolygon);
@@ -71,8 +71,8 @@ namespace nero
         circle.setOutlineColor(graphics::b2_to_sf(color));
         circle.setFillColor(sf::Color::Transparent);
 
-        float rad = radius * EngineConstant.SCALE;
-        circle.setPosition(graphics::b2_to_sf(center, EngineConstant.SCALE));
+        float rad = radius * EngineConstant::SCALE;
+        circle.setPosition(graphics::b2_to_sf(center, EngineConstant::SCALE));
         circle.setRadius(rad);
         circle.setOrigin(sf::Vector2f(rad, rad));
 
@@ -90,8 +90,8 @@ namespace nero
         solidCircle.setOutlineColor(graphics::b2_to_sf(color));
         solidCircle.setFillColor(graphics::b2_to_sf(color, m_Transparency));
 
-        float rad = radius * EngineConstant.SCALE;
-        solidCircle.setPosition(graphics::b2_to_sf(center, EngineConstant.SCALE));
+        float rad = radius * EngineConstant::SCALE;
+        solidCircle.setPosition(graphics::b2_to_sf(center, EngineConstant::SCALE));
         solidCircle.setRadius(rad);
         solidCircle.setOrigin(sf::Vector2f(rad, rad));
 
@@ -104,10 +104,10 @@ namespace nero
     void ShapeRenderer::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
     {
         sf::RectangleShape line;
-        float              length = math::distance(graphics::b2_to_sf(p1, EngineConstant.SCALE),
-                                      graphics::b2_to_sf(p2, EngineConstant.SCALE));
+        float              length = math::distance(graphics::b2_to_sf(p1, EngineConstant::SCALE),
+                                      graphics::b2_to_sf(p2, EngineConstant::SCALE));
         line.setSize(sf::Vector2f(length, m_Thickness));
-        line.setPosition(graphics::b2_to_sf(p1, EngineConstant.SCALE));
+        line.setPosition(graphics::b2_to_sf(p1, EngineConstant::SCALE));
         line.setFillColor(graphics::b2_to_sf(color));
         line.setOrigin(sf::Vector2f(line.getOrigin().x, m_Thickness / 2.f));
 
@@ -137,7 +137,7 @@ namespace nero
         float              s = size * 1.5f;
         sf::RectangleShape point;
         point.setFillColor(graphics::b2_to_sf(color));
-        point.setPosition(graphics::b2_to_sf(p, EngineConstant.SCALE));
+        point.setPosition(graphics::b2_to_sf(p, EngineConstant::SCALE));
         point.setSize(sf::Vector2f(s, s));
         point.setOrigin(sf::Vector2f(s / 2, s / 2));
 
@@ -150,14 +150,14 @@ namespace nero
         aabb_shape.setOutlineColor(graphics::b2_to_sf(c));
         aabb_shape.setPointCount(4);
 
-        aabb_shape.setPoint(0, graphics::b2_to_sf(aabb->lowerBound, EngineConstant.SCALE));
+        aabb_shape.setPoint(0, graphics::b2_to_sf(aabb->lowerBound, EngineConstant::SCALE));
         aabb_shape.setPoint(1,
-                            sf::Vector2f(aabb->upperBound.x * EngineConstant.SCALE,
-                                         aabb->lowerBound.y * EngineConstant.SCALE));
-        aabb_shape.setPoint(2, graphics::b2_to_sf(aabb->upperBound, EngineConstant.SCALE));
+                            sf::Vector2f(aabb->upperBound.x * EngineConstant::SCALE,
+                                         aabb->lowerBound.y * EngineConstant::SCALE));
+        aabb_shape.setPoint(2, graphics::b2_to_sf(aabb->upperBound, EngineConstant::SCALE));
         aabb_shape.setPoint(3,
-                            sf::Vector2f(aabb->lowerBound.x * EngineConstant.SCALE,
-                                         aabb->upperBound.y * EngineConstant.SCALE));
+                            sf::Vector2f(aabb->lowerBound.x * EngineConstant::SCALE,
+                                         aabb->upperBound.y * EngineConstant::SCALE));
 
         m_RenderTexture->draw(aabb_shape);
     }

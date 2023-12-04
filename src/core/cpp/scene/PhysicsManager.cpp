@@ -56,7 +56,7 @@ namespace nero
                 physicObject->getBody()->CreateFixture(&m_FixtureDef);
 
                 physicObject->getBody()->SetTransform(
-                    graphics::sf_to_b2(pointMesh->getMassCenter(), EngineConstant.SCALE),
+                    graphics::sf_to_b2(pointMesh->getMassCenter(), EngineConstant::SCALE),
                     0.f);
                 physicObject->setSize(pointMesh->getMeshSize());
             }
@@ -65,14 +65,14 @@ namespace nero
             case PointMesh::Circle:
             {
                 b2CircleShape shape;
-                shape.m_radius = pointMesh->getMeshSize().x / 2.f / EngineConstant.SCALE;
+                shape.m_radius = pointMesh->getMeshSize().x / 2.f / EngineConstant::SCALE;
 
                 setupFixtureDef(physics);
                 m_FixtureDef.shape = &shape;
                 physicObject->getBody()->CreateFixture(&m_FixtureDef);
 
                 physicObject->getBody()->SetTransform(
-                    graphics::sf_to_b2(pointMesh->getMassCenter(), EngineConstant.SCALE),
+                    graphics::sf_to_b2(pointMesh->getMassCenter(), EngineConstant::SCALE),
                     0.f);
                 physicObject->setSize(pointMesh->getMeshSize());
             }
@@ -94,10 +94,10 @@ namespace nero
                 computePolygonBody(physicObject->getBody(),
                                    &m_FixtureDef,
                                    &vertexTableVector,
-                                   EngineConstant.SCALE);
+                                   EngineConstant::SCALE);
 
                 physicObject->getBody()->SetTransform(
-                    graphics::sf_to_b2(pointMesh->getMassCenter(), EngineConstant.SCALE),
+                    graphics::sf_to_b2(pointMesh->getMassCenter(), EngineConstant::SCALE),
                     0.f);
                 physicObject->setSize(pointMesh->getMeshSize());
             }
@@ -115,7 +115,7 @@ namespace nero
                 physicObject->getBody()->CreateFixture(&m_FixtureDef);
 
                 physicObject->getBody()->SetTransform(
-                    graphics::sf_to_b2(pointMesh->getMassCenter(), EngineConstant.SCALE),
+                    graphics::sf_to_b2(pointMesh->getMassCenter(), EngineConstant::SCALE),
                     0.f);
                 physicObject->setSize(pointMesh->getMeshSize());
             }
@@ -156,7 +156,7 @@ namespace nero
 
         for(unsigned int i = 0; i < pointTable.size(); i++)
         {
-            table[i] = graphics::sf_to_b2(pointTable.at(i) - massCenter, EngineConstant.SCALE);
+            table[i] = graphics::sf_to_b2(pointTable.at(i) - massCenter, EngineConstant::SCALE);
         }
     }
 

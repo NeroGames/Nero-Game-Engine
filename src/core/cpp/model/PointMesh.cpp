@@ -42,19 +42,19 @@ namespace nero
     sf::Color PointMesh::getColor() const
     {
         if(!m_MeshValid)
-            return EngineConstant.COLOR_INVALIDE_MESH;
+            return EngineConstant::COLOR_INVALIDE_MESH;
 
         if(m_MeshSelected)
-            return EngineConstant.COLOR_SELECTED_MESH;
+            return EngineConstant::COLOR_SELECTED_MESH;
 
         switch(m_MeshType)
         {
             case Type::Static:
-                return EngineConstant.COLOR_STATIC_MESH;
+                return EngineConstant::COLOR_STATIC_MESH;
             case Type::Dynamic:
-                return EngineConstant.COLOR_DYNAMIC_MESH;
+                return EngineConstant::COLOR_DYNAMIC_MESH;
             case Type::Kinematic:
-                return EngineConstant.COLOR_KINEMATIC_MESH;
+                return EngineConstant::COLOR_KINEMATIC_MESH;
         }
     }
 

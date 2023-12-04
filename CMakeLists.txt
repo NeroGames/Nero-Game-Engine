@@ -48,9 +48,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Compiler Configuration
 #----------------------------------------------------------------------------------#
 # Activate C++17
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CXX_STANDARD 17)
-set(CMAKE_REQUIRED_FLAGS -std=c++1z)
 # Remove Console
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
 # Compile Option

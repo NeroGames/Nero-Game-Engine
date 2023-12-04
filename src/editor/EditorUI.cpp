@@ -270,7 +270,7 @@ namespace nero
 
     void EditorUI::render()
     {
-        ImGui::SFML::Update(m_RenderWindow, EngineConstant.TIME_PER_FRAME);
+        ImGui::SFML::Update(m_RenderWindow, EngineConstant::TIME_PER_FRAME);
 
         // Head
         m_EditorDockspace.render();
@@ -569,7 +569,7 @@ namespace nero
             m_ProjectManager->closeProject();
 
             // update editor window title
-            m_WindowTitleCallback(EngineConstant.ENGINE_WINDOW_TITLE);
+            m_WindowTitleCallback(EngineConstant::ENGINE_WINDOW_TITLE);
         };
 
         // Create workspace

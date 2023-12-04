@@ -200,7 +200,7 @@ namespace nero
             sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
             m_RenderTexture->getView());
 
-        b2Vec2 p = graphics::sf_to_b2(world_pos, EngineConstant.SCALE);
+        b2Vec2 p = graphics::sf_to_b2(world_pos, EngineConstant::SCALE);
 
         if(mouse.button == sf::Mouse::Left && isPressed == true)
         {
@@ -230,7 +230,7 @@ namespace nero
             sf::Vector2i(m_RenderContext->mousePosition.x, m_RenderContext->mousePosition.y),
             m_RenderTexture->getView());
 
-        b2Vec2 p = graphics::sf_to_b2(world_pos, EngineConstant.SCALE);
+        b2Vec2 p = graphics::sf_to_b2(world_pos, EngineConstant::SCALE);
 
         mouseMove(p);
     }
@@ -473,7 +473,7 @@ namespace nero
                                              m_EditorCamera->getPosition().y -
                                                  m_RenderTexture->getView().getSize().y / 2.f);
 
-        b2Vec2       p        = graphics::sf_to_b2(spaw_pos, EngineConstant.SCALE);
+        b2Vec2       p        = graphics::sf_to_b2(spaw_pos, EngineConstant::SCALE);
         p.x                   = p.x + math::randomFloat(-30.0f, 30.0f);
         b2Vec2 v              = -5.0f * b2Vec2(math::randomFloat(-15.0f, 15.0f), -30.0f);
         launchBomb(p, v);

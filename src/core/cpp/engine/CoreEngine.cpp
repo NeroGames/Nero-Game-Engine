@@ -26,8 +26,8 @@ namespace nero
     void CoreEngine::createEngineWindow()
     {
         m_RenderWindow.create(
-            sf::VideoMode(EngineConstant.ENGINE_WINDOW_WIDTH, EngineConstant.ENGINE_WINDOW_HEIGHT),
-            EngineConstant.ENGINE_WINDOW_TITLE,
+            sf::VideoMode(EngineConstant::ENGINE_WINDOW_WIDTH, EngineConstant::ENGINE_WINDOW_HEIGHT),
+            EngineConstant::ENGINE_WINDOW_TITLE,
             sf::Style::Default);
     }
 
@@ -51,12 +51,12 @@ namespace nero
             timeSinceLastUpdate  += elapsedTime;
 
             // Update as many times as neccessary
-            while(timeSinceLastUpdate > EngineConstant.TIME_PER_FRAME)
+            while(timeSinceLastUpdate > EngineConstant::TIME_PER_FRAME)
             {
                 EASY_BLOCK("CoreEngine::Event-And-Update")
 
                 // retrieve 1/60 second in the accumulated time
-                timeSinceLastUpdate -= EngineConstant.TIME_PER_FRAME;
+                timeSinceLastUpdate -= EngineConstant::TIME_PER_FRAME;
 
                 // 1... handle user inputs
                 EASY_BLOCK("CoreEngine::HandleEvent")
@@ -65,7 +65,7 @@ namespace nero
 
                 // 2... update the game
                 EASY_BLOCK("CoreEngine::Update")
-                update(EngineConstant.TIME_PER_FRAME);
+                update(EngineConstant::TIME_PER_FRAME);
                 EASY_END_BLOCK
 
                 EASY_END_BLOCK

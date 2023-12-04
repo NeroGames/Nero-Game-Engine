@@ -47,13 +47,13 @@ namespace nero
     {
         // create window
         m_RenderWindow.create(
-            sf::VideoMode(EngineConstant.ENGINE_WINDOW_WIDTH, EngineConstant.ENGINE_WINDOW_HEIGHT),
-            EngineConstant.NO_GAME_FOUND,
+            sf::VideoMode(EngineConstant::ENGINE_WINDOW_WIDTH, EngineConstant::ENGINE_WINDOW_HEIGHT),
+            EngineConstant::NO_GAME_FOUND,
             sf::Style::Close);
 
         // build NoGameScene
         m_GameScene =
-            NoGameFound::Ptr(new NoGameFound(Scene::Context(EngineConstant.NO_GAME_FOUND,
+            NoGameFound::Ptr(new NoGameFound(Scene::Context(EngineConstant::NO_GAME_FOUND,
                                                             m_RenderTexture,
                                                             m_GameWorldResourceManager,
                                                             m_Camera,
@@ -85,7 +85,7 @@ namespace nero
         }
         else
         {
-            startEngine(m_EngineStarted, EngineConstant.NUMBER_ZERO);
+            startEngine(m_EngineStarted, EngineConstant::NUMBER_ZERO);
         }
 
         // start bacground initialization
@@ -115,7 +115,7 @@ namespace nero
 
         m_CreateCppStartupScreen = boost::dll::import_alias<CreateCppStartupScreen>(
             game_library_path,
-            EngineConstant.DLL_CREATE_STARTUP_SCREEN,
+            EngineConstant::DLL_CREATE_STARTUP_SCREEN,
             boost::dll::load_mode::append_decorations);
 
         if(!m_CreateCppStartupScreen.empty())
@@ -145,7 +145,7 @@ namespace nero
 
         m_CreateCppScene =
             boost::dll::import_alias<CreateCppScene>(game_library_path,
-                                                     EngineConstant.DLL_CREATE_SCENE,
+                                                     EngineConstant::DLL_CREATE_SCENE,
                                                      boost::dll::load_mode::append_decorations);
         // create scene object
         if(!m_CreateCppScene.empty())
@@ -197,7 +197,7 @@ namespace nero
 // initialize game scene
 // m_GameScene->init();
 
-return EngineConstant.NUMBER_ZERO;
+return EngineConstant::NUMBER_ZERO;
 }
 
 void RenderEngine::handleEvent()

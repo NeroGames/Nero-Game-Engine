@@ -150,8 +150,8 @@ namespace nero
         if(levelBuilder)
         {
             auto       worldBuilder = levelBuilder->getSelectedChunk()->getWorldBuilder();
-            const auto alpha = builderMode == BuilderMode::Mesh ? EngineConstant.MESH_MODE_ALPHA
-                                                                : EngineConstant.DEFAULT_ALPHA;
+            const auto alpha = builderMode == BuilderMode::Mesh ? EngineConstant::MESH_MODE_ALPHA
+                                                                : EngineConstant::DEFAULT_ALPHA;
             worldBuilder->updateAllLayerAlpha(alpha);
         }
     }

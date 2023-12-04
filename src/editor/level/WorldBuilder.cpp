@@ -92,7 +92,7 @@ namespace nero
         if(b2TimeStep > 0.f)
         {
             b2TimeStep =
-                (b2TimeStep * timeStep.asSeconds()) / EngineConstant.TIME_PER_FRAME.asSeconds();
+                (b2TimeStep * timeStep.asSeconds()) / EngineConstant::TIME_PER_FRAME.asSeconds();
         }
 
         if(m_SelectedObject)

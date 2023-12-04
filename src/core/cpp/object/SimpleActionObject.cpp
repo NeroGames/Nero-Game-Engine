@@ -14,7 +14,7 @@ namespace nero
     SimpleActionObject::SimpleActionObject()
         : m_Object(nullptr)
         , m_ActionTable()
-        , m_TimeStep(EngineConstant.TIME_PER_FRAME)
+        , m_TimeStep(EngineConstant::TIME_PER_FRAME)
     {
     }
 

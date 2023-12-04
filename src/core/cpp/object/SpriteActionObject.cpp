@@ -11,7 +11,7 @@ namespace nero
     SpriteActionObject::SpriteActionObject()
         : m_SpriteObject(nullptr)
         , m_ActionTable()
-        , m_TimeStep(EngineConstant.TIME_PER_FRAME)
+        , m_TimeStep(EngineConstant::TIME_PER_FRAME)
     {
     }
 

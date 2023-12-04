@@ -45,8 +45,8 @@ namespace nero
 
         // create workspace document
         Parameter document;
-        document.setString("engine_version", EngineConstant.ENGINE_VERSION);
-        document.setString("document_type", EngineConstant.DOCUMENT_TYPE_WORKSPACE);
+        document.setString("engine_version", EngineConstant::ENGINE_VERSION);
+        document.setString("document_type", EngineConstant::DOCUMENT_TYPE_WORKSPACE);
         document.setString("workspace_name", parameter.getString("workspace_name"));
         document.setString("project_lead", parameter.getString("project_lead"));
         document.setString("project_namespace", parameter.getString("project_namespace"));
@@ -219,8 +219,8 @@ namespace nero
 
         // Step 1-2 : Create project document
         Setting document;
-        document.setString("engine_version", EngineConstant.ENGINE_VERSION);
-        document.setString("document_type", EngineConstant.DOCUMENT_TYPE_PROJECT);
+        document.setString("engine_version", EngineConstant::ENGINE_VERSION);
+        document.setString("document_type", EngineConstant::DOCUMENT_TYPE_PROJECT);
         document.setString("creation_date",
                            datetime::formatDateTime(datetime::getCurrentDateTime()));
         document.setString("modification_date",

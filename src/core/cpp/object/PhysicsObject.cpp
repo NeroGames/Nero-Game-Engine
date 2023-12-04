@@ -33,7 +33,7 @@ namespace nero
 
     void PhysicsObject::updateObject(sf::Time time_step)
     {
-        setPosition(graphics::b2_to_sf(m_Body->GetPosition(), EngineConstant.SCALE));
+        setPosition(graphics::b2_to_sf(m_Body->GetPosition(), EngineConstant::SCALE));
         setRotation(math::toDegree(m_Body->GetAngle()));
     }
 
@@ -89,12 +89,12 @@ namespace nero
 
     sf::Vector2f PhysicsObject::getLinearVelocity() const
     {
-        return graphics::b2_to_sf(m_Body->GetLinearVelocity(), EngineConstant.SCALE);
+        return graphics::b2_to_sf(m_Body->GetLinearVelocity(), EngineConstant::SCALE);
     }
 
     sf::Vector2f PhysicsObject::getLocalCenter() const
     {
-        return graphics::b2_to_sf(m_Body->GetLocalCenter(), EngineConstant.SCALE);
+        return graphics::b2_to_sf(m_Body->GetLocalCenter(), EngineConstant::SCALE);
     }
 
     float PhysicsObject::getMass() const
@@ -104,12 +104,12 @@ namespace nero
 
     sf::Vector2f PhysicsObject::getPosition() const
     {
-        return graphics::b2_to_sf(m_Body->GetPosition(), EngineConstant.SCALE);
+        return graphics::b2_to_sf(m_Body->GetPosition(), EngineConstant::SCALE);
     }
 
     sf::Vector2f PhysicsObject::getWorldCenter() const
     {
-        return graphics::b2_to_sf(m_Body->GetWorldCenter(), EngineConstant.SCALE);
+        return graphics::b2_to_sf(m_Body->GetWorldCenter(), EngineConstant::SCALE);
     }
 
     sf::Vector2f PhysicsObject::getCenter() const
@@ -124,22 +124,22 @@ namespace nero
 
     void PhysicsObject::applyForce(const sf::Vector2f& force, const sf::Vector2f& origin, bool wake)
     {
-        m_Body->ApplyForce(graphics::sf_to_b2(force, EngineConstant.SCALE),
-                           graphics::sf_to_b2(origin, EngineConstant.SCALE),
+        m_Body->ApplyForce(graphics::sf_to_b2(force, EngineConstant::SCALE),
+                           graphics::sf_to_b2(origin, EngineConstant::SCALE),
                            wake);
     }
 
     void PhysicsObject::applyForceToCenter(const sf::Vector2f& force, bool wake)
     {
-        m_Body->ApplyForceToCenter(graphics::sf_to_b2(force, EngineConstant.SCALE), wake);
+        m_Body->ApplyForceToCenter(graphics::sf_to_b2(force, EngineConstant::SCALE), wake);
     }
 
     void PhysicsObject::applyLinearImpulse(const sf::Vector2f& impulse,
                                            const sf::Vector2f& origin,
                                            bool                wake)
     {
-        m_Body->ApplyLinearImpulse(graphics::sf_to_b2(impulse, EngineConstant.SCALE),
-                                   graphics::sf_to_b2(origin, EngineConstant.SCALE),
+        m_Body->ApplyLinearImpulse(graphics::sf_to_b2(impulse, EngineConstant::SCALE),
+                                   graphics::sf_to_b2(origin, EngineConstant::SCALE),
                                    wake);
     }
 
@@ -220,7 +220,7 @@ namespace nero
 
     void PhysicsObject::setLinearVelocity(const sf::Vector2f& velocity)
     {
-        m_Body->SetLinearVelocity(graphics::sf_to_b2(velocity, EngineConstant.SCALE));
+        m_Body->SetLinearVelocity(graphics::sf_to_b2(velocity, EngineConstant::SCALE));
     }
 
     void PhysicsObject::setSleepingAllowed(bool flag)

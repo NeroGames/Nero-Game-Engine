@@ -114,26 +114,26 @@ namespace nero
 
         if(ImGui::Button("Learn", buttonSize))
         {
-            cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/learn/engine-v2");
+            cmd::launchBrowser(EngineConstant::ENGINE_WEBSITE + "/learn/engine-v2");
         }
 
         ImGui::SameLine();
 
         if(ImGui::Button("Forum", buttonSize))
         {
-            cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/forum");
+            cmd::launchBrowser(EngineConstant::ENGINE_WEBSITE + "/forum");
         }
 
         if(ImGui::Button("Snippet", buttonSize))
         {
-            cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/snippet/engine-v2");
+            cmd::launchBrowser(EngineConstant::ENGINE_WEBSITE + "/snippet/engine-v2");
         }
 
         ImGui::SameLine();
 
         if(ImGui::Button("API", buttonSize))
         {
-            cmd::launchBrowser(EngineConstant.ENGINE_WEBSITE + "/learn/engine-v2/api");
+            cmd::launchBrowser(EngineConstant::ENGINE_WEBSITE + "/learn/engine-v2/api");
         }
 
         ImGui::EndChild();
