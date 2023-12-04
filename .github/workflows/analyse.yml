@@ -1,5 +1,5 @@
 name: Static analysis
-run-name: ${{ github.actor }} is build the Nero Game Engine 🚀
+run-name: ${{ github.actor }} is analysing the Nero Game Engine source code 🚀
 on:
   push:
     paths:
@@ -22,8 +22,8 @@ jobs:
         build_dir=\${2}
         echo \"Hello from the init script! First arg=\${root_dir} second arg=\${build_dir}\"
 
-        add-apt-repository ppa:oibaf/graphics-drivers
-        apt update && apt upgrade
+        add-apt-repository ppa:oibaf/graphics-drivers -y
+        apt update && apt upgrade -y
         apt install -y libvulkan1 mesa-vulkan-drivers vulkan-utils" > init_script.sh
 
     - name: Run static analysis
