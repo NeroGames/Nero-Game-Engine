@@ -24,8 +24,7 @@ jobs:
 
         add-apt-repository ppa:oibaf/graphics-drivers -y
         apt update && apt upgrade -y
-        apt install vulkan-utils/bionic -y
-        apt install -y libvulkan1 mesa-vulkan-drivers vulkan-utils" > init_script.sh
+        apt install -y libvulkan1 mesa-vulkan-drivers vulkan-tools" > init_script.sh
 
     - name: Run static analysis
       uses: JacobDomagala/StaticAnalysis@master
