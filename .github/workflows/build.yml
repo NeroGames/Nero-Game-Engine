@@ -65,10 +65,13 @@ jobs:
       - run: Get-Childitem –Path D:\NeroGames\Library\bin  -Include "*.dll" -File -Recurse | Copy-Item  -Destination D:\Build\bin
       - run: bin\UnitTest.exe
         working-directory: D:\Build
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
       - name: Upload build
         uses: actions/upload-artifact@v3
         with:
-          name: NeroGameEngine-Build${{ github.job }}
+          name: NeroGameEngine-Build-$NOW
           path: |
             D:\Build
+          retention-days: 1
 
